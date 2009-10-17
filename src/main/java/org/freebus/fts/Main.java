@@ -1,5 +1,6 @@
 package org.freebus.fts;
 
+import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.gui.MainWindow;
 
 public final class Main
@@ -13,7 +14,9 @@ public final class Main
       final MainWindow mainWin = new MainWindow();
       mainWin.open();
       mainWin.run();
+
       mainWin.dispose();
+      BusInterface.disposeInstance();
 
 //      javax.swing.SwingUtilities.invokeLater(new Runnable()
 //      {

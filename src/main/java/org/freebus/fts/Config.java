@@ -1,5 +1,6 @@
 package org.freebus.fts;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -9,6 +10,7 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.freebus.fts.comm.ConnectType;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -22,6 +24,7 @@ public final class Config
 {
    static private Config instance = null;
    private String commPort = null;
+   private ConnectType commType = ConnectType.SERIAL;
 
    /**
     * @return The global configuration object.
@@ -30,6 +33,22 @@ public final class Config
    {
       if (instance==null) instance = new Config();
       return instance;
+   }
+
+   /**
+    * Set the communication port type.
+    */
+   public void setCommType(ConnectType commType)
+   {
+      this.commType = commType;
+   }
+
+   /**
+    * @return the communication port type.
+    */
+   public ConnectType getCommType()
+   {
+      return commType;
    }
 
    /**
@@ -62,7 +81,8 @@ public final class Config
 
       try
       {
-         load();
+         if ((new File("fts-config.xml")).exists())
+            load("fts-config.xml");
       }
       catch (Exception e)
       {
@@ -73,18 +93,20 @@ public final class Config
    }
 
    /**
-    * Load the configuration.
+    * Load the configuration from the file fileName.
     * Automatically called when the configuration object is created.
     * @throws ParserConfigurationException 
     * @throws IOException 
     * @throws SAXException 
     */
-   public void load() throws ParserConfigurationException, SAXException, IOException
+   public void load(String fileName) throws ParserConfigurationException, SAXException, IOException
    {
       DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
       DocumentBuilder db = dbf.newDocumentBuilder();
-      Document doc = db.parse("fts-config.xml");
+      Document doc = db.parse(fileName);
       doc.getDocumentElement().normalize();
+
+      // TODO
    }
 
    /**

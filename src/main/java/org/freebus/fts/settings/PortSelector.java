@@ -63,9 +63,12 @@ public class PortSelector extends Composite
       while (portList.hasMoreElements())
       {
          CommPortIdentifier portIdent = (CommPortIdentifier) portList.nextElement();
-         cbxPort.add(portIdent.getName());
-
-         if (portIdent.getName().equals(commPort)) cbxPort.select(cbxPort.getItemCount()-1);
+         
+         if (portIdent.getPortType() == CommPortIdentifier.PORT_SERIAL)
+         {
+            cbxPort.add(portIdent.getName());
+            if (portIdent.getName().equals(commPort)) cbxPort.select(cbxPort.getItemCount()-1);
+         }
       }
    }
 

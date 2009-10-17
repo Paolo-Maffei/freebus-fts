@@ -207,6 +207,11 @@ public final class MainWindow
       toolItem.addSelectionListener(new onProductsBrowser());
       toolItem.setToolTipText(I18n.getMessage("Products_Browser_Tip"));
 
+      toolItem = new ToolItem(toolBar, SWT.PUSH);
+      toolItem.setImage(ImageCache.getImage("icons/bus-monitor"));
+      toolItem.addSelectionListener(new onBusMonitor());
+      toolItem.setToolTipText(I18n.getMessage("Bus_Monitor_Tip"));
+
       toolBar.pack();
       Point size = toolBar.getSize();
       CoolItem item = new CoolItem(coolBar, SWT.NONE);
@@ -313,6 +318,21 @@ public final class MainWindow
       public void widgetSelected(SelectionEvent event)
       {
          Settings.openDialog();
+      }
+   }
+
+   /**
+    * Event listener for: open bus monitor
+    */
+   private class onBusMonitor extends SimpleSelectionListener
+   {
+      public void widgetSelected(SelectionEvent event)
+      {
+         final CTabItem tabItem = new CTabItem(centerTabFolder, SWT.CLOSE);
+         tabItem.setText(I18n.getMessage("Bus_Monitor_Tab"));
+         final BusMonitor dlg = new BusMonitor(centerTabFolder, SWT.FLAT);
+         tabItem.setControl(dlg);
+         centerTabFolder.setSelection(tabItem);
       }
    }
 

@@ -5,6 +5,7 @@ import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.layout.*;
 import org.eclipse.swt.widgets.*;
 import org.freebus.fts.Config;
+import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.SimpleSelectionListener;
 
@@ -77,6 +78,7 @@ public class Settings
       {
          portSelector.apply();
          Config.getConfig().save();
+         BusInterface.disposeInstance();
 
          instance = null;
          shell.close();
