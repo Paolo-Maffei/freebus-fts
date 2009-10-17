@@ -1,5 +1,7 @@
 package org.freebus.fts.utils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -9,8 +11,8 @@ import java.util.ResourceBundle;
  */
 public final class I18n
 {
-   static private String language = "";
-   static private String country = "";
+   static private String language = null;
+   static private String country = null;
    static private Locale locale;
    static private ResourceBundle messages;
    
@@ -42,7 +44,14 @@ public final class I18n
       if (language==null && country==null) locale = Locale.getDefault();
       else locale = new Locale(language, country);
 
-      messages = ResourceBundle.getBundle("messages", locale);
-      if (messages==null) messages = ResourceBundle.getBundle("messages", Locale.ENGLISH);
+      try
+      {
+         messages = ResourceBundle.getBundle("messages", locale);
+      }
+      catch (MissingResourceException e)
+      {
+         System.out.println("Failed to load messages for \"" + locale.getDisplayName() + "\", using fallback.");
+         messages = ResourceBundle.getBundle("src/main/resources/messages", Locale.ENGLISH);
+      }
    }
 }
