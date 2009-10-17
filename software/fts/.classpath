@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry excluding="org/freebus/fts/gui_swing/" kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/test/java">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fts/contrib/rxtx/x86_64-unknown-linux-gnu"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="contrib/swt/swt.jar" sourcepath="contrib/swt/src.zip"/>
+	<classpathentry kind="lib" path="contrib/rxtx/RXTXcomm.jar" sourcepath="contrib/rxtx/src.zip">
+		<attributes>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fts/contrib/rxtx/Linux/x86_64-unknown-linux-gnu"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="output" path="bin"/>
+</classpath>
