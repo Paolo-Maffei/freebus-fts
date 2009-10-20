@@ -1,6 +1,7 @@
 package org.freebus.fts.gui;
 
 import java.io.File;
+import java.io.IOException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.CTabFolder;
@@ -23,6 +24,10 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.freebus.fts.comm.BusConnectException;
+import org.freebus.fts.comm.BusInterface;
+import org.freebus.fts.eib.MessageCode;
+import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.settings.Settings;
 import org.freebus.fts.utils.I18n;
@@ -49,6 +54,7 @@ public final class MainWindow
    final private LogicalTab logicalTab;
    final private SashForm body;
    private String lastProductsDir = null;
+   private ToolItem toolItemTestMessage1 = null;
 
    private Project project = Project.createSampleProject();
 
@@ -144,21 +150,21 @@ public final class MainWindow
 
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("New_Project"));
-      menuItem.addSelectionListener(new onNewProject());
+      menuItem.addSelectionListener(new OnNewProject());
 
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Open_Project"));
-      menuItem.addSelectionListener(new onOpenProject());
+      menuItem.addSelectionListener(new OnOpenProject());
 
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Save_Project"));
-      menuItem.addSelectionListener(new onSaveProject());
+      menuItem.addSelectionListener(new OnSaveProject());
 
       new MenuItem(fileMenu, SWT.SEPARATOR);
 
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Exit"));
-      menuItem.addSelectionListener(new onExit());
+      menuItem.addSelectionListener(new OnExit());
 
       //
       // Menu: Tools
@@ -169,11 +175,11 @@ public final class MainWindow
 
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Products_Browser"));
-      menuItem.addSelectionListener(new onProductsBrowser());
+      menuItem.addSelectionListener(new OnProductsBrowser());
 
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Vdx_Browser"));
-      menuItem.addSelectionListener(new onVdxBrowser());
+      menuItem.addSelectionListener(new OnVdxBrowser());
 
       //
       // Menu: Settings
@@ -184,9 +190,23 @@ public final class MainWindow
 
       menuItem = new MenuItem(settingsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Settings"));
-      menuItem.addSelectionListener(new onSettings());
+      menuItem.addSelectionListener(new OnSettings());
 
       shell.setMenuBar(menuBar);
+   }
+
+   /**
+    * Add the given tool-bar to the main-window's cool-bar.
+    */
+   protected void addToolBar(ToolBar toolBar)
+   {
+      toolBar.pack();     
+      final Point size = toolBar.getSize();
+      final CoolItem item = new CoolItem(coolBar, SWT.NONE);
+      item.setControl(toolBar);
+      final Point preferred = item.computeSize(size.x, size.y);
+      item.setPreferredSize(preferred);
+      toolBar.pack();     
    }
 
    /**
@@ -199,26 +219,31 @@ public final class MainWindow
 
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/exit"));
-      toolItem.addSelectionListener(new onExit());
+      toolItem.addSelectionListener(new OnExit());
       toolItem.setToolTipText(I18n.getMessage("Exit_Tip"));
 
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/find"));
-      toolItem.addSelectionListener(new onProductsBrowser());
+      toolItem.addSelectionListener(new OnProductsBrowser());
       toolItem.setToolTipText(I18n.getMessage("Products_Browser_Tip"));
 
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/bus-monitor"));
-      toolItem.addSelectionListener(new onBusMonitor());
+      toolItem.addSelectionListener(new OnBusMonitor());
       toolItem.setToolTipText(I18n.getMessage("Bus_Monitor_Tip"));
 
-      toolBar.pack();
-      Point size = toolBar.getSize();
-      CoolItem item = new CoolItem(coolBar, SWT.NONE);
-      item.setControl(toolBar);
-      Point preferred = item.computeSize(size.x, size.y);
-      item.setPreferredSize(preferred);
-      toolBar.pack();
+      addToolBar(toolBar);
+
+      
+      toolBar = new ToolBar(coolBar, SWT.FLAT);
+
+      toolItem = new ToolItem(toolBar, SWT.PUSH);
+      toolItem.setImage(ImageCache.getImage("icons/music_32ndnote"));
+      toolItem.addSelectionListener(new OnSendBusMessage());
+      toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
+      toolItemTestMessage1 = toolItem;
+
+      addToolBar(toolBar);
    }
 
    /**
@@ -268,7 +293,7 @@ public final class MainWindow
    /**
     * Event listener for: new-project
     */
-   private class onNewProject extends SimpleSelectionListener
+   private class OnNewProject extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -279,7 +304,7 @@ public final class MainWindow
    /**
     * Event listener for: load-project
     */
-   private class onOpenProject extends SimpleSelectionListener
+   private class OnOpenProject extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -290,7 +315,7 @@ public final class MainWindow
    /**
     * Event listener for: save-project
     */
-   private class onSaveProject extends SimpleSelectionListener
+   private class OnSaveProject extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -301,7 +326,7 @@ public final class MainWindow
    /**
     * Event listener for: exit
     */
-   private class onExit extends SimpleSelectionListener
+   private class OnExit extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -313,7 +338,7 @@ public final class MainWindow
    /**
     * Event listener for: settings
     */
-   private class onSettings extends SimpleSelectionListener
+   private class OnSettings extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -324,7 +349,7 @@ public final class MainWindow
    /**
     * Event listener for: open bus monitor
     */
-   private class onBusMonitor extends SimpleSelectionListener
+   private class OnBusMonitor extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -339,7 +364,7 @@ public final class MainWindow
    /**
     * Event Callback: Products Browser
     */
-   private class onProductsBrowser extends SimpleSelectionListener
+   private class OnProductsBrowser extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
@@ -375,7 +400,7 @@ public final class MainWindow
    /**
     * Event Callback: VDX Browser
     */
-   private class onVdxBrowser extends SimpleSelectionListener
+   private class OnVdxBrowser extends SimpleSelectionListener
    {
       VdxLoader loader;
       VdxBrowser dlg;
@@ -437,6 +462,43 @@ public final class MainWindow
                });
             }
          }).start();
+      }
+   }
+
+   /**
+    * Event Callback: Send a test message to the EIB bus.
+    */
+   private class OnSendBusMessage extends SimpleSelectionListener
+   {
+      public void widgetSelected(SelectionEvent event)
+      {
+         BusInterface bus;
+         try
+         {
+            bus = BusInterface.getInstance();
+         }
+         catch (BusConnectException e)
+         {
+            e.printStackTrace();
+            return;
+         }
+
+         Telegram telegram = new Telegram();
+         if (event.widget==toolItemTestMessage1)
+         {
+            telegram.setMessageCode(MessageCode.L_DATA_REQ);
+            telegram.setFrom(1, 1, 254);
+            telegram.setBroadcastDest();
+         }
+
+         if (telegram.getMessageCode() != MessageCode.UNKNOWN) try
+         {
+            bus.sendData(telegram.toRawData());
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 }

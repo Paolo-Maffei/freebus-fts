@@ -42,7 +42,7 @@ public class PortSelector extends Composite
       cbxPort = new Combo(this, SWT.DEFAULT);
       setupPortsCombo();
       cbxPort.pack();
-      cbxPort.setSize(200, cbxPort.getSize().y);
+      cbxPort.setSize(200, cbxPort.getSize().y+4);
       formData = new FormData();
       formData.top = new FormAttachment(0);
       formData.left = new FormAttachment(lbl, 1);

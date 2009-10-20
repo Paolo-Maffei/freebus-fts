@@ -1,13 +1,14 @@
 package org.freebus.fts.comm;
 
 
+
 /**
  * Types of the connection to the EIB bus-interface.
  */
 public enum ConnectType
 {
    /**
-    * Serial port.
+    * A serial port connection.
     */
    SERIAL("SERIAL", SerialBusInterface.class);
 
@@ -20,17 +21,6 @@ public enum ConnectType
     * Class for the bus-interface connection
     */
    public final Class<? extends BusInterface> busInterfaceClass;
-
-//   /**
-//    * @return the constant for the given name.
-//    */
-//   static public ConnectTypes valueOf(String name)
-//   {
-//      for (ConnectTypes e: values())
-//         if (e.name.equals(name)) return e;
-//
-//      throw new IllegalArgumentException("Invalid connection type: "+name);
-//   }
 
    /**
     * Test if sectionId is a known section-id.

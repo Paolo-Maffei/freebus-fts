@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.List;
 import org.freebus.fts.comm.BusConnectException;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusListener;
-import org.freebus.fts.comm.Telegram;
+import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.utils.I18n;
 
 /**

@@ -15,14 +15,14 @@ public final class GroupAddress
     *
     * @param mainId is the main group identifier (0..15)
     * @param subId is the sub group identifier (0..15)
-    * @param deviceId is the group identifier (0..255)
+    * @param deviceId is the group identifier (0..127)
     */
    public GroupAddress(int zoneId, int lineId, int deviceId)
    {
       if (!isValid(zoneId, lineId, deviceId))
          throw new RuntimeException("Invalid group address: "+Integer.toString(zoneId)+"/"+Integer.toString(lineId)+"/"+Integer.toString(deviceId));
 
-      addr = (zoneId<<12) | (lineId<<8) | deviceId;
+      addr = (zoneId<<11) | (lineId<<7) | deviceId;
    }
 
    /**
@@ -40,7 +40,7 @@ public final class GroupAddress
     */
    public int getAreaId()
    {
-      return (addr>>12) & 15;
+      return (addr>>11) & 15;
    }
 
    /**
@@ -48,7 +48,7 @@ public final class GroupAddress
     */
    public int getLineId()
    {
-      return (addr>>8) & 15;
+      return (addr>>7) & 15;
    }
 
    /**
@@ -56,7 +56,7 @@ public final class GroupAddress
     */
    public int getDeviceId()
    {
-      return addr & 255;
+      return addr & 127;
    }
 
    /**
@@ -86,9 +86,9 @@ public final class GroupAddress
     * Create a group address.
     * Throws a runtime exception if the address is invalid.
     *
-    * @param zoneId is the zone identifier (0..13)
+    * @param zoneId is the zone identifier (0..15)
     * @param lineId is the line identifier (0..15)
-    * @param deviceId is the device identifier (0..255)
+    * @param deviceId is the device identifier (0..127)
     * 
     * @return the 2-byte group address.
     */
@@ -97,18 +97,18 @@ public final class GroupAddress
       if (!isValid(zoneId, lineId, deviceId))
          throw new RuntimeException("Invalid group address: "+Integer.toString(zoneId)+"/"+Integer.toString(lineId)+"/"+Integer.toString(deviceId));
 
-      return (zoneId<<12) | (lineId<<8) | deviceId;
+      return (zoneId<<11) | (lineId<<7) | deviceId;
    }
 
    /**
     * Test if the given group address is valid.
     *
-    * @param zoneId is the zone identifier (0..13)
+    * @param zoneId is the zone identifier (0..15)
     * @param lineId is the line identifier (0..15)
-    * @param deviceId is the device identifier (0..255)
+    * @param deviceId is the device identifier (0..127)
     */
    public static boolean isValid(int zoneId, int lineId, int deviceId)
    {
-      return zoneId>=0 && zoneId<=13 && lineId>=0 && lineId<=15 && deviceId>=0 && deviceId<=255;
+      return zoneId>=0 && zoneId<=15 && lineId>=0 && lineId<=15 && deviceId>=0 && deviceId<=127;
    }
 }

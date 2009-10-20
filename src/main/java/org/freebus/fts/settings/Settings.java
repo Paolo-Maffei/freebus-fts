@@ -15,8 +15,9 @@ import org.freebus.fts.utils.SimpleSelectionListener;
 public class Settings
 {
    private final Shell shell = new Shell(Display.getDefault());
-   private final Group contents = new Group(shell, SWT.BORDER);
-   private final PortSelector portSelector = new PortSelector(contents, SWT.FLAT);
+   private final Group contents = new Group(shell, SWT.FLAT);
+   private final Group portSelectorGroup = new Group(contents, SWT.BORDER|SWT.SHADOW_ETCHED_IN);
+   private final PortSelector portSelector = new PortSelector(portSelectorGroup, SWT.FLAT);
    private static Settings instance = null;
 
    /**
@@ -35,36 +36,49 @@ public class Settings
    {
       shell.setText(I18n.getMessage("Settings_Title"));
       shell.setLayout(new FormLayout());
-      shell.setSize(640, 600);
+      shell.setSize(640, 400);
 
       Button btn;
       FormData formData;
+      FillLayout fillLayout;
 
       formData = new FormData();
-      formData.top = new FormAttachment(0);
-      formData.left = new FormAttachment(0);
+      formData.top = new FormAttachment(2);
+      formData.left = new FormAttachment(2);
+      formData.right = new FormAttachment(98);
       contents.setLayoutData(formData);
 
+      portSelectorGroup.setText(I18n.getMessage("Settings_Port_Selector"));
+      fillLayout = new FillLayout();
+      fillLayout.marginWidth = 4;
+      fillLayout.marginHeight = 4;
+      portSelectorGroup.setLayout(fillLayout);
       contents.setLayout(new FormLayout());
       formData = new FormData();
       formData.top = new FormAttachment(0);
       formData.left = new FormAttachment(0);
-      portSelector.setLayoutData(formData);
+      formData.right = new FormAttachment(100);
+      portSelectorGroup.setLayoutData(formData);
 
-      Composite btnBox = new Composite(shell, SWT.BORDER);
-      btnBox.setLayout(new RowLayout(SWT.HORIZONTAL | SWT.RIGHT_TO_LEFT));
+      Composite btnBox = new Composite(shell, SWT.FLAT);
+      fillLayout = new FillLayout();
+      fillLayout.type = SWT.HORIZONTAL;
+      fillLayout.spacing = 8;
+      fillLayout.marginWidth = 20;
+      fillLayout.marginHeight = 8;
+      btnBox.setLayout(fillLayout);
       formData = new FormData();
       formData.bottom = new FormAttachment(100);
       formData.right = new FormAttachment(100);
       btnBox.setLayoutData(formData);
 
       btn = new Button(btnBox, SWT.DEFAULT);
-      btn.setText(I18n.getMessage("Cancel_Button"));
-      btn.addSelectionListener(new OnCancel());
-
-      btn = new Button(btnBox, SWT.DEFAULT);
       btn.setText(I18n.getMessage("Save_Button"));
       btn.addSelectionListener(new OnSave());
+
+      btn = new Button(btnBox, SWT.DEFAULT);
+      btn.setText(I18n.getMessage("Cancel_Button"));
+      btn.addSelectionListener(new OnCancel());
 
       shell.open();
    }
