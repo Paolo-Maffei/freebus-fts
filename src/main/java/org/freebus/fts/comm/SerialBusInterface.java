@@ -30,7 +30,7 @@ class SerialBusInterface extends BusInterface implements SerialPortEventListener
     */
    public SerialBusInterface() throws BusConnectException
    {
-      final String portName = Config.getConfig().getCommPort();
+      final String portName = Config.getInstance().getCommPort();
       try
       {
          portIdent = CommPortIdentifier.getPortIdentifier(portName);

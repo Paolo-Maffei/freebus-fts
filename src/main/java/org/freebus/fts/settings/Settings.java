@@ -93,7 +93,7 @@ public class Settings
       public void widgetSelected(SelectionEvent event)
       {
          portSelector.apply();
-         Config.getConfig().save();
+         Config.getInstance().save();
          BusInterface.disposeInstance();
 
          instance = null;

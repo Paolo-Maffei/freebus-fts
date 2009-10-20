@@ -42,7 +42,7 @@ public class BusInterface
    {
       if (instance==null)
       {
-         final ConnectType conType = Config.getConfig().getCommType();
+         final ConnectType conType = Config.getInstance().getCommType();
          try
          {
             instance = conType.busInterfaceClass.newInstance();

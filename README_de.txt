@@ -13,6 +13,10 @@ System installiert sein.
 FTS direkt starten
 ------------------
 
+Direkt starten funktioniert aus dem Subversion heraus nur
+wenn man zuerst mit Maven2 das entsprechende JAR baut.
+Dazu aufrufen: mvn package
+
 Unter Windows eine Verknüpfung von fts.cmd erstellen.
 Dort bei "Ausführen in Verzeichnis" das Verzeichnis eintragen
 in dem FTS installiert ist. Über die Verknüpfung FTS starten. 

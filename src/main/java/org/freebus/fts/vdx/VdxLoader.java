@@ -14,6 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
+import org.freebus.fts.Config;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
@@ -440,7 +441,8 @@ public class VdxLoader
       final Iterator<Integer> it = ids.iterator();
       final int fileNameIdx = section.getFieldIndex("SYMBOL_FILENAME", true);
       final int dataIdx = section.getFieldIndex("SYMBOL_DATA", true);
-      final int nameIdx = section.getNameFieldIdx(); 
+      final int nameIdx = section.getNameFieldIdx();
+      final String tempDir = Config.getInstance().getTempDir()+'/';
       String[] values;
       
       while (it.hasNext())
@@ -454,7 +456,7 @@ public class VdxLoader
          String name = values[fileNameIdx].toLowerCase();
          symbolNames.put(id, name);
          
-         final File file = new File("/tmp/"+name+".bmp");
+         final File file = new File(tempDir+name+".bmp");
          final FileOutputStream out = new FileOutputStream(file);
 
          final int dataLen = data.length();

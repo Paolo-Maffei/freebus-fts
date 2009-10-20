@@ -57,7 +57,7 @@ public class PortSelector extends Composite
    {
       cbxPort.removeAll();
 
-      final String commPort = Config.getConfig().getCommPort();
+      final String commPort = Config.getInstance().getCommPort();
 
       final Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
       while (portList.hasMoreElements())
@@ -77,7 +77,7 @@ public class PortSelector extends Composite
     */
    public void apply()
    {
-      final Config cfg = Config.getConfig();
+      final Config cfg = Config.getInstance();
 
       int idx = cbxPort.getSelectionIndex();
       cfg.setCommPort(idx>=0 ? cbxPort.getItem(idx) : null);

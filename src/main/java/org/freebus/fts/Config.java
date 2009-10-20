@@ -25,11 +25,12 @@ public final class Config
    static private Config instance = null;
    private String commPort = null;
    private ConnectType commType = ConnectType.SERIAL;
+   private String tempDir = null;
 
    /**
     * @return The global configuration object.
     */
-   static public Config getConfig()
+   static public Config getInstance()
    {
       if (instance==null) instance = new Config();
       return instance;
@@ -68,6 +69,22 @@ public final class Config
    }
 
    /**
+    * Set the temp directory.
+    */
+   public void setTempDir(String tempDir)
+   {
+      this.tempDir = tempDir;
+   }
+
+   /**
+    * @return the temp directory.
+    */
+   public String getTempDir()
+   {
+      return tempDir;
+   }
+
+   /**
     * Create a configuration object.
     * Use {@link #getConfig} to access the configuration object.
     */
@@ -75,8 +92,16 @@ public final class Config
    {
       // determine the name of the serial port on several operating systems
       String osname = System.getProperty("os.name","").toLowerCase();
-      if (osname.startsWith("windows")) commPort = "COM1";
-      else if (osname.startsWith("linux")) commPort = "/dev/ttyS0";
+      if (osname.startsWith("windows"))
+      {
+         commPort = "COM1";
+         tempDir = "c:/windows/temp";
+      }
+      else if (osname.startsWith("linux"))
+      {
+         commPort = "/dev/ttyS0";
+         tempDir = "/tmp";
+      }
       //else if (osname.startsWith("mac")) commPort = null; // what here?
 
       try
