@@ -204,7 +204,7 @@ public final class MainWindow
       final Point size = toolBar.getSize();
       final CoolItem item = new CoolItem(coolBar, SWT.NONE);
       item.setControl(toolBar);
-      final Point preferred = item.computeSize(size.x, size.y);
+      final Point preferred = item.computeSize(size.x+4, size.y+2);
       item.setPreferredSize(preferred);
       toolBar.pack();     
    }

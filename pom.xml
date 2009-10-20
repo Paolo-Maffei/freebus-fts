@@ -48,13 +48,13 @@
           <finalName>fts</finalName>
           <archive>
             <manifest>
-              <addClasspath>true</addClasspath>
+              <addClasspath>false</addClasspath>
               <mainClass>org.freebus.fts.Main</mainClass>
             </manifest>
-            <manifestEntries>
+            <!--  manifestEntries>
               <mode>development</mode>
               <url>${pom.url}</url>
-            </manifestEntries>
+            </manifestEntries -->
           </archive>
         </configuration>
       </plugin>

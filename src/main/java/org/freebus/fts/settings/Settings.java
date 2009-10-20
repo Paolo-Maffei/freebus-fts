@@ -75,10 +75,12 @@ public class Settings
       btn = new Button(btnBox, SWT.DEFAULT);
       btn.setText(I18n.getMessage("Save_Button"));
       btn.addSelectionListener(new OnSave());
+      btn.pack();
 
       btn = new Button(btnBox, SWT.DEFAULT);
       btn.setText(I18n.getMessage("Cancel_Button"));
       btn.addSelectionListener(new OnCancel());
+      btn.pack();
 
       shell.open();
    }

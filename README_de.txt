@@ -13,8 +13,11 @@ System installiert sein.
 FTS direkt starten
 ------------------
 
-Einfach das entsprechende Start-Script aufrufen.
-Das ist fts.cmd unter Windows, und fts.sh unter Linux/Unix.
+Unter Windows eine Verknüpfung von fts.cmd erstellen.
+Dort bei "Ausführen in Verzeichnis" das Verzeichnis eintragen
+in dem FTS installiert ist. Über die Verknüpfung FTS starten. 
+
+Unter Linux fts.sh einfach aufrufen.
 
 
 FTS aus Eclipse starten
