@@ -7,13 +7,17 @@ import java.util.TreeMap;
 import java.util.Vector;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.graphics.Font;
+import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.List;
 import org.eclipse.swt.widgets.Listener;
 import org.eclipse.swt.widgets.Table;
@@ -35,9 +39,11 @@ public class ProductsTab extends Composite
    private final ProductDb productDb;
    private final List lstManufacturers;
    private final Tree treCategories;
-   private final Table tblCatalog;
-   private final Group grpDetails;
+   private final Table tblCatalog, tblApplications;
+   private final Group grpDetails, grpApplications;
    private final CatalogEntryWidget cewDetails;
+   private final Label lblSelProduct;
+   private final Font fntCaption;
    
    /**
     * Create a new products-tab.
@@ -50,13 +56,17 @@ public class ProductsTab extends Composite
       setLayout(new FormLayout());
 
       FormData formData;
+      FillLayout fillLayout;
+      
+      final FontData curFontData = getFont().getFontData()[0];
+      fntCaption = new Font(Display.getCurrent(), new FontData(curFontData.getName(), (int)(curFontData.getHeight()*1.2), SWT.BOLD));
 
       Group grpManufacturer = new Group(this, SWT.BORDER);
-      grpManufacturer.setText(I18n.getMessage("Manufacturer"));
+      grpManufacturer.setText(I18n.getMessage("ProductsTab.Manufacturer"));
       grpManufacturer.setLayout(new FillLayout());
       formData = new FormData();
       formData.width = 150;
-      formData.bottom = new FormAttachment(40);
+      formData.bottom = new FormAttachment(35);
       formData.left = new FormAttachment(1);
       formData.top = new FormAttachment(1);
       grpManufacturer.setLayoutData(formData);
@@ -64,12 +74,12 @@ public class ProductsTab extends Composite
       lstManufacturers.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateCategories(); } });
 
       Group grpCategories = new Group(this, SWT.BORDER);
-      grpCategories.setText(I18n.getMessage("Categories"));
+      grpCategories.setText(I18n.getMessage("ProductsTab.Categories"));
       grpCategories.setSize(300, 200);
       grpCategories.setLayout(new FillLayout());
       formData = new FormData();
       formData.width = 300;
-      formData.bottom = new FormAttachment(40);
+      formData.bottom = new FormAttachment(35);
       formData.left = new FormAttachment(grpManufacturer, 1);
       formData.top = new FormAttachment(1);
       grpCategories.setLayoutData(formData);
@@ -77,29 +87,60 @@ public class ProductsTab extends Composite
       treCategories.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateCatalog(); } });
 
       Group grpCatalog = new Group(this, SWT.BORDER);
-      grpCatalog.setText(I18n.getMessage("Catalog"));
-      grpCatalog.setSize(300, 200);
+      grpCatalog.setText(I18n.getMessage("ProductsTab.Catalog"));
       grpCatalog.setLayout(new FillLayout());
       formData = new FormData();
-      formData.width = 600;
       formData.top = new FormAttachment(1);
-      formData.bottom = new FormAttachment(40);
+      formData.bottom = new FormAttachment(35);
       formData.left = new FormAttachment(grpCategories, 1);
       formData.right = new FormAttachment(99);
       grpCatalog.setLayoutData(formData);
       tblCatalog = new Table(grpCatalog, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
       tblCatalog.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateDetails(); } });
 
-      grpDetails = new Group(this, SWT.BORDER|SWT.SINGLE);
-      grpDetails.setSize(600, 300);
-      grpDetails.setLayout(new FillLayout());
-      grpDetails.setText(I18n.getMessage("Details"));
+      final Label lblSep = new Label(this, SWT.SEPARATOR|SWT.HORIZONTAL);
       formData = new FormData();
       formData.top = new FormAttachment(grpManufacturer, 5);
-      formData.bottom = new FormAttachment(99);
+      formData.height = 5;
+      formData.left = new FormAttachment(0);
+      formData.right = new FormAttachment(100);
+      lblSep.setLayoutData(formData);
+
+      lblSelProduct = new Label(this, SWT.LEFT);
+      lblSelProduct.setFont(fntCaption);
+      formData = new FormData();
+      formData.top = new FormAttachment(lblSep, 5);
       formData.left = new FormAttachment(1);
       formData.right = new FormAttachment(99);
+      lblSelProduct.setLayoutData(formData);
+
+      grpApplications = new Group(this, SWT.BORDER);
+      grpApplications.setText(I18n.getMessage("ProductsTab.Applications"));
+      grpApplications.setLayout(new FillLayout());
+      formData = new FormData();
+      formData.top = new FormAttachment(lblSelProduct, 5);
+      formData.bottom = new FormAttachment(99);
+      formData.left = new FormAttachment(1);
+      formData.width = 400;
+      grpApplications.setLayoutData(formData);
+      tblApplications = new Table(grpApplications, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
+//      tblApplications.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateDetails(); } });
+
+      
+      grpDetails = new Group(this, SWT.BORDER|SWT.SINGLE);
+      grpDetails.setSize(600, 300);
+      fillLayout = new FillLayout();
+      fillLayout.marginHeight = 4;
+      fillLayout.marginWidth = 2;
+      grpDetails.setLayout(fillLayout);
+//      grpDetails.setText(I18n.getMessage("ProductsTab.Product_Caption"));
+      formData = new FormData();
+      formData.top = new FormAttachment(lblSelProduct, 5);
+      formData.bottom = new FormAttachment(99);
+      formData.left = new FormAttachment(grpApplications, 1);
+      formData.right = new FormAttachment(99);
       grpDetails.setLayoutData(formData);
+      grpDetails.setVisible(false);
       cewDetails = new CatalogEntryWidget(grpDetails, SWT.BORDER, false);
 
       updateManufacturers();
@@ -271,7 +312,12 @@ public class ProductsTab extends Composite
    public void updateDetails()
    {
       final TableItem[] sel = tblCatalog.getSelection();
-//      grpDetails.setVisible(sel.length>0);
+      final boolean isVisible = sel.length>0;
+
+      grpDetails.setVisible(isVisible);
+      grpApplications.setVisible(isVisible);
+      lblSelProduct.setVisible(isVisible);
+
       if (sel.length<=0)
       {
          cewDetails.setCatalogEntry(null);
@@ -279,7 +325,7 @@ public class ProductsTab extends Composite
       }
 
       final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
-      grpDetails.setText(I18n.getMessage("Details_of_%1").replace("%1", catalogEntry.getName()));
+      lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", catalogEntry.getName()));
       cewDetails.setCatalogEntry(catalogEntry);
    }
 }

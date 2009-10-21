@@ -32,7 +32,7 @@ public class VdxBrowser extends Composite implements VdxProgress
    private final Combo cbxSection;
    private final ProgressBar prbLoad;
    private final Table tblElems, tblValues;
-   private final Label lblLoad;
+   private final Label lblLoadValue, lblLoad;
    private long progressTotal, progressCurrent;
    private boolean progressUpdating = false;
    private int currentSectionId = -1;
@@ -48,47 +48,54 @@ public class VdxBrowser extends Composite implements VdxProgress
 
       TableColumn tabColumn;
       FormData formData;
-      Label lbl;
-
+      
       cbxSection = new Combo(this, SWT.DEFAULT);
 
-      lbl = new Label(this, SWT.FLAT);
-      lbl.setAlignment(SWT.BOTTOM);
-      lbl.setText(I18n.getMessage("vdx_browser_progress")+" ");
-      lbl.pack();
+      final Label lblCap = new Label(this, SWT.FLAT);
+      lblCap.setText(I18n.getMessage("VdxBrowser.Caption"));
       formData = new FormData();
-      formData.left = new FormAttachment(0);
-      formData.bottom = new FormAttachment(cbxSection, -2);
-      lbl.setLayoutData(formData);
+      formData.left = new FormAttachment(2);
+      formData.top = new FormAttachment(1);
+      lblCap.setLayoutData(formData);
 
       lblLoad = new Label(this, SWT.FLAT);
       lblLoad.setAlignment(SWT.BOTTOM);
-      lblLoad.setText("0%");
+      lblLoad.setText(I18n.getMessage("VdxBrowser.Progress")+" ");
       lblLoad.pack();
       formData = new FormData();
-      formData.left = new FormAttachment(lbl, 0);
-      formData.bottom = new FormAttachment(cbxSection, -2);
+      formData.left = new FormAttachment(lblCap, 20);
+      formData.bottom = new FormAttachment(cbxSection, 2);
       lblLoad.setLayoutData(formData);
+
+      lblLoadValue = new Label(this, SWT.FLAT);
+      lblLoadValue.setAlignment(SWT.BOTTOM);
+      lblLoadValue.setText("0%");
+      lblLoadValue.pack();
+      formData = new FormData();
+      formData.left = new FormAttachment(lblLoad, 1);
+      formData.bottom = new FormAttachment(cbxSection, 2);
+      formData.width = 50;
+      lblLoadValue.setLayoutData(formData);
 
       prbLoad = new ProgressBar(this, SWT.SMOOTH);
       formData = new FormData();
-      formData.left = new FormAttachment(lblLoad, 1);
-      formData.right = new FormAttachment(100);
-      formData.top = new FormAttachment(1);
+      formData.left = new FormAttachment(lblLoadValue, 1);
+      formData.right = new FormAttachment(98);
+      formData.top = new FormAttachment(2);
       prbLoad.setLayoutData(formData);
       
       formData = new FormData();
-      formData.left = new FormAttachment(0);
-      formData.right = new FormAttachment(100);
-      formData.top = new FormAttachment(prbLoad, 1);
+      formData.left = new FormAttachment(2);
+      formData.right = new FormAttachment(98);
+      formData.top = new FormAttachment(lblCap, 4);
       cbxSection.setLayoutData(formData);
       cbxSection.setVisibleItemCount(20);
       cbxSection.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { onSectionSelected(); } });
 
       tblElems = new Table(this, SWT.BORDER);
       formData = new FormData();
-      formData.left = new FormAttachment(0);
-      formData.right = new FormAttachment(100);
+      formData.left = new FormAttachment(2);
+      formData.right = new FormAttachment(98);
       formData.top = new FormAttachment(cbxSection, 0);
       formData.bottom = new FormAttachment(40);
       tblElems.setLayoutData(formData);
@@ -101,10 +108,10 @@ public class VdxBrowser extends Composite implements VdxProgress
 
       tblValues = new Table(this, SWT.BORDER);
       formData = new FormData();
-      formData.left = new FormAttachment(0);
-      formData.right = new FormAttachment(100);
+      formData.left = new FormAttachment(2);
+      formData.right = new FormAttachment(98);
       formData.top = new FormAttachment(tblElems, 0);
-      formData.bottom = new FormAttachment(100);
+      formData.bottom = new FormAttachment(98);
       tblValues.setLayoutData(formData);
 
       tabColumn = new TableColumn(tblValues, SWT.NULL);
@@ -123,6 +130,9 @@ public class VdxBrowser extends Composite implements VdxProgress
       String[] items = new String[keys.size()];
 
       currentSectionId = -1;
+      prbLoad.setVisible(false);
+      lblLoad.setVisible(false);
+      lblLoadValue.setVisible(false);
 
       int i = 0;
       for (Integer key: keys)
@@ -210,7 +220,7 @@ public class VdxBrowser extends Composite implements VdxProgress
             if (prbLoad.isDisposed()) return;
             final int progrPerc = (int)(100*(progress+1)/progressTotal);
             prbLoad.setSelection(progrPerc);
-            lblLoad.setText(Integer.toString(progrPerc)+"%");
+            lblLoadValue.setText(Integer.toString(progrPerc)+"%");
             update();
             progressUpdating = false;
          }

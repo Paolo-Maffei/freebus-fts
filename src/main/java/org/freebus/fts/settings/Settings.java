@@ -14,9 +14,9 @@ import org.freebus.fts.utils.SimpleSelectionListener;
  */
 public class Settings
 {
-   private final Shell shell = new Shell(Display.getDefault());
-   private final Group contents = new Group(shell, SWT.FLAT);
-   private final Group portSelectorGroup = new Group(contents, SWT.BORDER|SWT.SHADOW_ETCHED_IN);
+   private final Shell shell = new Shell(Display.getDefault(), SWT.DIALOG_TRIM|SWT.APPLICATION_MODAL);
+   private final Group contents = new Group(shell, SWT.SHADOW_NONE);
+   private final Group portSelectorGroup = new Group(contents, SWT.SHADOW_NONE);
    private final PortSelector portSelector = new PortSelector(portSelectorGroup, SWT.FLAT);
    private static Settings instance = null;
 
@@ -61,23 +61,28 @@ public class Settings
       portSelectorGroup.setLayoutData(formData);
 
       Composite btnBox = new Composite(shell, SWT.FLAT);
-      fillLayout = new FillLayout();
-      fillLayout.type = SWT.HORIZONTAL;
-      fillLayout.spacing = 8;
-      fillLayout.marginWidth = 20;
-      fillLayout.marginHeight = 8;
-      btnBox.setLayout(fillLayout);
+
+      RowLayout btnBoxLayout = new RowLayout();
+      btnBoxLayout.type = SWT.HORIZONTAL;
+      btnBoxLayout.spacing = 8;
+      btnBoxLayout.marginWidth = 20;
+      btnBoxLayout.marginHeight = 8;
+      btnBoxLayout.fill = false;
+      btnBoxLayout.pack = false;
+      btnBox.setLayout(btnBoxLayout);
       formData = new FormData();
       formData.bottom = new FormAttachment(100);
       formData.right = new FormAttachment(100);
       btnBox.setLayoutData(formData);
 
-      btn = new Button(btnBox, SWT.DEFAULT);
+      btn = new Button(btnBox, SWT.PUSH);
       btn.setText(I18n.getMessage("Save_Button"));
       btn.addSelectionListener(new OnSave());
-      btn.pack();
+      RowData rowData = new RowData();
+      rowData.width = 120;
+      btn.setLayoutData(rowData);
 
-      btn = new Button(btnBox, SWT.DEFAULT);
+      btn = new Button(btnBox, SWT.PUSH);
       btn.setText(I18n.getMessage("Cancel_Button"));
       btn.addSelectionListener(new OnCancel());
       btn.pack();

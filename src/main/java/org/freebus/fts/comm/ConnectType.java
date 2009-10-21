@@ -10,12 +10,12 @@ public enum ConnectType
    /**
     * A serial port connection.
     */
-   SERIAL("SERIAL", SerialBusInterface.class);
+   SERIAL(SerialBusInterface.class),
 
    /**
-    * Name of the connection.
+    * An unknown connection.
     */
-   public final String name;
+   UNKNOWN(null);
 
    /**
     * Class for the bus-interface connection
@@ -28,16 +28,15 @@ public enum ConnectType
    static public boolean isValid(String name)
    {
       for (ConnectType e: values())
-         if (e.name.equals(name)) return true;
+         if (e.toString().equals(name)) return true;
       return false;
    }
 
    /*
     * Internal constructor.
     */
-   private ConnectType(String name, Class<? extends BusInterface> busInterfaceClass)
+   private ConnectType(Class<? extends BusInterface> busInterfaceClass)
    {
-      this.name = name;
       this.busInterfaceClass = busInterfaceClass;
    }
 }

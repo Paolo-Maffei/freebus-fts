@@ -8,6 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
@@ -27,27 +28,19 @@ public class PortSelector extends Composite
    public PortSelector(Composite parent, int style)
    {
       super(parent, style);
-      setLayout(new FormLayout());
 
-      FormData formData;
+      GridLayout gridLayout = new GridLayout(2, false);
+      gridLayout.horizontalSpacing = 8;
+      gridLayout.verticalSpacing = 4;
+      setLayout(gridLayout);
+
       Label lbl;
 
-      lbl = new Label(this, SWT.FLAT);
+      lbl = new Label(this, SWT.CENTER);
       lbl.setText(I18n.getMessage("PortSelector_Port"));
-      formData = new FormData();
-      formData.top = new FormAttachment(0);
-      formData.left = new FormAttachment(0);
-      lbl.setLayoutData(formData);
 
-      cbxPort = new Combo(this, SWT.DEFAULT);
+      cbxPort = new Combo(this, SWT.READ_ONLY);
       setupPortsCombo();
-      cbxPort.pack();
-      cbxPort.setSize(200, cbxPort.getSize().y+4);
-      formData = new FormData();
-      formData.top = new FormAttachment(0);
-      formData.left = new FormAttachment(lbl, 1);
-      formData.right = new FormAttachment(100);
-      cbxPort.setLayoutData(formData);
    }
 
    /**

@@ -4,10 +4,12 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
+import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -35,6 +37,7 @@ import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
 import org.freebus.fts.vdx.VdxLoader;
 import org.freebus.fts.vdx.VdxSectionType;
+import org.freebus.fts.Config;
 
 /**
  * The main window.
@@ -53,7 +56,6 @@ public final class MainWindow
    final private PhysicalTab physicalTab;
    final private LogicalTab logicalTab;
    final private SashForm body;
-   private String lastProductsDir = null;
    private ToolItem toolItemTestMessage1 = null;
 
    private Project project = Project.createSampleProject();
@@ -372,11 +374,15 @@ public final class MainWindow
          fileDialog.setText(I18n.getMessage("Products_Browser_Open_File"));
          fileDialog.setFilterExtensions(new String[] { "*.vd_", "*" });
          fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
-         if (lastProductsDir!=null) fileDialog.setFilterPath(lastProductsDir);
+         final String vdxDir = Config.getInstance().getVdxDir();
+         if (vdxDir!=null) fileDialog.setFilterPath(vdxDir);
 
          final String fileName = fileDialog.open();
          if (fileName == null) return;
-         lastProductsDir = new File(fileName).getParentFile().getPath();
+
+         final Config cfg = Config.getInstance();
+         cfg.setVdxDir(new File(fileName).getParentFile().getPath());
+         cfg.save();
 
          final VdxLoader loader = new VdxLoader();
          try
@@ -411,11 +417,15 @@ public final class MainWindow
          fileDialog.setText(I18n.getMessage("Products_Browser_Open_File"));
          fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
          fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
-         if (lastProductsDir!=null) fileDialog.setFilterPath(lastProductsDir);
+         final String vdxDir = Config.getInstance().getVdxDir();
+         if (vdxDir!=null) fileDialog.setFilterPath(vdxDir);
 
          final String fileName = fileDialog.open();
          if (fileName == null) return;
-         lastProductsDir = new File(fileName).getParentFile().getPath();
+
+         final Config cfg = Config.getInstance();
+         cfg.setVdxDir(new File(fileName).getParentFile().getPath());
+         cfg.save();
 
          loader = new VdxLoader();
 

@@ -1,13 +1,16 @@
 FTS - Getting Started
 =====================
 
-FTS kann entweder direkt oder aus Eclipse heraus gestartet
+FTS kann entweder direkt, oder aus Eclipse heraus gestartet
 werden.
 
-Im Prinzip sind alle benötigten Libraries im FTS Zip-Archiv
-enthalten. Nicht enthalten ist GTK, das für die Ausführung
-unter Linux benötigt wird. Es sollte aber auf Deinem Linux
-System installiert sein.
+Zur Ausführung braucht man eine Java Runtime, die man zum Beispiel
+hier bekommt: http://www.java.com/de/download
+
+Im Prinzip sind alle weiteren Libraries im FTS Zip-Archiv
+enthalten bzw im Subversion eingecheckt. Nicht enthalten ist GTK,
+das für die Ausführung unter Linux benötigt wird. Es sollte aber
+auf Deinem Linux System installiert sein.
 
 
 FTS direkt starten

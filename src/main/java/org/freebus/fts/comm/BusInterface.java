@@ -49,7 +49,7 @@ public class BusInterface
          }
          catch (Exception e)
          {
-            throw new RuntimeException("Cannot create bus interface: "+conType.name, e);
+            throw new RuntimeException("Cannot create bus interface: "+conType.toString(), e);
          }
       }
       return instance;
