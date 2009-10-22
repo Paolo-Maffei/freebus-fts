@@ -15,5 +15,6 @@
 	</classpathentry>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_64_3.4.1.v3452b.jar"/>
+	<classpathentry kind="lib" path="contrib/derby/derby.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

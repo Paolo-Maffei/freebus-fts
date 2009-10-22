@@ -148,6 +148,58 @@ public class VdxSection
    }
 
    /**
+    * Get the integer value of the element id with the given field-name.
+    * If the value is empty, zero is returned.
+    * 
+    * @param id is the id of the element
+    * @param name is the name of the requested field
+    */
+   public int getIntegerValue(int id, String fieldName)
+   {
+      return getIntegerValue(id, getFieldIndex(fieldName, true));
+   }
+
+   /**
+    * Get the integer value of the element id with the given field-index fieldIdx.
+    * If the value is empty, zero is returned.
+    * 
+    * @param id is the id of the element
+    * @param fieldIdx is the index of the requested field
+    */
+   public int getIntegerValue(int id, int fieldIdx)
+   {
+      final String val = elements.get(id)[fieldIdx];
+      if (val.isEmpty()) return 0;
+      return Integer.parseInt(val);
+   }
+
+   /**
+    * Get the double value of the element id with the given field-name.
+    * If the value is empty, zero is returned.
+    * 
+    * @param id is the id of the element
+    * @param name is the name of the requested field
+    */
+   public double getDoubleValue(int id, String fieldName)
+   {
+      return getDoubleValue(id, getFieldIndex(fieldName, true));
+   }
+
+   /**
+    * Get the integer value of the element id with the given field-index fieldIdx.
+    * If the value is empty, zero is returned.
+    * 
+    * @param id is the id of the element
+    * @param fieldIdx is the index of the requested field
+    */
+   public double getDoubleValue(int id, int fieldIdx)
+   {
+      final String val = elements.get(id)[fieldIdx];
+      if (val.isEmpty()) return 0;
+      return Double.parseDouble(val);
+   }
+
+   /**
     * Test if the section contains an element with the given id.
     */
    public boolean hasElement(int id)

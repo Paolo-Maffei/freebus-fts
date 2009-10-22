@@ -95,7 +95,7 @@ public class ProductsTab extends Composite
       formData.left = new FormAttachment(grpCategories, 1);
       formData.right = new FormAttachment(99);
       grpCatalog.setLayoutData(formData);
-      tblCatalog = new Table(grpCatalog, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
+      tblCatalog = new Table(grpCatalog, SWT.BORDER|SWT.SINGLE|SWT.V_SCROLL);
       tblCatalog.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateDetails(); } });
 
       final Label lblSep = new Label(this, SWT.SEPARATOR|SWT.HORIZONTAL);
@@ -123,7 +123,7 @@ public class ProductsTab extends Composite
       formData.left = new FormAttachment(1);
       formData.width = 400;
       grpApplications.setLayoutData(formData);
-      tblApplications = new Table(grpApplications, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
+      tblApplications = new Table(grpApplications, SWT.BORDER|SWT.SINGLE|SWT.V_SCROLL);
 //      tblApplications.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateDetails(); } });
 
       
@@ -327,5 +327,8 @@ public class ProductsTab extends Composite
       final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
       lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", catalogEntry.getName()));
       cewDetails.setCatalogEntry(catalogEntry);
+
+      tblApplications.removeAll();
+      
    }
 }

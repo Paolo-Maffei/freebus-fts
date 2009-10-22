@@ -537,12 +537,16 @@ public class VdxLoader
     */
    protected VdxSection processCatalogEntries(VdxSection section)
    {
-      final Set<Integer> ids = section.getElementIds();
-      final Iterator<Integer> it = ids.iterator();
       final int catIdIdx = section.getFieldIndex("CATALOG_ENTRY_ID", true);
       final int nameIdx = section.getFieldIndex("ENTRY_NAME", true);
       final int productIdx = section.getFieldIndex("PRODUCT_ID", true);
       final int manufacturerIdx = section.getFieldIndex("MANUFACTURER_ID", true);
+      final int dinIdx = section.getFieldIndex("DIN_FLAG", false);
+      final int widthModulesIdx = section.getFieldIndex("ENTRY_WIDTH_IN_MODULES", false);
+      final int widthMMIdx = section.getFieldIndex("ENTRY_WIDTH_IN_MILLIMETERS", false);
+
+      final Set<Integer> ids = section.getElementIds();
+      final Iterator<Integer> it = ids.iterator();
       int manufacturerId, lastManufacturerId = -1;
       Manufacturer manufacturer = null;
       Product product;
@@ -550,7 +554,8 @@ public class VdxLoader
 
       while (it.hasNext())
       {
-         values = section.getElement(it.next());
+         final int id = it.next();
+         values = section.getElement(id);
 
          manufacturerId = Integer.parseInt(values[manufacturerIdx]);
          if (manufacturerId!=lastManufacturerId)
@@ -561,6 +566,9 @@ public class VdxLoader
 
          product = db.getProduct(productIdToDb.get(Integer.parseInt(values[productIdx])));
          final CatalogEntry cat = new CatalogEntry(values[nameIdx], manufacturer, product);
+         if (dinIdx>=0) cat.setDIN(section.getIntegerValue(id, dinIdx) == 1);
+         if (widthModulesIdx>=0) cat.setWidthModules((int)section.getDoubleValue(id, widthModulesIdx));
+         if (widthMMIdx>=0) cat.setWidthModules((int)section.getDoubleValue(id, widthMMIdx));
 
          final int dbId = db.addCatalogEntry(cat);
 

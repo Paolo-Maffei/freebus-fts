@@ -4,12 +4,10 @@ import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.custom.CTabFolder;
 import org.eclipse.swt.custom.CTabItem;
 import org.eclipse.swt.custom.SashForm;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.graphics.Cursor;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
@@ -26,6 +24,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
+import org.freebus.fts.Config;
 import org.freebus.fts.comm.BusConnectException;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.eib.MessageCode;
@@ -37,14 +36,13 @@ import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
 import org.freebus.fts.vdx.VdxLoader;
 import org.freebus.fts.vdx.VdxSectionType;
-import org.freebus.fts.Config;
 
 /**
  * The main window.
  */
 public final class MainWindow
 {
-   final private Display display = new Display();
+   final private Display display = Display.getCurrent();
    final private Shell shell = new Shell(display);
    final private Menu menuBar = new Menu(shell, SWT.BAR);
    final private Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
@@ -157,16 +155,19 @@ public final class MainWindow
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Open_Project"));
       menuItem.addSelectionListener(new OnOpenProject());
+      menuItem.setAccelerator(SWT.CONTROL|'O');
 
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Save_Project"));
       menuItem.addSelectionListener(new OnSaveProject());
+      menuItem.setAccelerator(SWT.CONTROL|'S');
 
       new MenuItem(fileMenu, SWT.SEPARATOR);
 
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Exit"));
       menuItem.addSelectionListener(new OnExit());
+      menuItem.setAccelerator(SWT.CONTROL|'Q');
 
       //
       // Menu: Tools

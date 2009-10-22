@@ -1,4 +1,3 @@
-<!-- To generate: mvn assembly:assembly -->
 <assembly>
   <id>distribution</id>
   <formats>

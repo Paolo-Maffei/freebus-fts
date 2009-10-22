@@ -1,4 +1,4 @@
-package test;
+package example;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.PortInUseException;

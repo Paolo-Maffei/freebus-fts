@@ -11,6 +11,7 @@ import java.io.PrintWriter;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.freebus.fts.comm.ConnectType;
@@ -30,7 +31,15 @@ public final class Config
    private String vdxDir = null;
 
    private final String configFileName;
-   private final String homeDir;
+   private final String homeDir, appDir;
+
+   /**
+    * @return the directory where FTS can store files
+    */
+   public String getAppDir()
+   {
+      return appDir;
+   }
 
    /**
     * @return The global configuration object.
@@ -111,29 +120,44 @@ public final class Config
    private Config()
    {
       // determine the name of the serial port on several operating systems
-      String osname = System.getProperty("os.name", "").toLowerCase();
+      final String osname = System.getProperty("os.name", "").toLowerCase();
       if (osname.startsWith("windows"))
       {
-         commPort = "COM1";
          tempDir = "c:/windows/temp";
          homeDir = System.getenv("USERPROFILE");
-         configFileName = homeDir + "/fts-config.ini";
+         appDir = homeDir + "/fts";
+
+         commPort = "COM1";
       }
       else if (osname.startsWith("linux"))
       {
-         commPort = "/dev/ttyS0";
          tempDir = "/tmp";
          homeDir = System.getenv("HOME");
-         configFileName = homeDir + "/.fts-config";
+         appDir = homeDir + "/.fts";
+
+         commPort = "/dev/ttyS0";
       }
-      // else if (osname.startsWith("mac")) commPort = null; // what here?
       else
       {
-         configFileName = "fts-config.xml";
          homeDir = System.getenv("HOME");
+         appDir = homeDir + "/fts";
+         
+         final Shell shell = new Shell(Display.getDefault(), SWT.TITLE | SWT.BORDER | SWT.CLOSE | SWT.APPLICATION_MODAL);
+         MessageBox mbox = new MessageBox(shell, SWT.ICON_WARNING | SWT.OK);
+         mbox.setText(I18n.getMessage("Unknown System"));
+         mbox.setMessage("The system \""+osname+"\" is not fully supported.\nPlease contact the developers.");
+         mbox.open();
       }
 
+      configFileName = appDir + "/config.ini";
       vdxDir = homeDir;
+
+      final File appDirFile = new File(appDir);
+      if (!appDirFile.isDirectory())
+      {
+         if (!appDirFile.mkdir())
+            throw new RuntimeException("Cannot create application directory: "+appDir);
+      }
 
       try
       {

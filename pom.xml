@@ -1,15 +1,13 @@
-<!-- Freebus FTS POM. -->
-<!-- see http://maven.apache.org/pom.html for documentation about the file format -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.freebus</groupId>
   <artifactId>fts</artifactId>
   <version>0.1-SNAPSHOT</version>
   <name>fts</name>
-  <organisation>
+  <organization>
     <name>The Freebus Project</name>
     <url>http://www.freebus.org</url>
-  </organisation>
+  </organization>
   <developers>
    <developer>
     <id>stefant</id>
@@ -21,18 +19,25 @@
    </developer>
   </developers>
   <scm>
-    <connection>scm:svn:svn+ssh://svn.freebus.org/trunk/software/fts</connection>
-    <developerConnection>scm:svn:svn+ssh://svn.freebus.org/trunk/software/fts</developerConnection>
+    <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</connection>
+    <developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</developerConnection>
   </scm>
   <distributionManagement>
     <repository>
       <uniqueVersion>false</uniqueVersion>
-      <id>ftp-repository</id>
-      <name>Stefan's Private Build Repository</name>
-      <url>ftp:/...</url>
+      <id>stefant-webspace</id>
+      <name>Stefan's Webspace</name>
+      <url>ftp://stefan.members.xpirio.at/htdocs/fts</url>
     </repository>
   </distributionManagement>
   <build>
+    <extensions>
+      <extension>
+        <groupId>org.apache.maven.wagon</groupId>
+        <artifactId>wagon-ftp</artifactId>
+        <version>1.0-alpha-6</version>
+      </extension>
+    </extensions>
     <defaultGoal>package</defaultGoal>
     <plugins>
       <plugin>
@@ -51,10 +56,6 @@
               <addClasspath>false</addClasspath>
               <mainClass>org.freebus.fts.Main</mainClass>
             </manifest>
-            <!--  manifestEntries>
-              <mode>development</mode>
-              <url>${pom.url}</url>
-            </manifestEntries -->
           </archive>
         </configuration>
       </plugin>
@@ -74,7 +75,7 @@
         </configuration>
         <executions>
           <execution>
-            <id>fts-zip</id>
+            <id>make-assembly</id> 
             <phase>package</phase>
             <goals>
               <goal>assembly</goal>
