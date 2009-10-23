@@ -25,18 +25,18 @@ import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.freebus.fts.products.CatalogEntry;
-import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.CatalogGroup;
 import org.freebus.fts.products.Manufacturer;
-import org.freebus.fts.products.ProductDb;
+import org.freebus.fts.products.ProductDbOld;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.utils.I18n;
 
 /**
- * A browser for a {@link ProductDb} products-database.
+ * A browser for a {@link ProductDbOld} products-database.
  */
 public class ProductsTab extends Composite
 {
-   private final ProductDb productDb;
+   private final ProductDbOld productDb;
    private final List lstManufacturers;
    private final Tree treCategories;
    private final Table tblCatalog, tblApplications;
@@ -48,7 +48,7 @@ public class ProductsTab extends Composite
    /**
     * Create a new products-tab.
     */
-   public ProductsTab(Composite parent, ProductDb productDb)
+   public ProductsTab(Composite parent, ProductDbOld productDb)
    {
       super(parent, SWT.FLAT);
       this.productDb = productDb;
@@ -165,7 +165,7 @@ public class ProductsTab extends Composite
    /**
     * Returns a list with the selected categories.
     */
-   public Set<FunctionalEntity> getSelectedCategories()
+   public Set<CatalogGroup> getSelectedCategories()
    {
       final TreeItem[] selTopLevel = treCategories.getSelection();
 
@@ -176,9 +176,9 @@ public class ProductsTab extends Composite
          getChildren(item, sel);
       }
 
-      final Set<FunctionalEntity> result = new HashSet<FunctionalEntity>();
+      final Set<CatalogGroup> result = new HashSet<CatalogGroup>();
       for (int i=sel.size()-1; i>=0; --i)
-         result.add((FunctionalEntity) sel.get(i).getData());
+         result.add((CatalogGroup) sel.get(i).getData());
 
       return result;
    }
@@ -220,9 +220,9 @@ public class ProductsTab extends Composite
    public void updateCategories()
    {
       treCategories.removeAll();
-      final HashMap<FunctionalEntity,TreeItem> treeItems = new HashMap<FunctionalEntity,TreeItem>();
-      final TreeMap<String,FunctionalEntity> catSorted = new TreeMap<String,FunctionalEntity>();
-      FunctionalEntity parentCat, cat;
+      final HashMap<CatalogGroup,TreeItem> treeItems = new HashMap<CatalogGroup,TreeItem>();
+      final TreeMap<String,CatalogGroup> catSorted = new TreeMap<String,CatalogGroup>();
+      CatalogGroup parentCat, cat;
       TreeItem item;
 
       for (final Manufacturer manufacturer: getSelectedManufacturers())
@@ -270,7 +270,7 @@ public class ProductsTab extends Composite
    public void updateCatalog()
    {
       final Set<Manufacturer> manufacturers = getSelectedManufacturers();
-      final Set<FunctionalEntity> cats = getSelectedCategories();
+      final Set<CatalogGroup> cats = getSelectedCategories();
       final TreeMap<String,CatalogEntry> matches = new TreeMap<String,CatalogEntry>();
 
       VirtualDevice virtualDevice;

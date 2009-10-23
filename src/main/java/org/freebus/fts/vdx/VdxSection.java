@@ -1,217 +1,79 @@
 package org.freebus.fts.vdx;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
 import java.util.Vector;
 
-
 /**
- * A section of a .vdx file
+ * A section of a vd_ file.
  */
 public class VdxSection
 {
-   private final String name;
-   private final int id;
-   private final VdxSectionType type;
-   private final Vector<String> fields = new Vector<String>();
-   private final Map<Integer,String[]> elements = new HashMap<Integer,String[]>();
-   private int keyFieldIdx = -1;
-   private int nameFieldIdx = -1;
-
-   /**
-    * Create a new section.
-    */
-   public VdxSection(String name, int id, VdxSectionType type)
-   {
-      this.name = name;
-      this.id = id;
-      this.type = type;
-   }
-
-   /**
-    * @return the name of the section.
-    */
-   public String getName()
-   {
-      return name;
-   }
-
-   /**
-    * @return the type of the section.
-    */
-   public VdxSectionType getType()
-   {
-      return type;
-   }
-
-   /**
-    * @return the id of the section.
-    */
-   public int getId()
-   {
-      return id;
-   }
-
-   /**
-    * @return the names of all fields.
-    */
-   public Vector<String> getFields()
-   {
-      return fields;
-   }
+   private final VdxSectionHeader header;
+   private final Vector<String[]> elemValues = new Vector<String[]>(100);
    
-   /**
-    * Add a field name.
-    */
-   public void addField(String fieldName)
-   {
-      fields.add(fieldName);
-   }
-   
-   /**
-    * Searches the index for the field fieldName.
-    * 
-    * If not found, an exception is thrown if throwIfNotFound is true; -1 is
-    * returned if throwIfNotFound is false.
-    * 
-    * @return the index of the field.
-    */
-   public int getFieldIndex(String fieldName, boolean throwIfNotFound)
-   {
-      for (int i=fields.size()-1; i>=0; --i)
-         if (fields.get(i).equals(fieldName)) return i;
 
-      if (throwIfNotFound)
-         throw new RuntimeException("Section "+name+" contains no field "+fieldName);
-      return -1;
+   /**
+    * Create a new section object.
+    * @param header
+    */
+   VdxSection(VdxSectionHeader header)
+   {
+      this.header = header;
    }
 
    /**
-    * @return the index of the key field.
+    * @return the section header.
     */
-   public int getKeyFieldIdx()
+   public VdxSectionHeader getHeader()
    {
-      return keyFieldIdx;
+      return header;
    }
 
    /**
-    * Set the index of the key field.
+    * @return the number of elements that the section contains.
     */
-   public void setKeyFieldIdx(int keyFieldIdx)
+   public int getNumElements()
    {
-      this.keyFieldIdx = keyFieldIdx;
+      return elemValues.size();
    }
 
    /**
-    * @return the index of the name field.
+    * @return the field's values of the idx-th section element.
     */
-   public int getNameFieldIdx()
+   public String[] getElementValues(int idx)
    {
-      return nameFieldIdx;
+      return elemValues.get(idx);
    }
 
    /**
-    * Set the index of the name field.
+    * Add the fields to the list of section element values.
     */
-   public void setNameFieldIdx(int nameFieldIdx)
+   public void addElementValues(String[] values)
    {
-      this.nameFieldIdx = nameFieldIdx;
+      elemValues.add(values);
    }
 
    /**
-    * @return all id's of the elements that are contained.
+    * Return the fieldIdx-th field of the idx-th section element.
     */
-   public Set<Integer> getElementIds()
+   public String getValue(int idx, int fieldIdx)
    {
-      return elements.keySet();
+      return elemValues.get(idx)[fieldIdx];
    }
 
    /**
-    * @return the element with the given id. Returned is a vector with
-    *         the field's contents.
+    * Return the fieldIdx-th field of the section element with the name fieldName.
     */
-   public String[] getElement(int id)
+   public String getValue(int idx, String fieldName)
    {
-      return elements.get(id);
+      final int fieldIdx = header.getIndexOf(fieldName);
+      return elemValues.get(idx)[fieldIdx];
    }
 
    /**
-    * Get the value of the element id with the given field-name.
-    * @param id is the id of the element
-    * @param name is the name of the requested field
+    * Clear the list of of section element values.
     */
-   public String getValue(int id, String fieldName)
+   public void clear()
    {
-      final String[] elem = elements.get(id);
-      return elem[getFieldIndex(fieldName, true)];
-   }
-
-   /**
-    * Get the integer value of the element id with the given field-name.
-    * If the value is empty, zero is returned.
-    * 
-    * @param id is the id of the element
-    * @param name is the name of the requested field
-    */
-   public int getIntegerValue(int id, String fieldName)
-   {
-      return getIntegerValue(id, getFieldIndex(fieldName, true));
-   }
-
-   /**
-    * Get the integer value of the element id with the given field-index fieldIdx.
-    * If the value is empty, zero is returned.
-    * 
-    * @param id is the id of the element
-    * @param fieldIdx is the index of the requested field
-    */
-   public int getIntegerValue(int id, int fieldIdx)
-   {
-      final String val = elements.get(id)[fieldIdx];
-      if (val.isEmpty()) return 0;
-      return Integer.parseInt(val);
-   }
-
-   /**
-    * Get the double value of the element id with the given field-name.
-    * If the value is empty, zero is returned.
-    * 
-    * @param id is the id of the element
-    * @param name is the name of the requested field
-    */
-   public double getDoubleValue(int id, String fieldName)
-   {
-      return getDoubleValue(id, getFieldIndex(fieldName, true));
-   }
-
-   /**
-    * Get the integer value of the element id with the given field-index fieldIdx.
-    * If the value is empty, zero is returned.
-    * 
-    * @param id is the id of the element
-    * @param fieldIdx is the index of the requested field
-    */
-   public double getDoubleValue(int id, int fieldIdx)
-   {
-      final String val = elements.get(id)[fieldIdx];
-      if (val.isEmpty()) return 0;
-      return Double.parseDouble(val);
-   }
-
-   /**
-    * Test if the section contains an element with the given id.
-    */
-   public boolean hasElement(int id)
-   {
-      return elements.containsKey(id);
-   }
-
-   /**
-    * Add an element to the section.
-    */
-   public void addElement(int id, String[] values)
-   {
-      elements.put(id, values);
+      elemValues.clear();
    }
 }

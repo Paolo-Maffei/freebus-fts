@@ -13,7 +13,7 @@ public class Manufacturer
 
    private final int id;
    private final String name;
-   private final Map<Integer,FunctionalEntity> functionalEntities = new HashMap<Integer,FunctionalEntity>();
+   private final Map<Integer,CatalogGroup> catalogGroups = new HashMap<Integer,CatalogGroup>();
 
    /**
     * Create a manufacturer.
@@ -43,17 +43,17 @@ public class Manufacturer
    /**
     * Add a functional-entity.
     */
-   public void addFunctionalEntity(FunctionalEntity functionalEntity)
+   public void addFunctionalEntity(CatalogGroup catalogGroup)
    {
-      functionalEntities.put(functionalEntity.getId(), functionalEntity);
+      catalogGroups.put(catalogGroup.getId(), catalogGroup);
    }
 
    /**
     * @return the functional-entity with the given id.
     */
-   public FunctionalEntity getFunctionalEntity(int id)
+   public CatalogGroup getFunctionalEntity(int id)
    {
-      return functionalEntities.get(id);
+      return catalogGroups.get(id);
    }
    
    /**
@@ -61,7 +61,7 @@ public class Manufacturer
     */
    public Set<Integer> getFunctionalEntityKeys()
    {
-      return functionalEntities.keySet();
+      return catalogGroups.keySet();
    }
 
    /**

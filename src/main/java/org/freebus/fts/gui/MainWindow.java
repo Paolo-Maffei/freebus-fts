@@ -428,51 +428,20 @@ public final class MainWindow
          cfg.setVdxDir(new File(fileName).getParentFile().getPath());
          cfg.save();
 
-         loader = new VdxLoader();
-
          final CTabItem tabItem = new CTabItem(centerTabFolder, SWT.CLOSE);
          tabItem.setText(I18n.getMessage("Vdx_Browser_Tab"));
-         dlg = new VdxBrowser(centerTabFolder, loader.getSections());
-         loader.setProgress(dlg);
-         loader.setLoadUnusedData(20);
-         tabItem.setControl(dlg);
-         centerTabFolder.setSelection(tabItem);
-
-         new Thread(new Runnable()
+         try
          {
-            public void run()
-            {
-               System.out.println("loading");
-               try
-               {
-                  loader.load(fileName);
-               }
-               catch (Exception e)
-               {
-                  final String msg = e.getMessage();
-                  e.printStackTrace();
-
-                  Display.getDefault().asyncExec(new Runnable()
-                  {
-                     public void run()
-                     {
-                        MessageBox mbox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-                        mbox.setMessage(msg);
-                        mbox.open();
-                     }
-                  });
-                  return;
-               }
-
-               Display.getDefault().asyncExec(new Runnable()
-               {
-                  public void run()
-                  {
-                     dlg.updateContents();
-                  }
-               });
-            }
-         }).start();
+            tabItem.setControl(new VdxBrowser(centerTabFolder, fileName));
+            centerTabFolder.setSelection(tabItem);
+         }
+         catch (IOException e1)
+         {
+            e1.printStackTrace();
+            MessageBox mbox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            mbox.setMessage(e1.getMessage());
+            mbox.open();
+         }
       }
    }
 

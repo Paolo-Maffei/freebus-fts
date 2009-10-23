@@ -7,17 +7,17 @@ public class VirtualDevice
 {
    private final int id;
    private final String name, description;
-   private final FunctionalEntity functionalEntity;
+   private final CatalogGroup catalogGroup;
 
    /**
     * Create a virtual-device object.
     */
-   public VirtualDevice(int id, String name, String description, FunctionalEntity functionalEntity)
+   public VirtualDevice(int id, String name, String description, CatalogGroup catalogGroup)
    {
       this.id = id;
       this.name = name;
       this.description = description;
-      this.functionalEntity = functionalEntity;
+      this.catalogGroup = catalogGroup;
    }
 
    /**
@@ -45,11 +45,11 @@ public class VirtualDevice
    }
 
    /**
-    * @return the functionalEntity
+    * @return the catalogGroup
     */
-   public FunctionalEntity getFunctionalEntity()
+   public CatalogGroup getFunctionalEntity()
    {
-      return functionalEntity;
+      return catalogGroup;
    }
 
    /**

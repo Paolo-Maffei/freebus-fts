@@ -16,26 +16,26 @@ import java.util.Vector;
 
 import org.freebus.fts.Config;
 import org.freebus.fts.products.CatalogEntry;
-import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.CatalogGroup;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Product;
-import org.freebus.fts.products.ProductDb;
+import org.freebus.fts.products.ProductDbOld;
 import org.freebus.fts.products.VirtualDevice;
 
 /**
- * Helper class that loads a .vdx file into a {@link ProductDb}
+ * Helper class that loads a .vdx file into a {@link ProductDbOld}
  * product-database object.
  */
 public class VdxLoader
 {
-   private ProductDb db;
+   private ProductDbOld db;
    private BufferedReader in;
    private String fileName, currentLine, nextLine;
    private String preferedLanguage = "German";
    private int lineNo, languageId, loadUnusedData = 0;
    private VdxSectionType endLoadAfter = VdxSectionType.UNKNOWN;
    private long filePos;
-   private final Map<Integer,VdxSection> sections = new TreeMap<Integer,VdxSection>();
+   private final Map<Integer,OldVdxSection> sections = new TreeMap<Integer,OldVdxSection>();
    private final Map<Integer,Integer> productIdToDb = new HashMap<Integer,Integer>();
    private final Map<Integer,Integer> catalogEntryIdToDb = new HashMap<Integer,Integer>();
    private final Map<Integer,String> symbolNames = new HashMap<Integer,String>();
@@ -44,7 +44,7 @@ public class VdxLoader
    /**
     * Returns the product-database.
     */
-   public ProductDb getProductDb()
+   public ProductDbOld getProductDb()
    {
       return db;
    }
@@ -52,7 +52,7 @@ public class VdxLoader
    /**
     * @return the sections that {@link #load} loaded.
     */
-   public Map<Integer,VdxSection> getSections()
+   public Map<Integer,OldVdxSection> getSections()
    {
       return sections;
    }
@@ -106,7 +106,7 @@ public class VdxLoader
    public void load(String fileName) throws Exception
    {
       this.fileName = fileName;
-      db = new ProductDb();
+      db = new ProductDbOld();
 
       System.out.println("Reading file " + fileName);
 
@@ -146,7 +146,7 @@ public class VdxLoader
          
          for (int i=0; i<1000 && in.ready(); ++i)
          {
-            VdxSection section = readSection();
+            OldVdxSection section = readSection();
             if (section==null) break;
    
             final VdxSectionType type = section.getType();
@@ -270,7 +270,7 @@ public class VdxLoader
     * Read the next section
     * @throws IOException 
     */
-   protected VdxSection readSection() throws IOException
+   protected OldVdxSection readSection() throws IOException
    {
       String line, sectionName;
       final Vector<String> fieldNames = new Vector<String>();
@@ -295,7 +295,7 @@ public class VdxLoader
       }
       else type = VdxSectionType.valueOf(sectionId);
 
-      final VdxSection section = new VdxSection(sectionName, sectionId, type);
+      final OldVdxSection section = new OldVdxSection(sectionName, sectionId, type);
 
       //
       // Read field definitions
@@ -406,7 +406,7 @@ public class VdxLoader
    /**
     * Get the language-id from the ete_language section
     */
-   protected VdxSection selectLanguage(VdxSection section)
+   protected OldVdxSection selectLanguage(OldVdxSection section)
    {
       final Set<Integer> ids = section.getElementIds();
       final Iterator<Integer> it = ids.iterator();
@@ -435,7 +435,7 @@ public class VdxLoader
     * Store the icons and remove the icon data from the section
     * @throws IOException 
     */
-   protected VdxSection processSymbols(VdxSection section) throws IOException
+   protected OldVdxSection processSymbols(OldVdxSection section) throws IOException
    {
       final Set<Integer> ids = section.getElementIds();
       final Iterator<Integer> it = ids.iterator();
@@ -477,7 +477,7 @@ public class VdxLoader
    /**
     * Process the hardware products 
     */
-   protected VdxSection processProducts(VdxSection section)
+   protected OldVdxSection processProducts(OldVdxSection section)
    {
       final Set<Integer> ids = section.getElementIds();
       final Iterator<Integer> it = ids.iterator();
@@ -535,7 +535,7 @@ public class VdxLoader
    /**
     * Process the catalog-entries.
     */
-   protected VdxSection processCatalogEntries(VdxSection section)
+   protected OldVdxSection processCatalogEntries(OldVdxSection section)
    {
       final int catIdIdx = section.getFieldIndex("CATALOG_ENTRY_ID", true);
       final int nameIdx = section.getFieldIndex("ENTRY_NAME", true);
@@ -582,7 +582,7 @@ public class VdxLoader
    /**
     * Process the functional entities.
     */
-   protected VdxSection processFunctionalEntities(VdxSection section)
+   protected OldVdxSection processFunctionalEntities(OldVdxSection section)
    {
       final Set<Integer> ids = section.getElementIds();
       final int entityIdIdx = section.getFieldIndex("FUNCTIONAL_ENTITY_ID", true);
@@ -592,7 +592,7 @@ public class VdxLoader
       final int manufacturerIdx = section.getFieldIndex("MANUFACTURER_ID", true);
       int manufacturerId, lastManufacturerId = -1;
       Manufacturer manufacturer = null;
-      FunctionalEntity parentEnt;
+      CatalogGroup parentEnt;
       String[] values;
       String val, description;
 
@@ -610,7 +610,7 @@ public class VdxLoader
          if (descriptionIdx>=0) description = values[descriptionIdx];
          else description = "";
 
-         FunctionalEntity funcEnt = new FunctionalEntity(Integer.parseInt(values[entityIdIdx]), values[nameIdx], description);
+         CatalogGroup funcEnt = new CatalogGroup(Integer.parseInt(values[entityIdIdx]), values[nameIdx], description);
          manufacturer.addFunctionalEntity(funcEnt);
       }
 
@@ -647,7 +647,7 @@ public class VdxLoader
    /**
     * Process the virtual devices.
     */
-   protected VdxSection processVirtualDevice(VdxSection section)
+   protected OldVdxSection processVirtualDevice(OldVdxSection section)
    {
       final int deviceIdIdx = section.getFieldIndex("VIRTUAL_DEVICE_ID", true);
       final int nameIdx = section.getFieldIndex("VIRTUAL_DEVICE_NAME", true);
@@ -656,7 +656,7 @@ public class VdxLoader
       final int functionalIdx = section.getFieldIndex("FUNCTIONAL_ENTITY_ID", true);
 
       VirtualDevice virtDev;
-      FunctionalEntity funcEnt;
+      CatalogGroup funcEnt;
       CatalogEntry catEnt;
       String[] values;
       int id;

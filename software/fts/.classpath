@@ -6,6 +6,7 @@
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="fts/contrib/rxtx/x86_64-unknown-linux-gnu"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="contrib/swt/swt.jar" sourcepath="contrib/swt/src.zip"/>
 	<classpathentry kind="lib" path="contrib/rxtx/RXTXcomm.jar" sourcepath="/media/extern/Software/Java/rxtx-2.2pre2.zip">
@@ -16,5 +17,6 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="lib" path="/opt/eclipse/plugins/org.eclipse.swt.gtk.linux.x86_64_3.4.1.v3452b.jar"/>
 	<classpathentry kind="lib" path="contrib/derby/derby.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

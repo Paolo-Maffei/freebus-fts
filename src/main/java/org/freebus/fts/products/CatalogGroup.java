@@ -5,11 +5,11 @@ import java.lang.ref.WeakReference;
 /**
  * Functional entities are for grouping of the products.
  */
-public class FunctionalEntity
+public class CatalogGroup
 {
    private final int id;
    private final String name, description;
-   private WeakReference<FunctionalEntity> parent = null;
+   private WeakReference<CatalogGroup> parent = null;
 
    /**
     * Create a new functional entity.
@@ -18,7 +18,7 @@ public class FunctionalEntity
     * @param name is the name of the entity.
     * @param description is the description of the entity.
     */
-   public FunctionalEntity(int id, String name, String description)
+   public CatalogGroup(int id, String name, String description)
    {
       this.id = id;
       this.name = name;
@@ -52,16 +52,16 @@ public class FunctionalEntity
    /**
     * Set the parent. May be null.
     */
-   public void setParent(FunctionalEntity parent)
+   public void setParent(CatalogGroup parent)
    {
       if (parent==null) this.parent = null;
-      else this.parent = new WeakReference<FunctionalEntity>(parent);
+      else this.parent = new WeakReference<CatalogGroup>(parent);
    }
 
    /**
     * @return the parent. May be null.
     */
-   public FunctionalEntity getParent()
+   public CatalogGroup getParent()
    {
       if (parent==null) return null;
       return parent.get();
@@ -83,8 +83,8 @@ public class FunctionalEntity
    public boolean equals(final Object o)
    {
       if (o==this) return true;
-      if (!(o instanceof FunctionalEntity)) return false;
-      final FunctionalEntity oo = (FunctionalEntity)o;
+      if (!(o instanceof CatalogGroup)) return false;
+      final CatalogGroup oo = (CatalogGroup)o;
       return id==oo.id;
    }
 
