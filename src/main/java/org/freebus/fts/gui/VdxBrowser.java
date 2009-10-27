@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Set;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
 import org.eclipse.swt.layout.FormLayout;
@@ -30,7 +31,7 @@ import org.freebus.fts.vdx.VdxSection;
  */
 public class VdxBrowser extends Composite
 {
-   private final VdxFileReader reader;
+   private VdxFileReader reader = null;
    private final Combo cboSection;
    private final Table tblElems, tblValues;
    private final Button cbxSort;
@@ -38,19 +39,35 @@ public class VdxBrowser extends Composite
    private long progressTotal, progressCurrent;
    private boolean progressUpdating = false;
    private String[] sectionNames = null;
-   private VdxSection section = null;
+   private VdxSection findSection, section = null;
 
    /**
     * Create a new vdx browser.
     * 
     * @throws IOException
     */
-   public VdxBrowser(Composite parent, String fileName) throws IOException
+   public VdxBrowser(Composite parent, final String fileName) throws IOException
    {
       super(parent, SWT.FLAT);
 
-      reader = new VdxFileReader(fileName);
-      setLayout(new FormLayout());
+      Runnable run = new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            try
+            {
+               reader = new VdxFileReader(fileName);
+               setLayout(new FormLayout());
+            }
+            catch (IOException e)
+            {
+               e.printStackTrace();
+            }               
+         }
+      };
+      BusyIndicator.showWhile(getDisplay(), run);
+      getDisplay().syncExec(run);
 
       TableColumn tabColumn;
       FormData formData;
@@ -276,7 +293,6 @@ public class VdxBrowser extends Composite
       final String fieldName = tblValues.getItem(idx).getText(0);
       final String fieldValue = tblValues.getItem(idx).getText(1);
       final String curSectionName = section.getHeader().name;
-      VdxSection section;
       int fieldIdx;
 
       grpOthers.setText(I18n.getMessage("VdxBrowser.Others_Caption").replace("%1", fieldName));
@@ -295,34 +311,52 @@ public class VdxBrowser extends Composite
             public void handleEvent(Event e)
             {
                final String sectionName = (String) e.widget.getData();
+               if (sectionName == null) return;
+
+               final int selIdx = ((Combo) e.widget).getSelectionIndex();
+               if (selIdx <= 0) return;
+               final int idx = (Integer) ((Combo) e.widget).getData(Integer.toString(selIdx));
+
                int i;
                for (i = sectionNames.length-1; i >= 0; --i)
                   if (sectionNames[i].equals(sectionName)) break;
+               if (i < 0) return;
 
-               if (i >= 0)
-               {
-                  cboSection.select(i);
-                  onSectionSelected();
-               }
+
+               cboSection.select(i);
+               onSectionSelected();
+               getDisplay().readAndDispatch();
+
+               
             }
          });
 
-         try
+         findSection = null;
+         Runnable run = new Runnable()
          {
-            section = reader.getSection(sectionName);
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-            continue;
-         }
+            @Override
+            public void run()
+            {
+               try
+               {
+                  findSection = reader.getSection(sectionName);
+               }
+               catch (IOException e)
+               {
+                  e.printStackTrace();
+               }               
+            }
+         };
+         BusyIndicator.showWhile(getDisplay(), run);
+         getDisplay().syncExec(run);
 
-         final int numElems = section.getNumElements();
+         final int numElems = findSection.getNumElements();
          int matches = 0;
          for (int i = 0; i < numElems; ++i)
          {
-            if (!fieldValue.equals(section.getValue(i, fieldIdx))) continue;
+            if (!fieldValue.equals(findSection.getValue(i, fieldIdx))) continue;
             cbo.add("#" + Integer.toString(i));
+            cbo.setData(Integer.toString(cbo.getItemCount()), i);
             ++matches;
          }
 

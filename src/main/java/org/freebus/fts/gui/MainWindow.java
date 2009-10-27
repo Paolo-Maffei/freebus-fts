@@ -25,10 +25,12 @@ import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.freebus.fts.Config;
-import org.freebus.fts.comm.BusConnectException;
 import org.freebus.fts.comm.BusInterface;
-import org.freebus.fts.eib.MessageCode;
-import org.freebus.fts.eib.Telegram;
+import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.emi.EmiMessage;
+import org.freebus.fts.emi.L_Poll_Data;
+import org.freebus.fts.emi.PEI_Identify;
+import org.freebus.fts.emi.T_Connect;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.settings.Settings;
 import org.freebus.fts.utils.I18n;
@@ -365,7 +367,7 @@ public final class MainWindow
    }
 
    /**
-    * Event Callback: Products Browser
+    * Event callback: Products Browser
     */
    private class OnProductsBrowser extends SimpleSelectionListener
    {
@@ -405,13 +407,10 @@ public final class MainWindow
    }
 
    /**
-    * Event Callback: VDX Browser
+    * Event callback: VDX Browser
     */
    private class OnVdxBrowser extends SimpleSelectionListener
    {
-      VdxLoader loader;
-      VdxBrowser dlg;
-
       public void widgetSelected(SelectionEvent event)
       {
          final FileDialog fileDialog = new FileDialog(shell, SWT.SINGLE);
@@ -446,7 +445,7 @@ public final class MainWindow
    }
 
    /**
-    * Event Callback: Send a test message to the EIB bus.
+    * Event callback: Send a test message to the EIB bus.
     */
    private class OnSendBusMessage extends SimpleSelectionListener
    {
@@ -455,25 +454,26 @@ public final class MainWindow
          BusInterface bus;
          try
          {
-            bus = BusInterface.getInstance();
+            bus = BusInterfaceFactory.getDefaultInstance();
+            if (!bus.isOpen()) bus.open();
          }
-         catch (BusConnectException e)
+         catch (IOException e)
          {
             e.printStackTrace();
             return;
          }
 
-         Telegram telegram = new Telegram();
+         EmiMessage msg = null;
          if (event.widget==toolItemTestMessage1)
          {
-            telegram.setMessageCode(MessageCode.L_DATA_REQ);
-            telegram.setFrom(1, 1, 254);
-            telegram.setBroadcastDest();
+//            msg = new L_Poll_Data.req(0x0000, 15);
+//            msg = new T_Connect.req(0x1106);
+            msg = new PEI_Identify.req();
          }
 
-         if (telegram.getMessageCode() != MessageCode.UNKNOWN) try
+         if (msg != null) try
          {
-            bus.sendData(telegram.toRawData());
+            bus.write(msg);
          }
          catch (IOException e)
          {

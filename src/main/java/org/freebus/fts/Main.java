@@ -6,7 +6,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.freebus.fts.comm.BusInterface;
+import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.db.Database;
 import org.freebus.fts.db.SchemaConfig;
 import org.freebus.fts.gui.MainWindow;
@@ -59,7 +59,7 @@ public final class Main
             mainWin.run();
 
             mainWin.dispose();
-            BusInterface.disposeInstance();
+            BusInterfaceFactory.disposeDefaultInstance();
          }
          catch (Exception e)
          {

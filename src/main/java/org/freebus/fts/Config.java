@@ -14,7 +14,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.freebus.fts.comm.ConnectType;
+import org.freebus.fts.comm.ConnectTypeOld;
 import org.freebus.fts.utils.I18n;
 import org.xml.sax.SAXException;
 
@@ -26,7 +26,7 @@ public final class Config
 {
    static private Config instance = null;
    private String commPort = null;
-   private ConnectType commType = ConnectType.SERIAL;
+   private ConnectTypeOld commType = ConnectTypeOld.SERIAL;
    private String tempDir = null;
    private String vdxDir = null;
 
@@ -53,7 +53,7 @@ public final class Config
    /**
     * Set the communication port type.
     */
-   public void setCommType(ConnectType commType)
+   public void setCommType(ConnectTypeOld commType)
    {
       this.commType = commType;
    }
@@ -61,7 +61,7 @@ public final class Config
    /**
     * @return the communication port type.
     */
-   public ConnectType getCommType()
+   public ConnectTypeOld getCommType()
    {
       return commType;
    }
@@ -199,7 +199,7 @@ public final class Config
             try
             {
                if (key.equals("comm_port")) setCommPort(val);
-               else if (key.equals("comm_type")) setCommType(ConnectType.valueOf(val));
+               else if (key.equals("comm_type")) setCommType(ConnectTypeOld.valueOf(val));
                else if (key.equals("vdx_dir")) vdxDir = val;
             }
             catch (Exception e)

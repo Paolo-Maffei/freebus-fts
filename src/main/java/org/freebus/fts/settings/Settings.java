@@ -2,10 +2,19 @@ package org.freebus.fts.settings;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.layout.*;
-import org.eclipse.swt.widgets.*;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.FormAttachment;
+import org.eclipse.swt.layout.FormData;
+import org.eclipse.swt.layout.FormLayout;
+import org.eclipse.swt.layout.RowData;
+import org.eclipse.swt.layout.RowLayout;
+import org.eclipse.swt.widgets.Button;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.Shell;
 import org.freebus.fts.Config;
-import org.freebus.fts.comm.BusInterface;
+import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.SimpleSelectionListener;
 
@@ -99,7 +108,7 @@ public class Settings
       {
          portSelector.apply();
          Config.getInstance().save();
-         BusInterface.disposeInstance();
+         BusInterfaceFactory.disposeDefaultInstance();
 
          instance = null;
          shell.close();

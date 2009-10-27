@@ -1,14 +1,17 @@
 package org.freebus.fts.gui;
 
+import java.io.IOException;
+
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.List;
-import org.freebus.fts.comm.BusConnectException;
+import org.eclipse.swt.widgets.MessageBox;
 import org.freebus.fts.comm.BusInterface;
+import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.comm.BusListener;
-import org.freebus.fts.eib.Telegram;
+import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.utils.I18n;
 
 /**
@@ -41,11 +44,16 @@ public class BusMonitor extends Composite implements BusListener
 
       try
       {
-         BusInterface.getInstance().addListener(this);
+         final BusInterface bus = BusInterfaceFactory.getDefaultInstance();
+         if (!bus.isOpen()) bus.open();
+         bus.addListener(this);
       }
-      catch (BusConnectException e)
+      catch (IOException e)
       {
-         throw new RuntimeException(e);
+         e.printStackTrace();
+         MessageBox mbox = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+         mbox.setMessage(e.getMessage());
+         mbox.open();
       }
    }
 
@@ -55,25 +63,25 @@ public class BusMonitor extends Composite implements BusListener
    @Override
    public void dispose()
    {
-      try
-      {
-         BusInterface.getInstance().removeListener(this);
-      }
-      catch (BusConnectException e)
-      {
-         e.printStackTrace();
-      }
+      final BusInterface bus = BusInterfaceFactory.getDefaultInstance();
+      bus.removeListener(this);
+
       super.dispose();
    }
    
    /**
-    * An EIB bus telegram was received.
+    * An EMI message was received.
     */
    @Override
-   public void telegramReceived(Telegram telegram)
+   public void messageReceived(final EmiMessage message)
    {
-//      String msg = telegram.getFromStr()+" to "+telegram.getRecvStr();
-      list.add(telegram.toString());
+      getDisplay().syncExec(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            list.add(message.toString());            
+         }
+      });
    }
-
 }

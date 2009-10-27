@@ -1,10 +1,12 @@
 package org.freebus.fts.comm;
 
+import java.io.IOException;
+
 /**
  * The exception indicates that the connection to the EIB bus interface
  * failed for some reason.
  */
-public final class BusConnectException extends Exception
+public final class BusConnectException extends IOException
 {
    private static final long serialVersionUID = -427540522334652158L;
 

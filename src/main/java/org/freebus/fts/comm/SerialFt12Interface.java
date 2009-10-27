@@ -1,36 +1,39 @@
 package org.freebus.fts.comm;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
-import gnu.io.SerialPort;
-import gnu.io.SerialPortEvent;
-import gnu.io.SerialPortEventListener;
-import gnu.io.UnsupportedCommOperationException;
+import gnu.io.*;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
-import org.freebus.fts.Config;
-
 /**
- * Interface for accessing the EIB bus via a serial port interface, using
- * the FT1.2 protocol. 
+ * A FT1.2 speaking {@link BusInterface} using the local serial port.
  */
-class SerialBusInterface extends BusInterface implements SerialPortEventListener
+public final class SerialFt12Interface extends Ft12Interface implements SerialPortEventListener
 {
-   static CommPortIdentifier portIdent;
-   protected SerialPort serialPort;
+   protected final String portName;
+   protected CommPortIdentifier portIdent;
+   protected SerialPort serialPort = null;
+   protected InputStream inputStream = null;
+   protected OutputStream outputStream = null;
 
    /**
-    * Create a new serial-port bus-interface.
-    * 
-    * @throws PortInUseException
-    * @throws BusConnectException
+    * Create a connection for the serial port portName.
     */
-   public SerialBusInterface() throws BusConnectException
+   public SerialFt12Interface(String portName)
    {
-      final String portName = Config.getInstance().getCommPort();
+      this.portName = portName;
+   }
+
+   /**
+    * Connect to the serial port.
+    * @throws IOException
+    */
+   @Override
+   public void open() throws IOException
+   {
+      System.out.println("Opening serial port " + portName);
       try
       {
          portIdent = CommPortIdentifier.getPortIdentifier(portName);
@@ -70,44 +73,77 @@ class SerialBusInterface extends BusInterface implements SerialPortEventListener
          throw new BusConnectException("Failed to initialize internal listener", e);
       }
 
-      try
-      {
-         sendReset();
-         sendData(new int[]{ 0x81, 0x03, 0x01, 0x03, 0x01, 0x10 });
-      }
-      catch (IOException e)
-      {
-         throw new BusConnectException("Failed to send reset for serial port " + portName, e);
-      }
+      super.open();
    }
 
    /**
-    * Close all connections of the interface.
+    * Disconnect from the serial port.
     */
    @Override
-   protected void close()
+   public void close()
    {
-      try
+      System.out.println("Closing serial port " + portName);
+      inputStream = null;
+      outputStream = null;
+
+      if (serialPort != null)
       {
-         if (inputStream!=null) inputStream.close();
-         if (outputStream!=null) outputStream.close();
-         if (serialPort!=null) serialPort.close();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
+         serialPort.removeEventListener();
+         serialPort = null;
       }
    }
 
    /**
-    * A serial port event occured.
+    * @return true if the connection to the serial port is opened.
+    */
+   @Override
+   public boolean isOpen()
+   {
+      return inputStream != null && outputStream != null;
+   }
+
+   /**
+    * Receive one byte from the serial port.
+    * @throws IOException 
+    */
+   @Override
+   protected int read() throws IOException
+   {
+      return inputStream.read();
+   }
+
+   /**
+    * @return true if at least one byte can be read.
+    * @throws IOException 
+    */
+   @Override
+   protected boolean isDataAvailable() throws IOException
+   {
+      if (inputStream == null) return false;
+      return inputStream.available() > 0;
+   }
+
+   /**
+    * Send length bytes of data to the serial port.
+    * @throws IOException 
+    */
+   @Override
+   protected void write(int[] data, int length) throws IOException
+   {
+      for (int i = 0; i < length; ++i)
+         outputStream.write(data[i]);
+
+      outputStream.flush();
+   }
+
+   /**
+    * An event on the serial port occurred.
     */
    @Override
    public void serialEvent(SerialPortEvent event)
    {
       switch (event.getEventType())
       {
-
          case SerialPortEvent.BI:
          case SerialPortEvent.OE:
          case SerialPortEvent.FE:
@@ -123,7 +159,7 @@ class SerialBusInterface extends BusInterface implements SerialPortEventListener
             try
             {
                while (inputStream.available() > 0)
-                  readData();
+                  dataAvailable();
             }
             catch (IOException e)
             {

@@ -2,7 +2,7 @@ package org.freebus.fts.comm;
 
 import java.util.EventListener;
 
-import org.freebus.fts.eib.Telegram;
+import org.freebus.fts.emi.EmiMessage;
 
 /**
  * Interface for classes that want to be notified when the bus receives
@@ -11,8 +11,8 @@ import org.freebus.fts.eib.Telegram;
 public interface BusListener extends EventListener
 {
    /**
-    * A telegram was received.
-    * The called object must not change the telegram.
+    * A message was received.
+    * The called object must not change the message.
     */
-   public void telegramReceived(Telegram telegram);
+   public void messageReceived(EmiMessage message);
 }
