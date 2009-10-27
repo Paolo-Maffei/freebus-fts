@@ -1,7 +1,9 @@
 package org.freebus.fts.eib;
 
 /**
- * Application types. The A_ from the application types is omitted
+ * Types of application messages.
+ * 
+ * The "A_" from the application type names is omitted
  * (A_GroupValue_Read is {@link Application#GroupValue_Read} here).
  * See KNX Documentation 3/3/7 Application Layer.
  */
@@ -59,8 +61,17 @@ public enum Application
     */
    public final int mask;
 
-   public final int min, max;
+   /**
+    * Minimum length for data in the telegram. -1 if unspecified.
+    */
+   public final int min;
    
+   /**
+    * Maximum length for data in the telegram. -1 if unspecified.
+    */
+   public final int max;
+
+
    /*
     * Internal constructor.
     */

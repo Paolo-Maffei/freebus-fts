@@ -1,8 +1,5 @@
 package org.freebus.fts.eib;
 
-import org.freebus.fts.eib.Address;
-import org.freebus.fts.eib.PhysicalAddress;
-import org.freebus.fts.eib.Priority;
 
 /**
  * A communication data packet as it is used on the EIB bus.
@@ -11,6 +8,7 @@ public class Telegram
 {
    private PhysicalAddress from = null;
    private Address dest = null;
+   private Type type = Type.Multicast;
    private Priority priority = Priority.NORMAL;
    private boolean repeated = false;
    private int[] data = null;
@@ -57,6 +55,22 @@ public class Telegram
    public void setDest(Address dest)
    {
       this.dest = dest;
+   }
+
+   /**
+    * Set the telegram type.
+    */
+   public void setType(Type type)
+   {
+      this.type = type;
+   }
+
+   /**
+    * @return the telegram type.
+    */
+   public Type getType()
+   {
+      return type;
    }
 
    /**

@@ -2,21 +2,16 @@ package org.freebus.fts;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.xml.parsers.ParserConfigurationException;
-
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.freebus.fts.comm.ConnectTypeOld;
 import org.freebus.fts.utils.I18n;
-import org.xml.sax.SAXException;
 
 /**
  * Configuration settings. The configuration is a global singleton object that
@@ -26,7 +21,6 @@ public final class Config
 {
    static private Config instance = null;
    private String commPort = null;
-   private ConnectTypeOld commType = ConnectTypeOld.SERIAL;
    private String tempDir = null;
    private String vdxDir = null;
 
@@ -48,22 +42,6 @@ public final class Config
    {
       if (instance == null) instance = new Config();
       return instance;
-   }
-
-   /**
-    * Set the communication port type.
-    */
-   public void setCommType(ConnectTypeOld commType)
-   {
-      this.commType = commType;
-   }
-
-   /**
-    * @return the communication port type.
-    */
-   public ConnectTypeOld getCommType()
-   {
-      return commType;
    }
 
    /**
@@ -199,7 +177,6 @@ public final class Config
             try
             {
                if (key.equals("comm_port")) setCommPort(val);
-               else if (key.equals("comm_type")) setCommType(ConnectTypeOld.valueOf(val));
                else if (key.equals("vdx_dir")) vdxDir = val;
             }
             catch (Exception e)
@@ -247,7 +224,6 @@ public final class Config
 
          out.println("; FTS Configuration");
          out.println("comm_port=" + commPort);
-         out.println("comm_type=" + commType.toString());
          out.println("vdx_dir=" + vdxDir);
 
          out.flush();
