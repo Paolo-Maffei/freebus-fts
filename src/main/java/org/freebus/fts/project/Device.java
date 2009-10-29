@@ -2,6 +2,8 @@ package org.freebus.fts.project;
 
 import java.util.Vector;
 
+import org.freebus.fts.eib.GroupAddress;
+import org.freebus.fts.eib.PhysicalAddress;
 import org.freebus.fts.products.Product;
 
 /**

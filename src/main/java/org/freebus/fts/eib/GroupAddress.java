@@ -8,6 +8,11 @@ public final class GroupAddress implements Address
    private final int addr;
 
    /**
+    * A null group address (0.0.0)
+    */
+   public static final GroupAddress NULL = new GroupAddress();
+
+   /**
     * Create an empty address object.
     */
    public GroupAddress()

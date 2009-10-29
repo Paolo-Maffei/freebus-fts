@@ -8,6 +8,11 @@ public final class PhysicalAddress implements Address
    private final int addr;
 
    /**
+    * A null address (0.0.0)
+    */
+   public static final PhysicalAddress NULL = new PhysicalAddress();
+
+   /**
     * Create an empty address object.
     */
    public PhysicalAddress()

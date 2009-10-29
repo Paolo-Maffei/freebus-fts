@@ -1,5 +1,7 @@
 package org.freebus.fts.emi;
 
+import org.freebus.fts.eib.InvalidDataException;
+
 
 /**
  * Base class for "External Message Interface" (EMI) messages.
@@ -48,7 +50,7 @@ public abstract class EmiMessageBase implements EmiMessage
    /* (non-Javadoc)
     * @see org.freebus.fts.eib.EmiMessageInterface#fromRawData(int[], int)
     */
-   public abstract void fromRawData(int[] rawData, int start);
+   public abstract void fromRawData(int[] rawData, int start) throws InvalidDataException;
 
    /* (non-Javadoc)
     * @see org.freebus.fts.eib.EmiMessageInterface#toRawData(int[], int)

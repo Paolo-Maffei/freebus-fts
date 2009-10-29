@@ -2,48 +2,43 @@ package org.freebus.fts.gui;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MainGroups;
 import org.freebus.fts.project.MiddleGroup;
 import org.freebus.fts.project.Project;
+import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ImageCache;
 
-public class LogicalTab extends Composite
+public class LogicalTab extends TreeTabPage
 {
-   private final Tree tree;
    private Project project = null;
 
-   public LogicalTab(Composite parent, Project project)
+   public LogicalTab(Composite parent)
    {
-      super(parent, SWT.NONE);
-
-      FillLayout layout = new FillLayout();
-      layout.type = SWT.VERTICAL;
-      setLayout(layout);
-
-      tree = new Tree(this, SWT.BORDER | SWT.SINGLE);
-      
-      setProject(project);
+      super(parent);
+      setTitle(I18n.getMessage("Logical_Tab"));
+      setPlace(SWT.LEFT);
+      getToolBar().pack();
    }
 
    /**
     * Set the project that is displayed.
     * Calls {@link #updateContents}.
     */
-   public void setProject(Project project)
+   @Override
+   public void setObject(Object o)
    {
-      this.project = project;
+      this.project = (Project) o;
       updateContents();
    }
    
    /**
     * Call to update the widget's contents.
     */
+   @Override
    public void updateContents()
    {
       tree.removeAll();
@@ -80,7 +75,7 @@ public class LogicalTab extends Composite
             {
                final Device device = midGroup.get(deviceIdx);
                deviceItem = new TreeItem(midGroupItem, SWT.DEFAULT);
-               deviceIdStr = midGroupIdStr+"/"+device.getPhysicalAddr().getDeviceId();
+               deviceIdStr = midGroupIdStr+"/"+device.getPhysicalAddr().getNode();
                deviceItem.setText(device.getName()+" ("+deviceIdStr+")");
                deviceItem.setImage(deviceIcon);
                deviceItem.setExpanded(true);

@@ -198,7 +198,7 @@ public final class VdxFileReader
       char lineType;
 
       format = null;
-      version = null;
+      setVersion(null);
 
       in.seek(0);
 
@@ -215,7 +215,7 @@ public final class VdxFileReader
          {
             if (format == null || format.isEmpty()) format = line.substring(2).trim();
          }
-         else if (lineType == 'V') version = line.substring(2).trim();
+         else if (lineType == 'V') setVersion(line.substring(2).trim());
       }
    }
 
@@ -283,5 +283,21 @@ public final class VdxFileReader
             if (line==null || line.startsWith(sectionSeparator)) break;
          }
       }
+   }
+
+   /**
+    * @param version the version to set
+    */
+   public void setVersion(String version)
+   {
+      this.version = version;
+   }
+
+   /**
+    * @return the version
+    */
+   public String getVersion()
+   {
+      return version;
    }
 }

@@ -2,7 +2,6 @@ package test;
 
 import junit.framework.TestCase;
 
-import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
 
 public class TestPhysicalAddress extends TestCase

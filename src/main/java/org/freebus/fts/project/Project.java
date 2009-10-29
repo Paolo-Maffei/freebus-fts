@@ -1,7 +1,12 @@
 
 package org.freebus.fts.project;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.swt.graphics.Image;
 import org.freebus.fts.utils.I18n;
+import org.freebus.fts.utils.ImageCache;
 
 /**
  * Main class for a Freebus/ETS project
@@ -11,7 +16,8 @@ public class Project
    private String name;
    private final Buildings buildings = new Buildings(); 
    private final Areas areas = new Areas(); 
-   private final MainGroups mainGroups = new MainGroups(); 
+   private final MainGroups mainGroups = new MainGroups();
+   private final Map<String,Image> images = new HashMap<String,Image>();
 
    /**
     * Create a new project.
@@ -66,6 +72,25 @@ public class Project
    }
 
    /**
+    * @return a floor plan image for the given floor, or null if the floor has
+    * no plan-image file-name set.
+    */
+   public Image getImageFor(Floor floor)
+   {
+      final String name = floor.getPlanFileName();
+      if (name == null || name.isEmpty()) return null;
+
+      Image img = images.get(name);
+      if (img == null)
+      {
+         img = ImageCache.getImage(name);
+         if (img != null) images.put(name, img);
+      }
+
+      return img;
+   }
+
+   /**
     * Create a new sample project.
     * 
     * @return the created project.
@@ -76,6 +101,7 @@ public class Project
       final Building building = project.buildings.createBuilding(I18n.getMessage("proj_sample_house"));
 
       final Floor floor1 = building.createFloor(I18n.getMessage("proj_sample_floor1"));
+      floor1.setPlanFileName("images/sample-floor-plan");
       floor1.createRoom(I18n.getMessage("proj_sample_room1_1"));
       floor1.createRoom(I18n.getMessage("proj_sample_room1_2"));
       floor1.createRoom(I18n.getMessage("proj_sample_room1_3"));

@@ -11,13 +11,14 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.comm.BusListener;
+import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.utils.I18n;
 
 /**
  * A widget that outputs the telegrams on the EIB bus.
  */
-public class BusMonitor extends Composite implements BusListener
+public class BusMonitor extends TabPage implements BusListener
 {
    private final List list;
 
@@ -27,9 +28,11 @@ public class BusMonitor extends Composite implements BusListener
     * @param parent is the parent widget. 
     * @param style is the SWT gui style.
     */
-   public BusMonitor(Composite parent, int style)
+   public BusMonitor(Composite parent)
    {
-      super(parent, style);
+      super(parent);
+      setTitle(I18n.getMessage("Bus_Monitor_Tab"));
+      setPlace(SWT.CENTER);
 
       final FillLayout fillLayout = new FillLayout();
       fillLayout.marginWidth = 4;
@@ -68,7 +71,12 @@ public class BusMonitor extends Composite implements BusListener
 
       super.dispose();
    }
-   
+
+   @Override
+   public void setObject(Object o)
+   {
+   }
+
    /**
     * An EMI message was received.
     */
@@ -81,6 +89,19 @@ public class BusMonitor extends Composite implements BusListener
          public void run()
          {
             list.add(message.toString());            
+         }
+      });
+   }
+
+   @Override
+   public void telegramReceived(final Telegram telegram)
+   {
+      getDisplay().syncExec(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            list.add(telegram.toString());            
          }
       });
    }

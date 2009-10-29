@@ -12,7 +12,6 @@ import org.eclipse.swt.graphics.FontData;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Event;
@@ -34,9 +33,9 @@ import org.freebus.fts.utils.I18n;
 /**
  * A browser for a {@link ProductDbOld} products-database.
  */
-public class ProductsTab extends Composite
+public class ProductsTab extends TabPage
 {
-   private final ProductDbOld productDb;
+   private ProductDbOld productDb = null;
    private final List lstManufacturers;
    private final Tree treCategories;
    private final Table tblCatalog, tblApplications;
@@ -48,12 +47,11 @@ public class ProductsTab extends Composite
    /**
     * Create a new products-tab.
     */
-   public ProductsTab(Composite parent, ProductDbOld productDb)
+   public ProductsTab(Composite parent)
    {
-      super(parent, SWT.FLAT);
-      this.productDb = productDb;
-
-      setLayout(new FormLayout());
+      super(parent);
+      setTitle(I18n.getMessage("Products_Tab"));
+      setPlace(SWT.CENTER);
 
       FormData formData;
       FillLayout fillLayout;
@@ -142,8 +140,28 @@ public class ProductsTab extends Composite
       grpDetails.setLayoutData(formData);
       grpDetails.setVisible(false);
       cewDetails = new CatalogEntryWidget(grpDetails, SWT.BORDER, false);
+   }
 
-      updateManufacturers();
+   /**
+    * Set the object that the tab-page shows.
+    */
+   @Override
+   public void setObject(Object o)
+   {
+      productDb = (ProductDbOld) o;
+      setTitle(productDb.getCreationDate());
+      updateContents();
+   }
+   
+   /**
+    * Update the widget's contents. Called when the displayed
+    * object is changed. The default implementation is empty.
+    */
+   @Override
+   public void updateContents()
+   {
+      if (productDb != null)
+         updateManufacturers();
    }
 
    /**

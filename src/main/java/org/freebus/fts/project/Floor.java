@@ -8,7 +8,8 @@ import java.util.Vector;
 public class Floor
 {
    private String name;
-   private final Vector<Room> rooms = new Vector<Room>(); 
+   private final Vector<Room> rooms = new Vector<Room>();
+   private String planFileName = null;
 
    /**
     * Create a new floor with the given name.
@@ -34,6 +35,24 @@ public class Floor
       return name;
    }
    
+   /**
+    * Set the file name of the floor's background image.
+    */
+   public void setPlanFileName(String planFileName)
+   {
+      this.planFileName = planFileName;
+   }
+
+   /**
+    * @return the file name of the floor's background image.
+    *
+    * @see {@link Project#getImageFor}
+    */
+   public String getPlanFileName()
+   {
+      return planFileName;
+   }
+
    /**
     * @return the number of rooms on the floor.
     */

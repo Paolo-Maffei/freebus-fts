@@ -7,24 +7,24 @@ package org.freebus.fts.eib;
 public enum Priority
 {
    /**
-    * System-priority. This is the highest priority level.
+    * System priority. This is the highest priority level.
     */
    SYSTEM(0),
 
    /**
-    * High-priority.
+    * Urgent priority.
     */
-   HIGH(1),
+   URGENT(1),
 
    /**
-    * Alarm-priority.
+    * Normal priority.
     */
-   ALARM(2),
+   NORMAL(2),
 
    /**
-    * Normal priority. This is the lowest priority level.
+    * Low priority. This is the lowest priority level.
     */
-   NORMAL(3);
+   LOW(3);
 
    /**
     * The numerical id of the priority.
@@ -33,13 +33,14 @@ public enum Priority
 
    /**
     * @return the priority with the given id.
+    * @throws InvalidDataException 
     */
-   static public Priority valueOf(int id)
+   static public Priority valueOf(int id) throws InvalidDataException
    {
       for (Priority e: values())
          if (e.id==id) return e;
 
-      throw new IllegalArgumentException("Invalid telegram-priority #" + Integer.toString(id));
+      throw new InvalidDataException("Invalid telegram-priority", id);
    }
 
    // Internal constructor

@@ -1,8 +1,10 @@
 package org.freebus.fts.gui;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.MouseEvent;
+import org.eclipse.swt.events.MouseListener;
 import org.eclipse.swt.graphics.Image;
-import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
@@ -11,37 +13,36 @@ import org.freebus.fts.project.Buildings;
 import org.freebus.fts.project.Floor;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ImageCache;
 
 /**
  * Tab that shows the physical components of the project
  * (buildings, floors, rooms)
  */
-public class PhysicalTab extends Composite
+public class PhysicalTab extends TreeTabPage implements MouseListener
 {
-   private final Tree tree;
    private Project project = null;
+   
 
-   public PhysicalTab(Composite parent, Project project)
+   public PhysicalTab(Composite parent)
    {
-      super(parent, SWT.FLAT);
-
-      FillLayout layout = new FillLayout();
-      layout.type = SWT.VERTICAL;
-      setLayout(layout);
-
-      tree = new Tree(this, SWT.BORDER | SWT.SINGLE);
-
-      setProject(project);
+      super(parent);
+      setTitle(I18n.getMessage("Physical_Tab"));
+      setPlace(SWT.LEFT);
+      getToolBar().pack();
+      
+      tree.addMouseListener(this);
    }
 
    /**
     * Set the project that is displayed.
     * Calls {@link #updateContents}.
     */
-   public void setProject(Project project)
+   @Override
+   public void setObject(Object o)
    {
-      this.project = project;
+      this.project = (Project) o;
       updateContents();
    }
    
@@ -74,6 +75,7 @@ public class PhysicalTab extends Composite
             floorItem = new TreeItem(buildingItem, SWT.DEFAULT);
             floorItem.setText(floor.getName());
             floorItem.setImage(floorIcon);
+            floorItem.setData(floor);
       
             final int numRooms = floor.size();
             for (int roomIdx=0; roomIdx<numRooms; ++roomIdx)
@@ -88,5 +90,29 @@ public class PhysicalTab extends Composite
             floorItem.setExpanded(true);
          }
       }
+   }
+
+   @Override
+   public void mouseDoubleClick(MouseEvent e)
+   {
+   }
+
+   @Override
+   public void mouseDown(MouseEvent e)
+   {
+      if (e.widget != null && e.widget instanceof Tree)
+      {
+         final TreeItem treeItem = tree.getItem(new Point(e.x, e.y));
+         final Object data = treeItem.getData();
+         if (data instanceof Floor)
+         {
+            MainWindow.getInstance().showTabPage(FloorPlanTab.class, (Floor) data);
+         }
+      }
+   }
+
+   @Override
+   public void mouseUp(MouseEvent e)
+   {
    }
 }

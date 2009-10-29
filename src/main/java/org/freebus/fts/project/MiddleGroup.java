@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import org.freebus.fts.eib.PhysicalAddress;
 import org.freebus.fts.project.generic.Node;
 
 /**

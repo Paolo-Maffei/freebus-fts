@@ -34,12 +34,12 @@ public interface BusInterface
    public void write(EmiMessage message) throws IOException;
 
    /**
-    * Add a listener. Listeners get called when a message arrives.
+    * Add a bus listener. Listeners get called when messages arrive.
     */
    public void addListener(BusListener listener);
 
    /**
-    * Remove a listener.
+    * Remove a bus listener.
     */
    public void removeListener(BusListener listener);
 }

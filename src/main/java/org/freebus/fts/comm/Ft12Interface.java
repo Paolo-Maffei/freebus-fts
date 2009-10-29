@@ -3,8 +3,10 @@ package org.freebus.fts.comm;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.EmiMessageType;
+import org.freebus.fts.emi.L_Data;
 import org.freebus.fts.emi.PEI_Switch;
 
 /**
@@ -27,7 +29,7 @@ public abstract class Ft12Interface implements BusInterface
    protected static final int[] ackMsg = { 0xe5 };
 
    /**
-    * Add a listener that is informed when messages are received.
+    * Add a bus listener. Listeners get called when messages arrive.
     */
    @Override
    public void addListener(BusListener listener)
@@ -36,7 +38,7 @@ public abstract class Ft12Interface implements BusInterface
    }
 
    /**
-    * Remove a message listener.
+    * Remove a bus listener.
     */
    @Override
    public void removeListener(BusListener listener)
@@ -45,12 +47,17 @@ public abstract class Ft12Interface implements BusInterface
    }
 
    /**
-    * Notify all listeners about the given message.
+    * Notify all EMI- and telegram listeners about the given message.
     */
    public void notifyListeners(final EmiMessage message)
    {
+      final Telegram telegram = (message instanceof L_Data.base) ? ((L_Data.base) message).getTelegram() : null;
+
       for (BusListener listener : listeners)
+      {
          listener.messageReceived(message);
+         if (telegram != null) listener.telegramReceived(telegram);
+      }
    }
 
    /**

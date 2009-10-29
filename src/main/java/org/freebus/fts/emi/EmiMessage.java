@@ -1,5 +1,7 @@
 package org.freebus.fts.emi;
 
+import org.freebus.fts.eib.InvalidDataException;
+
 
 /**
  * An "External Message Interface" (EMI) message.
@@ -16,8 +18,10 @@ public interface EmiMessage
     * The first byte is expected to be the message type.
     * 
     * Must be overridden in subclasses.
+    *
+    * @throws InvalidDataException 
     */
-   public abstract void fromRawData(int[] rawData, int start);
+   public abstract void fromRawData(int[] rawData, int start) throws InvalidDataException;
 
    /**
     * Fill the raw data of the message into the array rawData, starting at
@@ -26,5 +30,4 @@ public interface EmiMessage
     * @return number of bytes that were used.
     */
    public abstract int toRawData(int[] rawData, int start);
-
 }

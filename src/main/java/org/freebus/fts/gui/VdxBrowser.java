@@ -8,7 +8,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.custom.BusyIndicator;
 import org.eclipse.swt.layout.FormAttachment;
 import org.eclipse.swt.layout.FormData;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Combo;
@@ -27,47 +26,28 @@ import org.freebus.fts.vdx.VdxFileReader;
 import org.freebus.fts.vdx.VdxSection;
 
 /**
- * A browser for a .vdx file
+ * A browser for a .vd_ (VDX) file
  */
-public class VdxBrowser extends Composite
+public class VdxBrowser extends TabPage
 {
    private VdxFileReader reader = null;
    private final Combo cboSection;
    private final Table tblElems, tblValues;
    private final Button cbxSort;
    private final Group grpOthers;
-   private long progressTotal, progressCurrent;
-   private boolean progressUpdating = false;
    private String[] sectionNames = null;
    private VdxSection findSection, section = null;
 
    /**
-    * Create a new vdx browser.
+    * Create a new VDX browser.
     * 
     * @throws IOException
     */
-   public VdxBrowser(Composite parent, final String fileName) throws IOException
+   public VdxBrowser(Composite parent) throws IOException
    {
-      super(parent, SWT.FLAT);
-
-      Runnable run = new Runnable()
-      {
-         @Override
-         public void run()
-         {
-            try
-            {
-               reader = new VdxFileReader(fileName);
-               setLayout(new FormLayout());
-            }
-            catch (IOException e)
-            {
-               e.printStackTrace();
-            }               
-         }
-      };
-      BusyIndicator.showWhile(getDisplay(), run);
-      getDisplay().syncExec(run);
+      super(parent);
+      setTitle(I18n.getMessage("Vdx_Browser_Tab"));
+      setPlace(SWT.CENTER);
 
       TableColumn tabColumn;
       FormData formData;
@@ -172,13 +152,21 @@ public class VdxBrowser extends Composite
       formData.height = 80;
       formData.bottom = new FormAttachment(98);
       grpOthers.setLayoutData(formData);
+   }
 
+   /**
+    * Set the project that is displayed.
+    * Calls {@link #updateContents}.
+    */
+   @Override
+   public void setObject(Object o)
+   {
+      reader = (VdxFileReader) o;
       updateContents();
    }
 
    /**
-    * Update the contents of the browser. Call this if the sections have
-    * changed.
+    * Update the contents of the widget.
     */
    public void updateContents()
    {
@@ -315,7 +303,7 @@ public class VdxBrowser extends Composite
 
                final int selIdx = ((Combo) e.widget).getSelectionIndex();
                if (selIdx <= 0) return;
-               final int idx = (Integer) ((Combo) e.widget).getData(Integer.toString(selIdx));
+//               final int idx = (Integer) ((Combo) e.widget).getData(Integer.toString(selIdx));
 
                int i;
                for (i = sectionNames.length-1; i >= 0; --i)
