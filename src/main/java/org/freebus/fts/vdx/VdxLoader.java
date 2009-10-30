@@ -23,7 +23,7 @@ import org.freebus.fts.products.ProductDbOld;
 import org.freebus.fts.products.VirtualDevice;
 
 /**
- * Helper class that loads a .vdx file into a {@link ProductDbOld}
+ * Helper class that loads a VDX file into a {@link ProductDbOld}
  * product-database object.
  */
 public class VdxLoader
@@ -564,15 +564,16 @@ public class VdxLoader
             manufacturer = getManufacturer(manufacturerId);
          }
 
+         final int catId = Integer.parseInt(values[catIdIdx]);
+
          product = db.getProduct(productIdToDb.get(Integer.parseInt(values[productIdx])));
-         final CatalogEntry cat = new CatalogEntry(values[nameIdx], manufacturer, product);
+         final CatalogEntry cat = new CatalogEntry(catId, values[nameIdx], manufacturer, product);
          if (dinIdx>=0) cat.setDIN(section.getIntegerValue(id, dinIdx) == 1);
          if (widthModulesIdx>=0) cat.setWidthModules((int)section.getDoubleValue(id, widthModulesIdx));
          if (widthMMIdx>=0) cat.setWidthModules((int)section.getDoubleValue(id, widthMMIdx));
 
          final int dbId = db.addCatalogEntry(cat);
 
-         final int catId = Integer.parseInt(values[catIdIdx]);
          catalogEntryIdToDb.put(catId, dbId);
       }
 
@@ -610,7 +611,7 @@ public class VdxLoader
          if (descriptionIdx>=0) description = values[descriptionIdx];
          else description = "";
 
-         CatalogGroup funcEnt = new CatalogGroup(Integer.parseInt(values[entityIdIdx]), values[nameIdx], description);
+         CatalogGroup funcEnt = new CatalogGroup(Integer.parseInt(values[entityIdIdx]), manufacturerId, values[nameIdx], description);
          manufacturer.addFunctionalEntity(funcEnt);
       }
 
@@ -637,7 +638,7 @@ public class VdxLoader
             parentEnt = manufacturer.getFunctionalEntity(parentId);
             if (parentEnt==null) parseError("In functional-entity #"+Integer.toString(id)+": parent #"+parentId+" not found");
 
-            manufacturer.getFunctionalEntity(id).setParent(parentEnt);
+            manufacturer.getFunctionalEntity(id).setParentId(parentId);
          }
       }
 
@@ -675,7 +676,7 @@ public class VdxLoader
          if (funcEnt==null) parseError("Unknown functional-entity #"+id);
 
          id = Integer.parseInt(values[deviceIdIdx]);
-         virtDev = new VirtualDevice(id, values[nameIdx], values[descriptionIdx], funcEnt);
+         virtDev = new VirtualDevice(id, values[nameIdx], values[descriptionIdx], funcEnt.getId(), catEnt.getId());
          catEnt.addVirtualDevice(virtDev);
       }
 

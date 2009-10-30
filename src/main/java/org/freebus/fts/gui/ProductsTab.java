@@ -1,7 +1,8 @@
 package org.freebus.fts.gui;
 
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -25,8 +26,9 @@ import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CatalogGroup;
-import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.ProductDb;
 import org.freebus.fts.products.ProductDbOld;
+import org.freebus.fts.products.ProductFilter;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.utils.I18n;
 
@@ -35,7 +37,7 @@ import org.freebus.fts.utils.I18n;
  */
 public class ProductsTab extends TabPage
 {
-   private ProductDbOld productDb = null;
+   private ProductDb productDb = null;
    private final List lstManufacturers;
    private final Tree treCategories;
    private final Table tblCatalog, tblApplications;
@@ -143,13 +145,13 @@ public class ProductsTab extends TabPage
    }
 
    /**
-    * Set the object that the tab-page shows.
+    * Set the {@link ProductDb} product-database that the tab-page shows.
     */
    @Override
    public void setObject(Object o)
    {
-      productDb = (ProductDbOld) o;
-      setTitle(productDb.getCreationDate());
+      productDb = (ProductDb) o;
+//      setTitle(productDb.getName());
       updateContents();
    }
    
@@ -160,30 +162,36 @@ public class ProductsTab extends TabPage
    @Override
    public void updateContents()
    {
-      if (productDb != null)
+      if (productDb != null) try
+      {
          updateManufacturers();
+      }
+      catch (IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
    }
 
    /**
-    * Returns a list with the selected manufacturers.
+    * @return a list with the id's of the selected manufacturers.
+    * The returned list is empty if no manufacturer is selected.
     */
-   public Set<Manufacturer> getSelectedManufacturers()
+   public int[] getSelectedManufacturers()
    {
       final String[] sel = lstManufacturers.getSelection();
 
-      final Set<Manufacturer> result = new HashSet<Manufacturer>();
+      final int[] result = new int[sel.length];
       for (int i=sel.length-1; i>=0; --i)
-      {
-         final Integer id = (Integer) lstManufacturers.getData(sel[i]);
-         result.add(productDb.getManufacturer(id));
-      }
+         result[i] = (Integer) lstManufacturers.getData(sel[i]);
+
       return result;
    }
 
    /**
-    * Returns a list with the selected categories.
+    * Returns a list with the id's of the selected categories.
     */
-   public Set<CatalogGroup> getSelectedCategories()
+   public int[] getSelectedCategories()
    {
       final TreeItem[] selTopLevel = treCategories.getSelection();
 
@@ -194,9 +202,9 @@ public class ProductsTab extends TabPage
          getChildren(item, sel);
       }
 
-      final Set<CatalogGroup> result = new HashSet<CatalogGroup>();
-      for (int i=sel.size()-1; i>=0; --i)
-         result.add((CatalogGroup) sel.get(i).getData());
+      final int[] result = new int[sel.size()];
+      for (int i = sel.size() - 1; i >= 0; --i)
+         result[i] = (Integer) sel.get(i).getData();
 
       return result;
    }
@@ -215,20 +223,25 @@ public class ProductsTab extends TabPage
 
    /**
     * Update the list of manufacturers.
+    * @throws IOException 
     */
-   public void updateManufacturers()
+   public void updateManufacturers() throws IOException
    {
       lstManufacturers.removeAll();
 
-      final Set<Integer> ids = productDb.getManufacturerKeys();
-      for (final Integer id: ids)
+      final Map<Integer, String> manufacturers = productDb.getManufacturers();
+      final Map<String, Integer> manufacturersSorted = new TreeMap<String, Integer>();
+
+      for (final Integer id: manufacturers.keySet())
+         manufacturersSorted.put(manufacturers.get(id), id);
+
+      for (final String name: manufacturersSorted.keySet())
       {
-         final Manufacturer manufacturer = productDb.getManufacturer(id);
-         lstManufacturers.add(manufacturer.getName());
-         lstManufacturers.setData(manufacturer.getName(), id);
+         lstManufacturers.add(name);
+         lstManufacturers.setData(name, manufacturersSorted.get(name));
       }
 
-      if (!ids.isEmpty()) lstManufacturers.select(0);
+      if (!manufacturersSorted.isEmpty()) lstManufacturers.select(0);
       updateCategories();
    }
 
@@ -238,44 +251,58 @@ public class ProductsTab extends TabPage
    public void updateCategories()
    {
       treCategories.removeAll();
-      final HashMap<CatalogGroup,TreeItem> treeItems = new HashMap<CatalogGroup,TreeItem>();
-      final TreeMap<String,CatalogGroup> catSorted = new TreeMap<String,CatalogGroup>();
-      CatalogGroup parentCat, cat;
-      TreeItem item;
+      final HashMap<Integer,TreeItem> treeItems = new HashMap<Integer,TreeItem>();
+      CatalogGroup cat;
+      TreeItem item, parentItem;
 
-      for (final Manufacturer manufacturer: getSelectedManufacturers())
+      final ProductFilter filter = new ProductFilter();
+      filter.manufacturers = getSelectedManufacturers();
+
+      Set<CatalogGroup> cats = null;
+      try
       {
-         final Set<Integer> ids = manufacturer.getFunctionalEntityKeys();
-         for (final Integer id: ids)
+         cats = productDb.getCatalogGroups(filter);
+      }
+      catch (IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+         return;
+      }
+
+      final Map<String, CatalogGroup> catSorted = new TreeMap<String, CatalogGroup>();
+      for (final CatalogGroup catalogGroup: cats)
+         catSorted.put(catalogGroup.getName(), catalogGroup);
+
+      // Process all categories, as long as there are categories to be added
+      // to the tree. Found categories are removed from the catSorted set.
+      for (int tries = 10; tries > 0 && !catSorted.isEmpty(); --tries)
+      {
+         final String[] names = new String[catSorted.size()];
+         catSorted.keySet().toArray(names);
+
+         for (int i = 0; i < names.length; ++i)
          {
-            cat = manufacturer.getFunctionalEntity(id);
-            catSorted.put(cat.getName()+'#'+id.toString(), cat);
-         }
-      }
-
-      // Process all top-level categories
-      for (String key: catSorted.keySet())
-      {
-         cat = catSorted.get(key);
-         if (cat.getParent()!=null) continue;
-
-         item = new TreeItem(treCategories, SWT.FLAT);
-         item.setText(cat.getName());
-         item.setData(cat);
-         treeItems.put(cat, item);
-      }
-
-      // Process all non-top-level categories
-      for (String key: catSorted.keySet())
-      {
-         cat = catSorted.get(key);
-         parentCat = cat.getParent();
-         if (parentCat==null) continue;
+            final String name = names[i];
+            cat = catSorted.get(name);
+            
+            final int parentId = cat.getParentId();
+            if (parentId > 0)
+            {
+               parentItem = treeItems.get(parentId);
+               if (parentItem == null) continue; // try next time
+            }
+            else parentItem = null;
    
-         item = new TreeItem(treeItems.get(parentCat), SWT.FLAT);
-         item.setText(cat.getName());
-         item.setData(cat);
-         treeItems.put(cat, item);
+            if (parentItem == null) item = new TreeItem(treCategories, SWT.FLAT);
+            else item = new TreeItem(parentItem, SWT.FLAT);
+
+            item.setText(cat.getName());
+            item.setData(cat.getId());
+
+            treeItems.put(cat.getId(), item);
+            catSorted.remove(name);
+         }
       }
       
       if (!catSorted.isEmpty()) treCategories.select(treCategories.getItem(0));
@@ -287,38 +314,49 @@ public class ProductsTab extends TabPage
     */
    public void updateCatalog()
    {
-      final Set<Manufacturer> manufacturers = getSelectedManufacturers();
-      final Set<CatalogGroup> cats = getSelectedCategories();
-      final TreeMap<String,CatalogEntry> matches = new TreeMap<String,CatalogEntry>();
-
-      VirtualDevice virtualDevice;
-      CatalogEntry catalogEntry;
-
       tblCatalog.removeAll();
 
-      final int numCatEntries = productDb.getNumCatalogEntries();
-      for (int id=0; id<numCatEntries; ++id)
+      final TreeMap<String,VirtualDevice> matches = new TreeMap<String,VirtualDevice>();
+
+      final ProductFilter filter = new ProductFilter();
+      filter.manufacturers = getSelectedManufacturers();
+      filter.catalogGroups = getSelectedCategories();
+
+      try
       {
-         catalogEntry = productDb.getCatalogEntry(id);
-         if (!manufacturers.contains(catalogEntry.getManufacturer())) continue;
-
-         final int numVirtDev = catalogEntry.getVirtualDevicesCount();
-         for (int i=0; i<numVirtDev; ++i)
-         {
-            virtualDevice = catalogEntry.getVirtualDevice(i);
-            if (virtualDevice==null || !cats.contains(virtualDevice.getFunctionalEntity())) continue;
-
-            matches.put(catalogEntry.getName(), catalogEntry);
-            break;
-         }
+         for (VirtualDevice dev: productDb.getVirtualDevices(filter))
+            matches.put(dev.getName(), dev);
       }
-      
+      catch (IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+         return;
+      }
+
+//      final int numCatEntries = productDb.getNumCatalogEntries();
+//      for (int id=0; id<numCatEntries; ++id)
+//      {
+//         catalogEntry = productDb.getCatalogEntry(id);
+//         if (!manufacturers.contains(catalogEntry.getManufacturer())) continue;
+//
+//         final int numVirtDev = catalogEntry.getVirtualDevicesCount();
+//         for (int i=0; i<numVirtDev; ++i)
+//         {
+//            virtualDevice = catalogEntry.getVirtualDevice(i);
+//            if (virtualDevice==null || !cats.contains(virtualDevice.getFunctionalEntity())) continue;
+//
+//            matches.put(catalogEntry.getName(), catalogEntry);
+//            break;
+//         }
+//      }
+
       for (String key: matches.keySet())
       {
-         catalogEntry = matches.get(key);
+         VirtualDevice dev = matches.get(key);
          final TableItem item = new TableItem(tblCatalog, SWT.FLAT);
-         item.setText(catalogEntry.getName());
-         item.setData(catalogEntry);
+         item.setText(dev.getName());
+         item.setData(dev.getId());
       }
 
       updateDetails();

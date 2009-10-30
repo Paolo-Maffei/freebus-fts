@@ -7,6 +7,7 @@ import java.util.Vector;
  */
 public class CatalogEntry
 {
+   private final int id;
    private final String name;
    private final Manufacturer manufacturer;
    private final Product product;
@@ -21,11 +22,20 @@ public class CatalogEntry
    /**
     * Create a catalog-entry object.
     */
-   public CatalogEntry(String name, Manufacturer manufacturer, Product product)
+   public CatalogEntry(int id, String name, Manufacturer manufacturer, Product product)
    {
+      this.id = id;
       this.name = name;
       this.manufacturer = manufacturer;
       this.product = product;
+   }
+
+   /**
+    * @return the id of the catalog-entry.
+    */
+   public int getId()
+   {
+      return id;
    }
 
    /**

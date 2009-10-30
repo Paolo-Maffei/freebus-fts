@@ -16,15 +16,13 @@ import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.PEI_Identify;
-import org.freebus.fts.products.ProductDbOld;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.settings.Settings;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
 import org.freebus.fts.vdx.VdxFileReader;
-import org.freebus.fts.vdx.VdxLoader;
-import org.freebus.fts.vdx.VdxSectionType;
+import org.freebus.fts.vdx.VdxProductDb;
 
 /**
  * The main window.
@@ -275,11 +273,9 @@ public final class MainWindow extends WorkBench
          cfg.setVdxDir(new File(fileName).getParentFile().getPath());
          cfg.save();
 
-         final VdxLoader loader = new VdxLoader();
          try
          {
-            loader.setEndLoadAfter(VdxSectionType.VIRTUAL_DEVICE);
-            loader.load(fileName);
+            showTabPage(ProductsTab.class, new VdxProductDb(fileName));
          }
          catch (Exception e)
          {
@@ -290,9 +286,6 @@ public final class MainWindow extends WorkBench
             return;
          }
 
-         final ProductDbOld db = loader.getProductDb();
-         db.setFileName(new File(fileName).getName());
-         showTabPage(ProductsTab.class, db);
       }
    }
 

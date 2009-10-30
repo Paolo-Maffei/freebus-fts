@@ -3,34 +3,45 @@ package org.freebus.fts.products;
 import java.lang.ref.WeakReference;
 
 /**
- * Functional entities are for grouping of the products.
+ * Catalog groups, or "functional entities", as they are called in the VDX files,
+ * are for grouping of the products.
  */
 public class CatalogGroup
 {
-   private final int id;
+   private final int id, manufacturerId;
    private final String name, description;
-   private WeakReference<CatalogGroup> parent = null;
+   private int parentId = 0;
 
    /**
-    * Create a new functional entity.
+    * Create a new catalog group.
     *
-    * @param id is the identifier of the entity.
-    * @param name is the name of the entity.
-    * @param description is the description of the entity.
+    * @param id - the identifier of the catalog group.
+    * @param manufacturerId - the id of the manufacturer to which the catalog group belongs.
+    * @param name - the name of the catalog group.
+    * @param description - the description of the catalog group.
     */
-   public CatalogGroup(int id, String name, String description)
+   public CatalogGroup(int id, int manufacturerId, String name, String description)
    {
       this.id = id;
+      this.manufacturerId = manufacturerId;
       this.name = name;
       this.description = description;
    }
 
    /**
-    * @return the id.
+    * @return the identifier of the catalog-group.
     */
    public int getId()
    {
       return id;
+   }
+
+   /**
+    * @return the identifier of the manufacturer to which the catalog group belongs.
+    */
+   public int getManufacturerId()
+   {
+      return manufacturerId;
    }
 
    /**
@@ -50,34 +61,32 @@ public class CatalogGroup
    }
 
    /**
-    * Set the parent. May be null.
+    * Set the parent id. 0 for no parent.
     */
-   public void setParent(CatalogGroup parent)
+   public void setParentId(int parentId)
    {
-      if (parent==null) this.parent = null;
-      else this.parent = new WeakReference<CatalogGroup>(parent);
+      this.parentId = parentId;
    }
 
    /**
-    * @return the parent. May be null.
+    * @return the parent id. 0 is returned for no parent.
     */
-   public CatalogGroup getParent()
+   public int getParentId()
    {
-      if (parent==null) return null;
-      return parent.get();
+      return parentId;
    }
 
    /**
-    * Returns a hash-code for the object.
+    * @return a hash-code for the object.
     */
    @Override
    public int hashCode()
    {
-      return id;
+      return (id << 10) | manufacturerId;
    }
    
    /**
-    * Compare two objects by id.
+    * Compare two objects.
     */
    @Override
    public boolean equals(final Object o)
@@ -85,15 +94,15 @@ public class CatalogGroup
       if (o==this) return true;
       if (!(o instanceof CatalogGroup)) return false;
       final CatalogGroup oo = (CatalogGroup)o;
-      return id==oo.id;
+      return id == oo.id && manufacturerId == oo.manufacturerId;
    }
 
    /**
-    * Returns a human readable representation of the object
+    * Returns a human readable representation of the object.
     */
    @Override
    public String toString()
    {
-      return name+" ["+Integer.toString(id)+"]";
+      return name + " [" + Integer.toString(id) + "]";
    }
 }

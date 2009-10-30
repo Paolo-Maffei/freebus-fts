@@ -53,7 +53,7 @@ public class VdxSection
    }
 
    /**
-    * Return the fieldIdx-th field of the idx-th section element.
+    * @return the fieldIdx-th field of the idx-th section element.
     */
    public String getValue(int idx, int fieldIdx)
    {
@@ -61,12 +61,35 @@ public class VdxSection
    }
 
    /**
-    * Return the fieldIdx-th field of the section element with the name fieldName.
+    * @return the fieldIdx-th field of the idx-th section element as an integer.
+    *         Zero is returned if the field is empty.
+    */
+   public int getIntValue(int idx, int fieldIdx)
+   {
+      final String val = elemValues.get(idx)[fieldIdx];
+      if (val.isEmpty()) return 0;
+      return Integer.parseInt(val);
+   }
+
+   /**
+    * @return the fieldIdx-th field of the section element with the name fieldName.
     */
    public String getValue(int idx, String fieldName)
    {
       final int fieldIdx = header.getIndexOf(fieldName);
       return elemValues.get(idx)[fieldIdx];
+   }
+
+   /**
+    * @return the fieldIdx-th field of the section element with the name fieldName
+    *         as an integer. Zero is returned if the field is empty.
+    */
+   public int getIntValue(int idx, String fieldName)
+   {
+      final int fieldIdx = header.getIndexOf(fieldName);
+      final String val = elemValues.get(idx)[fieldIdx];
+      if (val.isEmpty()) return 0;
+      return Integer.parseInt(val);
    }
 
    /**

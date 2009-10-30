@@ -1,5 +1,6 @@
 package org.freebus.fts.products;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -9,18 +10,29 @@ import java.util.*;
 public interface ProductDb
 {
    /**
-    * @return a map with all manufacturers. Key is the manufacturer-id, value is
+    * @return A map with all manufacturers. Key is the manufacturer-id, value is
     *         the name of the manufacturer.
+    * @throws IOException 
     */
-   public Map<Integer, String> getManufacturers();
+   public Map<Integer, String> getManufacturers() throws IOException;
 
    /**
     * Query the catalog-groups, with optional filtering.
     * 
-    * @param filter is an optional filter object. Set to null if you do not want
+    * @param filter - an optional filter object. Set to null if you do not want
     *           to have filtering applied.
-    * @return a list with all catalog-groups.
+    * @return A set with all matching catalog-groups.
+    * @throws IOException 
     */
-   public Set<CatalogGroup> getCatalogGroups(ProductFilter filter);
+   public Set<CatalogGroup> getCatalogGroups(ProductFilter filter) throws IOException;
 
+   /**
+    * Query the virtual devices, with optional filtering.
+    * 
+    * @param filter - an optional filter object. Set to null if you do not want
+    *           to have filtering applied.
+    * @return A set with all matching virtual devices.
+    * @throws IOException 
+    */
+   public Set<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException;
 }

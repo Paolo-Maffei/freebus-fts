@@ -5,19 +5,19 @@ package org.freebus.fts.products;
  */
 public class VirtualDevice
 {
-   private final int id;
+   private final int id, catalogEntryId, catalogGroupId;
    private final String name, description;
-   private final CatalogGroup catalogGroup;
 
    /**
     * Create a virtual-device object.
     */
-   public VirtualDevice(int id, String name, String description, CatalogGroup catalogGroup)
+   public VirtualDevice(int id, String name, String description, int catalogGroupId, int catalogEntryId)
    {
       this.id = id;
       this.name = name;
       this.description = description;
-      this.catalogGroup = catalogGroup;
+      this.catalogGroupId = catalogGroupId;
+      this.catalogEntryId = catalogEntryId;
    }
 
    /**
@@ -45,11 +45,19 @@ public class VirtualDevice
    }
 
    /**
-    * @return the catalogGroup
+    * @return the id of the catalog entry.
     */
-   public CatalogGroup getFunctionalEntity()
+   public int getCatalogEntryId()
    {
-      return catalogGroup;
+      return catalogEntryId;
+   }
+
+   /**
+    * @return the id of the catalog group.
+    */
+   public int getCatalogGroupId()
+   {
+      return catalogGroupId;
    }
 
    /**
@@ -67,10 +75,10 @@ public class VirtualDevice
    @Override
    public boolean equals(final Object o)
    {
-      if (o==this) return true;
+      if (o == this) return true;
       if (!(o instanceof VirtualDevice)) return false;
       final VirtualDevice oo = (VirtualDevice)o;
-      return id==oo.id && name==oo.name;
+      return id == oo.id && catalogEntryId == oo.catalogEntryId;
    }
 
    /**
@@ -79,6 +87,6 @@ public class VirtualDevice
    @Override
    public String toString()
    {
-      return name+" ["+Integer.toString(id)+"]";
+      return name + " [" + Integer.toString(id) + "]";
    }
 }
