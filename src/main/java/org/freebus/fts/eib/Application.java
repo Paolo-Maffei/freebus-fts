@@ -95,6 +95,15 @@ public enum Application
    }
 
    /**
+    * @return the application type in human readable form.
+    */
+   @Override
+   public String toString()
+   {
+      return name() + String.format(" [%02x]", apci);
+   }
+
+   /**
     * @return the application type for the given APCI field.
     * @throws InvalidDataException 
     */

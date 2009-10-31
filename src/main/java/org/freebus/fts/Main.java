@@ -25,6 +25,7 @@ public final class Main
    public static void main(String[] args)
    {
       final Display display = new Display();
+      MainWindow mainWin = null;
 
       while (restart)
       {
@@ -54,12 +55,9 @@ public final class Main
                }
             }
 
-            final MainWindow mainWin = new MainWindow();
+            mainWin = new MainWindow();
             mainWin.open();
             mainWin.run();
-
-            mainWin.dispose();
-            BusInterfaceFactory.disposeDefaultInstance();
          }
          catch (Exception e)
          {
@@ -71,6 +69,12 @@ public final class Main
             mbox.setMessage(I18n.getMessage("Fatal_Application_Error_Restart").replace("%1", e.getLocalizedMessage()));
             if (mbox.open() == SWT.YES) restart = true;
             shell.dispose();
+         }
+         finally
+         {
+            BusInterfaceFactory.disposeDefaultInstance();
+            if (mainWin != null) mainWin.dispose();
+            mainWin = null;
          }
       }
    }

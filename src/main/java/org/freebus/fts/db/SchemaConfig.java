@@ -7,7 +7,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
- * Class that manages the database schema.
+ * Class that manages the database schema. This class creates the database
+ * tables, and migrates the database tables from one FTS database version
+ * to the next.
  */
 public final class SchemaConfig
 {
@@ -16,10 +18,10 @@ public final class SchemaConfig
    // version to the next!
    private final int version = 1;
 
-   // Installed version.
+   // Version of the installed database.
    private int installedVersion = -1;
 
-   // The database connection
+   // The database connection.
    private final Connection con;
 
    /**
@@ -121,7 +123,7 @@ public final class SchemaConfig
     */
    protected void log(String message)
    {
-      System.out.println("Database update: " + message);
+      System.out.println("Database upgrade: " + message);
    }
 
    /**

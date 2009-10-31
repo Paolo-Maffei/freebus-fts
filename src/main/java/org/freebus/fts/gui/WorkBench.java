@@ -116,6 +116,7 @@ public class WorkBench
     */
    public void dispose()
    {
+      shell.dispose();
    }
 
    /**

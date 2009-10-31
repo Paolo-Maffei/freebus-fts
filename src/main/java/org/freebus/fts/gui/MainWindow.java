@@ -14,8 +14,12 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.freebus.fts.Config;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.eib.Application;
+import org.freebus.fts.eib.GroupAddress;
+import org.freebus.fts.eib.Priority;
+import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
-import org.freebus.fts.emi.PEI_Identify;
+import org.freebus.fts.emi.L_Data;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.settings.Settings;
 import org.freebus.fts.utils.I18n;
@@ -350,9 +354,14 @@ public final class MainWindow extends WorkBench
          EmiMessage msg = null;
          if (event.widget==toolItemTestMessage1)
          {
-//            msg = new L_Poll_Data.req(0x0000, 15);
-//            msg = new T_Connect.req(0x1106);
-            msg = new PEI_Identify.req();
+            final L_Data.req newMsg = new L_Data.req();
+            Telegram telegram = newMsg.getTelegram();
+//            telegram.setDest(new PhysicalAddress(1, 1, 6));
+            telegram.setDest(new GroupAddress(0));
+            telegram.setPriority(Priority.SYSTEM);
+            telegram.setApplication(Application.IndividualAddress_Read);
+            telegram.setData(new int[] { 10 });
+            msg = newMsg;
          }
 
          if (msg != null) try

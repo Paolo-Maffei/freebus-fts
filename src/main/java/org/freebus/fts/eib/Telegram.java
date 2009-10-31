@@ -11,6 +11,8 @@ public class Telegram
    private int routingCounter = 6;
    private Priority priority = Priority.LOW;
    private boolean repeated = false;
+   private Transport transport = null;
+   private int sequence = 0;
    private Application application = Application.Invalid;
    private int[] data = null;
 
@@ -19,6 +21,38 @@ public class Telegram
     */
    public Telegram()
    {
+   }
+
+   /**
+    * Set the transport type.
+    */
+   public void setTransport(Transport transport)
+   {
+      this.transport = transport;
+   }
+
+   /**
+    * @return the transport type.
+    */
+   public Transport getTransport()
+   {
+      return transport;
+   }
+
+   /**
+    * Set the sequence number. Only used for connected-data mode transport types.
+    */
+   public void setSequence(int sequence)
+   {
+      this.sequence = sequence;
+   }
+
+   /**
+    * @return the sequence number. Only used for connected-data mode transport types.
+    */
+   public int getSequence()
+   {
+      return sequence;
    }
 
    /**
@@ -68,10 +102,20 @@ public class Telegram
    /**
     * Set the destination address. This can either be a {@link PhysicalAddress}
     * physical address, or a {@link GroupAddress} group address.
+    * 
+    * Also sets the transport type, if it is yet unset: to {@link Transport#Individual}
+    * if the destination is a {@link PhysicalAddress}, or to {@link Transport#Group}
+    * if the destination is a {@link GroupAddress}.
     */
    public void setDest(Address dest)
    {
       this.dest = dest;
+
+      if (transport == null)
+      {
+         if (dest instanceof GroupAddress) transport = Transport.Group;
+         else transport = Transport.Individual;
+      }
    }
 
    /**
@@ -185,8 +229,9 @@ public class Telegram
        */
       final int drl = rawData[pos++];
 
-      if ((drl & 0x80) == 0) dest = new PhysicalAddress(destAddr);
-      else dest = new GroupAddress(destAddr);
+      final boolean isGroup = (drl & 0x80) != 0;
+      if (isGroup) dest = new GroupAddress(destAddr);
+      else dest = new PhysicalAddress(destAddr);
 
       routingCounter = (drl >> 4) & 7;
 
@@ -194,11 +239,13 @@ public class Telegram
 
       // TPCI - transport control field
       int tpci = rawData[pos++]; 
+      transport = Transport.valueOf(isGroup, tpci);
+
+      if (transport.hasSequence) sequence = (tpci >> 2) & 15;
+      else sequence = 0;
 
       // APCI - application type
       final int apci = ((tpci & 3) << 8) | rawData[pos++];
-      tpci >>= 2;
-
       application = Application.valueOf(apci);
 
       final int dataMask = application.getDataMask();
