@@ -35,4 +35,18 @@ public interface ProductDb
     * @throws IOException 
     */
    public Set<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException;
+
+   /**
+    * Query a specific virtual device.
+    *
+    * @param id - is the id of the virtual device.
+    * @return the virtual device
+    * @throws IOException 
+    */
+   public VirtualDevice getVirtualDevice(int id) throws IOException;
+
+   /**
+    * Query the product description for the catalog-entry with the given id.
+    */
+   public String getProductDescription(int catalogEntryId) throws IOException;
 }

@@ -16,6 +16,7 @@ import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.GroupAddress;
+import org.freebus.fts.eib.PhysicalAddress;
 import org.freebus.fts.eib.Priority;
 import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
@@ -357,6 +358,7 @@ public final class MainWindow extends WorkBench
             final L_Data.req newMsg = new L_Data.req();
             Telegram telegram = newMsg.getTelegram();
 //            telegram.setDest(new PhysicalAddress(1, 1, 6));
+            telegram.setFrom(new PhysicalAddress(1, 1, 255));
             telegram.setDest(new GroupAddress(0));
             telegram.setPriority(Priority.SYSTEM);
             telegram.setApplication(Application.IndividualAddress_Read);

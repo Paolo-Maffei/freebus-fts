@@ -51,7 +51,8 @@ public final class SchemaConfig
       }
       catch (SQLException e)
       {
-         if (e.getErrorCode() != 30000) // Table or view does not exist
+         final int err = e.getErrorCode();
+         if (err != -5501 && err != 30000) // Table or view does not exist (HSQL and Derby)
             e.printStackTrace();
       }
       return installedVersion;

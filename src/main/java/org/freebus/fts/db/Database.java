@@ -1,6 +1,11 @@
 package org.freebus.fts.db;
 
-import java.sql.*;
+import java.io.File;
+import java.sql.Connection;
+import java.sql.Driver;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * The class represents a database.
@@ -9,13 +14,13 @@ import java.sql.*;
  */
 public class Database
 {
-   private static String driverName = "org.apache.derby.jdbc.EmbeddedDriver";
-   private static String protocol = "jdbc:derby:";
+//   private static String driverName = "org.apache.derby.jdbc.EmbeddedDriver";
+//   private static String protocol = "jdbc:derby:";
+   private static String driverName = "org.hsqldb.jdbcDriver";
+   private static String protocol = "jdbc:hsqldb:file:";
    private static Database instance = null;
    private Connection defaultConnection = null;
    private final String name;
-   private final boolean create;
-   private final Driver driver;
 
    /**
     * @return the default database object.
@@ -51,15 +56,20 @@ public class Database
    public Database(String dbName, boolean create) throws Exception
    {
       this.name = dbName;
-      this.create = create;
 
       try
       {
-         driver = (Driver) Class.forName(driverName).newInstance();
+         Class.forName(driverName);
       }
       catch (Exception e)
       {
-         throw new Exception("Cannot initialise database " + dbName + "\n\n" + e.getMessage(), e);
+         throw new Exception("Cannot load database driver " + driverName, e);
+      }
+
+      if (create)
+      {
+         File dbDir = new File(name).getParentFile();
+         if (!dbDir.exists()) dbDir.mkdir();
       }
    }
 
@@ -87,10 +97,16 @@ public class Database
     */
    public Connection connect() throws SQLException
    {
-      String url = protocol + name;
-      if (create) url += ";create=true";
+      final String url = protocol + name;
 
-      return driver.connect(url, null);
+      final Properties props = new Properties();
+      props.put("hsqldb.shutdown", "true");
+      props.put("hsqldb.default_table_type", "cached");
+      
+      final Connection con = DriverManager.getConnection(url, props);
+      if (con == null) throw new SQLException("Cannot connect to database " + url);
+
+      return con;
    }
 
    /**

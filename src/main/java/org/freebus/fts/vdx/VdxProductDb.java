@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 
+import org.freebus.fts.Config;
 import org.freebus.fts.products.CatalogGroup;
 import org.freebus.fts.products.ProductDb;
 import org.freebus.fts.products.ProductFilter;
@@ -21,6 +23,8 @@ public final class VdxProductDb implements ProductDb
    private Map<Integer, String> manufacturers = null;
    private Map<Integer, CatalogGroup> groups = null;
    private Map<Integer, VirtualDevice> virtualDevices = null;
+   private Map<Integer, String> productDescriptions = null;
+   private int languageId = 0;
 
    /**
     * Create a new VdxProductDb object. Loads the given vd_ file.
@@ -30,6 +34,7 @@ public final class VdxProductDb implements ProductDb
    public VdxProductDb(String fileName) throws IOException
    {
       reader = new VdxFileReader(fileName);
+      lookupLanguageId();
    }
 
    /**
@@ -104,6 +109,47 @@ public final class VdxProductDb implements ProductDb
       return matches;
    }
 
+   @Override
+   public String getProductDescription(int catalogEntryId) throws IOException
+   {
+      if (productDescriptions == null) updateProductDescriptions();
+      return productDescriptions.get(catalogEntryId);
+   }
+
+   @Override
+   public VirtualDevice getVirtualDevice(int id) throws IOException
+   {
+      if (virtualDevices == null) updateVirtualDevices();
+      return virtualDevices.get(id);
+   }
+
+   /**
+    * Lookup the id of the preferred language.
+    * @throws IOException 
+    */
+   protected void lookupLanguageId() throws IOException
+   {
+      final String cfgLang = Config.getInstance().getLanguage(); 
+      languageId = 0;
+
+      final VdxSection section = reader.getSection("ete_language");
+      for (int i = section.getNumElements() - 1; i >= 0; --i)
+      {
+         final String lang = section.getValue(i, "language_name");
+         final int langId = section.getIntValue(i, "language_id");
+         if (cfgLang.equals(lang))
+         {
+            languageId = langId;
+            return;
+         }
+         if (cfgLang.equals("English"))
+         {
+            // Remember English as fallback, in case that the configured language is not found.
+            languageId = langId;
+         }
+      }
+   }
+
    /**
     * Update the internal list of catalog-groups.
     * @throws IOException 
@@ -161,6 +207,48 @@ public final class VdxProductDb implements ProductDb
                section.getIntValue(i, groupIdIdx), section.getIntValue(i, catIdIdx));
 
          virtualDevices.put(dev.getId(), dev);
+      }
+   }
+
+   /**
+    * Update the internal list of product descriptions.
+    * @throws IOException 
+    */
+   protected void updateProductDescriptions() throws IOException
+   {
+      productDescriptions = new HashMap<Integer, String>();
+
+      final VdxSection section = reader.getSection("product_description");
+      final int idIdx = section.getHeader().getIndexOf("catalog_entry_id");
+      final int textIdx = section.getHeader().getIndexOf("product_description_text");
+      final int orderIdx = section.getHeader().getIndexOf("display_order");
+      final int langIdIdx = section.getHeader().getIndexOf("language_id");
+      int id, order, langId;
+      String val;
+
+      // Temporary map with all lines. Key is: catalog_entry_id*256 + display_order
+      final Map<Integer,String> allLines = new TreeMap<Integer,String>();
+
+      for (int i = section.getNumElements() - 1; i >= 0; --i)
+      {
+         langId = section.getIntValue(i, langIdIdx);
+         if (langId != languageId) continue;
+
+         id = section.getIntValue(i, idIdx);
+         order = section.getIntValue(i, orderIdx);
+         allLines.put((id << 8) + order, section.getValue(i, textIdx));
+      }
+
+      // Combine the lines of the product descriptions
+      for (final int key: allLines.keySet())
+      {
+         id = key >> 8;
+
+         val = productDescriptions.get(id);
+         if (val == null) val = allLines.get(key);
+         else val += '\n' + allLines.get(key);
+
+         productDescriptions.put(id, val);
       }
    }
 }

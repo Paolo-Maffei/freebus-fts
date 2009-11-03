@@ -43,7 +43,7 @@ public class ProductsTab extends TabPage
    private final Table tblCatalog, tblApplications;
    private final Group grpDetails, grpApplications;
    private final CatalogEntryWidget cewDetails;
-   private final Label lblSelProduct;
+   private final Label lblSelProduct, lblDescription;
    private final Font fntCaption;
    
    /**
@@ -141,7 +141,10 @@ public class ProductsTab extends TabPage
       formData.right = new FormAttachment(99);
       grpDetails.setLayoutData(formData);
       grpDetails.setVisible(false);
+
       cewDetails = new CatalogEntryWidget(grpDetails, SWT.BORDER, false);
+      
+      lblDescription = new Label(grpDetails, SWT.BORDER);
    }
 
    /**
@@ -377,14 +380,38 @@ public class ProductsTab extends TabPage
       if (sel.length<=0)
       {
          cewDetails.setCatalogEntry(null);
+         lblDescription.setText("");
          return;
       }
+      
+      if (true) return;
 
-      final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
-      lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", catalogEntry.getName()));
-      cewDetails.setCatalogEntry(catalogEntry);
+      final int devId = (Integer) sel[0].getData();
+      VirtualDevice dev = null;
+      try
+      {
+         dev = productDb.getVirtualDevice(devId);
+      }
+      catch (IOException e1)
+      {
+         e1.printStackTrace();
+         return;
+      }
+      final String devLabel = sel[0].getText();
+
+//      final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
+      lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", devLabel));
+//      cewDetails.setCatalogEntry(catalogEntry);
+      try
+      {
+         lblDescription.setText(productDb.getProductDescription(dev.getCatalogEntryId()));
+      }
+      catch (IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
 
       tblApplications.removeAll();
-      
    }
 }

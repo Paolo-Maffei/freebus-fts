@@ -153,7 +153,10 @@ public final class VdxFileReader
             line = reader.readLine();
             if (line == null)
             {
-               if (i < numFields) throw new IOException(I18n.getMessage("VdxFileReader_ErrFileTruncated"));
+               if (i > 0 && i < numFields)
+               {
+                  throw new IOException(I18n.getMessage("VdxFileReader_ErrFileTruncated"));
+               }
                break;
             }
 

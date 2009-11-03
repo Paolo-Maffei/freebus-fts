@@ -1,7 +1,7 @@
 package org.freebus.fts.products;
 
 /**
- * A virtual-device
+ * A virtual-device.
  */
 public class VirtualDevice
 {

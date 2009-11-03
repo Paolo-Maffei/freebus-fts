@@ -23,6 +23,7 @@ public final class Config
    private String commPort = null;
    private String tempDir = null;
    private String vdxDir = null;
+   private String language = "German";
 
    private final String configFileName;
    private final String homeDir, appDir;
@@ -58,6 +59,22 @@ public final class Config
    public void setCommPort(String commPort)
    {
       this.commPort = commPort;
+   }
+
+   /**
+    * Set the preferred language.
+    */
+   public void setLanguage(String language)
+   {
+      this.language = language;
+   }
+
+   /**
+    * @return the preferred language.
+    */
+   public String getLanguage()
+   {
+      return language;
    }
 
    /**

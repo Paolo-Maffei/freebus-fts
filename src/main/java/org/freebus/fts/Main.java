@@ -1,6 +1,9 @@
 package org.freebus.fts;
 
+import java.io.File;
+import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.Statement;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -10,6 +13,7 @@ import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.db.Database;
 import org.freebus.fts.db.SchemaConfig;
 import org.freebus.fts.gui.MainWindow;
+import org.freebus.fts.utils.DeleteDir;
 import org.freebus.fts.utils.I18n;
 
 public final class Main
@@ -26,6 +30,7 @@ public final class Main
    {
       final Display display = new Display();
       MainWindow mainWin = null;
+      Database db = null;
 
       while (restart)
       {
@@ -36,12 +41,17 @@ public final class Main
             final String appDir = cfg.getAppDir();
             System.setProperty("derby.system.home", appDir);
 
-            Database db = new Database(appDir + "/products.db", true);
+            // Remove old (Derby) database directory
+            final File oldDb = new File(appDir + "/products.db");
+            if (oldDb.exists()) DeleteDir.deleteDir(oldDb);
+
+            // Create database instance
+            db = new Database(appDir + "/products/db", true);
             Database.setDefault(db);
 
+            // Ensure that the database contents exists and is up to date
             final SchemaConfig schemaConfig = new SchemaConfig();
-            schemaConfig.dropAllTables();
-
+//            schemaConfig.dropAllTables(); // for testing
             if (schemaConfig.getVersion() > schemaConfig.getInstalledVersion())
             {
                System.out.println("Need to upgrade the database");
@@ -75,6 +85,21 @@ public final class Main
             BusInterfaceFactory.disposeDefaultInstance();
             if (mainWin != null) mainWin.dispose();
             mainWin = null;
+
+            if (db != null)
+            {
+               try
+               {
+                  final Connection con = db.getDefaultConnection();
+                  con.createStatement().execute("shutdown");
+                  con.commit();
+               }
+               catch (SQLException e)
+               {
+                  // TODO Auto-generated catch block
+                  e.printStackTrace();
+               }
+            }
          }
       }
    }
