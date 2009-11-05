@@ -138,14 +138,15 @@ public final class VdxFileReader
       // We are at the "T" title line now
       // Skip to the first entry. An entry starts with such a line:
       // R 1 T 3 manufacturer
-      while (true)
+      line = reader.readLine();
+      while (line != null)
       {
          line = reader.readLine();
-         if (line == null || line.startsWith("R ")) break;
+         if (line == null || !line.startsWith("C")) break;
       }
 
       // Read the entries of the section
-      while (line != null && !line.startsWith(sectionSeparator))
+      while (line != null && !line.startsWith(sectionSeparator) && !line.equals("XXX"))
       {
          final String[] values = new String[numFields];
          for (int i=0; i<=numFields; ++i)

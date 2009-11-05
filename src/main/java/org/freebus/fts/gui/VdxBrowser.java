@@ -26,7 +26,7 @@ import org.freebus.fts.vdx.VdxFileReader;
 import org.freebus.fts.vdx.VdxSection;
 
 /**
- * A browser for a .vd_ (VDX) file
+ * A browser for a .vd_ file
  */
 public class VdxBrowser extends TabPage
 {
@@ -214,6 +214,7 @@ public class VdxBrowser extends TabPage
 
       // Find a suitable name field for the list
       final String[] fieldNames = section.getHeader().fields;
+      if (fieldNames.length <= 0) return;
       int nameIdx;
       for (nameIdx = 0; nameIdx < fieldNames.length - 1; ++nameIdx)
       {
@@ -351,7 +352,7 @@ public class VdxBrowser extends TabPage
          reader.removeSection(sectionName);
 
          cbo.pack();
-         cbo.add("[ " + Integer.toString(matches) + " " + sectionName + " ]", 0);
+         cbo.add(sectionName + " (" + Integer.toString(matches) + ")", 0);
          cbo.select(0);
       }
 

@@ -75,6 +75,10 @@ R 4 T 5 bcu_type
 System B
 
 -------------------------------------
+T 67 EmptySection
+C1 T67 1 4 N ID
+C2 T67 1 4 N Name
+-------------------------------------
 T 66 ApplicationProgramBaggage
 C1 T66 1 4 N ID
 C2 T66 1 4 N ApplicationProgramID
@@ -88,3 +92,9 @@ R 1 T 66 ApplicationProgramBaggage
 2330886
 1627773
 XXX
+
+
+-------------------------------------
+T 68 EmptySection2
+C1 T68 1 4 N ID
+C2 T68 1 4 N Name

@@ -5,6 +5,7 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.freebus.fts.vdx.VdxFileReader;
+import org.freebus.fts.vdx.VdxSection;
 import org.freebus.fts.vdx.VdxSectionHeader;
 
 public class TestVdxFileReader extends TestCase
@@ -12,10 +13,9 @@ public class TestVdxFileReader extends TestCase
    public void testScan() throws Exception
    {
       VdxFileReader reader = new VdxFileReader("src/test/resources/test-file.vd_");
-//      VdxFileReader reader = new VdxFileReader("/media/extern/Haustechnik/ETS/Tests/abb-ets.vd_");
       final Set<String> sectionNames = reader.getSectionNames();
 
-      assertEquals(4, sectionNames.size());
+      assertEquals(6, sectionNames.size());
       assertEquals(true, sectionNames.contains("manufacturer"));
 
       final VdxSectionHeader sectionHeader3 = reader.getSectionHeader("manufacturer");
@@ -32,5 +32,25 @@ public class TestVdxFileReader extends TestCase
       assertTrue(sectionHeader4.offset > sectionHeader3.offset);
       assertEquals(9, sectionHeader4.fields.length);
       assertEquals("fun_functional_entity_id", sectionHeader4.fields[5]);
+
+      final VdxSectionHeader sectionHeader5 = reader.getSectionHeader("emptysection");
+      assertNotNull(sectionHeader5);
+      assertEquals("emptysection", sectionHeader5.name);
+      assertEquals(67, sectionHeader5.id);
+      assertTrue(sectionHeader5.offset > sectionHeader4.offset);
+      assertEquals(2, sectionHeader5.fields.length);
+   }
+
+   public void testEmptySection() throws Exception
+   {
+      VdxFileReader reader = new VdxFileReader("src/test/resources/test-file.vd_");
+
+      final VdxSection section = reader.getSection("emptysection");
+      assertNotNull(section);
+      assertEquals(0, section.getNumElements());
+
+      final VdxSection section2 = reader.getSection("emptysection2");
+      assertNotNull(section2);
+      assertEquals(0, section2.getNumElements());
    }
 }
