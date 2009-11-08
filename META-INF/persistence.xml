@@ -6,8 +6,13 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence persistence_1_0.xsd" 
    <provider>oracle.toplink.essentials.ejb.cmp3.EntityManagerFactoryProvider</provider>
    <!-- provider>org.apache.openjpa.persistence.PersistenceProviderImpl</provider-->
     <class>org.freebus.fts.products.CatalogEntry</class>
+    <class>org.freebus.fts.products.CommunicationObject</class>
     <class>org.freebus.fts.products.FunctionalEntity</class>
     <class>org.freebus.fts.products.Manufacturer</class>
+    <class>org.freebus.fts.products.Parameter</class>
+    <class>org.freebus.fts.products.ParameterAtomicType</class>
+    <class>org.freebus.fts.products.ParameterType</class>
+    <class>org.freebus.fts.products.ParameterValue</class>
     <class>org.freebus.fts.products.Product</class>
     <class>org.freebus.fts.products.VirtualDevice</class>
     <properties>
@@ -26,8 +31,9 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence persistence_1_0.xsd" 
      <property name="toplink.jdbc.url" value="jdbc:hsqldb:file:tmp/testdb"/>
      <property name="toplink.jdbc.user" value="sa"/>
      <property name="toplink.jdbc.password" value=""/>
+     <!--property name="toplink.ddl-generation" value="create-tables"/-->
      <!--property name="toplink.ddl-generation" value="drop-and-create-tables"/-->
-     <property name="toplink.ddl-generation" value="create-tables"/>
+     <property name="toplink.ddl-generation" value="drop-and-create-tables"/>
      <property name="toplink.ddl-generation.output-mode" value="database"/>
      <property name="hsqldb.default_table_type" value="cached"/>
 

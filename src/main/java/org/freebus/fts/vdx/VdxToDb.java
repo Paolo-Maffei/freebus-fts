@@ -10,12 +10,18 @@ import java.util.Set;
 
 import javax.persistence.Column;
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import org.freebus.fts.Config;
 import org.freebus.fts.db.DatabaseResources;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
+import org.freebus.fts.products.ParameterType;
+import org.freebus.fts.products.ParameterValue;
 import org.freebus.fts.products.Product;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.utils.I18n;
@@ -46,8 +52,9 @@ public final class VdxToDb extends ListenableWorker
     */
    public void run() throws IOException
    {
-      final int stepGroups = 7; // number of "copyXY" methods that get called below +2
+      final int stepGroups = 12; // number of "copyXY" methods that get called below +2
       final int totalSteps = stepGroups * 10;
+      final EntityTransaction transaction = em.getTransaction();
       setTotalSteps(totalSteps);
 
       stepOffset = 0;
@@ -57,36 +64,62 @@ public final class VdxToDb extends ListenableWorker
       lookupLanguageId();
       stepOffset += 10;
 
-      em.getTransaction().begin();
+      transaction.begin();
 
       copyManufacturers();
       stepOffset += 10;
 
-      em.getTransaction().commit();
-      em.getTransaction().begin();
-
       copyFunctionalEntities();
       stepOffset += 10;
 
-      em.getTransaction().commit();
-      em.getTransaction().begin();
+      transaction.commit();
+      transaction.begin();
 
       copyVirtualDevices();
       stepOffset += 10;
 
-      em.getTransaction().commit();
-      em.getTransaction().begin();
+      transaction.commit();
+      transaction.begin();
 
       copyCatalogEntries();
       stepOffset += 10;
 
-      em.getTransaction().commit();
-      em.getTransaction().begin();
+      transaction.commit();
+      transaction.begin();
 
       copyProducts();
       stepOffset += 10;
 
-      em.getTransaction().commit();
+      copyParameterAtomicTypes();
+      stepOffset += 10;
+
+      transaction.commit();
+      transaction.begin();
+
+      copyParameterTypes();
+      stepOffset += 10;
+
+      transaction.commit();
+      transaction.begin();
+
+      copyParameterValues();
+      stepOffset += 10;
+
+      transaction.commit();
+      transaction.begin();
+
+      copyParameters();
+      stepOffset += 10;
+
+      transaction.commit();
+      transaction.begin();
+
+      copyCommunicationObjects();
+      stepOffset += 10;
+
+      progress(totalSteps-2, I18n.getMessage("VdxToDb_Commit"));
+      transaction.commit();
+
       progress(totalSteps, I18n.getMessage("VdxToDb_Done"));
    }
 
@@ -189,8 +222,9 @@ public final class VdxToDb extends ListenableWorker
                   if (pos >= 0) val = val.substring(0, pos);
                   field.setInt(obj, val.isEmpty() ? 0 : Integer.parseInt(val));                  
                }
+               else if (type == double.class) field.setDouble(obj, val.isEmpty() ? 0.0 : Double.parseDouble(val));
                else if (type == boolean.class) field.setBoolean(obj, val.isEmpty() ? false : Integer.parseInt(val) != 0);
-               else throw new Exception("Variable type not supported by mapper: " + type.toString());
+               else throw new Exception("Variable type not supported by vdx-to-db mapper: " + type.toString());
             }
 
             objs[i] = obj;
@@ -259,7 +293,7 @@ public final class VdxToDb extends ListenableWorker
    }
 
    /**
-    * Copy the catalog entries and product descriptions.
+    * Copy the catalog entries.
     * 
     * @throws IOException
     */
@@ -269,35 +303,9 @@ public final class VdxToDb extends ListenableWorker
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
       final Object objs[] = getVdxEntries(name, CatalogEntry.class);
 
-      final VdxSection section = getSection("product_description");
-      final VdxSectionHeader header = section.getHeader();
-      final int idIdx = header.getIndexOf("catalog_entry_id");
-      final int textIdx = header.getIndexOf("product_description_text");
-      final int langIdIdx = header.getIndexOf("language_id");
-      final int num = section.getNumElements();
-      final Map<Integer, String> descs = new HashMap<Integer, String>();
-
-      for (int i = 0; i < num; ++i)
-      {
-         if (section.getIntValue(i, langIdIdx) != languageId) continue;
-         final int id = section.getIntValue(i, idIdx); 
-
-         String val = descs.get(id);
-         if (val == null) val = section.getValue(i, textIdx);
-         else val = val + '\n' + section.getValue(i, textIdx);
-
-         descs.put(id, val);
-      }
-
       progress(stepOffset + 5, null);
       for (Object obj: objs)
-      {
-         final CatalogEntry ent = (CatalogEntry) obj;
-         final String desc = descs.get(ent.getId());
-//         if (desc != null && !desc.isEmpty()) ent.setDescription(desc);
-
-         em.merge(ent);
-      }
+         em.merge(obj);
 
       System.out.printf("Processed %d %s\n", objs.length, name);
    }
@@ -312,6 +320,96 @@ public final class VdxToDb extends ListenableWorker
       final String name = "hw_product";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
       final Object objs[] = getVdxEntries(name, Product.class);
+
+      progress(stepOffset + 5, null);
+      for (Object obj: objs)
+         em.merge(obj);
+
+      System.out.printf("Processed %d %s\n", objs.length, name);
+   }
+
+   /**
+    * Copy the parameter atomic types.
+    * 
+    * @throws IOException
+    */
+   protected void copyParameterAtomicTypes() throws IOException
+   {
+      final String name = "parameter_atomic_type";
+      progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      final Object objs[] = getVdxEntries(name, ParameterAtomicType.class);
+
+      progress(stepOffset + 5, null);
+      for (Object obj: objs)
+         em.merge(obj);
+
+      System.out.printf("Processed %d %s\n", objs.length, name);
+   }
+
+   /**
+    * Copy the parameter types.
+    * 
+    * @throws IOException
+    */
+   protected void copyParameterTypes() throws IOException
+   {
+      final String name = "parameter_type";
+      progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      final Object objs[] = getVdxEntries(name, ParameterType.class);
+
+      progress(stepOffset + 5, null);
+      for (Object obj: objs)
+         em.merge(obj);
+
+      System.out.printf("Processed %d %s\n", objs.length, name);
+   }
+
+   /**
+    * Copy the parameter type values.
+    * 
+    * @throws IOException
+    */
+   protected void copyParameterValues() throws IOException
+   {
+      final String name = "parameter_list_of_values";
+      progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      final Object objs[] = getVdxEntries(name, ParameterValue.class);
+
+      progress(stepOffset + 5, null);
+      for (Object obj: objs)
+         em.merge(obj);
+
+      System.out.printf("Processed %d %s\n", objs.length, name);
+   }
+
+   /**
+    * Copy the parameters.
+    * 
+    * @throws IOException
+    */
+   protected void copyParameters() throws IOException
+   {
+      final String name = "parameter";
+      progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      final Object objs[] = getVdxEntries(name, Parameter.class);
+
+      progress(stepOffset + 5, null);
+      for (Object obj: objs)
+         em.merge(obj);
+
+      System.out.printf("Processed %d %s\n", objs.length, name);
+   }
+
+   /**
+    * Copy the communication objects.
+    * 
+    * @throws IOException
+    */
+   protected void copyCommunicationObjects() throws IOException
+   {
+      final String name = "communication_object";
+      progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      final Object objs[] = getVdxEntries(name, CommunicationObject.class);
 
       progress(stepOffset + 5, null);
       for (Object obj: objs)

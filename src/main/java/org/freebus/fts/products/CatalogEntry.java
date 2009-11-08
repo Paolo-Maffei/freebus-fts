@@ -1,9 +1,10 @@
 package org.freebus.fts.products;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Lob;
 import javax.persistence.Table;
 
 
@@ -14,13 +15,15 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "catalog_entry")
-public class CatalogEntry
+public class CatalogEntry implements Serializable
 {
+   private static final long serialVersionUID = 4022059156749728267L;
+
    @Id
    @Column(name = "catalog_entry_id", columnDefinition = "INT", unique = true, nullable = false)
    private int id;
 
-   @Column(name = "entry_name")
+   @Column(name = "entry_name", nullable = false)
    private String name;
 
    @Column(name = "manufacturer_id", columnDefinition = "INT")
@@ -35,7 +38,7 @@ public class CatalogEntry
    @Column(name = "entry_width_in_millimeters", columnDefinition = "INT")
    private int widthMM;
 
-   @Column(name = "din_flag", columnDefinition = "BOOLEAN")
+   @Column(name = "din_flag", columnDefinition = "BOOLEAN", nullable = false)
    private boolean din;
 
    @Column(name = "order_number")
@@ -46,9 +49,6 @@ public class CatalogEntry
 
    @Column(name = "series")
    private String series;
-
-   @Column(name = "product_description")
-   private String description;
 
    /**
     * Create an empty catalog-entry object.
@@ -194,22 +194,6 @@ public class CatalogEntry
    public void setSeries(String series)
    {
       this.series = series;
-   }
-
-   /**
-    * Set the description.
-    */
-   public void setDescription(String description)
-   {
-      this.description = description;
-   }
-
-   /**
-    * @return the description
-    */
-   public String getDescription()
-   {
-      return description;
    }
 
    /**
