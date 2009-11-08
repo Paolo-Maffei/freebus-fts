@@ -1,19 +1,35 @@
 package org.freebus.fts.products;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 /**
  * A manufacturer.
  */
+@Entity
+@Table(name = "manufacturer", uniqueConstraints = @UniqueConstraint(columnNames = "manufacturer_id"))
 public class Manufacturer
 {
    public final static Manufacturer NOBODY = new Manufacturer(0, "Nobody");
+   
+   @Id
+   @Column(name = "manufacturer_id", columnDefinition = "INT", unique = true, nullable = false)
+   private int id;
 
-   private final int id;
-   private final String name;
-   private final Map<Integer,CatalogGroup> catalogGroups = new HashMap<Integer,CatalogGroup>();
+   @Column(name = "manufacturer_name", length = 50, nullable = false)
+   private String name;
+
+   /**
+    * Create a manufacturer with default values.
+    */
+   public Manufacturer()
+   {
+      id = 0;
+      name = "Unnamed";
+   }
 
    /**
     * Create a manufacturer.
@@ -41,30 +57,6 @@ public class Manufacturer
    }
 
    /**
-    * Add a functional-entity.
-    */
-   public void addFunctionalEntity(CatalogGroup catalogGroup)
-   {
-      catalogGroups.put(catalogGroup.getId(), catalogGroup);
-   }
-
-   /**
-    * @return the functional-entity with the given id.
-    */
-   public CatalogGroup getFunctionalEntity(int id)
-   {
-      return catalogGroups.get(id);
-   }
-   
-   /**
-    * @return all id's of the functional-entities.
-    */
-   public Set<Integer> getFunctionalEntityKeys()
-   {
-      return catalogGroups.keySet();
-   }
-
-   /**
     * Returns a hash-code for the object.
     */
    @Override
@@ -72,17 +64,17 @@ public class Manufacturer
    {
       return id;
    }
-   
+
    /**
     * Compare two manufacturers by id.
     */
    @Override
    public boolean equals(final Object o)
    {
-      if (o==this) return true;
+      if (o == this) return true;
       if (!(o instanceof Manufacturer)) return false;
-      final Manufacturer oo = (Manufacturer)o;
-      return id==oo.id;
+      final Manufacturer oo = (Manufacturer) o;
+      return id == oo.id;
    }
 
    /**
@@ -91,6 +83,6 @@ public class Manufacturer
    @Override
    public String toString()
    {
-      return name+" ["+Integer.toString(id)+"]";
+      return name + " [" + Integer.toString(id) + "]";
    }
 }

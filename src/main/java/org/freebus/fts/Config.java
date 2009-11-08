@@ -24,6 +24,7 @@ public final class Config
    private String tempDir = null;
    private String vdxDir = null;
    private String language = "German";
+   private String productsDb = "products/db";
 
    private final String configFileName;
    private final String homeDir, appDir;
@@ -75,6 +76,22 @@ public final class Config
    public String getLanguage()
    {
       return language;
+   }
+
+   /**
+    * Set the name of the products database.
+    */
+   public void setProductsDb(String productsDb)
+   {
+      this.productsDb = productsDb;
+   }
+
+   /**
+    * @return the name of the products database
+    */
+   public String getProductsDb()
+   {
+      return productsDb;
    }
 
    /**
@@ -195,6 +212,7 @@ public final class Config
             {
                if (key.equals("comm_port")) setCommPort(val);
                else if (key.equals("vdx_dir")) vdxDir = val;
+               else if (key.equals("products_db")) productsDb = val;
             }
             catch (Exception e)
             {
@@ -242,6 +260,7 @@ public final class Config
          out.println("; FTS Configuration");
          out.println("comm_port=" + commPort);
          out.println("vdx_dir=" + vdxDir);
+         out.println("products_db=" + productsDb);
 
          out.flush();
          outStream.close();

@@ -29,6 +29,13 @@
         <include>*.txt</include>
       </includes>
     </fileSet>
+    <fileSet>
+      <directory>${basedir}/META-INF</directory>
+      <outputDirectory>/META-INF</outputDirectory>
+      <includes>
+        <include>*.xml</include>
+      </includes>
+    </fileSet>
   </fileSets>
   <files>
     <file>

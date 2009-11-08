@@ -9,7 +9,7 @@ import java.util.Set;
 import java.util.TreeMap;
 
 import org.freebus.fts.Config;
-import org.freebus.fts.products.CatalogGroup;
+import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.ProductDb;
 import org.freebus.fts.products.ProductFilter;
 import org.freebus.fts.products.VirtualDevice;
@@ -21,7 +21,7 @@ public final class VdxProductDb implements ProductDb
 {
    private final VdxFileReader reader;
    private Map<Integer, String> manufacturers = null;
-   private Map<Integer, CatalogGroup> groups = null;
+   private Map<Integer, FunctionalEntity> groups = null;
    private Map<Integer, VirtualDevice> virtualDevices = null;
    private Map<Integer, String> productDescriptions = null;
    private int languageId = 0;
@@ -46,12 +46,12 @@ public final class VdxProductDb implements ProductDb
    }
 
    @Override
-   public Set<CatalogGroup> getCatalogGroups(ProductFilter filter) throws IOException
+   public Set<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException
    {
-      final Set<CatalogGroup> matches = new HashSet<CatalogGroup>();
+      final Set<FunctionalEntity> matches = new HashSet<FunctionalEntity>();
       if (groups == null) updateCatalogGroups();
 
-      for (final CatalogGroup cat: groups.values())
+      for (final FunctionalEntity cat: groups.values())
       {
          if (filter.manufacturers != null &&
              Arrays.binarySearch(filter.manufacturers, cat.getManufacturerId()) < 0)
@@ -92,13 +92,13 @@ public final class VdxProductDb implements ProductDb
 
       for (final VirtualDevice dev: virtualDevices.values())
       {
-         if (filter.catalogGroups != null &&
-             Arrays.binarySearch(filter.catalogGroups, dev.getCatalogGroupId()) < 0)
+         if (filter.functionalEntities != null &&
+             Arrays.binarySearch(filter.functionalEntities, dev.getFunctionalEntityId()) < 0)
             continue;
 
          if (filter.manufacturers != null)
          {
-            final CatalogGroup catGroup = groups.get(dev.getCatalogGroupId());
+            final FunctionalEntity catGroup = groups.get(dev.getFunctionalEntityId());
             if (Arrays.binarySearch(filter.manufacturers, catGroup.getManufacturerId()) < 0)
                continue;
          }
@@ -156,7 +156,7 @@ public final class VdxProductDb implements ProductDb
     */
    protected void updateCatalogGroups() throws IOException
    {
-      groups = new HashMap<Integer, CatalogGroup>();
+      groups = new HashMap<Integer, FunctionalEntity>();
 
       final VdxSection section = reader.getSection("functional_entity");
       final int groupIdIdx = section.getHeader().getIndexOf("functional_entity_id");
@@ -170,7 +170,7 @@ public final class VdxProductDb implements ProductDb
          final String[] values = section.getElementValues(i);
 
          final int groupId = Integer.parseInt(values[groupIdIdx]);
-         final CatalogGroup cat = new CatalogGroup(groupId, 
+         final FunctionalEntity cat = new FunctionalEntity(groupId, 
                Integer.parseInt(values[manuIdIdx]), values[nameIdx], values[descIdx]);
 
          if (parentIdIdx >= 0)
@@ -196,7 +196,7 @@ public final class VdxProductDb implements ProductDb
       final int idIdx = section.getHeader().getIndexOf("virtual_device_id");
       final int catIdIdx = section.getHeader().getIndexOf("catalog_entry_id");
 //      final int progIdIdx = section.getHeader().getIndexOf("program_id");
-      final int groupIdIdx = section.getHeader().getIndexOf("functional_entity_id");
+      final int funIdIdx = section.getHeader().getIndexOf("functional_entity_id");
       final int nameIdx = section.getHeader().getIndexOf("virtual_device_name");
       final int descIdx = section.getHeader().getIndexOf("virtual_device_description");
 
@@ -204,7 +204,7 @@ public final class VdxProductDb implements ProductDb
       {
          final VirtualDevice dev = new VirtualDevice(section.getIntValue(i, idIdx),
                section.getValue(i, nameIdx), section.getValue(i, descIdx),
-               section.getIntValue(i, groupIdIdx), section.getIntValue(i, catIdIdx));
+               section.getIntValue(i, funIdIdx), section.getIntValue(i, catIdIdx));
 
          virtualDevices.put(dev.getId(), dev);
       }

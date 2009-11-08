@@ -67,17 +67,18 @@ public final class SchemaConfig
    }
 
    /**
-    * Update the database to the latest version
+    * Update the database to the latest version, if required.
     * 
     * @throws SQLException
     */
    public void update() throws SQLException
    {
       if (installedVersion < 0) getInstalledVersion();
+      if (installedVersion == version) return;
 
       if (installedVersion == 0)
       {
-         log("Initial database installation: " + Database.getDefault().getName());
+         log("Creating database " + Database.getDefault().getName());
          installTables();
       }
       else
@@ -112,11 +113,13 @@ public final class SchemaConfig
       {
          tableType = resultSet.getString(2);
          tableName = resultSet.getString(3);
-         if (tableType.equals("APP")) stmt.addBatch("drop table " + tableName);
+         if (tableType.equals("PUBLIC")) stmt.addBatch("drop table " + tableName);
       }
 
       stmt.executeBatch();
       con.commit();
+
+      installedVersion = -1;
    }
 
    /**
@@ -139,16 +142,26 @@ public final class SchemaConfig
       stmt.addBatch("create table version(version int not null)");
       stmt.addBatch("insert into version(version) values(0)");
 
-      stmt.addBatch("create table manufacturer(manufacturer_id int not null, name varchar(20) not null)");
+      stmt.addBatch("create table manufacturer(manufacturer_id int not null, name varchar(50) not null)");
       stmt.addBatch("create unique index manufacturer_ix0 on manufacturer(manufacturer_id)");
 
-      stmt.addBatch("create table catalog_group(manufacturer_id int not null, group_id int not null, name varchar(40) not null, description varchar(255))");
-      stmt.addBatch("create unique index catalog_group_ix0 on catalog_group(manufacturer_id, group_id)");
+      stmt.addBatch("create table functional_entity(functional_entity_id int not null, manufacturer_id int not null, fun_functional_entity_id int, functional_entity_name varchar(50) not null, functional_entity_description varchar(80))");
+      stmt.addBatch("create unique index functional_entity_ix0 on functional_entity(functional_entity_id)");
+      stmt.addBatch("create index functional_entity_ix1 on functional_entity(manufacturer_id)");
 
-      stmt.addBatch("create table catalog_entry(manufacturer_id int not null, group_id int not null, name varchar(40) not null, description varchar(255))");
-      stmt.addBatch("create unique index catalog_entry_ix0 on catalog_entry(manufacturer_id, group_id)");
+      stmt.addBatch("create table catalog_entry(catalog_entry_id int not null, product_id int not null, manufacturer_id int not null, entry_name varchar(50), entry_colour varchar(20), entry_width_in_modules double, entry_width_in_millimeters double, din_flag boolean, registration_ts datetime(0))");
+      stmt.addBatch("create unique index catalog_entry_ix0 on catalog_entry(catalog_entry_id)");
+//      stmt.addBatch("create index catalog_entry_ix1 on catalog_entry(product_id)");
+//      stmt.addBatch("create index catalog_entry_ix2 on catalog_entry(manufacturer_id)");
+
+      stmt.addBatch("create table virtual_device(virtual_device_id int not null, catalog_entry_id int not null, program_id int not null, virtual_device_name varchar(50) not null, virtual_device_description varchar(80) not null, functional_entity_id int not null, product_type_id int not null, medium_types varchar(255))");
+      stmt.addBatch("create unique index virtual_device_ix0 on virtual_device(virtual_device_id)");
+      stmt.addBatch("create index virtual_device_ix1 on virtual_device(catalog_entry_id)");
+      stmt.addBatch("create index virtual_device_ix2 on virtual_device(functional_entity_id)");
 
       stmt.executeBatch();
+      con.commit();
+
       installedVersion = version;
    }
 }

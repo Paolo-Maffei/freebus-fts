@@ -105,6 +105,14 @@
       <systemPath>${project.basedir}/contrib/rxtx/RXTXcomm.jar</systemPath>
     </dependency>
     <dependency>
+      <groupId>oracle</groupId>
+      <artifactId>toplink</artifactId>
+      <version>1.0</version>
+      <type>jar</type>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/contrib/toplink-essentials.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>3.8.1</version>

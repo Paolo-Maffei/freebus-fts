@@ -24,10 +24,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
-import org.freebus.fts.products.CatalogEntry;
-import org.freebus.fts.products.CatalogGroup;
+import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.ProductDb;
-import org.freebus.fts.products.ProductDbOld;
 import org.freebus.fts.products.ProductFilter;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.utils.I18n;
@@ -255,16 +253,16 @@ public class ProductsTab extends TabPage
    {
       treCategories.removeAll();
       final HashMap<Integer,TreeItem> treeItems = new HashMap<Integer,TreeItem>();
-      CatalogGroup cat;
+      FunctionalEntity cat;
       TreeItem item, parentItem;
 
       final ProductFilter filter = new ProductFilter();
       filter.manufacturers = getSelectedManufacturers();
 
-      Set<CatalogGroup> cats = null;
+      Set<FunctionalEntity> cats = null;
       try
       {
-         cats = productDb.getCatalogGroups(filter);
+         cats = productDb.getFunctionalEntities(filter);
       }
       catch (IOException e)
       {
@@ -273,9 +271,9 @@ public class ProductsTab extends TabPage
          return;
       }
 
-      final Map<String, CatalogGroup> catSorted = new TreeMap<String, CatalogGroup>();
-      for (final CatalogGroup catalogGroup: cats)
-         catSorted.put(catalogGroup.getName(), catalogGroup);
+      final Map<String, FunctionalEntity> catSorted = new TreeMap<String, FunctionalEntity>();
+      for (final FunctionalEntity functionalEntity: cats)
+         catSorted.put(functionalEntity.getName(), functionalEntity);
 
       // Process all categories, as long as there are categories to be added
       // to the tree. Found categories are removed from the catSorted set.
@@ -323,7 +321,7 @@ public class ProductsTab extends TabPage
 
       final ProductFilter filter = new ProductFilter();
       filter.manufacturers = getSelectedManufacturers();
-      filter.catalogGroups = getSelectedCategories();
+      filter.functionalEntities = getSelectedCategories();
 
       try
       {

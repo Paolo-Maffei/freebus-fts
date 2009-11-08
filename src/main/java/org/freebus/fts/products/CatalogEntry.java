@@ -1,33 +1,71 @@
 package org.freebus.fts.products;
 
-import java.util.Vector;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Lob;
+import javax.persistence.Table;
+
 
 /**
- * A device as it can be bought from a catalog or web-shop.
+ * Catalog entries name the variations of a virtual device, as it can be bought
+ * from a catalog or web-shop. Catalog entries of the same virtual device
+ * usually differ in things like housing color or maximum switching power.
  */
+@Entity
+@Table(name = "catalog_entry")
 public class CatalogEntry
 {
-   private final int id;
-   private final String name;
-   private final Manufacturer manufacturer;
-   private final Product product;
-   private final Vector<VirtualDevice> virtualDevices = new Vector<VirtualDevice>();
-   private int widthModules = 0;
-   private int widthMM = 0;
-   private boolean din = false;
-   private String orderNumber = "";
-   private String color = "";
-   private String series = ""; 
+   @Id
+   @Column(name = "catalog_entry_id", columnDefinition = "INT", unique = true, nullable = false)
+   private int id;
+
+   @Column(name = "entry_name")
+   private String name;
+
+   @Column(name = "manufacturer_id", columnDefinition = "INT")
+   private int manufacturerId;
+
+   @Column(name = "product_id", columnDefinition = "INT")
+   private int productId;
+
+   @Column(name = "entry_width_in_modules", columnDefinition = "INT")
+   private int widthModules;
+
+   @Column(name = "entry_width_in_millimeters", columnDefinition = "INT")
+   private int widthMM;
+
+   @Column(name = "din_flag", columnDefinition = "BOOLEAN")
+   private boolean din;
+
+   @Column(name = "order_number")
+   private String orderNumber;
+
+   @Column(name = "entry_colour")
+   private String color;
+
+   @Column(name = "series")
+   private String series;
+
+   @Column(name = "product_description")
+   private String description;
+
+   /**
+    * Create an empty catalog-entry object.
+    */
+   public CatalogEntry()
+   {      
+   }
 
    /**
     * Create a catalog-entry object.
     */
-   public CatalogEntry(int id, String name, Manufacturer manufacturer, Product product)
+   public CatalogEntry(int id, String name, int manufacturerId, int productId)
    {
       this.id = id;
       this.name = name;
-      this.manufacturer = manufacturer;
-      this.product = product;
+      this.manufacturerId = manufacturerId;
+      this.productId = productId;
    }
 
    /**
@@ -47,43 +85,19 @@ public class CatalogEntry
    }
 
    /**
-    * @return the manufacturer.
+    * @return the manufacturer id.
     */
-   public Manufacturer getManufacturer()
+   public int getManufacturerId()
    {
-      return manufacturer;
+      return manufacturerId;
    }
 
    /**
-    * @return the product.
+    * @return the product id.
     */
-   public Product getProduct()
+   public int getProductId()
    {
-      return product;
-   }
-
-   /**
-    * @return the number of virtual devices that this catalog-entry contains.
-    */
-   public int getVirtualDevicesCount()
-   {
-      return virtualDevices.size();
-   }
-
-   /**
-    * @return the idx-th virtual device
-    */
-   public VirtualDevice getVirtualDevice(int idx)
-   {
-      return virtualDevices.get(idx);
-   }
-   
-   /**
-    * Add a virtual device
-    */
-   public void addVirtualDevice(VirtualDevice virtualDevice)
-   {
-      virtualDevices.add(virtualDevice);
+      return productId;
    }
 
    /**
@@ -183,6 +197,22 @@ public class CatalogEntry
    }
 
    /**
+    * Set the description.
+    */
+   public void setDescription(String description)
+   {
+      this.description = description;
+   }
+
+   /**
+    * @return the description
+    */
+   public String getDescription()
+   {
+      return description;
+   }
+
+   /**
     * Returns a hash-code for the object.
     */
    @Override
@@ -190,17 +220,17 @@ public class CatalogEntry
    {
       return name.hashCode();
    }
-   
+
    /**
     * Compare two objects.
     */
    @Override
    public boolean equals(final Object o)
    {
-      if (o==this) return true;
+      if (o == this) return true;
       if (!(o instanceof CatalogEntry)) return false;
-      final CatalogEntry oo = (CatalogEntry)o;
-      return product==oo.product && manufacturer==oo.manufacturer && name==oo.name;
+      final CatalogEntry oo = (CatalogEntry) o;
+      return id == oo.id && manufacturerId == oo.manufacturerId && productId == oo.productId;
    }
 
    /**

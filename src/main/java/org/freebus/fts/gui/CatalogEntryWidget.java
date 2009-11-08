@@ -95,7 +95,7 @@ public class CatalogEntryWidget extends Composite
       }
 
       entName.setText(catalogEntry.getName());
-      entManufacturer.setText(catalogEntry.getManufacturer().getName());
+//      entManufacturer.setText(catalogEntry.getManufacturer().getName());
       entColor.setText(catalogEntry.getColor());
       entWidthModules.setText(Integer.toString(catalogEntry.getWidthModules()));
       entWidthMM.setText(Integer.toString(catalogEntry.getWidthMM()));

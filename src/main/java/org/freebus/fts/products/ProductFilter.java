@@ -14,9 +14,9 @@ public final class ProductFilter
    public int[] manufacturers = null;
 
    /**
-    * Id's of catalog groups for filtering, or null.
+    * Id's of functional-entities for filtering, or null.
     */
-   public int[] catalogGroups = null;
+   public int[] functionalEntities = null;
 
    /**
     * Optimize the contents of the object. The arrays are sorted afterwards,
@@ -26,6 +26,6 @@ public final class ProductFilter
    public void optimize()
    {
       if (manufacturers != null) Arrays.sort(manufacturers);
-      if (catalogGroups != null) Arrays.sort(catalogGroups);
+      if (functionalEntities != null) Arrays.sort(functionalEntities);
    }
 }

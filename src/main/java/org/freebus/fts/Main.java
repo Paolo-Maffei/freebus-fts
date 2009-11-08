@@ -3,7 +3,6 @@ package org.freebus.fts;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
@@ -11,6 +10,7 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.db.Database;
+import org.freebus.fts.db.DatabaseResources;
 import org.freebus.fts.db.SchemaConfig;
 import org.freebus.fts.gui.MainWindow;
 import org.freebus.fts.utils.DeleteDir;
@@ -39,31 +39,30 @@ public final class Main
          {
             final Config cfg = Config.getInstance();
             final String appDir = cfg.getAppDir();
-            System.setProperty("derby.system.home", appDir);
 
             // Remove old (Derby) database directory
             final File oldDb = new File(appDir + "/products.db");
             if (oldDb.exists()) DeleteDir.deleteDir(oldDb);
 
-            // Create database instance
-            db = new Database(appDir + "/products/db", true);
-            Database.setDefault(db);
-
-            // Ensure that the database contents exists and is up to date
-            final SchemaConfig schemaConfig = new SchemaConfig();
+//            // Create (HSQL) database instance
+//            Database.setDefault(new Database(appDir + '/' + cfg.getProductsDb(), true));
+//
+////            // Ensure that the database contents exists and is up to date
+//            final SchemaConfig schemaConfig = new SchemaConfig();
 //            schemaConfig.dropAllTables(); // for testing
-            if (schemaConfig.getVersion() > schemaConfig.getInstalledVersion())
-            {
-               System.out.println("Need to upgrade the database");
-               try
-               {
-                  schemaConfig.update();
-               }
-               catch (SQLException e)
-               {
-                  throw new Exception("Database installation/upgrade failed", e);
-               }
-            }
+
+//            try
+//            {
+//               schemaConfig.update();
+//            }
+//            catch (SQLException e)
+//            {
+//               throw new Exception("Database installation/upgrade failed", e);
+//            }
+            Database.setDefault(null);
+
+            // Create JPA entity manager
+            DatabaseResources.getEntityManagerFactory();
 
             mainWin = new MainWindow();
             mainWin.open();
@@ -100,6 +99,8 @@ public final class Main
                   e.printStackTrace();
                }
             }
+
+            DatabaseResources.close();
          }
       }
    }

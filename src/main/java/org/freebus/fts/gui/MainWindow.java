@@ -28,6 +28,7 @@ import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
 import org.freebus.fts.vdx.VdxFileReader;
 import org.freebus.fts.vdx.VdxProductDb;
+import org.freebus.fts.vdx.VdxToDb;
 
 /**
  * The main window.
@@ -125,7 +126,7 @@ public final class MainWindow extends WorkBench
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Vdx_Browser"));
       menuItem.addSelectionListener(new OnVdxBrowser());
-   
+
       //
       // Menu: Settings
       //
@@ -157,7 +158,12 @@ public final class MainWindow extends WorkBench
       toolItem.setImage(ImageCache.getImage("icons/find"));
       toolItem.addSelectionListener(new OnProductsBrowser());
       toolItem.setToolTipText(I18n.getMessage("Products_Browser_Tip"));
-   
+      
+      toolItem = new ToolItem(toolBar, SWT.PUSH);
+      toolItem.setImage(ImageCache.getImage("icons/wizard"));
+      toolItem.addSelectionListener(new OnCopyVDX());
+      toolItem.setToolTipText(I18n.getMessage("Products_Copy_VDX_Tip"));
+ 
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/bus-monitor"));
       toolItem.addSelectionListener(new OnBusMonitor());
@@ -375,5 +381,32 @@ public final class MainWindow extends WorkBench
             e.printStackTrace();
          }
       }
+   }
+
+   /**
+    * Event callback: Copy a vd_ file into the products database.
+    */
+   class OnCopyVDX extends SimpleSelectionListener
+   {
+      public void widgetSelected(SelectionEvent event)
+      {
+         final FileDialog fileDialog = new FileDialog(shell, SWT.SINGLE);
+         fileDialog.setText(I18n.getMessage("VdxToDb_Open_File"));
+         fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
+         fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
+         final String vdxDir = Config.getInstance().getVdxDir();
+         if (vdxDir!=null) fileDialog.setFilterPath(vdxDir);
+
+         final String fileName = fileDialog.open();
+         if (fileName == null) return;
+
+         final Config cfg = Config.getInstance();
+         cfg.setVdxDir(new File(fileName).getParentFile().getPath());
+         cfg.save();
+
+         final VdxToDb conv = new VdxToDb(fileName);
+         final ProgressDialog dlg = new ProgressDialog(I18n.getMessage("VdxToDb_Title"), I18n.getMessage("VdxToDb_Description").replace("%1", fileName));
+         dlg.run(conv);
+      }   
    }
 }

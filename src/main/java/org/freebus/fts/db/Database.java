@@ -2,7 +2,6 @@ package org.freebus.fts.db;
 
 import java.io.File;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.Properties;
@@ -14,8 +13,6 @@ import java.util.Properties;
  */
 public class Database
 {
-//   private static String driverName = "org.apache.derby.jdbc.EmbeddedDriver";
-//   private static String protocol = "jdbc:derby:";
    private static String driverName = "org.hsqldb.jdbcDriver";
    private static String protocol = "jdbc:hsqldb:file:";
    private static Database instance = null;
