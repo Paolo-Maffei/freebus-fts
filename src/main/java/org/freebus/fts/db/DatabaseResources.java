@@ -4,6 +4,7 @@ import java.util.Properties;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 
 import org.freebus.fts.Config;
@@ -20,7 +21,12 @@ public final class DatabaseResources
     */
    static public EntityManager getEntityManager()
    {
-      if (entityManager == null) entityManager = getEntityManagerFactory().createEntityManager();
+      if (entityManager == null)
+      {
+         entityManager = getEntityManagerFactory().createEntityManager();
+         entityManager.setFlushMode(FlushModeType.COMMIT);
+      }
+
       return entityManager;
    }
 
@@ -35,10 +41,18 @@ public final class DatabaseResources
       {
          final Properties props = new Properties();
          final Config cfg = Config.getInstance();
+         final Driver driver = cfg.getProductsDbDriver();
 
-         final String productsDbFile = cfg.getAppDir() + '/' + cfg.getProductsDb();
-         props.setProperty("openjpa.ConnectionURL", "jdbc:hsqldb:file:" + productsDbFile + ";shutdown=true;hsqldb.default_table_type=cached");
-         props.setProperty("toplink.jdbc.url", "jdbc:hsqldb:file:" + productsDbFile + ";shutdown=true;hsqldb.default_table_type=cached");
+         String url;
+         if (driver.fileBased) url = driver.getConnectURL(cfg.getAppDir() + '/' + cfg.getProductsDbLocation());
+         else url = driver.getConnectURL(cfg.getProductsDbLocation());
+         System.out.printf("Connecting to %s\n", url);
+
+         props.setProperty("toplink.jdbc.driver", driver.className);
+         props.setProperty("toplink.jdbc.url", url);
+         props.setProperty("toplink.jdbc.user", cfg.getProductsDbUser());
+         props.setProperty("toplink.jdbc.password", cfg.getProductsDbPass());
+
          props.setProperty("hsqldb.default_table_type", "cached");  // ... does not work with openJPA
 
          entityManagerFactory = Persistence.createEntityManagerFactory("default", props);

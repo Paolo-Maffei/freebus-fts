@@ -33,7 +33,6 @@ xsi:schemaLocation="http://java.sun.com/xml/ns/persistence persistence_1_0.xsd" 
      <property name="toplink.jdbc.password" value=""/>
      <!--property name="toplink.ddl-generation" value="create-tables"/-->
      <!--property name="toplink.ddl-generation" value="drop-and-create-tables"/-->
-     <property name="toplink.ddl-generation" value="drop-and-create-tables"/>
      <property name="toplink.ddl-generation.output-mode" value="database"/>
      <property name="hsqldb.default_table_type" value="cached"/>
 

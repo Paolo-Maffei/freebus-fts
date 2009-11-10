@@ -2,8 +2,8 @@ package org.freebus.fts.gui;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 import java.util.Vector;
 
@@ -31,7 +31,7 @@ import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.utils.I18n;
 
 /**
- * A browser for a {@link ProductDbOld} products-database.
+ * A browser for a {@link ProductDb} products-database.
  */
 public class ProductsTab extends TabPage
 {
@@ -259,7 +259,7 @@ public class ProductsTab extends TabPage
       final ProductFilter filter = new ProductFilter();
       filter.manufacturers = getSelectedManufacturers();
 
-      Set<FunctionalEntity> cats = null;
+      java.util.List<FunctionalEntity> cats = null;
       try
       {
          cats = productDb.getFunctionalEntities(filter);
@@ -306,7 +306,7 @@ public class ProductsTab extends TabPage
          }
       }
       
-      if (!catSorted.isEmpty()) treCategories.select(treCategories.getItem(0));
+      if (treCategories.getItemCount() > 0) treCategories.select(treCategories.getItem(0));
       updateCatalog();
    }
 

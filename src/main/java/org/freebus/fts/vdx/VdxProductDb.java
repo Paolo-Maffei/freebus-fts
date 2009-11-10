@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
@@ -46,9 +48,9 @@ public final class VdxProductDb implements ProductDb
    }
 
    @Override
-   public Set<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException
+   public List<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException
    {
-      final Set<FunctionalEntity> matches = new HashSet<FunctionalEntity>();
+      final List<FunctionalEntity> matches = new LinkedList<FunctionalEntity>();
       if (groups == null) updateCatalogGroups();
 
       for (final FunctionalEntity cat: groups.values())
@@ -84,9 +86,9 @@ public final class VdxProductDb implements ProductDb
    }
 
    @Override
-   public Set<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException
+   public List<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException
    {
-      final Set<VirtualDevice> matches = new HashSet<VirtualDevice>();
+      final List<VirtualDevice> matches = new LinkedList<VirtualDevice>();
       if (virtualDevices == null) updateVirtualDevices();
       if (groups == null) updateCatalogGroups();
 

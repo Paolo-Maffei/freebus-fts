@@ -24,7 +24,7 @@ public interface ProductDb
     * @return A set with all matching catalog-groups.
     * @throws IOException 
     */
-   public Set<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException;
+   public List<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException;
 
    /**
     * Query the virtual devices, with optional filtering.
@@ -34,7 +34,7 @@ public interface ProductDb
     * @return A set with all matching virtual devices.
     * @throws IOException 
     */
-   public Set<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException;
+   public List<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException;
 
    /**
     * Query a specific virtual device.

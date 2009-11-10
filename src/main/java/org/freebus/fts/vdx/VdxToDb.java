@@ -5,6 +5,7 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -54,17 +55,14 @@ public final class VdxToDb extends ListenableWorker
    {
       final int stepGroups = 12; // number of "copyXY" methods that get called below +2
       final int totalSteps = stepGroups * 10;
-      final EntityTransaction transaction = em.getTransaction();
       setTotalSteps(totalSteps);
-
       stepOffset = 0;
+
 
       progress(0, I18n.getMessage("VdxToDb_Preparing"));
       reader = new VdxFileReader(fileName);
       lookupLanguageId();
       stepOffset += 10;
-
-      transaction.begin();
 
       copyManufacturers();
       stepOffset += 10;
@@ -72,20 +70,11 @@ public final class VdxToDb extends ListenableWorker
       copyFunctionalEntities();
       stepOffset += 10;
 
-      transaction.commit();
-      transaction.begin();
-
       copyVirtualDevices();
       stepOffset += 10;
 
-      transaction.commit();
-      transaction.begin();
-
       copyCatalogEntries();
       stepOffset += 10;
-
-      transaction.commit();
-      transaction.begin();
 
       copyProducts();
       stepOffset += 10;
@@ -93,32 +82,17 @@ public final class VdxToDb extends ListenableWorker
       copyParameterAtomicTypes();
       stepOffset += 10;
 
-      transaction.commit();
-      transaction.begin();
-
       copyParameterTypes();
       stepOffset += 10;
-
-      transaction.commit();
-      transaction.begin();
 
       copyParameterValues();
       stepOffset += 10;
 
-      transaction.commit();
-      transaction.begin();
-
       copyParameters();
       stepOffset += 10;
 
-      transaction.commit();
-      transaction.begin();
-
       copyCommunicationObjects();
       stepOffset += 10;
-
-      progress(totalSteps-2, I18n.getMessage("VdxToDb_Commit"));
-      transaction.commit();
 
       progress(totalSteps, I18n.getMessage("VdxToDb_Done"));
    }
@@ -239,6 +213,35 @@ public final class VdxToDb extends ListenableWorker
    }
 
    /**
+    * Write the objects of objs into the database. 
+    */
+   protected void persist(List<?> objs)
+   {
+      final EntityTransaction transaction = em.getTransaction();
+      progress(stepOffset + 2, null);
+
+      transaction.begin();
+
+      final int num = objs.size();
+      int i = 0;
+
+      for (Object obj: objs)
+      {
+         if ((++i & 1023) == 0)
+         {
+            transaction.commit();
+            transaction.begin();
+            progress(stepOffset + 2 + 8 * i / num, null);
+         }
+
+         em.merge(obj);
+         
+      }
+
+      transaction.commit();
+   }
+
+   /**
     * Copy the manufacturers.
     * 
     * @throws IOException
@@ -247,13 +250,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "manufacturer";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, Manufacturer.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(Manufacturer.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -265,13 +264,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "functional_entity";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, FunctionalEntity.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(FunctionalEntity.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -283,13 +278,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "virtual_device";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, VirtualDevice.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(VirtualDevice.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -301,13 +292,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "catalog_entry";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, CatalogEntry.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(CatalogEntry.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -319,13 +306,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "hw_product";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, Product.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(Product.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -337,13 +320,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter_atomic_type";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, ParameterAtomicType.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(ParameterAtomicType.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -355,13 +334,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter_type";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, ParameterType.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(ParameterType.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -373,13 +348,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter_list_of_values";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, ParameterValue.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(ParameterValue.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -391,13 +362,9 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, Parameter.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(Parameter.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 
    /**
@@ -409,12 +376,8 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "communication_object";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
-      final Object objs[] = getVdxEntries(name, CommunicationObject.class);
-
-      progress(stepOffset + 5, null);
-      for (Object obj: objs)
-         em.merge(obj);
-
-      System.out.printf("Processed %d %s\n", objs.length, name);
+      final List<?> objs = reader.getSection(name).toObjects(CommunicationObject.class);
+      persist(objs);
+      System.out.printf("Processed %d %s\n", objs.size(), name);
    }
 }

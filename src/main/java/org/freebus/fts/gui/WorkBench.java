@@ -36,6 +36,7 @@ public class WorkBench
    protected final SashForm body = new SashForm(shell, SWT.FLAT | SWT.HORIZONTAL);;
    protected final CTabFolder leftTabFolder;
    protected final CTabFolder centerTabFolder;
+   private boolean restart;
 
    protected final Map<Integer,CTabFolder> tabFolders = new HashMap<Integer,CTabFolder>();
    private final Map<TabPageIdent,TabPage> tabPages = new ConcurrentHashMap<TabPageIdent,TabPage>();
@@ -136,6 +137,22 @@ public class WorkBench
    }
 
    /**
+    * @return the restart flag.
+    */
+   public boolean isRestart()
+   {
+      return restart;
+   }
+
+   /**
+    * @param restart the application.
+    */
+   public void setRestart(boolean restart)
+   {
+      this.restart = restart;
+   }
+
+   /**
     * Open a tab-page for the given item. If it is already opened, bring
     * it to the front.
     * 
@@ -207,7 +224,7 @@ public class WorkBench
     */
    public void run()
    {
-      while (!shell.isDisposed())
+      while (!restart && !shell.isDisposed())
       {
          if (!display.readAndDispatch()) display.sleep();
       }

@@ -5,6 +5,7 @@ import gnu.io.CommPortIdentifier;
 import java.util.Enumeration;
 
 import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Combo;
 import org.eclipse.swt.widgets.Composite;
@@ -17,7 +18,7 @@ import org.freebus.fts.utils.I18n;
  */
 public class PortSelector extends Composite
 {
-   private final Combo cbxPort;
+   private final Combo cboPort;
 
    /**
     * Create a comm-port selection widget.
@@ -33,10 +34,12 @@ public class PortSelector extends Composite
 
       Label lbl;
 
-      lbl = new Label(this, SWT.CENTER);
+      lbl = new Label(this, SWT.LEFT);
+      lbl.setLayoutData(new GridData(160, SWT.DEFAULT));
       lbl.setText(I18n.getMessage("PortSelector_Port"));
 
-      cbxPort = new Combo(this, SWT.READ_ONLY);
+      cboPort = new Combo(this, SWT.READ_ONLY);
+      cboPort.setLayoutData(new GridData(200, SWT.DEFAULT));
       setupPortsCombo();
    }
 
@@ -45,7 +48,7 @@ public class PortSelector extends Composite
     */
    protected void setupPortsCombo()
    {
-      cbxPort.removeAll();
+      cboPort.removeAll();
 
       final String commPort = Config.getInstance().getCommPort();
 
@@ -56,8 +59,8 @@ public class PortSelector extends Composite
          
          if (portIdent.getPortType() == CommPortIdentifier.PORT_SERIAL)
          {
-            cbxPort.add(portIdent.getName());
-            if (portIdent.getName().equals(commPort)) cbxPort.select(cbxPort.getItemCount()-1);
+            cboPort.add(portIdent.getName());
+            if (portIdent.getName().equals(commPort)) cboPort.select(cboPort.getItemCount()-1);
          }
       }
    }
@@ -69,7 +72,7 @@ public class PortSelector extends Composite
    {
       final Config cfg = Config.getInstance();
 
-      int idx = cbxPort.getSelectionIndex();
-      cfg.setCommPort(idx>=0 ? cbxPort.getItem(idx) : null);
+      int idx = cboPort.getSelectionIndex();
+      cfg.setCommPort(idx>=0 ? cboPort.getItem(idx) : null);
    }
 }

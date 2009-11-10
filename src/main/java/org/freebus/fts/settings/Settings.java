@@ -10,11 +10,12 @@ import org.eclipse.swt.layout.RowData;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Composite;
-import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
+import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.freebus.fts.Config;
 import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.gui.MainWindow;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.SimpleSelectionListener;
 
@@ -23,10 +24,12 @@ import org.freebus.fts.utils.SimpleSelectionListener;
  */
 public class Settings
 {
-   private final Shell shell = new Shell(Display.getDefault(), SWT.DIALOG_TRIM|SWT.APPLICATION_MODAL);
+   private final Shell shell = new Shell(MainWindow.getInstance().getShell(), SWT.DIALOG_TRIM|SWT.SYSTEM_MODAL);
    private final Group contents = new Group(shell, SWT.SHADOW_NONE);
    private final Group portSelectorGroup = new Group(contents, SWT.SHADOW_NONE);
+   private final Group productsDbGroup = new Group(contents, SWT.SHADOW_NONE);
    private final PortSelector portSelector = new PortSelector(portSelectorGroup, SWT.FLAT);
+   private final DatabaseSettings dbsProductsDb = new DatabaseSettings(productsDbGroup, SWT.READ_ONLY);
    private static Settings instance = null;
 
    /**
@@ -37,7 +40,7 @@ public class Settings
       if (instance==null) instance = new Settings();
       else instance.shell.setMinimized(false);
    }
-   
+
    /**
     * Create a settings dialog.
     */
@@ -45,11 +48,13 @@ public class Settings
    {
       shell.setText(I18n.getMessage("Settings_Title"));
       shell.setLayout(new FormLayout());
-      shell.setSize(640, 400);
+      shell.setSize(500, 400);
 
       Button btn;
       FormData formData;
       FillLayout fillLayout;
+
+      contents.setLayout(new FormLayout());
 
       formData = new FormData();
       formData.top = new FormAttachment(2);
@@ -62,13 +67,26 @@ public class Settings
       fillLayout.marginWidth = 4;
       fillLayout.marginHeight = 4;
       portSelectorGroup.setLayout(fillLayout);
-      contents.setLayout(new FormLayout());
       formData = new FormData();
       formData.top = new FormAttachment(0);
       formData.left = new FormAttachment(0);
       formData.right = new FormAttachment(100);
       portSelectorGroup.setLayoutData(formData);
 
+      productsDbGroup.setText(I18n.getMessage("Settings_ProductsDb"));
+      fillLayout = new FillLayout();
+      fillLayout.marginWidth = 4;
+      fillLayout.marginHeight = 4;
+      productsDbGroup.setLayout(fillLayout);
+      formData = new FormData();
+      formData.top = new FormAttachment(portSelectorGroup, 1);
+      formData.left = new FormAttachment(0);
+      formData.right = new FormAttachment(100);
+      productsDbGroup.setLayoutData(formData);
+
+      //
+      // Dialog buttons
+      //
       Composite btnBox = new Composite(shell, SWT.FLAT);
 
       RowLayout btnBoxLayout = new RowLayout();
@@ -86,46 +104,72 @@ public class Settings
 
       btn = new Button(btnBox, SWT.PUSH);
       btn.setText(I18n.getMessage("Save_Button"));
-      btn.addSelectionListener(new OnSave());
+      btn.addSelectionListener(new SimpleSelectionListener()
+      {
+         @Override
+         public void widgetSelected(SelectionEvent e)
+         {
+            save();
+         }  
+      });
       RowData rowData = new RowData();
       rowData.width = 120;
       btn.setLayoutData(rowData);
 
       btn = new Button(btnBox, SWT.PUSH);
       btn.setText(I18n.getMessage("Cancel_Button"));
-      btn.addSelectionListener(new OnCancel());
+      btn.addSelectionListener(new SimpleSelectionListener()
+      {
+         @Override
+         public void widgetSelected(SelectionEvent e)
+         {
+            cancel();
+         }  
+      });
       btn.pack();
 
+      portSelectorGroup.layout();
+      productsDbGroup.layout();
+
+      shell.layout();
       shell.open();
    }
 
    /**
-    * Event listener for: save button pressed
+    * Save button pressed
     */
-   private class OnSave extends SimpleSelectionListener
+   protected void save()
    {
-      public void widgetSelected(SelectionEvent event)
-      {
-         portSelector.apply();
-         Config.getInstance().save();
-         BusInterfaceFactory.disposeDefaultInstance();
+      boolean restartRequired = false;
 
-         instance = null;
-         shell.close();
-         shell.dispose();        
+      portSelector.apply();
+      if (dbsProductsDb.apply()) restartRequired = true;
+
+      Config.getInstance().save();
+      BusInterfaceFactory.disposeDefaultInstance();
+
+      instance = null;
+
+      if (restartRequired)
+      {
+         MessageBox mbox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
+         mbox.setMessage(I18n.getMessage("Settings_Restart_required"));
+         int ret = mbox.open();
+         if (ret == SWT.YES) MainWindow.getInstance().setRestart(true);
       }
+
+      shell.close();
+      shell.dispose();
    }
 
    /**
-    * Event listener for: cancel button pressed
+    * Cancel button pressed
     */
-   private class OnCancel extends SimpleSelectionListener
+   protected void cancel()
    {
-      public void widgetSelected(SelectionEvent event)
-      {
-         instance = null;
-         shell.close();
-         shell.dispose();
-      }
+      instance = null;
+
+      shell.close();
+      shell.dispose();
    }
 }

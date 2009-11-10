@@ -11,6 +11,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
+import org.freebus.fts.db.Driver;
 import org.freebus.fts.utils.I18n;
 
 /**
@@ -19,12 +20,16 @@ import org.freebus.fts.utils.I18n;
  */
 public final class Config
 {
-   static private Config instance = null;
-   private String commPort = null;
-   private String tempDir = null;
-   private String vdxDir = null;
+   static private Config instance;
+   private String commPort;
+   private String tempDir;
+   private String vdxDir;
    private String language = "German";
-   private String productsDb = "products/db";
+
+   private String productsDbLocation = "products/db";
+   private Driver productsDbDriver = Driver.getDefault();
+   private String productsDbUser = "sa";
+   private String productsDbPass = "";
 
    private final String configFileName;
    private final String homeDir, appDir;
@@ -79,23 +84,95 @@ public final class Config
    }
 
    /**
-    * Set the name of the products database.
+    * Set the location of the products database.
+    * E.g. "localhost" or "products/db".
     */
-   public void setProductsDb(String productsDb)
+   public void setProductsDbLocation(String productsDbLocation)
    {
-      this.productsDb = productsDb;
+      this.productsDbLocation = productsDbLocation;
    }
 
    /**
-    * @return the name of the products database
+    * @return the location of the products database.
+    * E.g. "localhost" or "products/db".
     */
-   public String getProductsDb()
+   public String getProductsDbLocation()
    {
-      return productsDb;
+      return productsDbLocation;
    }
 
    /**
-    * Set the temp directory.
+    * @return the productsDbDriver
+    */
+   public Driver getProductsDbDriver()
+   {
+      return productsDbDriver;
+   }
+
+   /**
+    * @param productsDbDriver the productsDbDriver to set
+    */
+   public void setProductsDbDriver(Driver productsDbDriver)
+   {
+      this.productsDbDriver = productsDbDriver;
+   }
+
+   /**
+    * @return the productsDbUser
+    */
+   public String getProductsDbUser()
+   {
+      return productsDbUser;
+   }
+
+   /**
+    * @param productsDbUser the productsDbUser to set
+    */
+   public void setProductsDbUser(String productsDbUser)
+   {
+      this.productsDbUser = productsDbUser;
+   }
+
+   /**
+    * @return the productsDbPass
+    */
+   public String getProductsDbPass()
+   {
+      return rot13(productsDbPass);
+   }
+   
+   /**
+    * @param productsDbPass the productsDbPass to set
+    */
+   public void setProductsDbPass(String productsDbPass)
+   {
+      this.productsDbPass = rot13(productsDbPass);
+   }
+
+   /**
+    * A variation of the ROT-13 algorithm for string obfuscation.
+    * This is no password security, of course.
+    */
+   private String rot13(String str)
+   {
+      final int len = str.length();
+      StringBuilder result = new StringBuilder(len);
+
+      for (int i = 0; i < len; ++i)
+      {
+         char ch = str.charAt(i);
+         if ((ch >= 'a' && ch <= 'm') || (ch >= 'A' && ch <= 'M')) ch += 13;
+         else if ((ch >= 'n' && ch <= 'z') || (ch >= 'N' && ch <= 'Z')) ch -= 13;
+         else if (ch >= '0' && ch <= '4') ch += 5;
+         else if (ch >= '5' && ch <= '9') ch -= 5;
+         result.append(ch);
+      }
+
+      return result.toString();
+   }
+
+   /**
+    * Set the directory for temporary files.
     */
    public void setTempDir(String tempDir)
    {
@@ -103,7 +180,7 @@ public final class Config
    }
 
    /**
-    * @return the temp directory.
+    * @return the directory for temporary files.
     */
    public String getTempDir()
    {
@@ -212,7 +289,10 @@ public final class Config
             {
                if (key.equals("comm_port")) setCommPort(val);
                else if (key.equals("vdx_dir")) vdxDir = val;
-               else if (key.equals("products_db")) productsDb = val;
+               else if (key.equals("products_db_driver")) productsDbDriver = Driver.valueOf(val);
+               else if (key.equals("products_db_location")) productsDbLocation = val;
+               else if (key.equals("products_db_user")) productsDbUser = val;
+               else if (key.equals("products_db_pass")) productsDbPass = val;
             }
             catch (Exception e)
             {
@@ -260,7 +340,10 @@ public final class Config
          out.println("; FTS Configuration");
          out.println("comm_port=" + commPort);
          out.println("vdx_dir=" + vdxDir);
-         out.println("products_db=" + productsDb);
+         out.println("products_db_driver=" + productsDbDriver.toString());
+         out.println("products_db_location=" + productsDbLocation);
+         out.println("products_db_user=" + productsDbUser);
+         out.println("products_db_pass=" + productsDbPass);
 
          out.flush();
          outStream.close();

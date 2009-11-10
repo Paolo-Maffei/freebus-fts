@@ -67,6 +67,7 @@ public final class Main
             mainWin = new MainWindow();
             mainWin.open();
             mainWin.run();
+            restart = mainWin.isRestart();
          }
          catch (Exception e)
          {

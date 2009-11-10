@@ -14,6 +14,7 @@ import org.eclipse.swt.widgets.ToolItem;
 import org.freebus.fts.Config;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.db.DatabaseProductDb;
 import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
@@ -27,7 +28,6 @@ import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
 import org.freebus.fts.vdx.VdxFileReader;
-import org.freebus.fts.vdx.VdxProductDb;
 import org.freebus.fts.vdx.VdxToDb;
 
 /**
@@ -38,6 +38,7 @@ public final class MainWindow extends WorkBench
    private static MainWindow instance = null;
 
    final Menu fileMenu = new Menu(shell, SWT.DROP_DOWN);
+   final Menu productsMenu = new Menu(shell, SWT.DROP_DOWN);
    final Menu toolsMenu = new Menu(shell, SWT.DROP_DOWN);
    final Menu settingsMenu = new Menu(shell, SWT.DROP_DOWN);
    final TopologyTab topologyTab;
@@ -113,15 +114,22 @@ public final class MainWindow extends WorkBench
       menuItem.setAccelerator(SWT.CONTROL|'Q');
    
       //
+      // Menu: Products
+      //
+      final MenuItem productsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
+      productsMenuHeader.setText(I18n.getMessage("Products_Menu"));
+      productsMenuHeader.setMenu(productsMenu);
+
+      menuItem = new MenuItem(productsMenu, SWT.PUSH);
+      menuItem.setText(I18n.getMessage("Products_Browser"));
+      menuItem.addSelectionListener(new OnProductsBrowser());
+
+      //
       // Menu: Tools
       //
       final MenuItem toolsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
       toolsMenuHeader.setText(I18n.getMessage("Tools_Menu"));
       toolsMenuHeader.setMenu(toolsMenu);
-   
-      menuItem = new MenuItem(toolsMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Products_Browser"));
-      menuItem.addSelectionListener(new OnProductsBrowser());
    
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Vdx_Browser"));
@@ -270,23 +278,9 @@ public final class MainWindow extends WorkBench
    {
       public void widgetSelected(SelectionEvent event)
       {
-         final FileDialog fileDialog = new FileDialog(shell, SWT.SINGLE);
-         fileDialog.setText(I18n.getMessage("Products_Browser_Open_File"));
-         fileDialog.setFilterExtensions(new String[] { "*.vd_", "*" });
-         fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
-         final String vdxDir = Config.getInstance().getVdxDir();
-         if (vdxDir!=null) fileDialog.setFilterPath(vdxDir);
-
-         final String fileName = fileDialog.open();
-         if (fileName == null) return;
-
-         final Config cfg = Config.getInstance();
-         cfg.setVdxDir(new File(fileName).getParentFile().getPath());
-         cfg.save();
-
          try
          {
-            showTabPage(ProductsTab.class, new VdxProductDb(fileName));
+            showTabPage(ProductsTab.class, new DatabaseProductDb());
          }
          catch (Exception e)
          {
@@ -329,9 +323,9 @@ public final class MainWindow extends WorkBench
          catch (IOException e)
          {
             e.printStackTrace();
-            MessageBox mbox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
+            MessageBox mbox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
             mbox.setMessage(e.getMessage());
-            mbox.open();
+            int ret = mbox.open();
             return;
          }               
 
