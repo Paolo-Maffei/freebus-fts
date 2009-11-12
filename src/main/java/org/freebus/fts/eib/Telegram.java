@@ -320,7 +320,7 @@ public class Telegram
       if (dataLen > 0 && apciDataMask != 0) --dataLen;
 
       int drl = (routingCounter & 7) << 4;
-      if (data != null) drl |= dataLen & 15;
+      if (data != null) drl |= (dataLen + 1) & 15;
       if (dest instanceof GroupAddress) drl |= 0x80;
       rawData[pos++] = drl;
 

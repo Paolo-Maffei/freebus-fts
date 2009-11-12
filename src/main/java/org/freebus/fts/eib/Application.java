@@ -17,6 +17,10 @@ public enum Application
    IndividualAddress_Write(0x0c0, 10, 4, 4),
    IndividualAddress_Response(0x140, 10, -1, -1),
 
+   IndividualAddressSerialNumber_Read(0x3dc, 10, 6, 6),
+   IndividualAddressSerialNumber_Write(0x3de, 10, 8, 8),
+   IndividualAddressSerialNumber_Response(0x3dd, 10, 8, 8),
+
    ADC_Read(0x180, 4, 3, 3),
    ADC_Response(0x1c0, 4, -1, -1),
 
@@ -38,6 +42,9 @@ public enum Application
 
    DeviceDescriptor_Read(0x300, 10, -1, -1),
    DeviceDescriptor_Response(0x340, 10, -1, -1),
+
+   
+
 
    Restart(0x380, 10, -1, -1),
 

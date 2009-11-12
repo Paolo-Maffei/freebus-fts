@@ -47,17 +47,21 @@ public abstract class Ft12Interface implements BusInterface
    }
 
    /**
-    * Notify all EMI- and telegram listeners about the given message.
+    * Notify all listeners that the given message was received.
     */
-   public void notifyListeners(final EmiMessage message)
+   public void notifyListenersReceived(final EmiMessage message)
    {
-      final Telegram telegram = (message instanceof L_Data.base) ? ((L_Data.base) message).getTelegram() : null;
-
       for (BusListener listener : listeners)
-      {
          listener.messageReceived(message);
-         if (telegram != null) listener.telegramReceived(telegram);
-      }
+   }
+
+   /**
+    * Notify all listeners that the given message was sent.
+    */
+   public void notifyListenersSent(final EmiMessage message)
+   {
+      for (BusListener listener : listeners)
+         listener.messageSent(message);
    }
 
    /**
@@ -112,6 +116,8 @@ public abstract class Ft12Interface implements BusInterface
       }
 
       write(buffer, len + 7);
+
+      notifyListenersSent(message);
    }
 
    /**
@@ -184,11 +190,11 @@ public abstract class Ft12Interface implements BusInterface
       String err = "";
 
       ++readMsgCount;
-      if (read() != 0x68) err = err + "|Invalid boundary marker";
+      if (read() != 0x68) err += "|Invalid boundary marker";
 
       int controlByte = read();
       if (controlByte != 0xf3 && controlByte != 0xd3)
-         err = err + "|Invalid control byte 0x" + Integer.toHexString(controlByte);
+         err += "|Invalid control byte 0x" + Integer.toHexString(controlByte);
 
       int ftCheckSum = controlByte;
       final int[] data = new int[dataLen];
@@ -200,10 +206,10 @@ public abstract class Ft12Interface implements BusInterface
       }
 
       final int checksum = read();
-      if (checksum != (ftCheckSum & 0xff)) err = err + "|FT checksum error";
+      if (checksum != (ftCheckSum & 0xff)) err += "|FT checksum error";
 
       final int eofMarker = read();
-      if (eofMarker != 0x16) err = err + "|Invalid eof-marker 0x" + Integer.toHexString(eofMarker);
+      if (eofMarker != 0x16) err += "|Invalid eof-marker 0x" + Integer.toHexString(eofMarker);
 
       if (err.length() > 0) System.out.println(" ERROR:" + err.substring(1));
       else
@@ -222,7 +228,7 @@ public abstract class Ft12Interface implements BusInterface
             else
             {
                msg.fromRawData(data, 0);
-               notifyListeners(msg);
+               notifyListenersReceived(msg);
             }
          }
          catch (Exception e)

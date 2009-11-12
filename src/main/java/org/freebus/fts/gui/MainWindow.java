@@ -15,6 +15,8 @@ import org.freebus.fts.Config;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.db.DatabaseProductDb;
+import org.freebus.fts.dialogs.PhysicalAddressProgrammer;
+import org.freebus.fts.dialogs.ProgressDialog;
 import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
@@ -44,7 +46,7 @@ public final class MainWindow extends WorkBench
    final TopologyTab topologyTab;
    final PhysicalTab physicalTab;
    final LogicalTab logicalTab;
-   ToolItem toolItemTestMessage1 = null;
+   ToolItem toolItemTestMessage1, toolItemTestMessage2, toolItemTestMessage3;
 
    private Project project = Project.createSampleProject();
 
@@ -134,6 +136,10 @@ public final class MainWindow extends WorkBench
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Vdx_Browser"));
       menuItem.addSelectionListener(new OnVdxBrowser());
+      
+      menuItem = new MenuItem(toolsMenu, SWT.PUSH);
+      menuItem.setText(I18n.getMessage("Menu_ProgramAddress"));
+      menuItem.addSelectionListener(new OnProgramAddress());
 
       //
       // Menu: Settings
@@ -187,7 +193,19 @@ public final class MainWindow extends WorkBench
       toolItem.addSelectionListener(new OnSendBusMessage());
       toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
       toolItemTestMessage1 = toolItem;
-   
+      
+      toolItem = new ToolItem(toolBar, SWT.PUSH);
+      toolItem.setImage(ImageCache.getImage("icons/music_eightnote"));
+      toolItem.addSelectionListener(new OnSendBusMessage());
+      toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
+      toolItemTestMessage2 = toolItem;
+      
+      toolItem = new ToolItem(toolBar, SWT.PUSH);
+      toolItem.setImage(ImageCache.getImage("icons/music_flat"));
+      toolItem.addSelectionListener(new OnSendBusMessage());
+      toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
+      toolItemTestMessage3 = toolItem;
+
       addToolBar(toolBar);
    }
 
@@ -325,7 +343,7 @@ public final class MainWindow extends WorkBench
             e.printStackTrace();
             MessageBox mbox = new MessageBox(shell, SWT.ICON_QUESTION | SWT.YES | SWT.NO);
             mbox.setMessage(e.getMessage());
-            int ret = mbox.open();
+            mbox.open();
             return;
          }               
 
@@ -353,7 +371,7 @@ public final class MainWindow extends WorkBench
          }
 
          EmiMessage msg = null;
-         if (event.widget==toolItemTestMessage1)
+         if (event.widget == toolItemTestMessage1)
          {
             final L_Data.req newMsg = new L_Data.req();
             Telegram telegram = newMsg.getTelegram();
@@ -362,7 +380,29 @@ public final class MainWindow extends WorkBench
             telegram.setDest(new GroupAddress(0));
             telegram.setPriority(Priority.SYSTEM);
             telegram.setApplication(Application.IndividualAddress_Read);
-            telegram.setData(new int[] { 10 });
+            telegram.setData(new int[] { 0x01 });
+            msg = newMsg;
+         }
+         else if (event.widget == toolItemTestMessage2)
+         {
+            final L_Data.req newMsg = new L_Data.req();
+            Telegram telegram = newMsg.getTelegram();
+            telegram.setFrom(new PhysicalAddress(1, 1, 255));
+            telegram.setDest(new GroupAddress(0));
+            telegram.setPriority(Priority.SYSTEM);
+            telegram.setApplication(Application.IndividualAddress_Write);
+            telegram.setData(new int[] { 0x12, 0x34 });
+            msg = newMsg;
+         }
+         else if (event.widget == toolItemTestMessage3)
+         {
+            final L_Data.req newMsg = new L_Data.req();
+            Telegram telegram = newMsg.getTelegram();
+            telegram.setFrom(new PhysicalAddress(1, 1, 255));
+            telegram.setDest(new GroupAddress(0));
+            telegram.setPriority(Priority.SYSTEM);
+            telegram.setApplication(Application.IndividualAddressSerialNumber_Read);
+            telegram.setData(new int[] { 15 });
             msg = newMsg;
          }
 
@@ -402,5 +442,17 @@ public final class MainWindow extends WorkBench
          final ProgressDialog dlg = new ProgressDialog(I18n.getMessage("VdxToDb_Title"), I18n.getMessage("VdxToDb_Description").replace("%1", fileName));
          dlg.run(conv);
       }   
+   }
+
+   /**
+    * Event callback: Program a physical address
+    */
+   class OnProgramAddress extends SimpleSelectionListener
+   {
+      public void widgetSelected(SelectionEvent event)
+      {
+         final PhysicalAddressProgrammer dlg = new PhysicalAddressProgrammer();
+         dlg.open();
+      }
    }
 }

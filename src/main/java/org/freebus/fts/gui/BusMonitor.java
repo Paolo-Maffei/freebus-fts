@@ -7,8 +7,10 @@ import java.util.Calendar;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
+import org.eclipse.swt.graphics.Image;
 import org.eclipse.swt.layout.FillLayout;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Control;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.MessageBox;
@@ -21,8 +23,10 @@ import org.freebus.fts.comm.BusListener;
 import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.EmiMessageBase;
+import org.freebus.fts.emi.EmiMessageType;
 import org.freebus.fts.emi.L_Data;
 import org.freebus.fts.utils.I18n;
+import org.freebus.fts.utils.ImageCache;
 
 /**
  * A widget that outputs the telegrams on the EIB bus.
@@ -32,8 +36,19 @@ public class BusMonitor extends TabPage implements BusListener
    protected final Group grp = new Group(this, SWT.FLAT|SWT.UNDERLINE_SQUIGGLE);
    protected final Tree tree = new Tree(grp, SWT.BORDER);
    protected final SimpleDateFormat dateFormat = new SimpleDateFormat("HH:mm:ss");
+   protected final Image imgSend = ImageCache.getImage("icons/msg_send");
+   protected final Image imgReceive = ImageCache.getImage("icons/msg_receive");
    protected final Font fntCaption;
    protected int count = 0;
+
+   /**
+    * The direction of a message.
+    */
+   enum MessageDirection
+   {
+      SEND,
+      RECEIVE;
+   }
 
    /**
     * Create a new bus monitor widget.
@@ -96,7 +111,13 @@ public class BusMonitor extends TabPage implements BusListener
    {
    }
 
-   protected void addMessage(EmiMessage message)
+   /**
+    * Add a message to the list.
+    *
+    * @param direction - the direction of the message (sending or receiving).
+    * @param message - the message.
+    */
+   protected void addMessage(MessageDirection direction, EmiMessage message)
    {
       if (!(message instanceof L_Data.base)) return;
 
@@ -116,6 +137,8 @@ public class BusMonitor extends TabPage implements BusListener
       treeItem.setFont(fntCaption);
       treeItem.setText(0, dateFormat.format(cal.getTime()) + ' ' + msg.getTypeString());
       treeItem.setText(1, I18n.getMessage("BusMonitor_Raw_Data").replace("%1", sb.toString()));
+      treeItem.setImage(direction == MessageDirection.RECEIVE ? imgReceive : imgSend);
+      treeItem.setData(message);
       
       TreeItem childItem = new TreeItem(treeItem, SWT.DEFAULT);
       childItem.setText(0, I18n.getMessage("BusMonitor_Parties"));
@@ -150,6 +173,31 @@ public class BusMonitor extends TabPage implements BusListener
          col.pack();
       treeItem.setExpanded(true);
    }
+
+   /**
+    * A confirmation message was received.
+    *
+    * @param message - the confirmation message.
+    */
+   protected void confirmMessage(EmiMessage message)
+   {
+      final TreeItem[] childs = tree.getItems();
+      final EmiMessageType origType = message.getType().confirmationForType;
+      
+      for (int i = childs.length - 1; i >= 0; --i)
+      {
+         final TreeItem treeItem = childs[i];
+         EmiMessage msg = (EmiMessage) treeItem.getData();
+         if (msg == null) continue;
+
+         if (msg.getType() == origType)
+         {
+            treeItem.setText(1, treeItem.getText(1) + ' ' + I18n.getMessage("BusMonitor_MsgConfirmed"));
+            treeItem.setData(null);
+            break;
+         }  
+      }
+   }
    
    /**
     * An EMI message was received.
@@ -162,19 +210,24 @@ public class BusMonitor extends TabPage implements BusListener
          @Override
          public void run()
          {
-            addMessage(message);            
+            if (message.getType().isConfirmation()) confirmMessage(message);
+            else addMessage(MessageDirection.RECEIVE, message);            
          }
       });
    }
 
+   /**
+    * An EMI message was sent.
+    */
    @Override
-   public void telegramReceived(final Telegram telegram)
+   public void messageSent(final EmiMessage message)
    {
       getDisplay().syncExec(new Runnable()
       {
          @Override
          public void run()
          {
+            addMessage(MessageDirection.SEND, message);            
          }
       });
    }

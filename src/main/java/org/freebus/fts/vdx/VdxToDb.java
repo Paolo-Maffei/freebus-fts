@@ -53,7 +53,7 @@ public final class VdxToDb extends ListenableWorker
     */
    public void run() throws IOException
    {
-      final int stepGroups = 12; // number of "copyXY" methods that get called below +2
+      final int stepGroups = 12; // number of "copyXY" methods (that get called below) +2
       final int totalSteps = stepGroups * 10;
       setTotalSteps(totalSteps);
       stepOffset = 0;
