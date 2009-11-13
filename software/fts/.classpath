@@ -17,7 +17,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="contrib/hsql/hsqldb.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/mysql-connector-java.jar"/>
 	<classpathentry kind="lib" path="contrib/toplink-essentials.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
