@@ -3,11 +3,10 @@ package org.freebus.fts.comm;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.EmiMessageType;
-import org.freebus.fts.emi.L_Data;
 import org.freebus.fts.emi.PEI_Switch;
+import org.freebus.fts.utils.I18n;
 
 /**
  * An EIB/KNX bus connection to a device that speaks the FT1.2 protocol.
@@ -21,6 +20,7 @@ public abstract class Ft12Interface implements BusInterface
    // Message counters
    protected int readMsgCount = 0;
    protected int writeMsgCount = 0;
+   protected int ackCount = 0;
 
    // FT1.2 reset message
    protected static final int[] resetMsg = { 0x10, 0x40, 0x40, 0x16 };
@@ -71,10 +71,32 @@ public abstract class Ft12Interface implements BusInterface
    @Override
    public void open() throws IOException
    {
-      if (debug) System.out.println("WRITE: FT1.2-Reset x3");
-      write(resetMsg, resetMsg.length);
-      write(resetMsg, resetMsg.length);
-      write(resetMsg, resetMsg.length);
+      if (debug) System.out.println("WRITE: FT1.2-Reset");
+
+      // Send resets until the device acknowledges
+      final int startAckCount = ackCount;
+      for (int i = 50; i > 0 && ackCount == startAckCount; --i)
+      {
+         if (debug) System.out.println("WRITE: Reset");
+         write(resetMsg, resetMsg.length);
+
+         try
+         {
+            Thread.sleep(100);
+         }
+         catch (InterruptedException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+      }
+
+      if (startAckCount == ackCount)
+         throw new IOException(I18n.getMessage("Comm_ErrDeviceNotFound"));
+
+      // A pei_switch that eibd sends on startup
+      if (debug) System.out.println("WRITE: PEI_Switch init");
+      write(new PEI_Switch.req(PEI_Switch.Mode.INIT));
 
       if (debug) System.out.println("WRITE: PEI_Switch to link-layer mode");
       write(new PEI_Switch.req(PEI_Switch.Mode.LINK));
@@ -133,6 +155,7 @@ public abstract class Ft12Interface implements BusInterface
       {
          case 0xe5: // Acknowledge to the last frame we sent
             System.out.println("READ:  ACK [0xe5]");
+            ++ackCount;
             break;
 
          case 0x68: // Message with variable length

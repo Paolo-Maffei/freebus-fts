@@ -64,7 +64,7 @@
       <plugin>
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
-<!--           <finalName>fts-snapshot</finalName> -->
+          <!-- <finalName>fts-snapshot</finalName> -->
           <appendAssemblyId>true</appendAssemblyId>
           <archive>
             <manifest>

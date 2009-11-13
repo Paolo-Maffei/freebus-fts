@@ -2,7 +2,6 @@ package org.freebus.fts.gui;
 
 import java.io.IOException;
 import java.util.HashMap;
-import java.util.LinkedList;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.Vector;
@@ -382,34 +381,32 @@ public class ProductsTab extends TabPage
          return;
       }
       
-      if (true) return;
-
-      final int devId = (Integer) sel[0].getData();
-      VirtualDevice dev = null;
-      try
-      {
-         dev = productDb.getVirtualDevice(devId);
-      }
-      catch (IOException e1)
-      {
-         e1.printStackTrace();
-         return;
-      }
-      final String devLabel = sel[0].getText();
-
-//      final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
-      lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", devLabel));
-//      cewDetails.setCatalogEntry(catalogEntry);
-      try
-      {
-         lblDescription.setText(productDb.getProductDescription(dev.getCatalogEntryId()));
-      }
-      catch (IOException e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-
-      tblApplications.removeAll();
+//      final int devId = (Integer) sel[0].getData();
+//      VirtualDevice dev = null;
+//      try
+//      {
+//         dev = productDb.getVirtualDevice(devId);
+//      }
+//      catch (IOException e1)
+//      {
+//         e1.printStackTrace();
+//         return;
+//      }
+//      final String devLabel = sel[0].getText();
+//
+////      final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
+//      lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", devLabel));
+////      cewDetails.setCatalogEntry(catalogEntry);
+//      try
+//      {
+//         lblDescription.setText(productDb.getProductDescription(dev.getCatalogEntryId()));
+//      }
+//      catch (IOException e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      }
+//
+//      tblApplications.removeAll();
    }
 }

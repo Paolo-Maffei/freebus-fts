@@ -1,5 +1,6 @@
 package org.freebus.fts.utils;
 
+import java.io.File;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Map;
@@ -28,9 +29,13 @@ public final class ImageCache
       Image img = cache.get(imageName);
       if (img!=null) return img;
 
-      final String imageFullName = imageName + ".png";
-      final InputStream in = ImageCache.class.getClassLoader().getResourceAsStream(imageFullName);
-      if (in==null) throw new MissingResourceException("Image not found: "+imageFullName, ImageCache.class.getCanonicalName(), imageName);
+      final ClassLoader classLoader = ImageCache.class.getClassLoader();
+      
+      String imageFullName =  imageName + ".png";
+      InputStream in = classLoader.getResourceAsStream(imageFullName);
+      if (in == null) in = classLoader.getResourceAsStream("src/main/resources/" + imageFullName);
+
+      if (in == null) throw new MissingResourceException("Image not found: "+imageFullName, ImageCache.class.getCanonicalName(), imageName);
       
       final ImageData imgData = new ImageData(in);
       if (imgData==null) throw new MissingResourceException("Image file is broken: "+imageFullName, ImageCache.class.getCanonicalName(), in.toString());

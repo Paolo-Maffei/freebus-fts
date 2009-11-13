@@ -12,6 +12,12 @@ enthalten bzw im Subversion eingecheckt. Nicht enthalten ist GTK,
 das für die Ausführung unter Linux benötigt wird. Es sollte aber
 auf Deinem Linux System installiert sein.
 
+ACHTUNG: 
+
+Eine der verwendeten Bibliotheken (TopLink) hat Probleme wenn der
+Pfad zum FTS Verzeichnis Leerzeichen enthält. Die müssen dann
+leider entfernt werden.
+
 
 FTS direkt starten
 ------------------

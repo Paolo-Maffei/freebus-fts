@@ -103,6 +103,7 @@ public class PhysicalTab extends TreeTabPage implements MouseListener
       if (e.widget != null && e.widget instanceof Tree)
       {
          final TreeItem treeItem = tree.getItem(new Point(e.x, e.y));
+         if (treeItem == null) return;
          final Object data = treeItem.getData();
          if (data instanceof Floor)
          {

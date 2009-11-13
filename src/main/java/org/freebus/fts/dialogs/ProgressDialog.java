@@ -1,14 +1,11 @@
 package org.freebus.fts.dialogs;
 
 import org.eclipse.swt.SWT;
-import org.eclipse.swt.layout.FormLayout;
 import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.eclipse.swt.widgets.Shell;
+import org.eclipse.swt.widgets.Display;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ListenableWorker;
 import org.freebus.fts.utils.TaskListener;
@@ -17,14 +14,12 @@ import org.freebus.fts.utils.TaskListener;
  * A dialog with a progress bar, a general text, and a text
  * about the current step.
  */
-public class ProgressDialog implements TaskListener
+public class ProgressDialog extends Dialog implements TaskListener
 {
-   private final Shell shell = new Shell(Display.getDefault(), SWT.DIALOG_TRIM|SWT.APPLICATION_MODAL);
-   private final Group contents = new Group(shell, SWT.SHADOW_NONE);
    private final Label lblDesc = new Label(contents, SWT.FLAT);
    private final ProgressBar progressBar = new ProgressBar(contents, SWT.HORIZONTAL|SWT.SMOOTH);
    private final Label lblStep = new Label(contents, SWT.FLAT);
-   private final Button button = new Button(contents, SWT.PUSH);
+   private final Button button;
    private Thread thread;
 
    /**
@@ -32,9 +27,7 @@ public class ProgressDialog implements TaskListener
     */
    public ProgressDialog(String title, String description)
    {
-      shell.setText(title);
-      shell.setLayout(new FormLayout());
-      shell.setSize(640, 300);
+      super(title);
 
       RowLayout rowLayout = new RowLayout();
       rowLayout.fill = true;
@@ -53,14 +46,13 @@ public class ProgressDialog implements TaskListener
       progressBar.setMinimum(0);
       progressBar.setMaximum(100);
 
+      button = new Button(buttonBox, SWT.PUSH);
       button.setText(I18n.getMessage("ProgressDialog_Cancel"));
 
       lblStep.setText(" ");
       lblStep.pack();
 
-      shell.layout();
-      shell.pack();
-      shell.open();
+      open();
    }
 
    /**
@@ -80,12 +72,12 @@ public class ProgressDialog implements TaskListener
             {
                worker.run();
 
-               shell.getDisplay().syncExec(new Runnable()
+               Display.getDefault().syncExec(new Runnable()
                {
                   @Override
                   public void run()
                   {
-                     shell.close();
+                     close();
                      thread = null;
                   }
                });

@@ -73,7 +73,12 @@ public final class PEI_Switch
       /**
        * Bus monitor.
        */
-      BUSMON(0x90, new int[]{ 1, 8, 3, 4, 5, 6, 7, 8, 0 });
+      BUSMON(0x90, new int[]{ 1, 8, 3, 4, 5, 6, 7, 8, 0 }),
+      
+      /**
+       * Initialization that eibd sends.
+       */
+      INIT(0x1e, new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 0 });
 
       public final int systemStatus;
       public final int[] targets;
@@ -203,6 +208,7 @@ public final class PEI_Switch
          int pos = start;
          targets[9] = Layer._RESERVED;
 
+         rawData[pos++] = this.getType().id & 0xff;
          rawData[pos++] = systemStatus & 0xff;
          for (int i = 0; i < 9; i += 2)
             rawData[pos++] = (targets[i].id << 4) | targets[i + 1].id;

@@ -44,7 +44,16 @@ public enum EmiMessageType
    T_DISCONNECT_REQ(0x44, null, null),
    T_DISCONNECT_CON(0x88, null, T_DISCONNECT_REQ),
    T_DISCONNECT_IND(0x87, null, null),
-   
+
+   U_VALUE_READ_REQ(0x74, null, null),
+   U_VALUE_READ_CON(0xe4, null, null),
+
+   U_FLAGS_READ_REQ(0x7c, null, null),
+   U_FLAGS_READ_CON(0xec, null, null),
+
+   U_EVENT_IND(0xe7, null, null),
+   U_VALUE_WRITE_REQ(0x71, null, null),
+
    /**
     * Physical external interface
     */
@@ -95,7 +104,7 @@ public enum EmiMessageType
       for (EmiMessageType e: values())
          if (e.id == id) return e;
 
-      throw new IllegalArgumentException("Invalid message-code 0x" + Integer.toHexString(id));
+      throw new IllegalArgumentException("Unknown message-code 0x" + Integer.toHexString(id));
    }
 
    /**

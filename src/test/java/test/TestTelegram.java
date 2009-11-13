@@ -161,10 +161,10 @@ public class TestTelegram extends TestCase
       assertEquals(0x01, data[2]);
       assertEquals(0x0a, data[3]);
       assertEquals(0x05, data[4]);
-      assertEquals(0xb0, data[5]);
+      assertEquals(0xb1, data[5]);
       assertEquals(0x00, data[6]);
       assertEquals(0x81, data[7]);
-      assertEquals(0xf1, data[8]);
+      assertEquals(0xf0, data[8]);
 
       int check = 0;
       for (int i = 0; i < len; ++i)

@@ -5,7 +5,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * Static class for translated messages 
+ * Static class for translated messages
  */
 public final class I18n
 {
@@ -13,7 +13,7 @@ public final class I18n
    static private String country = null;
    static private Locale locale;
    static private ResourceBundle messages;
-   
+
    /**
     * Returns the message string for the given message-id for the active
     * language.
@@ -23,7 +23,7 @@ public final class I18n
     */
    static public String getMessage(final String msgid)
    {
-      if (locale==null) update();
+      if (locale == null) update();
       try
       {
          return messages.getString(msgid);
@@ -39,7 +39,7 @@ public final class I18n
     */
    private static synchronized void update()
    {
-      if (language==null && country==null) locale = Locale.getDefault();
+      if (language == null && country == null) locale = Locale.getDefault();
       else locale = new Locale(language, country);
 
       try
@@ -48,7 +48,8 @@ public final class I18n
       }
       catch (MissingResourceException e)
       {
-         System.out.println("Failed to load messages for \"" + locale.getDisplayName() + "\", using fallback.");
+         System.out.println("Failed to load messages_" + locale.getLanguage() + " for language \""
+               + locale.getDisplayName() + "\", using fallback.");
          messages = ResourceBundle.getBundle("src/main/resources/messages", Locale.ENGLISH);
       }
    }
