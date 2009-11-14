@@ -1,4 +1,4 @@
-package org.freebus.fts.gui;
+package org.freebus.fts.widgets;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;

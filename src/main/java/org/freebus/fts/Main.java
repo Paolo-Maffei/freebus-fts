@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Shell;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.db.Database;
 import org.freebus.fts.db.DatabaseResources;
+import org.freebus.fts.eib.jobs.JobQueue;
 import org.freebus.fts.gui.MainWindow;
 import org.freebus.fts.utils.DeleteDir;
 import org.freebus.fts.utils.I18n;
@@ -81,6 +82,8 @@ public final class Main
          }
          finally
          {
+            JobQueue.getDefaultJobQueue().dispose();
+
             BusInterfaceFactory.disposeDefaultInstance();
             if (mainWin != null) mainWin.dispose();
             mainWin = null;

@@ -7,7 +7,7 @@ package org.freebus.fts.eib;
 public class Telegram
 {
    private PhysicalAddress from = PhysicalAddress.NULL;
-   private Address dest = GroupAddress.NULL;
+   private Address dest = GroupAddress.BROADCAST;
    private int routingCounter = 6;
    private Priority priority = Priority.LOW;
    private boolean repeated = false;

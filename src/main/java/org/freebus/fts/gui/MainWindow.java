@@ -22,6 +22,9 @@ import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
 import org.freebus.fts.eib.Priority;
 import org.freebus.fts.eib.Telegram;
+import org.freebus.fts.eib.jobs.JobQueue;
+import org.freebus.fts.eib.jobs.JobQueueEvent;
+import org.freebus.fts.eib.jobs.JobQueueListener;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.L_Data;
 import org.freebus.fts.project.Project;
@@ -31,11 +34,12 @@ import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
 import org.freebus.fts.vdx.VdxFileReader;
 import org.freebus.fts.vdx.VdxToDb;
+import org.freebus.fts.widgets.JobQueueWidget;
 
 /**
  * The main window.
  */
-public final class MainWindow extends WorkBench
+public final class MainWindow extends WorkBench implements JobQueueListener
 {
    private static MainWindow instance = null;
 
@@ -46,6 +50,7 @@ public final class MainWindow extends WorkBench
    final TopologyTab topologyTab;
    final PhysicalTab physicalTab;
    final LogicalTab logicalTab;
+   final JobQueueWidget jobMonitor;
    ToolItem toolItemTestMessage1, toolItemTestMessage2, toolItemTestMessage3;
 
    private Project project = Project.createSampleProject();
@@ -76,8 +81,14 @@ public final class MainWindow extends WorkBench
       physicalTab = (PhysicalTab) showTabPage(PhysicalTab.class, project);
       topologyTab = (TopologyTab) showTabPage(TopologyTab.class, project);
       logicalTab = (LogicalTab) showTabPage(LogicalTab.class, project);
-
       leftTabFolder.setSelection(0);
+
+      jobMonitor = new JobQueueWidget(leftSash, SWT.BORDER);
+      jobMonitor.layout();
+      jobMonitor.setVisible(false);
+
+      JobQueue.getDefaultJobQueue().addListener(this);
+      leftSash.setWeights(new int[] { 10, 1 });
    }
 
    /**
@@ -454,5 +465,24 @@ public final class MainWindow extends WorkBench
          final PhysicalAddressProgrammer dlg = new PhysicalAddressProgrammer();
          dlg.open();
       }
+   }
+
+   @Override
+   public void jobEvent(final JobQueueEvent event)
+   {
+      getDisplay().syncExec(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            if (!jobMonitor.isVisible())
+            {
+               jobMonitor.setVisible(true);
+               leftSash.setWeights(new int[] { 8, 1 });
+            }
+
+            jobMonitor.jobEvent(event);
+         }
+      });
    }
 }

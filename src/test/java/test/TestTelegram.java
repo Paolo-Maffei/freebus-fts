@@ -48,7 +48,7 @@ public class TestTelegram extends TestCase
    public void testGetSetDest()
    {
       final Telegram telegram = new Telegram();
-      assertEquals(GroupAddress.NULL, telegram.getDest());
+      assertEquals(GroupAddress.BROADCAST, telegram.getDest());
 
       final PhysicalAddress destPhys = new PhysicalAddress(4, 8, 16);
       telegram.setDest(destPhys);

@@ -8,9 +8,9 @@ public final class GroupAddress implements Address
    private final int addr;
 
    /**
-    * A null group address (0.0.0)
+    * The broadcast group address (0/0/0)
     */
-   public static final GroupAddress NULL = new GroupAddress();
+   public static final GroupAddress BROADCAST = new GroupAddress();
 
    /**
     * Create an empty address object.
@@ -139,5 +139,23 @@ public final class GroupAddress implements Address
    public String toString()
    {
       return String.format("%d/%d/%d", addr >> 11, (addr >> 8) & 7, addr & 255);
+   }
+
+   /**
+    * Parse the given string and return a group-address.
+    *
+    * @param string - the string in the format "main/middle/sub".
+    * @return the group address, or null if the given string has an invalid format. 
+    */
+   public static GroupAddress valueOf(String str)
+   {
+      final int pos1 = str.indexOf('/');
+      if (pos1 <= 0) return null;
+
+      final int pos2 = str.indexOf('/', pos1 + 1);
+      if (pos2 < 0) return null;
+
+      return new GroupAddress(Integer.parseInt(str.substring(0, pos1)),
+            Integer.parseInt(str.substring(pos1 + 1, pos2)), Integer.parseInt(str.substring(pos2 + 1)));
    }
 }

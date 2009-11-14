@@ -34,6 +34,7 @@ public class WorkBench
    private final Menu menuBar = new Menu(shell, SWT.BAR);
    protected final CoolBar coolBar = new CoolBar(shell, SWT.FLAT);
    protected final SashForm body = new SashForm(shell, SWT.FLAT | SWT.HORIZONTAL);;
+   protected final SashForm leftSash;
    protected final CTabFolder leftTabFolder;
    protected final CTabFolder centerTabFolder;
    private boolean restart;
@@ -69,7 +70,9 @@ public class WorkBench
       formData.bottom = new FormAttachment(100);
       body.setLayoutData(formData);
 
-      leftTabFolder = new CTabFolder(body, SWT.BORDER | SWT.TOP);
+      leftSash = new SashForm(body, SWT.FLAT | SWT.VERTICAL);
+
+      leftTabFolder = new CTabFolder(leftSash, SWT.BORDER | SWT.TOP);
       leftTabFolder.setSimple(false);
       leftTabFolder.setMinimizeVisible(false);
       leftTabFolder.setMaximizeVisible(false);

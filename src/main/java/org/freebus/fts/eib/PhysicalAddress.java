@@ -13,6 +13,11 @@ public final class PhysicalAddress implements Address
    public static final PhysicalAddress NULL = new PhysicalAddress();
 
    /**
+    * The first regular address (1.1.1)
+    */
+   public static final PhysicalAddress ONE = new PhysicalAddress(1, 1, 1);
+
+   /**
     * Create an empty address object.
     */
    public PhysicalAddress()
@@ -139,5 +144,23 @@ public final class PhysicalAddress implements Address
    public String toString()
    {
       return String.format("%d.%d.%d", addr >> 12, (addr >> 8) & 15, addr & 255);
+   }
+
+   /**
+    * Parse the given string and return a physical-address.
+    *
+    * @param string - the string in the format "zone.line.node".
+    * @return the group address, or null if the given string has an invalid format. 
+    */
+   public static PhysicalAddress valueOf(String str)
+   {
+      final int pos1 = str.indexOf('.');
+      if (pos1 <= 0) return null;
+
+      final int pos2 = str.indexOf('.', pos1 + 1);
+      if (pos2 < 0) return null;
+
+      return new PhysicalAddress(Integer.parseInt(str.substring(0, pos1)),
+            Integer.parseInt(str.substring(pos1 + 1, pos2)), Integer.parseInt(str.substring(pos2 + 1)));
    }
 }

@@ -28,6 +28,7 @@ import org.freebus.fts.products.ProductDb;
 import org.freebus.fts.products.ProductFilter;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.utils.I18n;
+import org.freebus.fts.widgets.CatalogEntryWidget;
 
 /**
  * A browser for a {@link ProductDb} products-database.

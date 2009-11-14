@@ -11,7 +11,7 @@ import org.eclipse.swt.events.SelectionListener;
 public abstract class SimpleSelectionListener implements SelectionListener
 {
    @Override
-   public void widgetDefaultSelected(SelectionEvent event)
+   public final void widgetDefaultSelected(SelectionEvent event)
    {
       widgetSelected(event);
    }
