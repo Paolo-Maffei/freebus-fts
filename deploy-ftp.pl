@@ -72,7 +72,13 @@ sub main #()
    }
 
    usage() if ($server eq '' || $user eq '' || $file eq '');
-   $name = $file unless ($name);
+   
+   if ($name eq '')
+   {
+      $name = $file;
+      $name =~ s/^.*[\\\/]//;
+   }
+   print "$appName: no target filename given\n" if ($name eq '');
 
    print "$appName: connecting to $server\n" if ($verbose);
    my $ftp = Net::FTP->new($server, Debug => $verbose>1);

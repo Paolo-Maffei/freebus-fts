@@ -101,6 +101,7 @@
             <arguments>
               <argument>--config=~/.deploy-fts</argument>
               <argument>--verbose</argument>
+              <argument>target/fts-${project.version}-distribution.zip</argument>
             </arguments>
          </configuration>
       </plugin>
