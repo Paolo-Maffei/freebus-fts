@@ -18,6 +18,14 @@ Eine der verwendeten Bibliotheken (TopLink) hat Probleme wenn der
 Pfad zum FTS Verzeichnis Leerzeichen enthält. Die müssen dann
 leider entfernt werden.
 
+Fertig gebaute Snapshots
+------------------------
+
+Nächtliche, fertig gebaute Snapshots können herunter geladen
+werden. Man braucht zur Ausführung nur die Java Runtime.
+
+Download hier: http://stefan.members.xpirio.at/fts
+
 
 FTS direkt starten
 ------------------
