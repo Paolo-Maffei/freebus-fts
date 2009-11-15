@@ -63,6 +63,15 @@ public final class GroupAddress implements Address
    }
 
    /**
+    * @return the address as 2-byte array.
+    */
+   @Override
+   public int[] getBytes()
+   {
+      return new int[] { (addr >> 8) & 255, addr & 255 };
+   }
+
+   /**
     * @return the main-group component of the address (0..15)
     */
    public int getMain()

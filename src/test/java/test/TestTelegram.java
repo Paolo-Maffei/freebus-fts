@@ -17,13 +17,13 @@ public class TestTelegram extends TestCase
 
       assertFalse(telegram.isRepeated());
       assertEquals(Priority.LOW, telegram.getPriority());
-      assertEquals(Application.Invalid, telegram.getApplication());
+      assertEquals(Application.None, telegram.getApplication());
    }
 
    public void testGetSetApplication()
    {
       final Telegram telegram = new Telegram();
-      assertEquals(Application.Invalid, telegram.getApplication());
+      assertEquals(Application.None, telegram.getApplication());
 
       telegram.setApplication(Application.ADC_Read);
       assertEquals(Application.ADC_Read, telegram.getApplication());

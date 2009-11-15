@@ -11,9 +11,9 @@ public class Telegram
    private int routingCounter = 6;
    private Priority priority = Priority.LOW;
    private boolean repeated = false;
-   private Transport transport = null;
+   private Transport transport = Transport.Individual;
    private int sequence = 0;
-   private Application application = Application.Invalid;
+   private Application application = Application.None;
    private int[] data = null;
 
    /**
@@ -244,28 +244,36 @@ public class Telegram
       if (transport.hasSequence) sequence = (tpci >> 2) & 15;
       else sequence = 0;
 
-      // APCI - application type
-      final int apci = ((tpci & 3) << 8) | rawData[pos++];
-      application = Application.valueOf(apci);
-
-      final int dataMask = application.getDataMask();
-      if (dataMask != 0 && dataLen <= 1)
+      if (rawData.length > pos && transport.mask < 255)
       {
-         // ACPI byte contains data bits
-         data = new int[1];
-         data[0] = apci & dataMask;
-      }
-      else if (dataLen > 1)
-      {
-         // telegram contains extra data
-         --dataLen;
-         data = new int[dataLen];
-         for (int i = 0; i < dataLen; ++i)
-            data[i] = rawData[pos++];
+         // APCI - application type
+         final int apci = ((tpci & 3) << 8) | rawData[pos++];
+         application = Application.valueOf(apci);
+   
+         final int dataMask = application.getDataMask();
+         if (dataMask != 0 && dataLen <= 1)
+         {
+            // ACPI byte contains data bits
+            data = new int[1];
+            data[0] = apci & dataMask;
+         }
+         else if (dataLen > 1)
+         {
+            // telegram contains extra data
+            --dataLen;
+            data = new int[dataLen];
+            for (int i = 0; i < dataLen; ++i)
+               data[i] = rawData[pos++];
+         }
+         else
+         {
+            // telegram contains no extra data
+            data = null;
+         }
       }
       else
       {
-         // telegram contains no extra data
+         application = Application.None;
          data = null;
       }
 
@@ -324,10 +332,16 @@ public class Telegram
       if (dest instanceof GroupAddress) drl |= 0x80;
       rawData[pos++] = drl;
 
-      int tpci = (application.apci >> 8) & 3;
+      int tpci = transport.value;
+      tpci |= (application.apci >> 8) & ~transport.mask;
+      if (transport.hasSequence) tpci |= (sequence & 15) << 2;
       rawData[pos++] = tpci;
  
-      if (data == null)
+      if (transport.mask == 255)
+      {
+         // no application
+      }
+      else if (data == null)
       {
          rawData[pos++] = apci;
       }

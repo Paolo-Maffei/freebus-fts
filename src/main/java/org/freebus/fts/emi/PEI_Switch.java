@@ -36,7 +36,7 @@ public final class PEI_Switch
          for (Layer e : values())
             if (e.id == id) return e;
 
-         throw new IllegalArgumentException("Invalid layer 0x" + Integer.toHexString(id));
+         throw new IllegalArgumentException("None layer 0x" + Integer.toHexString(id));
       }
    }
 

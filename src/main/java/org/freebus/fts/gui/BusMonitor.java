@@ -19,6 +19,7 @@ import org.eclipse.swt.widgets.TreeItem;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.comm.BusListener;
+import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.EmiMessageBase;
@@ -143,7 +144,8 @@ public class BusMonitor extends TabPage implements BusListener
       childItem.setText(0, I18n.getMessage("BusMonitor_Parties"));
       childItem.setText(1, I18n.getMessage("BusMonitor_From_Dest")
             .replace("%1", telegram.getFrom().toString())
-            .replace("%2", telegram.getDest().toString()));
+            .replace("%2", telegram.getDest().toString())
+            + (telegram.isRepeated() ? ' ' + I18n.getMessage("BusMonitor_Repeated") : ""));
 
       String seqStr;
       if (telegram.getTransport().hasSequence)
@@ -160,12 +162,14 @@ public class BusMonitor extends TabPage implements BusListener
          appDataStr = I18n.getMessage("BusMonitor_AppData").replace("%1", sb.toString().substring(1));
       }
       else appDataStr = "";
-      
+
+      final Application application = telegram.getApplication();
+
       childItem = new TreeItem(treeItem, SWT.DEFAULT);
       childItem.setText(0, I18n.getMessage("BusMonitor_Contents"));
       childItem.setText(1, I18n.getMessage("BusMonitor_Types")
             .replace("%1", telegram.getTransport().toString() + seqStr)
-            .replace("%2", telegram.getApplication().toString())
+            .replace("%2", application == Application.None ? I18n.getMessage("BusMonitor_NoApplication") : application.toString())
             .replace("%3", appDataStr));
 
       for (final TreeColumn col: tree.getColumns())

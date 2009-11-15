@@ -213,11 +213,11 @@ public abstract class Ft12Interface implements BusInterface
       String err = "";
 
       ++readMsgCount;
-      if (read() != 0x68) err += "|Invalid boundary marker";
+      if (read() != 0x68) err += "|None boundary marker";
 
       int controlByte = read();
       if (controlByte != 0xf3 && controlByte != 0xd3)
-         err += "|Invalid control byte 0x" + Integer.toHexString(controlByte);
+         err += "|None control byte 0x" + Integer.toHexString(controlByte);
 
       int ftCheckSum = controlByte;
       final int[] data = new int[dataLen];
@@ -232,7 +232,7 @@ public abstract class Ft12Interface implements BusInterface
       if (checksum != (ftCheckSum & 0xff)) err += "|FT checksum error";
 
       final int eofMarker = read();
-      if (eofMarker != 0x16) err += "|Invalid eof-marker 0x" + Integer.toHexString(eofMarker);
+      if (eofMarker != 0x16) err += "|None eof-marker 0x" + Integer.toHexString(eofMarker);
 
       if (err.length() > 0) System.out.println(" ERROR:" + err.substring(1));
       else

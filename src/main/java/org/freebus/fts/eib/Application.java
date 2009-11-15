@@ -3,9 +3,6 @@ package org.freebus.fts.eib;
 /**
  * Types of telegram applications. The types are stored in the APCI field
  * of a telegram.
- * 
- * The "A_" from the application type names are omitted
- * (A_GroupValue_Read is {@link Application#GroupValue_Read} here).
  */
 public enum Application
 {
@@ -13,9 +10,23 @@ public enum Application
    GroupValue_Write(0x080, 4, 0, 14),
    GroupValue_Response(0x040, 4, -1, -1),
 
+   /**
+    * Read the physical address of all devices that are in programming mode. Broadcast.
+    * One data byte, its value is returned as data in {@link #IndividualAddress_Response}.
+    */
    IndividualAddress_Read(0x100, 10, 2, 2),
+
+   /**
+    * Set the physical address of all devices that are in programming mode. Broadcast.
+    * Two data bytes: the new physical address.
+    */
    IndividualAddress_Write(0x0c0, 10, 4, 4),
-   IndividualAddress_Response(0x140, 10, -1, -1),
+
+   /**
+    * The response to {@link #IndividualAddress_Read}. Broadcast.
+    * One data byte: The data byte that was sent as data by {@link #IndividualAddress_Read}.
+    */
+   IndividualAddress_Response(0x140, 10, 1, 1),
 
    IndividualAddressSerialNumber_Read(0x3dc, 10, 6, 6),
    IndividualAddressSerialNumber_Write(0x3de, 10, 8, 8),
@@ -24,13 +35,43 @@ public enum Application
    ADC_Read(0x180, 4, 3, 3),
    ADC_Response(0x1c0, 4, -1, -1),
 
-   Memory_Read(0x200, 6, 4, 4),
-   Memory_Write(0x280, 6, 1, 16),
-   Memory_Response(0x240, 6, -1, -1),
+   /**
+    * Read application memory.
+    * 3 data bytes: number of bytes to read (1..63), 2-byte address.
+    * Response: {@link #Memory_Response}.
+    */
+   Memory_Read(0x200, 6, 3, 3),
 
-   UserMemory_Read(0x2c0, 10, -1, -1),
-   UserMemory_Write(0x2c2, 10, -1, -1),
-   UserMemory_Response(0x2c1, 10, -1, -1),
+   /**
+    * Response to {@link #Memory_Read}.
+    * 3+ data bytes: number of bytes to read (1..63), 2-byte address, memory contents.
+    */
+   Memory_Response(0x240, 6, 3, 15),
+
+   /**
+    * Write application memory.
+    * 3+ data bytes: number of bytes to read (1..63), 2-byte address, memory contents.
+    */
+   Memory_Write(0x280, 6, 3, 15),
+
+   /**
+    * Read user-data memory.
+    * 3 data bytes: 4-bit address extension + 4-bit number of bytes, 2-byte address.
+    * Response: {@link #UserMemory_Response}.
+    */
+   UserMemory_Read(0x2c0, 10, 3, 3),
+
+   /**
+    * Response to {@link #UserMemory_Read}.
+    * 3+ data bytes: 4-bit address extension + 4-bit number of bytes, 2-byte address, memory contents.
+    */
+   UserMemory_Response(0x2c1, 10, 3, 15),
+
+   /**
+    * Write user-data memory.
+    * 3+ data bytes: 4-bit address extension + 4-bit number of bytes, 2-byte address, memory contents.
+    */
+   UserMemory_Write(0x2c2, 10, 3, 15),
 
    UserMemoryBit_Write(0x2c4, 10, -1, -1),
 
@@ -40,8 +81,17 @@ public enum Application
    // APCI 0x2c7 to 0x2f7 is reserved USERMSG (mask 0x3ff)
    // APCI 0x2f8 to 0x2fe is manufacturer specific area for USERMSG
 
-   DeviceDescriptor_Read(0x300, 10, -1, -1),
-   DeviceDescriptor_Response(0x340, 10, -1, -1),
+   /**
+    * Read a device descriptor.
+    * One data byte: the descriptor type to read.
+    * Response is {@link #DeviceDescriptor_Response}. 
+    */
+   DeviceDescriptor_Read(0x300, 10, 1, 1),
+
+   /**
+    * Response to {@link #DeviceDescriptor_Read}.
+    */
+   DeviceDescriptor_Response(0x340, 10, 1, 15),
 
    
 
@@ -57,9 +107,9 @@ public enum Application
    // TODO
 
    /**
-    * FTS-internal value, to indicate an invalid application type.
+    * FTS-internal value, to indicate an invalid or empty application type.
     */
-   Invalid(0xffff, 10, -1, -1);
+   None(0xffff, 10, -1, -1);
 
    /**
     * The contents of the APCI field.
@@ -119,7 +169,7 @@ public enum Application
       for (Application a: values())
          if ((apci & apciMasks[a.bits]) == a.apci) return a;
 
-      throw new InvalidDataException("Invalid APCI field contents", apci);
+      throw new InvalidDataException("None APCI field contents", apci);
    }
 
    /*

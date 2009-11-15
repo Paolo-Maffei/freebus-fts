@@ -6,8 +6,13 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.MessageBox;
 import org.freebus.fts.comm.BusInterface;
 import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.gui.MainWindow;
+import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.TaskListener;
 
 /**
@@ -50,6 +55,9 @@ public final class JobQueue implements TaskListener
                   semaphore.acquire();
                   Job job = jobs.poll();
                   runJob(job);
+
+                  if (jobs.isEmpty())
+                     notifyListeners(new JobQueueEvent(null));
                }
                catch (InterruptedException e)
                {
@@ -80,6 +88,14 @@ public final class JobQueue implements TaskListener
       if (thread == null) throw new IllegalAccessError("the job-queue object is disposed");
       jobs.add(job);
       semaphore.release();
+   }
+
+   /**
+    * @return true if the job-queue is empty.
+    */
+   public boolean isEmpty()
+   {
+      return jobs.isEmpty();
    }
 
    /**
@@ -125,9 +141,23 @@ public final class JobQueue implements TaskListener
          if (!busInterface.isOpen()) busInterface.open();
 
          job.run(busInterface);
-         
+
          masterEvent.progress = 100;
          notifyListeners(masterEvent);
+      }
+      catch (final JobFailedException e)
+      {
+         Display.getDefault().asyncExec(new Runnable()
+         {
+            @Override
+            public void run()
+            {
+               MessageBox mbox = new MessageBox(MainWindow.getInstance().getShell(), SWT.ICON_ERROR | SWT.OK);
+               mbox.setText(I18n.getMessage("JobQueue_JobFailed"));
+               mbox.setMessage(e.getMessage());
+               mbox.open();
+            }
+         });
       }
       catch (IOException e)
       {

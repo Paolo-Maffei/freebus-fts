@@ -18,6 +18,11 @@ public interface Job
    public void run(BusInterface busInterface) throws IOException;
 
    /**
+    * @return a human readable label with a short explanation of the job.
+    */
+   public String getLabel();
+
+   /**
     * Add a listener to the job that gets informed about the progress.
     */
    public void addListener(TaskListener listener);

@@ -41,9 +41,13 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, BusL
    public final void run(BusInterface busInterface) throws IOException
    {
       this.busInterface = busInterface;
+      busInterface.addListener(this);
+
       init();
       main(busInterface);
       cleanup();
+
+      busInterface.removeListener(this);
       this.busInterface = null;
    }
 
@@ -59,7 +63,6 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, BusL
     */
    protected void init()
    {
-      busInterface.addListener(this);
    }
 
    /**
@@ -67,7 +70,6 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, BusL
     */
    protected void cleanup()
    {
-      busInterface.removeListener(this);
    }
 
    /**

@@ -20,6 +20,8 @@ import org.freebus.fts.widgets.AddressInput;
  */
 public class PhysicalAddressProgrammer extends Dialog implements Listener
 {
+   static private PhysicalAddress lastAddress = PhysicalAddress.ONE;
+
    private final AddressInput adiPhysical;
    private final Button btnProgram;
 
@@ -43,6 +45,13 @@ public class PhysicalAddressProgrammer extends Dialog implements Listener
       adiPhysical.setLayoutData(new GridData(200, SWT.DEFAULT));
       adiPhysical.addValidInputListener(this);
 
+      lbl = new Label(contents, SWT.FLAT | SWT.WRAP);
+      lbl.setText(I18n.getMessage("PhysicalAddressProgrammer_Explain"));
+
+      GridData gridData = new GridData();
+      gridData.horizontalSpan = 2;
+      lbl.setLayoutData(gridData);
+      
       btnProgram = new Button(buttonBox, SWT.PUSH);
       btnProgram.setText(I18n.getMessage("PhysicalAddressProgrammer_BtnProgram"));
 
@@ -75,7 +84,7 @@ public class PhysicalAddressProgrammer extends Dialog implements Listener
    public void open()
    {
       super.open();
-      adiPhysical.setAddress(PhysicalAddress.ONE);
+      adiPhysical.setAddress(lastAddress);
    }
 
    /**
@@ -83,7 +92,10 @@ public class PhysicalAddressProgrammer extends Dialog implements Listener
     */
    public void program()
    {
-      JobQueue.getDefaultJobQueue().add(new SetPhysicalAddressJob((PhysicalAddress) adiPhysical.getAddress()));
+      final PhysicalAddress addr = (PhysicalAddress) adiPhysical.getAddress();
+      lastAddress = addr;
+
+      JobQueue.getDefaultJobQueue().add(new SetPhysicalAddressJob(addr));
       dispose();
    }
 

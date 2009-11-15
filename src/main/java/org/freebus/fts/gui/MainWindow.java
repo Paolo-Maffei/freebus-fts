@@ -22,6 +22,7 @@ import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
 import org.freebus.fts.eib.Priority;
 import org.freebus.fts.eib.Telegram;
+import org.freebus.fts.eib.Transport;
 import org.freebus.fts.eib.jobs.JobQueue;
 import org.freebus.fts.eib.jobs.JobQueueEvent;
 import org.freebus.fts.eib.jobs.JobQueueListener;
@@ -65,7 +66,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    {
       return instance;
    }
-   
+
    /**
     * Construct the main window.
     */
@@ -97,35 +98,35 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    protected void initMenuBar()
    {
       MenuItem menuItem;
-   
+
       //
       // Menu: File
       //
       final MenuItem fileMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
       fileMenuHeader.setText(I18n.getMessage("File_Menu"));
       fileMenuHeader.setMenu(fileMenu);
-   
+
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("New_Project"));
       menuItem.addSelectionListener(new OnNewProject());
-   
+
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Open_Project"));
       menuItem.addSelectionListener(new OnOpenProject());
-      menuItem.setAccelerator(SWT.CONTROL|'O');
-   
+      menuItem.setAccelerator(SWT.CONTROL | 'O');
+
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Save_Project"));
       menuItem.addSelectionListener(new OnSaveProject());
-      menuItem.setAccelerator(SWT.CONTROL|'S');
-   
+      menuItem.setAccelerator(SWT.CONTROL | 'S');
+
       new MenuItem(fileMenu, SWT.SEPARATOR);
-   
+
       menuItem = new MenuItem(fileMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Exit"));
       menuItem.addSelectionListener(new OnExit());
-      menuItem.setAccelerator(SWT.CONTROL|'Q');
-   
+      menuItem.setAccelerator(SWT.CONTROL | 'Q');
+
       //
       // Menu: Products
       //
@@ -143,11 +144,11 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       final MenuItem toolsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
       toolsMenuHeader.setText(I18n.getMessage("Tools_Menu"));
       toolsMenuHeader.setMenu(toolsMenu);
-   
+
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Vdx_Browser"));
       menuItem.addSelectionListener(new OnVdxBrowser());
-      
+
       menuItem = new MenuItem(toolsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Menu_ProgramAddress"));
       menuItem.addSelectionListener(new OnProgramAddress());
@@ -158,11 +159,11 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       final MenuItem settingsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
       settingsMenuHeader.setText(I18n.getMessage("Settings_Menu"));
       settingsMenuHeader.setMenu(settingsMenu);
-   
+
       menuItem = new MenuItem(settingsMenu, SWT.PUSH);
       menuItem.setText(I18n.getMessage("Settings"));
       menuItem.addSelectionListener(new OnSettings());
-   
+
       shell.setMenuBar(getMenuBar());
    }
 
@@ -173,44 +174,43 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    {
       ToolBar toolBar = new ToolBar(coolBar, SWT.FLAT);
       ToolItem toolItem;
-   
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/exit"));
       toolItem.addSelectionListener(new OnExit());
       toolItem.setToolTipText(I18n.getMessage("Exit_Tip"));
-   
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/find"));
       toolItem.addSelectionListener(new OnProductsBrowser());
       toolItem.setToolTipText(I18n.getMessage("Products_Browser_Tip"));
-      
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/wizard"));
       toolItem.addSelectionListener(new OnCopyVDX());
       toolItem.setToolTipText(I18n.getMessage("Products_Copy_VDX_Tip"));
- 
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/bus-monitor"));
       toolItem.addSelectionListener(new OnBusMonitor());
       toolItem.setToolTipText(I18n.getMessage("Bus_Monitor_Tip"));
-   
+
       addToolBar(toolBar);
-   
-      
+
       toolBar = new ToolBar(coolBar, SWT.FLAT);
-   
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/music_32ndnote"));
       toolItem.addSelectionListener(new OnSendBusMessage());
       toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
       toolItemTestMessage1 = toolItem;
-      
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/music_eightnote"));
       toolItem.addSelectionListener(new OnSendBusMessage());
       toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
       toolItemTestMessage2 = toolItem;
-      
+
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/music_flat"));
       toolItem.addSelectionListener(new OnSendBusMessage());
@@ -227,7 +227,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    public void open()
    {
       super.open();
-   
+
       topologyTab.updateContents();
       physicalTab.updateContents();
       logicalTab.updateContents();
@@ -335,7 +335,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
          fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
          fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
          final String vdxDir = Config.getInstance().getVdxDir();
-         if (vdxDir!=null) fileDialog.setFilterPath(vdxDir);
+         if (vdxDir != null) fileDialog.setFilterPath(vdxDir);
 
          final String fileName = fileDialog.open();
          if (fileName == null) return;
@@ -356,7 +356,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             mbox.setMessage(e.getMessage());
             mbox.open();
             return;
-         }               
+         }
 
          showTabPage(VdxBrowser.class, reader);
       }
@@ -365,8 +365,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    /**
     * Event callback: Send a test message to the EIB bus.
     */
+   int sequence = 0;
    class OnSendBusMessage extends SimpleSelectionListener
    {
+
       public void widgetSelected(SelectionEvent event)
       {
          BusInterface bus;
@@ -386,12 +388,11 @@ public final class MainWindow extends WorkBench implements JobQueueListener
          {
             final L_Data.req newMsg = new L_Data.req();
             Telegram telegram = newMsg.getTelegram();
-//            telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
-            telegram.setDest(new GroupAddress(0));
+            telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
-            telegram.setApplication(Application.IndividualAddress_Read);
-            telegram.setData(new int[] { 0x01 });
+            telegram.setTransport(Transport.Connect);
+            sequence = 0;
             msg = newMsg;
          }
          else if (event.widget == toolItemTestMessage2)
@@ -399,10 +400,12 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             final L_Data.req newMsg = new L_Data.req();
             Telegram telegram = newMsg.getTelegram();
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
-            telegram.setDest(new GroupAddress(0));
+            telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
-            telegram.setApplication(Application.IndividualAddress_Write);
-            telegram.setData(new int[] { 0x12, 0x34 });
+            telegram.setTransport(Transport.Connected);
+            telegram.setSequence(sequence++);
+            telegram.setApplication(Application.Memory_Read);
+            telegram.setData(new int[] { 0x4, 0x10, 0 });
             msg = newMsg;
          }
          else if (event.widget == toolItemTestMessage3)
@@ -410,10 +413,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             final L_Data.req newMsg = new L_Data.req();
             Telegram telegram = newMsg.getTelegram();
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
-            telegram.setDest(new GroupAddress(0));
+            telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
-            telegram.setApplication(Application.IndividualAddressSerialNumber_Read);
-            telegram.setData(new int[] { 15 });
+            telegram.setTransport(Transport.Disconnect);
             msg = newMsg;
          }
 
@@ -440,7 +442,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
          fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
          fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
          final String vdxDir = Config.getInstance().getVdxDir();
-         if (vdxDir!=null) fileDialog.setFilterPath(vdxDir);
+         if (vdxDir != null) fileDialog.setFilterPath(vdxDir);
 
          final String fileName = fileDialog.open();
          if (fileName == null) return;
@@ -450,9 +452,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener
          cfg.save();
 
          final VdxToDb conv = new VdxToDb(fileName);
-         final ProgressDialog dlg = new ProgressDialog(I18n.getMessage("VdxToDb_Title"), I18n.getMessage("VdxToDb_Description").replace("%1", fileName));
+         final ProgressDialog dlg = new ProgressDialog(I18n.getMessage("VdxToDb_Title"), I18n.getMessage(
+               "VdxToDb_Description").replace("%1", fileName));
          dlg.run(conv);
-      }   
+      }
    }
 
    /**
@@ -467,22 +470,53 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       }
    }
 
+   /**
+    * {@inheritDoc}.
+    * 
+    * The job-queue widget is shown if there is a new job, and is hidden
+    * if the job-queue got empty.
+    */
    @Override
    public void jobEvent(final JobQueueEvent event)
    {
-      getDisplay().syncExec(new Runnable()
+      if (event.job == null)
       {
-         @Override
-         public void run()
+         getDisplay().asyncExec(new Runnable()
          {
-            if (!jobMonitor.isVisible())
+            @Override
+            public void run()
             {
-               jobMonitor.setVisible(true);
-               leftSash.setWeights(new int[] { 8, 1 });
-            }
+               try
+               {
+                  Thread.sleep(1000);
+               }
+               catch (InterruptedException e)
+               {
+               }
 
-            jobMonitor.jobEvent(event);
-         }
-      });
+               if (JobQueue.getDefaultJobQueue().isEmpty())
+               {
+                  jobMonitor.setVisible(false);
+                  leftSash.setWeights(new int[] { 8, 0 });
+               }
+            }
+         });
+      }
+      else
+      {
+         getDisplay().syncExec(new Runnable()
+         {
+            @Override
+            public void run()
+            {
+               if (!jobMonitor.isVisible())
+               {
+                  jobMonitor.setVisible(true);
+                  leftSash.setWeights(new int[] { 8, 1 });
+               }
+               jobMonitor.jobEvent(event);
+            }
+         });
+      }
    }
 }

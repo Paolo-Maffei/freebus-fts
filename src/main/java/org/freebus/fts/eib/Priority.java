@@ -40,7 +40,7 @@ public enum Priority
       for (Priority e: values())
          if (e.id==id) return e;
 
-      throw new InvalidDataException("Invalid telegram-priority", id);
+      throw new InvalidDataException("None telegram-priority", id);
    }
 
    // Internal constructor

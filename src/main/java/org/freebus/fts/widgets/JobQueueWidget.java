@@ -5,6 +5,7 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
+import org.freebus.fts.eib.jobs.Job;
 import org.freebus.fts.eib.jobs.JobQueue;
 import org.freebus.fts.eib.jobs.JobQueueEvent;
 import org.freebus.fts.eib.jobs.JobQueueListener;
@@ -48,7 +49,14 @@ public final class JobQueueWidget extends Composite implements JobQueueListener
    @Override
    public void jobEvent(JobQueueEvent event)
    {
-      lblName.setText(event.job.getClass().getSimpleName());
+      final Job job = event.job;
+      if (job == null)
+      {
+         setVisible(false);
+         return;
+      }
+
+      lblName.setText(job.getLabel());
       prbDone.setSelection(event.progress);
       if (event.message != null) lblMessage.setText(event.message);
    }
