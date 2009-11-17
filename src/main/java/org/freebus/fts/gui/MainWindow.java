@@ -52,7 +52,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    final PhysicalTab physicalTab;
    final LogicalTab logicalTab;
    final JobQueueWidget jobMonitor;
-   ToolItem toolItemTestMessage1, toolItemTestMessage2, toolItemTestMessage3;
+   ToolItem toolItemTestMessage1, toolItemTestMessage2, toolItemTestMessage3, toolItemTestMessage4;
 
    private Project project = Project.createSampleProject();
 
@@ -138,6 +138,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       menuItem.setText(I18n.getMessage("Products_Browser"));
       menuItem.addSelectionListener(new OnProductsBrowser());
 
+      menuItem = new MenuItem(productsMenu, SWT.PUSH);
+      menuItem.setText(I18n.getMessage("Products_Import_VDX"));
+      menuItem.addSelectionListener(new OnImportVDX());
+
       //
       // Menu: Tools
       //
@@ -187,7 +191,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
       toolItem = new ToolItem(toolBar, SWT.PUSH);
       toolItem.setImage(ImageCache.getImage("icons/wizard"));
-      toolItem.addSelectionListener(new OnCopyVDX());
+      toolItem.addSelectionListener(new OnImportVDX());
       toolItem.setToolTipText(I18n.getMessage("Products_Copy_VDX_Tip"));
 
       toolItem = new ToolItem(toolBar, SWT.PUSH);
@@ -216,6 +220,12 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       toolItem.addSelectionListener(new OnSendBusMessage());
       toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
       toolItemTestMessage3 = toolItem;
+
+      toolItem = new ToolItem(toolBar, SWT.PUSH);
+      toolItem.setImage(ImageCache.getImage("icons/music_fullnote"));
+      toolItem.addSelectionListener(new OnSendBusMessage());
+      toolItem.setToolTipText(I18n.getMessage("Bus_Send_Test_Message"));
+      toolItemTestMessage4 = toolItem;
 
       addToolBar(toolBar);
    }
@@ -405,7 +415,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             telegram.setTransport(Transport.Connected);
             telegram.setSequence(sequence++);
             telegram.setApplication(Application.Memory_Read);
-            telegram.setData(new int[] { 0x4, 0x10, 0 });
+            telegram.setData(new int[] { 0, 0, 0 });
             msg = newMsg;
          }
          else if (event.widget == toolItemTestMessage3)
@@ -416,6 +426,19 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
             telegram.setTransport(Transport.Disconnect);
+            msg = newMsg;
+         }
+         else if (event.widget == toolItemTestMessage4)
+         {
+            final L_Data.req newMsg = new L_Data.req();
+            Telegram telegram = newMsg.getTelegram();
+            telegram.setFrom(new PhysicalAddress(1, 1, 255));
+            telegram.setDest(new PhysicalAddress(1, 1, 6));
+            telegram.setPriority(Priority.SYSTEM);
+            telegram.setTransport(Transport.Connected);
+            telegram.setSequence(sequence++);
+            telegram.setApplication(Application.Restart);
+            telegram.setData(new int[] { 0 });
             msg = newMsg;
          }
 
@@ -433,7 +456,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    /**
     * Event callback: Copy a vd_ file into the products database.
     */
-   class OnCopyVDX extends SimpleSelectionListener
+   class OnImportVDX extends SimpleSelectionListener
    {
       public void widgetSelected(SelectionEvent event)
       {
