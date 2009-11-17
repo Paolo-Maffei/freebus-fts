@@ -16,9 +16,9 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.freebus.fts.comm.BusInterface;
-import org.freebus.fts.comm.BusInterfaceFactory;
-import org.freebus.fts.comm.BusListener;
+import org.freebus.fts.comm.KNXConnection;
+import org.freebus.fts.comm.KNXConnectionFactory;
+import org.freebus.fts.comm.EmiFrameListener;
 import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.emi.EmiMessage;
@@ -31,7 +31,7 @@ import org.freebus.fts.utils.ImageCache;
 /**
  * A widget that outputs the telegrams on the EIB bus.
  */
-public class BusMonitor extends TabPage implements BusListener
+public class BusMonitor extends TabPage implements EmiFrameListener
 {
    protected final Group grp = new Group(this, SWT.FLAT|SWT.UNDERLINE_SQUIGGLE);
    protected final Tree tree = new Tree(grp, SWT.BORDER);
@@ -81,7 +81,7 @@ public class BusMonitor extends TabPage implements BusListener
 
       try
       {
-         final BusInterface bus = BusInterfaceFactory.getDefaultInstance();
+         final KNXConnection bus = KNXConnectionFactory.getDefaultConnection();
          if (!bus.isOpen()) bus.open();
          bus.addListener(this);
       }
@@ -100,7 +100,7 @@ public class BusMonitor extends TabPage implements BusListener
    @Override
    public void dispose()
    {
-      final BusInterface bus = BusInterfaceFactory.getDefaultInstance();
+      final KNXConnection bus = KNXConnectionFactory.getDefaultConnection();
       bus.removeListener(this);
 
       super.dispose();

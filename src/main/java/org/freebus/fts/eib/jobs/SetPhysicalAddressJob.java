@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.freebus.fts.comm.BusInterface;
+import org.freebus.fts.comm.KNXConnection;
 import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
@@ -55,7 +55,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
     * @throws IOException
     */
    @Override
-   public void main(BusInterface busInterface) throws IOException
+   public void main(KNXConnection knxConnection) throws IOException
    {
       //
       // Step 1: scan the bus for devices that are in programming mode
@@ -65,7 +65,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       dataTelegram.setData(new int[] { 0x01 });
       telegrams.clear();
       applicationExpected = Application.IndividualAddress_Response;
-      busInterface.write(dataMsg);
+      knxConnection.write(dataMsg);
 
       // Wait 3 seconds for devices that answer our telegram
       for (int i = 1; i < 30 && telegrams.size() < 2; ++i)
@@ -87,7 +87,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob_Programming"));
       dataTelegram.setApplication(Application.IndividualAddress_Write);
       dataTelegram.setData(newAddress.getBytes());
-      busInterface.write(dataMsg);
+      knxConnection.write(dataMsg);
       msleep(500);
 
       //
@@ -98,7 +98,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       dataTelegram.setDest(newAddress);
       telegrams.clear();
       applicationExpected = Application.Memory_Response;
-      busInterface.write(dataMsg);
+      knxConnection.write(dataMsg);
    }
 
    /**

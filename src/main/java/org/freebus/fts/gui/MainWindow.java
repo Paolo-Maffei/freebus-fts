@@ -12,8 +12,8 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
 import org.freebus.fts.Config;
-import org.freebus.fts.comm.BusInterface;
-import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.comm.KNXConnection;
+import org.freebus.fts.comm.KNXConnectionFactory;
 import org.freebus.fts.db.DatabaseProductDb;
 import org.freebus.fts.dialogs.PhysicalAddressProgrammer;
 import org.freebus.fts.dialogs.ProgressDialog;
@@ -381,10 +381,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
       public void widgetSelected(SelectionEvent event)
       {
-         BusInterface bus;
+         KNXConnection bus;
          try
          {
-            bus = BusInterfaceFactory.getDefaultInstance();
+            bus = KNXConnectionFactory.getDefaultConnection();
             if (!bus.isOpen()) bus.open();
          }
          catch (IOException e)

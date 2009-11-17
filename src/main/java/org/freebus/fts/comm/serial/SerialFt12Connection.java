@@ -1,4 +1,4 @@
-package org.freebus.fts.comm;
+package org.freebus.fts.comm.serial;
 
 import gnu.io.CommPortIdentifier;
 import gnu.io.NoSuchPortException;
@@ -13,10 +13,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
+import org.freebus.fts.comm.KNXConnectException;
+import org.freebus.fts.comm.KNXConnection;
+
 /**
- * A FT1.2 speaking {@link BusInterface} using the local serial port.
+ * A FT1.2 speaking {@link KNXConnection} using the local serial port.
  */
-public final class SerialFt12Interface extends Ft12Interface implements SerialPortEventListener
+public final class SerialFt12Connection extends Ft12Connection implements SerialPortEventListener
 {
    protected final String portName;
    protected CommPortIdentifier portIdent;
@@ -27,7 +30,7 @@ public final class SerialFt12Interface extends Ft12Interface implements SerialPo
    /**
     * Create a connection for the serial port portName.
     */
-   public SerialFt12Interface(String portName)
+   public SerialFt12Connection(String portName)
    {
       this.portName = portName;
    }
@@ -60,23 +63,23 @@ public final class SerialFt12Interface extends Ft12Interface implements SerialPo
       }
       catch (NoSuchPortException e)
       {
-         throw new BusConnectException("Cannot connect to serial port " + portName, e);
+         throw new KNXConnectException("Cannot connect to serial port " + portName, e);
       }
       catch (PortInUseException e)
       {
-         throw new BusConnectException("Serial port " + portName + " is in use", e);
+         throw new KNXConnectException("Serial port " + portName + " is in use", e);
       }
       catch (UnsupportedCommOperationException e)
       {
-         throw new BusConnectException("Failed to set serial port parameters for " + portName, e);
+         throw new KNXConnectException("Failed to set serial port parameters for " + portName, e);
       }
       catch (IOException e)
       {
-         throw new BusConnectException("Failed to open I/O streams for serial port " + portName, e);
+         throw new KNXConnectException("Failed to open I/O streams for serial port " + portName, e);
       }
       catch (TooManyListenersException e)
       {
-         throw new BusConnectException("Failed to initialize internal listener", e);
+         throw new KNXConnectException("Failed to initialize internal listener", e);
       }
 
       super.open();

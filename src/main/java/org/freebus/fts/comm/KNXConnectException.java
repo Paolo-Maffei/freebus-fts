@@ -6,14 +6,14 @@ import java.io.IOException;
  * The exception indicates that the connection to the EIB bus interface
  * failed for some reason.
  */
-public final class BusConnectException extends IOException
+public final class KNXConnectException extends IOException
 {
    private static final long serialVersionUID = -427540522334652158L;
 
    /**
     * Create a EIB bus-interface connect-failed exception.
     */
-   public BusConnectException(String message)
+   public KNXConnectException(String message)
    {
       super(message);
    }
@@ -21,7 +21,7 @@ public final class BusConnectException extends IOException
    /**
     * Create a EIB bus-interface connect-failed exception.
     */
-   public BusConnectException(String message, Throwable cause)
+   public KNXConnectException(String message, Throwable cause)
    {
       super(message, cause);
    }

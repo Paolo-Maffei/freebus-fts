@@ -8,7 +8,7 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
-import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.comm.KNXConnectionFactory;
 import org.freebus.fts.db.Database;
 import org.freebus.fts.db.DatabaseResources;
 import org.freebus.fts.eib.jobs.JobQueue;
@@ -84,7 +84,7 @@ public final class Main
          {
             JobQueue.getDefaultJobQueue().dispose();
 
-            BusInterfaceFactory.disposeDefaultInstance();
+            KNXConnectionFactory.disposeDefaultConnection();
             if (mainWin != null) mainWin.dispose();
             mainWin = null;
 

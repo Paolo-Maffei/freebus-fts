@@ -1,8 +1,10 @@
-package org.freebus.fts.comm;
+package org.freebus.fts.comm.serial;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.freebus.fts.comm.EmiFrameListener;
+import org.freebus.fts.comm.KNXConnection;
 import org.freebus.fts.emi.EmiMessage;
 import org.freebus.fts.emi.EmiMessageType;
 import org.freebus.fts.emi.PEI_Switch;
@@ -11,9 +13,9 @@ import org.freebus.fts.utils.I18n;
 /**
  * An EIB/KNX bus connection to a device that speaks the FT1.2 protocol.
  */
-public abstract class Ft12Interface implements BusInterface
+public abstract class Ft12Connection implements KNXConnection
 {
-   protected final CopyOnWriteArrayList<BusListener> listeners = new CopyOnWriteArrayList<BusListener>();
+   protected final CopyOnWriteArrayList<EmiFrameListener> listeners = new CopyOnWriteArrayList<EmiFrameListener>();
    protected boolean connected = false;
    protected boolean debug = true;
 
@@ -32,7 +34,7 @@ public abstract class Ft12Interface implements BusInterface
     * Add a bus listener. Listeners get called when messages arrive.
     */
    @Override
-   public void addListener(BusListener listener)
+   public void addListener(EmiFrameListener listener)
    {
       listeners.add(listener);
    }
@@ -41,7 +43,7 @@ public abstract class Ft12Interface implements BusInterface
     * Remove a bus listener.
     */
    @Override
-   public void removeListener(BusListener listener)
+   public void removeListener(EmiFrameListener listener)
    {
       listeners.add(listener);
    }
@@ -51,7 +53,7 @@ public abstract class Ft12Interface implements BusInterface
     */
    public void notifyListenersReceived(final EmiMessage message)
    {
-      for (BusListener listener : listeners)
+      for (EmiFrameListener listener : listeners)
          listener.messageReceived(message);
    }
 
@@ -60,7 +62,7 @@ public abstract class Ft12Interface implements BusInterface
     */
    public void notifyListenersSent(final EmiMessage message)
    {
-      for (BusListener listener : listeners)
+      for (EmiFrameListener listener : listeners)
          listener.messageSent(message);
    }
 

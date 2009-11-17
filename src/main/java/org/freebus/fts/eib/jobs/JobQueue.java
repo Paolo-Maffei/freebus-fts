@@ -9,8 +9,8 @@ import java.util.concurrent.Semaphore;
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.MessageBox;
-import org.freebus.fts.comm.BusInterface;
-import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.comm.KNXConnection;
+import org.freebus.fts.comm.KNXConnectionFactory;
 import org.freebus.fts.gui.MainWindow;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.TaskListener;
@@ -137,10 +137,10 @@ public final class JobQueue implements TaskListener
 
       try
       {
-         final BusInterface busInterface = BusInterfaceFactory.getDefaultInstance();
-         if (!busInterface.isOpen()) busInterface.open();
+         final KNXConnection knxConnection = KNXConnectionFactory.getDefaultConnection();
+         if (!knxConnection.isOpen()) knxConnection.open();
 
-         job.run(busInterface);
+         job.run(knxConnection);
 
          masterEvent.progress = 100;
          notifyListeners(masterEvent);

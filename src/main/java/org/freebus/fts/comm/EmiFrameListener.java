@@ -7,7 +7,7 @@ import org.freebus.fts.emi.EmiMessage;
 /**
  * Interface for classes that want to be notified when an EMI message is received.
  */
-public interface BusListener extends EventListener
+public interface EmiFrameListener extends EventListener
 {
    /**
     * A message was received.
