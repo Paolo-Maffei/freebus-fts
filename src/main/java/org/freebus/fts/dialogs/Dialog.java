@@ -11,6 +11,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Shell;
+import org.freebus.fts.gui.MainWindow;
 
 /**
  * A basic dialog. With a contents area that can be used for custom contents,
@@ -41,7 +42,7 @@ public class Dialog
 
       FormData formData;
 
-      shell = new Shell(Display.getDefault(), style);
+      shell = new Shell(MainWindow.getInstance().getShell(), style);
       shell.setLayout(new FormLayout());
       shell.setText(title);
       shell.setSize(640, 400);
@@ -107,8 +108,19 @@ public class Dialog
     */
    public void dispose()
    {
-      shell.close();
-      shell.dispose();
+      if (!shell.isDisposed())
+      {
+         shell.close();
+         shell.dispose();
+      }
+   }
+   
+   /**
+    * @return true if the dialog is disposed.
+    */
+   public boolean isDisposed()
+   {
+      return shell.isDisposed();
    }
 
    /**

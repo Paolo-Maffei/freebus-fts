@@ -66,7 +66,7 @@ public class Manufacturer
    }
 
    /**
-    * Compare two manufacturers by id.
+    * Compare two manufacturer by id.
     */
    @Override
    public boolean equals(final Object o)

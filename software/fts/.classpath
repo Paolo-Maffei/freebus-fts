@@ -15,6 +15,6 @@
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="lib" path="contrib/hsql/hsqldb.jar"/>
-	<classpathentry kind="lib" path="contrib/toplink-essentials.jar"/>
+	<classpathentry kind="lib" path="contrib/toplink-essentials.jar" sourcepath="/media/extern/Software/Java/toplink-essentials-2.1-60f-sources.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -66,7 +66,6 @@ public abstract class ListenableWorker
       System.out.printf("*** %d%% done: %s\n", donePerc, msg);
 
       if (listeners.isEmpty() || lastSteps == stepsDone) return;
-      lastSteps = lastSteps;
 
       Display.getDefault().syncExec(new Runnable()
       {

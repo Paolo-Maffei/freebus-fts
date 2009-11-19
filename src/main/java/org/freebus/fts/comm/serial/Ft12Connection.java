@@ -5,9 +5,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.freebus.fts.comm.EmiFrameListener;
 import org.freebus.fts.comm.KNXConnection;
-import org.freebus.fts.emi.EmiMessage;
-import org.freebus.fts.emi.EmiMessageType;
-import org.freebus.fts.emi.PEI_Switch;
+import org.freebus.fts.comm.emi.EmiFrame;
+import org.freebus.fts.comm.emi.EmiFrameType;
 import org.freebus.fts.utils.I18n;
 
 /**
@@ -51,19 +50,19 @@ public abstract class Ft12Connection implements KNXConnection
    /**
     * Notify all listeners that the given message was received.
     */
-   public void notifyListenersReceived(final EmiMessage message)
+   public void notifyListenersReceived(final EmiFrame message)
    {
       for (EmiFrameListener listener : listeners)
-         listener.messageReceived(message);
+         listener.frameReceived(message);
    }
 
    /**
     * Notify all listeners that the given message was sent.
     */
-   public void notifyListenersSent(final EmiMessage message)
+   public void notifyListenersSent(final EmiFrame message)
    {
       for (EmiFrameListener listener : listeners)
-         listener.messageSent(message);
+         listener.frameSent(message);
    }
 
    /**
@@ -95,20 +94,13 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (startAckCount == ackCount)
          throw new IOException(I18n.getMessage("Comm_ErrDeviceNotFound"));
-
-      // A pei_switch that eibd sends on startup
-      if (debug) System.out.println("WRITE: PEI_Switch init");
-      write(new PEI_Switch.req(PEI_Switch.Mode.INIT));
-
-      if (debug) System.out.println("WRITE: PEI_Switch to link-layer mode");
-      write(new PEI_Switch.req(PEI_Switch.Mode.LINK));
    }
 
    /**
     * Send a message using a FT1.2 frame with variable length.
     */
    @Override
-   public void write(EmiMessage message) throws IOException
+   public void send(EmiFrame message) throws IOException
    {
       final int[] buffer = new int[32];
 
@@ -243,9 +235,9 @@ public abstract class Ft12Connection implements KNXConnection
 
          try
          {
-            final EmiMessageType msgType = EmiMessageType.valueOf(data[0]);
+            final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);
 
-            final EmiMessage msg = msgType.newInstance();
+            final EmiFrame msg = msgType.newInstance();
             if (msg == null)
             {
                System.out.println("Ignoring unimplemented message " + msgType.toString());

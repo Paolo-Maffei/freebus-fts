@@ -3,14 +3,13 @@ package org.freebus.fts.vdx;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.TreeMap;
 
 import org.freebus.fts.Config;
+import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.ProductDb;
 import org.freebus.fts.products.ProductFilter;
@@ -47,6 +46,9 @@ public final class VdxProductDb implements ProductDb
       return reader.getFileName();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public List<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException
    {
@@ -55,8 +57,7 @@ public final class VdxProductDb implements ProductDb
 
       for (final FunctionalEntity cat: groups.values())
       {
-         if (filter.manufacturers != null &&
-             Arrays.binarySearch(filter.manufacturers, cat.getManufacturerId()) < 0)
+         if (filter.manufacturer != 0 && filter.manufacturer !=  cat.getManufacturerId())
             continue;
 
          matches.add(cat);
@@ -65,6 +66,9 @@ public final class VdxProductDb implements ProductDb
       return matches;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Map<Integer, String> getManufacturers() throws IOException
    {
@@ -85,6 +89,9 @@ public final class VdxProductDb implements ProductDb
       return manufacturers;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public List<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException
    {
@@ -98,10 +105,10 @@ public final class VdxProductDb implements ProductDb
              Arrays.binarySearch(filter.functionalEntities, dev.getFunctionalEntityId()) < 0)
             continue;
 
-         if (filter.manufacturers != null)
+         if (filter.manufacturer != 0)
          {
             final FunctionalEntity catGroup = groups.get(dev.getFunctionalEntityId());
-            if (Arrays.binarySearch(filter.manufacturers, catGroup.getManufacturerId()) < 0)
+            if (filter.manufacturer != catGroup.getManufacturerId())
                continue;
          }
 
@@ -111,6 +118,9 @@ public final class VdxProductDb implements ProductDb
       return matches;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String getProductDescription(int catalogEntryId) throws IOException
    {
@@ -118,11 +128,24 @@ public final class VdxProductDb implements ProductDb
       return productDescriptions.get(catalogEntryId);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public VirtualDevice getVirtualDevice(int id) throws IOException
    {
       if (virtualDevices == null) updateVirtualDevices();
       return virtualDevices.get(id);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CatalogEntry getCatalogEntry(int id) throws IOException
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 
    /**

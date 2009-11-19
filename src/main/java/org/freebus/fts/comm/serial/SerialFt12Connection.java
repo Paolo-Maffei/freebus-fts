@@ -37,6 +37,7 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
 
    /**
     * Connect to the serial port.
+    * 
     * @throws IOException
     */
    @Override
@@ -48,11 +49,11 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
          portIdent = CommPortIdentifier.getPortIdentifier(portName);
          serialPort = (SerialPort) portIdent.open("SerialBusInterface", 2000);
 
-         // RS-Interface: 115200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-         // SerialPort.PARITY_NONE
+         // Freebus RS-Interface: 115200, SerialPort.DATABITS_8,
+         // SerialPort.STOPBITS_1, SerialPort.PARITY_NONE.
          //
          // FT-1.2: 19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-         // SerialPort.PARITY_EVEN
+         // SerialPort.PARITY_EVEN.
          serialPort.setSerialPortParams(19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
 
          inputStream = serialPort.getInputStream();
@@ -106,14 +107,15 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
     * @return true if the connection to the serial port is opened.
     */
    @Override
-   public boolean isOpen()
+   public boolean isConnected()
    {
       return inputStream != null && outputStream != null;
    }
 
    /**
     * Receive one byte from the serial port.
-    * @throws IOException 
+    * 
+    * @throws IOException
     */
    @Override
    protected int read() throws IOException
@@ -123,7 +125,7 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
 
    /**
     * @return true if at least one byte can be read.
-    * @throws IOException 
+    * @throws IOException
     */
    @Override
    protected boolean isDataAvailable() throws IOException
@@ -134,7 +136,8 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
 
    /**
     * Send length bytes of data to the serial port.
-    * @throws IOException 
+    * 
+    * @throws IOException
     */
    @Override
    protected void write(int[] data, int length) throws IOException

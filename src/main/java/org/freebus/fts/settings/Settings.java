@@ -14,7 +14,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.freebus.fts.Config;
-import org.freebus.fts.comm.KNXConnectionFactory;
+import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.gui.MainWindow;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.SimpleSelectionListener;
@@ -146,7 +146,7 @@ public class Settings
       if (dbsProductsDb.apply()) restartRequired = true;
 
       Config.getInstance().save();
-      KNXConnectionFactory.disposeDefaultConnection();
+      BusInterfaceFactory.disposeDefaultInterface();
 
       instance = null;
 

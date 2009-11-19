@@ -23,6 +23,8 @@ import org.eclipse.swt.widgets.Table;
 import org.eclipse.swt.widgets.TableItem;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeItem;
+import org.freebus.fts.dialogs.ExceptionDialog;
+import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.ProductDb;
 import org.freebus.fts.products.ProductFilter;
@@ -31,7 +33,7 @@ import org.freebus.fts.utils.I18n;
 import org.freebus.fts.widgets.CatalogEntryWidget;
 
 /**
- * A browser for a {@link ProductDb} products-database.
+ * A browser for the {@link ProductDb} products-database.
  */
 public class ProductsTab extends TabPage
 {
@@ -43,7 +45,7 @@ public class ProductsTab extends TabPage
    private final CatalogEntryWidget cewDetails;
    private final Label lblSelProduct, lblDescription;
    private final Font fntCaption;
-   
+
    /**
     * Create a new products-tab.
     */
@@ -55,9 +57,10 @@ public class ProductsTab extends TabPage
 
       FormData formData;
       FillLayout fillLayout;
-      
+
       final FontData curFontData = getFont().getFontData()[0];
-      fntCaption = new Font(Display.getCurrent(), new FontData(curFontData.getName(), (int)(curFontData.getHeight()*1.2), SWT.BOLD));
+      fntCaption = new Font(Display.getCurrent(), new FontData(curFontData.getName(),
+            (int) (curFontData.getHeight() * 1.2), SWT.BOLD));
 
       Group grpManufacturer = new Group(this, SWT.BORDER);
       grpManufacturer.setText(I18n.getMessage("ProductsTab.Manufacturer"));
@@ -68,8 +71,14 @@ public class ProductsTab extends TabPage
       formData.left = new FormAttachment(1);
       formData.top = new FormAttachment(1);
       grpManufacturer.setLayoutData(formData);
-      lstManufacturers = new List(grpManufacturer, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
-      lstManufacturers.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateCategories(); } });
+      lstManufacturers = new List(grpManufacturer, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+      lstManufacturers.addListener(SWT.Selection, new Listener()
+      {
+         public void handleEvent(Event e)
+         {
+            updateCategories();
+         }
+      });
 
       Group grpCategories = new Group(this, SWT.BORDER);
       grpCategories.setText(I18n.getMessage("ProductsTab.Categories"));
@@ -81,8 +90,14 @@ public class ProductsTab extends TabPage
       formData.left = new FormAttachment(grpManufacturer, 1);
       formData.top = new FormAttachment(1);
       grpCategories.setLayoutData(formData);
-      treCategories = new Tree(grpCategories, SWT.BORDER|SWT.MULTI|SWT.V_SCROLL);
-      treCategories.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateCatalog(); } });
+      treCategories = new Tree(grpCategories, SWT.BORDER | SWT.MULTI | SWT.V_SCROLL);
+      treCategories.addListener(SWT.Selection, new Listener()
+      {
+         public void handleEvent(Event e)
+         {
+            updateCatalogEntries();
+         }
+      });
 
       Group grpCatalog = new Group(this, SWT.BORDER);
       grpCatalog.setText(I18n.getMessage("ProductsTab.Catalog"));
@@ -93,10 +108,16 @@ public class ProductsTab extends TabPage
       formData.left = new FormAttachment(grpCategories, 1);
       formData.right = new FormAttachment(99);
       grpCatalog.setLayoutData(formData);
-      tblCatalog = new Table(grpCatalog, SWT.BORDER|SWT.SINGLE|SWT.V_SCROLL);
-      tblCatalog.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateDetails(); } });
+      tblCatalog = new Table(grpCatalog, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+      tblCatalog.addListener(SWT.Selection, new Listener()
+      {
+         public void handleEvent(Event e)
+         {
+            updateDetails();
+         }
+      });
 
-      final Label lblSep = new Label(this, SWT.SEPARATOR|SWT.HORIZONTAL);
+      final Label lblSep = new Label(this, SWT.SEPARATOR | SWT.HORIZONTAL);
       formData = new FormData();
       formData.top = new FormAttachment(grpManufacturer, 5);
       formData.height = 5;
@@ -121,28 +142,29 @@ public class ProductsTab extends TabPage
       formData.left = new FormAttachment(1);
       formData.width = 400;
       grpApplications.setLayoutData(formData);
-      tblApplications = new Table(grpApplications, SWT.BORDER|SWT.SINGLE|SWT.V_SCROLL);
-//      tblApplications.addListener(SWT.Selection, new Listener() { public void handleEvent(Event e) { updateDetails(); } });
+      tblApplications = new Table(grpApplications, SWT.BORDER | SWT.SINGLE | SWT.V_SCROLL);
+      // tblApplications.addListener(SWT.Selection, new Listener() { public void
+      // handleEvent(Event e) { updateDetails(); } });
 
-      
-      grpDetails = new Group(this, SWT.BORDER|SWT.SINGLE);
-      grpDetails.setSize(600, 300);
+      grpDetails = new Group(this, SWT.BORDER | SWT.SINGLE);
       fillLayout = new FillLayout();
       fillLayout.marginHeight = 4;
       fillLayout.marginWidth = 2;
       grpDetails.setLayout(fillLayout);
-//      grpDetails.setText(I18n.getMessage("ProductsTab.Product_Caption"));
+      // grpDetails.setText(I18n.getMessage("ProductsTab.Product_Caption"));
       formData = new FormData();
       formData.top = new FormAttachment(lblSelProduct, 5);
       formData.bottom = new FormAttachment(99);
       formData.left = new FormAttachment(grpApplications, 1);
       formData.right = new FormAttachment(99);
+      formData.width = 400;
       grpDetails.setLayoutData(formData);
       grpDetails.setVisible(false);
 
       cewDetails = new CatalogEntryWidget(grpDetails, SWT.BORDER, false);
-      
+
       lblDescription = new Label(grpDetails, SWT.BORDER);
+
    }
 
    /**
@@ -152,13 +174,13 @@ public class ProductsTab extends TabPage
    public void setObject(Object o)
    {
       productDb = (ProductDb) o;
-//      setTitle(productDb.getName());
+      // setTitle(productDb.getName());
       updateContents();
    }
-   
+
    /**
-    * Update the widget's contents. Called when the displayed
-    * object is changed. The default implementation is empty.
+    * Update the widget's contents. Called when the displayed object is changed.
+    * The default implementation is empty.
     */
    @Override
    public void updateContents()
@@ -169,24 +191,20 @@ public class ProductsTab extends TabPage
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         new ExceptionDialog(e);
       }
    }
 
    /**
-    * @return a list with the id's of the selected manufacturers.
-    * The returned list is empty if no manufacturer is selected.
+    * @return a list with the id's of the selected manufacturer. The returned
+    *         list is empty if no manufacturer is selected.
     */
-   public int[] getSelectedManufacturers()
+   public int getSelectedManufacturer()
    {
       final String[] sel = lstManufacturers.getSelection();
+      if (sel == null) return 0;
 
-      final int[] result = new int[sel.length];
-      for (int i=sel.length-1; i>=0; --i)
-         result[i] = (Integer) lstManufacturers.getData(sel[i]);
-
-      return result;
+      return (Integer) lstManufacturers.getData(sel[0]);
    }
 
    /**
@@ -196,8 +214,8 @@ public class ProductsTab extends TabPage
    {
       final TreeItem[] selTopLevel = treCategories.getSelection();
 
-      final Vector<TreeItem> sel = new Vector<TreeItem>((selTopLevel.length<<2) + 10);
-      for (TreeItem item: selTopLevel)
+      final Vector<TreeItem> sel = new Vector<TreeItem>((selTopLevel.length << 2) + 10);
+      for (TreeItem item : selTopLevel)
       {
          sel.add(item);
          getChildren(item, sel);
@@ -215,7 +233,7 @@ public class ProductsTab extends TabPage
     */
    protected void getChildren(TreeItem item, Vector<TreeItem> children)
    {
-      for (TreeItem child: item.getItems())
+      for (TreeItem child : item.getItems())
       {
          children.add(child);
          getChildren(child, children);
@@ -223,8 +241,9 @@ public class ProductsTab extends TabPage
    }
 
    /**
-    * Update the list of manufacturers.
-    * @throws IOException 
+    * Update the list of manufacturer.
+    * 
+    * @throws IOException
     */
    public void updateManufacturers() throws IOException
    {
@@ -233,10 +252,10 @@ public class ProductsTab extends TabPage
       final Map<Integer, String> manufacturers = productDb.getManufacturers();
       final Map<String, Integer> manufacturersSorted = new TreeMap<String, Integer>();
 
-      for (final Integer id: manufacturers.keySet())
+      for (final Integer id : manufacturers.keySet())
          manufacturersSorted.put(manufacturers.get(id), id);
 
-      for (final String name: manufacturersSorted.keySet())
+      for (final String name : manufacturersSorted.keySet())
       {
          lstManufacturers.add(name);
          lstManufacturers.setData(name, manufacturersSorted.get(name));
@@ -247,17 +266,17 @@ public class ProductsTab extends TabPage
    }
 
    /**
-    * Update the list of categories.
+    * Update the list of categories. Called when the user clicks a manufacturer.
     */
    public void updateCategories()
    {
       treCategories.removeAll();
-      final HashMap<Integer,TreeItem> treeItems = new HashMap<Integer,TreeItem>();
+      final HashMap<Integer, TreeItem> treeItems = new HashMap<Integer, TreeItem>();
       FunctionalEntity cat;
       TreeItem item, parentItem;
 
       final ProductFilter filter = new ProductFilter();
-      filter.manufacturers = getSelectedManufacturers();
+      filter.manufacturer = getSelectedManufacturer();
 
       java.util.List<FunctionalEntity> cats = null;
       try
@@ -266,13 +285,12 @@ public class ProductsTab extends TabPage
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         new ExceptionDialog(e);
          return;
       }
 
       final Map<String, FunctionalEntity> catSorted = new TreeMap<String, FunctionalEntity>();
-      for (final FunctionalEntity functionalEntity: cats)
+      for (final FunctionalEntity functionalEntity : cats)
          catSorted.put(functionalEntity.getName(), functionalEntity);
 
       // Process all categories, as long as there are categories to be added
@@ -286,7 +304,7 @@ public class ProductsTab extends TabPage
          {
             final String name = names[i];
             cat = catSorted.get(name);
-            
+
             final int parentId = cat.getParentId();
             if (parentId > 0)
             {
@@ -294,7 +312,7 @@ public class ProductsTab extends TabPage
                if (parentItem == null) continue; // try next time
             }
             else parentItem = null;
-   
+
             if (parentItem == null) item = new TreeItem(treCategories, SWT.FLAT);
             else item = new TreeItem(parentItem, SWT.FLAT);
 
@@ -305,109 +323,108 @@ public class ProductsTab extends TabPage
             catSorted.remove(name);
          }
       }
-      
+
       if (treCategories.getItemCount() > 0) treCategories.select(treCategories.getItem(0));
-      updateCatalog();
+      updateCatalogEntries();
    }
 
    /**
-    * Update the list of catalog entries.
+    * Update the list of catalog entries. Called when the user selects a product
+    * category.
     */
-   public void updateCatalog()
+   public void updateCatalogEntries()
    {
       tblCatalog.removeAll();
 
-      final TreeMap<String,VirtualDevice> matches = new TreeMap<String,VirtualDevice>();
+      final TreeMap<String, VirtualDevice> matches = new TreeMap<String, VirtualDevice>();
 
       final ProductFilter filter = new ProductFilter();
-      filter.manufacturers = getSelectedManufacturers();
+      filter.manufacturer = getSelectedManufacturer();
       filter.functionalEntities = getSelectedCategories();
 
       try
       {
-         for (VirtualDevice dev: productDb.getVirtualDevices(filter))
+         for (VirtualDevice dev : productDb.getVirtualDevices(filter))
             matches.put(dev.getName(), dev);
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
+         new ExceptionDialog(e);
          return;
       }
 
-//      final int numCatEntries = productDb.getNumCatalogEntries();
-//      for (int id=0; id<numCatEntries; ++id)
-//      {
-//         catalogEntry = productDb.getCatalogEntry(id);
-//         if (!manufacturers.contains(catalogEntry.getManufacturer())) continue;
-//
-//         final int numVirtDev = catalogEntry.getVirtualDevicesCount();
-//         for (int i=0; i<numVirtDev; ++i)
-//         {
-//            virtualDevice = catalogEntry.getVirtualDevice(i);
-//            if (virtualDevice==null || !cats.contains(virtualDevice.getFunctionalEntity())) continue;
-//
-//            matches.put(catalogEntry.getName(), catalogEntry);
-//            break;
-//         }
-//      }
-
-      for (String key: matches.keySet())
+      for (String key : matches.keySet())
       {
          VirtualDevice dev = matches.get(key);
          final TableItem item = new TableItem(tblCatalog, SWT.FLAT);
          item.setText(dev.getName());
-         item.setData(dev.getId());
+         item.setData(dev);
       }
 
       updateDetails();
    }
-   
+
    /**
     * Update the details about the selected catalog entry.
     */
    public void updateDetails()
    {
       final TableItem[] sel = tblCatalog.getSelection();
-      final boolean isVisible = sel.length>0;
+      final boolean isVisible = sel.length > 0;
 
       grpDetails.setVisible(isVisible);
       grpApplications.setVisible(isVisible);
       lblSelProduct.setVisible(isVisible);
 
-      if (sel.length<=0)
+      tblApplications.removeAll();
+
+      if (sel.length <= 0)
       {
          cewDetails.setCatalogEntry(null);
          lblDescription.setText("");
          return;
       }
-      
-//      final int devId = (Integer) sel[0].getData();
-//      VirtualDevice dev = null;
-//      try
-//      {
-//         dev = productDb.getVirtualDevice(devId);
-//      }
-//      catch (IOException e1)
-//      {
-//         e1.printStackTrace();
-//         return;
-//      }
-//      final String devLabel = sel[0].getText();
-//
-////      final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
-//      lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1", devLabel));
-////      cewDetails.setCatalogEntry(catalogEntry);
-//      try
-//      {
-//         lblDescription.setText(productDb.getProductDescription(dev.getCatalogEntryId()));
-//      }
-//      catch (IOException e)
-//      {
-//         // TODO Auto-generated catch block
-//         e.printStackTrace();
-//      }
-//
-//      tblApplications.removeAll();
+
+      final VirtualDevice dev = (VirtualDevice) sel[0].getData();
+
+      try
+      {
+         final CatalogEntry catalogEntry = productDb.getCatalogEntry(dev.getCatalogEntryId());
+         cewDetails.setCatalogEntry(catalogEntry);
+      }
+      catch (IOException e)
+      {
+         new ExceptionDialog(e);
+         return;
+      }
+
+      // final int devId = (Integer) sel[0].getData();
+      // VirtualDevice dev = null;
+      // try
+      // {
+      // dev = productDb.getVirtualDevice(devId);
+      // }
+      // catch (IOException e1)
+      // {
+      // e1.printStackTrace();
+      // return;
+      // }
+      // final String devLabel = sel[0].getText();
+      //
+      // // final CatalogEntry catalogEntry = (CatalogEntry) sel[0].getData();
+      // lblSelProduct.setText(I18n.getMessage("ProductsTab.Selected_Product").replace("%1",
+      // devLabel));
+      // // cewDetails.setCatalogEntry(catalogEntry);
+      // try
+      // {
+      // lblDescription.setText(productDb.getProductDescription(dev.getCatalogEntryId()));
+      // }
+      // catch (IOException e)
+      // {
+      // // TODO Auto-generated catch block
+      // e.printStackTrace();
+      // }
+      //
+      // tblApplications.removeAll();
    }
 }

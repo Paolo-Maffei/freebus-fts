@@ -5,10 +5,10 @@ import org.eclipse.swt.layout.RowLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.ProgressBar;
-import org.freebus.fts.eib.jobs.Job;
-import org.freebus.fts.eib.jobs.JobQueue;
-import org.freebus.fts.eib.jobs.JobQueueEvent;
-import org.freebus.fts.eib.jobs.JobQueueListener;
+import org.freebus.fts.comm.jobs.Job;
+import org.freebus.fts.comm.jobs.JobQueue;
+import org.freebus.fts.comm.jobs.JobQueueEvent;
+import org.freebus.fts.comm.jobs.JobQueueListener;
 
 /**
  * A widget that shows the state of the {@link JobQueue}.

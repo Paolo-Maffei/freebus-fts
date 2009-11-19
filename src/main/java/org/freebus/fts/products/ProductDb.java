@@ -10,9 +10,9 @@ import java.util.*;
 public interface ProductDb
 {
    /**
-    * @return A map with all manufacturers. Key is the manufacturer-id, value is
+    * @return A map with all manufacturer. Key is the manufacturer-id, value is
     *         the name of the manufacturer.
-    * @throws IOException 
+    * @throws IOException
     */
    public Map<Integer, String> getManufacturers() throws IOException;
 
@@ -22,7 +22,7 @@ public interface ProductDb
     * @param filter - an optional filter object. Set to null if you do not want
     *           to have filtering applied.
     * @return A set with all matching catalog-groups.
-    * @throws IOException 
+    * @throws IOException
     */
    public List<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException;
 
@@ -32,18 +32,27 @@ public interface ProductDb
     * @param filter - an optional filter object. Set to null if you do not want
     *           to have filtering applied.
     * @return A set with all matching virtual devices.
-    * @throws IOException 
+    * @throws IOException
     */
    public List<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException;
 
    /**
     * Query a specific virtual device.
-    *
+    * 
     * @param id - is the id of the virtual device.
-    * @return the virtual device
-    * @throws IOException 
+    * @return the virtual device.
+    * @throws IOException
     */
    public VirtualDevice getVirtualDevice(int id) throws IOException;
+
+   /**
+    * Query a specific catalog entry.
+    * 
+    * @param id - is the id of the catalog entry.
+    * @return the catalog entry.
+    * @throws IOException
+    */
+   public CatalogEntry getCatalogEntry(int id) throws IOException;
 
    /**
     * Query the product description for the catalog-entry with the given id.

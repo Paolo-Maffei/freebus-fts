@@ -9,9 +9,9 @@ import java.util.Arrays;
 public final class ProductFilter
 {
    /**
-    * Id's of manufacturers, or null if no filtering by manufacturer shall occur.
+    * Manufacturer id, or zero if no filtering by manufacturer shall occur.
     */
-   public int[] manufacturers = null;
+   public int manufacturer = 0;
 
    /**
     * Id's of functional-entities for filtering, or null.
@@ -25,7 +25,24 @@ public final class ProductFilter
     */
    public void optimize()
    {
-      if (manufacturers != null) Arrays.sort(manufacturers);
       if (functionalEntities != null) Arrays.sort(functionalEntities);
+   }
+
+   /**
+    * @return the functional entities as comma separated string, or null if no
+    * functional entities are set.
+    */
+   public String getFunctionalEntitiesString()
+   {
+      if (functionalEntities == null || functionalEntities.length < 1) return null;
+
+      final StringBuilder sb = new StringBuilder();
+      for (int i = 0; i < functionalEntities.length; ++i)
+      {
+         if (i > 0) sb.append(',');
+         sb.append(functionalEntities[i]);
+      }
+
+      return sb.toString();
    }
 }

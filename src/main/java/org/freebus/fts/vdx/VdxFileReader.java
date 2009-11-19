@@ -37,6 +37,8 @@ public final class VdxFileReader
 
       try
       {
+         //final ZipFileType zipFileType = ZipFileType.inspectFile(fileName);
+
          in = new RandomAccessFile(fileName, "r");
          reader = new FileBlockReader(in, 1049600);
 

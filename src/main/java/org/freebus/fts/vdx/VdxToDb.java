@@ -242,7 +242,7 @@ public final class VdxToDb extends ListenableWorker
    }
 
    /**
-    * Copy the manufacturers.
+    * Copy the manufacturer.
     * 
     * @throws IOException
     */

@@ -6,8 +6,11 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.Query;
 
+import org.freebus.fts.dialogs.ExceptionDialog;
+import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductDb;
@@ -47,20 +50,25 @@ public class DatabaseProductDb implements ProductDb
       return entityManager;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @SuppressWarnings("unchecked")
    @Override
    public List<FunctionalEntity> getFunctionalEntities(ProductFilter filter) throws IOException
    {
       String stmt = "SELECT fe FROM FunctionalEntity fe";
-      if (filter.manufacturers != null)
-         stmt += " WHERE fe.manufacturerId = " + Integer.toString(filter.manufacturers[0]);
+      if (filter.manufacturer != 0) stmt += " WHERE fe.manufacturerId = " + Integer.toString(filter.manufacturer);
 
       final Query query = entityManager.createQuery(stmt);
       final List<?> objs = query.getResultList();
-      
+
       return (List<FunctionalEntity>) objs;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public Map<Integer, String> getManufacturers() throws IOException
    {
@@ -68,7 +76,7 @@ public class DatabaseProductDb implements ProductDb
       final List<?> objs = query.getResultList();
 
       final Map<Integer, String> result = new TreeMap<Integer, String>();
-      for (Object obj: objs)
+      for (Object obj : objs)
       {
          final Manufacturer manu = (Manufacturer) obj;
          result.put(manu.getId(), manu.getName());
@@ -77,6 +85,9 @@ public class DatabaseProductDb implements ProductDb
       return result;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public String getProductDescription(int catalogEntryId) throws IOException
    {
@@ -84,6 +95,9 @@ public class DatabaseProductDb implements ProductDb
       return null;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public VirtualDevice getVirtualDevice(int id) throws IOException
    {
@@ -91,14 +105,48 @@ public class DatabaseProductDb implements ProductDb
       return null;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @SuppressWarnings("unchecked")
    @Override
    public List<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException
    {
-      final Query query = entityManager.createQuery("SELECT dev FROM VirtualDevice dev");
+      final StringBuilder matchStr = new StringBuilder();
+
+      String funcEnts = filter.getFunctionalEntitiesString();
+      if (funcEnts != null)
+      {
+         if (matchStr.length() <= 0) matchStr.append(" WHERE ");
+         else matchStr.append(" AND ");
+         matchStr.append("dev.functionalEntityId IN (");
+         matchStr.append(funcEnts);
+         matchStr.append(")");
+      }
+
+      final Query query = entityManager.createQuery("SELECT dev FROM VirtualDevice dev" + matchStr.toString());
       final List<?> objs = query.getResultList();
-      
+
       return (List<VirtualDevice>) objs;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public CatalogEntry getCatalogEntry(int id) throws IOException
+   {
+      final Query query = entityManager.createQuery("SELECT ent FROM CatalogEntry ent WHERE ent.id="
+            + Integer.toString(id));
+
+      try
+      {
+         return (CatalogEntry) query.getSingleResult();
+      }
+      catch (NoResultException e)
+      {
+         new ExceptionDialog(e);
+         return null;
+      }
+   }
 }

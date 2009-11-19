@@ -2,10 +2,12 @@ package org.freebus.fts.comm;
 
 import java.io.IOException;
 
-import org.freebus.fts.emi.EmiMessage;
+import org.freebus.fts.comm.emi.EmiFrame;
 
 /**
  * Interface for a KNX/EIB bus connection.
+ *
+ * @see {@link BusInterface} - An interface for talking with the KNX/EIB bus.
  */
 public interface KNXConnection
 {
@@ -22,18 +24,18 @@ public interface KNXConnection
    /**
     * @return true if the bus connection is opened.
     */
-   public boolean isOpen();
+   public boolean isConnected();
 
    /**
-    * Send a message to the bus.
+    * Send an EMI frame to the bus.
     * 
     * @throws IOException
     */
-   public void write(EmiMessage message) throws IOException;
+   public void send(EmiFrame message) throws IOException;
 
    /**
-    * Add a frame listener. Frame listeners get called when {@link EmiMessage}s
-    * arrive. This is basically the whole bus communication.
+    * Add a frame listener. Frame listeners get called when {@link EmiFrame}s
+    * arrive.
     */
    public void addListener(EmiFrameListener listener);
 

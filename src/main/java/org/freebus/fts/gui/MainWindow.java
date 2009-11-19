@@ -1,40 +1,29 @@
 package org.freebus.fts.gui;
 
-import java.io.File;
 import java.io.IOException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.FileDialog;
 import org.eclipse.swt.widgets.Menu;
 import org.eclipse.swt.widgets.MenuItem;
 import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.ToolBar;
 import org.eclipse.swt.widgets.ToolItem;
-import org.freebus.fts.Config;
-import org.freebus.fts.comm.KNXConnection;
-import org.freebus.fts.comm.KNXConnectionFactory;
-import org.freebus.fts.db.DatabaseProductDb;
-import org.freebus.fts.dialogs.PhysicalAddressProgrammer;
-import org.freebus.fts.dialogs.ProgressDialog;
+import org.freebus.fts.comm.BusInterface;
+import org.freebus.fts.comm.BusInterfaceFactory;
+import org.freebus.fts.comm.jobs.JobQueue;
+import org.freebus.fts.comm.jobs.JobQueueEvent;
+import org.freebus.fts.comm.jobs.JobQueueListener;
 import org.freebus.fts.eib.Application;
-import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
 import org.freebus.fts.eib.Priority;
 import org.freebus.fts.eib.Telegram;
 import org.freebus.fts.eib.Transport;
-import org.freebus.fts.eib.jobs.JobQueue;
-import org.freebus.fts.eib.jobs.JobQueueEvent;
-import org.freebus.fts.eib.jobs.JobQueueListener;
-import org.freebus.fts.emi.EmiMessage;
-import org.freebus.fts.emi.L_Data;
+import org.freebus.fts.gui.actions.Action;
 import org.freebus.fts.project.Project;
-import org.freebus.fts.settings.Settings;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ImageCache;
 import org.freebus.fts.utils.SimpleSelectionListener;
-import org.freebus.fts.vdx.VdxFileReader;
-import org.freebus.fts.vdx.VdxToDb;
 import org.freebus.fts.widgets.JobQueueWidget;
 
 /**
@@ -103,70 +92,57 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       // Menu: File
       //
       final MenuItem fileMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
-      fileMenuHeader.setText(I18n.getMessage("File_Menu"));
+      fileMenuHeader.setText(I18n.getMessage("Menu_File"));
       fileMenuHeader.setMenu(fileMenu);
 
-      menuItem = new MenuItem(fileMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("New_Project"));
-      menuItem.addSelectionListener(new OnNewProject());
+      Action.PROJECT_NEW.newMenuItem(fileMenu, SWT.PUSH);
 
-      menuItem = new MenuItem(fileMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Open_Project"));
-      menuItem.addSelectionListener(new OnOpenProject());
+      menuItem = Action.PROJECT_OPEN.newMenuItem(fileMenu, SWT.PUSH);
       menuItem.setAccelerator(SWT.CONTROL | 'O');
 
-      menuItem = new MenuItem(fileMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Save_Project"));
-      menuItem.addSelectionListener(new OnSaveProject());
+      new MenuItem(fileMenu, SWT.SEPARATOR);
+
+      menuItem = Action.PROJECT_SAVE.newMenuItem(fileMenu, SWT.PUSH);
       menuItem.setAccelerator(SWT.CONTROL | 'S');
 
       new MenuItem(fileMenu, SWT.SEPARATOR);
 
-      menuItem = new MenuItem(fileMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Exit"));
-      menuItem.addSelectionListener(new OnExit());
+      menuItem = Action.EXIT.newMenuItem(fileMenu, SWT.PUSH);
       menuItem.setAccelerator(SWT.CONTROL | 'Q');
 
       //
       // Menu: Products
       //
       final MenuItem productsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
-      productsMenuHeader.setText(I18n.getMessage("Products_Menu"));
+      productsMenuHeader.setText(I18n.getMessage("Menu_Products"));
       productsMenuHeader.setMenu(productsMenu);
 
-      menuItem = new MenuItem(productsMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Products_Browser"));
-      menuItem.addSelectionListener(new OnProductsBrowser());
-
-      menuItem = new MenuItem(productsMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Products_Import_VDX"));
-      menuItem.addSelectionListener(new OnImportVDX());
+      Action.PRODUCTS_BROWSER.newMenuItem(productsMenu, SWT.PUSH);
+      Action.VDX_IMPORT.newMenuItem(productsMenu, SWT.PUSH);
 
       //
       // Menu: Tools
       //
       final MenuItem toolsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
-      toolsMenuHeader.setText(I18n.getMessage("Tools_Menu"));
+      toolsMenuHeader.setText(I18n.getMessage("Menu_Tools"));
       toolsMenuHeader.setMenu(toolsMenu);
 
-      menuItem = new MenuItem(toolsMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Vdx_Browser"));
-      menuItem.addSelectionListener(new OnVdxBrowser());
+      Action.VDX_BROWSER.newMenuItem(toolsMenu, SWT.PUSH);
 
-      menuItem = new MenuItem(toolsMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Menu_ProgramAddress"));
-      menuItem.addSelectionListener(new OnProgramAddress());
+      menuItem = Action.BUS_MONITOR.newMenuItem(toolsMenu, SWT.PUSH);
+      menuItem.setAccelerator(SWT.CONTROL | 'B');
+
+      Action.PROGRAM_ADDRESS.newMenuItem(toolsMenu, SWT.PUSH);
 
       //
       // Menu: Settings
       //
       final MenuItem settingsMenuHeader = new MenuItem(getMenuBar(), SWT.CASCADE);
-      settingsMenuHeader.setText(I18n.getMessage("Settings_Menu"));
+      settingsMenuHeader.setText(I18n.getMessage("Menu_Settings"));
       settingsMenuHeader.setMenu(settingsMenu);
 
-      menuItem = new MenuItem(settingsMenu, SWT.PUSH);
-      menuItem.setText(I18n.getMessage("Settings"));
-      menuItem.addSelectionListener(new OnSettings());
+      Action.SETTINGS.newMenuItem(settingsMenu, SWT.PUSH);
+
 
       shell.setMenuBar(getMenuBar());
    }
@@ -179,27 +155,13 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       ToolBar toolBar = new ToolBar(coolBar, SWT.FLAT);
       ToolItem toolItem;
 
-      toolItem = new ToolItem(toolBar, SWT.PUSH);
-      toolItem.setImage(ImageCache.getImage("icons/exit"));
-      toolItem.addSelectionListener(new OnExit());
-      toolItem.setToolTipText(I18n.getMessage("Exit_Tip"));
-
-      toolItem = new ToolItem(toolBar, SWT.PUSH);
-      toolItem.setImage(ImageCache.getImage("icons/find"));
-      toolItem.addSelectionListener(new OnProductsBrowser());
-      toolItem.setToolTipText(I18n.getMessage("Products_Browser_Tip"));
-
-      toolItem = new ToolItem(toolBar, SWT.PUSH);
-      toolItem.setImage(ImageCache.getImage("icons/wizard"));
-      toolItem.addSelectionListener(new OnImportVDX());
-      toolItem.setToolTipText(I18n.getMessage("Products_Copy_VDX_Tip"));
-
-      toolItem = new ToolItem(toolBar, SWT.PUSH);
-      toolItem.setImage(ImageCache.getImage("icons/bus-monitor"));
-      toolItem.addSelectionListener(new OnBusMonitor());
-      toolItem.setToolTipText(I18n.getMessage("Bus_Monitor_Tip"));
+      Action.EXIT.obj.attach(new ToolItem(toolBar, SWT.PUSH));
+      Action.PRODUCTS_BROWSER.obj.attach(new ToolItem(toolBar, SWT.PUSH));
+      Action.VDX_IMPORT.obj.attach(new ToolItem(toolBar, SWT.PUSH));
+      Action.BUS_MONITOR.obj.attach(new ToolItem(toolBar, SWT.PUSH));
 
       addToolBar(toolBar);
+
 
       toolBar = new ToolBar(coolBar, SWT.FLAT);
 
@@ -244,120 +206,20 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    }
 
    /**
-    * Event listener for: new-project
+    * Event callback: Send a test message to the EIB bus.
     */
-   class OnNewProject extends SimpleSelectionListener
+   int sequence = 0;
+   class OnSendBusMessage extends SimpleSelectionListener
    {
-      public void widgetSelected(SelectionEvent event)
-      {
-         // TODO
-      }
-   }
 
-   /**
-    * Event listener for: load-project
-    */
-   class OnOpenProject extends SimpleSelectionListener
-   {
       public void widgetSelected(SelectionEvent event)
       {
-         // TODO
-      }
-   }
+         Telegram telegram = null;
+         BusInterface bus;
 
-   /**
-    * Event listener for: save-project
-    */
-   class OnSaveProject extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         // TODO
-      }
-   }
-
-   /**
-    * Event listener for: exit
-    */
-   class OnExit extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         shell.close();
-         display.dispose();
-      }
-   }
-
-   /**
-    * Event listener for: settings
-    */
-   class OnSettings extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         Settings.openDialog();
-      }
-   }
-
-   /**
-    * Event listener for: open bus monitor
-    */
-   class OnBusMonitor extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         showTabPage(BusMonitor.class, null);
-      }
-   }
-
-   /**
-    * Event callback: Products Browser
-    */
-   class OnProductsBrowser extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
          try
          {
-            showTabPage(ProductsTab.class, new DatabaseProductDb());
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-            MessageBox mbox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-            mbox.setMessage(e.getLocalizedMessage());
-            mbox.open();
-            return;
-         }
-
-      }
-   }
-
-   /**
-    * Event callback: VDX Browser
-    */
-   class OnVdxBrowser extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         final FileDialog fileDialog = new FileDialog(shell, SWT.SINGLE);
-         fileDialog.setText(I18n.getMessage("Products_Browser_Open_File"));
-         fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
-         fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
-         final String vdxDir = Config.getInstance().getVdxDir();
-         if (vdxDir != null) fileDialog.setFilterPath(vdxDir);
-
-         final String fileName = fileDialog.open();
-         if (fileName == null) return;
-
-         final Config cfg = Config.getInstance();
-         cfg.setVdxDir(new File(fileName).getParentFile().getPath());
-         cfg.save();
-
-         VdxFileReader reader = null;
-         try
-         {
-            reader = new VdxFileReader(fileName);
+            bus = BusInterfaceFactory.getDefault();
          }
          catch (IOException e)
          {
@@ -368,47 +230,18 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             return;
          }
 
-         showTabPage(VdxBrowser.class, reader);
-      }
-   }
-
-   /**
-    * Event callback: Send a test message to the EIB bus.
-    */
-   int sequence = 0;
-   class OnSendBusMessage extends SimpleSelectionListener
-   {
-
-      public void widgetSelected(SelectionEvent event)
-      {
-         KNXConnection bus;
-         try
-         {
-            bus = KNXConnectionFactory.getDefaultConnection();
-            if (!bus.isOpen()) bus.open();
-         }
-         catch (IOException e)
-         {
-            e.printStackTrace();
-            return;
-         }
-
-         EmiMessage msg = null;
          if (event.widget == toolItemTestMessage1)
          {
-            final L_Data.req newMsg = new L_Data.req();
-            Telegram telegram = newMsg.getTelegram();
+            telegram = new Telegram();
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
             telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
             telegram.setTransport(Transport.Connect);
             sequence = 0;
-            msg = newMsg;
          }
          else if (event.widget == toolItemTestMessage2)
          {
-            final L_Data.req newMsg = new L_Data.req();
-            Telegram telegram = newMsg.getTelegram();
+            telegram = new Telegram();
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
             telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
@@ -416,22 +249,18 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             telegram.setSequence(sequence++);
             telegram.setApplication(Application.Memory_Read);
             telegram.setData(new int[] { 0, 0, 0 });
-            msg = newMsg;
          }
          else if (event.widget == toolItemTestMessage3)
          {
-            final L_Data.req newMsg = new L_Data.req();
-            Telegram telegram = newMsg.getTelegram();
+            telegram = new Telegram();
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
             telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
             telegram.setTransport(Transport.Disconnect);
-            msg = newMsg;
          }
          else if (event.widget == toolItemTestMessage4)
          {
-            final L_Data.req newMsg = new L_Data.req();
-            Telegram telegram = newMsg.getTelegram();
+            telegram = new Telegram();
             telegram.setFrom(new PhysicalAddress(1, 1, 255));
             telegram.setDest(new PhysicalAddress(1, 1, 6));
             telegram.setPriority(Priority.SYSTEM);
@@ -439,57 +268,16 @@ public final class MainWindow extends WorkBench implements JobQueueListener
             telegram.setSequence(sequence++);
             telegram.setApplication(Application.Restart);
             telegram.setData(new int[] { 0 });
-            msg = newMsg;
          }
 
-         if (msg != null) try
+         if (telegram != null) try
          {
-            bus.write(msg);
+            bus.send(telegram);
          }
          catch (IOException e)
          {
             e.printStackTrace();
          }
-      }
-   }
-
-   /**
-    * Event callback: Copy a vd_ file into the products database.
-    */
-   class OnImportVDX extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         final FileDialog fileDialog = new FileDialog(shell, SWT.SINGLE);
-         fileDialog.setText(I18n.getMessage("VdxToDb_Open_File"));
-         fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
-         fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
-         final String vdxDir = Config.getInstance().getVdxDir();
-         if (vdxDir != null) fileDialog.setFilterPath(vdxDir);
-
-         final String fileName = fileDialog.open();
-         if (fileName == null) return;
-
-         final Config cfg = Config.getInstance();
-         cfg.setVdxDir(new File(fileName).getParentFile().getPath());
-         cfg.save();
-
-         final VdxToDb conv = new VdxToDb(fileName);
-         final ProgressDialog dlg = new ProgressDialog(I18n.getMessage("VdxToDb_Title"), I18n.getMessage(
-               "VdxToDb_Description").replace("%1", fileName));
-         dlg.run(conv);
-      }
-   }
-
-   /**
-    * Event callback: Program a physical address
-    */
-   class OnProgramAddress extends SimpleSelectionListener
-   {
-      public void widgetSelected(SelectionEvent event)
-      {
-         final PhysicalAddressProgrammer dlg = new PhysicalAddressProgrammer();
-         dlg.open();
       }
    }
 

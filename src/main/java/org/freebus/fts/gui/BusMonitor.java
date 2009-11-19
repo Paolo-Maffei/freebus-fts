@@ -16,15 +16,15 @@ import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Tree;
 import org.eclipse.swt.widgets.TreeColumn;
 import org.eclipse.swt.widgets.TreeItem;
-import org.freebus.fts.comm.KNXConnection;
-import org.freebus.fts.comm.KNXConnectionFactory;
+import org.freebus.fts.comm.BusInterfaceFactory;
 import org.freebus.fts.comm.EmiFrameListener;
+import org.freebus.fts.comm.KNXConnection;
+import org.freebus.fts.comm.emi.EmiFrame;
+import org.freebus.fts.comm.emi.EmiFrameType;
+import org.freebus.fts.comm.emi.EmiMessageBase;
+import org.freebus.fts.comm.emi.L_Data;
 import org.freebus.fts.eib.Application;
 import org.freebus.fts.eib.Telegram;
-import org.freebus.fts.emi.EmiMessage;
-import org.freebus.fts.emi.EmiMessageBase;
-import org.freebus.fts.emi.EmiMessageType;
-import org.freebus.fts.emi.L_Data;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.ImageCache;
 
@@ -81,9 +81,8 @@ public class BusMonitor extends TabPage implements EmiFrameListener
 
       try
       {
-         final KNXConnection bus = KNXConnectionFactory.getDefaultConnection();
-         if (!bus.isOpen()) bus.open();
-         bus.addListener(this);
+         final KNXConnection con = BusInterfaceFactory.getDefault().getConnection();
+         con.addListener(this);
       }
       catch (IOException e)
       {
@@ -100,12 +99,26 @@ public class BusMonitor extends TabPage implements EmiFrameListener
    @Override
    public void dispose()
    {
-      final KNXConnection bus = KNXConnectionFactory.getDefaultConnection();
-      bus.removeListener(this);
+      KNXConnection con;
+      try
+      {
+         con = BusInterfaceFactory.getDefault().getConnection();
+         con.removeListener(this);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+         MessageBox mbox = new MessageBox(getShell(), SWT.ICON_ERROR | SWT.OK);
+         mbox.setMessage(e.getMessage());
+         mbox.open();
+      }
 
       super.dispose();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void setObject(Object o)
    {
@@ -117,7 +130,7 @@ public class BusMonitor extends TabPage implements EmiFrameListener
     * @param direction - the direction of the message (sending or receiving).
     * @param message - the message.
     */
-   protected void addMessage(MessageDirection direction, EmiMessage message)
+   protected void addMessage(MessageDirection direction, EmiFrame message)
    {
       if (!(message instanceof L_Data.base)) return;
 
@@ -182,15 +195,15 @@ public class BusMonitor extends TabPage implements EmiFrameListener
     *
     * @param message - the confirmation message.
     */
-   protected void confirmMessage(EmiMessage message)
+   protected void confirmMessage(EmiFrame message)
    {
       final TreeItem[] childs = tree.getItems();
-      final EmiMessageType origType = message.getType().confirmationForType;
+      final EmiFrameType origType = message.getType().confirmationForType;
       
       for (int i = childs.length - 1; i >= 0; --i)
       {
          final TreeItem treeItem = childs[i];
-         EmiMessage msg = (EmiMessage) treeItem.getData();
+         EmiFrame msg = (EmiFrame) treeItem.getData();
          if (msg == null) continue;
 
          if (msg.getType() == origType)
@@ -206,7 +219,7 @@ public class BusMonitor extends TabPage implements EmiFrameListener
     * An EMI message was received.
     */
    @Override
-   public void messageReceived(final EmiMessage message)
+   public void frameReceived(final EmiFrame message)
    {
       getDisplay().syncExec(new Runnable()
       {
@@ -223,7 +236,7 @@ public class BusMonitor extends TabPage implements EmiFrameListener
     * An EMI message was sent.
     */
    @Override
-   public void messageSent(final EmiMessage message)
+   public void frameSent(final EmiFrame message)
    {
       getDisplay().syncExec(new Runnable()
       {

@@ -1,10 +1,6 @@
 package org.freebus.fts.project;
 
-import java.util.Vector;
-
-import org.freebus.fts.eib.GroupAddress;
 import org.freebus.fts.eib.PhysicalAddress;
-import org.freebus.fts.products.Product;
 
 /**
  * An EIB device.
@@ -12,10 +8,9 @@ import org.freebus.fts.products.Product;
 public class Device
 {
    private String name = "Unnamed";
-   private Product deviceType = Product.NONE;
+//   private Product deviceType = Product.NONE;
    
    private PhysicalAddress physicalAddr = PhysicalAddress.NULL;
-   private final Vector<GroupAddress> groupAddrs = new Vector<GroupAddress>();
 
    /**
     * Create a device with the given name.

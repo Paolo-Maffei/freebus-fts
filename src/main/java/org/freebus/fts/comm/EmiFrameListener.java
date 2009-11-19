@@ -2,22 +2,22 @@ package org.freebus.fts.comm;
 
 import java.util.EventListener;
 
-import org.freebus.fts.emi.EmiMessage;
+import org.freebus.fts.comm.emi.EmiFrame;
 
 /**
- * Interface for classes that want to be notified when an EMI message is received.
+ * Interface for classes that want to be notified when an EMI frame is received.
  */
 public interface EmiFrameListener extends EventListener
 {
    /**
-    * A message was received.
-    * The called object must not change the message.
+    * An EMI frame was received.
+    * The called object must not change the frame.
     */
-   public void messageReceived(EmiMessage message);
+   public void frameReceived(EmiFrame frame);
 
    /**
-    * A message was sent.
-    * The called object must not change the message.
+    * An EMI frame was sent.
+    * The called object must not change the frame.
     */
-   public void messageSent(EmiMessage message);
+   public void frameSent(EmiFrame frame);
 }
