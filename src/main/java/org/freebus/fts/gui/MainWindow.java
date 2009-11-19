@@ -157,7 +157,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
       Action.EXIT.obj.attach(new ToolItem(toolBar, SWT.PUSH));
       Action.PRODUCTS_BROWSER.obj.attach(new ToolItem(toolBar, SWT.PUSH));
-      Action.VDX_IMPORT.obj.attach(new ToolItem(toolBar, SWT.PUSH));
+//      Action.VDX_IMPORT.obj.attach(new ToolItem(toolBar, SWT.PUSH));
       Action.BUS_MONITOR.obj.attach(new ToolItem(toolBar, SWT.PUSH));
 
       addToolBar(toolBar);

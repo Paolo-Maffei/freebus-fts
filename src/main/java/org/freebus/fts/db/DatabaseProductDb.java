@@ -1,6 +1,7 @@
 package org.freebus.fts.db;
 
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -113,6 +114,9 @@ public class DatabaseProductDb implements ProductDb
    public List<VirtualDevice> getVirtualDevices(ProductFilter filter) throws IOException
    {
       final StringBuilder matchStr = new StringBuilder();
+
+      if (filter.functionalEntities != null && filter.functionalEntities.length == 0)
+         return new LinkedList<VirtualDevice>();
 
       String funcEnts = filter.getFunctionalEntitiesString();
       if (funcEnts != null)

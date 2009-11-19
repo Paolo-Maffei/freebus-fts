@@ -1,5 +1,6 @@
 package org.freebus.fts.dialogs;
 
+import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 import org.eclipse.swt.SWT;
@@ -9,8 +10,6 @@ import org.eclipse.swt.widgets.Button;
 import org.eclipse.swt.widgets.Text;
 import org.freebus.fts.utils.I18n;
 import org.freebus.fts.utils.SimpleSelectionListener;
-
-import com.sun.xml.internal.messaging.saaj.util.ByteOutputStream;
 
 /**
  * A dialog that shows details about an exception.
@@ -26,7 +25,7 @@ public final class ExceptionDetailsDialog extends Dialog
 
       contents.setLayout(new FillLayout());
 
-      ByteOutputStream out = new ByteOutputStream();
+      ByteArrayOutputStream out = new ByteArrayOutputStream(8192);
       e.printStackTrace(new PrintStream(out));
       
       Text txt = new Text(contents, SWT.WRAP | SWT.MULTI | SWT.READ_ONLY);
