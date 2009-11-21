@@ -18,9 +18,9 @@ import org.eclipse.swt.widgets.CoolBar;
 import org.eclipse.swt.widgets.CoolItem;
 import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Menu;
-import org.eclipse.swt.widgets.MessageBox;
 import org.eclipse.swt.widgets.Shell;
 import org.eclipse.swt.widgets.ToolBar;
+import org.freebus.fts.dialogs.ExceptionDialog;
 import org.freebus.fts.utils.ImageCache;
 
 /**
@@ -179,10 +179,7 @@ public class WorkBench
          }
          catch (Exception e)
          {
-            e.printStackTrace();
-            MessageBox mbox = new MessageBox(shell, SWT.ICON_ERROR | SWT.OK);
-            mbox.setMessage(e.getLocalizedMessage());
-            mbox.open();
+            new ExceptionDialog(e);
             return null;
          }
       }

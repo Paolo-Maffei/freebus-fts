@@ -1,38 +1,35 @@
 package org.freebus.fts.gui.actions;
 
 import java.io.File;
-import java.io.IOException;
 
 import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
 import org.eclipse.swt.widgets.FileDialog;
-import org.eclipse.swt.widgets.MessageBox;
 import org.freebus.fts.Config;
+import org.freebus.fts.dialogs.ExceptionDialog;
 import org.freebus.fts.gui.MainWindow;
-import org.freebus.fts.gui.VdxBrowser;
+import org.freebus.fts.gui.ProductsTab;
+import org.freebus.fts.products.Products;
 import org.freebus.fts.utils.I18n;
-import org.freebus.fts.vdx.VdxFileReader;
 
 /**
- * Let the user choose a vd_/VDX file and open a browser widget that shows the
- * contents of the selected file.
+ * Open a widget for browsing a VDX products database file.
  */
 public final class ActionVdxBrowser extends GenericAction
 {
    ActionVdxBrowser()
    {
-      super(I18n.getMessage("ActionVdxBrowser_Label"), I18n.getMessage("ActionVdxBrowser_ToolTip"), "icons/filefind");
+      super(I18n.getMessage("ActionVdxBrowser_Label"), I18n.getMessage("ActionVdxBrowser_ToolTip"),
+            "icons/contents");
    }
 
    @Override
    public void triggered(SelectionEvent event)
    {
-      final MainWindow mainWin = MainWindow.getInstance();
-
-      final FileDialog fileDialog = new FileDialog(mainWin.getShell(), SWT.SINGLE);
-      fileDialog.setText(I18n.getMessage("Products_Browser_Open_File"));
-      fileDialog.setFilterExtensions(new String[] { "*.vd*", "*" });
-      fileDialog.setFilterNames(new String[] { "VDX Files", "Any" });
+      final FileDialog fileDialog = new FileDialog(MainWindow.getInstance().getShell(), SWT.SINGLE);
+      fileDialog.setText(I18n.getMessage("ActionVdxBrowser_Open_File"));
+      fileDialog.setFilterExtensions(new String[] { "*.vd_", "*" });
+      fileDialog.setFilterNames(new String[] { I18n.getMessage("FileType_vd_"), I18n.getMessage("FileType_all") });
       final String vdxDir = Config.getInstance().getVdxDir();
       if (vdxDir != null) fileDialog.setFilterPath(vdxDir);
 
@@ -43,21 +40,18 @@ public final class ActionVdxBrowser extends GenericAction
       cfg.setVdxDir(new File(fileName).getParentFile().getPath());
       cfg.save();
 
-      VdxFileReader reader = null;
+      final MainWindow mainWin = MainWindow.getInstance();
+
       try
       {
-         reader = new VdxFileReader(fileName);
+         final File file = new File(fileName);
+         mainWin.showTabPage(ProductsTab.class, Products.getDAOFactory(fileName)).setTitle(file.getName());
       }
-      catch (IOException e)
+      catch (Exception e)
       {
-         e.printStackTrace();
-         MessageBox mbox = new MessageBox(mainWin.getShell(), SWT.ICON_QUESTION | SWT.YES | SWT.NO);
-         mbox.setMessage(e.getMessage());
-         mbox.open();
+         new ExceptionDialog(e);
          return;
       }
-
-      mainWin.showTabPage(VdxBrowser.class, reader);
    }
 
 }

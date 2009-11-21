@@ -2,11 +2,16 @@ package org.freebus.fts.vdx;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
+
+import javax.persistence.Column;
 
 import org.freebus.fts.utils.FileBlockReader;
 import org.freebus.fts.utils.I18n;
@@ -113,7 +118,7 @@ public final class VdxFileReader
    /**
     * @return true if the section with the given name exists.
     */
-   public boolean hasSectionHeader(String name)
+   public boolean hasSection(String name)
    {
       return sectionHeaders.containsKey(name);
    }
@@ -178,6 +183,81 @@ public final class VdxFileReader
 
       sections.put(name, section);
       return section;
+   }
+
+   /**
+    * Loads the VDX section sectionName. For each record, creates an object of
+    * the type entryClass.
+    * 
+    * @param sectionName - the name of the VDX section to process.
+    * @param entryClass - the class for the entries.
+    * @return the list of created entries.
+    * @throws IOException
+    */
+   public Object[] getSectionEntries(String sectionName, Class<?> entryClass) throws IOException
+   {
+      final VdxSection section = getSection(sectionName);
+      final VdxSectionHeader header = section.getHeader();
+      final int num = section.getNumElements();
+      final Map<Integer,Field> fieldMappings = new HashMap<Integer,Field>();
+      String fieldName;
+
+      for (final Field field: entryClass.getDeclaredFields())
+      {
+         Annotation a = field.getAnnotation(VdxField.class);
+         if (a != null)
+         {
+            fieldName = ((VdxField) a).name();
+         }
+         else
+         {
+            a = field.getAnnotation(Column.class);
+            if (a == null) continue;
+            fieldName = ((Column) a).name();
+         }
+
+         int fieldIdx = header.getIndexOf(fieldName);
+         field.setAccessible(true);
+         if (fieldIdx >= 0) fieldMappings.put(fieldIdx, field);
+      }
+
+      final Object[] objs = new Object[num];
+      final Set<Integer> fieldIdxs = fieldMappings.keySet();
+
+      try
+      {
+         for (int i = 0; i < num; ++i)
+         {
+            final Object obj = entryClass.newInstance();
+            final String values[] = section.getElementValues(i);
+   
+            for (int fieldIdx: fieldIdxs)
+            {
+               final Field field = fieldMappings.get(fieldIdx);
+               final Type type = field.getGenericType();
+               String val = values[fieldIdx];
+
+               if (type == String.class) field.set(obj, val.trim());
+               else if (type == int.class)
+               {
+                  int pos = val.indexOf('.');
+                  if (pos >= 0) val = val.substring(0, pos);
+                  field.setInt(obj, val.isEmpty() ? 0 : Integer.parseInt(val));                  
+               }
+               else if (type == double.class) field.setDouble(obj, val.isEmpty() ? 0.0 : Double.parseDouble(val));
+               else if (type == boolean.class) field.setBoolean(obj, val.isEmpty() ? false : Integer.parseInt(val) != 0);
+               else throw new Exception("Variable type not supported by vdx-to-db mapper: " + type.toString());
+            }
+
+            objs[i] = obj;
+         }
+      }
+      catch (Exception e)
+      {
+         throw new IOException(e);
+      }
+
+      return objs;
    }
 
    /**

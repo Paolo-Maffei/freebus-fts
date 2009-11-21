@@ -10,12 +10,17 @@ import org.eclipse.swt.widgets.Display;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.dao.DAOException;
+import org.freebus.fts.products.dao.ProductsDAOFactory;
 import org.freebus.fts.utils.I18n;
 
 public class CatalogEntryWidget extends Composite
 {
+   private ProductsDAOFactory productsFactory;
+   private Manufacturer manufacturer;
    private final boolean editable;
-   private CatalogEntry catalogEntry = null;
+   private CatalogEntry catalogEntry;
    private final Text entName, entManufacturer, entColor, entWidthModules, entWidthMM;
    private final Text entOrderNumber, entSeries;
    private final Font fntLabels;
@@ -32,7 +37,7 @@ public class CatalogEntryWidget extends Composite
 
       final FontData curFontData = getFont().getFontData()[0];
       fntLabels = new Font(Display.getCurrent(), new FontData(curFontData.getName(), curFontData.getHeight(), SWT.BOLD));
-      
+
       entName = createField(I18n.getMessage("Name"));
       entManufacturer = createField(I18n.getMessage("Manufacturer"));
       entOrderNumber = createField(I18n.getMessage("Order_number"));
@@ -42,20 +47,19 @@ public class CatalogEntryWidget extends Composite
       entWidthMM = createField(I18n.getMessage("Width_in_mm"));
 
       Label lbl = new Label(this, SWT.FLAT);
-      lbl.setText(I18n.getMessage("For_DIN_rail")+":");
+      lbl.setText(I18n.getMessage("For_DIN_rail") + ":");
       lbl.setFont(fntLabels);
       lbl.pack();
 
-      
    }
 
    /**
-    * Create a label with a data field. 
+    * Create a label with a data field.
     */
    private Text createField(String label)
    {
       final Label lbl = new Label(this, SWT.FLAT);
-      lbl.setText(label+":");
+      lbl.setText(label + ":");
       lbl.setFont(fntLabels);
       lbl.pack();
 
@@ -71,31 +75,55 @@ public class CatalogEntryWidget extends Composite
 
       return entry;
    }
-   
+
    /**
-    * Set the catalog-entry that is displayed.
-    * Calls {@link #updateContents}.
+    * Set the {@link ProductsDAOFactory} that is used to access the DAO objects.
+    */
+   public void setDAOFactory(ProductsDAOFactory productsFactory)
+   {
+      this.productsFactory = productsFactory;
+      manufacturer = null;
+   }
+
+   /**
+    * Set the catalog-entry that is displayed. Calls {@link #updateContents}.
     */
    public void setCatalogEntry(CatalogEntry catalogEntry)
    {
       this.catalogEntry = catalogEntry;
       updateContents();
    }
-   
+
    /**
     * Update the contents of the widget.
     */
    public void updateContents()
    {
-      if (catalogEntry==null)
+      if (catalogEntry == null)
       {
          entName.setText("");
          entColor.setText("");
          return;
       }
 
+      if (productsFactory != null)
+      {
+         final int manufacturerId = catalogEntry.getManufacturerId();
+         if (manufacturer == null || manufacturer.getId() != manufacturerId)
+         {
+            manufacturer = null;
+            try
+            {
+               manufacturer = productsFactory.getManufacturerDAO().getManufacturer(manufacturerId);
+            }
+            catch (DAOException e)
+            {
+            }
+         }
+      }
+
       entName.setText(catalogEntry.getName());
-      entManufacturer.setText("<manufacturer>");
+      entManufacturer.setText(manufacturer == null ? "" : manufacturer.getName());
       entColor.setText(catalogEntry.getColor());
       entWidthModules.setText(Integer.toString(catalogEntry.getWidthModules()));
       entWidthMM.setText(Integer.toString(catalogEntry.getWidthMM()));

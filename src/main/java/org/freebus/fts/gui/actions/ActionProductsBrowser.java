@@ -1,11 +1,10 @@
 package org.freebus.fts.gui.actions;
 
-import org.eclipse.swt.SWT;
 import org.eclipse.swt.events.SelectionEvent;
-import org.eclipse.swt.widgets.MessageBox;
-import org.freebus.fts.db.DatabaseProductDb;
+import org.freebus.fts.dialogs.ExceptionDialog;
 import org.freebus.fts.gui.MainWindow;
 import org.freebus.fts.gui.ProductsTab;
+import org.freebus.fts.products.Products;
 import org.freebus.fts.utils.I18n;
 
 /**
@@ -26,14 +25,11 @@ public final class ActionProductsBrowser extends GenericAction
 
       try
       {
-         mainWin.showTabPage(ProductsTab.class, new DatabaseProductDb());
+         mainWin.showTabPage(ProductsTab.class, Products.getDAOFactory());
       }
       catch (Exception e)
       {
-         e.printStackTrace();
-         MessageBox mbox = new MessageBox(mainWin.getShell(), SWT.ICON_ERROR | SWT.OK);
-         mbox.setMessage(e.getLocalizedMessage());
-         mbox.open();
+         new ExceptionDialog(e);
          return;
       }
    }

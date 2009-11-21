@@ -55,9 +55,14 @@ public enum Action
    SETTINGS(new ActionSettings()),
 
    /**
-    * Inspect a VDX file.
+    * Open the products-database browser for a VDX file.
     */
    VDX_BROWSER(new ActionVdxBrowser()),
+
+   /**
+    * Inspect a VDX file.
+    */
+   VDX_INSPECTOR(new ActionVdxInspector()),
 
    /**
     * Import a VDX file.

@@ -128,6 +128,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       toolsMenuHeader.setMenu(toolsMenu);
 
       Action.VDX_BROWSER.newMenuItem(toolsMenu, SWT.PUSH);
+      Action.VDX_INSPECTOR.newMenuItem(toolsMenu, SWT.PUSH);
+
+      new MenuItem(toolsMenu, SWT.SEPARATOR);
 
       menuItem = Action.BUS_MONITOR.newMenuItem(toolsMenu, SWT.PUSH);
       menuItem.setAccelerator(SWT.CONTROL | 'B');

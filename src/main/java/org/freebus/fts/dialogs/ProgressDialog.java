@@ -84,8 +84,7 @@ public class ProgressDialog extends Dialog implements TaskListener
             }
             catch (Exception e)
             {
-               // TODO Auto-generated catch block
-               e.printStackTrace();
+               new ExceptionDialog(e);
             }
          }
       };

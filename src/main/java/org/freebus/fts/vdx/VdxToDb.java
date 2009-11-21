@@ -138,7 +138,7 @@ public final class VdxToDb extends ListenableWorker
    }
 
    /**
-    * Load the VDX section sectionName. For each record, creates an object of
+    * Loads the VDX section sectionName. For each record, creates an object of
     * the type entryClass.
     * 
     * @param sectionName - the name of the VDX section to process.
@@ -320,6 +320,7 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter_atomic_type";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      if (!reader.hasSection(name)) return;
       final List<?> objs = reader.getSection(name).toObjects(ParameterAtomicType.class);
       persist(objs);
       System.out.printf("Processed %d %s\n", objs.size(), name);
@@ -334,6 +335,7 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter_type";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      if (!reader.hasSection(name)) return;
       final List<?> objs = reader.getSection(name).toObjects(ParameterType.class);
       persist(objs);
       System.out.printf("Processed %d %s\n", objs.size(), name);
@@ -348,6 +350,7 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter_list_of_values";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      if (!reader.hasSection(name)) return;
       final List<?> objs = reader.getSection(name).toObjects(ParameterValue.class);
       persist(objs);
       System.out.printf("Processed %d %s\n", objs.size(), name);
@@ -362,6 +365,7 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "parameter";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      if (!reader.hasSection(name)) return;
       final List<?> objs = reader.getSection(name).toObjects(Parameter.class);
       persist(objs);
       System.out.printf("Processed %d %s\n", objs.size(), name);
@@ -376,6 +380,7 @@ public final class VdxToDb extends ListenableWorker
    {
       final String name = "communication_object";
       progress(stepOffset, I18n.getMessage("VdxToDb_Processing").replace("%1", name));
+      if (!reader.hasSection(name)) return;
       final List<?> objs = reader.getSection(name).toObjects(CommunicationObject.class);
       persist(objs);
       System.out.printf("Processed %d %s\n", objs.size(), name);
