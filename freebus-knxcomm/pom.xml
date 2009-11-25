@@ -52,7 +52,7 @@
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
         <configuration>
-          <finalName>fts</finalName>
+          <finalName>freebus-knxcomm</finalName>
           <archive>
             <manifest>
               <addClasspath>false</addClasspath>
