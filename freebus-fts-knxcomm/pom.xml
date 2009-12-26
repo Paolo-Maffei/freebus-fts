@@ -9,7 +9,7 @@
  </parent>
  <groupId>org.freebus.fts</groupId>
  <artifactId>knxcomm</artifactId>
- <name>freebus-knxcomm</name>
+ <name>freebus-fts-knxcomm</name>
  <distributionManagement>
   <repository>
    <uniqueVersion>false</uniqueVersion>
@@ -63,12 +63,6 @@
   </plugins>
  </build>
  <dependencies>
-  <dependency>
-   <groupId>junit</groupId>
-   <artifactId>junit</artifactId>
-   <version>3.8.1</version>
-   <scope>test</scope>
-  </dependency>
   <dependency>
    <groupId>org.rxtx</groupId>
    <artifactId>rxtx</artifactId>

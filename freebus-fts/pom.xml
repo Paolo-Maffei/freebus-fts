@@ -8,58 +8,11 @@
 	</parent>
 	<modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
- <artifactId>client</artifactId>
+ <artifactId>fts</artifactId>
  <version>0.1-SNAPSHOT</version>
  <name>freebus-fts</name>
- <organization>
-  <name>The Freebus Project</name>
-  <url>http://www.freebus.org</url>
- </organization>
- <developers>
-  <developer>
-   <id>stefant</id>
-   <name>Stefan Taferner</name>
-   <email>stefan.taferner@gmx.at</email>
-   <organization>The Freebus Project</organization>
-   <organizationUrl>http://www.freebus.org</organizationUrl>
-   <timezone>1</timezone>
-  </developer>
- </developers>
- <scm>
-  <connection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk/freebus-fts</connection>
-  <developerConnection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk/freebus-fts</developerConnection>
-  <!-- connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts/freebus-fts</connection -->
-  <!-- developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts/freebus-fts</developerConnection -->
- </scm>
  <dependencyManagement>
  	<dependencies>
- 		<dependency>
- 			<groupId>org.freebus</groupId>
- 			<artifactId>fts-common</artifactId>
- 			<version>0.1-SNAPSHOT</version>
- 			<type>jar</type>
- 			<scope>compile</scope>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.freebus.fts</groupId>
- 			<artifactId>products</artifactId>
- 			<version>0.1-SNAPSHOT</version>
- 			<type>jar</type>
- 			<scope>compile</scope>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.freebus</groupId>
- 			<artifactId>knxcomm</artifactId>
- 			<version>0.1-SNAPSHOT</version>
- 			<scope>compile</scope>
- 		</dependency>
- 		<dependency>
- 			<groupId>org.freebus.fts</groupId>
- 			<artifactId>project</artifactId>
- 			<version>0.1-SNAPSHOT</version>
- 			<type>jar</type>
- 			<scope>compile</scope>
- 		</dependency>
  	</dependencies>
  </dependencyManagement>
  <distributionManagement>
@@ -137,12 +90,6 @@
   	<scope>compile</scope>
   </dependency>
   
-  <dependency>
-   <groupId>junit</groupId>
-   <artifactId>junit</artifactId>
-   <version>3.8.1</version>
-   <scope>test</scope>
-  </dependency>
   <dependency>
    <groupId>javax.persistence</groupId>
    <artifactId>javax.persistence</artifactId>

@@ -1,34 +1,18 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<parent>
-		<artifactId>parent</artifactId>
-		<groupId>org.freebus.fts</groupId>
-		<version>0.1-SNAPSHOT</version>
-	</parent>
-	<modelVersion>4.0.0</modelVersion>
+ <parent>
+  <artifactId>parent</artifactId>
+  <groupId>org.freebus.fts</groupId>
+  <version>0.1-SNAPSHOT</version>
+  <relativePath>..</relativePath>
+ </parent>
+ <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
  <artifactId>common</artifactId>
  <packaging>jar</packaging>
- <version>0.1-SNAPSHOT</version>
  <name>freebus-fts-common</name>
  <url>http://maven.apache.org</url>
- <scm>
-  <connection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk/freebus-fts-common</connection>
-  <developerConnection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk/freebus-fts-common</developerConnection>
-  <!--
-   connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts/freebus-knxcomm</connection
-  -->
-  <!--
-   developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts/freebus-knxcomm</developerConnection
-  -->
- </scm>
  <dependencies>
-  <dependency>
-   <groupId>junit</groupId>
-   <artifactId>junit</artifactId>
-   <version>3.8.1</version>
-   <scope>test</scope>
-  </dependency>
   <dependency>
    <groupId>javax.persistence</groupId>
    <artifactId>javax.persistence</artifactId>

@@ -4,7 +4,7 @@
  <groupId>org.freebus.fts</groupId>
  <artifactId>parent</artifactId>
  <version>0.1-SNAPSHOT</version>
- <name>freebus-fts</name>
+ <name>freebus-fts-parent</name>
  <packaging>pom</packaging>
  <organization>
   <name>The Freebus Project</name>
@@ -21,11 +21,18 @@
   </developer>
  </developers>
  <scm>
-  <connection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk</connection>
-  <developerConnection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk</developerConnection>
-  <!-- connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</connection -->
-  <!-- developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</developerConnection -->
+  <!-- connection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk</connection -->
+  <!-- developerConnection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk</developerConnection -->
+  <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</connection>
+  <developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</developerConnection>
  </scm>
+ <modules>
+  <module>freebus-fts-common</module>
+  <module>freebus-fts-knxcomm</module>
+  <module>freebus-fts-products</module>
+  <module>freebus-fts-project</module>
+  <module>freebus-fts</module>
+ </modules>
  <distributionManagement>
   <repository>
    <uniqueVersion>false</uniqueVersion>

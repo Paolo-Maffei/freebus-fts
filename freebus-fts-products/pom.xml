@@ -9,15 +9,8 @@
 	<modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
  <artifactId>products</artifactId>
- <version>0.1-SNAPSHOT</version>
  <name>freebus-fts-products</name>
  <description>FTS Products database classes</description>
- <scm>
-  <connection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk/freebus-fts-products</connection>
-  <developerConnection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk/freebus-fts-products</developerConnection>
-  <!-- connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts/freebus-knxcomm</connection -->
-  <!-- developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts/freebus-knxcomm</developerConnection -->
- </scm>
  <dependencies>
   <dependency>
    <groupId>org.freebus.fts</groupId>
@@ -33,12 +26,6 @@
    <groupId>javax.persistence</groupId>
    <artifactId>javax.persistence</artifactId>
    <version>2.0-SNAPSHOT</version>
-  </dependency>
-  <dependency>
-   <groupId>junit</groupId>
-   <artifactId>junit</artifactId>
-   <version>3.8.1</version>
-   <scope>test</scope>
   </dependency>
   <dependency>
    <groupId>hsqldb</groupId>
