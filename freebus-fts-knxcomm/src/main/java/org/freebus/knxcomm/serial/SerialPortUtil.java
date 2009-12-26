@@ -75,7 +75,7 @@ public final class SerialPortUtil
       }
 
       String libPath = "";
-      for (String dir : new String[] { "contrib/rxtx/", "../freebus-knxcomm/contrib/rxtx/" })
+      for (String dir : new String[] { "contrib/rxtx/", "../freebus-fts-knxcomm/contrib/rxtx/" })
       {
          libPath = (new File(dir + dirName)).getAbsolutePath();
          try
@@ -94,12 +94,12 @@ public final class SerialPortUtil
       }
 
       if (!serialPortLibLoaded)
-         throw new RuntimeException("Failed to load native rxtxSerial library");
+         throw new RuntimeException("Failed to load native rxtxSerial library for " + dirName);
 
       boolean jarLoaded = false;
       try
       {
-         JarLoader.loadJar(new String[] { "contrib/rxtx/RXTXcomm.jar", "../freebus-knxcomm/contrib/rxtx/RXTXcomm.jar" });
+         JarLoader.loadJar(new String[] { "contrib/rxtx/RXTXcomm.jar", "../freebus-fts-knxcomm/contrib/rxtx/RXTXcomm.jar" });
          CommPortIdentifier.getPortIdentifiers();
          jarLoaded = true;
       }
@@ -109,6 +109,6 @@ public final class SerialPortUtil
       }
 
       if (!jarLoaded)
-         throw new RuntimeException("Failed to load RXTXcomm jar");
+         throw new RuntimeException("Failed to load RXTXcomm.jar");
    }
 }
