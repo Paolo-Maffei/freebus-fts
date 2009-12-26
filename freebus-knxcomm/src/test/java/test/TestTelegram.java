@@ -11,6 +11,7 @@ import org.freebus.knxcomm.telegram.Telegram;
 
 public class TestTelegram extends TestCase
 {
+
    public void testTelegram()
    {
       final Telegram telegram = new Telegram();

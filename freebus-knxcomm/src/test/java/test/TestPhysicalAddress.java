@@ -6,6 +6,7 @@ import org.freebus.knxcomm.telegram.PhysicalAddress;
 
 public class TestPhysicalAddress extends TestCase
 {
+
    public void testHashCode()
    {
       assertEquals(0x0000, new PhysicalAddress().hashCode());

@@ -1,0 +1,45 @@
+<assembly xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.0.0.xsd">
+ <id>distribution</id>
+ <formats>
+  <format>jar</format>
+ </formats>
+ <fileSets>
+  <fileSet>
+   <directory>${basedir}/target/classes</directory>
+   <outputDirectory>/</outputDirectory>
+   <includes>
+    <include>*.jar</include>
+   </includes>
+  </fileSet>
+  <fileSet>
+   <directory>${basedir}/contrib</directory>
+   <outputDirectory>/contrib</outputDirectory>
+   <excludes>
+    <exclude>*/src.zip</exclude>
+    <exclude>*/about_files/*</exclude>
+    <exclude>*/about*</exclude>
+   </excludes>
+  </fileSet>
+  <fileSet>
+   <directory>${basedir}</directory>
+   <outputDirectory>/</outputDirectory>
+   <includes>
+    <include>*.txt</include>
+   </includes>
+  </fileSet>
+  <fileSet>
+   <directory>${basedir}/META-INF</directory>
+   <outputDirectory>/META-INF</outputDirectory>
+   <includes>
+    <include>*.xml</include>
+   </includes>
+  </fileSet>
+ </fileSets>
+ <files>
+  <file>
+   <source>COPYING</source>
+   <outputDirectory>/</outputDirectory>
+  </file>
+ </files>
+</assembly>

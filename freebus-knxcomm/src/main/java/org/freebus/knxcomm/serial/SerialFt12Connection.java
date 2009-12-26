@@ -28,6 +28,14 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    protected OutputStream outputStream = null;
 
    /**
+    * Ensure that the native serial port library is loaded.
+    */
+   static
+   {
+      SerialPortUtil.loadSerialPortLib();
+   }
+
+   /**
     * Create a connection for the serial port portName.
     */
    public SerialFt12Connection(String portName)

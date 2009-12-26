@@ -87,8 +87,6 @@ public abstract class Ft12Connection implements KNXConnection
          }
          catch (InterruptedException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
          }
       }
 

@@ -1,7 +1,5 @@
 package example;
 
-import java.io.IOException;
-
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
@@ -17,9 +15,10 @@ public class BusMonitor implements TelegramListener
 
    /**
     * Create the bus monitor.
-    * @throws IOException 
+    * 
+    * @throws Exception
     */
-   public BusMonitor() throws IOException
+   public BusMonitor() throws Exception
    {
       String commPort;
 
@@ -42,12 +41,18 @@ public class BusMonitor implements TelegramListener
       iface.open();
    }
 
+   /**
+    * A telegram was received.
+    */
    @Override
    public void telegramReceived(Telegram telegram)
    {
       System.out.println(telegram.toString());
    }
 
+   /**
+    * A telegram was sent by our application.
+    */
    @Override
    public void telegramSent(Telegram telegram)
    {
@@ -55,8 +60,8 @@ public class BusMonitor implements TelegramListener
 
    /**
     * Start the application.
-    *
-    * @throws Exception 
+    * 
+    * @throws Exception
     */
    public static void main(String[] args) throws Exception
    {
