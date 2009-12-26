@@ -1,3 +1,20 @@
+
+
+***  ACHTUNG   ACHTUNG  ***
+
+
+Das README ist alt. Derzeit funktioniert der Start von FTS nur
+aus Eclipse heraus, und wahrscheinlich nur wenn man das Eclipse
+Maven Plugin installiert hat. 
+
+Eine Korrektur dieses Readme's folgt in den nächsten Tagen.
+
+
+----------------------------------------
+
+
+
+
 FTS - Getting Started
 =====================
 
