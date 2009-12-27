@@ -25,9 +25,9 @@ import org.freebus.fts.core.ImageCache;
 class ExtTab extends JPanel
 {
    private static final long serialVersionUID = 600126632738870853L;
-   private static final Icon closeButtonIcon = ImageCache.getIcon("icons/tab-close");
-   private static final Icon closeButtonHighliteIcon = ImageCache.getIcon("icons/tab-close-highlite");
-   private static final Icon closeButtonDimmedIcon = ImageCache.getIcon("icons/tab-close-dimmed");
+   private static final Icon closeButtonIcon = ImageCache.getIcon("gui-images/tab-close");
+   private static final Icon closeButtonHighliteIcon = ImageCache.getIcon("gui-images/tab-close-highlite");
+   private static final Icon closeButtonDimmedIcon = ImageCache.getIcon("gui-images/tab-close-dimmed");
    private final JTabbedPane pane;
    private final TabButton closeButton;
 

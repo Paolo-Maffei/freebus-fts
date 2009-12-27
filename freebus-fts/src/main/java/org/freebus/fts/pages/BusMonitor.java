@@ -1,6 +1,8 @@
 package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -13,6 +15,7 @@ import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.pages.internal.BusMonitorCellRenderer;
+import org.freebus.fts.pages.internal.BusMonitorItem;
 import org.freebus.fts.utils.TreeUtils;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -30,6 +33,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    private final JTree tree;
    private final JScrollPane treeView;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+   private final BusMonitorCellRenderer cellRenderer;
    private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
    private BusInterface iface = null;
@@ -44,12 +48,27 @@ public class BusMonitor extends AbstractPage implements TelegramListener
 
       tree = new JTree(treeModel);
       tree.setRootVisible(false);
-      tree.setCellRenderer(new BusMonitorCellRenderer());
+
+      cellRenderer = new BusMonitorCellRenderer();
+      tree.setCellRenderer(cellRenderer);
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
+
+      treeView.addComponentListener(new ComponentAdapter()
+      {
+         @Override
+         public void componentResized(ComponentEvent e)
+         {
+            cellRenderer.setViewSize(treeView.getSize());
+         }
+      });
    }
 
+   /**
+    * Set the object that the bus monitor works with. The KNX/EIB bus connection
+    * is opened here, the given object is ignored.
+    */
    @Override
    public void setObject(Object o)
    {
@@ -57,7 +76,9 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       {
          try
          {
-            // TODO use configured bus connection
+            // TODO use the bus connection type that was configured in the settings
+            // dialog.
+
             SerialPortUtil.loadSerialPortLib();
             BusInterface newIface = BusInterfaceFactory.newSerialInterface(Config.getInstance().getStringValue(
                   "knxConnectionSerial.port"));
@@ -68,13 +89,18 @@ public class BusMonitor extends AbstractPage implements TelegramListener
          }
          catch (Exception e)
          {
-            Dialogs.showExceptionDialog(e, "Cannot open bus connection");
+            Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrOpenBus"));
          }
       }
    }
 
-   @Override
-   public void telegramReceived(final Telegram telegram)
+   /**
+    * Add an entry to the list of telegrams.
+    * 
+    * @param telegram - The telegram that the entry is about.
+    * @param isReceived - True if the telegram was received, false else.
+    */
+   private void addBusMonitorItem(final Telegram telegram, final boolean isReceived)
    {
       try
       {
@@ -85,22 +111,37 @@ public class BusMonitor extends AbstractPage implements TelegramListener
             {
                final int numChilds = treeModel.getChildCount(rootNode);
 
-               DefaultMutableTreeNode node = new DefaultMutableTreeNode(telegram, true);
+               DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(telegram, isReceived));
                treeModel.insertNodeInto(node, rootNode, numChilds);
 
-               if (numChilds <= 1) TreeUtils.expandAll(tree);
+               if (numChilds <= 1)
+                  TreeUtils.expandAll(tree);
+
                tree.scrollRowToVisible(numChilds + 1);
             }
          });
       }
       catch (Exception e)
       {
-         e.printStackTrace();
+         Dialogs.showExceptionDialog(e, "Internal error: failed to add telegram to the bus monitor list");
       }
    }
 
+   /**
+    * Callback: a telegram was received.
+    */
    @Override
-   public void telegramSent(final Telegram telegram)
+   public void telegramReceived(Telegram telegram)
    {
+      addBusMonitorItem(telegram, true);
+   }
+
+   /**
+    * Callback: a telegram was sent.
+    */
+   @Override
+   public void telegramSent(Telegram telegram)
+   {
+      addBusMonitorItem(telegram, false);
    }
 }
