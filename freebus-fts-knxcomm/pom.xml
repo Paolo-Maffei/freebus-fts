@@ -10,14 +10,7 @@
  <groupId>org.freebus.fts</groupId>
  <artifactId>knxcomm</artifactId>
  <name>freebus-fts-knxcomm</name>
- <distributionManagement>
-  <repository>
-   <uniqueVersion>false</uniqueVersion>
-   <id>stefant-webspace</id>
-   <name>Stefan's Webspace</name>
-   <url>ftp://stefan.members.xpirio.at/htdocs/fts</url>
-  </repository>
- </distributionManagement>
+ <description>Standalone library for KNX/EIB bus communication. Shall not depend on other FTS components.</description>
  <build>
   <extensions>
    <extension>
