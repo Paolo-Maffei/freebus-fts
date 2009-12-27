@@ -2,7 +2,6 @@ package org.freebus.fts.pages.internal;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 
@@ -20,7 +19,8 @@ import org.freebus.knxcomm.telegram.Telegram;
 
 public final class BusMonitorCellRenderer implements TreeCellRenderer
 {
-   private int viewWidth = 400;
+   private static final Icon recvIcon = ImageCache.getIcon("icons/msg_receive");
+   private static final Icon sendIcon = ImageCache.getIcon("icons/msg_send");
 
    private final JPanel renderer;
    private final JLabel lblDirection, lblAppName, lblFrom, lblDest, lblAppData, lblRaw;
@@ -29,9 +29,6 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
 
    private final Color backgroundSelectionColor = defaultRenderer.getBackgroundSelectionColor();
    private final Color backgroundNonSelectionColor = defaultRenderer.getBackgroundNonSelectionColor();
-
-   private static final Icon recvIcon = ImageCache.getIcon("icons/msg_receive");
-   private static final Icon sendIcon = ImageCache.getIcon("icons/msg_send");
 
    /**
     * Create a bus-monitor cell renderer.
@@ -76,10 +73,11 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
       c.gridy = 1;
       renderer.add(lblRaw, c);
       c.gridwidth = 1;
-
-      renderer.setSize(viewWidth, renderer.getPreferredSize().height);
    }
 
+   /**
+    * Render a tree cell.
+    */
    @Override
    public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded,
          boolean leaf, int row, boolean hasFocus)
@@ -116,9 +114,8 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
             lblAppData.setText(I18n.formatMessage("BusMonitorCellRenderer.Data", new Object[] { appDataSB.toString() }));
             
             renderer.setBackground(selected ? backgroundSelectionColor : backgroundNonSelectionColor);
-            renderer.setSize(viewWidth, 50);
-
             renderer.setEnabled(tree.isEnabled());
+
             returnValue = renderer;
          }
       }
@@ -130,16 +127,5 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
       }
 
       return returnValue;
-   }
-
-   /**
-    * Set the dimension of the (main) view that displays the tree.
-    * 
-    * @param size - The dimension of the view.
-    */
-   public void setViewSize(Dimension size)
-   {
-      viewWidth = size.width;
-      renderer.setSize(viewWidth - 50, renderer.getPreferredSize().height);
    }
 }

@@ -1,8 +1,6 @@
 package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -54,15 +52,6 @@ public class BusMonitor extends AbstractPage implements TelegramListener
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
-
-      treeView.addComponentListener(new ComponentAdapter()
-      {
-         @Override
-         public void componentResized(ComponentEvent e)
-         {
-            cellRenderer.setViewSize(treeView.getSize());
-         }
-      });
    }
 
    /**
@@ -123,7 +112,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, "Internal error: failed to add telegram to the bus monitor list");
+         e.printStackTrace();
       }
    }
 
