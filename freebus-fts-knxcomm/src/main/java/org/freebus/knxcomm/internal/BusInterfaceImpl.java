@@ -12,7 +12,6 @@ import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
-import org.freebus.knxcomm.emi.EmiFrameType;
 import org.freebus.knxcomm.emi.L_Data;
 import org.freebus.knxcomm.emi.PEI_Switch;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
@@ -78,10 +77,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameReceived(EmiFrame frame)
    {
-      final EmiFrameType type = frame.getType();
-      if (type == EmiFrameType.L_DATA_IND)
+      if (frame instanceof L_Data.base)
       {
-         final Telegram telegram = ((L_Data.ind) frame).getTelegram();
+         final Telegram telegram = ((L_Data.base) frame).getTelegram();
          notifyListenersReceived(telegram);
       }
    }
@@ -92,6 +90,11 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameSent(EmiFrame frame)
    {
+      if (frame instanceof L_Data.base)
+      {
+         final Telegram telegram = ((L_Data.base) frame).getTelegram();
+         notifyListenersSent(telegram);
+      }
    }
 
    /**
