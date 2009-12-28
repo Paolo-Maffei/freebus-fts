@@ -3,6 +3,7 @@ package org.freebus.knxcomm;
 import org.freebus.knxcomm.eibd.EibdConnection;
 import org.freebus.knxcomm.internal.BusInterfaceImpl;
 import org.freebus.knxcomm.serial.SerialFt12Connection;
+import org.freebus.knxcomm.serial.SerialPortUtil;
 
 /**
  * Factory class for KNX/EIB bus interfaces.
@@ -18,7 +19,8 @@ public final class BusInterfaceFactory
     */
    public static BusInterface newSerialInterface(String portName) throws Exception
    {
-      // loadSerialPortLibrary();
+      SerialPortUtil.loadSerialPortLib();
+
       return new BusInterfaceImpl(new SerialFt12Connection(portName));
    }
 
