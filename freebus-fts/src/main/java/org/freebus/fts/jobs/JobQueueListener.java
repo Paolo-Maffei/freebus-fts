@@ -12,5 +12,5 @@ public interface JobQueueListener
     * 
     * @param event - details about the event.
     */
-   public void jobEvent(JobQueueEvent event);
+   public void jobQueueEvent(JobQueueEvent event);
 }

@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.internal;
+package org.freebus.fts.pages.busmonitor;
 
 import org.freebus.fts.pages.BusMonitor;
 import org.freebus.knxcomm.telegram.Telegram;

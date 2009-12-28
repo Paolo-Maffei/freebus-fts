@@ -7,6 +7,7 @@ import javax.swing.UIManager;
 
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProject;
@@ -36,7 +37,7 @@ public final class FTS implements Runnable
     */
    public void init()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
 
       final String lfName = cfg.get("lookAndFeel");
       if (!lfName.isEmpty())

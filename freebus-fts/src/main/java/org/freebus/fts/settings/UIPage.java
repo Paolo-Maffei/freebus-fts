@@ -18,6 +18,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 import org.freebus.fts.dialogs.Dialogs;
 
 /**
@@ -146,7 +147,7 @@ public final class UIPage extends SettingsPage
    @Override
    public void apply()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       cfg.put("lookAndFeel", ((LookAndFeelItem) cboLookAndFeel.getSelectedItem()).info.getClassName());
 
       SwingUtilities.updateComponentTreeUI(MainWindow.getInstance());

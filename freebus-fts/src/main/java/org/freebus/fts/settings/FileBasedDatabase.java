@@ -25,6 +25,7 @@ import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.Environment;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 import org.freebus.fts.utils.Rot13;
 
 /**
@@ -144,7 +145,7 @@ public final class FileBasedDatabase extends JPanel
       c.gridy = ++gridY;
       add(spacer, c);
 
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
 
       String val = cfg.getStringValue(configKey + ".database");
       if (val.isEmpty()) val = Environment.getAppDir() + "/db";
@@ -213,7 +214,7 @@ public final class FileBasedDatabase extends JPanel
     */
    public void apply()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       cfg.put(configKey + ".database", inpDatabase.getText());
       cfg.put(configKey + ".user", inpUser.getText());
       cfg.put(configKey + ".passwd", Rot13.rotate(inpPasswd.getText()));

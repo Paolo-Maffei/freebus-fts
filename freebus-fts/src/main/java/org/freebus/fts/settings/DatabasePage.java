@@ -15,6 +15,7 @@ import javax.swing.JSeparator;
 import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 
 /**
  * Settings page for the database settings.
@@ -96,7 +97,7 @@ public final class DatabasePage extends SettingsPage
          }
       });
 
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
 
       final String connTypeStr = cfg.get("databaseDriverType");
       for (DriverType type : DriverType.values())
@@ -139,7 +140,7 @@ public final class DatabasePage extends SettingsPage
    @Override
    public void apply()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       cfg.put("databaseDriverType", getSelectedDriverType().toString());
 
       cfgHSQL.apply();

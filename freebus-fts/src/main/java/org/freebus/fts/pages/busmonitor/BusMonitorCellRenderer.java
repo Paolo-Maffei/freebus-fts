@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.internal;
+package org.freebus.fts.pages.busmonitor;
 
 import java.awt.Color;
 import java.awt.Component;
@@ -107,11 +107,14 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
             lblRaw.setText(rawDataSB.toString());
 
             final int[] appData = telegram.getData();
-            final StringBuilder appDataSB = new StringBuilder(256);
-            for (int i = 0; i < appData.length; ++i)
-               appDataSB.append(String.format("%02x ", appData[i]));
-
-            lblAppData.setText(I18n.formatMessage("BusMonitorCellRenderer.Data", new Object[] { appDataSB.toString() }));
+            if (appData != null)
+            {
+               final StringBuilder appDataSB = new StringBuilder(256);
+               for (int i = 0; i < appData.length; ++i)
+                  appDataSB.append(String.format("%02x ", appData[i]));
+               lblAppData.setText(I18n.formatMessage("BusMonitorCellRenderer.Data", new Object[] { appDataSB.toString() }));
+            }
+            else lblAppData.setText("");
             
             renderer.setBackground(selected ? backgroundSelectionColor : backgroundNonSelectionColor);
             renderer.setEnabled(tree.isEnabled());

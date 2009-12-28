@@ -9,16 +9,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.pages.internal.BusMonitorCellRenderer;
-import org.freebus.fts.pages.internal.BusMonitorItem;
+import org.freebus.fts.pages.busmonitor.BusMonitorCellRenderer;
+import org.freebus.fts.pages.busmonitor.BusMonitorItem;
+import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.fts.utils.TreeUtils;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
-import org.freebus.knxcomm.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
@@ -34,7 +32,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    private final BusMonitorCellRenderer cellRenderer;
    private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
-   private BusInterface iface = null;
+   private BusInterface bus = null;
 
    /**
     * Create a bus monitor widget.
@@ -61,20 +59,12 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    @Override
    public void setObject(Object o)
    {
-      if (iface == null)
+      if (bus == null)
       {
          try
          {
-            // TODO use the bus connection type that was configured in the settings
-            // dialog.
-
-            SerialPortUtil.loadSerialPortLib();
-            BusInterface newIface = BusInterfaceFactory.newSerialInterface(Config.getInstance().getStringValue(
-                  "knxConnectionSerial.port"));
-
-            newIface.addListener(this);
-            newIface.open();
-            iface = newIface;
+            bus = BusInterfaceService.getBusInterface();
+            bus.addListener(this);
          }
          catch (Exception e)
          {

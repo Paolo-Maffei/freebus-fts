@@ -20,18 +20,41 @@ public final class Dialogs
     * @param message - some human readable message (not
     *           {@link Exception#getMessage}!)
     */
-   static public void showExceptionDialog(Exception e, String message)
+   public static void showExceptionDialog(Exception e, String message)
    {
-      final MainWindow mainWin = MainWindow.getInstance();
-
       e.printStackTrace();
 
       message = "\n" + I18n.getMessage("Dialogs.Exception_Caption") + ":\n\n" + message + "\n\n" + e.getMessage()
             + "\n\n";
 
+      showErrorDialog(I18n.getMessage("Dialogs.Exception_Title"), message);
+   }
+
+   /**
+    * Show an error dialog.
+    * 
+    * @param title - The title of the dialog
+    * @param message - Some human readable message (not
+    *           {@link Exception#getMessage}!)
+    */
+   public static void showErrorDialog(String title, String message)
+   {
+      final MainWindow mainWin = MainWindow.getInstance();
+
       mainWin.setCursor(Cursor.getDefaultCursor());
 
-      JOptionPane.showMessageDialog(mainWin, message, I18n.getMessage("Dialogs.Exception_Title"),
-            JOptionPane.ERROR_MESSAGE, ImageCache.getIcon("icons-large/error-dialog"));
+      JOptionPane.showMessageDialog(mainWin, message, title, JOptionPane.ERROR_MESSAGE, ImageCache
+            .getIcon("icons-large/error-dialog"));
+   }
+
+   /**
+    * Show an error dialog with the default error title.
+    * 
+    * @param message - Some human readable message (not
+    *           {@link Exception#getMessage}!)
+    */
+   public static void showErrorDialog(String message)
+   {
+      showErrorDialog(I18n.getMessage("Dialogs.Error_Title"), message);
    }
 }

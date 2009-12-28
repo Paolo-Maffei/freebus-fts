@@ -11,6 +11,7 @@ import java.util.Map;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -32,6 +33,7 @@ public class WorkBench extends JFrame
    private final JMenuBar menuBar = new JMenuBar();
    private final ExtTabbedPane leftTabbedPane, centerTabbedPane;
    private final JSplitPane leftCenterSplit;
+   private final JPanel bottomLeftPanel;
 
    private final Map<Class<? extends AbstractPage>, AbstractPage> uniquePages = new HashMap<Class<? extends AbstractPage>, AbstractPage>();
 
@@ -54,13 +56,21 @@ public class WorkBench extends JFrame
       setLayout(new BorderLayout(2, 2));
       setJMenuBar(menuBar);
 
+      final JPanel leftPanel = new JPanel();
+      leftPanel.setLayout(new BorderLayout());
+      
       leftTabbedPane = new ExtTabbedPane();
       leftTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+      leftPanel.add(leftTabbedPane, BorderLayout.CENTER);
 
+      bottomLeftPanel = new JPanel();
+      bottomLeftPanel.setLayout(new BorderLayout());
+      leftPanel.add(bottomLeftPanel, BorderLayout.SOUTH);
+      
       centerTabbedPane = new ExtTabbedPane();
       centerTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
-      leftCenterSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftTabbedPane, centerTabbedPane);
+      leftCenterSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, centerTabbedPane);
       add(leftCenterSplit, BorderLayout.CENTER);
       leftCenterSplit.setOneTouchExpandable(true);
       leftCenterSplit.setDividerLocation(250);
@@ -210,5 +220,14 @@ public class WorkBench extends JFrame
             }
          }
       });
+   }
+
+   /**
+    * Set the panel that is shown in the south/west (bottom-left) corner of the workbench.
+    */
+   public void setBottomLeftPanel(JPanel panel)
+   {
+      bottomLeftPanel.removeAll();
+      bottomLeftPanel.add(panel, BorderLayout.CENTER);
    }
 }

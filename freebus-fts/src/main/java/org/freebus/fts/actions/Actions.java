@@ -19,6 +19,9 @@ public enum Actions
    /** Exit the application. */
    EXIT(new ExitAction()),
 
+   /** Send a test telegram to the KNX/EIB bus. */
+   SEND_TEST_TELEGRAM(new SendTestTelegramAction()),
+
    /** Open the settings dialog. */
    SETTINGS(new SettingsAction()),
 

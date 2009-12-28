@@ -14,6 +14,7 @@ import javax.swing.JSeparator;
 
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 import org.freebus.knxcomm.KNXConnectionType;
 
 /**
@@ -96,7 +97,7 @@ public final class BusInterfacePage extends SettingsPage
          }
       });
 
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
 
       final String connTypeStr = cfg.get("knxConnectionType");
       for (KNXConnectionType type : KNXConnectionType.values())
@@ -139,7 +140,7 @@ public final class BusInterfacePage extends SettingsPage
    @Override
    public void apply()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       cfg.put("knxConnectionType", getSelectedConnectionType().toString());
 
       cfgSerial.apply();

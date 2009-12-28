@@ -9,6 +9,7 @@ import javax.swing.JPanel;
 
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 import org.freebus.knxcomm.serial.SerialPortUtil;
 
 /**
@@ -53,7 +54,7 @@ public final class SerialBusInterface extends JPanel
       add(spacer, c);
 
 
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       final String cfgPortName = cfg.get(configKey + ".port");
 
       for (final String portName: SerialPortUtil.getPortNames())
@@ -68,7 +69,7 @@ public final class SerialBusInterface extends JPanel
     */
    public void apply()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       cfg.put(configKey + ".port", (String) cboPort.getSelectedItem());
    }
 }

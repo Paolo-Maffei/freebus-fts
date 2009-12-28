@@ -9,6 +9,7 @@ import javax.swing.JTextField;
 
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SimpleConfig;
 
 /**
  * A widget for configuring an eibd bus interface connection.
@@ -65,7 +66,7 @@ public final class EibdBusInterface extends JPanel
       c.gridy = ++gridY;
       add(spacer, c);
 
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       inpHost.setText(cfg.getStringValue(configKey + ".host"));
       inpHost.setText(cfg.getStringValue(configKey + ".port"));
    }
@@ -75,7 +76,7 @@ public final class EibdBusInterface extends JPanel
     */
    public void apply()
    {
-      final Config cfg = Config.getInstance();
+      final SimpleConfig cfg = Config.getInstance();
       cfg.put(configKey + ".host", inpHost.getText());
       cfg.put(configKey + ".port", inpPort.getText());
    }

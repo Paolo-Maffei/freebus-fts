@@ -9,8 +9,8 @@ import javax.swing.SwingUtilities;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.BusInterfaceFactory;
 
 /**
  * The global job-queue executes the enqueued {@link Job}s one after another.
@@ -124,7 +124,7 @@ public final class JobQueue implements JobListener
    public void notifyListeners(JobQueueEvent event)
    {
       for (JobQueueListener listener : listeners)
-         listener.jobEvent(event);
+         listener.jobQueueEvent(event);
    }
 
    /**
@@ -140,7 +140,8 @@ public final class JobQueue implements JobListener
 
       try
       {
-         final BusInterface bus = BusInterfaceFactory.getDefault();
+         final BusInterface bus = BusInterfaceService.getBusInterface();
+         if (bus == null) return;
 
          job.run(bus);
 
