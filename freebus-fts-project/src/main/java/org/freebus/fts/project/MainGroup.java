@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.freebus.fts.project.internal.I18n;
+
 /**
  * A main-group in a {@link Project}. A main-group is the top-level group for
  * the logical structure of a project. The main-group holds the first number of
@@ -139,6 +141,9 @@ public class MainGroup
    @Override
    public String toString()
    {
-      return String.format("%d  %s", getAddress(), getName());
+      String nm = getName();
+      if (nm == null || nm.isEmpty()) nm = I18n.getMessage("MainGroup.DefaultName");
+
+      return String.format("%d  %s", getAddress(), nm);
    }
 }

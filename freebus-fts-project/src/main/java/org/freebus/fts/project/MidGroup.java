@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import org.freebus.fts.project.internal.I18n;
+
 /**
  * A mid-group in a {@link MainGroup}. A mid-group is the mid-level group for
  * the logical structure of a project. Every mid-group belongs to a
@@ -144,6 +146,9 @@ public class MidGroup
          mainAddr = "?";
       else mainAddr = Integer.toString(mainGroup.getAddress());
 
-      return String.format("%s/%d %s", mainAddr, getAddress(), getName());
+      String nm = getName();
+      if (nm == null || nm.isEmpty()) nm = I18n.getMessage("MidGroup.DefaultName");
+
+      return String.format("%s/%d  %s", mainAddr, getAddress(), nm);
    }
 }

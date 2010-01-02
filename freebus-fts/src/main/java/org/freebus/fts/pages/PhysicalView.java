@@ -9,11 +9,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.project.Area;
+import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
-import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.Room;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
@@ -73,20 +73,20 @@ public class PhysicalView extends AbstractPage
       final Project project = ProjectManager.getProject();
       if (project == null) return;
 
-      for (Area area : project.getAreas())
+      for (Building building : project.getBuildings())
       {
-         DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(area.toString(), true);
-         rootNode.add(areaNode);
+         DefaultMutableTreeNode buildingNode = new DefaultMutableTreeNode(building.toString(), true);
+         rootNode.add(buildingNode);
 
-         for (Line line : area.getLines())
+         for (Room room : building.getRooms())
          {
-            DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(line.toString(), true);
-            areaNode.add(lineNode);
+            DefaultMutableTreeNode roomNode = new DefaultMutableTreeNode(room.toString(), true);
+            buildingNode.add(roomNode);
 
-            for (Device device: line.getDevices())
+            for (Device device: room.getDevices())
             {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode("[Device] " + device.toString(), true);
-               lineNode.add(deviceNode);
+               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device.toString(), true);
+               roomNode.add(deviceNode);
             }
          }
       }

@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.freebus.fts.project.internal.I18n;
 import org.freebus.knxcomm.telegram.GroupAddress;
 
 /**
@@ -119,6 +120,9 @@ public class Group
    @Override
    public String toString()
    {
-      return String.format("%s %s", getGroupAddress().toString(), getName());
+      String nm = getName();
+      if (nm == null || nm.isEmpty()) nm = I18n.getMessage("Group.DefaultName");
+
+      return String.format("%s  %s", getGroupAddress().toString(), nm);
    }
 }
