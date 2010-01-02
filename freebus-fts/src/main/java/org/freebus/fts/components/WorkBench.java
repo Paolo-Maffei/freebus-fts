@@ -190,7 +190,24 @@ public class WorkBench extends JFrame
       page.setVisible(true);
       setPageObject(page, obj);
    }
-   
+
+   /**
+    * Raise the page so that it is visible.
+    */
+   public void setSelectedPage(AbstractPage page)
+   {
+      if (leftTabbedPane.indexOfComponent(page) >= 0) leftTabbedPane.setSelectedComponent(page);
+      else if (centerTabbedPane.indexOfComponent(page) >= 0) centerTabbedPane.setSelectedComponent(page);
+   }
+
+   /**
+    * @return The page object for the given class, or null if the page is currently not opened.
+    */
+   public AbstractPage getUniquePage(Class<? extends AbstractPage> pageClass)
+   {
+      return uniquePages.get(pageClass);
+   }
+
    /**
     * Set the page-object of the given page. The actual setting of the object happens after all
     * pending Swing events are processed.

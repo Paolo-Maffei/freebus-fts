@@ -19,6 +19,12 @@ public enum Actions
    /** Exit the application. */
    EXIT(new ExitAction()),
 
+   /** Open the logical structure of the project. */
+   LOGICAL_VIEW(new LogicalViewAction()),
+
+   /** Open the physical structure of the project. */
+   PHYSICAL_VIEW(new PhysicalViewAction()),
+
    /** Send a test telegram to the KNX/EIB bus. */
    SEND_TEST_TELEGRAM(new SendTestTelegramAction()),
 

@@ -15,6 +15,8 @@ import org.freebus.fts.core.I18n;
 import org.freebus.fts.jobs.JobQueue;
 import org.freebus.fts.jobs.JobQueueEvent;
 import org.freebus.fts.jobs.JobQueueListener;
+import org.freebus.fts.pages.LogicalView;
+import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
 
 /**
@@ -63,6 +65,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       JobQueue.getDefaultJobQueue().addListener(this);
 
       showUniquePage(TopologyView.class, null);
+      showUniquePage(PhysicalView.class, null);
+      showUniquePage(LogicalView.class, null);
+
+      setSelectedPage(getUniquePage(TopologyView.class));
 
       final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       setSize(new Dimension((int) (screenSize.width * 0.9), (int) (screenSize.height * 0.9)));
@@ -78,6 +84,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
       final JMenu viewMenu = createJMenu(I18n.getMessage("MainWindow.ViewMenu"));
       Actions.BUS_MONITOR.addTo(viewMenu);
+      viewMenu.addSeparator();
+      Actions.LOGICAL_VIEW.addTo(viewMenu);
+      Actions.PHYSICAL_VIEW.addTo(viewMenu);
       Actions.TOPOLOGY_VIEW.addTo(viewMenu);
 
       final JMenu settingsMenu = createJMenu(I18n.getMessage("MainWindow.SettingsMenu"));

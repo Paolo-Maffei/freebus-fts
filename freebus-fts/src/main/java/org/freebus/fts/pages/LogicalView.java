@@ -9,19 +9,17 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.project.Area;
-import org.freebus.fts.project.Device;
-import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
- * Shows the topological structure of the project.
+ * Shows the logical structure of the project. The main- and sub-groups with
+ * the devices.
  */
-public class TopologyView extends AbstractPage
+public class LogicalView extends AbstractPage
 {
-   private static final long serialVersionUID = 4442753739761863742L;
+   private static final long serialVersionUID = 4775024754983180786L;
 
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
@@ -30,10 +28,10 @@ public class TopologyView extends AbstractPage
    /**
     * Create a page that shows the topological structure of the project.
     */
-   public TopologyView()
+   public LogicalView()
    {
       setLayout(new BorderLayout());
-      setName(I18n.getMessage("TopologyView.Title"));
+      setName(I18n.getMessage("LogicalView.Title"));
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
@@ -71,23 +69,7 @@ public class TopologyView extends AbstractPage
       final Project project = ProjectManager.getProject();
       if (project == null) return;
 
-      for (Area area : project.getAreas())
-      {
-         DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(area.toString(), true);
-         rootNode.add(areaNode);
-
-         for (Line line : area.getLines())
-         {
-            DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(line.toString(), true);
-            areaNode.add(lineNode);
-
-            for (Device device: line.getDevices())
-            {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device.toString(), true);
-               lineNode.add(deviceNode);
-            }
-         }
-      }
+      // TODO
 
       TreeUtils.expandAll(tree);
    }

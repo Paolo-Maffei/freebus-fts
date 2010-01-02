@@ -17,9 +17,10 @@ import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
- * Shows the topological structure of the project.
+ * A page that shows the physical components of the project
+ * (buildings, floors, rooms).
  */
-public class TopologyView extends AbstractPage
+public class PhysicalView extends AbstractPage
 {
    private static final long serialVersionUID = 4442753739761863742L;
 
@@ -30,10 +31,10 @@ public class TopologyView extends AbstractPage
    /**
     * Create a page that shows the topological structure of the project.
     */
-   public TopologyView()
+   public PhysicalView()
    {
       setLayout(new BorderLayout());
-      setName(I18n.getMessage("TopologyView.Title"));
+      setName(I18n.getMessage("PhysicalView.Title"));
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
@@ -57,6 +58,7 @@ public class TopologyView extends AbstractPage
    @Override
    public void setObject(Object o)
    {
+      // TODO Auto-generated method stub
       updateContents();
    }
 
@@ -83,7 +85,7 @@ public class TopologyView extends AbstractPage
 
             for (Device device: line.getDevices())
             {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device.toString(), true);
+               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode("[Device] " + device.toString(), true);
                lineNode.add(deviceNode);
             }
          }
