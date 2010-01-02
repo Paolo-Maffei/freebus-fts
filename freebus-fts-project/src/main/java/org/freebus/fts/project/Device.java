@@ -21,10 +21,6 @@ public final class Device
    @Column(name = "device_id", columnDefinition = "INT", nullable = false)
    private int id;
 
-   @Id
-   @Column(name = "line_id", columnDefinition = "INT", nullable = false)
-   private int lineId;
-
    @Column(name = "device_address", columnDefinition = "INT", nullable = false)
    private int address;
 
@@ -34,6 +30,16 @@ public final class Device
    @ManyToOne(cascade=CascadeType.ALL)
    private Line line;
 
+   @ManyToOne(cascade=CascadeType.ALL)
+   private Room room;
+
+   /**
+    * Create an empty device object.
+    */
+   public Device()
+   {
+   }
+ 
    /**
     * @param id the id to set
     */
@@ -48,22 +54,6 @@ public final class Device
    public int getId()
    {
       return id;
-   }
-
-   /**
-    * @param lineId the lineId to set
-    */
-   public void setLineId(int lineId)
-   {
-      this.lineId = lineId;
-   }
-
-   /**
-    * @return the lineId
-    */
-   public int getLineId()
-   {
-      return lineId;
    }
 
    /**
@@ -109,5 +99,67 @@ public final class Device
    public int getVirtualDeviceId()
    {
       return virtualDeviceId;
+   }
+
+   /**
+    * @return the line to which the device belongs.
+    */
+   public Line getLine()
+   {
+      return line;
+   }
+
+   /**
+    * Set the line to which the device belongs.
+    */
+   public void setLine(Line line)
+   {
+      this.line = line;
+   }
+
+   /**
+    * Set the room in which the device is physically installed.
+    */
+   public void setRoom(Room room)
+   {
+      this.room = room;
+   }
+
+   /**
+    * @return the room in which the device is physically installed.
+    */
+   public Room getRoom()
+   {
+      return room;
+   }
+
+   /**
+    * @return a human readable representation of the object.
+    */
+   @Override
+   public String toString()
+   {
+      final StringBuilder sb = new StringBuilder();
+
+      sb.append("Device [VD#");
+      sb.append(virtualDeviceId);
+      sb.append("] (");
+
+      if (line != null)
+      {
+         final Area area = line.getArea();
+         if (area != null) sb.append(area.getAddress());
+         else sb.append('?');
+         sb.append('.');
+
+         sb.append(line.getAddress());
+         sb.append('.');
+      }
+      else sb.append("?.?.");
+
+      sb.append(address);
+      sb.append(')');
+
+      return sb.toString();
    }
 }

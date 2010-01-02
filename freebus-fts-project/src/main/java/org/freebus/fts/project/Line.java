@@ -10,7 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 
 /**
@@ -20,21 +19,17 @@ import javax.persistence.UniqueConstraint;
  * {@link Devices}.
  */
 @Entity
-@Table(name = "line", uniqueConstraints = @UniqueConstraint(columnNames = { "area_id", "line_id" } ))
+@Table(name = "line")
 public class Line
 {
    @Id
-   @Column(name = "line_id", columnDefinition = "INT", nullable = false)
+   @Column(name = "line_id", nullable = false)
    private int id;
-
-   @Id
-   @Column(name = "area_id", columnDefinition = "INT", nullable = false)
-   private int areaId;
 
    @Column(name = "line_name")
    private String name = "";
 
-   @Column(name = "line_address", columnDefinition = "INT")
+   @Column(name = "line_address")
    private int address;
 
    @ManyToOne(cascade=CascadeType.ALL)
@@ -64,22 +59,6 @@ public class Line
    public void setId(int id)
    {
       this.id = id;
-   }
-
-   /**
-    * @return the areaId
-    */
-   public int getAreaId()
-   {
-      return areaId;
-   }
-
-   /**
-    * @param areaId the areaId to set
-    */
-   public void setAreaId(int areaId)
-   {
-      this.areaId = areaId;
    }
 
    /**
@@ -135,6 +114,7 @@ public class Line
     */
    public void add(Device device)
    {
+      device.setLine(this);
       devices.add(device);
    }
 

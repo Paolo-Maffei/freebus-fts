@@ -36,6 +36,9 @@ public class Project
    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
    private Set<Area> areas = new HashSet<Area>();
 
+   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   private Set<Building> buildings = new HashSet<Building>();
+
    /**
     * Create a new project.
     * 
@@ -112,5 +115,39 @@ public class Project
    public Set<Area> getAreas()
    {
       return areas;
+   }
+
+   /**
+    * Set the buildings of the project.
+    */
+   public void setBuildings(Set<Building> buildings)
+   {
+      this.buildings = buildings;
+   }
+
+   /**
+    * @return the buildings of the project.
+    */
+   public Set<Building> getBuildings()
+   {
+      return buildings;
+   }
+
+   /**
+    * Add an area to the project.
+    */
+   public void add(Area area)
+   {
+      area.setProject(this);
+      areas.add(area);
+   }
+
+   /**
+    * Add a building to the project.
+    */
+   public void add(Building building)
+   {
+      building.setProject(this);
+      buildings.add(building);
    }
 }
