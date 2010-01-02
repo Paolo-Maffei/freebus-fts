@@ -75,7 +75,7 @@ public final class Device
    /**
     * @return the physical address of the device.
     */
-   public PhysicalAddress getPhysicalAddr()
+   public PhysicalAddress getPhysicalAddress()
    {
       if (line == null) return PhysicalAddress.NULL;
       final Area area = line.getArea();
@@ -141,24 +141,12 @@ public final class Device
    {
       final StringBuilder sb = new StringBuilder();
 
+      sb.append(getPhysicalAddress().toString());
+      sb.append(" ");
+
       sb.append("Device [VD#");
       sb.append(virtualDeviceId);
-      sb.append("] (");
-
-      if (line != null)
-      {
-         final Area area = line.getArea();
-         if (area != null) sb.append(area.getAddress());
-         else sb.append('?');
-         sb.append('.');
-
-         sb.append(line.getAddress());
-         sb.append('.');
-      }
-      else sb.append("?.?.");
-
-      sb.append(address);
-      sb.append(')');
+      sb.append("]");
 
       return sb.toString();
    }

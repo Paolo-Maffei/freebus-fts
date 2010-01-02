@@ -144,6 +144,6 @@ public class Line
       if (area == null) areaAddr = "?";
       else areaAddr = Integer.toString(area.getAddress());
 
-      return String.format("%s (%s.%d)", getName(), areaAddr, getAddress());
+      return String.format("%s.%d. %s", areaAddr, getAddress(), getName());
    }
 }

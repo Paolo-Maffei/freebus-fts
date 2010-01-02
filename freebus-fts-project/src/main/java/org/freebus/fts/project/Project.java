@@ -39,6 +39,9 @@ public class Project
    @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
    private Set<Building> buildings = new HashSet<Building>();
 
+   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   private Set<MainGroup> mainGroups = new HashSet<MainGroup>();
+
    /**
     * Create a new project.
     * 
@@ -102,38 +105,6 @@ public class Project
    }
 
    /**
-    * @param areas the areas to set
-    */
-   public void setAreas(Set<Area> areas)
-   {
-      this.areas = areas;
-   }
-
-   /**
-    * @return the areas
-    */
-   public Set<Area> getAreas()
-   {
-      return areas;
-   }
-
-   /**
-    * Set the buildings of the project.
-    */
-   public void setBuildings(Set<Building> buildings)
-   {
-      this.buildings = buildings;
-   }
-
-   /**
-    * @return the buildings of the project.
-    */
-   public Set<Building> getBuildings()
-   {
-      return buildings;
-   }
-
-   /**
     * Add an area to the project.
     */
    public void add(Area area)
@@ -149,5 +120,62 @@ public class Project
    {
       building.setProject(this);
       buildings.add(building);
+   }
+
+   /**
+    * Add a main-group to the project.
+    */
+   public void add(MainGroup mainGroup)
+   {
+      mainGroup.setProject(this);
+      mainGroups.add(mainGroup);
+   }
+
+   /**
+    * Set the areas container.
+    */
+   public void setAreas(Set<Area> areas)
+   {
+      this.areas = areas;
+   }
+
+   /**
+    * @return the areas container.
+    */
+   public Set<Area> getAreas()
+   {
+      return areas;
+   }
+
+   /**
+    * Set the buildings container. 
+    */
+   public void setBuildings(Set<Building> buildings)
+   {
+      this.buildings = buildings;
+   }
+
+   /**
+    * @return the buildings container. 
+    */
+   public Set<Building> getBuildings()
+   {
+      return buildings;
+   }
+
+   /**
+    * Set the main-groups container. 
+    */
+   public void setMainGroups(Set<MainGroup> mainGroups)
+   {
+      this.mainGroups = mainGroups;
+   }
+
+   /**
+    * @return the main-groups container. 
+    */
+   public Set<MainGroup> getMainGroups()
+   {
+      return mainGroups;
    }
 }

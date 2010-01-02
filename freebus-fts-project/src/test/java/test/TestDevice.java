@@ -48,17 +48,17 @@ public class TestDevice extends TestCase
    {
       final Device device = new Device();
       device.setAddress(12);
-      assertEquals(PhysicalAddress.NULL, device.getPhysicalAddr());
+      assertEquals(PhysicalAddress.NULL, device.getPhysicalAddress());
 
       final Line line = new Line();
       line.setAddress(9);
       line.add(device);
-      assertEquals(PhysicalAddress.NULL, device.getPhysicalAddr());
+      assertEquals(PhysicalAddress.NULL, device.getPhysicalAddress());
 
       final Area area = new Area();
       area.setAddress(7);
       area.add(line);
-      assertEquals(new PhysicalAddress(7, 9, 12), device.getPhysicalAddr());
+      assertEquals(new PhysicalAddress(7, 9, 12), device.getPhysicalAddress());
    }
 
    public final void testGetSetVirtualDeviceId()

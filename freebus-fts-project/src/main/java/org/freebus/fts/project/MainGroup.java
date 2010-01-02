@@ -6,47 +6,46 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
 
 /**
- * An area in a {@link Project}. An area is the top-level
- * group for the topological structure of an EIB bus. The
- * area holds the first number of a physical address.
+ * A main-group in a {@link Project}. A main-group is the top-level group for
+ * the logical structure of a project. The main-group holds the first number of
+ * a group address.
  */
 @Entity
-@Table(name = "area", uniqueConstraints = @UniqueConstraint(columnNames = { "area_id" } ))
-public class Area
+@Table(name = "main_group")
+public class MainGroup
 {
    @Id
-   @Column(name = "area_id", columnDefinition = "INT", nullable = false)
+   @Column(name = "main_group_id", nullable = false)
    private int id;
 
-   @ManyToOne(cascade=CascadeType.ALL)
-   private Project project;
-
-   @Column(name = "area_name")
+   @Column(name = "main_group_name", nullable = true)
    private String name = "";
 
-   @Column(name = "area_address", columnDefinition = "INT")
+   @Column(name = "main_group_address", nullable = false)
    private int address;
 
-   @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
-   private Set<Line> lines = new HashSet<Line>();
+   @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
+   private Project project;
+
+   @OneToMany(mappedBy = "mainGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+   private Set<MidGroup> midGroups = new HashSet<MidGroup>();
 
    /**
-    * Create a new area.
+    * Create a new main-group.
     */
-   public Area()
+   public MainGroup()
    {
    }
 
    /**
-    * @return the area id
+    * @return the main-group id.
     */
    public int getId()
    {
@@ -54,7 +53,7 @@ public class Area
    }
 
    /**
-    * @param id the area id to set
+    * Set the main-group id.
     */
    public void setId(int id)
    {
@@ -70,7 +69,7 @@ public class Area
    }
 
    /**
-    * @param project the project to set
+    * Set the project.
     */
    public void setProject(Project project)
    {
@@ -86,7 +85,7 @@ public class Area
    }
 
    /**
-    * @param name the name to set
+    * Set the name
     */
    public void setName(String name)
    {
@@ -102,7 +101,7 @@ public class Area
    }
 
    /**
-    * @param address the address to set
+    * Set the address.
     */
    public void setAddress(int address)
    {
@@ -110,28 +109,28 @@ public class Area
    }
 
    /**
-    * Add a line to the area.    
+    * Add a mid-group to the main-group.
     */
-   public void add(Line line)
+   public void add(MidGroup midGroup)
    {
-      line.setArea(this);
-      lines.add(line);
+      midGroup.setMainGroup(this);
+      midGroups.add(midGroup);
    }
 
    /**
-    * @return the lines
+    * @return the mid-groups container.
     */
-   public Set<Line> getLines()
+   public Set<MidGroup> getMidGroups()
    {
-      return lines;
+      return midGroups;
    }
 
    /**
-    * @param lines the lines to set
+    * Set the mid-groups container.
     */
-   public void setLines(Set<Line> lines)
+   public void setMidGroups(Set<MidGroup> midGroups)
    {
-      this.lines = lines;
+      this.midGroups = midGroups;
    }
 
    /**
@@ -140,6 +139,6 @@ public class Area
    @Override
    public String toString()
    {
-      return String.format("%d. %s", getAddress(), getName());
+      return String.format("%d  %s", getAddress(), getName());
    }
 }
