@@ -15,6 +15,7 @@ import javax.swing.tree.TreeCellRenderer;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.knxcomm.telegram.Application;
 import org.freebus.knxcomm.telegram.Telegram;
 
 public final class BusMonitorCellRenderer implements TreeCellRenderer
@@ -93,7 +94,10 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
 
             lblDirection.setIcon(busMonitorItem.isReceived() ? recvIcon : sendIcon);
 
-            lblAppName.setText(telegram.getApplication().name());
+            final Application application = telegram.getApplication();
+            if (application == Application.None) lblAppName.setText(telegram.getTransport().name());
+            else lblAppName.setText(application.name());
+
             lblFrom.setText(I18n.formatMessage("BusMonitorCellRenderer.From", new Object[] { telegram.getFrom().toString() }));
             lblDest.setText(I18n.formatMessage("BusMonitorCellRenderer.Dest", new Object[] { telegram.getDest().toString() }));
 
