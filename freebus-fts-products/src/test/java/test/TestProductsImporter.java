@@ -8,7 +8,7 @@ import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductsFactory;
 
-public class TestProductsImporter extends PersistanceTestCase
+public class TestProductsImporter extends PersistenceTestCase
 {
    public final void testImportVirtualDevices() throws DAOException
    {

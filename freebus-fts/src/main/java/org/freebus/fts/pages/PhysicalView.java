@@ -58,7 +58,6 @@ public class PhysicalView extends AbstractPage
    @Override
    public void setObject(Object o)
    {
-      // TODO Auto-generated method stub
       updateContents();
    }
 

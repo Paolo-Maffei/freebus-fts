@@ -6,10 +6,13 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 import javax.persistence.UniqueConstraint;
 
 
@@ -23,6 +26,8 @@ import javax.persistence.UniqueConstraint;
 public class Area
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "area_id", pkColumnValue = "area")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "area_id", columnDefinition = "INT", nullable = false)
    private int id;
 
@@ -35,7 +40,7 @@ public class Area
    @Column(name = "area_address", columnDefinition = "INT")
    private int address;
 
-   @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+//   @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
    private Set<Line> lines = new HashSet<Line>();
 
    /**

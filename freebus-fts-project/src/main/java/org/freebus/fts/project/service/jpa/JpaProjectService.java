@@ -1,5 +1,7 @@
 package org.freebus.fts.project.service.jpa;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.persistence.EntityManager;
@@ -47,8 +49,8 @@ public final class JpaProjectService implements ProjectService
    {
       try
       {
-         if (project.getId() <= 0)
-            project.setId(getFreeProjectId());
+//         if (project.getId() <= 0)
+//            project.setId(getFreeProjectId());
 
          entityManager.getTransaction().begin();
          entityManager.persist(project);
@@ -58,5 +60,21 @@ public final class JpaProjectService implements ProjectService
       {
          throw new PersistenceException("Cannot save project", e);
       }
+   }
+
+   @Override
+   public Map<Integer, String> getProjectNames()
+   {
+      final Query query = entityManager.createNativeQuery("select project_id,project_name from project");
+      final Map<Integer, String> map = new HashMap<Integer, String>();
+
+      @SuppressWarnings("unchecked")
+      Vector<Object[]> results = (Vector<Object[]>) query.getResultList();
+      for (Object[] fields: results)
+      {
+         map.put((Integer) fields[0], (String) fields[1]);
+      }
+
+      return map;
    }
 }

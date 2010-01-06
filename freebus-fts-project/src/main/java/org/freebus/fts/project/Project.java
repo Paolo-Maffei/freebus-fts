@@ -6,10 +6,12 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.TableGenerator;
 
 /**
  * Main class for a FTS project.
@@ -20,10 +22,12 @@ import javax.persistence.UniqueConstraint;
  * @See {@link ProjectManager#openProject} - to open an existing project.
  */
 @Entity
-@Table(name = "project", uniqueConstraints = @UniqueConstraint(columnNames = "project_id"))
+@Table(name = "project")
 public class Project
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "idgen", pkColumnValue = "project")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "project_id", columnDefinition = "INT", nullable = false)
    private int id;
 
@@ -33,13 +37,13 @@ public class Project
    @Column(name = "project_description")
    private String description;
 
-   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+//   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
    private Set<Area> areas = new HashSet<Area>();
 
-   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
    private Set<Building> buildings = new HashSet<Building>();
 
-   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
    private Set<MainGroup> mainGroups = new HashSet<MainGroup>();
 
    /**
@@ -49,7 +53,7 @@ public class Project
     */
    public Project()
    {
-      this.name ="Unnamed";
+      this.name = "Unnamed";
       this.id = 0;
       description = "";
    }
@@ -148,7 +152,7 @@ public class Project
    }
 
    /**
-    * Set the buildings container. 
+    * Set the buildings container.
     */
    public void setBuildings(Set<Building> buildings)
    {
@@ -156,7 +160,7 @@ public class Project
    }
 
    /**
-    * @return the buildings container. 
+    * @return the buildings container.
     */
    public Set<Building> getBuildings()
    {
@@ -164,7 +168,7 @@ public class Project
    }
 
    /**
-    * Set the main-groups container. 
+    * Set the main-groups container.
     */
    public void setMainGroups(Set<MainGroup> mainGroups)
    {
@@ -172,10 +176,46 @@ public class Project
    }
 
    /**
-    * @return the main-groups container. 
+    * @return the main-groups container.
     */
    public Set<MainGroup> getMainGroups()
    {
       return mainGroups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof Project))
+         return false;
+
+      final Project oo = (Project) o;
+      if (id != oo.id || name != oo.name || description != oo.description || areas != oo.areas
+            || buildings != oo.buildings || mainGroups != oo.mainGroups)
+      {
+         return false;
+      }
+      return true;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return "Project #" + id + " \"" + name + "\"";
    }
 }

@@ -34,7 +34,7 @@ public class Building
    @Column(name = "description")
    private String description;
 
-   @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+   @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
    private Set<Room> rooms = new HashSet<Room>();
 
    /**

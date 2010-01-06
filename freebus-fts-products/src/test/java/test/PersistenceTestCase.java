@@ -7,7 +7,7 @@ import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.products.Products;
 import org.freebus.fts.products.services.ProductsFactory;
 
-public class PersistanceTestCase extends TestCase
+public class PersistenceTestCase extends TestCase
 {
    private static ProductsFactory productsFactory;
 

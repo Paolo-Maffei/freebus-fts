@@ -21,7 +21,7 @@ public class SampleProject extends Project
       
       final Line line1 = new Line();
       line1.setName(I18n.getMessage("SampleProject.Line1"));
-      line1.setAddress(2);
+      line1.setAddress(1);
       area.add(line1);
 
       final Line line2 = new Line();
