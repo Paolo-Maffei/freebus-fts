@@ -6,26 +6,28 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-
+import javax.persistence.TableGenerator;
 
 /**
- * A building in a {@link Project}. A building is the top-level
- * group for the physical structure of a project.
+ * A building in a {@link Project}. A building is the top-level group for the
+ * physical structure of a project.
  */
 @Entity
-@Table(name = "building", uniqueConstraints = @UniqueConstraint(columnNames = { "building_id" } ))
+@Table(name = "building")
 public class Building
 {
    @Id
-   @Column(name = "building_id", columnDefinition = "INT", nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "gen_building_id")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "building_id", nullable = false)
    private int id;
 
-   @ManyToOne(cascade=CascadeType.ALL)
+   @ManyToOne(optional = false)
    private Project project;
 
    @Column(name = "building_name", nullable = false)
@@ -34,7 +36,7 @@ public class Building
    @Column(name = "description")
    private String description;
 
-   @OneToMany(mappedBy = "building", cascade = CascadeType.ALL)
+   // @OneToMany(cascade = CascadeType.ALL)
    private Set<Room> rooms = new HashSet<Room>();
 
    /**
@@ -109,7 +111,7 @@ public class Building
    }
 
    /**
-    * Add a room to the building.    
+    * Add a room to the building.
     */
    public void add(Room room)
    {
@@ -131,6 +133,15 @@ public class Building
    public void setRooms(Set<Room> rooms)
    {
       this.rooms = rooms;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

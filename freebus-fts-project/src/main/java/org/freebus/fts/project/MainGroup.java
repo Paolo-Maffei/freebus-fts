@@ -33,10 +33,10 @@ public class MainGroup
    @Column(name = "main_group_address", nullable = false)
    private int address;
 
-   @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
+   @ManyToOne(optional = false)
    private Project project;
 
-   @OneToMany(mappedBy = "mainGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//   @OneToMany(mappedBy = "mainGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
    private Set<MidGroup> midGroups = new HashSet<MidGroup>();
 
    /**
@@ -133,6 +133,15 @@ public class MainGroup
    public void setMidGroups(Set<MidGroup> midGroups)
    {
       this.midGroups = midGroups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

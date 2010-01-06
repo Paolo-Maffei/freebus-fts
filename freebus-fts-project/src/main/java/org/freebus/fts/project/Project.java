@@ -26,9 +26,9 @@ import javax.persistence.TableGenerator;
 public class Project
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "idgen", pkColumnValue = "project")
+   @TableGenerator(name = "ProjectIdGen", table = "id_gen", pkColumnName = "gen_name", pkColumnValue = "ProjectGen", valueColumnName = "gen_val", initialValue = 1, allocationSize = 10)
    @GeneratedValue(strategy = GenerationType.TABLE)
-   @Column(name = "project_id", columnDefinition = "INT", nullable = false)
+   @Column(name = "project_id", nullable = false)
    private int id;
 
    @Column(name = "project_name", nullable = false)
@@ -37,13 +37,13 @@ public class Project
    @Column(name = "project_description")
    private String description;
 
-//   @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL)
    private Set<Area> areas = new HashSet<Area>();
 
-   // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL)
    private Set<Building> buildings = new HashSet<Building>();
 
-   // @OneToMany(mappedBy = "project", cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL)
    private Set<MainGroup> mainGroups = new HashSet<MainGroup>();
 
    /**

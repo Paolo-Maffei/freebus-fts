@@ -3,17 +3,15 @@ package org.freebus.fts.project;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.Transient;
 
 
 /**
@@ -22,25 +20,26 @@ import javax.persistence.UniqueConstraint;
  * area holds the first number of a physical address.
  */
 @Entity
-@Table(name = "area", uniqueConstraints = @UniqueConstraint(columnNames = { "area_id" } ))
+@Table(name = "area")
 public class Area
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "area_id", pkColumnValue = "area")
-   @GeneratedValue(strategy = GenerationType.TABLE)
-   @Column(name = "area_id", columnDefinition = "INT", nullable = false)
+   @TableGenerator(name = "AreaIdGen", table = "id_gen", pkColumnName = "gen_name", pkColumnValue = "AreaGen", valueColumnName = "gen_val", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "AreaIdGen")
+   @Column(name = "area_id", nullable = false)
    private int id;
 
-   @ManyToOne(cascade=CascadeType.ALL)
+   @ManyToOne(optional = false)
    private Project project;
 
    @Column(name = "area_name")
-   private String name = "";
+   private String name;
 
-   @Column(name = "area_address", columnDefinition = "INT")
+   @Column(name = "area_address", nullable = false)
    private int address;
 
 //   @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
+   @Transient
    private Set<Line> lines = new HashSet<Line>();
 
    /**
@@ -87,6 +86,7 @@ public class Area
     */
    public String getName()
    {
+      if (name == null) return "";
       return name;
    }
 
@@ -137,6 +137,15 @@ public class Area
    public void setLines(Set<Line> lines)
    {
       this.lines = lines;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**
