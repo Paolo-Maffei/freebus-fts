@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -12,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  * Main class for a FTS project.
@@ -38,6 +41,10 @@ public class Project
    @Column(name = "project_description")
    private String description;
 
+   @Column(name = "last_modified", nullable = false)
+   @Temporal(TemporalType.TIMESTAMP)
+   private Date lastModified = new Date();
+
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
    private Set<Area> areas = new HashSet<Area>();
 
@@ -54,9 +61,7 @@ public class Project
     */
    public Project()
    {
-      this.name = "Unnamed";
-      this.id = 0;
-      description = "";
+      name = "Unnamed";
    }
 
    /**
@@ -107,6 +112,22 @@ public class Project
    public String getDescription()
    {
       return description;
+   }
+
+   /**
+    * Set the time-stamp of the last modification.
+    */
+   public void setLastModified(Date lastModified)
+   {
+      this.lastModified = lastModified;
+   }
+
+   /**
+    * @return the time-stamp of the last modification.
+    */
+   public Date getLastModified()
+   {
+      return lastModified;
    }
 
    /**

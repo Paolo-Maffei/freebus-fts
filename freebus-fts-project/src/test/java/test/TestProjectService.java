@@ -1,5 +1,6 @@
 package test;
 
+import java.util.List;
 import java.util.Map;
 
 import org.freebus.fts.project.Project;
@@ -8,10 +9,7 @@ import org.freebus.fts.project.service.ProjectService;
 
 public class TestProjectService extends PersistenceTestCase
 {
-   //
-   // Must be the first test - depends on an empty projects table.
-   //
-   public final void testGetProjectNames()
+   public final void testGetProjectNamesGetProjects()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
@@ -40,6 +38,11 @@ public class TestProjectService extends PersistenceTestCase
       assertEquals("Project-1", projectNames.get(project1.getId()));
       assertEquals("Project-2", projectNames.get(project2.getId()));
       assertEquals("Project-3", projectNames.get(project3.getId()));
+
+      final List<Project> projects = projectService.getProjects();
+      assertTrue(projects.contains(project1));
+      assertTrue(projects.contains(project2));
+      assertTrue(projects.contains(project3));
    }
 
    public final void testSaveGetProject()

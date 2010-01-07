@@ -1,5 +1,6 @@
 package org.freebus.fts.project.service;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.persistence.PersistenceException;
@@ -20,6 +21,11 @@ public interface ProjectService
     * Save the project.
     */
    public void save(Project project) throws PersistenceException;
+
+   /**
+    * Get all available projects.
+    */
+   public List<Project> getProjects();
 
    /**
     * Get a list of all available projects.

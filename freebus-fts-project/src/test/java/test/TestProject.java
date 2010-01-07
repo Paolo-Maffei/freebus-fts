@@ -1,5 +1,6 @@
 package test;
 
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -58,6 +59,16 @@ public class TestProject extends TestCase
 
       project.setDescription("");
       assertEquals("", project.getDescription());
+   }
+
+   public final void testGetSetLastModified()
+   {
+      final Project project = new Project();
+      assertNotNull(project);
+
+      final Date date1 = new Date(1262900127);
+      project.setLastModified(date1);
+      assertEquals(date1, project.getLastModified());
    }
 
    public final void testGetSetAreas()

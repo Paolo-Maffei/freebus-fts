@@ -1,11 +1,12 @@
 package org.freebus.fts.project.service.jpa;
 
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.persistence.EntityManager;
-import javax.persistence.NoResultException;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
@@ -28,30 +29,12 @@ public final class JpaProjectService implements ProjectService
       return entityManager.find(Project.class, id);
    }
 
-   @SuppressWarnings("unchecked")
-   protected int getFreeProjectId()
-   {
-      try
-      {
-         final Query query = entityManager.createNativeQuery("select max(project_id) from project");
-         final Object obj = ((Vector<Object>) query.getSingleResult()).get(0);
-         if (obj == null) return 1;
-         return ((Integer) obj) + 1;
-      }
-      catch (NoResultException e)
-      {
-         return 1;
-      }
-   }
-
    @Override
    public void save(Project project) throws PersistenceException
    {
       try
       {
-//         if (project.getId() <= 0)
-//            project.setId(getFreeProjectId());
-
+         project.setLastModified(new Date());
          entityManager.getTransaction().begin();
          entityManager.persist(project);
          entityManager.getTransaction().commit();
@@ -76,5 +59,16 @@ public final class JpaProjectService implements ProjectService
       }
 
       return map;
+   }
+
+   @Override
+   public List<Project> getProjects()
+   {
+      final Query query = entityManager.createQuery("select p from Project p", Project.class);
+
+      @SuppressWarnings("unchecked")
+      final List<Project> result = query.getResultList();
+
+      return result;
    }
 }
