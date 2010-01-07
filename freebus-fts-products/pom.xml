@@ -28,6 +28,12 @@
    <version>2.0-SNAPSHOT</version>
   </dependency>
   <dependency>
+   <groupId>org.eclipse.persistence</groupId>
+   <artifactId>eclipselink</artifactId>
+   <version>2.0.0-SNAPSHOT</version>
+   <scope>compile</scope>
+  </dependency>
+  <dependency>
    <groupId>hsqldb</groupId>
    <artifactId>hsqldb</artifactId>
    <version>1.8.0.7</version>
@@ -64,11 +70,4 @@
    </plugin>
   </plugins>
  </build>
- <repositories>
-  <repository>
-   <id>org.eclipse.persistence</id>
-   <name>eclipselink-repo</name>
-   <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
-   </repository>
-  </repositories>
 </project>
