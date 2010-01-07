@@ -3,43 +3,44 @@ package org.freebus.fts.project;
 import org.freebus.fts.project.internal.I18n;
 
 /**
- * A project that gets initialized with example values.
+ * Factory that creates a project that gets initialized with example values.
  */
-public class SampleProject extends Project
+public final class SampleProjectFactory
 {
    /**
-    * A project that gets initialized with example values.
+    * Creates a project that gets initialized with example values.
     */
-   public SampleProject()
+   public static Project newProject()
    {
-      setName(I18n.getMessage("SampleProject.ProjectName"));
+      final Project project = new Project();
+      project.setName(I18n.getMessage("SampleProjectFactory.ProjectName"));
    
       final Area area = new Area();
-      area.setName(I18n.getMessage("SampleProject.Area1"));
+      area.setName(I18n.getMessage("SampleProjectFactory.Area1"));
       area.setAddress(1);
-      add(area);
+      project.add(area);
       
       final Line line1 = new Line();
-      line1.setName(I18n.getMessage("SampleProject.Line1"));
+      line1.setName(I18n.getMessage("SampleProjectFactory.Line1"));
       line1.setAddress(1);
       area.add(line1);
 
       final Line line2 = new Line();
-      line2.setName(I18n.getMessage("SampleProject.Line2"));
+      line2.setName(I18n.getMessage("SampleProjectFactory.Line2"));
       line2.setAddress(2);
       area.add(line2);
 
 
       final Building building = new Building();
-      building.setName(I18n.getMessage("SampleProject.Building1"));
-      add(building);
+      building.setName(I18n.getMessage("SampleProjectFactory.Building1"));
+      project.add(building);
 
       final Room room1 = new Room();
-      room1.setName(I18n.getMessage("SampleProject.Room1"));
+      room1.setName(I18n.getMessage("SampleProjectFactory.Room1"));
       building.add(room1);
 
       final Room room2 = new Room();
-      room2.setName(I18n.getMessage("SampleProject.Room2"));
+      room2.setName(I18n.getMessage("SampleProjectFactory.Room2"));
       building.add(room2);
 
 
@@ -61,7 +62,7 @@ public class SampleProject extends Project
       
       final MainGroup mainGroup1 = new MainGroup();
       mainGroup1.setAddress(4);
-      add(mainGroup1);
+      project.add(mainGroup1);
 
       final MidGroup midGroup1 = new MidGroup();
       midGroup1.setAddress(5);
@@ -71,12 +72,21 @@ public class SampleProject extends Project
       midGroup1.setAddress(6);
       mainGroup1.add(midGroup2);
 
-      final Group group1 = new Group();
+      final SubGroup group1 = new SubGroup();
       group1.setAddress(101);
       midGroup1.add(group1);
 
-      final Group group2 = new Group();
+      final SubGroup group2 = new SubGroup();
       group2.setAddress(102);
       midGroup1.add(group2);
+
+      return project;
+   }
+
+   //
+   // It is not allowed to create objects of this class
+   //
+   private SampleProjectFactory()
+   {     
    }
 }

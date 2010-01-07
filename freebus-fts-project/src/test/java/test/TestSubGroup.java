@@ -2,16 +2,16 @@ package test;
 
 import junit.framework.TestCase;
 
-import org.freebus.fts.project.Group;
+import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.knxcomm.telegram.GroupAddress;
 
-public class TestGroup extends TestCase
+public class TestSubGroup extends TestCase
 {
    public final void testGroup()
    {
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
       assertNotNull(group);
       assertEquals(0, group.getId());
       assertEquals(0, group.getAddress());
@@ -21,7 +21,7 @@ public class TestGroup extends TestCase
 
    public final void testGetSetId()
    {
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
 
       group.setId(1234);
       assertEquals(1234, group.getId());
@@ -32,7 +32,7 @@ public class TestGroup extends TestCase
 
    public final void testGetSetAddress()
    {
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
 
       group.setAddress(123);
       assertEquals(123, group.getAddress());
@@ -43,7 +43,7 @@ public class TestGroup extends TestCase
 
    public final void testGetSetName()
    {
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
 
       group.setName("group-1");
       assertEquals("group-1", group.getName());
@@ -57,7 +57,7 @@ public class TestGroup extends TestCase
 
    public final void testGetPhysicalAddr()
    {
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
       group.setAddress(88);
       assertEquals(GroupAddress.BROADCAST, group.getGroupAddress());
 
@@ -74,7 +74,7 @@ public class TestGroup extends TestCase
 
    public final void testGetSetMidGroup()
    {
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
       final MidGroup midGroup = new MidGroup();
 
       group.setMidGroup(midGroup);

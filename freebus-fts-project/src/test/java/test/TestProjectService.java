@@ -3,23 +3,14 @@ package test;
 import java.util.Map;
 
 import org.freebus.fts.project.Project;
+import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.project.service.ProjectService;
 
 public class TestProjectService extends PersistenceTestCase
 {
-   public final void testSaveGetProject()
-   {
-      final ProjectService projectService = getProjectFactory().getProjectService();
-
-      final Project project = new Project();
-      projectService.save(project);
-      assertTrue(project.getId() != 0);
-
-      final Project loadedProject = projectService.getProject(project.getId());
-      assertNotNull(loadedProject);
-      assertSame(project, loadedProject);
-   }
-
+   //
+   // Must be the first test - depends on an empty projects table.
+   //
    public final void testGetProjectNames()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
@@ -49,5 +40,33 @@ public class TestProjectService extends PersistenceTestCase
       assertEquals("Project-1", projectNames.get(project1.getId()));
       assertEquals("Project-2", projectNames.get(project2.getId()));
       assertEquals("Project-3", projectNames.get(project3.getId()));
+   }
+
+   public final void testSaveGetProject()
+   {
+      final ProjectService projectService = getProjectFactory().getProjectService();
+
+      final Project project = new Project();
+      project.setName("Empty Project");
+      projectService.save(project);
+      assertTrue(project.getId() != 0);
+
+      final Project loadedProject = projectService.getProject(project.getId());
+      assertNotNull(loadedProject);
+      assertSame(project, loadedProject);
+   }
+
+   public final void testSaveGetSampleProject()
+   {
+      final ProjectService projectService = getProjectFactory().getProjectService();
+
+      final Project project = SampleProjectFactory.newProject();
+      project.setName("Sample Project");
+      projectService.save(project);
+      assertTrue(project.getId() != 0);
+
+      final Project loadedProject = projectService.getProject(project.getId());
+      assertNotNull(loadedProject);
+      assertSame(project, loadedProject);
    }
 }

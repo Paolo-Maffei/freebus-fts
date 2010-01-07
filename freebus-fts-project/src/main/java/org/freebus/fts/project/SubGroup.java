@@ -1,12 +1,14 @@
 package org.freebus.fts.project;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.freebus.fts.project.internal.I18n;
 import org.freebus.knxcomm.telegram.GroupAddress;
@@ -16,26 +18,29 @@ import org.freebus.knxcomm.telegram.GroupAddress;
  * structure of a project. Every group belongs to a {@link MidGroup}.
  */
 @Entity
-@Table(name = "group")
-public class Group
+@Table(name = "sub_group")
+public class SubGroup
 {
    @Id
-   @Column(name = "group_id", nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenGroupId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "sub_group_id", nullable = false)
    private int id;
 
-   @Column(name = "group_name", nullable = true)
+   @Column(name = "sub_group_name", nullable = true)
    private String name = "";
 
-   @Column(name = "group_address", nullable = false)
+   @Column(name = "sub_group_address", nullable = false)
    private int address;
 
-   @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "mid_group_id")
    private MidGroup midGroup;
 
    /**
     * Create a new group.
     */
-   public Group()
+   public SubGroup()
    {
    }
 
@@ -112,6 +117,28 @@ public class Group
    public void setMidGroup(MidGroup midGroup)
    {
       this.midGroup = midGroup;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof SubGroup))
+         return false;
+
+      final SubGroup oo = (SubGroup) o;
+      return (id == oo.id && address == oo.address && name == oo.name);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

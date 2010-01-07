@@ -9,7 +9,9 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -22,12 +24,13 @@ import javax.persistence.TableGenerator;
 public class Building
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "gen_building_id")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenBuildingId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "building_id", nullable = false)
    private int id;
 
    @ManyToOne(optional = false)
+   @JoinColumn(name = "project_id")
    private Project project;
 
    @Column(name = "building_name", nullable = false)
@@ -36,7 +39,7 @@ public class Building
    @Column(name = "description")
    private String description;
 
-   // @OneToMany(cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "building")
    private Set<Room> rooms = new HashSet<Room>();
 
    /**
@@ -133,6 +136,19 @@ public class Building
    public void setRooms(Set<Room> rooms)
    {
       this.rooms = rooms;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof Building))
+         return false;
+
+      final Building oo = (Building) o;
+      return (id == oo.id && name == oo.name && description == oo.description && rooms == oo.rooms);
    }
 
    /**

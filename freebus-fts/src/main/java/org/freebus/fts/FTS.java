@@ -10,7 +10,7 @@ import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.SimpleConfig;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.project.ProjectManager;
-import org.freebus.fts.project.SampleProject;
+import org.freebus.fts.project.SampleProjectFactory;
 
 /**
  * The main application class.
@@ -22,7 +22,7 @@ public final class FTS implements Runnable
     */
    public void run()
    {
-      ProjectManager.setProject(new SampleProject());
+      ProjectManager.setProject(SampleProjectFactory.newProject());
 
       MainWindow mainWin = new MainWindow();
 

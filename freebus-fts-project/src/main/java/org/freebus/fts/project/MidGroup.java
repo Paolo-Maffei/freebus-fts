@@ -6,24 +6,29 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.freebus.fts.project.internal.I18n;
 
 /**
  * A mid-group in a {@link MainGroup}. A mid-group is the mid-level group for
  * the logical structure of a project. Every mid-group belongs to a
- * {@link MainGroup}, and can contain {@link Group}s.
+ * {@link MainGroup}, and can contain {@link SubGroup}s.
  */
 @Entity
 @Table(name = "mid_group")
 public class MidGroup
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenMidGroupId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "mid_group_id", nullable = false)
    private int id;
 
@@ -33,11 +38,12 @@ public class MidGroup
    @Column(name = "mid_group_address", nullable = false)
    private int address;
 
-   @ManyToOne(cascade = CascadeType.ALL, optional = false, fetch = FetchType.EAGER)
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "main_group_id")
    private MainGroup mainGroup;
 
-   @OneToMany(mappedBy = "midGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-   private Set<Group> groups = new HashSet<Group>();
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "midGroup")
+   private Set<SubGroup> subGroups = new HashSet<SubGroup>();
 
    /**
     * Create a new mid-group.
@@ -111,28 +117,50 @@ public class MidGroup
    }
 
    /**
-    * Add a group to the mid-group.
+    * Add a sub-group to the mid-group.
     */
-   public void add(Group group)
+   public void add(SubGroup group)
    {
       group.setMidGroup(this);
-      groups.add(group);
+      subGroups.add(group);
    }
 
    /**
-    * @return the groups container.
+    * @return the sub-groups container.
     */
-   public Set<Group> getGroups()
+   public Set<SubGroup> getSubGroups()
    {
-      return groups;
+      return subGroups;
    }
 
    /**
-    * Set the groups container.
+    * Set the sub-groups container.
     */
-   public void setGroups(Set<Group> groups)
+   public void setSubGroups(Set<SubGroup> groups)
    {
-      this.groups = groups;
+      this.subGroups = groups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof MidGroup))
+         return false;
+
+      final MidGroup oo = (MidGroup) o;
+      return (id == oo.id && address == oo.address && name == oo.name && subGroups == oo.subGroups);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

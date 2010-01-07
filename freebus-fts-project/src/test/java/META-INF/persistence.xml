@@ -6,10 +6,15 @@
 
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>org.freebus.fts.project.Project</class>
   <class>org.freebus.fts.project.Area</class>
   <class>org.freebus.fts.project.Building</class>
+  <class>org.freebus.fts.project.Device</class>
+  <class>org.freebus.fts.project.Line</class>
   <class>org.freebus.fts.project.MainGroup</class>
+  <class>org.freebus.fts.project.MidGroup</class>
+  <class>org.freebus.fts.project.Project</class>
+  <class>org.freebus.fts.project.Room</class>
+  <class>org.freebus.fts.project.SubGroup</class>
   <properties>
    <property name="eclipselink.logging.level" value="FINE" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />

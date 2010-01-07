@@ -9,7 +9,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.project.Group;
+import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
@@ -82,7 +82,7 @@ public class LogicalView extends AbstractPage
             DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(midGroup.toString(), true);
             areaNode.add(lineNode);
 
-            for (Group group: midGroup.getGroups())
+            for (SubGroup group: midGroup.getSubGroups())
             {
                DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(group.toString(), true);
                lineNode.add(deviceNode);

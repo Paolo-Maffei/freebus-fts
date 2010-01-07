@@ -6,10 +6,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 
 /**
@@ -23,6 +27,8 @@ import javax.persistence.Table;
 public class Line
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenLineId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "line_id", nullable = false)
    private int id;
 
@@ -32,10 +38,11 @@ public class Line
    @Column(name = "line_address")
    private int address;
 
-   @ManyToOne(cascade=CascadeType.ALL)
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "area_id")
    private Area area;
 
-   @OneToMany(mappedBy = "line", cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "line")
    private Set<Device> devices = new HashSet<Device>();
    
    /**
@@ -132,6 +139,28 @@ public class Line
    public void setDevices(Set<Device> devices)
    {
       this.devices = devices;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof Line))
+         return false;
+
+      final Line oo = (Line) o;
+      return (id == oo.id && address == oo.address && name == oo.name && devices == oo.devices);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

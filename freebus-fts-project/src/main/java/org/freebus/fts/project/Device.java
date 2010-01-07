@@ -1,36 +1,43 @@
 package org.freebus.fts.project;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 
 /**
- * A KNX/EIB bus device. This is a device that is part of a project, that
- * gets installed somewhere in a house, and gets programmed.
+ * A KNX/EIB bus device. This is a device that is part of a project, that gets
+ * installed somewhere in a house, and gets programmed.
  */
 @Entity
 @Table(name = "device")
 public final class Device
 {
    @Id
-   @Column(name = "device_id", columnDefinition = "INT", nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenDeviceId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "device_id", nullable = false)
    private int id;
 
-   @Column(name = "device_address", columnDefinition = "INT", nullable = false)
+   @Column(name = "device_address", nullable = false)
    private int address;
 
-   @Column(name = "virtual_device_id", columnDefinition = "INT", nullable = false)
+   @Column(name = "virtual_device_id", nullable = false)
    private int virtualDeviceId;
 
-   @ManyToOne(cascade=CascadeType.ALL)
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "line_id")
    private Line line;
 
-   @ManyToOne(cascade=CascadeType.ALL)
+   @ManyToOne(optional = true)
+   @JoinColumn(name = "room_id")
    private Room room;
 
    /**
@@ -39,7 +46,7 @@ public final class Device
    public Device()
    {
    }
- 
+
    /**
     * @param id the id to set
     */
@@ -77,9 +84,11 @@ public final class Device
     */
    public PhysicalAddress getPhysicalAddress()
    {
-      if (line == null) return PhysicalAddress.NULL;
+      if (line == null)
+         return PhysicalAddress.NULL;
       final Area area = line.getArea();
-      if (area == null) return PhysicalAddress.NULL;
+      if (area == null)
+         return PhysicalAddress.NULL;
       return new PhysicalAddress(area.getAddress(), line.getAddress(), address);
    }
 
@@ -131,6 +140,28 @@ public final class Device
    public Room getRoom()
    {
       return room;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof Device))
+         return false;
+
+      final Device oo = (Device) o;
+      return (id == oo.id && address == oo.address && virtualDeviceId == oo.virtualDeviceId);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

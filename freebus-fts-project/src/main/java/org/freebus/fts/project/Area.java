@@ -3,15 +3,17 @@ package org.freebus.fts.project;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
 
 
 /**
@@ -24,12 +26,13 @@ import javax.persistence.Transient;
 public class Area
 {
    @Id
-   @TableGenerator(name = "AreaIdGen", table = "id_gen", pkColumnName = "gen_name", pkColumnValue = "AreaGen", valueColumnName = "gen_val", initialValue = 1, allocationSize = 10)
-   @GeneratedValue(strategy = GenerationType.TABLE, generator = "AreaIdGen")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenAreaId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "area_id", nullable = false)
    private int id;
 
    @ManyToOne(optional = false)
+   @JoinColumn(name = "project_id")
    private Project project;
 
    @Column(name = "area_name")
@@ -38,8 +41,7 @@ public class Area
    @Column(name = "area_address", nullable = false)
    private int address;
 
-//   @OneToMany(mappedBy = "area", cascade = CascadeType.ALL)
-   @Transient
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "area")
    private Set<Line> lines = new HashSet<Line>();
 
    /**
@@ -137,6 +139,19 @@ public class Area
    public void setLines(Set<Line> lines)
    {
       this.lines = lines;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof Area))
+         return false;
+
+      final Area oo = (Area) o;
+      return (id == oo.id && address == oo.address && name == oo.name && lines == oo.lines);
    }
 
    /**

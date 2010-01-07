@@ -6,6 +6,7 @@
 
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+  <!-- freebus-fts-products -->
   <class>org.freebus.fts.products.CatalogEntry</class>
   <class>org.freebus.fts.products.CommunicationObject</class>
   <class>org.freebus.fts.products.FunctionalEntity</class>
@@ -17,10 +18,16 @@
   <class>org.freebus.fts.products.Product</class>
   <class>org.freebus.fts.products.ProductDescription</class>
   <class>org.freebus.fts.products.VirtualDevice</class>
+  <!-- freebus-fts-project -->
   <class>org.freebus.fts.project.Area</class>
+  <class>org.freebus.fts.project.Building</class>
   <class>org.freebus.fts.project.Device</class>
   <class>org.freebus.fts.project.Line</class>
+  <class>org.freebus.fts.project.MainGroup</class>
+  <class>org.freebus.fts.project.MidGroup</class>
   <class>org.freebus.fts.project.Project</class>
+  <class>org.freebus.fts.project.Room</class>
+  <class>org.freebus.fts.project.SubGroup</class>
   <properties>
    <property name="eclipselink.logging.level" value="FINEST" />
    <property name="eclipselink.jdbc.driver" value="org.hsqldb.jdbcDriver" />

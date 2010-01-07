@@ -18,15 +18,16 @@ import javax.persistence.TableGenerator;
  * 
  * @See {@link ProjectManager#getProject} - to access the global project
  *      instance.
- * @See {@link ProjectManager#newProject} - to create a new project.
  * @See {@link ProjectManager#openProject} - to open an existing project.
+ * @See {@link ProjectManager#newProject} - to create a new project.
+ * @See {@link SampleProjectFactory#newProject} - to create a sample project.
  */
 @Entity
 @Table(name = "project")
 public class Project
 {
    @Id
-   @TableGenerator(name = "ProjectIdGen", table = "id_gen", pkColumnName = "gen_name", pkColumnValue = "ProjectGen", valueColumnName = "gen_val", initialValue = 1, allocationSize = 10)
+   @TableGenerator(initialValue = 1, allocationSize = 1, table = "sequences", name = "GenProjectId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "project_id", nullable = false)
    private int id;
@@ -37,13 +38,13 @@ public class Project
    @Column(name = "project_description")
    private String description;
 
-   @OneToMany(cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
    private Set<Area> areas = new HashSet<Area>();
 
-   @OneToMany(cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
    private Set<Building> buildings = new HashSet<Building>();
 
-   @OneToMany(cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
    private Set<MainGroup> mainGroups = new HashSet<MainGroup>();
 
    /**

@@ -5,7 +5,7 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.freebus.fts.project.Group;
+import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 
@@ -19,8 +19,8 @@ public class TestMidGroup extends TestCase
       assertEquals(0, midGroup.getId());
       assertEquals(0, midGroup.getAddress());
       assertNull(midGroup.getMainGroup());
-      assertNotNull(midGroup.getGroups());
-      assertTrue(midGroup.getGroups().isEmpty());
+      assertNotNull(midGroup.getSubGroups());
+      assertTrue(midGroup.getSubGroups().isEmpty());
    }
 
    public final void testGetSetId()
@@ -89,25 +89,25 @@ public class TestMidGroup extends TestCase
    {
       final MidGroup midGroup = new MidGroup();
 
-      final Set<Group> newGroups = new HashSet<Group>();
-      midGroup.setGroups(newGroups);
+      final Set<SubGroup> newGroups = new HashSet<SubGroup>();
+      midGroup.setSubGroups(newGroups);
 
-      assertEquals(newGroups, midGroup.getGroups());
+      assertEquals(newGroups, midGroup.getSubGroups());
    }
 
    public final void testAdd()
    {
       final MidGroup midGroup = new MidGroup();
-      assertTrue(midGroup.getGroups().isEmpty());
+      assertTrue(midGroup.getSubGroups().isEmpty());
 
-      final Group group = new Group();
+      final SubGroup group = new SubGroup();
       midGroup.add(group);
 
-      assertFalse(midGroup.getGroups().isEmpty());
-      assertEquals(1, midGroup.getGroups().size());
-      assertEquals(group, midGroup.getGroups().iterator().next());
+      assertFalse(midGroup.getSubGroups().isEmpty());
+      assertEquals(1, midGroup.getSubGroups().size());
+      assertEquals(group, midGroup.getSubGroups().iterator().next());
 
-      midGroup.add(new Group());
-      assertEquals(2, midGroup.getGroups().size());      
+      midGroup.add(new SubGroup());
+      assertEquals(2, midGroup.getSubGroups().size());      
    }
 }

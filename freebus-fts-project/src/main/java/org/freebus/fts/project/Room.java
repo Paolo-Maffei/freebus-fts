@@ -6,10 +6,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * A room in a {@link Building}. A room is the mid-level group for the physical
@@ -21,6 +25,8 @@ import javax.persistence.Table;
 public class Room
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenRoomId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "room_id", nullable = false)
    private int id;
 
@@ -33,10 +39,11 @@ public class Room
    @Column(name = "description")
    private String description = "";
 
-   @ManyToOne(cascade = CascadeType.ALL)
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "building_id")
    private Building building;
 
-   @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "room")
    private Set<Device> devices = new HashSet<Device>();
 
    /**
@@ -149,6 +156,28 @@ public class Room
    public void setDevices(Set<Device> devices)
    {
       this.devices = devices;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof Room))
+         return false;
+
+      final Room oo = (Room) o;
+      return (id == oo.id && name == oo.name && number == oo.number && description == oo.description && devices == oo.devices);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**

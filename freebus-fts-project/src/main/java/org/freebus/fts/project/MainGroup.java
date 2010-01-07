@@ -6,11 +6,14 @@ import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.freebus.fts.project.internal.I18n;
 
@@ -24,6 +27,8 @@ import org.freebus.fts.project.internal.I18n;
 public class MainGroup
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenMainGroupId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "main_group_id", nullable = false)
    private int id;
 
@@ -34,9 +39,10 @@ public class MainGroup
    private int address;
 
    @ManyToOne(optional = false)
+   @JoinColumn(name = "project_id")
    private Project project;
 
-//   @OneToMany(mappedBy = "mainGroup", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "mainGroup")
    private Set<MidGroup> midGroups = new HashSet<MidGroup>();
 
    /**
@@ -133,6 +139,19 @@ public class MainGroup
    public void setMidGroups(Set<MidGroup> midGroups)
    {
       this.midGroups = midGroups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (!(o instanceof MainGroup))
+         return false;
+
+      final MainGroup oo = (MainGroup) o;
+      return (id == oo.id && address == oo.address && name == oo.name && midGroups == oo.midGroups);
    }
 
    /**
