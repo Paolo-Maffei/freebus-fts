@@ -9,7 +9,7 @@ package org.freebus.fts.project;
 public interface ProjectListener
 {
    /**
-    * The global project changed.
+    * The global project has changes or was changed.
     */
-   public void projectChanged(Project project);
+   public void projectChange(Project project);
 }

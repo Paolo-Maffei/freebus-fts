@@ -6,12 +6,13 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Vector;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import org.freebus.fts.common.db.DriverClass;
 import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
@@ -23,10 +24,9 @@ import org.freebus.fts.core.SimpleConfig;
 public final class DatabasePage extends SettingsPage
 {
    private static final long serialVersionUID = 882434523577623L;
+
    private final JComboBox cboConnectionType;
-   private final FileBasedDatabase cfgHSQL;
-   private final ServerBasedDatabase cfgMYSQL;
-   final JPanel cfgNone;
+   private final Vector<DatabaseDriverPage> cfgPages = new Vector<DatabaseDriverPage>();
 
    /**
     * Create a database settings page.
@@ -64,30 +64,6 @@ public final class DatabasePage extends SettingsPage
       c.gridx = 1;
       c.gridy = gridY;
       add(cboConnectionType, c);
-
-      c.fill = GridBagConstraints.HORIZONTAL;
-      c.gridwidth = 2;
-      c.gridx = 0;
-      c.gridy = ++gridY;
-      c.insets = new Insets(8, 4, 8, 4);
-      add(new JSeparator(), c);
-      c.gridwidth = 1;
-
-      cfgNone = new JPanel();
-      cfgHSQL = new FileBasedDatabase(DriverType.HSQL);
-      cfgMYSQL = new ServerBasedDatabase(DriverType.MYSQL);
-
-      c.fill = GridBagConstraints.BOTH;
-      c.weightx = 1;
-      c.weighty = 10;
-      c.gridwidth = 2;
-      c.gridx = 0;
-      c.gridy = ++gridY;
-      c.insets = new Insets(0, 4, 0, 4);
-      add(cfgNone, c);
-      add(cfgHSQL, c);
-      add(cfgMYSQL, c);
-
       cboConnectionType.addActionListener(new ActionListener()
       {
          @Override
@@ -97,15 +73,41 @@ public final class DatabasePage extends SettingsPage
          }
       });
 
+      c.fill = GridBagConstraints.HORIZONTAL;
+      c.gridwidth = 2;
+      c.gridx = 0;
+      c.gridy = ++gridY;
+      c.insets = new Insets(8, 4, 8, 4);
+      add(new JSeparator(), c);
+      c.gridwidth = 1;
+
+      c.fill = GridBagConstraints.BOTH;
+      c.weightx = 1;
+      c.weighty = 10;
+      c.gridwidth = 2;
+      c.gridx = 0;
+      c.gridy = ++gridY;
+      c.insets = new Insets(0, 4, 0, 4);
+
       final SimpleConfig cfg = Config.getInstance();
 
       final String connTypeStr = cfg.get("databaseDriverType");
       for (DriverType type : DriverType.values())
       {
+         final DriverClass driverClass = type.driverClass;
+         DatabaseDriverPage cfgPage = null;
+
+         if (driverClass == DriverClass.FILE_BASED) cfgPage = new FileBasedDatabase(type);
+         else if (driverClass == DriverClass.SERVER_BASED) cfgPage = new ServerBasedDatabase(type);
+         else continue;
+
          final String typeStr = type.toString();
          final String key = "Settings.DatabasePage." + typeStr;
          String label = I18n.getMessage(key);
          if (label.equals(key) || label.isEmpty()) label = typeStr;
+
+         add(cfgPage, c);
+         cfgPages.add(cfgPage);
 
          cboConnectionType.addItem(label);
          if (typeStr.equals(connTypeStr))
@@ -115,19 +117,20 @@ public final class DatabasePage extends SettingsPage
    }
 
    /**
-    * Called when a connection type is selected. Show the connection-details widget.
+    * Called when a connection type is selected. Show the connection-details
+    * widget.
     */
    protected void showConnectionDetails()
    {
-      final DriverType type = getSelectedDriverType();
+      final int selected = cboConnectionType.getSelectedIndex();
 
-      cfgNone.setVisible(type == DriverType.None);
-      cfgHSQL.setVisible(type == DriverType.HSQL);
-      cfgMYSQL.setVisible(type == DriverType.MYSQL);
+      for (int i = cfgPages.size() - 1; i >= 0; --i)
+         cfgPages.get(i).setVisible(i == selected);
    }
 
    /**
-    * @return the connection type of the selected item in the connection-type combo-box.
+    * @return the connection type of the selected item in the connection-type
+    *         combo-box.
     */
    protected DriverType getSelectedDriverType()
    {
@@ -135,7 +138,8 @@ public final class DatabasePage extends SettingsPage
    }
 
    /**
-    * Apply the widget's contents to the running application and the configuration.
+    * Apply the widget's contents to the running application and the
+    * configuration.
     */
    @Override
    public void apply()
@@ -143,8 +147,8 @@ public final class DatabasePage extends SettingsPage
       final SimpleConfig cfg = Config.getInstance();
       cfg.put("databaseDriverType", getSelectedDriverType().toString());
 
-      cfgHSQL.apply();
-      cfgMYSQL.apply();
+      for (int i = cfgPages.size() - 1; i >= 0; --i)
+         cfgPages.get(i).apply();
    }
 
    /**

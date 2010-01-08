@@ -22,8 +22,20 @@ public enum Actions
    /** Open the logical structure of the project. */
    LOGICAL_VIEW(new LogicalViewAction()),
 
+   /** Create a new project. */
+   NEW_PROJECT(new NewProjectAction()),
+
+   /** Open a project. */
+   OPEN_PROJECT(new OpenProjectAction()),
+
    /** Open the physical structure of the project. */
    PHYSICAL_VIEW(new PhysicalViewAction()),
+
+   /** Show the properties of the current project. */
+   PROJECT_PROPERTIES(new ProjectPropertiesAction()),
+
+   /** Save the current project. */
+   SAVE_PROJECT(new SaveProjectAction()),
 
    /** Send a test telegram to the KNX/EIB bus. */
    SEND_TEST_TELEGRAM(new SendTestTelegramAction()),

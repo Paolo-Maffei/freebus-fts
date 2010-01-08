@@ -21,9 +21,7 @@ public final class ProjectManager
    static public void setProject(Project project)
    {
       ProjectManager.project = project;
-
-      for (ProjectListener listener: listeners)
-         listener.projectChanged(project);
+      fireProjectChange();
    }
 
    /**
@@ -56,5 +54,14 @@ public final class ProjectManager
    static public void removeListener(ProjectListener listener)
    {
       listeners.remove(listener);
+   }
+
+   /**
+    * Inform all listeners that the global project has changed or got important changes.
+    */
+   static public void fireProjectChange()
+   {
+      for (ProjectListener listener: listeners)
+         listener.projectChange(project);
    }
 }

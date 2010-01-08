@@ -8,22 +8,22 @@ public enum DriverType
    /**
     * No driver.
     */
-   None(null, null, null, false),
+   None(null, null, null, DriverClass.NONE),
 
    /**
     * Hypersonic SQL (HSQL) file based driver.
     */
-   HSQL("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:", ";create=true;shutdown=true;hsqldb.default_table_type=cached", true),
+   HSQL("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:", ";create=true;shutdown=true;hsqldb.default_table_type=cached", DriverClass.FILE_BASED),
 
    /**
-    * Hypersonic SQL (HSQL) memory based driver. For test cases.
+    * Hypersonic SQL (HSQL) memory based driver. For testing only.
     */
-   HSQL_MEM("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:", ";create=true;shutdown=true", false),
+   HSQL_MEM("org.hsqldb.jdbcDriver", "jdbc:hsqldb:mem:", ";create=true;shutdown=true", DriverClass.NONE),
 
    /**
     * MYSQL driver.
     */
-   MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", null, false);
+   MYSQL("com.mysql.jdbc.Driver", "jdbc:mysql://", null, DriverClass.SERVER_BASED);
 
    /**
     * The class-name of the JDBC driver.
@@ -41,9 +41,9 @@ public enum DriverType
    public final String urlArgs;
 
    /**
-    * True if the database is file-based.
+    * The class of the driver, @see {@link DriverClass}.
     */
-   public final boolean fileBased;
+   public final DriverClass driverClass;
 
    /**
     * @return the default database driver.
@@ -65,11 +65,11 @@ public enum DriverType
    /*
     * Internal constructor
     */
-   private DriverType(String className, String urlPrefix, String urlArgs, boolean fileBased)
+   private DriverType(String className, String urlPrefix, String urlArgs, DriverClass driverClass)
    {
       this.className = className;
       this.urlPrefix = urlPrefix;
       this.urlArgs = urlArgs;
-      this.fileBased = fileBased;
+      this.driverClass = driverClass;
    }
 }

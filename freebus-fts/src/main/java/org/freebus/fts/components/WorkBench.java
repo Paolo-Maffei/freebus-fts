@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.swing.JFrame;
@@ -22,9 +23,8 @@ import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
 
 /**
- * A class for main application windows. This class contains no FTS specific code.
- * 
- * This class is meant to be sub-classed.
+ * A class for main application windows. This class contains no FTS specific
+ * code. This class is meant to be sub-classed.
  */
 public class WorkBench extends JFrame
 {
@@ -58,7 +58,7 @@ public class WorkBench extends JFrame
 
       final JPanel leftPanel = new JPanel();
       leftPanel.setLayout(new BorderLayout());
-      
+
       leftTabbedPane = new ExtTabbedPane();
       leftTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
       leftPanel.add(leftTabbedPane, BorderLayout.CENTER);
@@ -66,7 +66,7 @@ public class WorkBench extends JFrame
       bottomLeftPanel = new JPanel();
       bottomLeftPanel.setLayout(new BorderLayout());
       leftPanel.add(bottomLeftPanel, BorderLayout.SOUTH);
-      
+
       centerTabbedPane = new ExtTabbedPane();
       centerTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
@@ -88,8 +88,9 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Create a new menu with the given name and add it to the menu bar. Mnemonics are
-    * properly detected if they are marked with an ampersand in the name (e.g. "&File").
+    * Create a new menu with the given name and add it to the menu bar.
+    * Mnemonics are properly detected if they are marked with an ampersand in
+    * the name (e.g. "&File").
     */
    public JMenu createJMenu(String name)
    {
@@ -102,15 +103,16 @@ public class WorkBench extends JFrame
       }
 
       final JMenu menu = new JMenu(name);
-      if (mnemonic != 0) menu.setMnemonic(mnemonic);
+      if (mnemonic != 0)
+         menu.setMnemonic(mnemonic);
 
       menuBar.add(menu);
       return menu;
    }
 
    /**
-    * Add the given page to the work-bench and show it. When the page is created and
-    * visible, the page's {@link AbstractPage#setObject(Object)} is called.
+    * Add the given page to the work-bench and show it. When the page is created
+    * and visible, the page's {@link AbstractPage#setObject(Object)} is called.
     * 
     * @param page - the page to show.
     * @param obj - the object that is given to the page via
@@ -119,7 +121,8 @@ public class WorkBench extends JFrame
     */
    public synchronized boolean addPage(AbstractPage page, Object obj)
    {
-      if (!addPage(page)) return false;
+      if (!addPage(page))
+         return false;
       setPageObject(page, obj);
       return true;
    }
@@ -160,8 +163,8 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Create or show the page with the given class. Set the object that the page shall
-    * display to the object displayedObject.
+    * Create or show the page with the given class. Set the object that the page
+    * shall display to the object displayedObject.
     */
    public synchronized void showUniquePage(Class<? extends AbstractPage> pageClass, final Object obj)
    {
@@ -171,7 +174,8 @@ public class WorkBench extends JFrame
          try
          {
             page = pageClass.newInstance();
-            if (!addPage(page)) return;
+            if (!addPage(page))
+               return;
 
             uniquePages.put(pageClass, page);
          }
@@ -184,7 +188,8 @@ public class WorkBench extends JFrame
       }
       else
       {
-         if (!addPage(page)) return;
+         if (!addPage(page))
+            return;
       }
 
       page.setVisible(true);
@@ -196,12 +201,15 @@ public class WorkBench extends JFrame
     */
    public void setSelectedPage(AbstractPage page)
    {
-      if (leftTabbedPane.indexOfComponent(page) >= 0) leftTabbedPane.setSelectedComponent(page);
-      else if (centerTabbedPane.indexOfComponent(page) >= 0) centerTabbedPane.setSelectedComponent(page);
+      if (leftTabbedPane.indexOfComponent(page) >= 0)
+         leftTabbedPane.setSelectedComponent(page);
+      else if (centerTabbedPane.indexOfComponent(page) >= 0)
+         centerTabbedPane.setSelectedComponent(page);
    }
 
    /**
-    * @return The page object for the given class, or null if the page is currently not opened.
+    * @return The page object for the given class, or null if the page is
+    *         currently not opened.
     */
    public AbstractPage getUniquePage(Class<? extends AbstractPage> pageClass)
    {
@@ -209,8 +217,8 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Set the page-object of the given page. The actual setting of the object happens after all
-    * pending Swing events are processed.
+    * Set the page-object of the given page. The actual setting of the object
+    * happens after all pending Swing events are processed.
     * 
     * @param page - the page to process.
     * @param obj - the object to set.
@@ -240,11 +248,24 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Set the panel that is shown in the south/west (bottom-left) corner of the workbench.
+    * Set the panel that is shown in the south/west (bottom-left) corner of the
+    * workbench.
     */
    public void setBottomLeftPanel(JPanel panel)
    {
       bottomLeftPanel.removeAll();
       bottomLeftPanel.add(panel, BorderLayout.CENTER);
+   }
+
+   /**
+    * Call {@link AbstractPage#updateContents()} for all pages.
+    */
+   public void updateContents()
+   {
+      final Iterator<Class<? extends AbstractPage>> it = uniquePages.keySet().iterator();
+      while (it.hasNext())
+      {
+         uniquePages.get(it.next()).updateContents();
+      }
    }
 }

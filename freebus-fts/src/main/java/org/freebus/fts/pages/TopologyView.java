@@ -272,7 +272,7 @@ public class TopologyView extends AbstractPage
          }
       }
 
+      ((DefaultTreeModel) tree.getModel()).reload();
       TreeUtils.expandAll(tree);
-      treeView.doLayout();
    }
 }
