@@ -1,4 +1,4 @@
-package org.freebus.fts.settings;
+package org.freebus.fts.dialogs.settings;
 
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -52,7 +52,7 @@ public final class UIPage extends SettingsPage
    /**
     * Create a user interface settings page.
     */
-   UIPage()
+   public UIPage()
    {
       super(I18n.getMessage("Settings.UIPage.Title"));
 

@@ -1,4 +1,4 @@
-package org.freebus.fts.settings;
+package org.freebus.fts.dialogs.settings;
 
 import javax.swing.JPanel;
 

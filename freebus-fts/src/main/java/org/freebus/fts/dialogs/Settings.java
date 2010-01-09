@@ -1,4 +1,4 @@
-package org.freebus.fts.settings;
+package org.freebus.fts.dialogs;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -16,6 +16,10 @@ import javax.swing.JTabbedPane;
 
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.dialogs.settings.BusInterfacePage;
+import org.freebus.fts.dialogs.settings.DatabasePage;
+import org.freebus.fts.dialogs.settings.SettingsPage;
+import org.freebus.fts.dialogs.settings.UIPage;
 
 /**
  * A dialog for editing the application's settings.

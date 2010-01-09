@@ -1,4 +1,4 @@
-package org.freebus.fts.settings;
+package org.freebus.fts.dialogs.settings;
 
 import java.awt.Font;
 import java.awt.GridBagConstraints;
@@ -31,7 +31,7 @@ public final class DatabasePage extends SettingsPage
    /**
     * Create a database settings page.
     */
-   DatabasePage()
+   public DatabasePage()
    {
       super(I18n.getMessage("Settings.DatabasePage.Title"));
 
