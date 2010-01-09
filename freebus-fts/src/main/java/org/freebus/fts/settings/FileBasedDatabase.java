@@ -135,7 +135,7 @@ public final class FileBasedDatabase extends DatabaseDriverPage
       EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(getDriverType(), inpDatabase.getText(),
             inpUser.getText(), inpPasswd.getText());
 
-      emf.createEntityManager();
+      emf.createEntityManager().close();
    }
 
    /**

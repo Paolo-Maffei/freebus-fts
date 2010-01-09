@@ -114,7 +114,7 @@ public final class ServerBasedDatabase extends DatabaseDriverPage
       EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(getDriverType(), inpHost.getText() + '/'
             + inpDatabase.getText(), inpUser.getText(), inpPasswd.getText());
 
-      emf.createEntityManager();
+      emf.createEntityManager().close();
    }
 
    /**
