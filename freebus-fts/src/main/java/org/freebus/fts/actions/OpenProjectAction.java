@@ -2,11 +2,17 @@ package org.freebus.fts.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.KeyStroke;
 
+import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.dialogs.ProjectSelector;
+import org.freebus.fts.project.Project;
+import org.freebus.fts.project.ProjectManager;
 
 /**
  * Open a project.
@@ -31,5 +37,19 @@ public final class OpenProjectAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
+      final ProjectSelector dlg = new ProjectSelector(MainWindow.getInstance());
+      dlg.addWindowListener(new WindowAdapter()
+      {
+         @Override
+         public void windowClosed(WindowEvent e)
+         {
+            if (!dlg.isAccepted()) return;
+            final Project project = dlg.getSelectedProject();
+            if (project == null) return;
+            ProjectManager.setProject(project);
+         }
+      });
+
+      dlg.setVisible(true);
    }
 }
