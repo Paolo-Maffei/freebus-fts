@@ -62,6 +62,14 @@ public enum DriverType
       return urlPrefix + location + urlArgs;
    }
 
+   /**
+    * @return The prefix for configuration options.
+    */
+   public String getConfigPrefix()
+   {
+      return "database" + toString();
+   }
+
    /*
     * Internal constructor
     */

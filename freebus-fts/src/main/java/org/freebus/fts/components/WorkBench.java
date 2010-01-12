@@ -3,8 +3,6 @@ package org.freebus.fts.components;
 import java.awt.BorderLayout;
 import java.awt.Cursor;
 import java.awt.Dimension;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -18,7 +16,6 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.freebus.fts.actions.Actions;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
 
@@ -76,15 +73,6 @@ public class WorkBench extends JFrame
       leftCenterSplit.setDividerLocation(250);
       leftCenterSplit.setContinuousLayout(true);
       leftCenterSplit.setFocusable(false);
-
-      addWindowListener(new WindowAdapter()
-      {
-         @Override
-         public void windowClosing(WindowEvent event)
-         {
-            Actions.EXIT.action.actionPerformed(null);
-         }
-      });
    }
 
    /**

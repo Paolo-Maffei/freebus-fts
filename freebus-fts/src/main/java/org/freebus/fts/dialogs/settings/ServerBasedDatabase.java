@@ -9,11 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.SimpleConfig;
 import org.freebus.fts.utils.Rot13;
 
 /**
@@ -31,7 +31,7 @@ public final class ServerBasedDatabase extends DatabaseDriverPage
    public ServerBasedDatabase(DriverType driverType)
    {
       super(driverType);
-      this.configKey = "database" + driverType.toString();
+      configKey = driverType.getConfigPrefix();
 
       final JPanel base = getConfigPanel();
       GridBagLayout layout = new GridBagLayout();

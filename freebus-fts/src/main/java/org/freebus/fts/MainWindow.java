@@ -4,13 +4,17 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 
 import org.freebus.fts.actions.Actions;
+import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.WorkBench;
+import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.jobs.JobQueue;
 import org.freebus.fts.jobs.JobQueueEvent;
@@ -75,8 +79,27 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       setSelectedPage(getUniquePage(TopologyView.class));
 
-      final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      setSize(new Dimension((int) (screenSize.width * 0.9), (int) (screenSize.height * 0.9)));
+      Dimension size = Config.getInstance().getMainWindowSize();
+      if (size == null)
+      {
+         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+         size = new Dimension((int) (screenSize.width * 0.9), (int) (screenSize.height * 0.9));
+      }
+      setSize(size);
+
+      addWindowListener(new WindowAdapter()
+      {
+         @Override
+         public void windowClosing(WindowEvent event)
+         {
+            final Config cfg = Config.getInstance();
+            cfg.setMainWindowSize(getSize());
+
+            DatabaseResources.close();
+
+            cfg.save();
+         }
+      });
    }
 
    /**

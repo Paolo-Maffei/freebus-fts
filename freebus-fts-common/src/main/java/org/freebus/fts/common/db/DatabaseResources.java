@@ -8,7 +8,10 @@ import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-public final class DatabaseResources
+import org.apache.log4j.Logger;
+import org.freebus.fts.common.SimpleConfig;
+
+public class DatabaseResources
 {
    static protected EntityManagerFactory entityManagerFactory;
    static protected EntityManager entityManager;
@@ -22,7 +25,8 @@ public final class DatabaseResources
    {
       if (entityManager == null)
       {
-         if (entityManagerFactory == null) throw new RuntimeException("entity manager factory is not initialized");
+         if (entityManagerFactory == null)
+            throw new RuntimeException("entity manager factory is not initialized");
 
          entityManager = entityManagerFactory.createEntityManager();
          entityManager.setFlushMode(FlushModeType.COMMIT);
@@ -32,13 +36,59 @@ public final class DatabaseResources
    }
 
    /**
+    * Create an entity manager factory, using the values from the
+    * {@link SimpleConfig} configuration.
+    * 
+    * @return The created entity-manager factory.
+    * 
+    * @see {@link #setEntityManagerFactory}
+    */
+   static public EntityManagerFactory createDefaultEntityManagerFactory()
+   {
+      final SimpleConfig cfg = SimpleConfig.getInstance();
+      final String driverStr = cfg.getStringValue("databaseDriverType");
+
+      final DriverType driver = driverStr.isEmpty() ? DriverType.getDefault() : DriverType.valueOf(driverStr);
+      if (driver == null) return null;
+
+      return createEntityManagerFactory(driver);
+   }
+
+   /**
+    * Create an entity manager factory, using the values from the
+    * {@link SimpleConfig} configuration for database, user and password.
+    * 
+    * This method fetches the required parameters from the global
+    * {@link SimpleConfig} configuration, using {@link DriverType#getConfigPrefix()}
+    * as prefix for the configuration options.
+    * 
+    * @param driver - the database driver to use.
+    * 
+    * @return The created entity-manager factory.
+    * 
+    * @see {@link #setEntityManagerFactory}
+    */
+   static public EntityManagerFactory createEntityManagerFactory(DriverType driver)
+   {
+      final SimpleConfig cfg = SimpleConfig.getInstance();
+      final String pfx = driver.getConfigPrefix();
+
+      final String dbname = cfg.getStringValue(pfx + ".database");
+      final String user = cfg.getStringValue(pfx + ".user");
+      final String passwd = cfg.getStringValue(pfx + ".passwd");
+
+      return createEntityManagerFactory(driver, dbname, user, passwd);
+   }
+
+   /**
     * Create an entity manager factory.
     * 
     * @param driver - the database driver to use.
     * @param dbname - the name of the database (or database file).
     * @param user - the database connect user.
     * @param password - the database connect password.
-    * @return
+    * 
+    * @return The created entity-manager factory.
     * 
     * @see {@link #setEntityManagerFactory}
     */
@@ -48,18 +98,19 @@ public final class DatabaseResources
       // final Config cfg = Config.getInstance();
       // final Driver driver = cfg.getProductsDbDriver();
       // String url;
-      // if (driver.fileBased) url = driver.getConnectURL(cfg.getAppDir() + '/' +
+      // if (driver.fileBased) url = driver.getConnectURL(cfg.getAppDir() + '/'
+      // +
       // cfg.getProductsDbLocation());
       // else url = driver.getConnectURL(cfg.getProductsDbLocation());
       final String url = driver.getConnectURL(dbname);
-      System.out.printf("Connecting: %s\n", url);
+      Logger.getLogger(DatabaseResources.class).info("Connecting: " + url);
 
       final Properties props = new Properties();
       props.setProperty("javax.persistence.jdbc.driver", driver.className);
       props.setProperty("javax.persistence.jdbc.url", url);
       props.setProperty("javax.persistence.jdbc.user", user);
       props.setProperty("javax.persistence.jdbc.password", password);
-//      props.setProperty("eclipselink.logging.level", "FINEST");
+      // props.setProperty("eclipselink.logging.level", "FINEST");
 
       props.setProperty("hsqldb.default_table_type", "cached");
 
@@ -101,7 +152,8 @@ public final class DatabaseResources
    {
       if (entityManager != null)
       {
-         if (entityManager.getTransaction().isActive()) entityManager.getTransaction().rollback();
+         if (entityManager.getTransaction().isActive())
+            entityManager.getTransaction().rollback();
          entityManager.close();
          entityManager = null;
       }

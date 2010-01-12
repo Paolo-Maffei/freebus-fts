@@ -2,9 +2,11 @@ package org.freebus.fts.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
+import java.awt.event.WindowEvent;
 
 import javax.swing.KeyStroke;
 
+import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 
@@ -31,7 +33,8 @@ public final class ExitAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      System.exit(0);
+      final MainWindow win = MainWindow.getInstance();
+      win.dispatchEvent(new WindowEvent(win, WindowEvent.WINDOW_CLOSING));
    }
 
 }

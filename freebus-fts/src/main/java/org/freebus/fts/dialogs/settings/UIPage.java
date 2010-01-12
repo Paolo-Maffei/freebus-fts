@@ -16,9 +16,9 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.freebus.fts.MainWindow;
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.SimpleConfig;
 import org.freebus.fts.dialogs.Dialogs;
 
 /**
