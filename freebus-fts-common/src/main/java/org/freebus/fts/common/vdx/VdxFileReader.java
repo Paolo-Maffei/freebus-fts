@@ -50,13 +50,20 @@ public final class VdxFileReader
 
          scanHeader();
          scanFile();
-
-         setLanguage("German");
       }
       catch (IOException e)
       {
          if (in != null) in.close();
          throw new IOException("Failed to read file " + fileName + ": " + e.getMessage(), e);
+      }
+
+      try
+      {
+         setLanguage("German");
+      }
+      catch (Exception e)
+      {
+         e.printStackTrace();
       }
    }
 
@@ -415,8 +422,12 @@ public final class VdxFileReader
     */
    public void setLanguage(String language)
    {
-      if (languages == null) getLanguages();
-      languageId = languages.get(language);
+      if (languages == null)
+         getLanguages();
+
+      if (languages.isEmpty())
+         languageId = 0;
+      else languageId = languages.get(language);
    }
    
    /**
@@ -448,6 +459,8 @@ public final class VdxFileReader
          try
          {
             section = getSection("ete_language");
+            if (section == null) return null;
+
             final int langIdIdx = section.getHeader().getIndexOf("language_id");
             final int langNameIdx = section.getHeader().getIndexOf("language_name");
 

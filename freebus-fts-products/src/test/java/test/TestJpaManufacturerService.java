@@ -6,7 +6,7 @@ import java.util.List;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 
-public class TestManufacturerService extends PersistenceTestCase
+public class TestJpaManufacturerService extends PersistenceTestCase
 {
    private ManufacturerService manuService;
 
@@ -14,7 +14,7 @@ public class TestManufacturerService extends PersistenceTestCase
    public void setUp() throws Exception
    {
       if (manuService == null)
-         manuService = getProductsFactory().getManufacturerService();
+         manuService = getJpaProductsFactory().getManufacturerService();
 
       final List<Manufacturer> manus = new LinkedList<Manufacturer>();
       manus.add(new Manufacturer(1, "Manufacturer-1"));

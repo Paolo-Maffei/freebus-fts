@@ -5,7 +5,6 @@ import java.lang.reflect.InvocationTargetException;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
-import org.apache.log4j.BasicConfigurator;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.core.Config;
@@ -25,7 +24,6 @@ public final class FTS implements Runnable
 
    static
    {
-      BasicConfigurator.configure();
       Environment.setAppName("fts");
       globalConfig = new Config();
    }

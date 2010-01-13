@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Window;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -58,6 +59,7 @@ public final class ProjectSelector extends Dialog
       });
 
       projectsView = new JScrollPane(projectsTable);
+      projectsView.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
       body.add(projectsView, BorderLayout.CENTER);
 
       btnOpen = new JButton(I18n.getMessage("Button.Open"));

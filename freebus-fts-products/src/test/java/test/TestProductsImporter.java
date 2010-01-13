@@ -15,12 +15,14 @@ public class TestProductsImporter extends PersistenceTestCase
       final ProductsFactory vdFactory = Products.getFactory("src/test/resources/230V in LPC_.vd_");
       assertNotNull(vdFactory);
 
-      final ProductsImporter importer = new ProductsImporter(vdFactory, getProductsFactory());
+      final ProductsImporter importer = new ProductsImporter(vdFactory, getJpaProductsFactory());
 
       List<VirtualDevice> devs = vdFactory.getVirtualDeviceService().getVirtualDevices();
       assertNotNull(devs);
       assertFalse(devs.isEmpty());
 
-      importer.copy(devs);
+      importer.copy(devs.get(0));
+
+      
    }
 }

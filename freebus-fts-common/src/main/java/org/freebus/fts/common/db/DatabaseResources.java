@@ -9,12 +9,19 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.SimpleConfig;
 
 public class DatabaseResources
 {
    static protected EntityManagerFactory entityManagerFactory;
    static protected EntityManager entityManager;
+
+   static
+   {
+      // Ensure that Environment is loaded, which initializes the logging
+      Environment.getOS();
+   }
 
    /**
     * Lazily acquire the global entity manager and cache it.
@@ -111,6 +118,7 @@ public class DatabaseResources
       props.setProperty("javax.persistence.jdbc.user", user);
       props.setProperty("javax.persistence.jdbc.password", password);
       // props.setProperty("eclipselink.logging.level", "FINEST");
+      //props.setProperty("eclipselink.logging.logger", "org.freebus.fts.common.db.CommonsLoggingSessionLog");
 
       props.setProperty("hsqldb.default_table_type", "cached");
 

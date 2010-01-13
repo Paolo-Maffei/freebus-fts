@@ -10,7 +10,8 @@
   <class>org.freebus.fts.products.FunctionalEntity</class>
   <class>org.freebus.fts.products.Manufacturer</class>
   <properties>
-   <property name="eclipselink.logging.level" value="FINE" />
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINER" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
    <property name="javax.persistence.jdbc.user" value="sa" />

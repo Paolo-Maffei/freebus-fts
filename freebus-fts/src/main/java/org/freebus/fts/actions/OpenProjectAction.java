@@ -1,5 +1,6 @@
 package org.freebus.fts.actions;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.WindowAdapter;
@@ -37,19 +38,30 @@ public final class OpenProjectAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      final ProjectSelector dlg = new ProjectSelector(MainWindow.getInstance());
-      dlg.addWindowListener(new WindowAdapter()
-      {
-         @Override
-         public void windowClosed(WindowEvent e)
-         {
-            if (!dlg.isAccepted()) return;
-            final Project project = dlg.getSelectedProject();
-            if (project == null) return;
-            ProjectManager.setProject(project);
-         }
-      });
+      final MainWindow mainWin = MainWindow.getInstance();
 
-      dlg.setVisible(true);
+      try
+      {
+         mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         final ProjectSelector dlg = new ProjectSelector(mainWin);
+
+         dlg.addWindowListener(new WindowAdapter()
+         {
+            @Override
+            public void windowClosed(WindowEvent e)
+            {
+               if (!dlg.isAccepted()) return;
+               final Project project = dlg.getSelectedProject();
+               if (project == null) return;
+               ProjectManager.setProject(project);
+            }
+         });
+
+         dlg.setVisible(true);
+      }
+      finally
+      {
+         mainWin.setCursor(Cursor.getDefaultCursor());
+      }
    }
 }

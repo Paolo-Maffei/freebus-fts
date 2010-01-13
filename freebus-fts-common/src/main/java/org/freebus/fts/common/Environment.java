@@ -2,6 +2,8 @@ package org.freebus.fts.common;
 
 import java.io.File;
 
+import org.apache.log4j.BasicConfigurator;
+
 /**
  * System specific settings.
  */
@@ -13,6 +15,9 @@ public final class Environment
 
    static
    {
+      // Configure Log4J
+      BasicConfigurator.configure();
+
       osname = System.getProperty("os.name", "").toLowerCase();
       if (osname.startsWith("windows"))
       {
