@@ -10,7 +10,7 @@ import javax.persistence.Table;
  * Functional entities are for grouping of the virtual devices.
  */
 @Entity
-@Table(name = "functional_entry")
+@Table(name = "functional_entity")
 public class FunctionalEntity
 {
    @Id

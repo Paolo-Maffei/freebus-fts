@@ -4,8 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 
 /**
@@ -20,16 +26,19 @@ public class CatalogEntry implements Serializable
    private static final long serialVersionUID = 4022059156749728267L;
 
    @Id
-   @Column(name = "catalog_entry_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenCatalogEntryId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "catalog_entry_id", nullable = false)
    private int id;
 
    @Column(name = "entry_name", nullable = false)
    private String name;
 
-   @Column(name = "manufacturer_id", columnDefinition = "INT")
-   private int manufacturerId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
+   private Manufacturer manufacturer;
 
-   @Column(name = "product_id", columnDefinition = "INT")
+   @Column(name = "product_id")
    private int productId;
 
    @Column(name = "entry_width_in_modules", columnDefinition = "INT")
@@ -60,12 +69,20 @@ public class CatalogEntry implements Serializable
    /**
     * Create a catalog-entry object.
     */
-   public CatalogEntry(int id, String name, int manufacturerId, int productId)
+   public CatalogEntry(int id, String name, Manufacturer manufacturer, int productId)
    {
       this.id = id;
       this.name = name;
-      this.manufacturerId = manufacturerId;
+      this.manufacturer = manufacturer;
       this.productId = productId;
+   }
+
+   /**
+    * Create a catalog-entry object.
+    */
+   public CatalogEntry(String name, Manufacturer manufacturer)
+   {
+      this(0, name, manufacturer, 0);
    }
 
    /**
@@ -85,11 +102,11 @@ public class CatalogEntry implements Serializable
    }
 
    /**
-    * @return the manufacturer id.
+    * @return the manufacturer.
     */
-   public int getManufacturerId()
+   public Manufacturer getManufacturer()
    {
-      return manufacturerId;
+      return manufacturer;
    }
 
    /**
@@ -214,7 +231,7 @@ public class CatalogEntry implements Serializable
       if (o == this) return true;
       if (!(o instanceof CatalogEntry)) return false;
       final CatalogEntry oo = (CatalogEntry) o;
-      return id == oo.id && manufacturerId == oo.manufacturerId && productId == oo.productId;
+      return id == oo.id && manufacturer == oo.manufacturer && productId == oo.productId;
    }
 
    /**

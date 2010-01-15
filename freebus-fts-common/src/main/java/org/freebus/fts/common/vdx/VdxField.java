@@ -8,14 +8,14 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.Target;
 
 /**
- * Describes a field in a vd_ file.
+ * Describes a field in a VD_ file.
  */
 @Target({METHOD, FIELD}) 
 @Retention(RUNTIME)
 public @interface VdxField
 {
    /**
-    * The name of the field.
+    * The name of the field in a VD_ file.
     */
    public String name();
 }

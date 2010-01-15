@@ -101,7 +101,7 @@ public final class CatalogEntryDetails extends JPanel
    public void setCatalogEntry(CatalogEntry entry)
    {
       entName.setText(entry.getName());
-      entManufacturer.setText("" + entry.getManufacturerId());
+      entManufacturer.setText(entry.getManufacturer().getName());
       entOrderNumber.setText(entry.getOrderNumber());
       entSeries.setText(entry.getSeries());
       entColor.setText(entry.getColor());

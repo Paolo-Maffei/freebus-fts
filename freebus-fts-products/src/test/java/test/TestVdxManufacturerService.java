@@ -1,6 +1,5 @@
 package test;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import org.freebus.fts.products.Manufacturer;

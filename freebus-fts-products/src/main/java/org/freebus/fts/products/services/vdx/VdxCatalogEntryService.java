@@ -89,11 +89,10 @@ public final class VdxCatalogEntryService implements CatalogEntryService
          ids.add(device.getCatalogEntryId());
 
       final List<CatalogEntry> result = new LinkedList<CatalogEntry>();
-      final int manufacturerId = m.getId();
 
       for (CatalogEntry entry: entries)
       {
-         if (entry.getManufacturerId() == manufacturerId && ids.contains(entry.getId()))
+         if (entry.getManufacturer() == m && ids.contains(entry.getId()))
             result.add(entry);
       }
 
