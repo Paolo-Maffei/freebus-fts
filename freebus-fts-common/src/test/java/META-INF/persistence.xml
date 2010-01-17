@@ -28,5 +28,11 @@
   <class>test.entities.TestFunctionalEntity</class>
   <class>test.entities.TestManufacturer2</class>
  </persistence-unit>
+  
+ <persistence-unit name="with-children">
+  <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+  <class>test.entities.TestManufacturer</class>
+  <class>test.entities.TestFunctionalEntityTree</class>
+ </persistence-unit>
  
 </persistence>

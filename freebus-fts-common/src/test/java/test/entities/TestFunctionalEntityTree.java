@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.freebus.fts.common.vdx.VdxField;
+
 
 /**
  * Functional entities are for grouping of the virtual devices.
@@ -15,7 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "functional_entity")
-public class TestFunctionalEntity
+public class TestFunctionalEntityTree
 {
    @Id
    @Column(name = "functional_entity_id", nullable = false)
@@ -31,8 +33,10 @@ public class TestFunctionalEntity
    @Column(name = "functional_entity_description")
    public String description;
 
-   @Column(name = "fun_functional_entity_id")
-   public int parentId = 0;
+   @VdxField(name = "fun_functional_entity_id")
+   @ManyToOne(fetch = FetchType.EAGER, optional = false)
+   @JoinColumn(name = "parent_id", nullable = true)
+   public TestFunctionalEntityTree parent;
 
    /**
     * @return a hash-code for the object.
@@ -50,8 +54,8 @@ public class TestFunctionalEntity
    public boolean equals(final Object o)
    {
       if (o==this) return true;
-      if (!(o instanceof TestFunctionalEntity)) return false;
-      final TestFunctionalEntity oo = (TestFunctionalEntity)o;
+      if (!(o instanceof TestFunctionalEntityTree)) return false;
+      final TestFunctionalEntityTree oo = (TestFunctionalEntityTree)o;
       return id == oo.id && manufacturer == oo.manufacturer;
    }
 }

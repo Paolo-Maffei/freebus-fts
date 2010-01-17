@@ -7,6 +7,7 @@ import junit.framework.TestCase;
 import org.freebus.fts.common.vdx.VdxEntityManager;
 
 import test.entities.TestFunctionalEntity;
+import test.entities.TestFunctionalEntityTree;
 import test.entities.TestManufacturer;
 
 public class TestVdxEntityManager extends TestCase
@@ -50,7 +51,7 @@ public class TestVdxEntityManager extends TestCase
       assertTrue(exceptionThrown);
    }
 
-   public final void testFindAll() throws Exception
+   public final void testFindAllSimple() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
       assertNotNull(mgr);
@@ -75,7 +76,7 @@ public class TestVdxEntityManager extends TestCase
       assertEquals("Busch-Jaeger Elektro", manu.name);
    }
 
-   public final void testFindAll2() throws Exception
+   public final void testFindAllUniDirectionalReference() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
       assertNotNull(mgr);
@@ -91,5 +92,31 @@ public class TestVdxEntityManager extends TestCase
       TestFunctionalEntity ent = (TestFunctionalEntity) obj;
       assertNotNull(ent.manufacturer);
       assertEquals(2, ent.manufacturer.id);
+   }
+
+   public final void testFindAllBiDirectionalReference() throws Exception
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "with-children");
+      assertNotNull(mgr);
+
+      @SuppressWarnings("unchecked")
+      List<TestFunctionalEntityTree> lst = (List<TestFunctionalEntityTree>) mgr.fetchAll(TestFunctionalEntityTree.class);
+      assertNotNull(lst);
+      assertEquals(2, lst.size());
+
+      Object obj = lst.get(0);
+      assertNotNull(obj);
+      assertTrue(obj instanceof TestFunctionalEntityTree);
+      TestFunctionalEntityTree ent = (TestFunctionalEntityTree) obj;
+      assertNotNull(ent.manufacturer);
+      assertEquals(2, ent.manufacturer.id);
+
+      Object childObj = lst.get(1);
+      assertNotNull(childObj);
+      assertTrue(childObj instanceof TestFunctionalEntityTree);
+      TestFunctionalEntityTree childEnt = (TestFunctionalEntityTree) childObj;
+      assertNotNull(childEnt.manufacturer);
+      assertEquals(2, childEnt.manufacturer.id);
+      assertEquals(ent, childEnt.parent);
    }
 }

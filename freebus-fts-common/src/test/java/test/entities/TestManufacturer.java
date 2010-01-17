@@ -8,11 +8,14 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.common.vdx.VdxEntity;
+
 /**
  * A manufacturer. Used for unit-tests only!
  */
 @Entity
-@Table(name = "manufacturer")
+@VdxEntity(name = "manufacturer")
+@Table(name = "manu")
 public class TestManufacturer
 {
    @Id

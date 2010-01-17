@@ -22,7 +22,5 @@ public class TestProductsImporter extends PersistenceTestCase
       assertFalse(devs.isEmpty());
 
       importer.copy(devs.get(0));
-
-      
    }
 }

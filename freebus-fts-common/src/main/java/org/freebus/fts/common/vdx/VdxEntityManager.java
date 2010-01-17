@@ -1,29 +1,23 @@
 package org.freebus.fts.common.vdx;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.PersistenceException;
-import javax.persistence.Table;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
+import org.freebus.fts.common.vdx.internal.VdxEntityInfo;
+import org.freebus.fts.common.vdx.internal.VdxEntityInspector;
+
 
 /**
  * A simple entity manager that holds the entities of a VD_ file.
+ * Access methods are {@link #fetch(Class, Object)} to fetch a single entity
+ * by key, and {@link #fetchAll(Class)} to fetch all entities of one type.
  * 
  * Restrictions:
  * 
@@ -32,30 +26,8 @@ import org.w3c.dom.NodeList;
  */
 public final class VdxEntityManager
 {
-   private class EntityInfo
-   {
-      // The VD_ section name of the entity
-      public String name;
-
-      // The class of the entity
-      public Class<?> clazz;
-
-      // The @Id field, if any
-      public Field id;
-
-      // All annotated fields that we will process
-      public final Map<String, Field> fields = new HashMap<String, Field>();
-
-      // All objects of this entity type
-      public Vector<Object> objs;
-
-      // The @Id's of the objects in objs
-      public Map<String, Object> ids;
-   }
-
    private final VdxFileReader reader;
-   private final Map<String, EntityInfo> nameInfos = new HashMap<String, EntityInfo>();
-   private final Map<Class<?>, EntityInfo> classInfos = new HashMap<Class<?>, EntityInfo>();
+   private final VdxEntityInspector inspector;
 
    /**
     * Create an entity-manager object that works on the VD_ file fileName
@@ -68,14 +40,14 @@ public final class VdxEntityManager
     */
    public VdxEntityManager(String fileName, String persistenceUnitName) throws PersistenceException
    {
-      scanClasses(persistenceUnitName);
+      inspector = new VdxEntityInspector(persistenceUnitName);
       try
       {
          reader = new VdxFileReader(fileName);
       }
       catch (IOException e)
       {
-         throw new PersistenceException("failed to read file " + fileName, e);
+         throw new PersistenceException("Failed to read file " + fileName, e);
       }
    }
 
@@ -101,22 +73,22 @@ public final class VdxEntityManager
     */
    public List<?> fetchAll(Class<?> entityClass) throws PersistenceException
    {
-      final EntityInfo info = classInfos.get(entityClass);
+      final VdxEntityInfo info = inspector.getInfo(entityClass);
       if (info == null)
          throw new PersistenceException("Class " + entityClass.getCanonicalName() + " is missing in persistence.xml");
 
-      if (info.objs == null)
+      if (info.getObjs() == null)
       {
          loadEntities(info);
-         if (info.objs == null)
+         if (info.getObjs() == null)
             return null;
       }
 
-      final int num = info.objs.size();
+      final int num = info.getObjs().size();
       if (num <= 0)
          return null;
 
-      return info.objs;
+      return info.getObjs();
    }
 
    /**
@@ -130,38 +102,38 @@ public final class VdxEntityManager
     */
    public <T extends Object> T fetch(Class<T> entityClass, Object id) throws PersistenceException
    {
-      final EntityInfo info = classInfos.get(entityClass);
+      final VdxEntityInfo info = inspector.getInfo(entityClass);
       if (info == null)
          throw new PersistenceException("Class " + entityClass.getCanonicalName() + " is missing in persistence.xml");
 
-      if (info.objs == null)
+      if (info.getObjs() == null)
       {
          loadEntities(info);
-         if (info.objs == null)
+         if (info.getObjs() == null)
             return null;
       }
 
       @SuppressWarnings("unchecked")
-      final T result = (T) info.ids.get(id.toString());
+      final T result = (T) info.getIds().get(id.toString());
 
       return result;
    }
 
    /**
     * Load all entities for the entity-info info from the VD_ file and store
-    * them in the class-info's objects vector.
+    * them in the entity-info's objects vector.
     * 
     * @param info - The entity-info for which the entities are loaded.
     * @throws PersistenceException
     */
-   private void loadEntities(final EntityInfo info) throws PersistenceException
+   private void loadEntities(final VdxEntityInfo info) throws PersistenceException
    {
-      final Class<?> entityClass = info.clazz;
+      final Class<?> entityClass = info.getClazz();
       VdxSection section;
 
       try
       {
-         section = reader.getSection(info.name);
+         section = reader.getSection(info.getName());
          if (section == null)
             return;
       }
@@ -175,6 +147,9 @@ public final class VdxEntityManager
       final Map<String, Object> ids = new HashMap<String, Object>();
       Object obj;
       String id;
+
+      info.setObjs(objs);
+      info.setIds(ids);
 
       try
       {
@@ -197,18 +172,15 @@ public final class VdxEntityManager
       {
          throw new PersistenceException("Could not create an instance of " + entityClass.getName());
       }
-
-      info.objs = objs;
-      info.ids = ids;
    }
 
    /**
-    * Initialize the object obj with the idx-th record of the given section.
+    * Set the fields of the object obj with the idx-th record of the given section.
     * 
     * @return The contents of the object's @{@link Id} field as {@link String}.
     * @throws PersistenceException
     */
-   private String initObject(Object obj, EntityInfo info, VdxSection section, int idx) throws PersistenceException
+   private String initObject(Object obj, VdxEntityInfo info, VdxSection section, int idx) throws PersistenceException
    {
       final String[] fieldNames = section.getHeader().fields;
       String fieldName, value;
@@ -221,7 +193,7 @@ public final class VdxEntityManager
             fieldName = fieldNames[i];
             value = section.getValue(idx, i);
 
-            final Field field = info.fields.get(fieldName);
+            final Field field = info.getField(fieldName);
             if (field == null)
                continue;
 
@@ -259,7 +231,7 @@ public final class VdxEntityManager
                   field.setDouble(obj, 0.0);
                else field.setDouble(obj, Double.parseDouble(value));
             }
-            else if (classInfos.containsKey(type))
+            else if (inspector.hasClass(type))
             {
                if (value.isEmpty())
                {
@@ -277,7 +249,7 @@ public final class VdxEntityManager
                throw new Exception("Unsupported field class: " + field.getType().getName());
             }
 
-            if (field == info.id)
+            if (field == info.getId())
                idValue = value;
 
             if (!accessible)
@@ -291,159 +263,5 @@ public final class VdxEntityManager
       }
 
       return idValue;
-   }
-
-   /**
-    * Scan all classes from the persistence.xml file.
-    * 
-    * @throws Exception
-    */
-   private synchronized void scanClasses(String persistenceUnitName) throws PersistenceException
-   {
-      final Node persistenceUnitNode = loadPersistenceUnit("META-INF/persistence.xml", persistenceUnitName);
-
-      nameInfos.clear();
-
-      final NodeList classNodes = persistenceUnitNode.getChildNodes();
-      for (int i = 0; i < classNodes.getLength(); ++i)
-      {
-         final Node classNode = classNodes.item(i);
-         if (!classNode.getNodeName().equals("class"))
-            continue;
-
-         scanClass(classNode.getTextContent().trim());
-      }
-   }
-
-   /**
-    * Scan the class with the given class-name.
-    * 
-    * @param className - The name of the class that is to be scanned.
-    * 
-    * @throws Exception
-    */
-   private void scanClass(String className) throws PersistenceException
-   {
-      Class<?> clazz;
-      try
-      {
-         clazz = getClass().getClassLoader().loadClass(className);
-      }
-      catch (Exception e)
-      {
-         throw new PersistenceException(e);
-      }
-
-      final String entityName = getEntityNameOf(clazz).toLowerCase();
-      if (nameInfos.containsKey(entityName))
-      {
-         throw new PersistenceException("Entity name " + entityName + " is not unique. Used for " + className
-               + " and for " + nameInfos.get(entityName).clazz.getCanonicalName());
-      }
-
-      final EntityInfo info = new EntityInfo();
-      info.name = entityName;
-      info.clazz = clazz;
-
-      scanClassFields(clazz, info);
-
-      nameInfos.put(entityName, info);
-      classInfos.put(clazz, info);
-   }
-
-   /**
-    * Scan the fields of the class clazz and put the annotated fields into the
-    * info's fields map.
-    */
-   private void scanClassFields(final Class<?> clazz, final EntityInfo info)
-   {
-      final Class<?> superClazz = clazz.getSuperclass();
-      if (superClazz != null && superClazz.getAnnotation(Entity.class) != null)
-         scanClassFields(superClazz, info);
-
-      for (Field field : clazz.getDeclaredFields())
-      {
-         final Id idField = field.getAnnotation(Id.class);
-         if (idField != null)
-            info.id = field;
-
-         final VdxField vdxField = field.getAnnotation(VdxField.class);
-         if (vdxField != null)
-         {
-            info.fields.put(vdxField.name(), field);
-            continue;
-         }
-
-         final JoinColumn jcolField = field.getAnnotation(JoinColumn.class);
-         if (jcolField != null && !jcolField.name().isEmpty())
-         {
-            info.fields.put(jcolField.name(), field);
-         }
-
-         final Column colField = field.getAnnotation(Column.class);
-         if (colField != null && !colField.name().isEmpty())
-         {
-            info.fields.put(colField.name(), field);
-         }
-      }
-   }
-
-   /**
-    * @return the entity name of the class clazz.
-    * 
-    * @throws PersistenceException If the class does not have a proper
-    *            annotation.
-    */
-   private String getEntityNameOf(Class<?> clazz) throws PersistenceException
-   {
-      final Entity entity = clazz.getAnnotation(Entity.class);
-      if (entity == null)
-         throw new PersistenceException("Class " + clazz.getCanonicalName() + " contains no entity annotation");
-
-      final VdxEntity vdxEntity = clazz.getAnnotation(VdxEntity.class);
-      if (vdxEntity != null)
-         return vdxEntity.name();
-
-      if (entity != null && !entity.name().isEmpty())
-         return entity.name();
-
-      final Table table = clazz.getAnnotation(Table.class);
-      if (table != null && !table.name().isEmpty())
-         return table.name();
-
-      return clazz.getSimpleName();
-   }
-
-   /**
-    * Load the persistence unit DOM nodes from the file fileName.
-    * 
-    * @throws PersistenceException
-    */
-   private Node loadPersistenceUnit(String fileName, String persistenceUnitName) throws PersistenceException
-   {
-      try
-      {
-         final InputStream in = getClass().getClassLoader().getResourceAsStream(fileName);
-         final DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-         final DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-         final Document doc = docBuilder.parse(in);
-         final Element root = doc.getDocumentElement();
-
-         final NodeList persUnits = root.getElementsByTagName("persistence-unit");
-         for (int i = 0; i < persUnits.getLength(); ++i)
-         {
-            final Node node = persUnits.item(i);
-            final String name = node.getAttributes().getNamedItem("name").getNodeValue();
-
-            if (persistenceUnitName.equals(name))
-               return node;
-         }
-      }
-      catch (Exception e)
-      {
-         throw new PersistenceException(e);
-      }
-
-      throw new PersistenceException("No persistence-unit named " + persistenceUnitName + " found in " + fileName);
    }
 }
