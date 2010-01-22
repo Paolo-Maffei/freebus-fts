@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javax.persistence.PersistenceException;
 
+import org.freebus.fts.common.vdx.VdxEntityManager;
 import org.freebus.fts.common.vdx.VdxFileReader;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
@@ -23,6 +24,7 @@ import org.freebus.fts.products.services.VirtualDeviceService;
 public final class VdxProductsFactory implements ProductsFactory
 {
    private VdxFileReader reader;
+   private VdxEntityManager manager;
 
    private CatalogEntryService catalogEntryService;
    private FunctionalEntityService functionalEntityService;
@@ -41,6 +43,7 @@ public final class VdxProductsFactory implements ProductsFactory
    {
       try
       {
+         manager = new VdxEntityManager(fileName);
          reader = new VdxFileReader(fileName);
       }
       catch (IOException e)
@@ -52,21 +55,21 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public CatalogEntryService getCatalogEntryService()
    {
-      if (catalogEntryService == null) catalogEntryService = new VdxCatalogEntryService(reader, getVirtualDeviceService());
+      if (catalogEntryService == null) catalogEntryService = new VdxCatalogEntryService(manager, getVirtualDeviceService());
       return catalogEntryService;
    }
 
    @Override
    public FunctionalEntityService getFunctionalEntityService()
    {
-      if (functionalEntityService == null) functionalEntityService = new VdxFunctionalEntityService(reader);
+      if (functionalEntityService == null) functionalEntityService = new VdxFunctionalEntityService(manager);
       return functionalEntityService;
    }
 
    @Override
    public ManufacturerService getManufacturerService()
    {
-      if (manufacturerService == null) manufacturerService = new VdxManufacturerService(reader, getFunctionalEntityService());
+      if (manufacturerService == null) manufacturerService = new VdxManufacturerService(manager, getFunctionalEntityService());
       return manufacturerService;
    }
 
@@ -80,7 +83,7 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public VirtualDeviceService getVirtualDeviceService()
    {
-      if (virtualDeviceService == null) virtualDeviceService = new VdxVirtualDeviceService(reader);
+      if (virtualDeviceService == null) virtualDeviceService = new VdxVirtualDeviceService(manager);
       return virtualDeviceService;
    }
 

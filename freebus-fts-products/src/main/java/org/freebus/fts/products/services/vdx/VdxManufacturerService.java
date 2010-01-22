@@ -1,15 +1,11 @@
 package org.freebus.fts.products.services.vdx;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxFileReader;
+import org.freebus.fts.common.vdx.VdxEntityManager;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
@@ -19,57 +15,28 @@ import org.freebus.fts.products.services.ManufacturerService;
  */
 public final class VdxManufacturerService implements ManufacturerService
 {
-   private final VdxFileReader reader;
-   private FunctionalEntityService functionalEntityService;
-   private List<Manufacturer> manufacturers, activeManufacturers;
+   private final VdxEntityManager manager;
+   private final FunctionalEntityService functionalEntityService;
+   private List<Manufacturer> activeManufacturers;
 
-   VdxManufacturerService(VdxFileReader reader, FunctionalEntityService functionalEntityService)
+   VdxManufacturerService(VdxEntityManager manager, FunctionalEntityService functionalEntityService)
    {
-      this.reader = reader;
+      this.manager = manager;
       this.functionalEntityService = functionalEntityService;
-   }
-
-   private synchronized void fetchData() throws PersistenceException
-   {
-      if (manufacturers != null) return;
-
-      try
-      {
-         final Object[] arr = reader.getSectionEntries("manufacturer", Manufacturer.class);
-         Arrays.sort(arr, new Comparator<Object>()
-         {
-            @Override
-            public int compare(Object a, Object b)
-            {
-               return ((Manufacturer) a).getName().compareTo(((Manufacturer) b).getName());
-            }
-         });
-         manufacturers = new ArrayList<Manufacturer>(arr.length);
-         for (Object obj : arr)
-            manufacturers.add((Manufacturer) obj);
-      }
-      catch (IOException e)
-      {
-         throw new PersistenceException(e);
-      }
    }
 
    @Override
    public Manufacturer getManufacturer(int id) throws PersistenceException
    {
-      if (manufacturers == null) fetchData();
-
-      for (Manufacturer manufacturer : manufacturers)
-         if (manufacturer.getId() == id) return manufacturer;
-
-      throw new PersistenceException("Object not found, id=" + Integer.toString(id));
+      return manager.fetch(Manufacturer.class, id);
    }
 
    @Override
    public List<Manufacturer> getManufacturers() throws PersistenceException
    {
-      if (manufacturers == null) fetchData();
-      return manufacturers;
+      @SuppressWarnings("unchecked")
+      final List<Manufacturer> result = (List<Manufacturer>) manager.fetchAll(Manufacturer.class);
+      return result; 
    }
 
    @Override
@@ -77,12 +44,14 @@ public final class VdxManufacturerService implements ManufacturerService
    {
       if (activeManufacturers == null)
       {
-         synchronized (reader)
+         synchronized (manager)
          {
             if (activeManufacturers == null)
             {
                activeManufacturers = new LinkedList<Manufacturer>();
-               if (manufacturers == null) fetchData();
+               
+               @SuppressWarnings("unchecked")
+               final List<Manufacturer> manufacturers = (List<Manufacturer>) manager.fetchAll(Manufacturer.class);
 
                for (Manufacturer m : manufacturers)
                {

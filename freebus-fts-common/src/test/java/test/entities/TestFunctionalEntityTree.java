@@ -1,11 +1,15 @@
 package test.entities;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.freebus.fts.common.vdx.VdxField;
@@ -33,10 +37,15 @@ public class TestFunctionalEntityTree
    @Column(name = "functional_entity_description")
    public String description;
 
-   @VdxField(name = "fun_functional_entity_id")
    @ManyToOne(fetch = FetchType.EAGER, optional = false)
-   @JoinColumn(name = "parent_id", nullable = true)
+   @JoinColumn(name = "parent_id")
+   @VdxField(name = "fun_functional_entity_id")
    public TestFunctionalEntityTree parent;
+
+   @OneToMany(fetch = FetchType.EAGER)
+   @JoinColumn(name = "parent_id")
+   @VdxField(name = "functional_entity_id")
+   public Set<TestFunctionalEntityTree> childs = new HashSet<TestFunctionalEntityTree>();
 
    /**
     * @return a hash-code for the object.

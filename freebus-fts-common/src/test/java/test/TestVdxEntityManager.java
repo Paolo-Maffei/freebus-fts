@@ -1,6 +1,7 @@
 package test;
 
 import java.util.List;
+import java.util.Set;
 
 import junit.framework.TestCase;
 
@@ -118,5 +119,10 @@ public class TestVdxEntityManager extends TestCase
       assertNotNull(childEnt.manufacturer);
       assertEquals(2, childEnt.manufacturer.id);
       assertEquals(ent, childEnt.parent);
+
+      final Set<TestFunctionalEntityTree> childs = ent.childs;
+      assertNotNull(childs);
+      assertEquals(1, childs.size());
+      assertEquals(childObj, childs.iterator().next());
    }
 }

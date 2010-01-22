@@ -38,16 +38,17 @@ public class CatalogEntry implements Serializable
    @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
    private Manufacturer manufacturer;
 
-   @Column(name = "product_id")
-   private int productId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "product_id")
+   private Product product;
 
-   @Column(name = "entry_width_in_modules", columnDefinition = "INT")
+   @Column(name = "entry_width_in_modules")
    private int widthModules;
 
-   @Column(name = "entry_width_in_millimeters", columnDefinition = "INT")
+   @Column(name = "entry_width_in_millimeters")
    private int widthMM;
 
-   @Column(name = "din_flag", columnDefinition = "BOOLEAN", nullable = false)
+   @Column(name = "din_flag", nullable = false)
    private boolean din;
 
    @Column(name = "order_number")
@@ -69,12 +70,12 @@ public class CatalogEntry implements Serializable
    /**
     * Create a catalog-entry object.
     */
-   public CatalogEntry(int id, String name, Manufacturer manufacturer, int productId)
+   public CatalogEntry(int id, String name, Manufacturer manufacturer, Product product)
    {
       this.id = id;
       this.name = name;
       this.manufacturer = manufacturer;
-      this.productId = productId;
+      this.product = product;
    }
 
    /**
@@ -82,7 +83,7 @@ public class CatalogEntry implements Serializable
     */
    public CatalogEntry(String name, Manufacturer manufacturer)
    {
-      this(0, name, manufacturer, 0);
+      this(0, name, manufacturer, null);
    }
 
    /**
@@ -110,11 +111,11 @@ public class CatalogEntry implements Serializable
    }
 
    /**
-    * @return the product id.
+    * @return the product.
     */
-   public int getProductId()
+   public Product getProduct()
    {
-      return productId;
+      return product;
    }
 
    /**
@@ -231,7 +232,7 @@ public class CatalogEntry implements Serializable
       if (o == this) return true;
       if (!(o instanceof CatalogEntry)) return false;
       final CatalogEntry oo = (CatalogEntry) o;
-      return id == oo.id && manufacturer == oo.manufacturer && productId == oo.productId;
+      return id == oo.id && manufacturer == oo.manufacturer && product == oo.product;
    }
 
    /**

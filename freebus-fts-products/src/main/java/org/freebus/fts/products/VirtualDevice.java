@@ -2,35 +2,45 @@ package org.freebus.fts.products;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.TableGenerator;
 
 /**
  * A virtual-device.
  */
 @Entity
-@Table(name = "virtual_device", uniqueConstraints = @UniqueConstraint(columnNames = "virtual_device_id"))
+@Table(name = "virtual_device")
 public class VirtualDevice
 {
    @Id
-   @Column(name = "virtual_device_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenVirtualDeviceId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "virtual_device_id", nullable = false)
    private int id;
-
-   @Column(name = "catalog_entry_id", columnDefinition = "INT", nullable = false)
-   private int catalogEntryId;
-
-   @Column(name = "functional_entity_id", columnDefinition = "INT", nullable = false)
-   private int functionalEntityId;
-
-   @Column(name = "program_id", columnDefinition = "INT")
-   private int programId;
 
    @Column(name = "virtual_device_name", length = 50)
    private String name;
 
    @Column(name = "virtual_device_description", length = 80)
    private String description;
+
+   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+   @JoinColumn(name = "catalog_entry_id", nullable = false)
+   public CatalogEntry catalogEntry;
+
+   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+   @JoinColumn(name = "functional_entity_id", nullable = false)
+   public FunctionalEntity functionalEntity;
+
+   @ManyToOne(fetch = FetchType.LAZY, optional = true)
+   @JoinColumn(name = "program_id", nullable = true)
+   private Program program;
 
    /**
     * Create an empty virtual-device object.
@@ -42,13 +52,13 @@ public class VirtualDevice
    /**
     * Create a virtual-device object.
     */
-   public VirtualDevice(int id, String name, String description, int functionalEntityId, int catalogEntryId)
+   public VirtualDevice(int id, String name, String description, FunctionalEntity functionalEntity, CatalogEntry catalogEntry)
    {
       this.id = id;
       this.name = name;
       this.description = description;
-      this.functionalEntityId = functionalEntityId;
-      this.catalogEntryId = catalogEntryId;
+      this.functionalEntity = functionalEntity;
+      this.catalogEntry = catalogEntry;
    }
 
    /**
@@ -60,11 +70,11 @@ public class VirtualDevice
    }
    
    /**
-    * @return the functional entity id.
+    * @return the functional entity.
     */
-   public int getFunctionalEntityId()
+   public FunctionalEntity getFunctionalEntity()
    {
-      return functionalEntityId;
+      return functionalEntity;
    }
 
    /**
@@ -84,27 +94,27 @@ public class VirtualDevice
    }
 
    /**
-    * @return the id of the catalog entry.
+    * @return the catalog entry.
     */
-   public int getCatalogEntryId()
+   public CatalogEntry getCatalogEntry()
    {
-      return catalogEntryId;
+      return catalogEntry;
    }
 
    /**
-    * Set the program id.
+    * Set the program.
     */
-   public void setProgramId(int programId)
+   public void setProgram(Program program)
    {
-      this.programId = programId;
+      this.program = program;
    }
 
    /**
-    * @return the program id.
+    * @return the program.
     */
-   public int getProgramId()
+   public Program getProgram()
    {
-      return programId;
+      return program;
    }
 
    /**
@@ -125,7 +135,7 @@ public class VirtualDevice
       if (o == this) return true;
       if (!(o instanceof VirtualDevice)) return false;
       final VirtualDevice oo = (VirtualDevice) o;
-      return id == oo.id && catalogEntryId == oo.catalogEntryId;
+      return id == oo.id && catalogEntry == oo.catalogEntry;
    }
 
    /**

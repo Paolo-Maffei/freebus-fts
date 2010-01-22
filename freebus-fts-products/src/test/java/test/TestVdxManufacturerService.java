@@ -5,6 +5,8 @@ import java.util.List;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 
+import test.internal.PersistenceTestCase;
+
 public class TestVdxManufacturerService extends PersistenceTestCase
 {
    private ManufacturerService manuService;
@@ -12,6 +14,8 @@ public class TestVdxManufacturerService extends PersistenceTestCase
    @Override
    public void setUp() throws Exception
    {
+      super.setUp();
+
       if (manuService == null)
          manuService = getVdxProductsFactory().getManufacturerService();
    }

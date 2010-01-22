@@ -1,13 +1,16 @@
 package test;
 
 import java.util.Set;
+import java.util.Vector;
 
 import junit.framework.TestCase;
 
+import org.freebus.fts.common.vdx.internal.VdxAssociation;
 import org.freebus.fts.common.vdx.internal.VdxEntityInfo;
 import org.freebus.fts.common.vdx.internal.VdxEntityInspector;
 
 import test.entities.TestFunctionalEntity;
+import test.entities.TestFunctionalEntityTree;
 import test.entities.TestManufacturer;
 import test.entities.TestManufacturer2;
 
@@ -52,5 +55,39 @@ public class TestVdxEntityInspector extends TestCase
       assertNotNull(info);
       assertTrue(info.isInspected());
       assertEquals("functional_entity", info.getName());
+   }
+
+   final public void testGetInfoOneToMany()
+   {
+      final VdxEntityInspector inspector = new VdxEntityInspector("with-children");
+      assertNotNull(inspector);
+
+      VdxEntityInfo info = inspector.getInfo(TestFunctionalEntityTree.class);
+      assertNotNull(info);
+      assertTrue(info.isInspected());
+      assertEquals("functional_entity", info.getName());
+
+      final Vector<VdxAssociation> assocs = info.getAssociations();
+      assertEquals(3, assocs.size());
+
+      // Expected member:  Manufacturer manufacturer
+      VdxAssociation assoc = assocs.get(0);
+      assertEquals("manufacturer", assoc.getField().getName());
+      assertEquals("manufacturer_id", assoc.getVdxFieldName());
+      assertEquals(TestManufacturer.class, assoc.getTargetClass());
+
+      // Expected member:  TestFunctionalEntityTree parent
+      assoc = assocs.get(1);
+      assertEquals("parent", assoc.getField().getName());
+      assertEquals("fun_functional_entity_id", assoc.getVdxFieldName());
+      assertEquals(TestFunctionalEntityTree.class, assoc.getTargetClass());
+
+      // Expected member:  Set<TestFunctionalEntityTree> childs
+      assoc = assocs.get(2);
+      assertEquals("childs", assoc.getField().getName());
+      assertEquals("functional_entity_id", assoc.getVdxFieldName());
+      assertEquals(TestFunctionalEntityTree.class, assoc.getTargetClass());
+      assertNotNull(assoc.getTargetField());
+      assertEquals("parent", assoc.getTargetField().getName());
    }
 }

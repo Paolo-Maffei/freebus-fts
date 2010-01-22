@@ -1,23 +1,28 @@
 package org.freebus.fts.common.vdx;
 
 import java.io.IOException;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.PersistenceException;
 
+import org.freebus.fts.common.vdx.internal.VdxAssociation;
 import org.freebus.fts.common.vdx.internal.VdxEntityInfo;
 import org.freebus.fts.common.vdx.internal.VdxEntityInspector;
 
-
 /**
- * A simple entity manager that holds the entities of a VD_ file.
- * Access methods are {@link #fetch(Class, Object)} to fetch a single entity
- * by key, and {@link #fetchAll(Class)} to fetch all entities of one type.
+ * A simple entity manager that holds the entities of a VD_ file. Access methods
+ * are {@link #fetch(Class, Object)} to fetch a single entity by key, and
+ * {@link #fetchAll(Class)} to fetch all entities of one type.
  * 
  * Restrictions:
  * 
@@ -153,38 +158,105 @@ public final class VdxEntityManager
 
       try
       {
+         //
+         // Create the objects and set all non-entity values
+         //
          for (int i = 0; i < num; ++i)
          {
             obj = entityClass.newInstance();
-            id = initObject(obj, info, section, i);
+            id = materializeObject(obj, info, section, i);
 
             objs.add(obj);
 
             if (id != null && !id.isEmpty())
                ids.put(id, obj);
          }
+
+         //
+         // Set all entity values
+         //
+         final Vector<VdxAssociation> assocs = info.getAssociations();
+         if (assocs != null && !assocs.isEmpty())
+         {
+            for (VdxAssociation assoc : assocs)
+            {
+               final Class<?> targetClass = assoc.getTargetClass();
+               final VdxEntityInfo targetInfo = inspector.getInfo(targetClass);
+               if (targetInfo == null)
+               {
+                  throw new PersistenceException("Class " + targetClass.getCanonicalName()
+                        + " is missing in persistence.xml");
+               }
+
+               final int vdxFieldId = section.getHeader().getIndexOf(assoc.getVdxFieldName());
+               if (vdxFieldId < 0)
+               {
+                  throw new PersistenceException(info.getClazz() + ": VDX section " + info.getName() + " has no field "
+                        + assoc.getVdxFieldName());
+               }
+
+               for (int i = 0; i < num; ++i)
+               {
+                  obj = objs.get(i);
+                  final String value = section.getValue(i, vdxFieldId);
+
+                  final Annotation a = assoc.getType();
+                  if (a instanceof ManyToOne || a instanceof OneToOne)
+                  {
+                     final Object valueObj = fetch(assoc.getTargetClass(), value);
+                     final Field f = assoc.getField();
+                     final boolean accessible = f.isAccessible();
+                     if (!accessible)
+                        f.setAccessible(true);
+                     f.set(obj, valueObj);
+                     if (!accessible)
+                        f.setAccessible(false);
+                  }
+                  else if (a instanceof OneToMany)
+                  {
+                     @SuppressWarnings("unchecked")
+                     final Collection<Object> coll = (Collection<Object>) assoc.getField().get(obj);
+
+                     coll.clear();
+                     for (Object assocObj : fetchAll(assoc.getTargetClass()))
+                     {
+                        if (assoc.getTargetField().get(assocObj) == obj)
+                           coll.add(assocObj);
+                     }
+                  }
+                  else
+                  {
+                     throw new PersistenceException("Sorry, this annotation type is not implemented: " + a);
+                  }
+               }
+            }
+         }
       }
       catch (InstantiationException e)
       {
-         throw new PersistenceException("Could not create an instance of " + entityClass.getName());
+         throw new PersistenceException("Could not create an instance of " + entityClass.getName(), e);
       }
       catch (IllegalAccessException e)
       {
-         throw new PersistenceException("Could not create an instance of " + entityClass.getName());
+         throw new PersistenceException("Could not create an instance of " + entityClass.getName(), e);
       }
    }
 
    /**
-    * Set the fields of the object obj with the idx-th record of the given section.
+    * Set the fields of the object obj with the idx-th record of the given
+    * section. The fields that are entity objects or OneToMany/ManyToOne/...
+    * associations are not set by this method.
     * 
     * @return The contents of the object's @{@link Id} field as {@link String}.
     * @throws PersistenceException
     */
-   private String initObject(Object obj, VdxEntityInfo info, VdxSection section, int idx) throws PersistenceException
+   private String materializeObject(Object obj, VdxEntityInfo info, VdxSection section, int idx)
+         throws PersistenceException
    {
       final String[] fieldNames = section.getHeader().fields;
-      String fieldName, value;
+      String fieldName = null;
       String idValue = null;
+      String value;
 
       try
       {
@@ -207,6 +279,8 @@ public final class VdxEntityManager
             {
                if (value.isEmpty())
                   field.setInt(obj, 0);
+               else if (value.indexOf('.') >= 0)
+                  field.setInt(obj, (int) Double.parseDouble(value));
                else field.setInt(obj, Integer.parseInt(value));
             }
             else if (type == String.class)
@@ -231,19 +305,6 @@ public final class VdxEntityManager
                   field.setDouble(obj, 0.0);
                else field.setDouble(obj, Double.parseDouble(value));
             }
-            else if (inspector.hasClass(type))
-            {
-               if (value.isEmpty())
-               {
-                  field.set(obj, null);
-               }
-               else
-               {
-                  // Need to fetch the entity of another section/table
-                  final Object valueObj = fetch(type, value);
-                  field.set(obj, valueObj);
-               }
-            }
             else
             {
                throw new Exception("Unsupported field class: " + field.getType().getName());
@@ -259,7 +320,7 @@ public final class VdxEntityManager
       catch (Exception e)
       {
          throw new PersistenceException("Could not initialize object of type " + obj.getClass().getCanonicalName()
-               + " with VD_ file data", e);
+               + " field " + fieldName + " with data from the VD_ file", e);
       }
 
       return idValue;

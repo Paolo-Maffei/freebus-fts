@@ -3,7 +3,8 @@ package org.freebus.fts.common.vdx.internal;
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.Collection;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -41,7 +42,8 @@ public final class VdxEntityInspector
    private final String persistenceUnit;
 
    /**
-    * Create an entity-inspector that processes the classes of the default persistence unit.
+    * Create an entity-inspector that processes the classes of the default
+    * persistence unit.
     */
    public VdxEntityInspector()
    {
@@ -49,8 +51,9 @@ public final class VdxEntityInspector
    }
 
    /**
-    * Create an entity-inspector that processes the classes of a persistence unit.
-    *
+    * Create an entity-inspector that processes the classes of a persistence
+    * unit.
+    * 
     * @param persistenceUnit - The name of the persistence unit to be processed.
     */
    public VdxEntityInspector(String persistenceUnit)
@@ -71,14 +74,16 @@ public final class VdxEntityInspector
     * Get the information for a class. The class is inspected if required.
     * 
     * @param clazz - The class which information is requested.
-    *
+    * 
     * @return The information about the class.
-    * @throws PersistenceException - If the class is not found in the persistence unit of persistence.xml
+    * @throws PersistenceException - If the class is not found in the
+    *            persistence unit of persistence.xml
     */
    public VdxEntityInfo getInfo(Class<?> clazz)
    {
       final VdxEntityInfo info = classInfos.get(clazz);
-      if (info == null) throw new PersistenceException("Class not found in persistence unit " + persistenceUnit);
+      if (info == null)
+         throw new PersistenceException(clazz + " not found in persistence unit \"" + persistenceUnit + "\"");
 
       if (!info.isInspected())
          inspect(info);
@@ -87,13 +92,13 @@ public final class VdxEntityInspector
    }
 
    /**
-    * @return True if information about the given class is available.  
+    * @return True if information about the given class is available.
     */
    public boolean hasClass(Class<?> clazz)
    {
       return classInfos.containsKey(clazz);
    }
-   
+
    /**
     * Inspect the class that the info contains.
     */
@@ -117,69 +122,114 @@ public final class VdxEntityInspector
 
       for (Field field : clazz.getDeclaredFields())
       {
-         for (Annotation a: field.getAnnotations())
+         String fieldName = null;
+
+         final VdxField annoVdxField = field.getAnnotation(VdxField.class);
+         if (annoVdxField != null)
+         {
+            fieldName = annoVdxField.name();
+         }
+         else
+         {
+            final JoinColumn annoJoinColumn = field.getAnnotation(JoinColumn.class);
+            if (annoJoinColumn != null)
+            {
+               fieldName = annoJoinColumn.name();
+            }
+            else
+            {
+               final Column annoColumn = field.getAnnotation(Column.class);
+               if (annoColumn != null)
+               {
+                  fieldName = annoColumn.name();
+               }
+            }
+         }
+
+         if (fieldName == null)
+            continue;
+
+         for (Annotation a : field.getAnnotations())
          {
             if (a instanceof Id)
             {
                info.setId(field);
             }
-            else if (a instanceof VdxField)
-            {
-               info.addField(((VdxField) a).name(), field);
-            }
-            else if (a instanceof JoinColumn)
-            {
-               info.addField(((JoinColumn) a).name(), field);
-            }
-            else if (a instanceof Column)
-            {
-               info.addField(((Column) a).name(), field);               
-            }
             else if (a instanceof OneToMany)
             {
                final OneToMany aa = (OneToMany) a;
-               final Class<?> targetClass = getAssociationTargetClass(field.getClass());
-               final VdxAssociation assoc = new VdxAssociation(aa, field, targetClass);
+               final Class<?> entityClass = getAssociationEntityClass(field.getType(), field.getGenericType());
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, entityClass);
+               assoc.setTargetField(findTargetField(assoc.getTargetClass(), clazz));
                info.addAssociation(assoc);
+               fieldName = null;
             }
             else if (a instanceof ManyToMany)
             {
+               // Warning: ManyToMany is not properly implemented
+
                final ManyToMany aa = (ManyToMany) a;
-               final Class<?> targetClass = getAssociationTargetClass(field.getClass());
-               final VdxAssociation assoc = new VdxAssociation(aa, field, targetClass);
+               final Class<?> entityClass = getAssociationEntityClass(field.getType(), field.getGenericType());
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, entityClass);
+               assoc.setTargetField(findTargetField(assoc.getTargetClass(), clazz));
                info.addAssociation(assoc);
+               fieldName = null;
             }
             else if (a instanceof ManyToOne)
             {
                final ManyToOne aa = (ManyToOne) a;
-               final VdxAssociation assoc = new VdxAssociation(aa, field, field.getType());
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, field.getType());
                info.addAssociation(assoc);
+               fieldName = null;
             }
             else if (a instanceof OneToOne)
             {
                final OneToOne aa = (OneToOne) a;
-               final VdxAssociation assoc = new VdxAssociation(aa, field, field.getType());
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, field.getType());
                info.addAssociation(assoc);
+               fieldName = null;
             }
          }
+
+         if (fieldName != null)
+            info.addField(fieldName, field);
       }
    }
 
    /**
-    * @return The target entity class for an association.
+    * @return The field in the class clazz that is of the type fieldClazz.
     */
-   private Class<?> getAssociationTargetClass(Class<?> type)
+   private Field findTargetField(Class<?> clazz, Class<?> fieldClazz)
    {
-      if (Collection.class.isAssignableFrom(type))
+      for (Field field : clazz.getDeclaredFields())
       {
-         return type.getComponentType();
+         if (field.getGenericType() == fieldClazz)
+            return field;
+      }
+
+      return null;
+   }
+   
+   /**
+    * @return The entity class for an association.
+    */
+   private Class<?> getAssociationEntityClass(Class<?> type, Type genericType)
+   {
+      // See
+      // http://tutorials.jenkov.com/java-reflection/generics.html#fieldtypes
+
+      if (genericType instanceof ParameterizedType)
+      {
+         final ParameterizedType paramType = (ParameterizedType) genericType;
+         final Type[] argTypes = paramType.getActualTypeArguments();
+         return (Class<?>) argTypes[argTypes.length - 1];
       }
       return type;
    }
 
    /**
-    * Read the classes that shall be inspected from the persistence.xml file. Only
-    * loads the classes - the classes are inspected later on demand.
+    * Read the classes that shall be inspected from the persistence.xml file.
+    * Only loads the classes - the classes are inspected later on demand.
     * 
     * Called automatically by the constructor.
     * 

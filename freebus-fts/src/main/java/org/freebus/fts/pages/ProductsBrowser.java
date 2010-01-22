@@ -263,7 +263,7 @@ public class ProductsBrowser extends AbstractPage
          if (dao != null)
          {
             final List<FunctionalEntity> cats = dao.getFunctionalEntities(getSelectedManufacturer());
-            final Map<Integer, DefaultMutableTreeNode> parentNodes = new HashMap<Integer, DefaultMutableTreeNode>();
+            final Map<FunctionalEntity, DefaultMutableTreeNode> parentNodes = new HashMap<FunctionalEntity, DefaultMutableTreeNode>();
 
             for (int tries = 20; tries > 0 && !cats.isEmpty(); --tries)
             {
@@ -271,10 +271,10 @@ public class ProductsBrowser extends AbstractPage
                {
                   DefaultMutableTreeNode parentNode;
 
-                  final int parentId = cat.getParentId();
-                  if (parentId > 0)
+                  final FunctionalEntity parent = cat.getParent();
+                  if (parent != null)
                   {
-                     parentNode = parentNodes.get(parentId);
+                     parentNode = parentNodes.get(parent);
                      if (parentNode == null) continue;
                   }
                   else
@@ -285,7 +285,7 @@ public class ProductsBrowser extends AbstractPage
                   final DefaultMutableTreeNode node = new DefaultMutableTreeNode(cat, true);
                   parentNode.add(node);
 
-                  parentNodes.put(cat.getId(), node);
+                  parentNodes.put(cat, node);
                   cats.remove(cat);
                }
             }
@@ -336,11 +336,8 @@ public class ProductsBrowser extends AbstractPage
             int row = 0;
             for (VirtualDevice dev : devs)
             {
-               CatalogEntry entry = catalogEntryDAO.getCatalogEntry(dev.getCatalogEntryId());
-
                tbmEntries.setValueAt(dev, row, 0);
-               tbmEntries.setValueAt(entry, row, 1);
-
+               tbmEntries.setValueAt(dev.getCatalogEntry(), row, 1);
                ++row;
             }
          }

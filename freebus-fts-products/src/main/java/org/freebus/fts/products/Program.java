@@ -2,22 +2,29 @@ package org.freebus.fts.products;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.TableGenerator;
 
 /**
  * An application program.
  */
 @Entity
-@Table(name = "application_program", uniqueConstraints = @UniqueConstraint(columnNames = "program_id"))
+@Table(name = "application_program")
 public class Program
 {
    @Id
-   @Column(name = "program_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenProgramId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "program_id", nullable = false)
    private int id;
 
-   @Column(name = "mask_id", columnDefinition = "INT")
+   @Column(name = "mask_id")
    private int maskId;
 
    @Column(name = "program_name", length = 50)
@@ -29,53 +36,61 @@ public class Program
    @Column(name = "linkable")
    private boolean linkable;
 
-   @Column(name = "device_type", columnDefinition = "INT")
+   @Column(name = "device_type")
    private int deviceType;
 
-   @Column(name = "pei_type", columnDefinition = "INT")
+   @Column(name = "pei_type")
    private int peiType;
 
-   @Column(name = "address_tab_size", columnDefinition = "INT")
+   @Column(name = "address_tab_size")
    private int addrTabSize;
 
-   @Column(name = "assoctab_address", columnDefinition = "INT")
+   @Column(name = "assoctab_address")
    private int assocTabAddr;
 
-   @Column(name = "assoctab_size", columnDefinition = "INT")
+   @Column(name = "assoctab_size")
    private int assocTabSize;
 
-   @Column(name = "commstab_address", columnDefinition = "INT")
+   @Column(name = "commstab_address")
    private int commsTabAddr;
 
-   @Column(name = "commstab_size", columnDefinition = "INT")
+   @Column(name = "commstab_size")
    private int commsTabSize;
 
    @Column(name = "program_serial_number", length = 20)
    private String serial;
 
-   @Column(name = "manufacturer_id", columnDefinition = "INT")
-   private int manufacturerId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
+   private Manufacturer manufacturer;
 
    @Column(name = "eeprom_data", columnDefinition = "")
    private String eepromData;
 
-   @Column(name = "dynamic_management", columnDefinition = "BOOLEAN")
+   @Column(name = "dynamic_management")
    private boolean dynamicManagement;
 
-   @Column(name = "program_type", columnDefinition = "SMALLINT")
+   @Column(name = "program_type")
    private int programType;
 
-   @Column(name = "ram_size", columnDefinition = "INT")
+   @Column(name = "ram_size")
    private int ramSize;
 
-   @Column(name = "program_style", columnDefinition = "SMALLINT")
+   @Column(name = "program_style")
    private int programStyle;
 
    @Column(name = "is_polling_master")
    private boolean pollingMaster;
 
-   @Column(name = "number_of_polling_groups", columnDefinition = "SMALLINT")
+   @Column(name = "number_of_polling_groups")
    private int numPollingGroups;
+
+   /**
+    * Create an empty program object.
+    */
+   public Program()
+   {
+   }
 
    /**
     * @return the program id
@@ -286,19 +301,19 @@ public class Program
    }
 
    /**
-    * @return the manufacturerId
+    * @return the manufacturer.
     */
-   public int getManufacturerId()
+   public Manufacturer getManufacturer()
    {
-      return manufacturerId;
+      return manufacturer;
    }
 
    /**
-    * @param manufacturerId the manufacturerId to set
+    * Set the manufacturer.
     */
-   public void setManufacturerId(int manufacturerId)
+   public void setManufacturer(Manufacturer manufacturer)
    {
-      this.manufacturerId = manufacturerId;
+      this.manufacturer = manufacturer;
    }
 
    /**

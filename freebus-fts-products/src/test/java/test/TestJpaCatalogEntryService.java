@@ -7,6 +7,8 @@ import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.ManufacturerService;
 
+import test.internal.PersistenceTestCase;
+
 /**
  * Unit-tests for CatalogEntry persistence using JPA.
  */

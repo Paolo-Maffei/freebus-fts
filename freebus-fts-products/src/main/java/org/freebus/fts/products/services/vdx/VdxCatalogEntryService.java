@@ -1,19 +1,13 @@
 package org.freebus.fts.products.services.vdx;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxFileReader;
+import org.freebus.fts.common.vdx.VdxEntityManager;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
@@ -26,73 +20,40 @@ import org.freebus.fts.products.services.VirtualDeviceService;
  */
 public final class VdxCatalogEntryService implements CatalogEntryService
 {
-   private final VdxFileReader reader;
-   private final VirtualDeviceService virtualDeviceDAO;
-   private List<CatalogEntry> entries;
-   private Map<Integer, CatalogEntry> entriesById;
+   private final VdxEntityManager manager;
+   private final VirtualDeviceService virtualDeviceService;
 
-   VdxCatalogEntryService(VdxFileReader reader, VirtualDeviceService virtualDeviceDAO)
+   VdxCatalogEntryService(VdxEntityManager manager, VirtualDeviceService virtualDeviceService)
    {
-      this.reader = reader;
-      this.virtualDeviceDAO = virtualDeviceDAO;
-   }
-
-   private synchronized void fetchData() throws PersistenceException
-   {
-      if (entries != null) return;
-
-      try
-      {
-         final Object[] arr = reader.getSectionEntries("catalog_entry", CatalogEntry.class);
-         Arrays.sort(arr, new Comparator<Object>()
-         {
-            @Override
-            public int compare(Object a, Object b)
-            {
-               return ((CatalogEntry) a).getName().compareTo(((CatalogEntry) b).getName());
-            }
-         });
-
-         entries = new ArrayList<CatalogEntry>(arr.length);
-         entriesById = new HashMap<Integer, CatalogEntry>((arr.length << 1) + 31);
-
-         for (Object obj : arr)
-         {
-            final CatalogEntry entry = (CatalogEntry) obj;
-
-            entries.add(entry);
-            entriesById.put(entry.getId(), entry);
-         }
-      }
-      catch (IOException e)
-      {
-         throw new PersistenceException(e);
-      }
+      this.manager = manager;
+      this.virtualDeviceService = virtualDeviceService;
    }
 
    @Override
    public List<CatalogEntry> getCatalogEntries() throws PersistenceException
    {
-      if (entries == null) fetchData();
-      return entries;
+      @SuppressWarnings("unchecked")
+      final List<CatalogEntry> result = (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);
+      return result; 
    }
 
    @Override
    public List<CatalogEntry> getCatalogEntries(Manufacturer m, FunctionalEntity[] functionalEntities)
          throws PersistenceException
    {
-      if (entries == null) fetchData();
+      @SuppressWarnings("unchecked")
+      final List<CatalogEntry> entries = (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);
 
-      final List<VirtualDevice> devices = virtualDeviceDAO.getVirtualDevices(functionalEntities);
-      final Set<Integer> ids = new HashSet<Integer>();
+      final List<VirtualDevice> devices = virtualDeviceService.getVirtualDevices(functionalEntities);
+      final Set<CatalogEntry> ents = new HashSet<CatalogEntry>();
       for (VirtualDevice device: devices)
-         ids.add(device.getCatalogEntryId());
+         ents.add(device.getCatalogEntry());
 
       final List<CatalogEntry> result = new LinkedList<CatalogEntry>();
 
       for (CatalogEntry entry: entries)
       {
-         if (entry.getManufacturer() == m && ids.contains(entry.getId()))
+         if (entry.getManufacturer() == m && ents.contains(entry))
             result.add(entry);
       }
 
@@ -102,11 +63,7 @@ public final class VdxCatalogEntryService implements CatalogEntryService
    @Override
    public CatalogEntry getCatalogEntry(int id) throws PersistenceException
    {
-      if (entries == null) fetchData();
-
-      final CatalogEntry entry = entriesById.get(id);
-      if (entry == null) throw new PersistenceException("Object not found, id=" + Integer.toString(id));
-      return entry;
+      return manager.fetch(CatalogEntry.class, id);
    }
 
    @Override

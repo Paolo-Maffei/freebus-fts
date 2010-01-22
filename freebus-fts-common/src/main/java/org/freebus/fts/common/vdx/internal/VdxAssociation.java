@@ -15,16 +15,18 @@ public final class VdxAssociation
 {
    private Annotation type;
    private Field field;
+   private String vdxFieldName;
    private Class<?> targetClass;
    private Field targetField;
 
    /**
     * Create an association object.
     */
-   public VdxAssociation(Annotation type, Field field, Class<?> targetClass)
+   public VdxAssociation(Annotation type, Field field, String vdxFieldName, Class<?> targetClass)
    {
       this.type = type;
       this.field = field;
+      this.setVdxFieldName(vdxFieldName);
       this.targetClass = targetClass;
    }
 
@@ -61,6 +63,22 @@ public final class VdxAssociation
    }
 
    /**
+    * Set the name of the VD_ table field.
+    */
+   public void setVdxFieldName(String vdxFieldName)
+   {
+      this.vdxFieldName = vdxFieldName;
+   }
+
+   /**
+    * @return The name of the VD_ table field.
+    */
+   public String getVdxFieldName()
+   {
+      return vdxFieldName;
+   }
+
+   /**
     * @return The class of the target of the association.
     */
    public Class<?> getTargetClass()
@@ -77,18 +95,20 @@ public final class VdxAssociation
    }
 
    /**
-    * @return The field of the target for bidirectional associations.
-    */
-   public Field getTargetField()
-   {
-      return targetField;
-   }
-
-   /**
-    * Set the field of the target for bidirectional associations.
+    * Set the field in the target class that is used for lookup of the entity
+    * object by xToMany annotations.
     */
    public void setTargetField(Field targetField)
    {
       this.targetField = targetField;
+   }
+
+   /**
+    * @return The field in the target class that is used for lookup of the
+    *         entity object by xToMany annotations.
+    */
+   public Field getTargetField()
+   {
+      return targetField;
    }
 }

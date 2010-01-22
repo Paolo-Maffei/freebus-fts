@@ -5,6 +5,8 @@ import java.util.List;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 
+import test.internal.PersistenceTestCase;
+
 public class TestVdxCatalogEntryService extends PersistenceTestCase
 {
    private ManufacturerService manuService;

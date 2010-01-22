@@ -2,7 +2,10 @@ package org.freebus.fts.products;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -13,25 +16,26 @@ import javax.persistence.UniqueConstraint;
  * of the hardware.
  */
 @Entity
-@Table(name = "hw_product", uniqueConstraints = @UniqueConstraint(columnNames = "product_id"))
+@Table(name = "hw_product")
 public class Product
 {
-   public final static Product NONE = new Product(0, "NONE", 0);
+   public final static Product NONE = new Product(0, "NONE", null);
 
    @Id
-   @Column(name = "product_id", columnDefinition = "INT", unique = true, nullable = false)
+   @Column(name = "product_id", nullable = false)
    private int id;
 
    @Column(name = "product_name", length = 50, nullable = false)
    private String name;
 
-   @Column(name = "manufacturer_id", columnDefinition = "INT")
-   private int manufacturerId; 
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
+   private Manufacturer manufacturer;
 
    @Column(name = "product_serial_number", length = 30)
    private String serial;
 
-   @Column(name = "bus_current", columnDefinition = "SMALLINT")
+   @Column(name = "bus_current")
    private int busCurrent;
 
    /**
@@ -44,11 +48,11 @@ public class Product
    /**
     * Create a product.
     */
-   public Product(int id, String name, int manufacturerId)
+   public Product(int id, String name, Manufacturer manufacturer)
    {
       this.id = id;
       this.name = name;
-      this.manufacturerId = manufacturerId;
+      this.manufacturer = manufacturer;
    }
 
    /**
@@ -76,11 +80,11 @@ public class Product
    }
 
    /**
-    * @return the manufacturer id.
+    * @return the manufacturer.
     */
-   public int getManufacturer()
+   public Manufacturer getManufacturer()
    {
-      return manufacturerId;
+      return manufacturer;
    }
 
    /**

@@ -36,7 +36,7 @@ public final class JpaManufacturerService implements ManufacturerService
    @Override
    public List<Manufacturer> getActiveManufacturers() throws PersistenceException
    {
-      final Query query = entityManager.createQuery("select m from Manufacturer m where m.id in (select distinct fe.manufacturerId from FunctionalEntity fe) order by m.name");
+      final Query query = entityManager.createQuery("select distinct fe.manufacturer from FunctionalEntity fe");
       return query.getResultList();
    }
 

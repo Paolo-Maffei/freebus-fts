@@ -2,8 +2,13 @@ package org.freebus.fts.products;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+
+import org.freebus.fts.common.vdx.VdxField;
 
 
 /**
@@ -16,9 +21,10 @@ public class FunctionalEntity
    @Id
    @Column(name = "functional_entity_id", nullable = false)
    private int id;
-   
-   @Column(name = "manufacturer_id", nullable = false)
-   private int manufacturerId;
+
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
+   private Manufacturer manufacturer;
 
    @Column(name = "functional_entity_name", nullable = false)
    private String name;
@@ -26,8 +32,10 @@ public class FunctionalEntity
    @Column(name = "functional_entity_description")
    private String description;
 
-   @Column(name = "fun_functional_entity_id")
-   private int parentId = 0;
+   @ManyToOne(fetch = FetchType.EAGER, optional = false)
+   @JoinColumn(name = "parent_id")
+   @VdxField(name = "fun_functional_entity_id")
+   public FunctionalEntity parent;
 
    /**
     * Create an empty object.
@@ -44,10 +52,10 @@ public class FunctionalEntity
     * @param name - the name of the functional entity.
     * @param description - the description of the functional entity.
     */
-   public FunctionalEntity(int id, int manufacturerId, String name, String description)
+   public FunctionalEntity(int id, Manufacturer manufacturer, String name, String description)
    {
       this.id = id;
-      this.manufacturerId = manufacturerId;
+      this.manufacturer = manufacturer;
       this.name = name;
       this.description = description;
    }
@@ -61,11 +69,11 @@ public class FunctionalEntity
    }
 
    /**
-    * @return the identifier of the manufacturer to whom the functional entity belongs.
+    * @return The manufacturer to whom the functional entity belongs.
     */
-   public int getManufacturerId()
+   public Manufacturer getManufacturer()
    {
-      return manufacturerId;
+      return manufacturer;
    }
 
    /**
@@ -85,19 +93,19 @@ public class FunctionalEntity
    }
 
    /**
-    * Set the parent id. 0 for no parent.
+    * Set the parent functional entity.
     */
-   public void setParentId(int parentId)
+   public void setParent(FunctionalEntity parent)
    {
-      this.parentId = parentId;
+      this.parent = parent;
    }
 
    /**
-    * @return the parent id. 0 is returned for no parent.
+    * @return The parent functional entity.
     */
-   public int getParentId()
+   public FunctionalEntity getParent()
    {
-      return parentId;
+      return parent;
    }
 
    /**
@@ -106,7 +114,7 @@ public class FunctionalEntity
    @Override
    public int hashCode()
    {
-      return (id << 10) | manufacturerId;
+      return (id << 10) | (manufacturer == null ? 0 : manufacturer.getId());
    }
    
    /**
@@ -118,7 +126,7 @@ public class FunctionalEntity
       if (o==this) return true;
       if (!(o instanceof FunctionalEntity)) return false;
       final FunctionalEntity oo = (FunctionalEntity)o;
-      return id == oo.id && manufacturerId == oo.manufacturerId;
+      return id == oo.id && manufacturer == oo.manufacturer;
    }
 
    /**

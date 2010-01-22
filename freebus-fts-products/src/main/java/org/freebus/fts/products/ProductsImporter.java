@@ -17,9 +17,9 @@ import org.freebus.fts.products.services.ProductsFactory;
 public final class ProductsImporter
 {
    private final ProductsFactory sourceFactory, destFactory;
-   private final CatalogEntryService sourceCatalogEntryService, destCatalogEntryService;
+   private final CatalogEntryService destCatalogEntryService;
 
-   private final Set<Integer> catalogEntryIds = new HashSet<Integer>();
+   private final Set<CatalogEntry> catalogEntries = new HashSet<CatalogEntry>();
 
    /**
     * Create an importer that will import using sourceFactory and save the
@@ -28,7 +28,6 @@ public final class ProductsImporter
    public ProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {
       this.sourceFactory = sourceFactory;
-      sourceCatalogEntryService = sourceFactory.getCatalogEntryService();
 
       this.destFactory = destFactory;
       destCatalogEntryService = destFactory.getCatalogEntryService();
@@ -42,9 +41,9 @@ public final class ProductsImporter
    {
       for (VirtualDevice device: devices)
       {
-         int catalogEntryId = device.getCatalogEntryId();
-         if (!catalogEntryIds.contains(catalogEntryId))
-            copy(sourceCatalogEntryService.getCatalogEntry(catalogEntryId));
+         final CatalogEntry catalogEntry = device.getCatalogEntry();
+         if (!catalogEntries.contains(catalogEntry))
+            copy(catalogEntry);
       }
    }
 
@@ -65,7 +64,7 @@ public final class ProductsImporter
    public void copy(CatalogEntry catalogEntry)
    {
       destCatalogEntryService.save(catalogEntry);
-      catalogEntryIds.add(catalogEntry.getId());
+      catalogEntries.add(catalogEntry);
    }
 
    /**
