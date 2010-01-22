@@ -9,16 +9,14 @@
   <class>test.entities.TestFunctionalEntity</class>
   <class>test.entities.TestManufacturer</class>
   <properties>
-   <property name="eclipselink.logging.level" value="FINEST" />
-   <property name="eclipselink.jdbc.driver" value="org.hsqldb.jdbcDriver" />
-   <property name="eclipselink.jdbc.url" value="jdbc:hsqldb:file:tmp/testdb" />
-   <property name="eclipselink.jdbc.user" value="sa" />
-   <property name="eclipselink.jdbc.password" value="" />
-   <!--property name="eclipselink.ddl-generation" value="create-tables"/-->
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
+   <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
+   <property name="javax.persistence.jdbc.user" value="sa" />
+   <property name="javax.persistence.jdbc.password" value="" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode"
-    value="database" />
-   <property name="hsqldb.default_table_type" value="cached" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
   </properties>
  </persistence-unit>
  
@@ -27,12 +25,32 @@
   <class>test.entities.TestManufacturer</class>
   <class>test.entities.TestFunctionalEntity</class>
   <class>test.entities.TestManufacturer2</class>
+  <properties>
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
+   <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
+   <property name="javax.persistence.jdbc.user" value="sa" />
+   <property name="javax.persistence.jdbc.password" value="" />
+   <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
+  </properties>
  </persistence-unit>
   
  <persistence-unit name="with-children">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <class>test.entities.TestManufacturer</class>
   <class>test.entities.TestFunctionalEntityTree</class>
+  <properties>
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
+   <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
+   <property name="javax.persistence.jdbc.user" value="sa" />
+   <property name="javax.persistence.jdbc.password" value="" />
+   <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
+  </properties>
  </persistence-unit>
  
 </persistence>

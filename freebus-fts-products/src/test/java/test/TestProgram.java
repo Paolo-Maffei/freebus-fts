@@ -261,29 +261,87 @@ public class TestProgram extends TestCase
       assertEquals(false, prog.isDynamicManagement());
    }
 
-   public final void testGetProgramType()
+   public final void testGetSetProgramType()
    {
-      fail("Not yet implemented");
+      final Program prog = new Program();
+
+      prog.setProgramType(1);
+      assertEquals(1, prog.getProgramType());
+
+      prog.setProgramType(Integer.MAX_VALUE);
+      assertEquals(Integer.MAX_VALUE, prog.getProgramType());
+
+      prog.setProgramType(Integer.MIN_VALUE);
+      assertEquals(Integer.MIN_VALUE, prog.getProgramType());
+
+      prog.setProgramType(0);
+      assertEquals(0, prog.getProgramType());
    }
 
-   public final void testGetRamSize()
+   public final void testGetSetRamSize()
    {
-      fail("Not yet implemented");
+      final Program prog = new Program();
+      assertEquals(0, prog.getRamSize());
+
+      prog.setRamSize(1);
+      assertEquals(1, prog.getRamSize());
+
+      prog.setRamSize(Integer.MAX_VALUE);
+      assertEquals(Integer.MAX_VALUE, prog.getRamSize());
+
+      prog.setRamSize(Integer.MIN_VALUE);
+      assertEquals(Integer.MIN_VALUE, prog.getRamSize());
+
+      prog.setRamSize(0);
+      assertEquals(0, prog.getRamSize());
    }
 
-   public final void testGetProgramStyle()
+   public final void testGetSetProgramStyle()
    {
-      fail("Not yet implemented");
+      final Program prog = new Program();
+      assertEquals(0, prog.getProgramStyle());
+
+      prog.setProgramStyle(1);
+      assertEquals(1, prog.getProgramStyle());
+
+      prog.setProgramStyle(Integer.MAX_VALUE);
+      assertEquals(Integer.MAX_VALUE, prog.getProgramStyle());
+
+      prog.setProgramStyle(Integer.MIN_VALUE);
+      assertEquals(Integer.MIN_VALUE, prog.getProgramStyle());
+
+      prog.setProgramStyle(0);
+      assertEquals(0, prog.getProgramStyle());
    }
 
-   public final void testIsPollingMaster()
+   public final void testIsSetPollingMaster()
    {
-      fail("Not yet implemented");
+      final Program prog = new Program();
+      assertEquals(false, prog.isPollingMaster());
+
+      prog.setPollingMaster(true);
+      assertEquals(true, prog.isPollingMaster());
+
+      prog.setPollingMaster(false);
+      assertEquals(false, prog.isPollingMaster());
    }
 
-   public final void testGetNumPollingGroups()
+   public final void testGetSetNumPollingGroups()
    {
-      fail("Not yet implemented");
+      final Program prog = new Program();
+      assertEquals(0, prog.getNumPollingGroups());
+
+      prog.setNumPollingGroups(1);
+      assertEquals(1, prog.getNumPollingGroups());
+
+      prog.setNumPollingGroups(Integer.MAX_VALUE);
+      assertEquals(Integer.MAX_VALUE, prog.getNumPollingGroups());
+
+      prog.setNumPollingGroups(Integer.MIN_VALUE);
+      assertEquals(Integer.MIN_VALUE, prog.getNumPollingGroups());
+
+      prog.setNumPollingGroups(0);
+      assertEquals(0, prog.getNumPollingGroups());
    }
 
 }
