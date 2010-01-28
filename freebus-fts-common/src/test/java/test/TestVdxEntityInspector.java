@@ -90,9 +90,4 @@ public class TestVdxEntityInspector extends TestCase
       assertNotNull(assoc.getTargetField());
       assertEquals("parent", assoc.getTargetField().getName());
    }
-   
-   final public void testFails()
-   {
-      assertTrue(false);
-   }
 }
