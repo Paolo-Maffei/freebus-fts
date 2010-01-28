@@ -1,5 +1,7 @@
 package org.freebus.fts.products.services;
 
+import javax.persistence.EntityTransaction;
+
 /**
  * Interface for factories that generate data access objects for the products
  * database.
@@ -35,4 +37,14 @@ public interface ProductsFactory
     * @return the service for application-program queries.
     */
    public ProgramService getProgramService();
+
+   /**
+    * Return the resource-level <code>EntityTransaction</code> object. 
+    * The <code>EntityTransaction</code> instance may be used serially to 
+    * begin and commit multiple transactions.
+    * @return EntityTransaction instance
+    * @throws IllegalStateException if invoked on a JTA
+    *         entity manager
+    */
+   public EntityTransaction getTransaction();
 }

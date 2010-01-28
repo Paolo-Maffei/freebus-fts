@@ -18,6 +18,20 @@ public class PersistenceTestCase extends TestCase
          DatabaseResources.setEntityManagerFactory(DatabaseResources.createEntityManagerFactory(DriverType.HSQL_MEM, "test", "sa", ""));
    }
 
+   @Override
+   protected void setUp() throws Exception
+   {
+      super.setUp();
+      getJpaProductsFactory().getTransaction().begin();
+   }
+
+   @Override
+   protected void tearDown() throws Exception
+   {
+      jpaProductsFactory.getTransaction().rollback();
+      super.tearDown();
+   }
+
    public static synchronized ProductsFactory getJpaProductsFactory()
    {
       if (jpaProductsFactory == null)

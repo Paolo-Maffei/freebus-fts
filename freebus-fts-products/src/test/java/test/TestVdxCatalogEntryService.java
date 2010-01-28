@@ -16,6 +16,8 @@ public class TestVdxCatalogEntryService extends PersistenceTestCase
    {
       if (manuService == null)
          manuService = getVdxProductsFactory().getManufacturerService();
+
+      super.setUp();
    }
 
    public final void testGetManufacturer()

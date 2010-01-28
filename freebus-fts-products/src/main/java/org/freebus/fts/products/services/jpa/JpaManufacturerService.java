@@ -24,20 +24,24 @@ public final class JpaManufacturerService implements ManufacturerService
       return entityManager.find(Manufacturer.class, id);
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public List<Manufacturer> getManufacturers() throws PersistenceException
    {
-      final Query query = entityManager.createQuery("select m from Manufacturer m order by m.name");
-      return query.getResultList();
+      final Query query = entityManager.createQuery("select m from Manufacturer m");
+
+      @SuppressWarnings("unchecked")
+      final List<Manufacturer> result = (List<Manufacturer>) query.getResultList();
+      return result;
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public List<Manufacturer> getActiveManufacturers() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select distinct fe.manufacturer from FunctionalEntity fe");
-      return query.getResultList();
+
+      @SuppressWarnings("unchecked")
+      final List<Manufacturer> result = (List<Manufacturer>) query.getResultList();
+      return result;
    }
 
    @Override
@@ -49,19 +53,13 @@ public final class JpaManufacturerService implements ManufacturerService
    @Override
    public void save(Manufacturer manufacturer) throws PersistenceException
    {
-      entityManager.getTransaction().begin();
-      entityManager.merge(manufacturer);
-      entityManager.getTransaction().commit();
+      entityManager.persist(manufacturer);
    }
 
    @Override
    public void save(List<Manufacturer> manufacturers) throws PersistenceException
    {
-      entityManager.getTransaction().begin();
-
       for (Manufacturer manufacturer: manufacturers)
-         entityManager.merge(manufacturer);
-
-      entityManager.getTransaction().commit();
+         entityManager.persist(manufacturer);
    }
 }

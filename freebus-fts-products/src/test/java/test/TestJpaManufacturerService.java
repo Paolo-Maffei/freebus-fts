@@ -1,8 +1,8 @@
 package test;
 
-import java.util.LinkedList;
 import java.util.List;
 
+import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 
@@ -15,16 +15,15 @@ public class TestJpaManufacturerService extends PersistenceTestCase
    @Override
    public void setUp() throws Exception
    {
-      if (manuService == null)
-      {
-         manuService = getJpaProductsFactory().getManufacturerService();
+      super.setUp();
 
-         final List<Manufacturer> manus = new LinkedList<Manufacturer>();
-         manus.add(new Manufacturer(1, "Manufacturer-1"));
-         manus.add(new Manufacturer(2, "Manufacturer-2"));
-         manus.add(new Manufacturer(3, "Manufacturer-3"));
-         manuService.save(manus);
-      }
+      manuService = getJpaProductsFactory().getManufacturerService();
+
+      System.err.println("save");
+      manuService.save(new Manufacturer(1, "Manufacturer-1"));
+      manuService.save(new Manufacturer(2, "Manufacturer-2"));
+      manuService.save(new Manufacturer(3, "Manufacturer-3"));
+      DatabaseResources.getEntityManager().flush();
    }
 
    public final void testGetManufacturers()

@@ -2,6 +2,7 @@ package test;
 
 import java.util.List;
 
+import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.CatalogEntryService;
@@ -22,16 +23,18 @@ public class TestJpaCatalogEntryService extends PersistenceTestCase
    @Override
    public void setUp() throws Exception
    {
+      super.setUp();
+
       if (manuService == null)
          manuService = getJpaProductsFactory().getManufacturerService();
+
+      if (catService == null)
+          catService = getJpaProductsFactory().getCatalogEntryService();
 
       manu1 = new Manufacturer(1, "Manufacturer-1");
       manu2 = new Manufacturer(2, "Manufacturer-2");
       manuService.save(manu1);
       manuService.save(manu2);
-
-      if (catService == null)
-    	  catService = getJpaProductsFactory().getCatalogEntryService();
 
       final CatalogEntry cat = new CatalogEntry("CatalogEntry-1", manu1);
       catService.save(cat);
@@ -39,6 +42,8 @@ public class TestJpaCatalogEntryService extends PersistenceTestCase
 
       catService.save(new CatalogEntry("CatalogEntry-2", manu1));
       catService.save(new CatalogEntry("CatalogEntry-3", manu2));
+
+      DatabaseResources.getEntityManager().flush();
    }
 
    public final void testGetCatalogEntries()

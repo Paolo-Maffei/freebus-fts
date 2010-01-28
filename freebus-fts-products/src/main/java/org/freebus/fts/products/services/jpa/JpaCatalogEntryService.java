@@ -59,8 +59,6 @@ public final class JpaCatalogEntryService implements CatalogEntryService
    @Override
    public void save(CatalogEntry catalogEntry) throws PersistenceException
    {
-      entityManager.getTransaction().begin();
       entityManager.persist(catalogEntry);
-      entityManager.getTransaction().commit();
    }
 }

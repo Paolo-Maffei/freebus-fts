@@ -2,6 +2,7 @@ package org.freebus.fts.products;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +13,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
 
 /**
  * Catalog entries name the variations of a virtual device, as it can be bought
@@ -34,12 +34,12 @@ public class CatalogEntry implements Serializable
    @Column(name = "entry_name", nullable = false)
    private String name;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, targetEntity = Manufacturer.class)
    @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
    private Manufacturer manufacturer;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
-   @JoinColumn(name = "product_id", nullable = false, referencedColumnName = "product_id")
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Product.class)
+   @JoinColumn(name = "product_id", referencedColumnName = "product_id")
    private Product product;
 
    @Column(name = "entry_width_in_modules")
@@ -64,7 +64,7 @@ public class CatalogEntry implements Serializable
     * Create an empty catalog-entry object.
     */
    public CatalogEntry()
-   {      
+   {
    }
 
    /**
@@ -229,8 +229,10 @@ public class CatalogEntry implements Serializable
    @Override
    public boolean equals(final Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof CatalogEntry)) return false;
+      if (o == this)
+         return true;
+      if (!(o instanceof CatalogEntry))
+         return false;
       final CatalogEntry oo = (CatalogEntry) o;
       return id == oo.id && manufacturer == oo.manufacturer && product == oo.product;
    }

@@ -1,6 +1,7 @@
 package org.freebus.fts.products.services.jpa;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.products.services.CatalogEntryService;
@@ -53,5 +54,11 @@ public final class JpaProductsFactory implements ProductsFactory
    public ProgramService getProgramService()
    {
       return new JpaProgramService(entityManager);
+   }
+
+   @Override
+   public EntityTransaction getTransaction()
+   {
+      return entityManager.getTransaction();
    }
 }

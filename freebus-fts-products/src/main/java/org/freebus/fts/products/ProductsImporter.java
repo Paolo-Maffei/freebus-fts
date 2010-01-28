@@ -63,6 +63,7 @@ public final class ProductsImporter
     */
    public void copy(CatalogEntry catalogEntry)
    {
+      destFactory.getManufacturerService().save(catalogEntry.getManufacturer());
       destCatalogEntryService.save(catalogEntry);
       catalogEntries.add(catalogEntry);
    }

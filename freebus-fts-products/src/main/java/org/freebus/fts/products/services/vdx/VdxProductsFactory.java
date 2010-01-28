@@ -2,6 +2,7 @@ package org.freebus.fts.products.services.vdx;
 
 import java.io.IOException;
 
+import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
 import org.freebus.fts.common.vdx.VdxEntityManager;
@@ -25,6 +26,7 @@ public final class VdxProductsFactory implements ProductsFactory
 {
    private VdxFileReader reader;
    private VdxEntityManager manager;
+   private VdxEntityTransaction transaction = new VdxEntityTransaction();
 
    private CatalogEntryService catalogEntryService;
    private FunctionalEntityService functionalEntityService;
@@ -92,5 +94,11 @@ public final class VdxProductsFactory implements ProductsFactory
    {
       if (programService == null) programService = new VdxProgramService(reader);
       return programService;
+   }
+
+   @Override
+   public EntityTransaction getTransaction()
+   {
+      return transaction;
    }
 }
