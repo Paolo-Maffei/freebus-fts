@@ -1,33 +1,37 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.Set;
 import java.util.Vector;
-
-import junit.framework.TestCase;
 
 import org.freebus.fts.common.vdx.internal.VdxAssociation;
 import org.freebus.fts.common.vdx.internal.VdxEntityInfo;
 import org.freebus.fts.common.vdx.internal.VdxEntityInspector;
+import org.junit.Test;
 
 import test.entities.TestFunctionalEntity;
 import test.entities.TestFunctionalEntityTree;
 import test.entities.TestManufacturer;
 import test.entities.TestManufacturer2;
 
-public class TestVdxEntityInspector extends TestCase
+public class TestVdxEntityInspector
 {
+   @Test
    final public void testVdxEntityInspector()
    {
       final VdxEntityInspector inspector = new VdxEntityInspector();
       assertNotNull(inspector);
    }
 
+   @Test
    final public void testVdxEntityInspectorString()
    {
       final VdxEntityInspector inspector = new VdxEntityInspector("default");
       assertNotNull(inspector);
    }
 
+   @Test
    final public void testGetClasses()
    {
       final VdxEntityInspector inspector = new VdxEntityInspector("default");
@@ -41,6 +45,7 @@ public class TestVdxEntityInspector extends TestCase
       assertFalse(classes.contains(TestManufacturer2.class));
    }
 
+   @Test
    final public void testGetInfo()
    {
       final VdxEntityInspector inspector = new VdxEntityInspector("default");
@@ -57,6 +62,7 @@ public class TestVdxEntityInspector extends TestCase
       assertEquals("functional_entity", info.getName());
    }
 
+   @Test
    final public void testGetInfoOneToMany()
    {
       final VdxEntityInspector inspector = new VdxEntityInspector("with-children");

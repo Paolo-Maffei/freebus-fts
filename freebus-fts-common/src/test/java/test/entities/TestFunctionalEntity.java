@@ -8,6 +8,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.junit.Ignore;
+
 
 /**
  * Functional entities are for grouping of the virtual devices.
@@ -15,6 +17,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "functional_entity")
+@Ignore
 public class TestFunctionalEntity
 {
    @Id

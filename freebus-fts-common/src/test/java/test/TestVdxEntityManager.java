@@ -1,57 +1,51 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 import java.util.Set;
 
-import junit.framework.TestCase;
+import javax.persistence.PersistenceException;
 
 import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.junit.Test;
 
 import test.entities.TestFunctionalEntity;
 import test.entities.TestFunctionalEntityTree;
 import test.entities.TestManufacturer;
 
-public class TestVdxEntityManager extends TestCase
+public class TestVdxEntityManager
 {
+   @Test
    public final void testVdxEntityManager() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
       assertNotNull(mgr);
-
-      boolean exceptionThrown = false;
-      try
-      {
-         new VdxEntityManager("unknown-file.vd_");
-      }
-      catch (Exception e)
-      {
-         exceptionThrown = true;
-      }
-      assertTrue(exceptionThrown);
-
-      exceptionThrown = false;
-      try
-      {
-         new VdxEntityManager("src/test/resources/test-file.vd_", "unknown-unit");
-      }
-      catch (Exception e)
-      {
-         exceptionThrown = true;
-      }
-      assertTrue(exceptionThrown);
-
-      exceptionThrown = false;
-      try
-      {
-         new VdxEntityManager("src/test/resources/test-file.vd_", "duplicate-entities");
-      }
-      catch (Exception e)
-      {
-         exceptionThrown = true;
-      }
-      assertTrue(exceptionThrown);
+   }
+   
+   @Test(expected = PersistenceException.class)
+   public final void testVdxEntityManagerUnknownFile() throws Exception
+   {
+      new VdxEntityManager("unknown-file.vd_");
    }
 
+   
+   @Test(expected = PersistenceException.class)
+   public final void testVdxEntityManagerUnknownUnit() throws Exception
+   {
+      new VdxEntityManager("src/test/resources/test-file.vd_", "unknown-unit");
+   }
+
+   
+   @Test(expected = PersistenceException.class)
+   public final void testVdxEntityManagerDuplicateEntities() throws Exception
+   {
+      new VdxEntityManager("src/test/resources/test-file.vd_", "duplicate-entities");
+   }
+
+   @Test
    public final void testFindAllSimple() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
@@ -77,6 +71,7 @@ public class TestVdxEntityManager extends TestCase
       assertEquals("Busch-Jaeger Elektro", manu.name);
    }
 
+   @Test
    public final void testFindAllUniDirectionalReference() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
@@ -95,6 +90,7 @@ public class TestVdxEntityManager extends TestCase
       assertEquals(2, ent.manufacturer.id);
    }
 
+   @Test
    public final void testFindAllBiDirectionalReference() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "with-children");

@@ -10,7 +10,7 @@
   <class>test.entities.TestManufacturer</class>
   <properties>
    <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
-   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
    <property name="javax.persistence.jdbc.user" value="sa" />
@@ -27,7 +27,7 @@
   <class>test.entities.TestManufacturer2</class>
   <properties>
    <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
-   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
    <property name="javax.persistence.jdbc.user" value="sa" />
@@ -43,7 +43,7 @@
   <class>test.entities.TestFunctionalEntityTree</class>
   <properties>
    <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
-   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
    <property name="javax.persistence.jdbc.user" value="sa" />

@@ -9,6 +9,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.freebus.fts.common.vdx.VdxEntity;
+import org.junit.Ignore;
 
 /**
  * A manufacturer. Used for unit-tests only!
@@ -16,6 +17,7 @@ import org.freebus.fts.common.vdx.VdxEntity;
 @Entity
 @VdxEntity(name = "manufacturer")
 @Table(name = "manu")
+@Ignore
 public class TestManufacturer
 {
    @Id
