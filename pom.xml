@@ -21,10 +21,8 @@
   </developer>
  </developers>
  <scm>
-  <!-- connection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk</connection -->
-  <!-- developerConnection>scm:svn:https://devport.no-ip.org/dev/freebus/trunk</developerConnection -->
-  <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</connection>
-  <developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software/fts</developerConnection>
+  <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</connection>
+  <developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</developerConnection>
  </scm>
  <modules>
   <module>freebus-fts-common</module>
@@ -45,7 +43,7 @@
   <dependency>
    <groupId>junit</groupId>
    <artifactId>junit</artifactId>
-   <version>3.8.1</version>
+   <version>4.7</version>
    <scope>test</scope>
   </dependency>
   <dependency>

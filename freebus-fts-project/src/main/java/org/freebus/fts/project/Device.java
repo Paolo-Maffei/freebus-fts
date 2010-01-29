@@ -41,10 +41,20 @@ public final class Device
    private Room room;
 
    /**
+    * Create a device object.
+    */
+   public Device(int id, int virtualDeviceId)
+   {
+      this.id = id;
+      this.virtualDeviceId = virtualDeviceId;
+   }
+
+   /**
     * Create an empty device object.
     */
    public Device()
    {
+      this(0, 0);
    }
 
    /**

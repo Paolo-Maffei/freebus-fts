@@ -39,15 +39,7 @@ public class WorkBench extends JFrame
     */
    public WorkBench()
    {
-      try
-      {
-         UIManager.setLookAndFeel("com.sun.java.swing.plaf.gtk.GTKLookAndFeel");
-      }
-      catch (Exception e)
-      {
-         // Never mind if this does not work
-      }
-
+      setDefaultLookAndFeel();
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setMinimumSize(new Dimension(600, 400));
       setLayout(new BorderLayout(2, 2));
@@ -75,6 +67,26 @@ public class WorkBench extends JFrame
       leftCenterSplit.setFocusable(false);
    }
 
+   /**
+    * Set the default look and feel.
+    */
+   protected void setDefaultLookAndFeel()
+   {
+      for (String lafName: new String[] { "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
+                                          "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" })
+      {
+         try
+         {
+            UIManager.setLookAndFeel(lafName);
+            break;
+         }
+         catch (Exception e)
+         {
+            // Never mind if this does not work
+         }
+      }
+   }
+   
    /**
     * Create a new menu with the given name and add it to the menu bar.
     * Mnemonics are properly detected if they are marked with an ampersand in

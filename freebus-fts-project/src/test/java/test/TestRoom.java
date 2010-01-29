@@ -1,17 +1,18 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Room;
+import org.junit.Test;
 
-public class TestRoom extends TestCase
+public class TestRoom
 {
-
+   @Test
    public final void testRoom()
    {
       final Room room = new Room();
@@ -22,6 +23,7 @@ public class TestRoom extends TestCase
       assertTrue(room.getDevices().isEmpty());
    }
 
+   @Test
    public final void testGetSetId()
    {
       final Room room = new Room();
@@ -36,6 +38,7 @@ public class TestRoom extends TestCase
       assertEquals(0, room.getId());
    }
 
+   @Test
    public final void testGetSetBuilding()
    {
       final Room room = new Room();
@@ -49,6 +52,7 @@ public class TestRoom extends TestCase
       assertNull(room.getBuilding());
    }
 
+   @Test
    public final void testGetSetName()
    {
       final Room room = new Room();
@@ -63,6 +67,7 @@ public class TestRoom extends TestCase
       assertEquals("room-2", room.getName());
    }
 
+   @Test
    public final void testGetSetDescription()
    {
       final Room room = new Room();
@@ -77,6 +82,7 @@ public class TestRoom extends TestCase
       assertEquals("room-desc-2", room.getDescription());
    }
 
+   @Test
    public final void testGetSetDevices()
    {
       final Room room = new Room();
@@ -86,20 +92,27 @@ public class TestRoom extends TestCase
       assertEquals(newDevices, room.getDevices());
    }
 
+   @Test
    public final void testAdd()
    {
       final Room room = new Room();
       assertTrue(room.getDevices().isEmpty());
 
-      final Device device = new Device();
+      final Device device = new Device(1, 2);
       room.add(device);
       assertEquals(1, room.getDevices().size());
       assertEquals(device, room.getDevices().iterator().next());
 
-      room.add(device);
-      assertEquals(1, room.getDevices().size());
-
-      room.add(new Device());
+      room.add(new Device(1, 3));
       assertEquals(2, room.getDevices().size());
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public final void testAddTwice()
+   {
+      final Room room = new Room();
+      final Device device = new Device();
+      room.add(device);
+      room.add(device);
    }
 }

@@ -1,17 +1,21 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import junit.framework.TestCase;
 
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
+import org.junit.Test;
 
-public class TestLine extends TestCase
+public class TestLine
 {
-
+   @Test
    public final void testLine()
    {
       final Line line = new Line();
@@ -21,6 +25,7 @@ public class TestLine extends TestCase
       assertNotNull(line.getDevices());
    }
 
+   @Test
    public final void testGetSetId()
    {
       final Line line = new Line();
@@ -35,6 +40,7 @@ public class TestLine extends TestCase
       assertEquals(0, line.getId());
    }
 
+   @Test
    public final void testGetSetName()
    {
       final Line line = new Line();
@@ -49,6 +55,7 @@ public class TestLine extends TestCase
       assertEquals("", line.getName());
    }
 
+   @Test
    public final void testGetSetAddress()
    {
       final Line line = new Line();
@@ -63,6 +70,7 @@ public class TestLine extends TestCase
       assertEquals(0, line.getAddress());
    }
 
+   @Test
    public final void testGetSetArea()
    {
       final Line line = new Line();
@@ -76,6 +84,7 @@ public class TestLine extends TestCase
       assertNull(line.getArea());
    }
 
+   @Test
    public final void testGetSetDevices()
    {
       final Line line = new Line();
@@ -86,17 +95,27 @@ public class TestLine extends TestCase
       assertEquals(newDevices, line.getDevices());
    }
 
+   @Test
    public final void testAdd()
    {
       final Line line = new Line();
       assertTrue(line.getDevices().isEmpty());
 
-      final Device device = new Device();
+      final Device device = new Device(1, 1);
       line.add(device);
       assertEquals(1, line.getDevices().size());
       assertEquals(device, line.getDevices().iterator().next());
 
-      line.add(new Device());
+      line.add(new Device(2, 2));
       assertEquals(2, line.getDevices().size());
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public final void testAddTwice()
+   {
+      final Line line = new Line();
+      final Device device = new Device();
+      line.add(device);
+      line.add(device);
    }
 }

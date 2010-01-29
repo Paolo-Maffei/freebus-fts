@@ -45,6 +45,14 @@ public class SubGroup
    }
 
    /**
+    * Create a new group.
+    */
+   public SubGroup(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return the group-id
     */
    public int getId()

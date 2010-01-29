@@ -118,9 +118,14 @@ public class Line
 
    /**
     * Add a device to the line.
+    * 
+    * @throws IllegalArgumentException - If the device was already added to the room.
     */
    public void add(Device device)
    {
+      if (devices.contains(device))
+         throw new IllegalArgumentException("Device was previously added: " + device);
+
       device.setLine(this);
       devices.add(device);
    }

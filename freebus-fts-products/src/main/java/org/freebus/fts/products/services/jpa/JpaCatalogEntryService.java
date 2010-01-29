@@ -21,12 +21,15 @@ public final class JpaCatalogEntryService implements CatalogEntryService
       this.entityManager = entityManager;
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public List<CatalogEntry> getCatalogEntries() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select ce from CatalogEntry ce");
-      return query.getResultList();
+
+      @SuppressWarnings("unchecked")
+      final List<CatalogEntry> results = query.getResultList();
+
+      return results;
    }
 
    @SuppressWarnings("unchecked")

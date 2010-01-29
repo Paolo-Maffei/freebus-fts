@@ -135,9 +135,14 @@ public class Room
 
    /**
     * Add a device to the room.
+    * 
+    * @throws IllegalArgumentException - If the device was already added to the room.
     */
    public void add(Device device)
    {
+      if (devices.contains(device))
+         throw new IllegalArgumentException("Device was previously added: " + device);
+
       device.setRoom(this);
       devices.add(device);
    }

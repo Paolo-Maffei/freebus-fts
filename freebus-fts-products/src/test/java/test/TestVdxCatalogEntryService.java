@@ -1,9 +1,12 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
+import org.junit.Test;
 
 import test.internal.PersistenceTestCase;
 
@@ -20,6 +23,7 @@ public class TestVdxCatalogEntryService extends PersistenceTestCase
       super.setUp();
    }
 
+   @Test
    public final void testGetManufacturer()
    {
       Manufacturer manu = manuService.getManufacturer(4);
@@ -33,6 +37,7 @@ public class TestVdxCatalogEntryService extends PersistenceTestCase
       assertEquals("INSTA ELEKTRO", manu.getName());
    }
 
+   @Test
    public final void testGetManufacturers()
    {
       List<Manufacturer> manus = manuService.getManufacturers();
@@ -42,6 +47,7 @@ public class TestVdxCatalogEntryService extends PersistenceTestCase
       assertEquals("INSTA ELEKTRO", manus.get(1).getName());
    }
 
+   @Test
    public final void testGetActiveManufacturers()
    {
       List<Manufacturer> manus = manuService.getActiveManufacturers();

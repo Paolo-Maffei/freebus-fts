@@ -4,9 +4,11 @@ import junit.framework.TestCase;
 
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
+import org.junit.Test;
 
 public class TestFunctionalEntity extends TestCase
 {
+   @Test
    public final void testFunctionalEntity()
    {
       final FunctionalEntity fun = new FunctionalEntity();
@@ -18,6 +20,7 @@ public class TestFunctionalEntity extends TestCase
       assertEquals(null, fun.getManufacturer());
    }
 
+   @Test
    public final void testFunctionalEntityIntManufacturerStringString()
    {
       final Manufacturer manu = new Manufacturer(17, "manu-17");
@@ -31,6 +34,7 @@ public class TestFunctionalEntity extends TestCase
       assertEquals(manu, fun.getManufacturer());
    }
 
+   @Test
    public final void testGetSetParent()
    {
       final FunctionalEntity parentFun = new FunctionalEntity();

@@ -1,11 +1,14 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
+import org.junit.Test;
 
 import test.internal.PersistenceTestCase;
 
@@ -14,7 +17,8 @@ public class TestVdxFunctionalEntityService extends PersistenceTestCase
    private FunctionalEntityService funcService;
    private ManufacturerService manuService;
 
-   protected void setUp() throws Exception
+   @Override
+   public void setUp() throws Exception
    {
       super.setUp();
 
@@ -25,6 +29,7 @@ public class TestVdxFunctionalEntityService extends PersistenceTestCase
          manuService = getVdxProductsFactory().getManufacturerService();
    }
 
+   @Test
    public final void testGetFunctionalEntities()
    {
       List<FunctionalEntity> ents = funcService.getFunctionalEntities();
@@ -35,6 +40,7 @@ public class TestVdxFunctionalEntityService extends PersistenceTestCase
       assertEquals(ents.get(0), ents.get(1).getParent());
    }
 
+   @Test
    public final void testGetFunctionalEntitiesManufacturer()
    {
       List<FunctionalEntity> ents;
@@ -61,6 +67,7 @@ public class TestVdxFunctionalEntityService extends PersistenceTestCase
       assertEquals(0, ents.size());
    }
 
+   @Test
    public final void testGetFunctionalEntity()
    {
       assertNull(funcService.getFunctionalEntity(0));
@@ -78,5 +85,4 @@ public class TestVdxFunctionalEntityService extends PersistenceTestCase
       assertNotNull(ent);
       assertEquals(22804, ent.getId());
    }
-
 }

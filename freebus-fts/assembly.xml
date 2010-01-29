@@ -1,0 +1,35 @@
+<assembly xmlns="http://maven.apache.org/POM/4.0.0"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/assembly-1.0.0.xsd">
+  <id>distribution</id>
+  <formats>
+    <format>zip</format>
+  </formats>
+  <dependencySets>
+   <dependencySet>
+    <outputDirectory>libs</outputDirectory>
+   </dependencySet>
+  </dependencySets>
+  <files>
+    <file>
+      <source>COPYING</source>
+      <outputDirectory>/</outputDirectory>
+    </file>
+    <file>
+      <source>fts.sh</source>
+      <outputDirectory>/</outputDirectory>
+      <fileMode>0755</fileMode>
+    </file>
+    <file>
+      <source>fts.cmd</source>
+      <outputDirectory>/</outputDirectory>
+      <fileMode>0755</fileMode>
+    </file>
+  </files>
+  <fileSets>
+   <fileSet>
+    <directory>../freebus-fts-knxcomm/contrib/rxtx</directory>
+    <outputDirectory>contrib/rxtx</outputDirectory>
+   </fileSet>
+  </fileSets>
+</assembly>

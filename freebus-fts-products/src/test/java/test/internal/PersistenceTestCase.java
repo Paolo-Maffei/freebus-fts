@@ -1,35 +1,46 @@
 package test.internal;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertTrue;
 
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.products.Products;
 import org.freebus.fts.products.services.ProductsFactory;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class PersistenceTestCase extends TestCase
+public class PersistenceTestCase
 {
    private static ProductsFactory jpaProductsFactory;
    private static ProductsFactory vdxProductsFactory;
+   private boolean setupCalled;
 
    static
    {
       if (DatabaseResources.getEntityManagerFactory() == null)
-         DatabaseResources.setEntityManagerFactory(DatabaseResources.createEntityManagerFactory(DriverType.HSQL_MEM, "test", "sa", ""));
+         DatabaseResources.setEntityManagerFactory(DatabaseResources.createEntityManagerFactory(DriverType.HSQL_MEM,
+               "test", "sa", ""));
    }
 
-   @Override
-   protected void setUp() throws Exception
+   @Before
+   public void setUp() throws Exception
    {
-      super.setUp();
+      setupCalled = true;
       getJpaProductsFactory().getTransaction().begin();
+      getJpaProductsFactory().getTransaction().setRollbackOnly();
    }
 
-   @Override
-   protected void tearDown() throws Exception
+   @After
+   public void tearDown() throws Exception
    {
       jpaProductsFactory.getTransaction().rollback();
-      super.tearDown();
+   }
+
+   @Test
+   public void setupCalled()
+   {
+      assertTrue(setupCalled);
    }
 
    public static synchronized ProductsFactory getJpaProductsFactory()

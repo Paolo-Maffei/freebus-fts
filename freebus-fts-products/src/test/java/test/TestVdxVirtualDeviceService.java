@@ -1,11 +1,14 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.VirtualDeviceService;
+import org.junit.Test;
 
 import test.internal.PersistenceTestCase;
 
@@ -14,7 +17,8 @@ public class TestVdxVirtualDeviceService extends PersistenceTestCase
    private VirtualDeviceService virtDevService;
    private FunctionalEntityService funcEntService;
 
-   protected void setUp() throws Exception
+   @Override
+   public void setUp() throws Exception
    {
       super.setUp();
 
@@ -25,6 +29,7 @@ public class TestVdxVirtualDeviceService extends PersistenceTestCase
          funcEntService = getVdxProductsFactory().getFunctionalEntityService();
    }
 
+   @Test
    public final void testGetVirtualDevice()
    {
       assertNull(virtDevService.getVirtualDevice(-1));
@@ -42,6 +47,7 @@ public class TestVdxVirtualDeviceService extends PersistenceTestCase
       assertEquals(160234, virtDev.getFunctionalEntity().getId());
    }
 
+   @Test
    public final void testGetVirtualDevices()
    {
       final List<VirtualDevice> virtDevs = virtDevService.getVirtualDevices();
@@ -51,6 +57,7 @@ public class TestVdxVirtualDeviceService extends PersistenceTestCase
       assertEquals(160245, virtDevs.get(0).getId());
    }
 
+   @Test
    public final void testGetVirtualDevicesFunctionalEntityArray()
    {
       List<VirtualDevice> virtDevs;

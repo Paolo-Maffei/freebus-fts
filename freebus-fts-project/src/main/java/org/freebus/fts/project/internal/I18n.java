@@ -5,9 +5,8 @@ import java.util.ResourceBundle;
 
 public class I18n
 {
-   private static final String BUNDLE_NAME = "org.freebus.fts.project.messages";
-
-   private static final ResourceBundle RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+//   private static final String bundleName = "org.freebus.fts.project.messages";
+   private static final ResourceBundle bundle = ResourceBundle.getBundle("project-messages");
 
    private I18n()
    {
@@ -17,7 +16,7 @@ public class I18n
    {
       try
       {
-         return RESOURCE_BUNDLE.getString(key);
+         return bundle.getString(key);
       }
       catch (MissingResourceException e)
       {

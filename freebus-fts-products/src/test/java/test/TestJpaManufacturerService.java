@@ -1,10 +1,13 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
+import org.junit.Test;
 
 import test.internal.PersistenceTestCase;
 
@@ -26,7 +29,8 @@ public class TestJpaManufacturerService extends PersistenceTestCase
       DatabaseResources.getEntityManager().flush();
    }
 
-   public final void testGetManufacturers()
+   @Test
+   public final void getManufacturers()
    {
       List<Manufacturer> manus = manuService.getManufacturers();
       assertNotNull(manus);
@@ -34,7 +38,8 @@ public class TestJpaManufacturerService extends PersistenceTestCase
       assertEquals("Manufacturer-1", manus.get(0).getName());
    }
 
-   public final void testGetManufacturer()
+   @Test
+   public final void getManufacturer()
    {
       manuService.save(new Manufacturer(10, "Manufacturer-10"));
 
@@ -44,7 +49,8 @@ public class TestJpaManufacturerService extends PersistenceTestCase
       assertEquals("Manufacturer-10", manu.getName());
    }
 
-   public final void testGetActiveManufacturers()
+   @Test
+   public final void getActiveManufacturers()
    {
       List<Manufacturer> manus = manuService.getActiveManufacturers();
       assertNotNull(manus);

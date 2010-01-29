@@ -16,7 +16,7 @@
   <class>org.freebus.fts.project.Room</class>
   <class>org.freebus.fts.project.SubGroup</class>
   <properties>
-   <property name="eclipselink.logging.level" value="FINE" />
+   <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
    <property name="javax.persistence.jdbc.user" value="sa" />

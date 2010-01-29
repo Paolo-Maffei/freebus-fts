@@ -53,6 +53,14 @@ public class MidGroup
    }
 
    /**
+    * Create a new mid-group.
+    */
+   public MidGroup(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return the mid-group id
     */
    public int getId()

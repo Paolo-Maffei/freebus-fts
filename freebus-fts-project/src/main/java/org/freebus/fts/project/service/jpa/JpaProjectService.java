@@ -35,9 +35,7 @@ public final class JpaProjectService implements ProjectService
       try
       {
          project.setLastModified(new Date());
-         entityManager.getTransaction().begin();
          entityManager.persist(project);
-         entityManager.getTransaction().commit();
       }
       catch (PersistenceException e)
       {

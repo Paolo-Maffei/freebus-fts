@@ -1,5 +1,9 @@
 package test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.freebus.fts.common.db.DatabaseResources;
@@ -7,6 +11,9 @@ import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.ManufacturerService;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 import test.internal.PersistenceTestCase;
 
@@ -18,11 +25,12 @@ public class TestJpaCatalogEntryService extends PersistenceTestCase
    private CatalogEntryService catService;
    private ManufacturerService manuService;
    private Manufacturer manu1, manu2;
-   private int catId;
 
+   @Before
    @Override
    public void setUp() throws Exception
    {
+      System.err.println("setUp");
       super.setUp();
 
       if (manuService == null)
@@ -36,44 +44,41 @@ public class TestJpaCatalogEntryService extends PersistenceTestCase
       manuService.save(manu1);
       manuService.save(manu2);
 
-      final CatalogEntry cat = new CatalogEntry("CatalogEntry-1", manu1);
-      catService.save(cat);
-      catId = cat.getId();
-
+      catService.save(new CatalogEntry("CatalogEntry-1", manu1));
       catService.save(new CatalogEntry("CatalogEntry-2", manu1));
       catService.save(new CatalogEntry("CatalogEntry-3", manu2));
 
       DatabaseResources.getEntityManager().flush();
    }
 
-   public final void testGetCatalogEntries()
+   @After
+   @Override
+   public void tearDown() throws Exception
+   {
+      super.tearDown();
+      System.err.println("tearDown");
+   }
+
+   @Test
+   public final void getCatalogEntries()
    {
       final List<CatalogEntry> cats = catService.getCatalogEntries();
       assertNotNull(cats);
       assertEquals(3, cats.size());
    }
 
-   public final void getCatalogEntriesManufacturerFunctionalEntity()
-   {
-      final List<CatalogEntry> cats = catService.getCatalogEntries(manu1, null);
-      assertNotNull(cats);
-      assertEquals(2, cats.size());
-   }
-
-   public final void testSave()
+   @Test
+   public final void saveGetCatalogEntry()
    {
       final CatalogEntry cat = new CatalogEntry("CatalogEntry-4", manu2);
       catService.save(cat);
 
       assertTrue(cat.getId() != 0);
       assertEquals("CatalogEntry-4", cat.getName());
-   }
 
-   public final void testGetCatalogEntry()
-   {
-      final CatalogEntry cat = catService.getCatalogEntry(catId);
-      assertNotNull(cat);
-      assertEquals(catId, cat.getId());
-      assertEquals("CatalogEntry-1", cat.getName());
+      final CatalogEntry cat2 = catService.getCatalogEntry(cat.getId());
+      assertNotNull(cat2);
+      assertEquals(cat.getId(), cat2.getId());
+      assertEquals(cat.getName(), cat2.getName());
    }
 }

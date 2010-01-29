@@ -1,5 +1,7 @@
 package org.freebus.fts.project.service.jpa;
 
+import javax.persistence.EntityTransaction;
+
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.project.service.AreaService;
 import org.freebus.fts.project.service.ProjectFactory;
@@ -21,5 +23,11 @@ public final class JpaProjectFactory implements ProjectFactory
    public AreaService getAreaService()
    {
       return new JpaAreaService(DatabaseResources.getEntityManager());
+   }
+
+   @Override
+   public EntityTransaction getTransaction()
+   {
+      return DatabaseResources.getEntityManager().getTransaction();
    }
 }

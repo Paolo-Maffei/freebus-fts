@@ -1,15 +1,20 @@
 package test;
 
+import static org.junit.Assert.*;
+
 import java.util.List;
 import java.util.Map;
 
+import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.project.service.ProjectService;
+import org.junit.Test;
 
 public class TestProjectService extends PersistenceTestCase
 {
-   public final void testGetProjectNamesGetProjects()
+   @Test
+   public final void getProjectNamesGetProjects()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
@@ -28,6 +33,8 @@ public class TestProjectService extends PersistenceTestCase
       assertNotSame(project1.getId(), project3.getId());
       assertNotSame(project2.getId(), project3.getId());
 
+      DatabaseResources.getEntityManager().flush();
+
       final Map<Integer,String> projectNames = projectService.getProjectNames();
       assertNotNull(projectNames);
 
@@ -45,13 +52,15 @@ public class TestProjectService extends PersistenceTestCase
       assertTrue(projects.contains(project3));
    }
 
-   public final void testSaveGetProject()
+   @Test
+   public final void saveGetProject()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
       final Project project = new Project();
       project.setName("Empty Project");
       projectService.save(project);
+      DatabaseResources.getEntityManager().flush();
       assertTrue(project.getId() != 0);
 
       final Project loadedProject = projectService.getProject(project.getId());
@@ -59,13 +68,15 @@ public class TestProjectService extends PersistenceTestCase
       assertSame(project, loadedProject);
    }
 
-   public final void testSaveGetSampleProject()
+   @Test
+   public final void saveGetSampleProject()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
       final Project project = SampleProjectFactory.newProject();
       project.setName("Sample Project");
       projectService.save(project);
+      DatabaseResources.getEntityManager().flush();
       assertTrue(project.getId() != 0);
 
       final Project loadedProject = projectService.getProject(project.getId());
