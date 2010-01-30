@@ -25,8 +25,8 @@
   <developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</developerConnection>
  </scm>
  <modules>
-  <module>freebus-fts-common</module>
   <module>freebus-fts-knxcomm</module>
+  <module>freebus-fts-persistence</module>
   <module>freebus-fts-products</module>
   <module>freebus-fts-project</module>
   <module>freebus-fts</module>

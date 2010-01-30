@@ -8,9 +8,9 @@
  </parent>
  <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
- <artifactId>common</artifactId>
+ <artifactId>persistence</artifactId>
  <packaging>jar</packaging>
- <name>freebus-fts-common</name>
+ <name>freebus-fts-persistence</name>
  <dependencies>
   <dependency>
    <groupId>javax.persistence</groupId>
@@ -37,17 +37,6 @@
     <configuration>
      <source>1.6</source>
      <target>1.6</target>
-    </configuration>
-   </plugin>
-   <plugin>
-    <artifactId>maven-jar-plugin</artifactId>
-    <configuration>
-     <finalName>freebus-fts-common</finalName>
-     <archive>
-      <manifest>
-       <addClasspath>false</addClasspath>
-      </manifest>
-     </archive>
     </configuration>
    </plugin>
   </plugins>
