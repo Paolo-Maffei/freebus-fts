@@ -18,8 +18,8 @@
  <description>Freebus Tools Software</description>
  <url>http://www.freebus.org</url>
  <issueManagement>
- 	<system>Redmine</system>
- 	<url>http://bugs.freebus.org</url>
+  <system>Redmine</system>
+  <url>http://bugs.freebus.org</url>
  </issueManagement>
  <build>
   <plugins>
@@ -61,10 +61,30 @@
       <id>make-assembly</id>
       <phase>package</phase>
       <goals>
-       <goal>assembly</goal>
+       <goal>deploy</goal>
       </goals>
      </execution>
     </executions>
+   </plugin>
+   <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>exec-maven-plugin</artifactId>
+    <version>1.1</version>
+    <executions>
+     <execution>
+      <goals>
+       <goal>deploy</goal>
+      </goals>
+     </execution>
+    </executions>
+    <configuration>
+     <executable>tools/deploy-ftp.pl</executable>
+     <arguments>
+      <argument>--config=~/.deploy-fts</argument>
+      <argument>--verbose</argument>
+      <argument>target/freebus-fts-${project.version}-distribution-NIX.zip</argument>
+     </arguments>
+    </configuration>
    </plugin>
   </plugins>
  </build>
