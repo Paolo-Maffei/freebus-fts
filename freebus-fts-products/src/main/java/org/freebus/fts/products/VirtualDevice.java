@@ -1,5 +1,6 @@
 package org.freebus.fts.products;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -34,11 +35,11 @@ public class VirtualDevice
    @JoinColumn(name = "catalog_entry_id", nullable = false)
    public CatalogEntry catalogEntry;
 
-   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+   @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = FunctionalEntity.class)
    @JoinColumn(name = "functional_entity_id", nullable = false)
    public FunctionalEntity functionalEntity;
 
-   @ManyToOne(fetch = FetchType.LAZY, optional = true)
+   @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "program_id", nullable = true)
    private Program program;
 
@@ -144,6 +145,6 @@ public class VirtualDevice
    @Override
    public String toString()
    {
-      return name;
+      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
    }
 }

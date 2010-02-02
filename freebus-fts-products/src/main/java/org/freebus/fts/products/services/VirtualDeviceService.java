@@ -29,4 +29,9 @@ public interface VirtualDeviceService
     */
    public List<VirtualDevice> getVirtualDevices(FunctionalEntity[] functionalEntities)
          throws PersistenceException;
+
+   /**
+    * Save a virtual device.
+    */
+   public void save(VirtualDevice device) throws PersistenceException;
 }

@@ -16,6 +16,7 @@ import javax.swing.tree.TreePath;
 
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
+import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.project.Area;
@@ -85,7 +86,7 @@ public class TopologyView extends AbstractPage
     */
    private void initToolBar()
    {
-      final JToolBar toolBar = new JToolBar();
+      final JToolBar toolBar = new ToolBar();
       add(toolBar, BorderLayout.NORTH);
 
       btnAddArea = toolBar.add(new AbstractAction()

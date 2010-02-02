@@ -102,6 +102,6 @@ public class Manufacturer
    @Override
    public String toString()
    {
-      return name + " [" + Integer.toString(id) + "]";
+      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
    }
 }

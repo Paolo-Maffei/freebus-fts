@@ -29,6 +29,32 @@ public final class DatabasePage extends SettingsPage
    private final Vector<DatabaseDriverPage> cfgPages = new Vector<DatabaseDriverPage>();
 
    /**
+    * Internal class for the database-driver selection combo-box.
+    */
+   protected class DriverTypeItem
+   {
+      private final DriverType type;
+      private final String label;
+      
+      public DriverTypeItem(final DriverType type, final String label)
+      {
+         this.type = type;
+         this.label = label;
+      }
+
+      @Override
+      public String toString()
+      {
+         return label;
+      }
+
+      public DriverType getType()
+      {
+         return type;
+      }
+   }
+
+   /**
     * Create a database settings page.
     */
    public DatabasePage()
@@ -109,7 +135,7 @@ public final class DatabasePage extends SettingsPage
          add(cfgPage, c);
          cfgPages.add(cfgPage);
 
-         cboConnectionType.addItem(label);
+         cboConnectionType.addItem(new DriverTypeItem(type, label));
          if (typeStr.equals(connTypeStr))
             cboConnectionType.setSelectedIndex(cboConnectionType.getItemCount() - 1);
       }
@@ -134,7 +160,7 @@ public final class DatabasePage extends SettingsPage
     */
    protected DriverType getSelectedDriverType()
    {
-      return DriverType.values()[cboConnectionType.getSelectedIndex()];
+      return ((DriverTypeItem) cboConnectionType.getSelectedItem()).getType();
    }
 
    /**

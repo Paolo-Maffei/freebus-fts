@@ -48,4 +48,10 @@ public final class VdxFunctionalEntityService implements FunctionalEntityService
    {
       return manager.fetch(FunctionalEntity.class, id);
    }
+
+   @Override
+   public void save(FunctionalEntity funcEnt) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
 }

@@ -1,5 +1,6 @@
 package org.freebus.fts.products;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -22,7 +23,7 @@ public class FunctionalEntity
    @Column(name = "functional_entity_id", nullable = false)
    private int id;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, targetEntity = Manufacturer.class, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
    private Manufacturer manufacturer;
 
@@ -32,8 +33,8 @@ public class FunctionalEntity
    @Column(name = "functional_entity_description")
    private String description;
 
-   @ManyToOne(fetch = FetchType.EAGER, optional = false)
-   @JoinColumn(name = "parent_id")
+   @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "parent_id", nullable = true)
    @VdxField(name = "fun_functional_entity_id")
    public FunctionalEntity parent;
 
@@ -135,6 +136,6 @@ public class FunctionalEntity
    @Override
    public String toString()
    {
-      return name;
+      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
    }
 }

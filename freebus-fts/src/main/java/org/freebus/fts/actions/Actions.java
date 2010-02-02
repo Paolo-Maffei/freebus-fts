@@ -3,6 +3,7 @@ package org.freebus.fts.actions;
 import javax.swing.Action;
 import javax.swing.JButton;
 import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JToolBar;
 
 /**
@@ -12,12 +13,15 @@ public enum Actions
 {
    /** Browse the contents of a VD_ products file. */
    BROWSE_PRODUCTS_VDX(new BrowseProductsVdxAction()),
-   
+
    /** Show the bus-monitor. */
    BUS_MONITOR(new BusMonitorAction()),
 
    /** Exit the application. */
    EXIT(new ExitAction()),
+
+   /** Import products from of a VD_ file into the FTS database. */
+   IMPORT_PRODUCTS(new ImportProductsAction()),
 
    /** Open the logical structure of the project. */
    LOGICAL_VIEW(new LogicalViewAction()),
@@ -51,27 +55,29 @@ public enum Actions
 
    /**
     * Add the action to the given menu.
-    *
+    * 
     * @param menu - the menu to which the action is added.
+    * @return The created menu item.
     */
-   public void addTo(JMenu menu)
+   public JMenuItem addTo(JMenu menu)
    {
-      menu.add(action);
+      return menu.add(action);
    }
 
    /**
     * Add the action to the tool bar.
-    *
+    * 
     * @param toolBar - the tool bar to which the action is added.
+    * @return The created tool bar button.
     */
-   public void addTo(JToolBar toolBar)
+   public JButton addTo(JToolBar toolBar)
    {
-      JButton btn = toolBar.add(action);
+      final JButton btn = toolBar.add(action);
 
       if (action instanceof BasicAction)
-      {
          btn.setToolTipText(((BasicAction) action).getToolTipText());
-      }
+
+      return btn;
    }
 
    /*

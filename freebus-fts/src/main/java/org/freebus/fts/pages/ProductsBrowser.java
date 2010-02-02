@@ -9,6 +9,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +39,8 @@ import javax.swing.tree.TreeSelectionModel;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.CatalogEntryDetails;
+import org.freebus.fts.components.items.FunctionalEntityItem;
+import org.freebus.fts.components.items.ManufacturerItem;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.products.CatalogEntry;
@@ -237,8 +240,15 @@ public class ProductsBrowser extends AbstractPage
          final ManufacturerService dao = productsFactory.getManufacturerService();
          if (dao != null)
          {
-            for (Manufacturer manufacturer : dao.getActiveManufacturers())
-               cboManufacturer.addItem(manufacturer);
+            final List<Manufacturer> manus = dao.getActiveManufacturers();
+
+            final ManufacturerItem items[] = new ManufacturerItem[manus.size()];
+            for (int i = manus.size() - 1; i >= 0; --i)
+               items[i] = new ManufacturerItem(manus.get(i));
+            Arrays.sort(items);
+
+            for (ManufacturerItem item: items)
+               cboManufacturer.addItem(item);
          }
 
          if (cboManufacturer.getItemCount() > 0) cboManufacturer.setSelectedIndex(0);
@@ -282,7 +292,7 @@ public class ProductsBrowser extends AbstractPage
                      parentNode = rootCategories;
                   }
 
-                  final DefaultMutableTreeNode node = new DefaultMutableTreeNode(cat, true);
+                  final DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FunctionalEntityItem(cat), true);
                   parentNode.add(node);
 
                   parentNodes.put(cat, node);
@@ -376,7 +386,7 @@ public class ProductsBrowser extends AbstractPage
     */
    protected Manufacturer getSelectedManufacturer()
    {
-      return (Manufacturer) cboManufacturer.getSelectedItem();
+      return ((ManufacturerItem) cboManufacturer.getSelectedItem()).getManufacturer();
    }
 
    /**
@@ -392,10 +402,10 @@ public class ProductsBrowser extends AbstractPage
       for (TreePath path : paths)
       {
          final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-         entities.add((FunctionalEntity) node.getUserObject());
+         entities.add(((FunctionalEntityItem) node.getUserObject()).getFunctionalEntity());
 
          for (TreeNode child : TreeUtils.getChildTreeNodes(node))
-            entities.add((FunctionalEntity) ((DefaultMutableTreeNode) child).getUserObject());
+            entities.add(((FunctionalEntityItem) ((DefaultMutableTreeNode) child).getUserObject()).getFunctionalEntity());
       }
 
       final FunctionalEntity[] result = new FunctionalEntity[entities.size()];

@@ -3,14 +3,14 @@
  <modelVersion>4.0.0</modelVersion>
  <parent>
   <groupId>org.freebus.fts</groupId>
-  <artifactId>parent</artifactId>
+  <artifactId>freebus-fts-parent</artifactId>
   <version>0.1-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
  <groupId>org.freebus.fts</groupId>
- <artifactId>knxcomm</artifactId>
+ <artifactId>freebus-fts-knxcomm</artifactId>
  <name>freebus-fts-knxcomm</name>
- <description>Standalone library for KNX/EIB bus communication. Shall not depend on other FTS components.</description>
+ <description>Standalone library for KNX/EIB bus communication. Must not depend on other FTS components.</description>
  <build>
   <extensions>
    <extension>

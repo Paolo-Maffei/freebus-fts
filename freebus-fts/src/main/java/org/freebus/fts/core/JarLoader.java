@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.internal;
+package org.freebus.fts.core;
 
 import java.lang.reflect.Method;
 import java.net.URL;
@@ -16,7 +16,7 @@ public final class JarLoader
    {
       try
       {
-         final Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] { URL.class });
+         final Method addURL = URLClassLoader.class.getDeclaredMethod("addURL", new Class[] {URL.class});
          addURL.setAccessible(true);
    
          final ClassLoader cl = ClassLoader.getSystemClassLoader();

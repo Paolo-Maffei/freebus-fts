@@ -1,14 +1,12 @@
 package org.freebus.fts.common;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileReader;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
-import java.util.TreeMap;
+import java.io.InputStream;
+import java.util.Properties;
 
 /**
  * A simple configuration class.
@@ -16,7 +14,7 @@ import java.util.TreeMap;
 public class SimpleConfig
 {
    private static SimpleConfig instance;
-   private final Map<String, String> values = new TreeMap<String, String>();
+   private final Properties props = new Properties();
 
    /**
     * Returns the global configuration object. A {@link SimpleConfig} object is
@@ -52,7 +50,7 @@ public class SimpleConfig
     */
    public boolean containsKey(String key)
    {
-      return values.containsKey(key);
+      return props.containsKey(key);
    }
 
    /**
@@ -61,7 +59,7 @@ public class SimpleConfig
     */
    public String getStringValue(String key)
    {
-      String val = values.get(key);
+      String val = props.getProperty(key);
       if (val == null)
          return "";
       return val;
@@ -69,11 +67,11 @@ public class SimpleConfig
 
    /**
     * @return the configuration value for the given key as Integer. Returns zero
-    *         if the key does not exist in the config object.
+    *         if the key does not exist in the configuration object.
     */
    public int getIntValue(String key)
    {
-      String val = values.get(key);
+      String val = props.getProperty(key);
       if (val == null)
          return 0;
       return Integer.parseInt(val);
@@ -81,11 +79,11 @@ public class SimpleConfig
 
    /**
     * @return the configuration value for the given key. Returns null if the key
-    *         does not exist in the config object.
+    *         does not exist in the configuration object.
     */
    public String get(String key)
    {
-      return values.get(key);
+      return props.getProperty(key);
    }
 
    /**
@@ -93,7 +91,7 @@ public class SimpleConfig
     */
    public void put(String key, String value)
    {
-      values.put(key, value);
+      props.setProperty(key, value);
    }
 
    /**
@@ -103,7 +101,7 @@ public class SimpleConfig
     */
    public void clear()
    {
-      values.clear();
+      props.clear();
    }
 
    /**
@@ -125,46 +123,19 @@ public class SimpleConfig
       clear();
       init();
 
-      FileReader fileReader = null;
+      InputStream inStream = null;
       try
       {
-         fileReader = new FileReader(new File(fileName));
-         final BufferedReader in = new BufferedReader(fileReader);
-
-         String key, val, line;
-         int idx, lineNo = 0;
-
-         while (in.ready())
-         {
-            ++lineNo;
-            line = in.readLine().trim();
-            if (line.length() < 2 || line.startsWith(";") || line.startsWith("#"))
-               continue;
-            idx = line.indexOf('=');
-            if (idx < 0)
-               continue;
-            key = line.substring(0, idx);
-            val = line.substring(idx + 1);
-
-            values.put(key, val);
-         }
+         inStream = new FileInputStream(fileName);
+         props.load(inStream);
       }
       catch (FileNotFoundException e)
       {
-         // Not a problem
       }
       finally
       {
-         if (fileReader != null)
-         {
-            try
-            {
-               fileReader.close();
-            }
-            catch (IOException e)
-            {
-            }
-         }
+         if (inStream != null)
+            inStream.close();
       }
    }
 
@@ -177,16 +148,18 @@ public class SimpleConfig
    {
       final String configFileName = Environment.getAppDir() + "/config.ini";
 
-      final FileOutputStream outStream = new FileOutputStream(new File(configFileName));
-      final PrintWriter out = new PrintWriter(outStream);
+      FileOutputStream out = null;
 
-      out.println("; " + Environment.getAppName() + " configuration");
-
-      for (String key : values.keySet())
-         out.printf("%s=%s\n", key, values.get(key));
-
-      out.flush();
-      outStream.close();
+      try
+      {
+         out = new FileOutputStream(new File(configFileName));
+         props.store(out, Environment.getAppName() + " configuration");
+      }
+      finally
+      {
+         if (out != null)
+            out.close();
+      }
    }
 
 }

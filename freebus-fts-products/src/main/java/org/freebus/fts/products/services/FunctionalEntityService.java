@@ -26,4 +26,9 @@ public interface FunctionalEntityService
     * Get all functional entities of the given manufacturer, sorted by name.
     */
    public List<FunctionalEntity> getFunctionalEntities(Manufacturer m) throws PersistenceException;
+
+   /**
+    * Save a functional entity.
+    */
+   public void save(FunctionalEntity funcEnt);
 }

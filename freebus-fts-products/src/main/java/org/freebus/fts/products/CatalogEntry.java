@@ -34,7 +34,7 @@ public class CatalogEntry implements Serializable
    @Column(name = "entry_name", nullable = false)
    private String name;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY, targetEntity = Manufacturer.class)
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, targetEntity = Manufacturer.class, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
    private Manufacturer manufacturer;
 
@@ -243,6 +243,6 @@ public class CatalogEntry implements Serializable
    @Override
    public String toString()
    {
-      return name;
+      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
    }
 }

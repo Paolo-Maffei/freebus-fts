@@ -2,9 +2,9 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
- <artifactId>parent</artifactId>
+ <artifactId>freebus-fts-parent</artifactId>
  <version>0.1-SNAPSHOT</version>
- <name>freebus-fts-parent</name>
+ <name>Freebus Tools Software</name>
  <packaging>pom</packaging>
  <organization>
   <name>The Freebus Project</name>
@@ -69,10 +69,10 @@
    <name>eclipselink-repo</name>
    <url>http://www.eclipse.org/downloads/download.php?r=1&amp;nf=1&amp;file=/rt/eclipselink/maven.repo</url>
   </repository>
-  <repository> 
-   <id>jboss</id> 
-   <name>jboss</name> 
-   <url>http://repository.jboss.org/maven2</url> 
-  </repository> 
+  <repository>
+   <id>jboss</id>
+   <name>jboss</name>
+   <url>http://repository.jboss.org/maven2</url>
+  </repository>
  </repositories>
 </project>

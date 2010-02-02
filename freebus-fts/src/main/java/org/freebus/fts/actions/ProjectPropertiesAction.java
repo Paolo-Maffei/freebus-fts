@@ -6,7 +6,6 @@ import java.awt.event.WindowEvent;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.ProjectProperties;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
@@ -23,8 +22,7 @@ public final class ProjectPropertiesAction extends BasicAction
     */
    ProjectPropertiesAction()
    {
-      super(I18n.getMessage("ProjectPropertiesAction.Name"), I18n.getMessage("ProjectPropertiesAction.ToolTip"), ImageCache
-            .getIcon("icons/info"));
+      super(I18n.getMessage("ProjectPropertiesAction.Name"), I18n.getMessage("ProjectPropertiesAction.ToolTip"), null);
    }
 
    /**

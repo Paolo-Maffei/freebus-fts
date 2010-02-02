@@ -1,14 +1,14 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
  <parent>
-  <artifactId>parent</artifactId>
+  <artifactId>freebus-fts-parent</artifactId>
   <groupId>org.freebus.fts</groupId>
   <version>0.1-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
  <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
- <artifactId>persistence</artifactId>
+ <artifactId>freebus-fts-persistence</artifactId>
  <packaging>jar</packaging>
  <name>freebus-fts-persistence</name>
  <dependencies>

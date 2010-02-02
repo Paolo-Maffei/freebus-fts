@@ -10,7 +10,7 @@ import org.freebus.fts.dialogs.Dialogs;
 
 /**
  * Configuration settings. The configuration is a global singleton object that
- * is automatically loaded.
+ * is automatically loaded on demand.
  */
 public final class Config extends SimpleConfig
 {

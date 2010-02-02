@@ -1,5 +1,6 @@
 package org.freebus.fts.actions;
 
+import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 
 import org.freebus.fts.MainWindow;
@@ -28,7 +29,16 @@ public final class SettingsAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      final Settings dlg = new Settings(MainWindow.getInstance());
-      dlg.setVisible(true);
+      final MainWindow mainWin = MainWindow.getInstance();
+      try
+      {
+         mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+         final Settings dlg = new Settings(mainWin);
+         dlg.setVisible(true);
+      }
+      finally
+      {
+         mainWin.setCursor(Cursor.getDefaultCursor());
+      }
    }
 }

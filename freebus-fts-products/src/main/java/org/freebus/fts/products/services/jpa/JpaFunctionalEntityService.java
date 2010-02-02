@@ -40,4 +40,10 @@ public final class JpaFunctionalEntityService implements FunctionalEntityService
    {
       return entityManager.find(FunctionalEntity.class, id);
    }
+
+   @Override
+   public void save(FunctionalEntity funcEnt)
+   {
+      entityManager.persist(funcEnt);
+   }
 }

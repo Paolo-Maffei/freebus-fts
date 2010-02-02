@@ -1,10 +1,12 @@
 package org.freebus.fts.dialogs.settings;
 
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.util.Arrays;
 
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -33,13 +35,19 @@ public final class UIPage extends SettingsPage
    /**
     * Internal class for look-and-feel combo box entries
     */
-   static class LookAndFeelItem
+   static class LookAndFeelItem implements Comparable<LookAndFeelItem>
    {
       public final LookAndFeelInfo info;
 
       public LookAndFeelItem(LookAndFeelInfo info)
       {
          this.info = info;
+      }
+
+      @Override
+      public int compareTo(LookAndFeelItem o)
+      {
+         return info.getName().compareTo(o.info.getName());
       }
 
       @Override
@@ -95,12 +103,17 @@ public final class UIPage extends SettingsPage
       add(spacer, c);
 
       final String currentLFClassName = UIManager.getLookAndFeel().getClass().getCanonicalName();
-      for (LookAndFeelInfo lfInfo : UIManager.getInstalledLookAndFeels())
-      {
-         cboLookAndFeel.addItem(new LookAndFeelItem(lfInfo));
-         System.out.println("- " + lfInfo.getClassName());
+      final LookAndFeelInfo[] lafInfos = UIManager.getInstalledLookAndFeels();
+      final LookAndFeelItem[] lafItems = new LookAndFeelItem[lafInfos.length];
 
-         if (currentLFClassName.equals(lfInfo.getClassName()))
+      for (int i = lafInfos.length - 1; i >= 0; --i)
+         lafItems[i] = new LookAndFeelItem(lafInfos[i]);
+      Arrays.sort(lafItems);
+
+      for (LookAndFeelItem lafItem: lafItems)
+      {
+         cboLookAndFeel.addItem(lafItem);
+         if (currentLFClassName.equals(lafItem.info.getClassName()))
             cboLookAndFeel.setSelectedIndex(cboLookAndFeel.getItemCount() - 1);
       }
 
@@ -127,8 +140,12 @@ public final class UIPage extends SettingsPage
          @Override
          public void run()
          {
+            final LookAndFeel previousLookAndFeel = UIManager.getLookAndFeel();
+
             try
             {
+               setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
                UIManager.setLookAndFeel(item.info.getClassName());
                SwingUtilities.updateComponentTreeUI(getParent().getParent());
             }
@@ -136,6 +153,22 @@ public final class UIPage extends SettingsPage
             {
                Dialogs.showExceptionDialog(e, I18n.formatMessage("Settings.UIPage.ErrChangeLookAndFeel",
                      new Object[] { item.info.getName() }));
+
+               if (previousLookAndFeel != null)
+               {
+                  try
+                  {
+                     UIManager.setLookAndFeel(previousLookAndFeel);
+                  }
+                  catch (UnsupportedLookAndFeelException e1)
+                  {
+                     e1.printStackTrace();
+                  }
+               }
+            }
+            finally
+            {
+               setCursor(Cursor.getDefaultCursor());
             }
          }
       });
@@ -150,7 +183,14 @@ public final class UIPage extends SettingsPage
       final SimpleConfig cfg = Config.getInstance();
       cfg.put("lookAndFeel", ((LookAndFeelItem) cboLookAndFeel.getSelectedItem()).info.getClassName());
 
-      SwingUtilities.updateComponentTreeUI(MainWindow.getInstance());
+      try
+      {
+         SwingUtilities.updateComponentTreeUI(MainWindow.getInstance());
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("Settings.UIPage.ErrActivatingLookAndFeel"));
+      }
    }
 
    /**

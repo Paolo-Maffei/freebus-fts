@@ -8,7 +8,9 @@ import java.util.Set;
 import javax.persistence.PersistenceException;
 
 import org.freebus.fts.products.services.CatalogEntryService;
+import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductsFactory;
+import org.freebus.fts.products.services.VirtualDeviceService;
 
 /**
  * Class for importing parts of a products database into FTS' internal
@@ -39,11 +41,20 @@ public final class ProductsImporter
     */
    public void copy(List<VirtualDevice> devices) throws PersistenceException
    {
+      final VirtualDeviceService virtDevService = destFactory.getVirtualDeviceService();
+      final FunctionalEntityService funcEntService = destFactory.getFunctionalEntityService();
+
       for (VirtualDevice device: devices)
       {
          final CatalogEntry catalogEntry = device.getCatalogEntry();
          if (!catalogEntries.contains(catalogEntry))
             copy(catalogEntry);
+
+         final FunctionalEntity funcEnt = device.getFunctionalEntity();
+         if (funcEntService.getFunctionalEntity(funcEnt.getId()) == null)
+            funcEntService.save(funcEnt);
+
+         virtDevService.save(device);
       }
    }
 

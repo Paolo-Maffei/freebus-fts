@@ -1,25 +1,25 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
  <parent>
-  <artifactId>parent</artifactId>
+  <artifactId>freebus-fts-parent</artifactId>
   <groupId>org.freebus.fts</groupId>
   <version>0.1-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
  <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
- <artifactId>products</artifactId>
+ <artifactId>freebus-fts-products</artifactId>
  <name>freebus-fts-products</name>
  <description>FTS Products database classes</description>
  <dependencies>
   <dependency>
    <groupId>org.freebus.fts</groupId>
-   <artifactId>persistence</artifactId>
+   <artifactId>freebus-fts-persistence</artifactId>
    <version>0.1-SNAPSHOT</version>
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
-   <artifactId>knxcomm</artifactId>
+   <artifactId>freebus-fts-knxcomm</artifactId>
    <version>0.1-SNAPSHOT</version>
   </dependency>
   <dependency>

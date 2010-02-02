@@ -53,4 +53,10 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
             + "where vd.functionalEntityId in (" + funcsStr.toString() + ") order by vd.name");
       return query.getResultList();
    }
+
+   @Override
+   public void save(VirtualDevice device) throws PersistenceException
+   {
+      entityManager.persist(device);
+   }
 }

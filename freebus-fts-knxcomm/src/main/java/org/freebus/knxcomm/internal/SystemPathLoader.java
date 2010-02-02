@@ -4,17 +4,22 @@ import java.io.File;
 import java.lang.reflect.Field;
 
 /**
- * To make it clear: this is a hack. But it is the only way to get some JARs to find their
- * native libraries, like for RXTX.
+ * Load a library by changing Java's system path and using
+ * {@link System#loadLibrary}.
+ * 
+ * To make it clear: this is a hack. But it is the only way to get some JARs to
+ * find their native libraries, like for RXTX.
  */
 public final class SystemPathLoader
 {
    /**
-    * Load a library by changing Java's system path and using {@link System#loadLibrary}.
+    * Load a library by changing Java's system path and using
+    * {@link System#loadLibrary}.
     * 
     * @param libPath - the path to the library that shall be loaded.
-    * @param libName - the name of the library, without system specific extensions like ".dll"
-    * @throws Exception 
+    * @param libName - the name of the library, without system specific
+    *           extensions like ".dll"
+    * @throws Exception
     */
    public static void loadLibrary(String libPath, String libName) throws Exception
    {
@@ -25,16 +30,18 @@ public final class SystemPathLoader
       {
          field = clazz.getDeclaredField("sys_paths");
          boolean accessible = field.isAccessible();
-         if (!accessible) field.setAccessible(true);
+         if (!accessible)
+            field.setAccessible(true);
          Object original = field.get(clazz);
 
-         // Reset the "sys_paths" to null so that whenever "System.loadLibrary" is called, it
+         // Reset the "sys_paths" to null so that whenever "System.loadLibrary"
+         // is called, it
          // will be reconstructed with the changed value.
          field.set(clazz, null);
 
          try
          {
-            System.setProperty("java.library.path", new File(libPath).getAbsolutePath()); 
+            System.setProperty("java.library.path", new File(libPath).getAbsolutePath());
             System.loadLibrary(libName);
          }
          finally

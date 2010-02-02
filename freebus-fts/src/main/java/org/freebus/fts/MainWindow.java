@@ -13,6 +13,7 @@ import javax.swing.JToolBar;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.components.JobQueueView;
+import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
@@ -116,6 +117,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       fileMenu.addSeparator();
       Actions.EXIT.addTo(fileMenu);
 
+      final JMenu productsMenu = createJMenu(I18n.getMessage("MainWindow.ProductsMenu"));
+      Actions.IMPORT_PRODUCTS.addTo(productsMenu);
+      Actions.BROWSE_PRODUCTS_VDX.addTo(productsMenu);
+
       final JMenu viewMenu = createJMenu(I18n.getMessage("MainWindow.ViewMenu"));
       Actions.BUS_MONITOR.addTo(viewMenu);
       viewMenu.addSeparator();
@@ -134,7 +139,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    {
       final Container content = getContentPane();
 
-      final JToolBar toolBar = new JToolBar();
+      final JToolBar toolBar = new ToolBar();
       content.add(toolBar, BorderLayout.NORTH);
 
       Actions.EXIT.addTo(toolBar);
