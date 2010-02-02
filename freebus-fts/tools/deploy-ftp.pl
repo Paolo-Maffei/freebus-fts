@@ -91,7 +91,7 @@ sub main #()
    if ($dir ne '')
    {
       print "$appName: changing directory into $dir\n" if ($verbose);
-      $ftp->cwd($dir) || die "$appName: cannot change director to $dir: $!\n";
+      $ftp->cwd($dir) || die "$appName: cannot change into directory $dir: $!\n";
    }
 
    my $tmpFile = $name.'.part';
