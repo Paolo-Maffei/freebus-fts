@@ -43,6 +43,7 @@ public final class BrowseProductsVdxAction extends BasicAction
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
          dlg.addChoosableFileFilter(new VdxFileFilter());
+         dlg.setDialogTitle(I18n.getMessage("BrowseProductsVdxAction.openFileTitle"));
 
          if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)
             return;

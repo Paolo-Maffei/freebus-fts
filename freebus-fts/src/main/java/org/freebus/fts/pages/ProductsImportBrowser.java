@@ -1,5 +1,7 @@
 package org.freebus.fts.pages;
 
+
+
 /**
  * A products browser that allows to mark products for import.
  */
@@ -10,5 +12,6 @@ public class ProductsImportBrowser extends ProductsBrowser
    public ProductsImportBrowser()
    {
       super();
+      enableImportMode();
    }
 }

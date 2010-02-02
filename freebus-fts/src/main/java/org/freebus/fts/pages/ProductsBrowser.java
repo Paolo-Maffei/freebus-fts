@@ -17,6 +17,9 @@ import java.util.Map;
 
 import javax.persistence.PersistenceException;
 import javax.swing.BorderFactory;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -78,6 +81,10 @@ public class ProductsBrowser extends AbstractPage
 
    private final JLabel lblEntryName;
    private final CatalogEntryDetails ceDetails;
+   private final JPanel pnlBottom = new JPanel();
+
+   private JCheckBox cboImport = new JCheckBox(I18n.getMessage("ProductsBrowser.ImportOption"));
+   private boolean importMode = false;
 
    /**
     * Create a bus monitor widget.
@@ -92,14 +99,14 @@ public class ProductsBrowser extends AbstractPage
 
       final JPanel pnlTopLeft = new JPanel();
       final JPanel pnlTopRight = new JPanel();
-      final JPanel pnlBottom = new JPanel();
+      final JPanel pnlCenter = new JPanel();
 
       sppTop = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnlTopLeft, pnlTopRight);
       sppTop.setDividerLocation(300);
       sppTop.setContinuousLayout(true);
       sppTop.setFocusable(false);
 
-      sppCenter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sppTop, pnlBottom);
+      sppCenter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sppTop, pnlCenter);
       add(sppCenter, BorderLayout.CENTER);
       sppCenter.setDividerLocation(300);
       sppCenter.setContinuousLayout(true);
@@ -184,21 +191,60 @@ public class ProductsBrowser extends AbstractPage
             GridBagConstraints.BOTH, insets, 0, 0));
 
       //
-      // Bottom area
+      // Center area
       //
-      pnlBottom.setLayout(new GridBagLayout());
+      pnlCenter.setLayout(new GridBagLayout());
       row = -1;
 
       lblEntryName = new JLabel();
       lblEntryName.setFont(fntCaption.deriveFont(fntCaption.getSize() * 1.1f));
-      pnlBottom.add(lblEntryName, new GridBagConstraints(0, ++row, 1, 1, 1, 0, GridBagConstraints.WEST,
+      pnlCenter.add(lblEntryName, new GridBagConstraints(0, ++row, 1, 1, 1, 0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, insets, 0, 4));
 
       ceDetails = new CatalogEntryDetails();
       ceDetails.setVisible(false);
       ceDetails.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED), BorderFactory.createLineBorder(getBackground(), 5)));
-      pnlBottom.add(ceDetails, new GridBagConstraints(0, ++row, 1, 1, 1, 10, GridBagConstraints.WEST,
+      pnlCenter.add(ceDetails, new GridBagConstraints(0, ++row, 1, 1, 1, 10, GridBagConstraints.WEST,
             GridBagConstraints.BOTH, insets, 0, 0));
+
+      //
+      // Bottom area
+      //
+      add(pnlBottom, BorderLayout.SOUTH);
+      pnlBottom.setVisible(false);
+      pnlBottom.setLayout(new BoxLayout(pnlBottom, BoxLayout.X_AXIS));
+      pnlBottom.add(cboImport);
+
+      final JButton btnImport = new JButton(I18n.getMessage("ProductsBrowser.ImportButton"));
+      pnlBottom.add(btnImport);
+      btnImport.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            importClicked();
+         }
+      });
+   }
+
+   /**
+    * Enable the import mode. In import mode the import buttons on the bottom of the page are
+    * enabled, and the {@link import} callback is called when the import button is clicked.
+    */
+   protected void enableImportMode()
+   {
+      importMode = true;
+      pnlBottom.setVisible(ceDetails.isVisible());
+   }
+
+   /**
+    * Returns the bottom panel. This panel is initially empty and can be used for extensions.
+    *
+    * @return the bottom panel.
+    */
+   public JPanel getBottomPanel()
+   {
+      return pnlBottom;
    }
 
    @Override
@@ -373,12 +419,20 @@ public class ProductsBrowser extends AbstractPage
 
       lblEntryName.setVisible(entry != null);
       ceDetails.setVisible(entry != null);
+      pnlBottom.setVisible(entry != null);
 
       if (entry != null && dev != null)
       {
          lblEntryName.setText(I18n.formatMessage("ProductsBrowser.DetailsCaption", new Object[] { dev.getName() }));
          ceDetails.setCatalogEntry(entry);
       }
+   }
+
+   /**
+    * The import button was clicked.
+    */
+   protected void importClicked()
+   {
    }
 
    /**
