@@ -24,14 +24,12 @@ public final class JpaProgramService implements ProgramService
       return entityManager.find(Program.class, id);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<Program> getPrograms() throws DAOException
    {
       final Query query = entityManager.createQuery("select p from Program p order by p.name");
 
-      @SuppressWarnings("unchecked")
-      final List<Program> result = query.getResultList();
-
-      return result;
+      return query.getResultList();
    }
 }

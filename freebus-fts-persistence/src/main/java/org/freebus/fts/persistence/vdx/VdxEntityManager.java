@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx;
+package org.freebus.fts.persistence.vdx;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -15,9 +15,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.internal.VdxAssociation;
-import org.freebus.fts.common.vdx.internal.VdxEntityInfo;
-import org.freebus.fts.common.vdx.internal.VdxEntityInspector;
+import org.freebus.fts.persistence.vdx.internal.VdxAssociation;
+import org.freebus.fts.persistence.vdx.internal.VdxEntityInfo;
+import org.freebus.fts.persistence.vdx.internal.VdxEntityInspector;
 
 /**
  * A simple entity manager that holds the entities of a VD_ file. Access methods
@@ -119,7 +119,7 @@ public final class VdxEntityManager
       }
 
       @SuppressWarnings("unchecked")
-      final T result = (T) info.getIds().get(id.toString());
+      T result = (T) info.getIds().get(id.toString());
 
       return result;
    }

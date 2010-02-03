@@ -1,11 +1,11 @@
-package org.freebus.fts.common.vdx.internal;
+package org.freebus.fts.persistence.vdx.internal;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
 
 
 /**

@@ -16,8 +16,8 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.db.DriverType;
 
 /**
  * Abstract base class for database-driver specific settings pages.

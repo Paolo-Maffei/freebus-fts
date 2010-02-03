@@ -1,4 +1,4 @@
-package org.freebus.fts.common;
+package org.freebus.fts.persistence;
 
 
 import java.io.IOException;

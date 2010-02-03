@@ -5,8 +5,8 @@ import java.io.IOException;
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
-import org.freebus.fts.common.vdx.VdxFileReader;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;

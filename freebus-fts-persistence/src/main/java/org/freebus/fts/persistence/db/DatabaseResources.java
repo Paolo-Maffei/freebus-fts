@@ -1,4 +1,4 @@
-package org.freebus.fts.common.db;
+package org.freebus.fts.persistence.db;
 
 import java.util.Properties;
 
@@ -9,8 +9,8 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.Environment;
-import org.freebus.fts.common.SimpleConfig;
+import org.freebus.fts.persistence.Environment;
+import org.freebus.fts.persistence.SimpleConfig;
 
 public class DatabaseResources
 {

@@ -47,9 +47,16 @@
    <scope>test</scope>
   </dependency>
   <dependency>
-  	<groupId>apache-log4j</groupId>
-  	<artifactId>log4j</artifactId>
-  	<version>1.2.15</version>
+   <groupId>apache-log4j</groupId>
+   <artifactId>log4j</artifactId>
+   <version>1.2.15</version>
+  </dependency>
+  <dependency>
+   <groupId>maven-plugins</groupId>
+   <artifactId>maven-cobertura-plugin</artifactId>
+   <version>1.4</version>
+   <type>jar</type>
+   <scope>test</scope>
   </dependency>
  </dependencies>
  <build>
@@ -62,6 +69,27 @@
     </configuration>
    </plugin>
   </plugins>
+  <pluginManagement>
+   <plugins>
+    <plugin>
+     <groupId>org.codehaus.mojo</groupId>
+     <artifactId>cobertura-maven-plugin</artifactId>
+     <configuration>
+      <formats>
+       <format>xml</format>
+      </formats>
+     </configuration>
+     <executions>
+      <execution>
+       <phase>package</phase>
+       <goals>
+        <goal>cobertura</goal>
+       </goals>
+      </execution>
+     </executions>
+    </plugin>
+   </plugins>
+  </pluginManagement>
  </build>
  <repositories>
   <repository>

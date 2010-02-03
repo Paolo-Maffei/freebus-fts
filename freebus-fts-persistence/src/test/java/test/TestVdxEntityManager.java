@@ -9,7 +9,7 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.junit.Test;
 
 import test.entities.TestFunctionalEntity;

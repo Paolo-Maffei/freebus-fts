@@ -4,7 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.freebus.fts.common.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 import org.junit.Test;

@@ -1,7 +1,12 @@
 package org.freebus.fts.pages;
 
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
+import org.freebus.fts.products.ProductsImporter;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
 
 /**
@@ -22,5 +27,13 @@ public class ProductsImportBrowser extends ProductsBrowser
     */
    protected void importProducts(Set<VirtualDevice> virtualDevices)
    {
+      final List<VirtualDevice> virtDevsList = new Vector<VirtualDevice>(virtualDevices.size());
+
+      final Iterator<VirtualDevice> it = virtualDevices.iterator();
+      while (it.hasNext())
+         virtDevsList.add(it.next());
+
+      final ProductsImporter importer = new ProductsImporter(getProductsFactory(), ProductsManager.getFactory());
+      importer.copy(virtDevsList);
    }
 }

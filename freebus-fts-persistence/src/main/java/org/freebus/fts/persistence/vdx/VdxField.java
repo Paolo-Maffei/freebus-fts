@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx;
+package org.freebus.fts.persistence.vdx;
 
 import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;

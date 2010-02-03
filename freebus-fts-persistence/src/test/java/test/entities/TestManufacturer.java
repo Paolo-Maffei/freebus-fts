@@ -8,7 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-import org.freebus.fts.common.vdx.VdxEntity;
+import org.freebus.fts.persistence.vdx.VdxEntity;
 import org.junit.Ignore;
 
 /**

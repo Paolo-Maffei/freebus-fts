@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx;
+package org.freebus.fts.persistence.vdx;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;

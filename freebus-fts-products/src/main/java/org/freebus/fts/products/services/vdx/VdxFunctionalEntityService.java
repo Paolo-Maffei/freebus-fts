@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.FunctionalEntityService;
@@ -22,22 +22,20 @@ public final class VdxFunctionalEntityService implements FunctionalEntityService
       this.manager = manager;
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<FunctionalEntity> getFunctionalEntities() throws PersistenceException
    {
-      @SuppressWarnings("unchecked")
-      final List<FunctionalEntity> result = (List<FunctionalEntity>) manager.fetchAll(FunctionalEntity.class);
-      return result; 
+      return (List<FunctionalEntity>) manager.fetchAll(FunctionalEntity.class);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<FunctionalEntity> getFunctionalEntities(Manufacturer m) throws PersistenceException
    {
-      @SuppressWarnings("unchecked")
-      final List<FunctionalEntity> entities = (List<FunctionalEntity>) manager.fetchAll(FunctionalEntity.class);
-
       final List<FunctionalEntity> result = new LinkedList<FunctionalEntity>();
-      for (FunctionalEntity entity : entities)
+
+      for (FunctionalEntity entity : (List<FunctionalEntity>) manager.fetchAll(FunctionalEntity.class))
          if (entity.getManufacturer() == m) result.add(entity);
 
       return result;

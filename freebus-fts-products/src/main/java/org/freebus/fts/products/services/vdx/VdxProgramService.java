@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import org.freebus.fts.common.vdx.VdxFileReader;
+import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProgramService;

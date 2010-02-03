@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.freebus.fts.common.vdx.VdxField;
+import org.freebus.fts.persistence.vdx.VdxField;
 
 /**
  * A line of a product description.

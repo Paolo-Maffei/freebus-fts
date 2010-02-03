@@ -27,12 +27,11 @@ public final class JpaCatalogEntryService implements CatalogEntryService
       final Query query = entityManager.createQuery("select ce from CatalogEntry ce");
 
       @SuppressWarnings("unchecked")
-      final List<CatalogEntry> results = query.getResultList();
+      List<CatalogEntry> results = query.getResultList();
 
       return results;
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public List<CatalogEntry> getCatalogEntries(Manufacturer m, FunctionalEntity[] functionalEntities)
          throws PersistenceException
@@ -50,7 +49,11 @@ public final class JpaCatalogEntryService implements CatalogEntryService
       final Query query = entityManager.createQuery("select ce from CatalogEntry ce, VirtualDevice vd "
             + "where ce.id=vd.catalogEntryId and ce.manufacturerId=" + Integer.toString(m.getId())
             + " and vd.functionalEntityId in (" + funcsStr.toString() + ") order by ce.name");
-      return query.getResultList();
+
+      @SuppressWarnings("unchecked")
+      List<CatalogEntry> result = (List<CatalogEntry>) query.getResultList();
+
+      return result;
    }
 
    @Override

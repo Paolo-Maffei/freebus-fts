@@ -60,11 +60,11 @@ public final class JpaProjectService implements ProjectService
    }
 
    @Override
+   @SuppressWarnings("unchecked")
    public List<Project> getProjects()
    {
       final Query query = entityManager.createQuery("select p from Project p", Project.class);
 
-      @SuppressWarnings("unchecked")
       final List<Project> result = query.getResultList();
 
       return result;

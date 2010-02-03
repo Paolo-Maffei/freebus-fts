@@ -2,8 +2,8 @@ package test;
 
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.fts.common.db.DatabaseResources;
-import org.freebus.fts.common.db.DriverType;
+import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DriverType;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectFactory;
 import org.junit.After;
@@ -23,7 +23,7 @@ public class PersistenceTestCase
 
    public static synchronized ProjectFactory getProjectFactory()
    {
-      if (projectFactory == null) projectFactory = ProjectManager.getDAOFactory();
+      if (projectFactory == null) projectFactory = ProjectManager.getProjectFactory();
       return projectFactory;
    }
 

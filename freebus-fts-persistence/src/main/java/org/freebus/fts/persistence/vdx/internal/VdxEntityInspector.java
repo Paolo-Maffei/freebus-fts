@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx.internal;
+package org.freebus.fts.persistence.vdx.internal;
 
 import java.io.InputStream;
 import java.lang.annotation.Annotation;
@@ -22,9 +22,9 @@ import javax.persistence.Table;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
-import org.freebus.fts.common.vdx.VdxEntity;
-import org.freebus.fts.common.vdx.VdxEntityManager;
-import org.freebus.fts.common.vdx.VdxField;
+import org.freebus.fts.persistence.vdx.VdxEntity;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxField;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

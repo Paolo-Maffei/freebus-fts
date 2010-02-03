@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx.internal;
+package org.freebus.fts.persistence.vdx.internal;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

@@ -11,7 +11,6 @@ import javax.swing.JMenu;
 import javax.swing.JToolBar;
 
 import org.freebus.fts.actions.Actions;
-import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
@@ -23,6 +22,7 @@ import org.freebus.fts.jobs.JobQueueListener;
 import org.freebus.fts.pages.LogicalView;
 import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
+import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectListener;
 import org.freebus.fts.project.ProjectManager;

@@ -7,7 +7,7 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.VirtualDeviceService;
@@ -30,18 +30,17 @@ public final class VdxVirtualDeviceService implements VirtualDeviceService
       return manager.fetch(VirtualDevice.class, id);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<VirtualDevice> getVirtualDevices() throws PersistenceException
    {
-      @SuppressWarnings("unchecked")
-      final List<VirtualDevice> result = (List<VirtualDevice>) manager.fetchAll(VirtualDevice.class);
-      return result; 
+      return (List<VirtualDevice>) manager.fetchAll(VirtualDevice.class);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<VirtualDevice> getVirtualDevices(FunctionalEntity[] functionalEntities) throws PersistenceException
    {
-      @SuppressWarnings("unchecked")
       final List<VirtualDevice> devices = (List<VirtualDevice>) manager.fetchAll(VirtualDevice.class);
 
       final Set<FunctionalEntity> ents = new HashSet<FunctionalEntity>();

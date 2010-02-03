@@ -53,7 +53,7 @@ import org.freebus.fts.pages.productsbrowser.ProductsListCellRenderer;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
-import org.freebus.fts.products.Products;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
@@ -267,8 +267,8 @@ public class ProductsBrowser extends AbstractPage
       {
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-         if (obj instanceof File) productsFactory = Products.getFactory(((File) obj).getAbsolutePath());
-         else productsFactory = Products.getFactory();
+         if (obj instanceof File) productsFactory = ProductsManager.getFactory(((File) obj).getAbsolutePath());
+         else productsFactory = ProductsManager.getFactory();
       }
       catch (Exception e)
       {
@@ -281,6 +281,14 @@ public class ProductsBrowser extends AbstractPage
 
       ceDetails.setProductsFactory(productsFactory);
       updateContents();
+   }
+
+   /**
+    * @return The products factory that contains the entities of the products that are displayed. 
+    */
+   public ProductsFactory getProductsFactory()
+   {
+      return productsFactory;
    }
 
    /**

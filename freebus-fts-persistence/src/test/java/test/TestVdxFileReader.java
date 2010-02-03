@@ -5,9 +5,9 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.freebus.fts.common.vdx.VdxFileReader;
-import org.freebus.fts.common.vdx.VdxSection;
-import org.freebus.fts.common.vdx.VdxSectionHeader;
+import org.freebus.fts.persistence.vdx.VdxFileReader;
+import org.freebus.fts.persistence.vdx.VdxSection;
+import org.freebus.fts.persistence.vdx.VdxSectionHeader;
 
 public class TestVdxFileReader extends TestCase
 {

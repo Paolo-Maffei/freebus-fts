@@ -2,7 +2,7 @@ package org.freebus.fts.project.service.jpa;
 
 import javax.persistence.EntityTransaction;
 
-import org.freebus.fts.common.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.service.AreaService;
 import org.freebus.fts.project.service.ProjectFactory;
 import org.freebus.fts.project.service.ProjectService;

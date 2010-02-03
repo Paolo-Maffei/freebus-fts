@@ -11,12 +11,12 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.Environment;
-import org.freebus.fts.common.db.DatabaseResources;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.LookAndFeelManager;
 import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.persistence.Environment;
+import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.knxcomm.internal.JarLoader;

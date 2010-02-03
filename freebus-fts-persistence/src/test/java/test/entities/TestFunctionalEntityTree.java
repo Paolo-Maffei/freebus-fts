@@ -12,7 +12,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import org.freebus.fts.common.vdx.VdxField;
+import org.freebus.fts.persistence.vdx.VdxField;
 import org.junit.Ignore;
 
 

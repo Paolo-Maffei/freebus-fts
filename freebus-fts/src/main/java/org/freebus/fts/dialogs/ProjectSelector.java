@@ -173,7 +173,7 @@ public final class ProjectSelector extends Dialog
        */
       public void update()
       {
-         projects = ProjectManager.getDAOFactory().getProjectService().getProjects();
+         projects = ProjectManager.getProjectFactory().getProjectService().getProjects();
          fireTableDataChanged();
       }
    }

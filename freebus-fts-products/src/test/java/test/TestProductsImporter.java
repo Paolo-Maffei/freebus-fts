@@ -4,8 +4,8 @@ import static org.junit.Assert.*;
 
 import java.util.List;
 
-import org.freebus.fts.common.db.DatabaseResources;
-import org.freebus.fts.products.Products;
+import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.DAOException;
@@ -19,7 +19,7 @@ public class TestProductsImporter extends PersistenceTestCase
    @Test
    public final void importVirtualDevices() throws DAOException
    {
-      final ProductsFactory vdxFactory = Products.getFactory("src/test/resources/230V in LPC_.vd_");
+      final ProductsFactory vdxFactory = ProductsManager.getFactory("src/test/resources/230V in LPC_.vd_");
       assertNotNull(vdxFactory);
 
       final ProductsFactory jpaFactory = getJpaProductsFactory();

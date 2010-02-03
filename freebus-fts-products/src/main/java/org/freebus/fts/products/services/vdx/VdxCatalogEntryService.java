@@ -7,7 +7,7 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
@@ -29,12 +29,11 @@ public final class VdxCatalogEntryService implements CatalogEntryService
       this.virtualDeviceService = virtualDeviceService;
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<CatalogEntry> getCatalogEntries() throws PersistenceException
    {
-      @SuppressWarnings("unchecked")
-      final List<CatalogEntry> result = (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);
-      return result; 
+      return (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);
    }
 
    @Override
@@ -42,7 +41,7 @@ public final class VdxCatalogEntryService implements CatalogEntryService
          throws PersistenceException
    {
       @SuppressWarnings("unchecked")
-      final List<CatalogEntry> entries = (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);
+      List<CatalogEntry> entries = (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);
 
       final List<VirtualDevice> devices = virtualDeviceService.getVirtualDevices(functionalEntities);
       final Set<CatalogEntry> ents = new HashSet<CatalogEntry>();

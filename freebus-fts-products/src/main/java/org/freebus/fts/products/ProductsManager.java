@@ -10,9 +10,9 @@ import org.freebus.fts.products.services.vdx.VdxProductsFactory;
 /**
  * Get a DAO factory for products stored in the database or a VDX file.
  */
-public final class Products
+public final class ProductsManager
 {
-   private Products()
+   private ProductsManager()
    {
    }
 

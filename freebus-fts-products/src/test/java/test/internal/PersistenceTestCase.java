@@ -2,9 +2,9 @@ package test.internal;
 
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.fts.common.db.DatabaseResources;
-import org.freebus.fts.common.db.DriverType;
-import org.freebus.fts.products.Products;
+import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DriverType;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.junit.After;
 import org.junit.Before;
@@ -46,7 +46,7 @@ public class PersistenceTestCase
    public static synchronized ProductsFactory getJpaProductsFactory()
    {
       if (jpaProductsFactory == null)
-         jpaProductsFactory = Products.getFactory();
+         jpaProductsFactory = ProductsManager.getFactory();
 
       return jpaProductsFactory;
    }
@@ -54,7 +54,7 @@ public class PersistenceTestCase
    public static synchronized ProductsFactory getVdxProductsFactory()
    {
       if (vdxProductsFactory == null)
-         vdxProductsFactory = Products.getFactory("src/test/resources/230V in LPC_.vd_");
+         vdxProductsFactory = ProductsManager.getFactory("src/test/resources/230V in LPC_.vd_");
 
       return vdxProductsFactory;
    }

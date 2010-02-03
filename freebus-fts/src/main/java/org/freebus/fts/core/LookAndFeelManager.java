@@ -42,9 +42,9 @@ public final class LookAndFeelManager
     *
     * @throws ClassNotFoundException if the look&feel class cannot be loaded
     */
+   @SuppressWarnings("unchecked")
    public void add(String lookAndFeelClassName) throws ClassNotFoundException
    {
-      @SuppressWarnings("unchecked")
       final Class<? extends LookAndFeel> lafClass =
          (Class<? extends LookAndFeel>) FTS.class.getClassLoader().loadClass(lookAndFeelClassName);
 

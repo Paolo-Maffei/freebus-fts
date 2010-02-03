@@ -5,8 +5,8 @@ import static org.junit.Assert.*;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
-import org.freebus.fts.common.db.DatabaseResources;
-import org.freebus.fts.common.db.DriverType;
+import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DriverType;
 import org.junit.Test;
 
 

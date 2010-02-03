@@ -5,7 +5,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.common.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
@@ -31,14 +31,14 @@ public final class VdxManufacturerService implements ManufacturerService
       return manager.fetch(Manufacturer.class, id);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<Manufacturer> getManufacturers() throws PersistenceException
    {
-      @SuppressWarnings("unchecked")
-      final List<Manufacturer> result = (List<Manufacturer>) manager.fetchAll(Manufacturer.class);
-      return result; 
+      return (List<Manufacturer>) manager.fetchAll(Manufacturer.class);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<Manufacturer> getActiveManufacturers() throws PersistenceException
    {
@@ -49,13 +49,11 @@ public final class VdxManufacturerService implements ManufacturerService
             if (activeManufacturers == null)
             {
                activeManufacturers = new LinkedList<Manufacturer>();
-               
-               @SuppressWarnings("unchecked")
-               final List<Manufacturer> manufacturers = (List<Manufacturer>) manager.fetchAll(Manufacturer.class);
 
-               for (Manufacturer m : manufacturers)
+               for (Manufacturer m : (List<Manufacturer>) manager.fetchAll(Manufacturer.class))
                {
-                  if (!functionalEntityService.getFunctionalEntities(m).isEmpty()) activeManufacturers.add(m);
+                  if (!functionalEntityService.getFunctionalEntities(m).isEmpty())
+                     activeManufacturers.add(m);
                }
             }
          }

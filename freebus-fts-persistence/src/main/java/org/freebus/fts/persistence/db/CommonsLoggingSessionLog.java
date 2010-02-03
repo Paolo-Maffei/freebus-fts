@@ -1,4 +1,4 @@
-package org.freebus.fts.common.db;
+package org.freebus.fts.persistence.db;
 
 import java.util.HashMap;
 import java.util.Map;

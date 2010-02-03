@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx;
+package org.freebus.fts.persistence.vdx;
 
 /**
  * Header information about a section in a vd_ file.

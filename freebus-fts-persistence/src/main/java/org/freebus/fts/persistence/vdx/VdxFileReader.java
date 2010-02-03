@@ -1,4 +1,4 @@
-package org.freebus.fts.common.vdx;
+package org.freebus.fts.persistence.vdx;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -14,7 +14,7 @@ import java.util.Vector;
 
 import javax.persistence.Column;
 
-import org.freebus.fts.common.FileBlockReader;
+import org.freebus.fts.persistence.FileBlockReader;
 
 /**
  * A class that reads vd_ files. The section names are all converted to lower case.

@@ -5,9 +5,9 @@ import static org.junit.Assert.*;
 import java.util.Set;
 import java.util.Vector;
 
-import org.freebus.fts.common.vdx.internal.VdxAssociation;
-import org.freebus.fts.common.vdx.internal.VdxEntityInfo;
-import org.freebus.fts.common.vdx.internal.VdxEntityInspector;
+import org.freebus.fts.persistence.vdx.internal.VdxAssociation;
+import org.freebus.fts.persistence.vdx.internal.VdxEntityInfo;
+import org.freebus.fts.persistence.vdx.internal.VdxEntityInspector;
 import org.junit.Test;
 
 import test.entities.TestFunctionalEntity;

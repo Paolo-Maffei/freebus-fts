@@ -1,4 +1,4 @@
-package org.freebus.fts.common.db;
+package org.freebus.fts.persistence.db;
 
 /**
  * The class of a {@link DriverType}.

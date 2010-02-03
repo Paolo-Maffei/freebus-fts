@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.freebus.fts.common.vdx.VdxFileReader;
+import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.ProductDescription;
 import org.freebus.fts.products.services.DAOException;

@@ -7,9 +7,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.SimpleConfig;
 
 /**
  * A widget for configuring an eibd bus interface connection.

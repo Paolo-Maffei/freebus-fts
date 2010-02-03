@@ -42,7 +42,7 @@ public final class SaveProjectAction extends BasicAction
       try
       {
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-         ProjectManager.getDAOFactory().getProjectService().save(project);
+         ProjectManager.getProjectFactory().getProjectService().save(project);
       }
       catch (Exception ex)
       {

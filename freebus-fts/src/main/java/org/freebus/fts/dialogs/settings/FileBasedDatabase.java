@@ -14,12 +14,12 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.freebus.fts.common.Environment;
-import org.freebus.fts.common.SimpleConfig;
-import org.freebus.fts.common.db.DatabaseResources;
-import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.Environment;
+import org.freebus.fts.persistence.SimpleConfig;
+import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DriverType;
 import org.freebus.fts.utils.Rot13;
 
 /**

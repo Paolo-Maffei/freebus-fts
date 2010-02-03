@@ -1,4 +1,4 @@
-package org.freebus.fts.common.db;
+package org.freebus.fts.persistence.db;
 
 /**
  * All supported JDBC connection drivers.

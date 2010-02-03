@@ -74,9 +74,9 @@ public final class TreeUtils
    /**
     * Internal worker of {@link getTreeNodeChildren}.
     */
+   @SuppressWarnings("unchecked")
    private static void collectTreeNodeChildren(TreeNode node, List<TreeNode> result)
    {
-      @SuppressWarnings("unchecked")
       final Enumeration<TreeNode> childs = node.children();
 
       while (childs.hasMoreElements())

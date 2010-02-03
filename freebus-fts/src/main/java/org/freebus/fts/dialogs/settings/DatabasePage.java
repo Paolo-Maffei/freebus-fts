@@ -12,11 +12,11 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 
-import org.freebus.fts.common.SimpleConfig;
-import org.freebus.fts.common.db.DriverClass;
-import org.freebus.fts.common.db.DriverType;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.SimpleConfig;
+import org.freebus.fts.persistence.db.DriverClass;
+import org.freebus.fts.persistence.db.DriverType;
 
 /**
  * Settings page for the database settings.

@@ -3,7 +3,7 @@ package org.freebus.fts.products.services.jpa;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
-import org.freebus.fts.common.db.DatabaseResources;
+import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;

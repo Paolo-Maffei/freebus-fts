@@ -24,24 +24,20 @@ public final class JpaManufacturerService implements ManufacturerService
       return entityManager.find(Manufacturer.class, id);
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<Manufacturer> getManufacturers() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select m from Manufacturer m");
-
-      @SuppressWarnings("unchecked")
-      final List<Manufacturer> result = (List<Manufacturer>) query.getResultList();
-      return result;
+      return (List<Manufacturer>) query.getResultList();
    }
 
+   @SuppressWarnings("unchecked")
    @Override
    public List<Manufacturer> getActiveManufacturers() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select distinct fe.manufacturer from FunctionalEntity fe");
-
-      @SuppressWarnings("unchecked")
-      final List<Manufacturer> result = (List<Manufacturer>) query.getResultList();
-      return result;
+      return (List<Manufacturer>) query.getResultList();
    }
 
    @Override

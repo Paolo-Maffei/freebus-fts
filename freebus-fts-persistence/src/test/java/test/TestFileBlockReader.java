@@ -6,11 +6,11 @@ import java.io.RandomAccessFile;
 
 import junit.framework.TestCase;
 
-import org.freebus.fts.common.FileBlockReader;
+import org.freebus.fts.persistence.FileBlockReader;
 
 public class TestFileBlockReader extends TestCase
 {
-   private org.freebus.fts.common.FileBlockReader reader = null;
+   private org.freebus.fts.persistence.FileBlockReader reader = null;
    private RandomAccessFile in = null;
 
    @Override

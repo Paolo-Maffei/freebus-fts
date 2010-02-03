@@ -35,7 +35,7 @@ public final class ProjectManager
    /**
     * @return the DAO factory for the global project instance.
     */
-   static public ProjectFactory getDAOFactory()
+   static public ProjectFactory getProjectFactory()
    {
       return projectFactory;
    }
