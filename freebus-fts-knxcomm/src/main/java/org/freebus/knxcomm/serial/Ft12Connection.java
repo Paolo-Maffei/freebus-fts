@@ -26,6 +26,9 @@ public abstract class Ft12Connection implements KNXConnection
    // FT1.2 reset message
    protected static final int[] resetMsg = { 0x10, 0x40, 0x40, 0x16 };
 
+   // FT1.2 request status message
+   protected static final int[] statusReqMsg = { 0x10, 0x49, 0x49, 0x16 };
+
    // FT1.2 acknowledge message
    protected static final int[] ackMsg = { 0xe5 };
 
@@ -92,6 +95,10 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (startAckCount == ackCount)
          throw new KNXConnectException("Device not found");
+
+      // Send a status request
+      if (debug) System.out.println("WRITE: Status request");
+      write(statusReqMsg, statusReqMsg.length);
    }
 
    /**
@@ -155,15 +162,36 @@ public abstract class Ft12Connection implements KNXConnection
             break;
 
          case 0x10: // Frame with fixed length
-            final int cmd = read();
+            int cmd = read();
             final int checksum = read();
             final int end = read();
-            if (cmd != checksum || end != 0x16) System.out.println(" Malformed!");
-            else if (cmd == 0xC0)
+            if (cmd != checksum || end != 0x16)
             {
-               System.out.print("READ:  Reset.ind");
+               System.out.println(" Malformed!");
+               break;
+            }
+
+            // Bits of the command:
+            // 7: direction - 1: BAU to us, 0: we to BAU
+            // 6: primary message - 0: message from secondary (responding) station
+            // 5: reserved
+            // 4: data flow control (not used)
+            // 3..0: function code
+
+            cmd &= 0xf;
+            if (cmd == 0)
+            {
+               System.out.println("READ:  Confirm ACK");
                readMsgCount = 0;
                writeMsgCount = 0;
+            }
+            else if (cmd == 1)
+            {
+               System.out.println("READ:  Confirm NACK !");
+            }
+            else if (cmd == 0xb)
+            {
+               System.out.println("READ:  Status response");
             }
             else System.out.println(" Unknown fixed-width frame 0x" + Integer.toHexString(cmd));
             break;

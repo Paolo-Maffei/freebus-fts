@@ -66,12 +66,12 @@ public final class PEI_Switch
       TRANS_LOCAL(0x00, new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 0 }),
       
       /**
-       * Link layer.
+       * Data link layer.
        */
       LINK(0x00, new int[]{ 1, 8, 3, 4, 5, 6, 7, 8, 0 }),
       
       /**
-       * Bus monitor.
+       * Data link layer "Bus monitor" mode.
        */
       BUSMON(0x90, new int[]{ 1, 8, 3, 4, 5, 6, 7, 8, 0 }),
       
