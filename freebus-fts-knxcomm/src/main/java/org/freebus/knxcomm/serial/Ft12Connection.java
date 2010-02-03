@@ -3,6 +3,7 @@ package org.freebus.knxcomm.serial;
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Logger;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
@@ -14,6 +15,8 @@ import org.freebus.knxcomm.emi.EmiFrameType;
  */
 public abstract class Ft12Connection implements KNXConnection
 {
+   private Logger logger = Logger.getLogger(getClass());
+
    protected final CopyOnWriteArrayList<EmiFrameListener> listeners = new CopyOnWriteArrayList<EmiFrameListener>();
    protected boolean connected = false;
    protected boolean debug = true;
@@ -75,13 +78,13 @@ public abstract class Ft12Connection implements KNXConnection
    @Override
    public void open() throws IOException
    {
-      if (debug) System.out.println("WRITE: FT1.2-Reset");
+      logger.debug("WRITE: FT1.2-Reset");
 
       // Send resets until the device acknowledges
       final int startAckCount = ackCount;
       for (int i = 50; i > 0 && ackCount == startAckCount; --i)
       {
-         if (debug) System.out.println("WRITE: Reset");
+         logger.debug("WRITE: Reset");
          write(resetMsg, resetMsg.length);
 
          try
@@ -97,7 +100,7 @@ public abstract class Ft12Connection implements KNXConnection
          throw new KNXConnectException("Device not found");
 
       // Send a status request
-      if (debug) System.out.println("WRITE: Status request");
+      logger.debug("WRITE: Status request");
       write(statusReqMsg, statusReqMsg.length);
    }
 
@@ -128,12 +131,13 @@ public abstract class Ft12Connection implements KNXConnection
       buffer[len + 5] = checksum & 0xff;
       buffer[len + 6] = 0x16;
 
-      if (debug)
+      if (logger.isDebugEnabled())
       {
-         System.out.print("WRITE: DATA");
+         StringBuffer sb = new StringBuffer();
+         sb.append("WRITE: DATA");
          for (int i = 0; i < len + 7; ++i)
-            System.out.printf(" %02x", buffer[i]);
-         System.out.println();
+            sb.append(' ').append(Integer.toHexString(buffer[i]));
+         logger.debug(sb.toString());
       }
 
       write(buffer, len + 7);
@@ -153,7 +157,7 @@ public abstract class Ft12Connection implements KNXConnection
       switch (type)
       {
          case 0xe5: // Acknowledge to the last frame we sent
-            System.out.println("READ:  ACK [0xe5]");
+            logger.debug("READ: ACK [0xe5]");
             ++ackCount;
             break;
 
@@ -167,7 +171,7 @@ public abstract class Ft12Connection implements KNXConnection
             final int end = read();
             if (cmd != checksum || end != 0x16)
             {
-               System.out.println(" Malformed!");
+               logger.info(" Malformed!");
                break;
             }
 
@@ -181,23 +185,24 @@ public abstract class Ft12Connection implements KNXConnection
             cmd &= 0xf;
             if (cmd == 0)
             {
-               System.out.println("READ:  Confirm ACK");
-               readMsgCount = 0;
+               logger.debug("READ: Confirm ACK");
+               readMsgCount = 0;  // Assume it was a Reset reply
                writeMsgCount = 0;
             }
             else if (cmd == 1)
             {
-               System.out.println("READ:  Confirm NACK !");
+               logger.debug("READ: Confirm NACK !");
             }
             else if (cmd == 0xb)
             {
-               System.out.println("READ:  Status response");
+               logger.debug("READ: Status response");
             }
-            else System.out.println(" Unknown fixed-width frame 0x" + Integer.toHexString(cmd));
+            else logger.error(" Unknown fixed-width frame 0x" + Integer.toHexString(cmd));
             break;
 
          default: // Unknown frame
-            System.out.print("READ:  UNKNOWN [0x" + Integer.toHexString(type) + "]");
+            final StringBuffer sb = new StringBuffer();
+            sb.append("READ:  UNKNOWN [").append(Integer.toHexString(type)).append(']');
             try
             {
                Thread.sleep(500);
@@ -208,14 +213,15 @@ public abstract class Ft12Connection implements KNXConnection
             }
             int val;
             while (isDataAvailable() && (val = read()) != 0x16)
-               System.out.printf(" %02x", val);
+               sb.append(' ').append(Integer.toHexString(val));
+            logger.error(sb.toString());
             break;
       }
 
       // Send acknowledge
       if (type != 0xe5)
       {
-//         if (debug) System.out.println("WRITE: ACK [0xe5]");
+//         logger.debug("WRITE: ACK [0xe5]");
          write(ackMsg, ackMsg.length);
       }
    }
@@ -229,22 +235,23 @@ public abstract class Ft12Connection implements KNXConnection
    {
       final int dataLen = read() - 1;
       read(); // dataLen repeated
-      System.out.print("READ:  DATA [0x68] (" + Integer.toString(dataLen) + " bytes): ");
+
+      String logMsg = "READ: DATA [0x68] (" + Integer.toString(dataLen) + " bytes): ";
       String err = "";
 
       ++readMsgCount;
-      if (read() != 0x68) err += "|None boundary marker";
+      if (read() != 0x68) err += "|no boundary marker";
 
       int controlByte = read();
       if (controlByte != 0xf3 && controlByte != 0xd3)
-         err += "|None control byte 0x" + Integer.toHexString(controlByte);
+         err += "|no control byte 0x" + Integer.toHexString(controlByte);
 
       int ftCheckSum = controlByte;
       final int[] data = new int[dataLen];
       for (int i = 0; i < dataLen; ++i)
       {
          data[i] = read();
-         System.out.printf(" %02x", data[i]);
+         logMsg += ' ' + Integer.toHexString(data[i]);
          ftCheckSum += data[i];
       }
 
@@ -252,13 +259,15 @@ public abstract class Ft12Connection implements KNXConnection
       if (checksum != (ftCheckSum & 0xff)) err += "|FT checksum error";
 
       final int eofMarker = read();
-      if (eofMarker != 0x16) err += "|None eof-marker 0x" + Integer.toHexString(eofMarker);
+      if (eofMarker != 0x16) err += "|no eof-marker 0x" + Integer.toHexString(eofMarker);
 
-      if (err.length() > 0) System.out.println(" ERROR:" + err.substring(1));
+      if (err.length() > 0)
+      {
+         logger.error(logMsg + err.substring(1));
+      }
       else
       {
-         System.out.println();
-
+         logger.debug(logMsg);
          try
          {
             final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);
