@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.freebus.fts.persistence.vdx.VdxField;
-import org.junit.Ignore;
 
 
 /**
@@ -22,7 +21,6 @@ import org.junit.Ignore;
  */
 @Entity
 @Table(name = "functional_entity")
-@Ignore
 public class TestFunctionalEntityTree
 {
    @Id
