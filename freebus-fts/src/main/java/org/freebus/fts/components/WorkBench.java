@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -14,7 +15,6 @@ import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
-import javax.swing.UIManager;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
@@ -39,52 +39,35 @@ public class WorkBench extends JFrame
     */
    public WorkBench()
    {
-      setDefaultLookAndFeel();
       setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setMinimumSize(new Dimension(600, 400));
       setLayout(new BorderLayout(2, 2));
       setJMenuBar(menuBar);
 
       final JPanel leftPanel = new JPanel();
-      leftPanel.setLayout(new BorderLayout());
+      leftPanel.setLayout(new BorderLayout(0, 0));
 
       leftTabbedPane = new ExtTabbedPane();
       leftTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+      leftTabbedPane.setBorder(BorderFactory.createEmptyBorder());
       leftPanel.add(leftTabbedPane, BorderLayout.CENTER);
 
       bottomLeftPanel = new JPanel();
-      bottomLeftPanel.setLayout(new BorderLayout());
+      bottomLeftPanel.setLayout(new BorderLayout(0, 0));
       leftPanel.add(bottomLeftPanel, BorderLayout.SOUTH);
 
       centerTabbedPane = new ExtTabbedPane();
       centerTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+      centerTabbedPane.setBorder(BorderFactory.createEmptyBorder());
 
       leftCenterSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, centerTabbedPane);
       add(leftCenterSplit, BorderLayout.CENTER);
       leftCenterSplit.setOneTouchExpandable(true);
       leftCenterSplit.setDividerLocation(250);
+      leftCenterSplit.setResizeWeight(0.9);
+      leftCenterSplit.setDividerSize(6);
       leftCenterSplit.setContinuousLayout(true);
       leftCenterSplit.setFocusable(false);
-   }
-
-   /**
-    * Set the default look and feel.
-    */
-   protected void setDefaultLookAndFeel()
-   {
-      for (String lafName: new String[] { "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
-                                          "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" })
-      {
-         try
-         {
-            UIManager.setLookAndFeel(lafName);
-            break;
-         }
-         catch (Exception e)
-         {
-            // Never mind if this does not work
-         }
-      }
    }
    
    /**

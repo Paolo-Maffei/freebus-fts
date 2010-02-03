@@ -1,6 +1,8 @@
 package org.freebus.fts.pages;
 
+import java.util.Set;
 
+import org.freebus.fts.products.VirtualDevice;
 
 /**
  * A products browser that allows to mark products for import.
@@ -13,5 +15,12 @@ public class ProductsImportBrowser extends ProductsBrowser
    {
       super();
       enableImportMode();
+   }
+
+   /**
+    * Import the marked virtual devices.
+    */
+   protected void importProducts(Set<VirtualDevice> virtualDevices)
+   {
    }
 }

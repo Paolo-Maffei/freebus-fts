@@ -1,4 +1,4 @@
-package org.freebus.fts.components.items;
+package org.freebus.fts.pages.productsbrowser;
 
 import org.freebus.fts.products.Manufacturer;
 

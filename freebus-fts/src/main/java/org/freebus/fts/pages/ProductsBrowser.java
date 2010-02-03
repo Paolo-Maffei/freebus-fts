@@ -11,28 +11,31 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.persistence.PersistenceException;
 import javax.swing.BorderFactory;
-import javax.swing.BoxLayout;
+import javax.swing.Box;
+import javax.swing.DefaultComboBoxModel;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
-import javax.swing.JTable;
 import javax.swing.JTree;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
-import javax.swing.table.DefaultTableModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreeNode;
@@ -42,10 +45,11 @@ import javax.swing.tree.TreeSelectionModel;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.CatalogEntryDetails;
-import org.freebus.fts.components.items.FunctionalEntityItem;
-import org.freebus.fts.components.items.ManufacturerItem;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.pages.productsbrowser.FunctionalEntityTreeNode;
+import org.freebus.fts.pages.productsbrowser.ManufacturerItem;
+import org.freebus.fts.pages.productsbrowser.ProductsListCellRenderer;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
@@ -75,16 +79,17 @@ public class ProductsBrowser extends AbstractPage
    private final DefaultMutableTreeNode rootCategories = new DefaultMutableTreeNode("[CATEGORIES]");
    private DefaultTreeModel trmCategories = new DefaultTreeModel(rootCategories);
 
-   private final JTable tblEntries;
+   private final JList lstEntries;
    private final JScrollPane scpEntries;
-   private DefaultTableModel tbmEntries = new DefaultTableModel(0, 2);
+   private DefaultListModel lmEntries = new DefaultListModel();
 
    private final JLabel lblEntryName;
    private final CatalogEntryDetails ceDetails;
-   private final JPanel pnlBottom = new JPanel();
+   private final Box boxBottom = Box.createHorizontalBox();
 
-   private JCheckBox cboImport = new JCheckBox(I18n.getMessage("ProductsBrowser.ImportOption"));
-   private boolean importMode = false;
+   private final JCheckBox cbxImport = new JCheckBox(I18n.getMessage("ProductsBrowser.ImportOption"));
+   private final JButton btnImport = new JButton(I18n.getMessage("ProductsBrowser.ImportButton"));
+   private final Set<VirtualDevice> importDevices = new HashSet<VirtualDevice>();
 
    /**
     * Create a bus monitor widget.
@@ -128,6 +133,7 @@ public class ProductsBrowser extends AbstractPage
             GridBagConstraints.NONE, insets, 0, 0));
 
       cboManufacturer = new JComboBox();
+      cboManufacturer.setModel(new DefaultComboBoxModel());
       pnlTopLeft.add(cboManufacturer, new GridBagConstraints(0, ++row, 1, 1, 1, 0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, insets, 0, 0));
       cboManufacturer.addActionListener(new ActionListener()
@@ -173,10 +179,9 @@ public class ProductsBrowser extends AbstractPage
       pnlTopRight.add(lbl, new GridBagConstraints(0, ++row, 1, 1, 1, 0, GridBagConstraints.WEST,
             GridBagConstraints.NONE, insets, 0, 0));
 
-      tblEntries = new JTable(0, 2);
-      tblEntries.setModel(tbmEntries);
-      tblEntries.setColumnSelectionAllowed(false);
-      tblEntries.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+      lstEntries = new JList(lmEntries);
+      lstEntries.setCellRenderer(new ProductsListCellRenderer());
+      lstEntries.getSelectionModel().addListSelectionListener(new ListSelectionListener()
       {
          @Override
          public void valueChanged(ListSelectionEvent e)
@@ -184,9 +189,9 @@ public class ProductsBrowser extends AbstractPage
             updateCatalogEntry();
          }
       });
-      tbmEntries.setColumnIdentifiers(new String[] { I18n.getMessage("ProductsBrowser.CatalogEntries.Device"),
-            I18n.getMessage("ProductsBrowser.CatalogEntries.Entry") });
-      scpEntries = new JScrollPane(tblEntries);
+//      tbmEntries.setColumnIdentifiers(new String[] { I18n.getMessage("ProductsBrowser.CatalogEntries.Device"),
+//            I18n.getMessage("ProductsBrowser.CatalogEntries.Entry") });
+      scpEntries = new JScrollPane(lstEntries);
       pnlTopRight.add(scpEntries, new GridBagConstraints(0, ++row, 1, 1, 1, 10, GridBagConstraints.WEST,
             GridBagConstraints.BOTH, insets, 0, 0));
 
@@ -210,19 +215,35 @@ public class ProductsBrowser extends AbstractPage
       //
       // Bottom area
       //
-      add(pnlBottom, BorderLayout.SOUTH);
-      pnlBottom.setVisible(false);
-      pnlBottom.setLayout(new BoxLayout(pnlBottom, BoxLayout.X_AXIS));
-      pnlBottom.add(cboImport);
+      add(boxBottom, BorderLayout.SOUTH);
+      boxBottom.setVisible(false);
+      boxBottom.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+      boxBottom.add(Box.createHorizontalGlue());
+      boxBottom.add(cbxImport);
+      boxBottom.add(Box.createHorizontalStrut(20));
+      boxBottom.add(btnImport);
 
-      final JButton btnImport = new JButton(I18n.getMessage("ProductsBrowser.ImportButton"));
-      pnlBottom.add(btnImport);
+      cbxImport.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            final VirtualDevice currentDevice = getSelectedVirtualDevice();
+            if (cbxImport.isSelected()) importDevices.add(currentDevice);
+            else importDevices.remove(currentDevice);
+            btnImport.setEnabled(!importDevices.isEmpty());
+            
+         }
+      });
+
+      btnImport.setEnabled(false);
       btnImport.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent e)
          {
-            importClicked();
+            if (!importDevices.isEmpty())
+               importProducts(importDevices);
          }
       });
    }
@@ -233,18 +254,7 @@ public class ProductsBrowser extends AbstractPage
     */
    protected void enableImportMode()
    {
-      importMode = true;
-      pnlBottom.setVisible(ceDetails.isVisible());
-   }
-
-   /**
-    * Returns the bottom panel. This panel is initially empty and can be used for extensions.
-    *
-    * @return the bottom panel.
-    */
-   public JPanel getBottomPanel()
-   {
-      return pnlBottom;
+      boxBottom.setVisible(ceDetails.isVisible());
    }
 
    @Override
@@ -338,7 +348,7 @@ public class ProductsBrowser extends AbstractPage
                      parentNode = rootCategories;
                   }
 
-                  final DefaultMutableTreeNode node = new DefaultMutableTreeNode(new FunctionalEntityItem(cat), true);
+                  final DefaultMutableTreeNode node = new FunctionalEntityTreeNode(cat, true);
                   parentNode.add(node);
 
                   parentNodes.put(cat, node);
@@ -359,11 +369,13 @@ public class ProductsBrowser extends AbstractPage
    }
 
    /**
-    * Update the list of catalog entries. Called when the user selects a product category.
+    * Update the list of catalog entries / virtual devices. 
+    * Called when the user selects a product category.
     */
    public void updateCatalogEntries()
    {
-      tblEntries.removeAll();
+      lmEntries.clear();
+      lstEntries.removeAll();
 
       // ETS uses the following fields for its catalog-entries table:
       //
@@ -379,23 +391,15 @@ public class ProductsBrowser extends AbstractPage
          final CatalogEntryService catalogEntryDAO = productsFactory.getCatalogEntryService();
 
          final FunctionalEntity[] ents = getSelectedCategories();
-         if (ents == null || virtualDeviceDAO == null || catalogEntryDAO == null)
-         {
-            tbmEntries.setRowCount(0);
-         }
-         else
+         if (ents != null && virtualDeviceDAO != null && catalogEntryDAO != null)
          {
             devs = virtualDeviceDAO.getVirtualDevices(ents);
 
-            tbmEntries.setRowCount(devs.size());
+            lmEntries.setSize(devs.size());
 
-            int row = 0;
+            int row = -1;
             for (VirtualDevice dev : devs)
-            {
-               tbmEntries.setValueAt(dev, row, 0);
-               tbmEntries.setValueAt(dev.getCatalogEntry(), row, 1);
-               ++row;
-            }
+               lmEntries.set(++row, dev);
          }
       }
       catch (PersistenceException e)
@@ -404,7 +408,7 @@ public class ProductsBrowser extends AbstractPage
          return;
       }
 
-      if (tbmEntries.getRowCount() > 0) tblEntries.getSelectionModel().setSelectionInterval(0, 0);
+      if (lmEntries.getSize() > 0) lstEntries.getSelectionModel().setSelectionInterval(0, 0);
 
       updateCatalogEntry();
    }
@@ -414,24 +418,28 @@ public class ProductsBrowser extends AbstractPage
     */
    public void updateCatalogEntry()
    {
-      final CatalogEntry entry = getSelectedCatalogEntry();
       final VirtualDevice dev = getSelectedVirtualDevice();
+      final CatalogEntry entry = (dev == null ? null : dev.getCatalogEntry());
+      final boolean valid = dev != null && entry != null;
 
-      lblEntryName.setVisible(entry != null);
-      ceDetails.setVisible(entry != null);
-      pnlBottom.setVisible(entry != null);
+      lblEntryName.setVisible(valid);
+      ceDetails.setVisible(valid);
+      boxBottom.setVisible(valid);
 
-      if (entry != null && dev != null)
+      if (valid)
       {
          lblEntryName.setText(I18n.formatMessage("ProductsBrowser.DetailsCaption", new Object[] { dev.getName() }));
          ceDetails.setCatalogEntry(entry);
+
+         cbxImport.setSelected(importDevices.contains(dev));
       }
    }
 
    /**
-    * The import button was clicked.
+    * Import the marked virtual devices. Called when the user clicks the import button.
+    * To be implemented in subclasses - this implementation is empty.
     */
-   protected void importClicked()
+   protected void importProducts(Set<VirtualDevice> virtualDevices)
    {
    }
 
@@ -456,10 +464,10 @@ public class ProductsBrowser extends AbstractPage
       for (TreePath path : paths)
       {
          final DefaultMutableTreeNode node = (DefaultMutableTreeNode) path.getLastPathComponent();
-         entities.add(((FunctionalEntityItem) node.getUserObject()).getFunctionalEntity());
+         entities.add((FunctionalEntity) node.getUserObject());
 
          for (TreeNode child : TreeUtils.getChildTreeNodes(node))
-            entities.add(((FunctionalEntityItem) ((DefaultMutableTreeNode) child).getUserObject()).getFunctionalEntity());
+            entities.add((FunctionalEntity) ((DefaultMutableTreeNode) child).getUserObject());
       }
 
       final FunctionalEntity[] result = new FunctionalEntity[entities.size()];
@@ -470,20 +478,16 @@ public class ProductsBrowser extends AbstractPage
    /**
     * @return the selected catalog entry.
     */
-   public CatalogEntry getSelectedCatalogEntry()
-   {
-      final int row = tblEntries.getSelectedRow();
-      if (row < 0) return null;
-      return (CatalogEntry) tbmEntries.getValueAt(row, 1);
-   }
+//   public CatalogEntry getSelectedCatalogEntry()
+//   {
+//      return (CatalogEntry) lstEntries.getSelectedValue();
+//   }
 
    /**
     * @return the selected {@link VirtualDevice}.
     */
    public VirtualDevice getSelectedVirtualDevice()
    {
-      final int row = tblEntries.getSelectedRow();
-      if (row < 0) return null;
-      return (VirtualDevice) tbmEntries.getValueAt(row, 0);
+      return (VirtualDevice) lstEntries.getSelectedValue();
    }
 }

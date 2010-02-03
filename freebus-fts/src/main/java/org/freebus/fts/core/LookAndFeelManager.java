@@ -18,6 +18,26 @@ public final class LookAndFeelManager
    private final Set<Class<? extends LookAndFeel>> lafClasses = new HashSet<Class<? extends LookAndFeel>>();
 
    /**
+    * Set the default look and feel.
+    */
+   static public void setDefaultLookAndFeel()
+   {
+      for (String lafName: new String[] { "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
+                                          "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" })
+      {
+         try
+         {
+            UIManager.setLookAndFeel(lafName);
+            break;
+         }
+         catch (Exception e)
+         {
+            // Never mind if this does not work
+         }
+      }
+   }
+
+   /**
     * Add a look&feel by it's class-name.
     *
     * @throws ClassNotFoundException if the look&feel class cannot be loaded

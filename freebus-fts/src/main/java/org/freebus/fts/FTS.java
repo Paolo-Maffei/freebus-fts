@@ -45,6 +45,8 @@ public final class FTS implements Runnable
     */
    public void run()
    {
+      LookAndFeelManager.setDefaultLookAndFeel();
+
       if (lafLoader != null)
       {
          lafLoader.install();
