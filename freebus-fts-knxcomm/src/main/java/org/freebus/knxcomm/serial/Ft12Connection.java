@@ -111,7 +111,7 @@ public abstract class Ft12Connection implements KNXConnection
    public void send(EmiFrame message) throws IOException
    {
       final int[] buffer = new int[32];
-
+      StringBuffer sb = new StringBuffer();
       buffer[0] = 0x68;
       // 1,2 contain the length
       buffer[3] = 0x68;
@@ -133,17 +133,31 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (logger.isDebugEnabled())
       {
-         StringBuffer sb = new StringBuffer();
          sb.append("WRITE: DATA");
          for (int i = 0; i < len + 7; ++i)
             sb.append(' ').append(Integer.toHexString(buffer[i]));
          logger.debug(sb.toString());
       }
 
-      write(buffer, len + 7);
+      //write(buffer, len + 7);
+		final int startAckCount = ackCount;
+		for (int i = 3; i > 0 && ackCount == startAckCount; --i) {
+			if (logger.isDebugEnabled())
+				logger.debug(sb.toString());
+			write(buffer, len + 7);
 
-      notifyListenersSent(message);
-   }
+			try {
+				Thread.sleep(100);
+			} catch (InterruptedException e) {
+			}
+		}
+
+		if (startAckCount == ackCount) {
+			throw new KNXConnectException("Device not found");
+		} else {
+			notifyListenersSent(message);
+		}
+	}
 
    /**
     * Called by the data transport methods when data is ready to be received.
