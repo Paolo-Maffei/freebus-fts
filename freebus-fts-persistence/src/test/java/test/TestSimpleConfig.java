@@ -1,8 +1,8 @@
 package test;
 
-import static org.junit.Assert.*;
-
-import java.io.IOException;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 import org.freebus.fts.persistence.SimpleConfig;
 import org.junit.Test;
@@ -50,18 +50,20 @@ public class TestSimpleConfig
    }
 
    @Test
+   public final void testGetIntValue()
+   {
+      final SimpleConfig cfg = new SimpleConfig();
+      cfg.put("key-1", "123");
+      assertEquals(123, cfg.getIntValue("key-1"));
+      assertEquals(0, cfg.getIntValue("not-exists"));
+   }
+
+   @Test
    public final void testClear()
    {
       final SimpleConfig cfg = new SimpleConfig();
       cfg.put("key-1", "val-1");
       cfg.clear();
       assertEquals(null, cfg.get("key-1"));
-   }
-
-   @Test
-   public final void testLoadSave() throws IOException
-   {
-      final SimpleConfig cfg = new SimpleConfig();
-      cfg.load("no-such-file");
    }
 }

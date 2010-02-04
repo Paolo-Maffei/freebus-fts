@@ -24,17 +24,10 @@ public final class Environment
          tempDir = "c:/windows/temp";
          homeDir = System.getenv("USERPROFILE");
       }
-      else if (osname.startsWith("linux"))
+      else
       {
          tempDir = "/tmp";
          homeDir = System.getenv("HOME");
-      }
-      else
-      {
-         tempDir = ".";
-         homeDir = System.getenv("HOME");
-
-         System.err.println("The system \"" + osname + "\" is not fully supported.\nPlease contact the developers.");
       }
    }
 
