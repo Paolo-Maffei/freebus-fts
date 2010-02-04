@@ -153,7 +153,7 @@ public abstract class Ft12Connection implements KNXConnection
 		}
 
 		if (startAckCount == ackCount) {
-			throw new KNXConnectException("Device not found");
+			throw new KNXConnectException("No ACK( 0xE5) recived");
 		} else {
 			notifyListenersSent(message);
 		}
