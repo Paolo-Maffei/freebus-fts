@@ -9,6 +9,9 @@ import org.eclipse.persistence.logging.AbstractSessionLog;
 import org.eclipse.persistence.logging.SessionLog;
 import org.eclipse.persistence.logging.SessionLogEntry;
 
+/**
+ * A session-log handler that redirects the JPA log output to Log4J.
+ */
 public final class CommonsLoggingSessionLog extends AbstractSessionLog
 {
    private static final Map<Integer, Level> levelMap = new HashMap<Integer, Level>();

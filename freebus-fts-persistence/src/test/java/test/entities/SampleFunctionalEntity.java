@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import org.junit.Ignore;
 
 
 /**
@@ -15,7 +16,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "functional_entity")
-public class TestFunctionalEntity
+@Ignore
+public class SampleFunctionalEntity
 {
    @Id
    @Column(name = "functional_entity_id", nullable = false)
@@ -23,7 +25,7 @@ public class TestFunctionalEntity
 
    @ManyToOne(fetch = FetchType.EAGER, optional = false)
    @JoinColumn(name = "manufacturer_id", nullable = false)
-   public TestManufacturer manufacturer;
+   public SampleManufacturer manufacturer;
 
    @Column(name = "functional_entity_name", nullable = false)
    public String name;
@@ -50,8 +52,8 @@ public class TestFunctionalEntity
    public boolean equals(final Object o)
    {
       if (o==this) return true;
-      if (!(o instanceof TestFunctionalEntity)) return false;
-      final TestFunctionalEntity oo = (TestFunctionalEntity)o;
+      if (!(o instanceof SampleFunctionalEntity)) return false;
+      final SampleFunctionalEntity oo = (SampleFunctionalEntity)o;
       return id == oo.id && manufacturer == oo.manufacturer;
    }
 }

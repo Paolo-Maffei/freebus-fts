@@ -25,9 +25,16 @@ public class SimpleConfig
    public static SimpleConfig getInstance()
    {
       if (instance == null)
-         new SimpleConfig();
-
+         return new SimpleConfig();
       return instance;
+   }
+
+   /**
+    * Dispose the global configuration object.
+    */
+   public static void disposeInstance()
+   {
+      instance = null;
    }
 
    /**

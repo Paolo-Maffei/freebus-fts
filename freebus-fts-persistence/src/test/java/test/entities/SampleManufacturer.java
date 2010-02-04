@@ -16,7 +16,7 @@ import org.freebus.fts.persistence.vdx.VdxEntity;
 @Entity
 @VdxEntity(name = "manufacturer")
 @Table(name = "manu")
-public class TestManufacturer
+public class SampleManufacturer
 {
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenManufacturerId")
@@ -43,8 +43,8 @@ public class TestManufacturer
    public boolean equals(final Object o)
    {
       if (o == this) return true;
-      if (!(o instanceof TestManufacturer)) return false;
-      final TestManufacturer oo = (TestManufacturer) o;
+      if (!(o instanceof SampleManufacturer)) return false;
+      final SampleManufacturer oo = (SampleManufacturer) o;
       return id == oo.id;
    }
 }

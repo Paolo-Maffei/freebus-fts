@@ -8,6 +8,6 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "manufacturer")
-public class TestManufacturer2
+public class SampleManufacturer2
 {
 }

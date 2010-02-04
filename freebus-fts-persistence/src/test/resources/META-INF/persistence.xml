@@ -6,10 +6,9 @@
 
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>test.entities.TestFunctionalEntity</class>
-  <class>test.entities.TestManufacturer</class>
+  <class>test.entities.SampleFunctionalEntity</class>
+  <class>test.entities.SampleManufacturer</class>
   <properties>
-   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
@@ -22,11 +21,10 @@
  
  <persistence-unit name="duplicate-entities">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>test.entities.TestManufacturer</class>
-  <class>test.entities.TestFunctionalEntity</class>
-  <class>test.entities.TestManufacturer2</class>
+  <class>test.entities.SampleManufacturer</class>
+  <class>test.entities.SampleFunctionalEntity</class>
+  <class>test.entities.SampleManufacturer2</class>
   <properties>
-   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />
@@ -39,10 +37,9 @@
   
  <persistence-unit name="with-children">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>test.entities.TestManufacturer</class>
-  <class>test.entities.TestFunctionalEntityTree</class>
+  <class>test.entities.SampleManufacturer</class>
+  <class>test.entities.SampleFunctionalEntityTree</class>
   <properties>
-   <property name="eclipselink.logging.logger" value="org.freebus.fts.common.db.CommonsLoggingSessionLog" />
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
    <property name="javax.persistence.jdbc.url" value="jdbc:hsqldb:mem:test" />

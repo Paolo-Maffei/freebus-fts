@@ -31,6 +31,7 @@ public class WorkBench extends JFrame
    private final ExtTabbedPane leftTabbedPane, centerTabbedPane;
    private final JSplitPane leftCenterSplit;
    private final JPanel bottomLeftPanel;
+   private final StatusBar statusBar = new StatusBar();
 
    private final Map<Class<? extends AbstractPage>, AbstractPage> uniquePages = new HashMap<Class<? extends AbstractPage>, AbstractPage>();
 
@@ -68,48 +69,10 @@ public class WorkBench extends JFrame
       leftCenterSplit.setDividerSize(6);
       leftCenterSplit.setContinuousLayout(true);
       leftCenterSplit.setFocusable(false);
+
+      add(statusBar, BorderLayout.SOUTH);
    }
    
-   /**
-    * Create a new menu with the given name and add it to the menu bar.
-    * Mnemonics are properly detected if they are marked with an ampersand in
-    * the name (e.g. "&File").
-    */
-   public JMenu createJMenu(String name)
-   {
-      final int idx = name.indexOf('&');
-      char mnemonic = 0;
-      if (idx >= 0)
-      {
-         mnemonic = name.charAt(idx + 1);
-         name = name.substring(0, idx) + name.substring(idx + 1);
-      }
-
-      final JMenu menu = new JMenu(name);
-      if (mnemonic != 0)
-         menu.setMnemonic(mnemonic);
-
-      menuBar.add(menu);
-      return menu;
-   }
-
-   /**
-    * Add the given page to the work-bench and show it. When the page is created
-    * and visible, the page's {@link AbstractPage#setObject(Object)} is called.
-    * 
-    * @param page - the page to show.
-    * @param obj - the object that is given to the page via
-    *           {@link AbstractPage#setObject(Object)}.
-    * @return true if the page was successfully added.
-    */
-   public synchronized boolean addPage(AbstractPage page, Object obj)
-   {
-      if (!addPage(page))
-         return false;
-      setPageObject(page, obj);
-      return true;
-   }
-
    /**
     * Add the given page to the work-bench and show it.
     * 
@@ -146,48 +109,51 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Create or show the page with the given class. Set the object that the page
-    * shall display to the object displayedObject.
+    * Add the given page to the work-bench and show it. When the page is created
+    * and visible, the page's {@link AbstractPage#setObject(Object)} is called.
+    * 
+    * @param page - the page to show.
+    * @param obj - the object that is given to the page via
+    *           {@link AbstractPage#setObject(Object)}.
+    * @return true if the page was successfully added.
     */
-   public synchronized void showUniquePage(Class<? extends AbstractPage> pageClass, final Object obj)
+   public synchronized boolean addPage(AbstractPage page, Object obj)
    {
-      AbstractPage page = uniquePages.get(pageClass);
-      if (page == null)
-      {
-         try
-         {
-            page = pageClass.newInstance();
-            if (!addPage(page))
-               return;
-
-            uniquePages.put(pageClass, page);
-         }
-         catch (Exception e)
-         {
-            Dialogs.showExceptionDialog(e, I18n.formatMessage("WorkBench.errCreatePage", new Object[] { pageClass
-                  .getName() }));
-            return;
-         }
-      }
-      else
-      {
-         if (!addPage(page))
-            return;
-      }
-
-      page.setVisible(true);
+      if (!addPage(page))
+         return false;
       setPageObject(page, obj);
+      return true;
    }
 
    /**
-    * Raise the page so that it is visible.
+    * Create a new menu with the given name and add it to the menu bar.
+    * Mnemonics are properly detected if they are marked with an ampersand in
+    * the name (e.g. "&File").
     */
-   public void setSelectedPage(AbstractPage page)
+   public JMenu createJMenu(String name)
    {
-      if (leftTabbedPane.indexOfComponent(page) >= 0)
-         leftTabbedPane.setSelectedComponent(page);
-      else if (centerTabbedPane.indexOfComponent(page) >= 0)
-         centerTabbedPane.setSelectedComponent(page);
+      final int idx = name.indexOf('&');
+      char mnemonic = 0;
+      if (idx >= 0)
+      {
+         mnemonic = name.charAt(idx + 1);
+         name = name.substring(0, idx) + name.substring(idx + 1);
+      }
+
+      final JMenu menu = new JMenu(name);
+      if (mnemonic != 0)
+         menu.setMnemonic(mnemonic);
+
+      menuBar.add(menu);
+      return menu;
+   }
+
+   /**
+    * @return the status bar widget.
+    */
+   public StatusBar getStatusBar()
+   {
+      return statusBar;
    }
 
    /**
@@ -197,6 +163,16 @@ public class WorkBench extends JFrame
    public AbstractPage getUniquePage(Class<? extends AbstractPage> pageClass)
    {
       return uniquePages.get(pageClass);
+   }
+
+   /**
+    * Set the panel that is shown in the south/west (bottom-left) corner of the
+    * workbench.
+    */
+   public void setBottomLeftPanel(JPanel panel)
+   {
+      bottomLeftPanel.removeAll();
+      bottomLeftPanel.add(panel, BorderLayout.CENTER);
    }
 
    /**
@@ -231,13 +207,48 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Set the panel that is shown in the south/west (bottom-left) corner of the
-    * workbench.
+    * Raise the page so that it is visible.
     */
-   public void setBottomLeftPanel(JPanel panel)
+   public void setSelectedPage(AbstractPage page)
    {
-      bottomLeftPanel.removeAll();
-      bottomLeftPanel.add(panel, BorderLayout.CENTER);
+      if (leftTabbedPane.indexOfComponent(page) >= 0)
+         leftTabbedPane.setSelectedComponent(page);
+      else if (centerTabbedPane.indexOfComponent(page) >= 0)
+         centerTabbedPane.setSelectedComponent(page);
+   }
+
+   /**
+    * Create or show the page with the given class. Set the object that the page
+    * shall display to the object displayedObject.
+    */
+   public synchronized void showUniquePage(Class<? extends AbstractPage> pageClass, final Object obj)
+   {
+      AbstractPage page = uniquePages.get(pageClass);
+      if (page == null)
+      {
+         try
+         {
+            page = pageClass.newInstance();
+            if (!addPage(page))
+               return;
+
+            uniquePages.put(pageClass, page);
+         }
+         catch (Exception e)
+         {
+            Dialogs.showExceptionDialog(e, I18n.formatMessage("WorkBench.errCreatePage", new Object[] { pageClass
+                  .getName() }));
+            return;
+         }
+      }
+      else
+      {
+         if (!addPage(page))
+            return;
+      }
+
+      page.setVisible(true);
+      setPageObject(page, obj);
    }
 
    /**

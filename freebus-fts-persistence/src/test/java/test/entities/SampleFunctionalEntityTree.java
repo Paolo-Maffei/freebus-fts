@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.freebus.fts.persistence.vdx.VdxField;
+import org.junit.Ignore;
 
 
 /**
@@ -21,7 +22,8 @@ import org.freebus.fts.persistence.vdx.VdxField;
  */
 @Entity
 @Table(name = "functional_entity")
-public class TestFunctionalEntityTree
+@Ignore
+public class SampleFunctionalEntityTree
 {
    @Id
    @Column(name = "functional_entity_id", nullable = false)
@@ -29,7 +31,7 @@ public class TestFunctionalEntityTree
 
    @ManyToOne(fetch = FetchType.EAGER, optional = false)
    @JoinColumn(name = "manufacturer_id", nullable = false)
-   public TestManufacturer manufacturer;
+   public SampleManufacturer manufacturer;
 
    @Column(name = "functional_entity_name", nullable = false)
    public String name;
@@ -40,12 +42,12 @@ public class TestFunctionalEntityTree
    @ManyToOne(fetch = FetchType.EAGER, optional = false)
    @JoinColumn(name = "parent_id")
    @VdxField(name = "fun_functional_entity_id")
-   public TestFunctionalEntityTree parent;
+   public SampleFunctionalEntityTree parent;
 
    @OneToMany(fetch = FetchType.EAGER)
    @JoinColumn(name = "parent_id")
    @VdxField(name = "functional_entity_id")
-   public Set<TestFunctionalEntityTree> childs = new HashSet<TestFunctionalEntityTree>();
+   public Set<SampleFunctionalEntityTree> childs = new HashSet<SampleFunctionalEntityTree>();
 
    /**
     * @return a hash-code for the object.
@@ -63,8 +65,8 @@ public class TestFunctionalEntityTree
    public boolean equals(final Object o)
    {
       if (o==this) return true;
-      if (!(o instanceof TestFunctionalEntityTree)) return false;
-      final TestFunctionalEntityTree oo = (TestFunctionalEntityTree)o;
+      if (!(o instanceof SampleFunctionalEntityTree)) return false;
+      final SampleFunctionalEntityTree oo = (SampleFunctionalEntityTree)o;
       return id == oo.id && manufacturer == oo.manufacturer;
    }
 }

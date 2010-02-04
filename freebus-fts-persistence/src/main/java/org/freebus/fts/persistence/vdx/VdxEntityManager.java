@@ -215,7 +215,7 @@ public final class VdxEntityManager
                   else if (a instanceof OneToMany)
                   {
                      @SuppressWarnings("unchecked")
-                     final Collection<Object> coll = (Collection<Object>) assoc.getField().get(obj);
+                     Collection<Object> coll = (Collection<Object>) assoc.getField().get(obj);
 
                      coll.clear();
                      for (Object assocObj : fetchAll(assoc.getTargetClass()))

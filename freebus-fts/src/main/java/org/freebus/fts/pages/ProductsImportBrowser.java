@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
+import org.freebus.fts.core.I18n;
+import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
@@ -27,13 +29,20 @@ public class ProductsImportBrowser extends ProductsBrowser
     */
    protected void importProducts(Set<VirtualDevice> virtualDevices)
    {
-      final List<VirtualDevice> virtDevsList = new Vector<VirtualDevice>(virtualDevices.size());
-
-      final Iterator<VirtualDevice> it = virtualDevices.iterator();
-      while (it.hasNext())
-         virtDevsList.add(it.next());
-
-      final ProductsImporter importer = new ProductsImporter(getProductsFactory(), ProductsManager.getFactory());
-      importer.copy(virtDevsList);
+      try
+      {
+         final List<VirtualDevice> virtDevsList = new Vector<VirtualDevice>(virtualDevices.size());
+   
+         final Iterator<VirtualDevice> it = virtualDevices.iterator();
+         while (it.hasNext())
+            virtDevsList.add(it.next());
+   
+         final ProductsImporter importer = new ProductsImporter(getProductsFactory(), ProductsManager.getFactory());
+         importer.copy(virtDevsList);
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("ProductsImportBrowser.ErrImport"));
+      }
    }
 }

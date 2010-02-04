@@ -10,10 +10,10 @@ import org.freebus.fts.persistence.vdx.internal.VdxEntityInfo;
 import org.freebus.fts.persistence.vdx.internal.VdxEntityInspector;
 import org.junit.Test;
 
-import test.entities.TestFunctionalEntity;
-import test.entities.TestFunctionalEntityTree;
-import test.entities.TestManufacturer;
-import test.entities.TestManufacturer2;
+import test.entities.SampleFunctionalEntity;
+import test.entities.SampleFunctionalEntityTree;
+import test.entities.SampleManufacturer;
+import test.entities.SampleManufacturer2;
 
 public class TestVdxEntityInspector
 {
@@ -40,9 +40,9 @@ public class TestVdxEntityInspector
       Set<Class<?>> classes = inspector.getClasses();
       assertNotNull(classes);
 
-      assertTrue(classes.contains(TestFunctionalEntity.class));
-      assertTrue(classes.contains(TestManufacturer.class));
-      assertFalse(classes.contains(TestManufacturer2.class));
+      assertTrue(classes.contains(SampleFunctionalEntity.class));
+      assertTrue(classes.contains(SampleManufacturer.class));
+      assertFalse(classes.contains(SampleManufacturer2.class));
    }
 
    @Test
@@ -51,12 +51,12 @@ public class TestVdxEntityInspector
       final VdxEntityInspector inspector = new VdxEntityInspector("default");
       assertNotNull(inspector);
 
-      VdxEntityInfo info = inspector.getInfo(TestManufacturer.class);
+      VdxEntityInfo info = inspector.getInfo(SampleManufacturer.class);
       assertNotNull(info);
       assertTrue(info.isInspected());
       assertEquals("manufacturer", info.getName());
 
-      info = inspector.getInfo(TestFunctionalEntity.class);
+      info = inspector.getInfo(SampleFunctionalEntity.class);
       assertNotNull(info);
       assertTrue(info.isInspected());
       assertEquals("functional_entity", info.getName());
@@ -68,7 +68,7 @@ public class TestVdxEntityInspector
       final VdxEntityInspector inspector = new VdxEntityInspector("with-children");
       assertNotNull(inspector);
 
-      VdxEntityInfo info = inspector.getInfo(TestFunctionalEntityTree.class);
+      VdxEntityInfo info = inspector.getInfo(SampleFunctionalEntityTree.class);
       assertNotNull(info);
       assertTrue(info.isInspected());
       assertEquals("functional_entity", info.getName());
@@ -80,19 +80,19 @@ public class TestVdxEntityInspector
       VdxAssociation assoc = assocs.get(0);
       assertEquals("manufacturer", assoc.getField().getName());
       assertEquals("manufacturer_id", assoc.getVdxFieldName());
-      assertEquals(TestManufacturer.class, assoc.getTargetClass());
+      assertEquals(SampleManufacturer.class, assoc.getTargetClass());
 
       // Expected member:  TestFunctionalEntityTree parent
       assoc = assocs.get(1);
       assertEquals("parent", assoc.getField().getName());
       assertEquals("fun_functional_entity_id", assoc.getVdxFieldName());
-      assertEquals(TestFunctionalEntityTree.class, assoc.getTargetClass());
+      assertEquals(SampleFunctionalEntityTree.class, assoc.getTargetClass());
 
       // Expected member:  Set<TestFunctionalEntityTree> childs
       assoc = assocs.get(2);
       assertEquals("childs", assoc.getField().getName());
       assertEquals("functional_entity_id", assoc.getVdxFieldName());
-      assertEquals(TestFunctionalEntityTree.class, assoc.getTargetClass());
+      assertEquals(SampleFunctionalEntityTree.class, assoc.getTargetClass());
       assertNotNull(assoc.getTargetField());
       assertEquals("parent", assoc.getTargetField().getName());
    }

@@ -6,12 +6,14 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Logger;
 
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.JobQueueView;
+import org.freebus.fts.components.LogLine;
 import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
 import org.freebus.fts.core.Config;
@@ -65,6 +67,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       createMenuBar();
       createToolBar();
+
+      getStatusBar().add(new LogLine());
+      Logger.getAnonymousLogger().info("Initializing...");
 
       jobQueueView = new JobQueueView();
       jobQueueView.setVisible(false);

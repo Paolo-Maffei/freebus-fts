@@ -12,9 +12,9 @@ import javax.persistence.PersistenceException;
 import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.junit.Test;
 
-import test.entities.TestFunctionalEntity;
-import test.entities.TestFunctionalEntityTree;
-import test.entities.TestManufacturer;
+import test.entities.SampleFunctionalEntity;
+import test.entities.SampleFunctionalEntityTree;
+import test.entities.SampleManufacturer;
 
 public class TestVdxEntityManager
 {
@@ -52,21 +52,21 @@ public class TestVdxEntityManager
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
-      List<TestManufacturer> lst = (List<TestManufacturer>) mgr.fetchAll(TestManufacturer.class);
+      List<SampleManufacturer> lst = (List<SampleManufacturer>) mgr.fetchAll(SampleManufacturer.class);
       assertNotNull(lst);
       assertEquals(3, lst.size());
 
       Object obj = lst.get(0);
       assertNotNull(obj);
-      assertTrue(obj instanceof TestManufacturer);
-      TestManufacturer manu = (TestManufacturer) obj;
+      assertTrue(obj instanceof SampleManufacturer);
+      SampleManufacturer manu = (SampleManufacturer) obj;
       assertEquals(1, manu.id);
       assertEquals("Siemens", manu.name);
 
       obj = lst.get(2);
       assertNotNull(obj);
-      assertTrue(obj instanceof TestManufacturer);
-      manu = (TestManufacturer) obj;
+      assertTrue(obj instanceof SampleManufacturer);
+      manu = (SampleManufacturer) obj;
       assertEquals(7, manu.id);
       assertEquals("Busch-Jaeger Elektro", manu.name);
    }
@@ -78,14 +78,14 @@ public class TestVdxEntityManager
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
-      List<TestFunctionalEntity> lst = (List<TestFunctionalEntity>) mgr.fetchAll(TestFunctionalEntity.class);
+      List<SampleFunctionalEntity> lst = (List<SampleFunctionalEntity>) mgr.fetchAll(SampleFunctionalEntity.class);
       assertNotNull(lst);
       assertEquals(2, lst.size());
 
       Object obj = lst.get(0);
       assertNotNull(obj);
-      assertTrue(obj instanceof TestFunctionalEntity);
-      TestFunctionalEntity ent = (TestFunctionalEntity) obj;
+      assertTrue(obj instanceof SampleFunctionalEntity);
+      SampleFunctionalEntity ent = (SampleFunctionalEntity) obj;
       assertNotNull(ent.manufacturer);
       assertEquals(2, ent.manufacturer.id);
    }
@@ -97,26 +97,26 @@ public class TestVdxEntityManager
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
-      List<TestFunctionalEntityTree> lst = (List<TestFunctionalEntityTree>) mgr.fetchAll(TestFunctionalEntityTree.class);
+      List<SampleFunctionalEntityTree> lst = (List<SampleFunctionalEntityTree>) mgr.fetchAll(SampleFunctionalEntityTree.class);
       assertNotNull(lst);
       assertEquals(2, lst.size());
 
       Object obj = lst.get(0);
       assertNotNull(obj);
-      assertTrue(obj instanceof TestFunctionalEntityTree);
-      TestFunctionalEntityTree ent = (TestFunctionalEntityTree) obj;
+      assertTrue(obj instanceof SampleFunctionalEntityTree);
+      SampleFunctionalEntityTree ent = (SampleFunctionalEntityTree) obj;
       assertNotNull(ent.manufacturer);
       assertEquals(2, ent.manufacturer.id);
 
       Object childObj = lst.get(1);
       assertNotNull(childObj);
-      assertTrue(childObj instanceof TestFunctionalEntityTree);
-      TestFunctionalEntityTree childEnt = (TestFunctionalEntityTree) childObj;
+      assertTrue(childObj instanceof SampleFunctionalEntityTree);
+      SampleFunctionalEntityTree childEnt = (SampleFunctionalEntityTree) childObj;
       assertNotNull(childEnt.manufacturer);
       assertEquals(2, childEnt.manufacturer.id);
       assertEquals(ent, childEnt.parent);
 
-      final Set<TestFunctionalEntityTree> childs = ent.childs;
+      final Set<SampleFunctionalEntityTree> childs = ent.childs;
       assertNotNull(childs);
       assertEquals(1, childs.size());
       assertEquals(childObj, childs.iterator().next());

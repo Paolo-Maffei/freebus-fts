@@ -31,6 +31,17 @@
   <module>freebus-fts-project</module>
   <module>freebus-fts</module>
  </modules>
+ <dependencyManagement>
+ 	<dependencies>
+ 		<dependency>
+ 			<groupId>junit</groupId>
+ 			<artifactId>junit</artifactId>
+ 			<version>4.4</version>
+ 			<type>jar</type>
+ 			<scope>test</scope>
+ 		</dependency>
+ 	</dependencies>
+ </dependencyManagement>
  <distributionManagement>
   <repository>
    <uniqueVersion>false</uniqueVersion>
@@ -40,24 +51,20 @@
   </repository>
  </distributionManagement>
  <dependencies>
-  <dependency>
-   <groupId>junit</groupId>
-   <artifactId>junit</artifactId>
-   <version>4.7</version>
-   <scope>test</scope>
-  </dependency>
-  <dependency>
-   <groupId>apache-log4j</groupId>
-   <artifactId>log4j</artifactId>
-   <version>1.2.15</version>
-  </dependency>
-  <dependency>
-   <groupId>maven-plugins</groupId>
-   <artifactId>maven-cobertura-plugin</artifactId>
-   <version>1.4</version>
-   <type>jar</type>
-   <scope>test</scope>
-  </dependency>
+ 	<dependency>
+ 		<groupId>junit</groupId>
+ 		<artifactId>junit</artifactId>
+ 		<version>4.4</version>
+ 		<type>jar</type>
+ 		<scope>test</scope>
+ 	</dependency>
+ 	<dependency>
+ 		<groupId>apache-log4j</groupId>
+ 		<artifactId>log4j</artifactId>
+ 		<version>1.2.15</version>
+ 		<type>jar</type>
+ 		<scope>compile</scope>
+ 	</dependency>
  </dependencies>
  <build>
   <plugins>
@@ -69,7 +76,7 @@
     </configuration>
    </plugin>
   </plugins>
-  <pluginManagement>
+  <!-- pluginManagement>
    <plugins>
     <plugin>
      <groupId>org.codehaus.mojo</groupId>
@@ -77,6 +84,7 @@
      <configuration>
       <formats>
        <format>xml</format>
+       <format>html</format>
       </formats>
      </configuration>
      <executions>
@@ -89,7 +97,7 @@
      </executions>
     </plugin>
    </plugins>
-  </pluginManagement>
+  </pluginManagement -->
  </build>
  <repositories>
   <repository>

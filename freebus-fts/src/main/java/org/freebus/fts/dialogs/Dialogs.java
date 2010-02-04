@@ -4,6 +4,7 @@ import java.awt.Cursor;
 
 import javax.swing.JOptionPane;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
@@ -22,7 +23,8 @@ public final class Dialogs
     */
    public static void showExceptionDialog(Exception e, String message)
    {
-      e.printStackTrace();
+      Logger.getRootLogger().warn(message, e);
+//      e.printStackTrace();
 
       message = "\n" + I18n.getMessage("Dialogs.Exception_Caption") + ":\n\n" + message + "\n\n" + e.getMessage()
             + "\n\n";

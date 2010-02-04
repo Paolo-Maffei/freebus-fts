@@ -19,7 +19,7 @@ public class DatabaseResources
 
    static
    {
-      // Ensure that Environment is loaded, which initializes the logging
+      // Ensure that Environment is loaded, which also initializes the logging
       Environment.getOS();
    }
 
@@ -118,7 +118,7 @@ public class DatabaseResources
       props.setProperty("javax.persistence.jdbc.user", user);
       props.setProperty("javax.persistence.jdbc.password", password);
       // props.setProperty("eclipselink.logging.level", "FINEST");
-      //props.setProperty("eclipselink.logging.logger", "org.freebus.fts.common.db.CommonsLoggingSessionLog");
+      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
 
       props.setProperty("hsqldb.default_table_type", "cached");
 

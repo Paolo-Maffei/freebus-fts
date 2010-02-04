@@ -85,11 +85,12 @@ public class ProductsBrowser extends AbstractPage
 
    private final JLabel lblEntryName;
    private final CatalogEntryDetails ceDetails;
-   private final Box boxBottom = Box.createHorizontalBox();
 
+   private final Box boxBottom = Box.createHorizontalBox();
    private final JCheckBox cbxImport = new JCheckBox(I18n.getMessage("ProductsBrowser.ImportOption"));
    private final JButton btnImport = new JButton(I18n.getMessage("ProductsBrowser.ImportButton"));
    private final Set<VirtualDevice> importDevices = new HashSet<VirtualDevice>();
+   private boolean importMode = false;
 
    /**
     * Create a bus monitor widget.
@@ -254,6 +255,7 @@ public class ProductsBrowser extends AbstractPage
     */
    protected void enableImportMode()
    {
+      importMode = true;
       boxBottom.setVisible(ceDetails.isVisible());
    }
 
@@ -432,7 +434,7 @@ public class ProductsBrowser extends AbstractPage
 
       lblEntryName.setVisible(valid);
       ceDetails.setVisible(valid);
-      boxBottom.setVisible(valid);
+      boxBottom.setVisible(importMode && valid);
 
       if (valid)
       {
