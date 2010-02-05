@@ -161,7 +161,7 @@ public class TestProject extends TestCase
       assertNotNull(project);
       assertTrue(project.getAreas().isEmpty());
 
-      final MainGroup mainGroup = new MainGroup();
+      final MainGroup mainGroup = new MainGroup(1);
       project.add(mainGroup);
 
       assertNotNull(project.getMainGroups());
@@ -173,7 +173,7 @@ public class TestProject extends TestCase
       assertEquals(1, project.getMainGroups().size());
       assertEquals(mainGroup, project.getMainGroups().iterator().next());
 
-      final MainGroup mainGroup2 = new MainGroup();
+      final MainGroup mainGroup2 = new MainGroup(2);
       project.add(mainGroup2);
       assertEquals(2, project.getMainGroups().size());
    }
