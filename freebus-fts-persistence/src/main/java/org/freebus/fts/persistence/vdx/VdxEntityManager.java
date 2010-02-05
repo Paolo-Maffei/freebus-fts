@@ -79,19 +79,9 @@ public final class VdxEntityManager
    public List<?> fetchAll(Class<?> entityClass) throws PersistenceException
    {
       final VdxEntityInfo info = inspector.getInfo(entityClass);
-      if (info == null)
-         throw new PersistenceException("Class " + entityClass.getCanonicalName() + " is missing in persistence.xml");
 
       if (info.getObjs() == null)
-      {
          loadEntities(info);
-         if (info.getObjs() == null)
-            return null;
-      }
-
-      final int num = info.getObjs().size();
-      if (num <= 0)
-         return null;
 
       return info.getObjs();
    }
@@ -108,8 +98,6 @@ public final class VdxEntityManager
    public <T extends Object> T fetch(Class<T> entityClass, Object id) throws PersistenceException
    {
       final VdxEntityInfo info = inspector.getInfo(entityClass);
-      if (info == null)
-         throw new PersistenceException("Class " + entityClass.getCanonicalName() + " is missing in persistence.xml");
 
       if (info.getObjs() == null)
       {
@@ -291,7 +279,7 @@ public final class VdxEntityManager
             {
                if (value.isEmpty())
                   field.setBoolean(obj, false);
-               else field.setBoolean(obj, Boolean.parseBoolean(value));
+               else field.setBoolean(obj, Integer.parseInt(value) != 0);
             }
             else if (type == Float.class || type == float.class)
             {

@@ -1,11 +1,11 @@
 package org.freebus.fts.persistence;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Properties;
 
 /**
@@ -120,47 +120,67 @@ public class SimpleConfig
    }
 
    /**
-    * Load the configuration from the file fileName. Automatically called when
-    * the configuration object is created.
+    * Load the configuration from the file fileName. The configuration is
+    * cleared before loading.
     * 
-    * @throws IOException
+    * @throws FileNotFoundException if the file exists but is a directory rather
+    *            than a regular file, does not exist but cannot be created, or
+    *            cannot be opened for any other reason.
+    * @throws IOException if an error occurred when reading from the input
+    *            stream.
+    * @throws IllegalArgumentException if the configuration file contains a malformed
+    *            Unicode escape sequence.
     */
-   public void load(String fileName) throws IOException
+   public void load(String fileName) throws IOException,FileNotFoundException
    {
-      clear();
-      init();
+      InputStream in = null;
 
-      InputStream inStream = null;
       try
       {
-         inStream = new FileInputStream(fileName);
-         props.load(inStream);
-      }
-      catch (FileNotFoundException e)
-      {
+         in = new FileInputStream(fileName);
+         load(in);
       }
       finally
       {
-         if (inStream != null)
-            inStream.close();
+         if (in != null)
+            in.close();
       }
    }
 
    /**
-    * Save the configuration.
+    * Load the configuration from the input stream <code>in</code>. The
+    * configuration is cleared before loading.
     * 
-    * @throws IOException
+    * @throws IOException if an error occurred when reading from the input
+    *            stream.
+    * @throws IllegalArgumentException if the input stream contains a malformed
+    *            Unicode escape sequence.
     */
-   public void save() throws IOException
+   public void load(InputStream in) throws IOException
    {
-      final String configFileName = Environment.getAppDir() + "/config.ini";
+      clear();
+      init();
+      props.load(in);
+   }
 
+   /**
+    * Save the configuration to the file fileName.
+    * 
+    * @throws FileNotFoundException if the file exists but is a directory rather
+    *            than a regular file, does not exist but cannot be created, or
+    *            cannot be opened for any other reason.
+    * @throws SecurityException if a security manager exists and its
+    *            <code>checkWrite</code> method denies write access to the file.
+    * @throws IOException if writing the configuration list to the specified
+    *            output stream throws an <tt>IOException</tt>.
+    */
+   public void save(String fileName) throws IOException
+   {
       FileOutputStream out = null;
-
       try
       {
-         out = new FileOutputStream(new File(configFileName));
-         props.store(out, Environment.getAppName() + " configuration");
+         out = new FileOutputStream(fileName);
+         save(out);
       }
       finally
       {
@@ -169,4 +189,15 @@ public class SimpleConfig
       }
    }
 
+   /**
+    * Save the configuration to the output stream <code>out</code>.
+    * 
+    * @throws IOException if writing the configuration list to the specified
+    *            output stream throws an <tt>IOException</tt>.
+    * @throws NullPointerException if <code>out</code> is null.
+    */
+   public void save(OutputStream out) throws IOException
+   {
+      props.store(out, Environment.getAppName() + " configuration");
+   }
 }

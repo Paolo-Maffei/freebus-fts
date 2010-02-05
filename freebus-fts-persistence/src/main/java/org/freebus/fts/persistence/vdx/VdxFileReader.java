@@ -33,9 +33,10 @@ public final class VdxFileReader
    private Map<String, Integer> languages;
 
    /**
-    * Create a new vdx-file reader object.
+    * Create a new VDX-file reader object. The file <code>fileName</code> is read
+    * upon creation.
     * 
-    * @throws Exception if the file cannot be read.
+    * @throws IOException if the file cannot be read.
     */
    public VdxFileReader(String fileName) throws IOException
    {
@@ -122,7 +123,7 @@ public final class VdxFileReader
     */
    public VdxSectionHeader getSectionHeader(String name)
    {
-      return sectionHeaders.get(name);
+      return sectionHeaders.get(name.toLowerCase());
    }
 
    /**
@@ -130,17 +131,19 @@ public final class VdxFileReader
     */
    public boolean hasSection(String name)
    {
-      return sectionHeaders.containsKey(name);
+      return sectionHeaders.containsKey(name.toLowerCase());
    }
 
    /**
     * Get a specific section of the file. The section is read, if required.
     * 
-    * @return the section with the given name or null if not found.
+    * @return the section with the given name or null if no such section exists or
+    *         if the section contains no records.
     * @throws IOException
     */
    public VdxSection getSection(String name) throws IOException
    {
+      name = name.toLowerCase();
       if (sections.containsKey(name)) return sections.get(name);
 
       final VdxSectionHeader header = sectionHeaders.get(name);
@@ -262,11 +265,16 @@ public final class VdxFileReader
                   if (pos >= 0) val = val.substring(0, pos);
                   field.setInt(obj, val.isEmpty() ? 0 : Integer.parseInt(val));
                }
-               else if (type == double.class)
+               else if (type == double.class || type == Double.class)
                   field.setDouble(obj, val.isEmpty() ? 0.0 : Double.parseDouble(val));
-               else if (type == boolean.class)
-                  field.setBoolean(obj, val.isEmpty() ? false : Integer.parseInt(val) != 0);
-               else throw new Exception("Variable type not supported by vdx-to-db mapper: " + type.toString());
+               else if (type == float.class || type == Float.class)
+                  field.setFloat(obj, val.isEmpty() ? 0.0f : Float.parseFloat(val));
+               else if (type == boolean.class || type == Boolean.class)
+               {
+                  if (val.isEmpty()) val = "0";
+                  field.setBoolean(obj, Integer.parseInt(val) != 0);
+               }
+               else throw new IOException("Variable type not supported by vdx-to-db mapper: " + type.toString());
             }
 
             objs[i] = obj;
@@ -293,13 +301,13 @@ public final class VdxFileReader
    }
 
    /**
-    * Remove a specific section from the reader. Only the contents of the section is
-    * removed, the section header stays loaded.
+    * Remove a specific section contents from the reader. Only the contents of the
+    * section is removed, the section header stays loaded.
     * 
     * You can call this method free some memory, which is recommended when working with
     * large files.
     */
-   public void removeSection(String name)
+   public void removeSectionContents(String name)
    {
       sections.remove(name);
    }
@@ -368,15 +376,15 @@ public final class VdxFileReader
 
          // Read the fields of the section
          fieldLines.clear();
-         while (reader.read() == 'C')
+         while (!reader.atEnd() && reader.read() == 'C')
          {
             // A field definition line looks like this:
             // C1 T3 1 4 N MANUFACTURER_ID
             reader.readWord(); // Skip the field-id "1" (we already read the 'C')
             reader.readWord(); // Skip the section name "T3"
-            reader.readWord(); // Skip the unknown number
-            reader.readWord(); // Skip the maximum field length
-            reader.readWord(); // Skip the unknown Y|N switch
+            reader.readWord(); // Skip the field data type
+            reader.readWord(); // Skip the size of the field in bytes (int:4, short:2, string:length, ...)
+            reader.readWord(); // Skip the null-allowed Y|N switch
 
             line = reader.readLine();
             if (line == null) break;
@@ -425,9 +433,9 @@ public final class VdxFileReader
       if (languages == null)
          getLanguages();
 
-      if (languages.isEmpty())
-         languageId = 0;
-      else languageId = languages.get(language);
+      if (languages.containsKey(language))
+         languageId = languages.get(language);
+      else languageId = 0;
    }
    
    /**

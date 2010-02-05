@@ -44,7 +44,7 @@ public final class VdxSectionHeader
    {
       int i;
       for (i=fields.length-1; i>=0; --i)
-         if (fields[i].equals(name)) break;
+         if (fields[i].equalsIgnoreCase(name)) break;
       return i;
    }
 
