@@ -220,16 +220,15 @@ public class Project
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof Project))
          return false;
 
       final Project oo = (Project) o;
-      if (id != oo.id || name != oo.name || description != oo.description || areas != oo.areas
-            || buildings != oo.buildings || mainGroups != oo.mainGroups)
-      {
-         return false;
-      }
-      return true;
+      return id == oo.id && name == oo.name && description == oo.description && areas.equals(oo.areas)
+            && buildings.equals(oo.buildings) && mainGroups.equals(oo.mainGroups);
    }
 
    /**

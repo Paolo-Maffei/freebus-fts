@@ -119,7 +119,7 @@ public class TestProject extends TestCase
       assertNotNull(project);
       assertTrue(project.getAreas().isEmpty());
 
-      final Area area = new Area();
+      final Area area = new Area(1);
       project.add(area);
 
       assertNotNull(project.getAreas());
@@ -131,7 +131,7 @@ public class TestProject extends TestCase
       assertEquals(1, project.getAreas().size());
       assertEquals(area, project.getAreas().iterator().next());
 
-      final Area area2 = new Area();
+      final Area area2 = new Area(2);
       project.add(area2);
       assertEquals(2, project.getAreas().size());
    }
@@ -142,7 +142,7 @@ public class TestProject extends TestCase
       assertNotNull(project);
       assertTrue(project.getBuildings().isEmpty());
 
-      final Building building = new Building();
+      final Building building = new Building(1);
       project.add(building);
 
       assertNotNull(project.getBuildings());
@@ -150,7 +150,7 @@ public class TestProject extends TestCase
       assertEquals(1, project.getBuildings().size());
       assertEquals(building, project.getBuildings().iterator().next());
 
-      Building building2 = new Building();
+      Building building2 = new Building(2);
       project.add(building2);
       assertEquals(2, project.getBuildings().size());
    }

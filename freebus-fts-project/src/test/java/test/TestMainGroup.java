@@ -98,17 +98,20 @@ public class TestMainGroup extends TestCase
 
    public final void testAdd()
    {
-      final MainGroup mainGroup = new MainGroup();
+      final MainGroup mainGroup = new MainGroup(1);
       assertTrue(mainGroup.getMidGroups().isEmpty());
 
-      final MidGroup midGroup = new MidGroup();
+      final MidGroup midGroup = new MidGroup(2);
       mainGroup.add(midGroup);
 
       assertFalse(mainGroup.getMidGroups().isEmpty());
       assertEquals(1, mainGroup.getMidGroups().size());
       assertEquals(midGroup, mainGroup.getMidGroups().iterator().next());
 
-      mainGroup.add(new MidGroup());
+      mainGroup.add(midGroup);
+      assertEquals(1, mainGroup.getMidGroups().size());
+
+      mainGroup.add(new MidGroup(3));
       assertEquals(2, mainGroup.getMidGroups().size());      
    }
 

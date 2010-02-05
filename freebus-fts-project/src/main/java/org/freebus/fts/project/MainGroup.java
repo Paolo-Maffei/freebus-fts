@@ -169,7 +169,7 @@ public class MainGroup
    @Override
    public int hashCode()
    {
-      return id;
+      return (id << 8) | address;
    }
 
    /**

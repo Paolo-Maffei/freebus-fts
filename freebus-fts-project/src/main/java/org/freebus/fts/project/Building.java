@@ -50,6 +50,14 @@ public class Building
    }
 
    /**
+    * Create a new building with an id.
+    */
+   public Building(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return the building id
     */
    public int getId()
@@ -148,7 +156,7 @@ public class Building
          return false;
 
       final Building oo = (Building) o;
-      return (id == oo.id && name == oo.name && description == oo.description && rooms == oo.rooms);
+      return (id == oo.id && name == oo.name && description == oo.description && rooms.equals(oo.rooms));
    }
 
    /**

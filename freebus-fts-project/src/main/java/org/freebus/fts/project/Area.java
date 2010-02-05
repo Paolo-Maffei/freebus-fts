@@ -52,6 +52,14 @@ public class Area
    }
 
    /**
+    * Create an area with a id.
+    */
+   public Area(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return the area id
     */
    public int getId()
@@ -151,7 +159,7 @@ public class Area
          return false;
 
       final Area oo = (Area) o;
-      return (id == oo.id && address == oo.address && name == oo.name && lines == oo.lines);
+      return (id == oo.id && address == oo.address && name == oo.name && lines.equals(oo.lines));
    }
 
    /**
