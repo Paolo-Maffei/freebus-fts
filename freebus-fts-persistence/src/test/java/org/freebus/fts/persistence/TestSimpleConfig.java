@@ -22,7 +22,8 @@ public class TestSimpleConfig
       if (tempFileName != null)
       {
          final File tempFile = new File(tempFileName);
-         if (tempFile.exists()) tempFile.delete();
+         if (tempFile.exists() && !tempFile.delete())
+            throw new RuntimeException("failed to delete temp file " + tempFileName);
       }
    }
 

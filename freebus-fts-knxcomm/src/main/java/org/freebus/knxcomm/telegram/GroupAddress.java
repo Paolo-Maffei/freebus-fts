@@ -136,8 +136,8 @@ public final class GroupAddress implements Address
    public boolean equals(Object o)
    {
       if (o == this) return true;
+      if (!(o instanceof GroupAddress)) return false;
       final GroupAddress oo = (GroupAddress) o;
-      if (oo == null) return false;
       return oo.addr == addr;
    }
 

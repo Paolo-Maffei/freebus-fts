@@ -1,5 +1,8 @@
 package org.freebus.fts.pages.productsbrowser;
 
+import javax.swing.JComboBox;
+import javax.swing.JList;
+
 import org.freebus.fts.products.Manufacturer;
 
 /**
@@ -10,7 +13,7 @@ import org.freebus.fts.products.Manufacturer;
  * This is a useful helper class for creating lists of manufacturers,
  * like for {@link JList} or {@link JComboBox}.
  */
-public class ManufacturerItem implements Comparable<Manufacturer>
+public class ManufacturerItem implements Comparable<ManufacturerItem>
 {
    private Manufacturer manufacturer;
 
@@ -50,11 +53,37 @@ public class ManufacturerItem implements Comparable<Manufacturer>
     * Compare two items by comparing their manufacturer's names.
     */
    @Override
-   public int compareTo(Manufacturer o)
+   public int compareTo(ManufacturerItem o)
    {
-      if (manufacturer == o) return 0;
+      if (manufacturer == o.manufacturer) return 0;
       if (manufacturer == null) return -1;
-      return manufacturer.getName().compareTo(o.getName());
+      return manufacturer.getName().compareTo(o.manufacturer.getName());
+   }
+   
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this) return true;
+      if (!(o instanceof ManufacturerItem)) return false;
+      final ManufacturerItem oo = (ManufacturerItem) o;
+      if (manufacturer == null)
+      {
+         return oo.manufacturer == null;
+      }
+      return manufacturer.getName().equals(oo.manufacturer.getName());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      if (manufacturer == null) return 0;
+      return manufacturer.hashCode();
    }
 
    /**
@@ -63,7 +92,7 @@ public class ManufacturerItem implements Comparable<Manufacturer>
    @Override
    public String toString()
    {
-      if (manufacturer == null) return null;
+      if (manufacturer == null) return "";
       return manufacturer.getName();
    }
 }

@@ -18,8 +18,8 @@ import org.freebus.knxcomm.serial.SerialPortUtil;
 public final class SerialBusInterface extends JPanel
 {
    private static final long serialVersionUID = 1457255663125616282L;
+   private final static String configKey = "knxConnectionSerial";
    private final JComboBox cboPort;
-   private final String configKey = "knxConnectionSerial";
 
    /**
     * Create a new serial bus-interface configuration widget.

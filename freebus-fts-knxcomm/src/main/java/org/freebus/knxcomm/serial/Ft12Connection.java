@@ -250,8 +250,9 @@ public abstract class Ft12Connection implements KNXConnection
       final int dataLen = read() - 1;
       read(); // dataLen repeated
 
-      String logMsg = "READ: DATA [0x68] (" + Integer.toString(dataLen) + " bytes): ";
       String err = "";
+      final StringBuffer logMsg = new StringBuffer();
+      logMsg.append("READ: DATA [0x68] (").append(dataLen).append(" bytes): ");
 
       ++readMsgCount;
       if (read() != 0x68) err += "|no boundary marker";
@@ -265,7 +266,7 @@ public abstract class Ft12Connection implements KNXConnection
       for (int i = 0; i < dataLen; ++i)
       {
          data[i] = read();
-         logMsg += ' ' + Integer.toHexString(data[i]);
+         logMsg.append(' ').append(Integer.toHexString(data[i]));
          ftCheckSum += data[i];
       }
 
@@ -277,11 +278,12 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (err.length() > 0)
       {
-         logger.error(logMsg + err.substring(1));
+         logMsg.append(err.substring(1));
+         logger.error(logMsg.toString());
       }
       else
       {
-         logger.debug(logMsg);
+         logger.debug(logMsg.toString());
          try
          {
             final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);

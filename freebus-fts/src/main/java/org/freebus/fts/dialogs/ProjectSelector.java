@@ -26,8 +26,8 @@ public final class ProjectSelector extends Dialog
 {
    private static final long serialVersionUID = 7580878090288641271L;
 
-   private final ProjectsModel projectsModel;
-   private final JTable projectsTable;
+   private final ProjectsModel projectsModel = new ProjectsModel();
+   private final JTable projectsTable = new JTable(projectsModel);
    private final JScrollPane projectsView;
    private final JButton btnOpen;
 
@@ -43,9 +43,6 @@ public final class ProjectSelector extends Dialog
       final Container body = getBodyPane();
       body.setLayout(new BorderLayout());
 
-      projectsModel = new ProjectsModel();
-
-      projectsTable = new JTable(projectsModel);
       projectsTable.setFillsViewportHeight(true);
       projectsTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
       projectsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
@@ -83,7 +80,7 @@ public final class ProjectSelector extends Dialog
     * Internal table-model for the {@link ProjectSelector} project-selection
     * dialog.
     */
-   private class ProjectsModel extends AbstractTableModel
+   private static class ProjectsModel extends AbstractTableModel
    {
       private static final long serialVersionUID = 4747236528702209278L;
       private List<Project> projects;

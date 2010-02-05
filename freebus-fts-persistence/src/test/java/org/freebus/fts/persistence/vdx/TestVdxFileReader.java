@@ -17,7 +17,7 @@ import org.junit.Test;
 
 public final class TestVdxFileReader
 {
-   private final String vdxFileName = "src/test/resources/test-file.vd_";
+   private final static String vdxFileName = "src/test/resources/test-file.vd_";
    private VdxFileReader reader;
 
    @Before
@@ -38,13 +38,13 @@ public final class TestVdxFileReader
    public void testFinalizeClosed() throws Exception
    {
       reader.close();
-      reader.finalize();
+      reader.finalize(); // this looks strange, but it seems to work
    }
 
    @Test(expected = RuntimeException.class)
    public void testFinalizeNotClosed() throws Exception
    {
-      (new VdxFileReader(vdxFileName)).finalize();
+      (new VdxFileReader(vdxFileName)).finalize(); // this looks strange, but it seems to to work
    }
 
    @Test

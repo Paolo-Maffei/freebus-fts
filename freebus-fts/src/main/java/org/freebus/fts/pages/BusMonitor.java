@@ -29,7 +29,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    private final JTree tree;
    private final JScrollPane treeView;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-   private final BusMonitorCellRenderer cellRenderer;
+   private final transient BusMonitorCellRenderer cellRenderer;
    private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
 
    private BusInterface bus = null;

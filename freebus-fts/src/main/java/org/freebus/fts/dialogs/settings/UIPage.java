@@ -51,6 +51,22 @@ public final class UIPage extends SettingsPage
       }
 
       @Override
+      public boolean equals(Object o)
+      {
+         if (o == this) return true;
+         if (!(o instanceof LookAndFeelItem)) return false;
+         final LookAndFeelItem oo = (LookAndFeelItem) o;
+         return info.getName().equals(oo.info.getName());
+      }
+
+      @Override
+      public int hashCode()
+      {
+         if (info == null) return 0;
+         return info.hashCode();
+      }
+
+      @Override
       public String toString()
       {
          return info.getName();

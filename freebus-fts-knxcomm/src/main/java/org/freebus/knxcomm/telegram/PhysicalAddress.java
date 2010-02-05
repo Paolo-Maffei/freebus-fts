@@ -141,8 +141,8 @@ public final class PhysicalAddress implements Address
    public boolean equals(Object o)
    {
       if (o == this) return true;
+      if (!(o instanceof PhysicalAddress)) return false;
       final PhysicalAddress oo = (PhysicalAddress) o;
-      if (oo == null) return false;
       return oo.addr == addr;
    }
 

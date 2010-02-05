@@ -328,8 +328,9 @@ public final class VdxFileReader
 
       in.seek(0);
 
-      line = reader.readLine().trim();
-      if (!line.equals("EX-IM")) throw new IOException("no vdx file");
+      line = reader.readLine();
+      if (line != null) line = line.trim();
+      if (!"EX-IM".equals(line)) throw new IOException("no vdx file");
 
       while (true)
       {
@@ -367,7 +368,8 @@ public final class VdxFileReader
             throw new IOException("No section start at byte-pos " + Long.toString(reader.getFilePointer()));
 
          final int sectionId = Integer.parseInt(reader.readWord());
-         final String sectionName = reader.readLine().trim().toLowerCase();
+         String sectionName = reader.readLine();
+         if (sectionName != null) sectionName= sectionName.trim().toLowerCase();
          if (sectionHeaders.containsKey(sectionName))
          {
             throw new IOException("Duplicate section \"" + sectionName + "\" at byte-pos "
@@ -428,7 +430,7 @@ public final class VdxFileReader
     * Set the language that shall be used for multi-lingual texts.
     * Use {@link getLanguages} to obtain the list of available languages in a VD_ file.
     */
-   public void setLanguage(String language)
+   public synchronized void setLanguage(String language)
    {
       if (languages == null)
          getLanguages();

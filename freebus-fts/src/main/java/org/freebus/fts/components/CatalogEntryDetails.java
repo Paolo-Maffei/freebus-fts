@@ -92,7 +92,8 @@ public final class CatalogEntryDetails extends JPanel
     */
    public void setProductsFactory(ProductsFactory productsFactory)
    {
-      productDescriptionService = productsFactory.getProductDescriptionService();
+      if (productsFactory == null) productDescriptionService = null;
+      else productDescriptionService = productsFactory.getProductDescriptionService();
    }
 
    /**

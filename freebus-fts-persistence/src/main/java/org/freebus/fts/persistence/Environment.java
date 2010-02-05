@@ -89,11 +89,7 @@ public final class Environment
     */
    public static void setAppName(String appName)
    {
-      appName.replace('\\', '-');
-      appName.replace('/',  '-');
-      appName.replace(':',  '-');
-      appName.replace(' ',  '_');
-
+      appName = appName.replace('\\', '-').replace('/',  '-').replace(':',  '-').replace(' ',  '_');
       Environment.appName = appName;
       appDir = null;
    }

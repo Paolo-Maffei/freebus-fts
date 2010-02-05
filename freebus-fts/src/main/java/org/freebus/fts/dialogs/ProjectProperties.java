@@ -27,8 +27,8 @@ public class ProjectProperties extends Dialog
 {
    private static final long serialVersionUID = -2181288305995816556L;
 
-   private final JTextField edtName;
-   private final JTextArea edtDescription;
+   private final JTextField edtName = new JTextField();
+   private final JTextArea edtDescription = new JTextArea();
    private final JButton btnOk = new JButton(I18n.getMessage("Button.Ok"));
    private Project project;
 
@@ -54,7 +54,6 @@ public class ProjectProperties extends Dialog
       lbl.setFont(captionFont);
       body.add(lbl, new GridBagConstraints(0, ++row, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(4, 4, 0, 4), 0, 0));
 
-      edtName = new JTextField();
       edtName.setName("edtName");
       body.add(edtName, new GridBagConstraints(0, ++row, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, defaultInsets, 0, 0));
 //      edtName.addKeyListener(new KeyAdapter()
@@ -90,7 +89,6 @@ public class ProjectProperties extends Dialog
       lbl.setFont(captionFont);
       body.add(lbl, new GridBagConstraints(0, ++row, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, defaultInsets, 0, 0));
 
-      edtDescription = new JTextArea();
       edtDescription.setName("edtDescription");
       edtDescription.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       body.add(edtDescription, new GridBagConstraints(0, ++row, 3, 1, 1, 100, GridBagConstraints.WEST, GridBagConstraints.BOTH, defaultInsets, 0, 0));
@@ -113,9 +111,9 @@ public class ProjectProperties extends Dialog
    /**
     * Set the project that is displayed/edited.
     */
-   public void setProject(Project project)
+   public void setProject(Project proj)
    {
-      this.project = project;
+      project = proj;
 
       edtName.setText(project.getName());
       edtDescription.setText(project.getDescription());

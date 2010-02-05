@@ -17,8 +17,8 @@ import org.freebus.fts.persistence.SimpleConfig;
 public final class EibdBusInterface extends JPanel
 {
    private static final long serialVersionUID = 1457255663125616282L;
-   private final String configKey = "knxConnectionEibd";
-   private final int defaultEibdPort = 6720;
+   private final static String configKey = "knxConnectionEibd";
+   private final static int defaultEibdPort = 6720;
    private final JTextField inpHost, inpPort;
 
    /**

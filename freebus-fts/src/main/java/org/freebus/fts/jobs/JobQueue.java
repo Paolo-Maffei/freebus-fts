@@ -29,9 +29,10 @@ public final class JobQueue implements JobListener
    /**
     * @return the default job queue.
     */
-   public static JobQueue getDefaultJobQueue()
+   public synchronized static JobQueue getDefaultJobQueue()
    {
-      if (defaultJobQueue == null) defaultJobQueue = new JobQueue();
+      if (defaultJobQueue == null)
+         defaultJobQueue = new JobQueue();
       return defaultJobQueue;
    }
 
@@ -54,11 +55,13 @@ public final class JobQueue implements JobListener
                   Job job = jobs.poll();
                   runJob(job);
 
-                  if (jobs.isEmpty()) notifyListeners(new JobQueueEvent(null));
+                  if (jobs.isEmpty())
+                     notifyListeners(new JobQueueEvent(null));
                }
                catch (InterruptedException e)
                {
-                  if (running) e.printStackTrace();
+                  if (running)
+                     e.printStackTrace();
                }
             }
          }
@@ -80,7 +83,8 @@ public final class JobQueue implements JobListener
          thread = null;
       }
 
-      if (this == defaultJobQueue) defaultJobQueue = null;
+      if (this == defaultJobQueue)
+         defaultJobQueue = null;
    }
 
    /**
@@ -88,7 +92,8 @@ public final class JobQueue implements JobListener
     */
    public void add(Job job)
    {
-      if (thread == null) throw new IllegalAccessError("the job-queue object is disposed");
+      if (thread == null)
+         throw new IllegalAccessError("the job-queue object is disposed");
       jobs.add(job);
       semaphore.release();
    }
@@ -106,7 +111,8 @@ public final class JobQueue implements JobListener
     */
    public void addListener(JobQueueListener listener)
    {
-      if (thread == null) throw new IllegalAccessError("the job-queue object is disposed");
+      if (thread == null)
+         throw new IllegalAccessError("the job-queue object is disposed");
       listeners.add(listener);
    }
 
@@ -141,7 +147,8 @@ public final class JobQueue implements JobListener
       try
       {
          final BusInterface bus = BusInterfaceService.getBusInterface();
-         if (bus == null) return;
+         if (bus == null)
+            return;
 
          job.run(bus);
 
@@ -170,6 +177,7 @@ public final class JobQueue implements JobListener
    @Override
    public void progress(int done, String message)
    {
-      if (currentJob != null) notifyListeners(new JobQueueEvent(currentJob, done, message));
+      if (currentJob != null)
+         notifyListeners(new JobQueueEvent(currentJob, done, message));
    }
 }

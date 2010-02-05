@@ -21,7 +21,6 @@ import org.freebus.knxcomm.telegram.Transport;
 public final class SendTestTelegramAction extends BasicAction
 {
    private static final long serialVersionUID = 5690672834708924069L;
-   private static int sequence = 0;
 
    /** A connect telegram. */
    public static final String CONNECT = "connect";
@@ -29,6 +28,7 @@ public final class SendTestTelegramAction extends BasicAction
    /** A connected memory-read telegram. */
    public static final String MEMORY_READ = "memory_read";
 
+   private int sequence = 0;
    private final String telegramType;
 
    /**

@@ -65,8 +65,7 @@ public class BusMonitor implements TelegramListener
     */
    public static void main(String[] args) throws Exception
    {
-      @SuppressWarnings("unused")
-      BusMonitor mon = new BusMonitor();
+      new BusMonitor();
 
       while (true)
          Thread.sleep(1000);

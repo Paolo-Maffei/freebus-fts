@@ -31,7 +31,7 @@ public final class DatabasePage extends SettingsPage
    /**
     * Internal class for the database-driver selection combo-box.
     */
-   protected class DriverTypeItem
+   protected static class DriverTypeItem
    {
       private final DriverType type;
       private final String label;

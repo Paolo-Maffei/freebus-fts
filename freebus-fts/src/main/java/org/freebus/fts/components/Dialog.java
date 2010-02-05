@@ -29,13 +29,13 @@ public class Dialog extends JDialog
     * Button role for accept/ok buttons. Buttons with this role call
     * {@link #accept} when clicked.
     */
-   public static final String ACCEPT = "accept";
+   public static final int ACCEPT = 1;
 
    /**
     * Button role for reject/cancel buttons. Buttons with this role call
     * {@link #reject} when clicked.
     */
-   public static final String REJECT = "reject";
+   public static final int REJECT = 0;
 
    /**
     * Create a dialog window.
@@ -119,7 +119,7 @@ public class Dialog extends JDialog
     * @param button - The button to add.
     * @param role - The button's role: {@link #ACCEPT}, {@link #REJECT}.
     */
-   public void addButton(JButton button, String role)
+   public void addButton(JButton button, int role)
    {
       addButton(button);
 

@@ -22,10 +22,11 @@ import org.apache.log4j.spi.LoggingEvent;
 public class LogLine extends JLabel
 {
    private static final long serialVersionUID = 3863672762089494126L;
+   private static final int messageTimeoutMS = 5000; 
+
    private final Map<Level,Color> levelColors = new HashMap<Level,Color>();
    private final Color defaultColor = getForeground();
    private Timer timer;
-   private final int messageTimeoutMS = 5000; 
 
    /**
     * Create a log-line widget.
@@ -96,7 +97,7 @@ public class LogLine extends JLabel
    /*
     * The internal log-appender that feeds the log line. 
     */
-   protected final Appender appender = new WriterAppender()
+   protected final transient Appender appender = new WriterAppender()
    {
       @Override
       public void append(final LoggingEvent event)
