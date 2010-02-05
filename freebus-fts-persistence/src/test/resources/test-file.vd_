@@ -75,6 +75,19 @@ R 4 T 5 bcu_type
 System B
 
 -------------------------------------
+T 18 ete_language
+C1 T18 1 4 N LANGUAGE_ID
+C2 T18 3 50 Y LANGUAGE_NAME
+C3 T18 2 2 Y DATABASE_LANGUAGE
+R 1 T 18 ete_language
+1031
+German
+1
+R 2 T 18 ete_language
+1033
+English
+0
+-------------------------------------
 T 67 EmptySection
 C1 T67 1 4 N ID
 C2 T67 1 4 N Name
@@ -82,19 +95,35 @@ C2 T67 1 4 N Name
 T 66 ApplicationProgramBaggage
 C1 T66 1 4 N ID
 C2 T66 1 4 N ApplicationProgramID
-C3 T66 1 4 N BaggageID
+C3 T66 1 4 N LANGUAGE_ID
+C4 T66 1 4 N Any_Key
+C5 T66 1 2 N active
+C6 T66 1 2 N factor
 R 1 T 66 ApplicationProgramBaggage
-621036
+621036.
 24680
-621007
- 347 T 66 ApplicationProgramBaggage
+1033
+17.
+1
+3.14
+R 2 T 66 ApplicationProgramBaggage
 2348887
 2330886
-1627773
+1031
+4.0
+1
+2.98
+R 3 T 66 ApplicationProgramBaggage
+
+
+1031
+
+
+
 XXX
 
 
 -------------------------------------
 T 68 EmptySection2
-C1 T68 1 4 N ID
+C1 T68 1 4 N This-Section-is-after-the-end-marker
 C2 T68 1 4 N Name

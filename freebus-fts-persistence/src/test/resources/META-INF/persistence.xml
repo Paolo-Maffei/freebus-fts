@@ -6,8 +6,9 @@
 
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>test.entities.SampleFunctionalEntity</class>
-  <class>test.entities.SampleManufacturer</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleBaggage</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntity</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer</class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
@@ -21,9 +22,9 @@
  
  <persistence-unit name="duplicate-entities">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>test.entities.SampleManufacturer</class>
-  <class>test.entities.SampleFunctionalEntity</class>
-  <class>test.entities.SampleManufacturer2</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntity</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer2</class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
@@ -37,8 +38,8 @@
   
  <persistence-unit name="with-children">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>test.entities.SampleManufacturer</class>
-  <class>test.entities.SampleFunctionalEntityTree</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntityTree</class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="javax.persistence.jdbc.driver" value="org.hsqldb.jdbcDriver" />
