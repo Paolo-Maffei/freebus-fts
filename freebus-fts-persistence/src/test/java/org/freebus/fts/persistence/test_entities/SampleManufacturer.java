@@ -1,4 +1,4 @@
-package test.entities;
+package org.freebus.fts.persistence.test_entities;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

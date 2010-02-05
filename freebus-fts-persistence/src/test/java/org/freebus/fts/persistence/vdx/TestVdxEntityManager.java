@@ -1,4 +1,4 @@
-package test;
+package org.freebus.fts.persistence.vdx;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,20 +9,19 @@ import java.util.Set;
 
 import javax.persistence.PersistenceException;
 
-import org.freebus.fts.persistence.vdx.VdxEntityManager;
+import org.freebus.fts.persistence.test_entities.SampleBaggage;
+import org.freebus.fts.persistence.test_entities.SampleFunctionalEntity;
+import org.freebus.fts.persistence.test_entities.SampleFunctionalEntityTree;
+import org.freebus.fts.persistence.test_entities.SampleManufacturer;
 import org.junit.Test;
 
-import test.entities.SampleFunctionalEntity;
-import test.entities.SampleFunctionalEntityTree;
-import test.entities.SampleManufacturer;
 
 public class TestVdxEntityManager
 {
    @Test
    public final void testVdxEntityManager() throws Exception
    {
-      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
-      assertNotNull(mgr);
+      assertNotNull(new VdxEntityManager("src/test/resources/test-file.vd_"));
    }
    
    @Test(expected = PersistenceException.class)
@@ -45,8 +44,22 @@ public class TestVdxEntityManager
       new VdxEntityManager("src/test/resources/test-file.vd_", "duplicate-entities");
    }
 
+   @Test(expected = PersistenceException.class)
+   public final void testFetchAllNull() throws PersistenceException
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      mgr.fetchAll(null);
+   }
+
+   @Test(expected = PersistenceException.class)
+   public final void testFetchAllInvalidClass() throws PersistenceException
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      mgr.fetchAll(Object.class);
+   }
+
    @Test
-   public final void testFindAllSimple() throws Exception
+   public final void testFetchAllSimple() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
       assertNotNull(mgr);
@@ -72,7 +85,19 @@ public class TestVdxEntityManager
    }
 
    @Test
-   public final void testFindAllUniDirectionalReference() throws Exception
+   public final void testFetchAllLocalized() throws Exception
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      assertNotNull(mgr);
+
+      @SuppressWarnings("unchecked")
+      List<SampleBaggage> lst = (List<SampleBaggage>) mgr.fetchAll(SampleBaggage.class);
+      assertNotNull(lst);
+      assertEquals(3, lst.size());
+   }
+
+   @Test
+   public final void testFetchAllUniDirectionalReference() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
       assertNotNull(mgr);
@@ -91,7 +116,7 @@ public class TestVdxEntityManager
    }
 
    @Test
-   public final void testFindAllBiDirectionalReference() throws Exception
+   public final void testFetchAllBiDirectionalReference() throws Exception
    {
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "with-children");
       assertNotNull(mgr);
@@ -120,5 +145,19 @@ public class TestVdxEntityManager
       assertNotNull(childs);
       assertEquals(1, childs.size());
       assertEquals(childObj, childs.iterator().next());
+   }
+
+   @Test(expected = PersistenceException.class)
+   public final void testFetchNull() throws PersistenceException
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      mgr.fetch(null, null);
+   }
+
+   @Test(expected = PersistenceException.class)
+   public final void testFetchInvalidClass() throws PersistenceException
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      mgr.fetch(Object.class, null);
    }
 }

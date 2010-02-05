@@ -1,4 +1,4 @@
-package test.entities;
+package org.freebus.fts.persistence.test_entities;
 
 import java.util.HashSet;
 import java.util.Set;

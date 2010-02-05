@@ -1,19 +1,21 @@
-package test;
+package org.freebus.fts.persistence.vdx;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.Set;
 import java.util.Vector;
 
+import org.freebus.fts.persistence.test_entities.SampleFunctionalEntity;
+import org.freebus.fts.persistence.test_entities.SampleFunctionalEntityTree;
+import org.freebus.fts.persistence.test_entities.SampleManufacturer;
 import org.freebus.fts.persistence.vdx.internal.VdxAssociation;
 import org.freebus.fts.persistence.vdx.internal.VdxEntityInfo;
 import org.freebus.fts.persistence.vdx.internal.VdxEntityInspector;
 import org.junit.Test;
 
-import test.entities.SampleFunctionalEntity;
-import test.entities.SampleFunctionalEntityTree;
-import test.entities.SampleManufacturer;
-import test.entities.SampleManufacturer2;
 
 public class TestVdxEntityInspector
 {
@@ -42,7 +44,7 @@ public class TestVdxEntityInspector
 
       assertTrue(classes.contains(SampleFunctionalEntity.class));
       assertTrue(classes.contains(SampleManufacturer.class));
-      assertFalse(classes.contains(SampleManufacturer2.class));
+      assertFalse(classes.contains(Object.class));
    }
 
    @Test

@@ -1,28 +1,31 @@
-package test;
+package org.freebus.fts.persistence;
 
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import junit.framework.TestCase;
-
 import org.freebus.fts.persistence.FileBlockReader;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
-public class TestFileBlockReader extends TestCase
+public class TestFileBlockReader
 {
    private org.freebus.fts.persistence.FileBlockReader reader = null;
    private RandomAccessFile in = null;
 
-   @Override
-   protected void setUp() throws Exception
+   @Before
+   public void setUp() throws Exception
    {
-      super.setUp();
       in = new RandomAccessFile("src/test/resources/test-fileblockreader.txt", "r");
       reader = new FileBlockReader(in, 10);
    }
 
-   @Override
-   protected void tearDown()
+   @After
+   public void tearDown()
    {
       try
       {
@@ -30,12 +33,12 @@ public class TestFileBlockReader extends TestCase
       }
       catch (IOException e)
       {
-         e.printStackTrace();
       }
       reader = null;
       in = null;
    }
 
+   @Test
    public void testAtEnd() throws IOException
    {
       assertFalse(reader.atEnd());
@@ -45,6 +48,7 @@ public class TestFileBlockReader extends TestCase
       assertEquals(in.length(), in.getFilePointer());
    }
 
+   @Test
    public void testGetFilePointer() throws IOException
    {
       assertEquals(0, reader.getFilePointer());
@@ -56,6 +60,7 @@ public class TestFileBlockReader extends TestCase
       }
    }
 
+   @Test
    public void testSeek() throws IOException
    {
       reader.seek(4);
@@ -74,6 +79,7 @@ public class TestFileBlockReader extends TestCase
       assertEquals('l', reader.read());
    }
 
+   @Test
    public void testRead() throws IOException
    {
       assertEquals('0', reader.read());
@@ -82,6 +88,7 @@ public class TestFileBlockReader extends TestCase
       assertEquals('3', reader.read());
    }
 
+   @Test
    public void testReadWord() throws IOException
    {
       assertEquals("0123456789", reader.readWord());
@@ -89,10 +96,10 @@ public class TestFileBlockReader extends TestCase
       assertEquals("2", reader.readWord());
    }
 
+   @Test
    public void testReadLine() throws IOException
    {
       assertEquals("0123456789", reader.readLine());
       assertEquals("lin\u00FC\u00E4 2  ", reader.readLine());
    }
-
 }

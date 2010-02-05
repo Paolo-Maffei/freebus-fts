@@ -1,4 +1,4 @@
-package test;
+package org.freebus.fts.persistence;
 
 import static org.junit.Assert.*;
 
