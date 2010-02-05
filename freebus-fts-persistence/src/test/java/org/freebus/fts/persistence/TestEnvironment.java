@@ -40,13 +40,6 @@ public class TestEnvironment
       assertFalse(Environment.getAppDir().isEmpty());
    }
 
-   @Test(expected = RuntimeException.class)
-   public final void testGetAppDirInvalid()
-   {
-      Environment.setAppName(":/\\invalid\\/:");
-      Environment.getAppDir();
-   }
-
    @Test
    public final void testGetAppName()
    {
