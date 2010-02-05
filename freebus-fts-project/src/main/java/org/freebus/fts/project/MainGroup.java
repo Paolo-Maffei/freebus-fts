@@ -50,6 +50,15 @@ public class MainGroup
     */
    public MainGroup()
    {
+      this(0);
+   }
+
+   /**
+    * Create a new main-group with the given id.
+    */
+   public MainGroup(int id)
+   {
+      this.id = id;
    }
 
    /**
@@ -151,7 +160,7 @@ public class MainGroup
          return false;
 
       final MainGroup oo = (MainGroup) o;
-      return (id == oo.id && address == oo.address && name == oo.name && midGroups == oo.midGroups);
+      return (id == oo.id && address == oo.address && name == oo.name && midGroups.equals(oo.midGroups));
    }
 
    /**

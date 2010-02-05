@@ -21,6 +21,7 @@ public class TestMainGroup extends TestCase
       assertNull(mainGroup.getProject());
       assertNotNull(mainGroup.getMidGroups());
       assertTrue(mainGroup.getMidGroups().isEmpty());
+      assertNotNull(mainGroup.toString());
    }
 
    public final void testGetSetId()
@@ -109,5 +110,17 @@ public class TestMainGroup extends TestCase
 
       mainGroup.add(new MidGroup());
       assertEquals(2, mainGroup.getMidGroups().size());      
+   }
+
+   public final void testEquals()
+   {
+      final MainGroup o1 = new MainGroup(1);
+      final MainGroup o2 = new MainGroup(1);
+      final MainGroup o3 = new MainGroup(3);
+
+      assertTrue(o1.equals(o2));
+      assertFalse(o1.equals(o3));
+      assertFalse(o1.equals(null));
+      assertFalse(o1.equals(new Object()));
    }
 }

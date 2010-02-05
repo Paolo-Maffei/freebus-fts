@@ -9,7 +9,7 @@ import org.freebus.knxcomm.telegram.GroupAddress;
 
 public class TestSubGroup extends TestCase
 {
-   public final void testGroup()
+   public final void testSubGroup()
    {
       final SubGroup group = new SubGroup();
       assertNotNull(group);
@@ -17,11 +17,12 @@ public class TestSubGroup extends TestCase
       assertEquals(0, group.getAddress());
       assertNull(group.getMidGroup());
       assertEquals(GroupAddress.BROADCAST, group.getGroupAddress());
+      assertNotNull(group.toString());
    }
 
    public final void testGetSetId()
    {
-      final SubGroup group = new SubGroup();
+      final SubGroup group = new SubGroup(1);
 
       group.setId(1234);
       assertEquals(1234, group.getId());
@@ -82,5 +83,17 @@ public class TestSubGroup extends TestCase
 
       group.setMidGroup(null);
       assertNull(group.getMidGroup());
+   }
+
+   public final void testEquals()
+   {
+      final SubGroup sg1 = new SubGroup(1);
+      final SubGroup sg2 = new SubGroup(1);
+      final SubGroup sg3 = new SubGroup(3);
+
+      assertTrue(sg1.equals(sg2));
+      assertFalse(sg1.equals(sg3));
+      assertFalse(sg1.equals(null));
+      assertFalse(sg1.equals(new Object()));
    }
 }

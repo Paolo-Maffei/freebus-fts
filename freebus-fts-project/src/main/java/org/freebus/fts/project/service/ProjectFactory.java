@@ -14,11 +14,6 @@ public interface ProjectFactory
    public ProjectService getProjectService();
 
    /**
-    * @return the DAO for area queries.
-    */
-   public AreaService getAreaService();
-
-   /**
     * Return the resource-level <code>EntityTransaction</code> object. 
     * The <code>EntityTransaction</code> instance may be used serially to 
     * begin and commit multiple transactions.

@@ -159,7 +159,7 @@ public class MidGroup
          return false;
 
       final MidGroup oo = (MidGroup) o;
-      return (id == oo.id && address == oo.address && name == oo.name && subGroups == oo.subGroups);
+      return (id == oo.id && address == oo.address && name == oo.name && subGroups.equals(oo.subGroups));
    }
 
    /**
