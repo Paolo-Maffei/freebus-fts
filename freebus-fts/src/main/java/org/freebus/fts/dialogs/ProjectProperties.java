@@ -6,8 +6,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -15,6 +13,8 @@ import javax.swing.JLabel;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 
 import org.freebus.fts.components.Dialog;
 import org.freebus.fts.core.I18n;
@@ -29,7 +29,7 @@ public class ProjectProperties extends Dialog
 
    private final JTextField edtName;
    private final JTextArea edtDescription;
-   private final JButton btnOk;
+   private final JButton btnOk = new JButton(I18n.getMessage("Button.Ok"));
    private Project project;
 
    /**
@@ -55,13 +55,34 @@ public class ProjectProperties extends Dialog
       body.add(lbl, new GridBagConstraints(0, ++row, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(4, 4, 0, 4), 0, 0));
 
       edtName = new JTextField();
+      edtName.setName("edtName");
       body.add(edtName, new GridBagConstraints(0, ++row, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, defaultInsets, 0, 0));
-      edtName.addKeyListener(new KeyAdapter()
+//      edtName.addKeyListener(new KeyAdapter()
+//      {
+//         @Override
+//         public void keyReleased(KeyEvent e)
+//         {
+//            btnOk.setEnabled(!edtName.getText().isEmpty());
+//         }
+//      });
+      edtName.getDocument().addDocumentListener(new DocumentListener()
       {
          @Override
-         public void keyReleased(KeyEvent e)
+         public void removeUpdate(DocumentEvent e)
          {
-            btnOk.setEnabled(!edtName.getText().isEmpty());
+            btnOk.setEnabled(e.getDocument().getLength() > 0);
+         }
+         
+         @Override
+         public void insertUpdate(DocumentEvent e)
+         {
+            btnOk.setEnabled(e.getDocument().getLength() > 0);
+         }
+         
+         @Override
+         public void changedUpdate(DocumentEvent e)
+         {
+            btnOk.setEnabled(e.getDocument().getLength() > 0);
          }
       });
 
@@ -70,10 +91,11 @@ public class ProjectProperties extends Dialog
       body.add(lbl, new GridBagConstraints(0, ++row, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, defaultInsets, 0, 0));
 
       edtDescription = new JTextArea();
+      edtDescription.setName("edtDescription");
       edtDescription.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       body.add(edtDescription, new GridBagConstraints(0, ++row, 3, 1, 1, 100, GridBagConstraints.WEST, GridBagConstraints.BOTH, defaultInsets, 0, 0));
 
-      btnOk = new JButton(I18n.getMessage("Button.Ok"));
+      btnOk.setName("btnOk");
       btnOk.setEnabled(false);
       addButton(btnOk, Dialog.ACCEPT);
 
@@ -97,8 +119,6 @@ public class ProjectProperties extends Dialog
 
       edtName.setText(project.getName());
       edtDescription.setText(project.getDescription());
-
-      btnOk.setEnabled(!edtName.getText().isEmpty());
    }
 
    /**

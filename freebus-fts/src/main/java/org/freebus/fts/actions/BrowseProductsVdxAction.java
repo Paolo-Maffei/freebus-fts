@@ -11,7 +11,6 @@ import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.pages.ProductsBrowser;
-import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.fts.utils.VdxFileFilter;
 
 /**
@@ -37,7 +36,7 @@ public final class BrowseProductsVdxAction extends BasicAction
    {
       try
       {
-         final SimpleConfig cfg = Config.getInstance();
+         final Config cfg = Config.getInstance();
          String lastDir = cfg.getStringValue("BrowseProductsVdxAction.lastDir");
    
          final JFileChooser dlg = new JFileChooser();

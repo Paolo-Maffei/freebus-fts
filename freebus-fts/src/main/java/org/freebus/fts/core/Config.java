@@ -1,7 +1,7 @@
 package org.freebus.fts.core;
 
 import java.awt.Dimension;
-import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 import org.freebus.fts.dialogs.Dialogs;
@@ -14,6 +14,8 @@ import org.freebus.fts.persistence.SimpleConfig;
  */
 public final class Config extends SimpleConfig
 {
+   private final String configFileName;
+
    /**
     * @return The global configuration object.
     */
@@ -23,36 +25,26 @@ public final class Config extends SimpleConfig
    }
 
    /**
-    * Create a configuration object. The saved configuration is automatically
-    * loaded.
+    * Create a configuration object. Automatically loads the application's
+    * default configuration.
     * 
     * @see {@link #getConfig} - To access the global configuration object.
     */
    public Config()
    {
-      init();
-
-      final String configFileName = Environment.getAppDir() + "/config.ini";
-      try
-      {
-         if ((new File(configFileName)).exists())
-            load(configFileName);
-      }
-      catch (Exception e)
-      {
-         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrLoad", new Object[] { configFileName }));
-      }
+      configFileName = Environment.getAppDir() + "/config.ini";
+      load();
    }
-   
+
    /**
-    * Set the name of the Swing look-and-feel. This is a convenient method
-    * which does only set the configuration option.
+    * Set the name of the Swing look-and-feel. This is a convenient method which
+    * does only set the configuration option.
     */
    public void setLookAndFeelName(String value)
    {
       put("lookAndFeel", value);
    }
-   
+
    /**
     * @return The name of the Swing look-and-feel.
     */
@@ -75,10 +67,12 @@ public final class Config extends SimpleConfig
    public Dimension getMainWindowSize()
    {
       final String value = getStringValue("mainWindowSize");
-      if (value.isEmpty()) return null;
+      if (value.isEmpty())
+         return null;
 
       final int idx = value.indexOf('x');
-      if (idx < 0) return null;
+      if (idx < 0)
+         return null;
 
       final int width = Integer.parseInt(value.substring(0, idx));
       final int height = Integer.parseInt(value.substring(idx + 1));
@@ -86,18 +80,46 @@ public final class Config extends SimpleConfig
    }
 
    /**
-    * Save the configuration object.
+    * Load the configuration object from the default application configuration
+    * file. Automatically called by the constructor. No error occurs if the
+    * configuration file does not exist (but the configuration object is empty
+    * afterwards).
+    * 
+    * Opens an error dialog if an error occurs.
     */
-   @Override
+   public void load()
+   {
+      try
+      {
+         try
+         {
+            load(configFileName);
+         }
+         catch (FileNotFoundException e)
+         {
+         }
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrLoad", new Object[] { configFileName }));
+      }
+   }
+
+   /**
+    * Save the configuration object to the default application configuration
+    * file.
+    * 
+    * Opens an error dialog if an error occurs.
+    */
    public void save()
    {
       try
       {
-         super.save();
+         super.save(configFileName);
       }
       catch (IOException e)
       {
-         Dialogs.showExceptionDialog(e, I18n.getMessage("Config.ErrSave"));
+         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrSave", new Object[] { configFileName }));
          e.printStackTrace();
       }
    }
@@ -116,15 +138,10 @@ public final class Config extends SimpleConfig
          commPort = "COM1";
          lookAndFeel = "";
       }
-      else if (osname.startsWith("linux"))
+      else
       {
          commPort = "/dev/ttyS0";
          lookAndFeel = "com.sun.java.swing.plaf.gtk.GTKLookAndFeel";
-      }
-      else
-      {
-         commPort = "";
-         lookAndFeel = "";
       }
 
       put("commPort", commPort);
