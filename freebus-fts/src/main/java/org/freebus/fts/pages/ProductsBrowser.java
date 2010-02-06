@@ -98,13 +98,14 @@ public class ProductsBrowser extends AbstractPage
       final JPanel pnlTopLeft = new JPanel();
       final JPanel pnlTopRight = new JPanel();
       final JPanel pnlCenter = new JPanel();
-
+      final JScrollPane scpCenter = new JScrollPane(pnlCenter);
+      
       sppTop = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, pnlTopLeft, pnlTopRight);
       sppTop.setDividerLocation(300);
       sppTop.setContinuousLayout(true);
       sppTop.setFocusable(false);
 
-      sppCenter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sppTop, pnlCenter);
+      sppCenter = new JSplitPane(JSplitPane.VERTICAL_SPLIT, sppTop, scpCenter);
       add(sppCenter, BorderLayout.CENTER);
       sppCenter.setDividerLocation(300);
       sppCenter.setContinuousLayout(true);
