@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
@@ -14,6 +15,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.freebus.fts.MainWindow;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
@@ -179,9 +181,7 @@ public class TopologyView extends AbstractPage
    public void addDevice(final Device device)
    {
       DefaultMutableTreeNode lineNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-      if (lineNode == null) return;
-
-      final Object selectedObject = lineNode.getUserObject();
+      final Object selectedObject = lineNode == null ? null : lineNode.getUserObject();
       Line line = null;
 
       if (selectedObject instanceof Line)
@@ -194,8 +194,13 @@ public class TopologyView extends AbstractPage
          lineNode = (DefaultMutableTreeNode) lineNode.getParent();
       }
 
-      if (line == null) return;
+      if (line == null)
+      {
+         JOptionPane.showMessageDialog(MainWindow.getInstance(), I18n.getMessage("TopologyView.ErrNoLineSelected"), I18n.getMessage("TopologyView.ErrTitle"), JOptionPane.ERROR_MESSAGE);
+         return;
+      }
 
+      device.setAddress(line.getFreeAddress());
       line.add(device);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();

@@ -8,6 +8,7 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.KeyStroke;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
@@ -54,6 +55,7 @@ public final class OpenProjectAction extends BasicAction
                final Project project = dlg.getSelectedProject();
                if (project == null) return;
                ProjectManager.setProject(project);
+               Logger.getLogger(getClass()).info("Project loaded: " + project.getName());
             }
          });
 

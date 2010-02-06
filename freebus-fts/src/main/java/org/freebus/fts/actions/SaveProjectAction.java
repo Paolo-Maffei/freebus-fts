@@ -6,12 +6,14 @@ import java.awt.event.InputEvent;
 
 import javax.swing.KeyStroke;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.service.ProjectFactory;
 
 /**
  * Save the current project.
@@ -36,16 +38,23 @@ public final class SaveProjectAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
+      final ProjectFactory projectFactory = ProjectManager.getProjectFactory();
       final Project project = ProjectManager.getProject();
       final MainWindow mainWin = MainWindow.getInstance();
 
       try
       {
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-         ProjectManager.getProjectFactory().getProjectService().save(project);
+
+         projectFactory.getTransaction().begin();
+         projectFactory.getProjectService().save(project);
+         projectFactory.getTransaction().commit();
+
+         Logger.getLogger(getClass()).info("Project saved");
       }
       catch (Exception ex)
       {
+         projectFactory.getTransaction().rollback();
          Dialogs.showExceptionDialog(ex, I18n.getMessage("SaveProjectAction.ErrSaving"));
       }
       finally

@@ -120,6 +120,8 @@ public class Line
     * Add a device to the line.
     * 
     * @throws IllegalArgumentException - If the device was already added to the room.
+    * 
+    * @see {@link #getFreeAddress} to obtain a free address for the device.
     */
    public void add(Device device)
    {
@@ -128,6 +130,27 @@ public class Line
 
       device.setLine(this);
       devices.add(device);
+   }
+
+   /**
+    * @return an address that is not used in the line.
+    * 
+    * @throws RuntimeException if no free address can be found.
+    */
+   public int getFreeAddress()
+   {
+      final Set<Integer> usedAddr = new HashSet<Integer>(256);
+
+      for (Device device: devices)
+         usedAddr.add(device.getAddress());
+
+      int addr;
+      for (addr = 0; addr <= 255; ++addr)
+         if (!usedAddr.contains(addr)) break;
+
+      if (addr > 255) throw new RuntimeException("Line is full, no free address found");
+
+      return addr;
    }
 
    /**
