@@ -17,7 +17,7 @@ public abstract class EmiMessageBase implements EmiFrame
    {
       this.type = EmiFrameType.UNKNOWN;
    }
-   
+
    /**
     * Create a new message and set the message type.
     * Internal constructor for subclasses.

@@ -8,17 +8,17 @@ package org.freebus.knxcomm.emi;
  */
 public enum EmiFrameType
 {
-   L_BUSMON_IND(0x2b),
+   L_BUSMON_IND(0x2b, L_Busmon_ind.class),
    L_PLAIN_DATA_REQ(0x10),
    
    /**
     * Link data. Classes {@link L_Data.req}
     */
-   L_DATA_REQ(0x11, L_Data.req.class),
-   L_DATA_CON(0x2e, L_Data.con.class, L_DATA_REQ),
-   L_DATA_IND(0x29, L_Data.ind.class),
+   L_DATA_REQ(0x11, L_Data_req.class),
+   L_DATA_CON(0x2e, L_Data_con.class, L_DATA_REQ),
+   L_DATA_IND(0x29, L_Data_ind.class),
 
-   L_POLL_DATA_REQ(0x13, L_Poll_Data.req.class),
+   L_POLL_DATA_REQ(0x13, L_Poll_Data_req.class),
    L_POLL_DATA_CON(0x25, null, L_POLL_DATA_REQ),
 
    N_DATA_INDIVIDUAL_REQ(0x21),
@@ -56,9 +56,9 @@ public enum EmiFrameType
    /**
     * Physical external interface
     */
-   PEI_IDENTIFY_REQ(0xa7, PEI_Identify.req.class),
-   PEI_IDENTIFY_CON(0xa8, PEI_Identify.con.class, PEI_IDENTIFY_REQ),
-   PEI_SWITCH_REQ(0xa9, PEI_Switch.req.class),
+   PEI_IDENTIFY_REQ(0xa7, PEI_Identify_req.class),
+   PEI_IDENTIFY_CON(0xa8, PEI_Identify_con.class, PEI_IDENTIFY_REQ),
+   PEI_SWITCH_REQ(0xa9, PEI_Switch_req.class),
 
    /**
     * Timer

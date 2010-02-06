@@ -4,7 +4,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 
 
 /**
- * An "External Message Interface" (EMI) frame.
+ * Interface for "External Message Interface" (EMI) frames.
  */
 public interface EmiFrame
 {

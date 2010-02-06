@@ -12,8 +12,10 @@ import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
-import org.freebus.knxcomm.emi.L_Data;
-import org.freebus.knxcomm.emi.PEI_Switch;
+import org.freebus.knxcomm.emi.EmiTelegramFrame;
+import org.freebus.knxcomm.emi.PEISwitchMode;
+import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.emi.PEI_Switch_req;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -34,7 +36,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       this.con = con;
 //      final Config cfg = Config.getInstance();
-//      con = new SerialFt12Connection(cfg.getCommPort());
+//      L_Data_con = new SerialFt12Connection(cfg.getCommPort());
    }
 
    /**
@@ -77,9 +79,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameReceived(EmiFrame frame)
    {
-      if (frame instanceof L_Data.base)
+      if (frame instanceof EmiTelegramFrame)
       {
-         final Telegram telegram = ((L_Data.base) frame).getTelegram();
+         final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
          notifyListenersReceived(telegram);
       }
    }
@@ -90,9 +92,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameSent(EmiFrame frame)
    {
-      if (frame instanceof L_Data.base)
+      if (frame instanceof EmiTelegramFrame)
       {
-         final Telegram telegram = ((L_Data.base) frame).getTelegram();
+         final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
          notifyListenersSent(telegram);
       }
    }
@@ -143,10 +145,11 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
       con.addListener(this);
 
       // A pei_switch that EIBD sends on startup, so we do it here too
-      con.send(new PEI_Switch.req(PEI_Switch.Mode.INIT));
+      con.send(new PEI_Switch_req(PEISwitchMode.INIT));
 
-      // Switch to link mode
-      con.send(new PEI_Switch.req(PEI_Switch.Mode.LINK));
+      // Switch to bus monitor mode
+      con.send(new PEI_Switch_req(PEISwitchMode.BUSMON));
+      //L_Data_con.send(new PEI_Switch.req(PEI_Switch.Mode.LINK));
    }
 
    /**
@@ -166,6 +169,6 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       if (con == null) throw new IOException("Not open");
 
-      con.send(new L_Data.req(telegram));
+      con.send(new L_Data_req(telegram));
    }
 }
