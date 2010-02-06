@@ -11,6 +11,9 @@ import javax.swing.JToolBar;
  */
 public enum Actions
 {
+   /** Open a products browser that allows adding devices to the current project. */
+   ADD_DEVICES(new AddDevicesAction()),
+
    /** Browse the contents of a VD_ products file. */
    BROWSE_PRODUCTS_VDX(new BrowseProductsVdxAction()),
 

@@ -13,8 +13,7 @@ import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
 /**
- * Class for importing parts of a products database into FTS' internal
- * (products) database.
+ * Class for importing parts of a products database into FTS' internal database.
  */
 public final class ProductsImporter
 {

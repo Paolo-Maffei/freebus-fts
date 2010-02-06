@@ -101,12 +101,12 @@ public class TestLine
       final Line line = new Line();
       assertTrue(line.getDevices().isEmpty());
 
-      final Device device = new Device(1, 1);
+      final Device device = new Device(1, null);
       line.add(device);
       assertEquals(1, line.getDevices().size());
       assertEquals(device, line.getDevices().iterator().next());
 
-      line.add(new Device(2, 2));
+      line.add(new Device(2, null));
       assertEquals(2, line.getDevices().size());
    }
 

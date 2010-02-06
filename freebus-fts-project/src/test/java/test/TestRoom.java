@@ -98,12 +98,12 @@ public class TestRoom
       final Room room = new Room();
       assertTrue(room.getDevices().isEmpty());
 
-      final Device device = new Device(1, 2);
+      final Device device = new Device(1, null);
       room.add(device);
       assertEquals(1, room.getDevices().size());
       assertEquals(device, room.getDevices().iterator().next());
 
-      room.add(new Device(1, 3));
+      room.add(new Device(2, null));
       assertEquals(2, room.getDevices().size());
    }
 

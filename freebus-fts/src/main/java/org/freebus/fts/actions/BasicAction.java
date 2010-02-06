@@ -1,5 +1,7 @@
 package org.freebus.fts.actions;
 
+import java.awt.event.ActionEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.Icon;
@@ -82,5 +84,13 @@ public abstract class BasicAction extends AbstractAction
    public String getToolTipText()
    {
       return toolTipText;
+   }
+
+   /**
+    * Perform the action.
+    */
+   public void perform()
+   {
+      actionPerformed(new ActionEvent(this, 1, ""));
    }
 }

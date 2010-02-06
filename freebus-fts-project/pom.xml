@@ -43,6 +43,12 @@
  <dependencies>
   <dependency>
    <groupId>org.freebus.fts</groupId>
+   <artifactId>freebus-fts-products</artifactId>
+   <version>0.1-SNAPSHOT</version>
+   <scope>compile</scope>
+  </dependency>
+  <dependency>
+   <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-persistence</artifactId>
    <version>0.1-SNAPSHOT</version>
   </dependency>

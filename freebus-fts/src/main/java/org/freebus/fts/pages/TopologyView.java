@@ -14,6 +14,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.components.ToolBar;
@@ -116,16 +117,7 @@ public class TopologyView extends AbstractPage
       btnAddLine.setIcon(ImageCache.getIcon("icons/line-new"));
       btnAddLine.setToolTipText(I18n.getMessage("TopologyView.AddLineTip"));
 
-      btnAddDevice = toolBar.add(new AbstractAction()
-      {
-         private static final long serialVersionUID = 1L;
-
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            addDevice();
-         }
-      });
+      btnAddDevice = toolBar.add(Actions.ADD_DEVICES.action);
       btnAddDevice.setEnabled(false);
       btnAddDevice.setIcon(ImageCache.getIcon("icons/device-new"));
       btnAddDevice.setToolTipText(I18n.getMessage("TopologyView.AddDeviceTip"));
@@ -184,7 +176,7 @@ public class TopologyView extends AbstractPage
    /**
     * Add a device to the selected line.
     */
-   protected void addDevice()
+   public void addDevice(final Device device)
    {
       DefaultMutableTreeNode lineNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
       if (lineNode == null) return;
@@ -204,7 +196,6 @@ public class TopologyView extends AbstractPage
 
       if (line == null) return;
 
-      final Device device = new Device();
       line.add(device);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();

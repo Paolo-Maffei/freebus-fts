@@ -7,8 +7,10 @@ import java.awt.event.WindowEvent;
 import javax.swing.KeyStroke;
 
 import org.freebus.fts.MainWindow;
+import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.persistence.db.DatabaseResources;
 
 /**
  * Exit the application.
@@ -33,8 +35,12 @@ public final class ExitAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
+      Config.getInstance().save();
+
       final MainWindow win = MainWindow.getInstance();
       win.dispatchEvent(new WindowEvent(win, WindowEvent.WINDOW_CLOSING));
+
+      DatabaseResources.close();
    }
 
 }

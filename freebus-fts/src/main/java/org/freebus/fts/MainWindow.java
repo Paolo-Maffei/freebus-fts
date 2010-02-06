@@ -18,6 +18,7 @@ import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.ProjectController;
 import org.freebus.fts.jobs.JobQueue;
 import org.freebus.fts.jobs.JobQueueEvent;
 import org.freebus.fts.jobs.JobQueueListener;
@@ -25,6 +26,8 @@ import org.freebus.fts.pages.LogicalView;
 import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectListener;
 import org.freebus.fts.project.ProjectManager;
@@ -32,7 +35,7 @@ import org.freebus.fts.project.ProjectManager;
 /**
  * The main application window.
  */
-public final class MainWindow extends WorkBench implements JobQueueListener, ProjectListener
+public final class MainWindow extends WorkBench implements JobQueueListener, ProjectListener, ProjectController
 {
    private static final long serialVersionUID = 4384074439505445519L;
    private static MainWindow instance;
@@ -156,7 +159,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       toolBar.addSeparator();
 
       Actions.BUS_MONITOR.addTo(toolBar);
-      Actions.BROWSE_PRODUCTS_VDX.addTo(toolBar);
+      Actions.ADD_DEVICES.addTo(toolBar);
       Actions.SETTINGS.addTo(toolBar);
 
       toolBar.addSeparator();
@@ -186,5 +189,21 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    {
       updateContents();
       setTitle(I18n.formatMessage("MainWindow.Title", new Object[] { project.getName() }));
+   }
+
+   /**
+    * Add a virtual device to the current project.
+    *
+    * @param virtualDevice the device to add.
+    */
+   @Override
+   public void addDevice(VirtualDevice virtualDevice)
+   {
+      final Device device = new Device(virtualDevice);
+
+      final TopologyView topologyView = (TopologyView) getUniquePage(TopologyView.class);
+      if (topologyView == null) return;
+
+      topologyView.addDevice(device);
    }
 }

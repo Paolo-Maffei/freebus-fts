@@ -171,7 +171,6 @@ public final class FTS implements Runnable
       }
       finally
       {
-         Config.getInstance().save();
       }
    }
 }

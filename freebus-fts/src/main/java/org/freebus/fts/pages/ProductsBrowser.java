@@ -11,19 +11,15 @@ import java.awt.event.ActionListener;
 import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import javax.persistence.PersistenceException;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
@@ -87,10 +83,6 @@ public class ProductsBrowser extends AbstractPage
    private final CatalogEntryDetails ceDetails;
 
    private final Box boxBottom = Box.createHorizontalBox();
-   private final JCheckBox cbxImport = new JCheckBox(I18n.getMessage("ProductsBrowser.ImportOption"));
-   private final JButton btnImport = new JButton(I18n.getMessage("ProductsBrowser.ImportButton"));
-   private final Set<VirtualDevice> importDevices = new HashSet<VirtualDevice>();
-   private boolean importMode = false;
 
    /**
     * Create a bus monitor widget.
@@ -214,51 +206,25 @@ public class ProductsBrowser extends AbstractPage
             GridBagConstraints.BOTH, insets, 0, 0));
 
       //
-      // Bottom area
+      // Bottom area for optional components.
       //
       add(boxBottom, BorderLayout.SOUTH);
       boxBottom.setVisible(false);
       boxBottom.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-      boxBottom.add(Box.createHorizontalGlue());
-      boxBottom.add(cbxImport);
-      boxBottom.add(Box.createHorizontalStrut(20));
-      boxBottom.add(btnImport);
-
-      cbxImport.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            final VirtualDevice currentDevice = getSelectedVirtualDevice();
-            if (cbxImport.isSelected()) importDevices.add(currentDevice);
-            else importDevices.remove(currentDevice);
-            btnImport.setEnabled(!importDevices.isEmpty());
-            
-         }
-      });
-
-      btnImport.setEnabled(false);
-      btnImport.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            if (!importDevices.isEmpty())
-               importProducts(importDevices);
-         }
-      });
    }
 
    /**
-    * Enable the import mode. In import mode the import buttons on the bottom of the page are
-    * enabled, and the {@link import} callback is called when the import button is clicked.
+    * @return the bottom box for optional GUI components. This box is per default invisible.
     */
-   protected void enableImportMode()
+   protected Box getBottomBox()
    {
-      importMode = true;
-      boxBottom.setVisible(ceDetails.isVisible());
+      return boxBottom;
    }
 
+   /**
+    * Set the object that is displayed. This can bei either a {@link File} for a VD_ products
+    * file, or anything else for FTS' products.
+    */
    @Override
    public void setObject(Object obj)
    {
@@ -434,23 +400,12 @@ public class ProductsBrowser extends AbstractPage
 
       lblEntryName.setVisible(valid);
       ceDetails.setVisible(valid);
-      boxBottom.setVisible(importMode && valid);
 
       if (valid)
       {
          lblEntryName.setText(I18n.formatMessage("ProductsBrowser.DetailsCaption", new Object[] { dev.getName() }));
          ceDetails.setCatalogEntry(entry);
-
-         cbxImport.setSelected(importDevices.contains(dev));
       }
-   }
-
-   /**
-    * Import the marked virtual devices. Called when the user clicks the import button.
-    * To be implemented in subclasses - this implementation is empty.
-    */
-   protected void importProducts(Set<VirtualDevice> virtualDevices)
-   {
    }
 
    /**

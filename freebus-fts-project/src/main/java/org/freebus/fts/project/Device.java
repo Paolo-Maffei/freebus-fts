@@ -10,6 +10,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.products.VirtualDevice;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 
 /**
@@ -29,8 +30,9 @@ public final class Device
    @Column(name = "device_address", nullable = false)
    private int address;
 
-   @Column(name = "virtual_device_id", nullable = false)
-   private int virtualDeviceId;
+   @ManyToOne(optional = true)
+   @JoinColumn(name = "virtual_device_id")
+   private VirtualDevice virtualDevice;
 
    @ManyToOne(optional = false)
    @JoinColumn(name = "line_id")
@@ -41,20 +43,27 @@ public final class Device
    private Room room;
 
    /**
-    * Create a device object.
-    */
-   public Device(int id, int virtualDeviceId)
-   {
-      this.id = id;
-      this.virtualDeviceId = virtualDeviceId;
-   }
-
-   /**
     * Create an empty device object.
     */
    public Device()
    {
-      this(0, 0);
+   }
+
+   /**
+    * Create a device object from a virtual device.
+    */
+   public Device(VirtualDevice virtualDevice)
+   {
+      this.virtualDevice = virtualDevice;
+   }
+
+   /**
+    * Create a device object.
+    */
+   public Device(int id, VirtualDevice virtualDevice)
+   {
+      this.id = id;
+      this.virtualDevice = virtualDevice;
    }
 
    /**
@@ -105,19 +114,19 @@ public final class Device
    /**
     * Set the id of the {@link VirtualDevice} virtual device.
     * 
-    * @param virtualDeviceId - the id of the virtual device.
+    * @param virtualDevice - the virtual device.
     */
-   public void setVirtualDeviceId(int virtualDeviceId)
+   public void setVirtualDevice(VirtualDevice virtualDevice)
    {
-      this.virtualDeviceId = virtualDeviceId;
+      this.virtualDevice = virtualDevice;
    }
 
    /**
-    * @return the id of the virtual device.
+    * @return the virtual device.
     */
-   public int getVirtualDeviceId()
+   public VirtualDevice getVirtualDevice()
    {
-      return virtualDeviceId;
+      return virtualDevice;
    }
 
    /**
@@ -158,11 +167,10 @@ public final class Device
    @Override
    public boolean equals(Object o)
    {
-      if (!(o instanceof Device))
-         return false;
-
+      if (o == this) return true;
+      if (!(o instanceof Device)) return false;
       final Device oo = (Device) o;
-      return (id == oo.id && address == oo.address && virtualDeviceId == oo.virtualDeviceId);
+      return (id == oo.id && address == oo.address && virtualDevice.equals(oo.virtualDevice));
    }
 
    /**
@@ -183,11 +191,7 @@ public final class Device
       final StringBuilder sb = new StringBuilder();
 
       sb.append(getPhysicalAddress().toString());
-      sb.append(" ");
-
-      sb.append("Device [VD#");
-      sb.append(virtualDeviceId);
-      sb.append("]");
+      sb.append(" ").append("Device ").append(virtualDevice);
 
       return sb.toString();
    }
