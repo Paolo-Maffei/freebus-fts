@@ -8,6 +8,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.Transport;
 
 public class TestTelegram extends TestCase
 {
@@ -61,6 +62,14 @@ public class TestTelegram extends TestCase
       final GroupAddress destGrp = new GroupAddress(3, 3, 1);
       telegram.setDest(destGrp);
       assertEquals(destGrp, telegram.getDest());
+
+      telegram.setTransport(null);
+      telegram.setDest(destGrp);
+      assertEquals(destGrp, telegram.getDest());
+
+      telegram.setTransport(null);
+      telegram.setDest(destPhys);
+      assertEquals(destPhys, telegram.getDest());
    }
 
    public void testGetSetPriority()
@@ -173,4 +182,23 @@ public class TestTelegram extends TestCase
       assertEquals(0xff, check & 0xff);
    }
 
+   public void testGetSetTransport()
+   {
+      final Telegram telegram = new Telegram();
+
+      telegram.setTransport(Transport.Group);
+      assertEquals(Transport.Group, telegram.getTransport());
+
+      telegram.setTransport(Transport.Individual);
+      assertEquals(Transport.Individual, telegram.getTransport());
+   }
+
+   public void testGetSetSequence()
+   {
+      final Telegram telegram = new Telegram();
+      assertEquals(0, telegram.getSequence());
+
+      telegram.setSequence(123);
+      assertEquals(123, telegram.getSequence());
+   }
 }

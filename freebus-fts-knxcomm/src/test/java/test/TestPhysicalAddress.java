@@ -87,6 +87,35 @@ public class TestPhysicalAddress extends TestCase
       assertFalse(PhysicalAddress.isValid(0, 0, 256));
    }
 
+   public void testGetBytes()
+   {
+      final PhysicalAddress addr = new PhysicalAddress(0x12, 0x34);
+      assertEquals(0x12, addr.getBytes()[0]);
+      assertEquals(0x34, addr.getBytes()[1]);
+   }
+
+   public void testValueOf()
+   {
+      assertEquals(new PhysicalAddress(0, 0, 0), PhysicalAddress.valueOf("0.0.0"));
+      assertEquals(new PhysicalAddress(1, 2, 34), PhysicalAddress.valueOf("1.2.34"));
+      assertEquals(null, PhysicalAddress.valueOf("1.2-34"));
+      assertEquals(null, PhysicalAddress.valueOf("1-2-34"));
+      assertEquals(null, PhysicalAddress.valueOf(".."));
+   }
+
+   public void testEquals()
+   {
+      final PhysicalAddress addr = new PhysicalAddress(1, 2, 3);
+      final PhysicalAddress addr2 = new PhysicalAddress(1, 2, 3);
+      final PhysicalAddress addr3 = new PhysicalAddress(1, 2, 4);
+
+      assertFalse(addr.equals(null));
+      assertFalse(addr.equals(new Object()));
+      assertTrue(addr.equals(addr));
+      assertTrue(addr.equals(addr2));
+      assertFalse(addr.equals(addr3));
+   }
+
    public void testToString()
    {
       assertEquals("0.0.0", new PhysicalAddress(0, 0, 0).toString());

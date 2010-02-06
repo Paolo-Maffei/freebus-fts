@@ -71,6 +71,7 @@ public enum Transport
     * 
     * @param isGroup - true if the telegram destination is a group address.
     * @param tpci - the contents of the transport control field.
+    *
     * @return the transport type for the given values, or null if no transport
     *         type matches.
     */

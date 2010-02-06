@@ -93,6 +93,35 @@ public class TestGroupAddress extends TestCase
       assertFalse(GroupAddress.isValid(0, 0, 256));
    }
 
+   public void testGetBytes()
+   {
+      final GroupAddress addr = new GroupAddress(0x12, 0x34);
+      assertEquals(0x12, addr.getBytes()[0]);
+      assertEquals(0x34, addr.getBytes()[1]);
+   }
+
+   public void testValueOf()
+   {
+      assertEquals(new GroupAddress(0, 0, 0), GroupAddress.valueOf("0/0/0"));
+      assertEquals(new GroupAddress(1, 2, 34), GroupAddress.valueOf("1/2/34"));
+      assertEquals(null, GroupAddress.valueOf("1/2-34"));
+      assertEquals(null, GroupAddress.valueOf("1-2-34"));
+      assertEquals(null, GroupAddress.valueOf(""));
+   }
+
+   public void testEquals()
+   {
+      final GroupAddress addr = new GroupAddress(1, 2, 3);
+      final GroupAddress addr2 = new GroupAddress(1, 2, 3);
+      final GroupAddress addr3 = new GroupAddress(1, 2, 4);
+
+      assertFalse(addr.equals(null));
+      assertFalse(addr.equals(new Object()));
+      assertTrue(addr.equals(addr));
+      assertTrue(addr.equals(addr2));
+      assertFalse(addr.equals(addr3));
+   }
+
    public void testToString()
    {
       assertEquals("0/0/0", new GroupAddress(0, 0, 0).toString());
