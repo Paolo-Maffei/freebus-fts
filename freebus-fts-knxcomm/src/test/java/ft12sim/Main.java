@@ -5,7 +5,6 @@ import java.io.OutputStream;
 
 import gnu.io.CommPort;
 import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
 import gnu.io.SerialPort;
 
 public class Main {

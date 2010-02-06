@@ -24,7 +24,6 @@ public class FT12replay {
 		int len = 0;
 		byte[] buffer = new byte[1024];
 		int[] rxarr;
-		int[][] txbuffer;
 		ArrayList<Integer> rxfifo = new ArrayList<Integer>();
 		int[][] replaybuffer = null;
 		int replaycounter = 0;
@@ -78,7 +77,7 @@ public class FT12replay {
 							&& rxarr[1] == rxarr[2]) {
 
 						if (rxarr.length > (rxarr[1] + 5)) {
-							int a = rxarr[rxarr[1] + 5];
+							
 							int[] knxtelegramm = new int[rxarr[1] + 6];
 							Thread.sleep(0);
 
