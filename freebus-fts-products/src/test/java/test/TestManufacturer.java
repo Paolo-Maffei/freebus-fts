@@ -8,9 +8,9 @@ public class TestManufacturer extends TestCase
 {
    public final void testHashCode()
    {
-      Manufacturer manu = new Manufacturer();
-      manu.setId(1234);
-      assertEquals(1234, manu.hashCode());
+      Manufacturer manu1 = new Manufacturer(1234, "manu-1234");
+      Manufacturer manu2 = new Manufacturer(1234, "manu-1234");
+      assertEquals(manu1.hashCode(), manu2.hashCode());
    }
 
    public final void testManufacturer()
@@ -18,6 +18,7 @@ public class TestManufacturer extends TestCase
       Manufacturer manu = new Manufacturer();
       assertEquals(0, manu.getId());
       assertEquals("", manu.getName());
+      assertNotNull(manu.toString());
    }
 
    public final void testManufacturerIntString()

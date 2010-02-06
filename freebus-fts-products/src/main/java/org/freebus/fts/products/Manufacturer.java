@@ -93,7 +93,7 @@ public class Manufacturer
       if (o == this) return true;
       if (!(o instanceof Manufacturer)) return false;
       final Manufacturer oo = (Manufacturer) o;
-      return id == oo.id;
+      return id == oo.id && name == oo.name;
    }
 
    /**

@@ -30,8 +30,8 @@ public final class JpaFunctionalEntityService implements FunctionalEntityService
    @Override
    public List<FunctionalEntity> getFunctionalEntities(Manufacturer m)
    {
-      final Query query = entityManager.createQuery("select fe from FunctionalEntity fe where fe.manufacturerId=?1 order by fe.name");
-      query.setParameter(1, m.getId());
+      final Query query = entityManager.createQuery("select fe from FunctionalEntity fe where fe.manufacturer=?1 order by fe.name");
+      query.setParameter(1, m);
       return query.getResultList();
    }
 

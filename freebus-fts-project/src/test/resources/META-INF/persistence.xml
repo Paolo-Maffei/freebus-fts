@@ -6,6 +6,8 @@
 
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+  <class>org.freebus.fts.products.Manufacturer</class>
+  <class>org.freebus.fts.products.VirtualDevice</class>
   <class>org.freebus.fts.project.Area</class>
   <class>org.freebus.fts.project.Building</class>
   <class>org.freebus.fts.project.Device</class>

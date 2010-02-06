@@ -8,6 +8,7 @@ import javax.swing.JButton;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ProjectController;
+import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.VirtualDevice;
 
 
@@ -65,5 +66,20 @@ public class ProductsToProjectBrowser extends ProductsBrowser
    public void setProjectController(final ProjectController controller)
    {
       this.controller = controller;
+   }
+
+   /**
+    * Update the selected catalog entry.
+    */
+   @Override
+   public void updateCatalogEntry()
+   {
+      super.updateCatalogEntry();
+
+      final VirtualDevice dev = getSelectedVirtualDevice();
+      final CatalogEntry entry = (dev == null ? null : dev.getCatalogEntry());
+      final boolean valid = dev != null && entry != null;
+
+      getBottomBox().setVisible(valid);
    }
 }

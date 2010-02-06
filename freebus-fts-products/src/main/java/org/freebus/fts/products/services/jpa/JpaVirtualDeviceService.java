@@ -49,8 +49,8 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
          funcsStr.append(functionalEntities[i].getId());
       }
 
-      final Query query = entityManager.createQuery("select vd from VirtualDevice vd "
-            + "where vd.functionalEntityId in (" + funcsStr.toString() + ") order by vd.name");
+      final Query query = entityManager.createQuery("select vd from VirtualDevice vd, FunctionalEntity fe "
+            + "where vd.functionalEntity = fe and fe.id in (" + funcsStr.toString() + ") order by vd.name");
       return query.getResultList();
    }
 

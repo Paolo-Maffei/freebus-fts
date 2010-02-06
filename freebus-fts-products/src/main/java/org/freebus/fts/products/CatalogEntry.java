@@ -68,6 +68,14 @@ public class CatalogEntry implements Serializable
    }
 
    /**
+    * Create an empty catalog-entry object with an id.
+    */
+   public CatalogEntry(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * Create a catalog-entry object.
     */
    public CatalogEntry(int id, String name, Manufacturer manufacturer, Product product)
@@ -95,11 +103,27 @@ public class CatalogEntry implements Serializable
    }
 
    /**
+    * Set the id of the catalog-entry.
+    */
+   public void setId(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return the name of the catalog-entry.
     */
    public String getName()
    {
       return name;
+   }
+
+   /**
+    * Set the name of the catalog-entry.
+    */
+   public void setName(String name)
+   {
+      this.name = name;
    }
 
    /**
@@ -220,7 +244,7 @@ public class CatalogEntry implements Serializable
    @Override
    public int hashCode()
    {
-      return name.hashCode();
+      return id;
    }
 
    /**
@@ -234,7 +258,7 @@ public class CatalogEntry implements Serializable
       if (!(o instanceof CatalogEntry))
          return false;
       final CatalogEntry oo = (CatalogEntry) o;
-      return id == oo.id && manufacturer == oo.manufacturer && product == oo.product;
+      return id == oo.id && manufacturer.equals(oo.manufacturer) && product.equals(oo.product);
    }
 
    /**
