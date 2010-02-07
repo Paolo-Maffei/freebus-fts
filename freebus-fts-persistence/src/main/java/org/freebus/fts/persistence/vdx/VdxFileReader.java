@@ -290,14 +290,36 @@ public final class VdxFileReader
                   }
                   else if (fieldClass.isEnum())
                   {
+                     @SuppressWarnings("unchecked")
+                     Class<? extends Enum> enumClass = (Class<? extends Enum>) type;
+
                      if (value.isEmpty())
                      {
                         field.set(obj, null);
                      }
+                     else if (value.matches("\\d*"))
+                     {
+                        final int ordinal = Integer.parseInt(value);
+                        Enum<?> enumVal = null;
+
+                        
+                        for (Enum<?> e: enumClass.getEnumConstants())
+                        {
+                           if (e.ordinal() == ordinal)
+                           {
+                              enumVal = e;
+                              break;
+                           }
+                        }
+
+                        if (enumVal != null)
+                           field.set(obj, enumVal);
+                        else throw new IllegalArgumentException("Could not initialize enum of type " + type + " with value: " + value);
+                     }
                      else
                      {
                         @SuppressWarnings("unchecked")
-                        Enum<?> enumVal = Enum.valueOf((Class<? extends Enum>) type, value.toUpperCase().replace(' ', '_'));
+                        Enum<?> enumVal = Enum.valueOf(enumClass, value.toUpperCase().replace(' ', '_'));
                         field.set(obj, enumVal);
                      }
                   }

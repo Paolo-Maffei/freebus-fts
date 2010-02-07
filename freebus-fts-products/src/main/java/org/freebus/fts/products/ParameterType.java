@@ -2,40 +2,70 @@ package org.freebus.fts.products;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
+
+import org.freebus.fts.persistence.vdx.VdxField;
 
 /**
- * The type of a program's parameter.
+ * The type of a program's parameter. The parameter type holds the
+ * possible values for a parameter.
+ * 
+ * What one would expect here, which type a parameter is, contains
+ * the class {@link ParameterAtomicType}, which can be access with
+ * {@link #getAtomicType()}.
  */
 @Entity
 @Table(name = "parameter_type")
 public class ParameterType
 {
    @Id
-   @Column(name = "parameter_type_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenParameterTypeId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "parameter_type_id", nullable = false)
    private int id;
 
-   @Column(name = "atomic_type_number", columnDefinition = "SMALLINT")
-   private int atomicTypeId;
+   @VdxField(name = "atomic_type_number")
+   @Enumerated(EnumType.ORDINAL)
+   @Column(name = "atomic_type_id")
+   private ParameterAtomicType atomicType;
 
-   @Column(name = "program_id", columnDefinition = "INT")
-   private int programId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "program_id", nullable = false)
+   private Program program;
 
    @Column(name = "parameter_type_name", nullable = false)
    private String name;
 
-   @Column(name = "minimum_value", columnDefinition = "DOUBLE")
+   @Column(name = "minimum_value")
    private double minValue;
 
-   @Column(name = "maximum_value", columnDefinition = "DOUBLE")
+   @Column(name = "maximum_value")
    private double maxValue;
 
-   @Column(name = "parameter_type_low_access", columnDefinition = "SMALLINT")
+   @Column(name = "parameter_type_low_access")
    private int lowAccess;
 
-   @Column(name = "parameter_type_high_access", columnDefinition = "SMALLINT")
+   @Column(name = "parameter_type_high_access")
    private int highAccess;
+
+   @Column(name = "parameter_type_size")
+   private int size;
+
+   /**
+    * Create an empty parameter type.
+    */
+   public ParameterType()
+   {
+   }
 
    /**
     * @return the id
@@ -46,7 +76,7 @@ public class ParameterType
    }
 
    /**
-    * @param id the id to set
+    * Set the id.
     */
    public void setId(int id)
    {
@@ -54,39 +84,39 @@ public class ParameterType
    }
 
    /**
-    * @return the atomic type number.
+    * @return the atomic type of the parameter.
     */
-   public int getAtomicTypeId()
+   public ParameterAtomicType getAtomicType()
    {
-      return atomicTypeId;
+      return atomicType;
    }
 
    /**
-    * Set the atomic type number.
+    * Set the atomic type of the parameter.
     */
-   public void setAtomicTypeId(int atomicTypeNumber)
+   public void setAtomicType(ParameterAtomicType atomicType)
    {
-      this.atomicTypeId = atomicTypeNumber;
+      this.atomicType = atomicType;
    }
 
    /**
-    * @return the programId
+    * @return the program to which the parameter type belongs.
     */
-   public int getProgramId()
+   public Program getProgram()
    {
-      return programId;
+      return program;
    }
 
    /**
-    * @param programId the programId to set
+    * Set the program to which the parameter type belongs.
     */
-   public void setProgramId(int programId)
+   public void setProgram(Program program)
    {
-      this.programId = programId;
+      this.program = program;
    }
 
    /**
-    * @return the name
+    * @return the name of the parameter type.
     */
    public String getName()
    {
@@ -94,7 +124,7 @@ public class ParameterType
    }
 
    /**
-    * @param name the name to set
+    * Set the name of the parameter type.
     */
    public void setName(String name)
    {
@@ -185,6 +215,12 @@ public class ParameterType
       this.size = size;
    }
 
-   @Column(name = "parameter_type_size", columnDefinition = "SMALLINT")
-   private int size;
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
 }

@@ -1,6 +1,5 @@
 package org.freebus.fts.persistence.test_entities;
 
-import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -47,7 +46,7 @@ public class SampleFunctionalEntityTree
    @OneToMany(fetch = FetchType.EAGER)
    @JoinColumn(name = "parent_id")
    @VdxField(name = "functional_entity_id")
-   public Set<SampleFunctionalEntityTree> childs = new HashSet<SampleFunctionalEntityTree>();
+   public Set<SampleFunctionalEntityTree> childs;
 
    /**
     * @return a hash-code for the object.

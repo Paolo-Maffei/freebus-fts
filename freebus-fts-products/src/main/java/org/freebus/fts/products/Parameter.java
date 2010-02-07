@@ -1,23 +1,28 @@
 package org.freebus.fts.products;
 
-import java.io.Serializable;
-
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * A parameter of a program.
  */
 @Entity
 @Table(name = "parameter")
-public class Parameter implements Serializable
+public class Parameter
 {
-   private static final long serialVersionUID = 6541645278498553618L;
-
    @Id
-   @Column(name = "parameter_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenParameterId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "parameter_id", nullable = false)
    private int id;
 
    @Column(name = "parameter_name")
@@ -29,11 +34,13 @@ public class Parameter implements Serializable
    @Column(name = "parameter_description")
    private String description;
 
-   @Column(name = "program_id", columnDefinition = "INT", nullable = false)
-   private int programId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "program_id", nullable = false)
+   private Program program;
 
-   @Column(name = "parameter_type_id", columnDefinition = "INT", nullable = false)
-   private int parameterTypeId;
+   @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "parameter_type_id", nullable = false)
+   private ParameterType parameterType;
 
    @Column(name = "parameter_low_access", columnDefinition = "SMALLINT")
    private int lowAccess;
@@ -41,8 +48,9 @@ public class Parameter implements Serializable
    @Column(name = "parameter_high_access", columnDefinition = "SMALLINT")
    private int highAccess;
 
-   @Column(name = "par_parameter_id", columnDefinition = "INT")
-   private int parentId;
+   @ManyToOne(optional = true, fetch = FetchType.EAGER)
+   @JoinColumn(name = "par_parameter_id", nullable = true)
+   private Parameter parent;
 
    @Column(name = "parent_parm_value", columnDefinition = "INT")
    private int parentValue;
@@ -142,35 +150,35 @@ public class Parameter implements Serializable
    }
 
    /**
-    * @return the programId
+    * @return the program to which the parameter belongs.
     */
-   public int getProgramId()
+   public Program getProgram()
    {
-      return programId;
+      return program;
    }
 
    /**
-    * @param programId the programId to set
+    * Set the program to which the parameter belongs.
     */
-   public void setProgramId(int programId)
+   public void setProgram(Program program)
    {
-      this.programId = programId;
+      this.program = program;
    }
 
    /**
-    * @return the parameterTypeId
+    * @return the parameter type.
     */
-   public int getParameterTypeId()
+   public ParameterType getParameterType()
    {
-      return parameterTypeId;
+      return parameterType;
    }
 
    /**
-    * @param parameterTypeId the parameterTypeId to set
+    * Set the parameter type.
     */
-   public void setParameterTypeId(int parameterTypeId)
+   public void setParameterType(ParameterType parameterType)
    {
-      this.parameterTypeId = parameterTypeId;
+      this.parameterType = parameterType;
    }
 
    /**
@@ -206,19 +214,19 @@ public class Parameter implements Serializable
    }
 
    /**
-    * @return the parentId
+    * @return the parent parameter
     */
-   public int getParentId()
+   public Parameter getParentId()
    {
-      return parentId;
+      return parent;
    }
 
    /**
-    * @param parentId the parentId to set
+    * Set the parent parameter.
     */
-   public void setParentId(int parentId)
+   public void setParentId(Parameter parent)
    {
-      this.parentId = parentId;
+      this.parent = parent;
    }
 
    /**
@@ -395,5 +403,38 @@ public class Parameter implements Serializable
    public void setAddressSpace(int addressSpace)
    {
       this.addressSpace = addressSpace;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this) return true;
+      if (!(o instanceof Parameter)) return false;
+
+      final Parameter oo = (Parameter) o;
+      if (program == null && oo.program != null) return false;
+      if (name == null && oo.name != null) return false;
+      return id == oo.id && program.equals(oo.program) && name.equals(oo.name);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
    }
 }

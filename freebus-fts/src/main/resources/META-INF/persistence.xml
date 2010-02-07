@@ -12,7 +12,6 @@
   <class>org.freebus.fts.products.FunctionalEntity</class>
   <class>org.freebus.fts.products.Manufacturer</class>
   <class>org.freebus.fts.products.Parameter</class>
-  <class>org.freebus.fts.products.ParameterAtomicType</class>
   <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.ParameterValue</class>
   <class>org.freebus.fts.products.Product</class>

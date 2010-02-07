@@ -1,72 +1,78 @@
 package org.freebus.fts.products;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
 
 /**
  * The atomic type of a parameter: none, unsigned, signed, string, enum, long enum.
  */
-@Entity
-@Table(name = "parameter_atomic_type")
-public class ParameterAtomicType
+public enum ParameterAtomicType
 {
-   @Id
-   @Column(name = "atomic_type_number", columnDefinition = "INT", unique = true, nullable = false)
-   private int id;
-
-   @Column(name = "atomic_type_name", unique = true, nullable = false)
-   private String name;
-
-   @Column(name = "dispattr", columnDefinition = "CHAR")
-   private String dispAttr;
+   /**
+    * No parameter type.
+    */
+   NONE(' ', null),
 
    /**
-    * @return the atomic type number.
+    * Unsigned integer.
     */
-   public int getId()
+   UNSIGNED('+', Integer.class),
+
+   /**
+    * Signed integer.
+    */
+   SIGNED('-', Integer.class),
+
+   /**
+    * String.
+    */
+   STRING('$', String.class),
+
+   /**
+    * Enumeration.
+    */
+   ENUM('Y', Integer.class),
+
+   /**
+    * Long enumeration.
+    */
+   LONG_ENUM('Z', Integer.class);
+
+
+   private final char dispAttr;
+   private final Class<?> parameterClass;
+
+   /*
+    * Internal constructor.
+    */
+   private ParameterAtomicType(char dispAttr, Class<?> parameterClass)
    {
-      return id;
+      this.dispAttr = dispAttr;
+      this.parameterClass = parameterClass;
    }
 
    /**
-    * Set the atomic type number.
-    */
-   public void setId(int id)
-   {
-      this.id = id;
-   }
-
-   /**
-    * @return the atomic type name.
-    */
-   public String getName()
-   {
-      return name;
-   }
-
-   /**
-    * Set the atomic type name.
-    */
-   public void setName(String name)
-   {
-      this.name = name;
-   }
-
-   /**
-    * @return the display-attribute character (e.g. '+', '$', 'Z').
+    * @return the display-attribute character.
     */
    public char getDispAttr()
    {
-      return dispAttr.charAt(0);
+      return dispAttr;
    }
 
    /**
-    * Set the display-attribute character (e.g. '+', '$', 'Z').
+    * @return the class that is used for parameters of this type.
     */
-   public void setDispAttr(char dispAttr)
+   public Class<?> getParameterClass()
    {
-      this.dispAttr = Character.toString(dispAttr);
+      return parameterClass;
+   }
+
+   /**
+    * @return the object for the given ordinal.
+    */
+   public static ParameterAtomicType valueOf(int ordinal)
+   {
+      for (ParameterAtomicType o: values())
+         if (o.ordinal() == ordinal)
+            return o;
+      return null;
    }
 }

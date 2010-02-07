@@ -9,6 +9,8 @@
   <class>org.freebus.fts.products.CatalogEntry</class>
   <class>org.freebus.fts.products.FunctionalEntity</class>
   <class>org.freebus.fts.products.Manufacturer</class>
+  <class>org.freebus.fts.products.Parameter</class>
+  <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.Product</class>
   <class>org.freebus.fts.products.Program</class>
   <class>org.freebus.fts.products.VirtualDevice</class>

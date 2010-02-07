@@ -5,8 +5,11 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.persistence.Id;
@@ -202,15 +205,44 @@ public final class VdxEntityManager
                   }
                   else if (a instanceof OneToMany)
                   {
-                     @SuppressWarnings("unchecked")
-                     Collection<Object> coll = (Collection<Object>) assoc.getField().get(obj);
+                     final Field f = assoc.getField();
+                     final boolean accessible = f.isAccessible();
+                     if (!accessible) f.setAccessible(true);
 
-                     coll.clear();
+                     @SuppressWarnings("unchecked")
+                     Collection<Object> coll = (Collection<Object>) f.get(obj);
+
+                     if (coll == null)
+                     {
+                        final Class<?> type = (Class<?>) f.getType();
+                        if (Set.class.isAssignableFrom(type))
+                           coll = new HashSet<Object>();
+                        else if (List.class.isAssignableFrom(type))
+                           coll = new LinkedList<Object>();
+                        else
+                           throw new PersistenceException("Sorry, but the collection type is not implemented: " + type);
+
+                        f.set(obj, coll);
+                     }
+                     else
+                     {
+                        coll.clear();
+                     }
+
                      for (Object assocObj : fetchAll(assoc.getTargetClass()))
                      {
-                        if (assoc.getTargetField().get(assocObj) == obj)
+                        final Field targetField = assoc.getTargetField();
+                        final boolean targetAccessible = targetField.isAccessible();
+                        if (!targetAccessible) targetField.setAccessible(true);
+
+                        if (targetField.get(assocObj) == obj)
                            coll.add(assocObj);
+
+                        if (!targetAccessible) targetField.setAccessible(false);
                      }
+
+                     if (!accessible)
+                        f.setAccessible(false);
                   }
                   else
                   {
@@ -309,14 +341,36 @@ public final class VdxEntityManager
                }
                else if (fieldClass.isEnum())
                {
+                  @SuppressWarnings("unchecked")
+                  Class<? extends Enum> enumClass = (Class<? extends Enum>) type;
+
                   if (value.isEmpty())
                   {
                      field.set(obj, null);
                   }
+                  else if (value.matches("\\d*"))
+                  {
+                     final int ordinal = Integer.parseInt(value);
+                     Enum<?> enumVal = null;
+
+                     
+                     for (Enum<?> e: enumClass.getEnumConstants())
+                     {
+                        if (e.ordinal() == ordinal)
+                        {
+                           enumVal = e;
+                           break;
+                        }
+                     }
+
+                     if (enumVal != null)
+                        field.set(obj, enumVal);
+                     else throw new IllegalArgumentException("Could not initialize enum of type " + type + " with value: " + value);
+                  }
                   else
                   {
                      @SuppressWarnings("unchecked")
-                     Enum<?> enumVal = Enum.valueOf((Class<? extends Enum>) type, value.toUpperCase().replace(' ', '_'));
+                     Enum<?> enumVal = Enum.valueOf(enumClass, value.toUpperCase().replace(' ', '_'));
                      field.set(obj, enumVal);
                   }
                }

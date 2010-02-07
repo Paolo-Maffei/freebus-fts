@@ -1,5 +1,7 @@
 package org.freebus.fts.products;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -65,6 +68,10 @@ public class Program
    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "manufacturer_id", nullable = false)
    private Manufacturer manufacturer;
+
+   @OneToMany(cascade = CascadeType.ALL)
+   @JoinColumn(name = "program_id", nullable = false)
+   private Set<Parameter> parameters;
 
    @Lob
    @Column(name = "eeprom_data")
@@ -327,6 +334,22 @@ public class Program
    public void setManufacturer(Manufacturer manufacturer)
    {
       this.manufacturer = manufacturer;
+   }
+
+   /**
+    * Set the parameters of the program.
+    */
+   public void setParameters(Set<Parameter> parameters)
+   {
+      this.parameters = parameters;
+   }
+
+   /**
+    * @return the parameters of the program.
+    */
+   public Set<Parameter> getParameters()
+   {
+      return parameters;
    }
 
    /**

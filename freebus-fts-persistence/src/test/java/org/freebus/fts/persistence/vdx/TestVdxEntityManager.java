@@ -160,4 +160,14 @@ public class TestVdxEntityManager
       final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
       mgr.fetch(Object.class, null);
    }
+
+   @Test
+   public final void testFetchNullCollection() throws PersistenceException
+   {
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "with-children");
+
+      final SampleFunctionalEntityTree ent = mgr.fetch(SampleFunctionalEntityTree.class, 24378);
+      assertNotNull(ent);
+      assertEquals(1, ent.childs.size());
+   }
 }
