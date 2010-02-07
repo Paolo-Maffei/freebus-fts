@@ -34,8 +34,8 @@ public class CatalogEntry implements Serializable
    @Column(name = "entry_name", nullable = false)
    private String name;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY, targetEntity = Manufacturer.class, cascade = CascadeType.PERSIST)
-   @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "manufacturer_id", nullable = false)
    private Manufacturer manufacturer;
 
    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.ALL, targetEntity = Product.class)

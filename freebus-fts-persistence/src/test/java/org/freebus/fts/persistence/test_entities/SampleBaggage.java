@@ -3,6 +3,7 @@ package org.freebus.fts.persistence.test_entities;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.Lob;
 
 import org.freebus.fts.persistence.vdx.VdxEntity;
 import org.freebus.fts.persistence.vdx.VdxField;
@@ -27,6 +28,10 @@ public class SampleBaggage
 
    @Column(name = "any_key", nullable = false)
    public int anyKey;
+
+   @Lob
+   @Column(name = "data")
+   public byte[] data;
 
    @Column(name = "active", nullable = false)
    public boolean active;

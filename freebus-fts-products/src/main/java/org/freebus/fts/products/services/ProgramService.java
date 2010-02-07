@@ -2,6 +2,8 @@ package org.freebus.fts.products.services;
 
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.freebus.fts.products.Program;
 
 /**
@@ -14,10 +16,15 @@ public interface ProgramService
     * 
     * @throws DAONotFoundException if the object does not exist
     */
-   public Program getProgram(int id) throws DAOException;
+   public Program getProgram(int id) throws PersistenceException;
 
    /**
     * Get all programs.
     */
-   public List<Program> getPrograms() throws DAOException;
+   public List<Program> getPrograms() throws PersistenceException;
+
+   /**
+    * Save a program.
+    */
+   public void save(Program program);
 }

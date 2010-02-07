@@ -107,6 +107,11 @@ public final class TestVdxFileReader
       assertEquals("2330886", obj1.appId);
       assertEquals(1031, obj1.langId);
       assertEquals(4, obj1.anyKey);
+      assertEquals(15, obj1.data[0]);
+      assertEquals(0, obj1.data[1]);
+      assertEquals(4, obj1.data[2]);
+      assertEquals(-1, obj1.data[3]);
+      assertEquals(-128, obj1.data[4]);
 
       final SampleBaggage obj2 = (SampleBaggage) entries[1];
       assertEquals(0, obj2.id, 0.5);

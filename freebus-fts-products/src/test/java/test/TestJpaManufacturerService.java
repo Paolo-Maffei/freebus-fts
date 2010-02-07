@@ -22,7 +22,6 @@ public class TestJpaManufacturerService extends PersistenceTestCase
 
       manuService = getJpaProductsFactory().getManufacturerService();
 
-      System.err.println("save");
       manuService.save(new Manufacturer(1, "Manufacturer-1"));
       manuService.save(new Manufacturer(2, "Manufacturer-2"));
       manuService.save(new Manufacturer(3, "Manufacturer-3"));

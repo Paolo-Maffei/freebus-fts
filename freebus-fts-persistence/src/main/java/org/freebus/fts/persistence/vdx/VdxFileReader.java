@@ -274,13 +274,36 @@ public final class VdxFileReader
                   if (val.isEmpty()) val = "0";
                   field.setBoolean(obj, Integer.parseInt(val) != 0);
                }
-               else throw new IOException("Variable type not supported by vdx-to-db mapper: " + type.toString());
+               else
+               {
+                  final Class<?> fieldClass = (Class<?>) type;
+                  final boolean isArray = fieldClass.isArray();
+                  final Class<?> componentType = fieldClass.getComponentType();
+
+                  if (isArray && componentType == byte.class)
+                  {
+                     // Assume hex data string
+                     final int len = val.length() >> 1;
+                     final byte[] data = new byte[len];
+                     for (int k = 0, l = 0; k < len; ++k, l += 2)
+                        data[k] = (byte) (Integer.parseInt(val.substring(l, l + 2), 16));
+                     field.set(obj, data);
+                  }
+                  else
+                  {
+                     throw new IOException("Variable type not supported by vdx-to-db mapper: " + type.toString());
+                  }
+               }
             }
 
             objs[i] = obj;
          }
       }
-      catch (Exception e)
+      catch (IllegalAccessException e)
+      {
+         throw new IOException(e);
+      }
+      catch (InstantiationException e)
       {
          throw new IOException(e);
       }

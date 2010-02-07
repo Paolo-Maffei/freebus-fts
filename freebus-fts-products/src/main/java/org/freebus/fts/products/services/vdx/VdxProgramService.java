@@ -6,9 +6,10 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
+import javax.persistence.PersistenceException;
+
 import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.products.Program;
-import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProgramService;
 
 /**
@@ -24,7 +25,7 @@ public final class VdxProgramService implements ProgramService
       this.reader = reader;
    }
 
-   private synchronized void fetchData() throws DAOException
+   private synchronized void fetchData() throws PersistenceException
    {
       if (programs != null) return;
 
@@ -45,12 +46,12 @@ public final class VdxProgramService implements ProgramService
       }
       catch (IOException e)
       {
-         throw new DAOException(e);
+         throw new PersistenceException(e);
       }
    }
 
    @Override
-   public Program getProgram(int id) throws DAOException
+   public Program getProgram(int id) throws PersistenceException
    {
       if (programs == null) fetchData();
 
@@ -61,9 +62,15 @@ public final class VdxProgramService implements ProgramService
    }
 
    @Override
-   public List<Program> getPrograms() throws DAOException
+   public List<Program> getPrograms() throws PersistenceException
    {
       if (programs == null) fetchData();
       return programs;
+   }
+
+   @Override
+   public void save(Program program)
+   {
+      throw new PersistenceException("Sorry, not implemented");
    }
 }

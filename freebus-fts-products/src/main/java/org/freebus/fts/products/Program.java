@@ -1,5 +1,6 @@
 package org.freebus.fts.products;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -7,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -60,12 +62,13 @@ public class Program
    @Column(name = "program_serial_number", length = 20)
    private String serial;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
-   @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "manufacturer_id", nullable = false)
    private Manufacturer manufacturer;
 
-   @Column(name = "eeprom_data", columnDefinition = "")
-   private String eepromData;
+   @Lob
+   @Column(name = "eeprom_data")
+   private byte[] eepromData;
 
    @Column(name = "dynamic_management")
    private boolean dynamicManagement;
@@ -90,6 +93,16 @@ public class Program
     */
    public Program()
    {
+   }
+
+   /**
+    * Create a program object.
+    */
+   public Program(int id, String name, Manufacturer manufacturer)
+   {
+      this.id = id;
+      this.name = name;
+      this.manufacturer = manufacturer;
    }
 
    /**
@@ -319,7 +332,7 @@ public class Program
    /**
     * @return the eepromData
     */
-   public String getEepromData()
+   public byte[] getEepromData()
    {
       return eepromData;
    }
@@ -327,7 +340,7 @@ public class Program
    /**
     * @param eepromData the eepromData to set
     */
-   public void setEepromData(String eepromData)
+   public void setEepromData(byte[] eepromData)
    {
       this.eepromData = eepromData;
    }
@@ -426,5 +439,27 @@ public class Program
    public void setNumPollingGroups(int numPollingGroups)
    {
       this.numPollingGroups = numPollingGroups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this) return true;
+      if (!(o instanceof Program)) return false;
+      final Program oo = (Program) o;
+      return id == oo.id && maskId == oo.maskId && peiType == oo.peiType &&
+             ((name == null && oo.name == null) || name.equals(oo.name));
    }
 }

@@ -1,12 +1,14 @@
 package test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Program;
+import org.junit.Test;
 
-public class TestProgram extends TestCase
+public class TestProgram
 {
+   @Test
    public final void testProgram()
    {
       final Program prog = new Program();
@@ -14,8 +16,10 @@ public class TestProgram extends TestCase
 
       assertEquals(0, prog.getId());
       assertEquals(null, prog.getName());
+      assertNotNull(prog.toString());
    }
 
+   @Test
    public final void testGetSetId()
    {
       final Program prog = new Program();
@@ -30,6 +34,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getId());
    }
 
+   @Test
    public final void testGetSetMaskId()
    {
       final Program prog = new Program();
@@ -44,6 +49,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getMaskId());
    }
 
+   @Test
    public final void testGetSetName()
    {
       final Program prog = new Program();
@@ -61,6 +67,7 @@ public class TestProgram extends TestCase
       assertEquals("str-2", prog.getName());
    }
 
+   @Test
    public final void testGetSetVersion()
    {
       final Program prog = new Program();
@@ -78,6 +85,7 @@ public class TestProgram extends TestCase
       assertEquals("str-2", prog.getVersion());
    }
 
+   @Test
    public final void testIsSetLinkable()
    {
       final Program prog = new Program();
@@ -89,6 +97,7 @@ public class TestProgram extends TestCase
       assertEquals(false, prog.isLinkable());
    }
 
+   @Test
    public final void testGetSetDeviceType()
    {
       final Program prog = new Program();
@@ -103,6 +112,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getDeviceType());
    }
 
+   @Test
    public final void testGetSetPeiType()
    {
       final Program prog = new Program();
@@ -117,6 +127,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getPeiType());
    }
 
+   @Test
    public final void testGetSetAddrTabSize()
    {
       final Program prog = new Program();
@@ -134,6 +145,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getAddrTabSize());
    }
 
+   @Test
    public final void testGetSetAssocTabAddr()
    {
       final Program prog = new Program();
@@ -151,6 +163,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getAssocTabAddr());
    }
 
+   @Test
    public final void testGetSetAssocTabSize()
    {
       final Program prog = new Program();
@@ -168,6 +181,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getAssocTabSize());
    }
 
+   @Test
    public final void testGetSetCommsTabAddr()
    {
       final Program prog = new Program();
@@ -185,6 +199,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getCommsTabAddr());
    }
 
+   @Test
    public final void testGetSetCommsTabSize()
    {
       final Program prog = new Program();
@@ -202,6 +217,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getCommsTabSize());
    }
 
+   @Test
    public final void testGetSetSerial()
    {
       final Program prog = new Program();
@@ -219,6 +235,7 @@ public class TestProgram extends TestCase
       assertEquals("str-2", prog.getSerial());
    }
 
+   @Test
    public final void testGetSetManufacturer()
    {
       final Program prog = new Program();
@@ -233,23 +250,23 @@ public class TestProgram extends TestCase
       assertNull(prog.getManufacturer());
    }
 
+   @Test
    public final void testGetSetEepromData()
    {
       final Program prog = new Program();
 
-      prog.setEepromData("str-1");
-      assertEquals("str-1", prog.getEepromData());
+      final byte[] data1 = new byte[] { 0, 1, 2, 3, 0, 4, 5, 6 };
+      prog.setEepromData(data1);
+      assertArrayEquals(data1, prog.getEepromData());
 
-      prog.setEepromData("");
-      assertEquals("", prog.getEepromData());
+      prog.setEepromData(new byte[] { });
+      assertArrayEquals(new byte[] { }, prog.getEepromData());
 
       prog.setEepromData(null);
-      assertEquals(null, prog.getEepromData());
-
-      prog.setEepromData("str-2");
-      assertEquals("str-2", prog.getEepromData());
+      assertArrayEquals(null, prog.getEepromData());
    }
 
+   @Test
    public final void testIsSetDynamicManagement()
    {
       final Program prog = new Program();
@@ -261,6 +278,7 @@ public class TestProgram extends TestCase
       assertEquals(false, prog.isDynamicManagement());
    }
 
+   @Test
    public final void testGetSetProgramType()
    {
       final Program prog = new Program();
@@ -278,6 +296,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getProgramType());
    }
 
+   @Test
    public final void testGetSetRamSize()
    {
       final Program prog = new Program();
@@ -296,6 +315,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getRamSize());
    }
 
+   @Test
    public final void testGetSetProgramStyle()
    {
       final Program prog = new Program();
@@ -314,6 +334,7 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getProgramStyle());
    }
 
+   @Test
    public final void testIsSetPollingMaster()
    {
       final Program prog = new Program();
@@ -326,6 +347,7 @@ public class TestProgram extends TestCase
       assertEquals(false, prog.isPollingMaster());
    }
 
+   @Test
    public final void testGetSetNumPollingGroups()
    {
       final Program prog = new Program();
@@ -344,4 +366,30 @@ public class TestProgram extends TestCase
       assertEquals(0, prog.getNumPollingGroups());
    }
 
+   @Test
+   public final void testEqualsHashCode()
+   {
+      final Program prog1 = new Program();
+      prog1.setId(1);
+
+      final Program prog2 = new Program();
+      prog2.setId(1);
+
+      final Program prog3 = new Program();
+      prog3.setId(3);
+
+      assertEquals(prog2.hashCode(), prog1.hashCode());
+
+      assertTrue(prog1.equals(prog1));
+      assertTrue(prog1.equals(prog2));
+      assertFalse(prog1.equals(prog3));
+      assertFalse(prog1.equals(null));
+      assertFalse(prog1.equals(new Object()));
+
+      prog1.setName("prog");
+      assertFalse(prog1.equals(prog2));
+
+      prog2.setName("prog");
+      assertTrue(prog1.equals(prog2));
+   }
 }

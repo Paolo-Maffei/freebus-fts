@@ -295,7 +295,23 @@ public final class VdxEntityManager
             }
             else
             {
-               throw new Exception("Unsupported field class: " + field.getType().getName());
+               final Class<?> fieldClass = (Class<?>) type;
+               final boolean isArray = fieldClass.isArray();
+               final Class<?> componentType = fieldClass.getComponentType();
+
+               if (isArray && componentType == byte.class)
+               {
+                  // Assume hex data string
+                  final int len = value.length() >> 1;
+                  final byte[] data = new byte[len];
+                  for (int k = 0, l = 0; k < len; ++k, l += 2)
+                     data[k] = (byte) (Integer.parseInt(value.substring(l, l + 2), 16));
+                  field.set(obj, data);
+               }
+               else
+               {
+                  throw new Exception("Unsupported field class: " + field.getType().getName());
+               }
             }
 
             if (field == info.getId())
