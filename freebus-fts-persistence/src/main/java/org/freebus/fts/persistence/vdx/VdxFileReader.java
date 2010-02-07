@@ -255,39 +255,51 @@ public final class VdxFileReader
             {
                final Field field = fieldMappings.get(fieldIdx);
                final Type type = field.getGenericType();
-               String val = values[fieldIdx];
+               String value = values[fieldIdx];
 
                if (type == String.class)
-                  field.set(obj, val.trim());
+                  field.set(obj, value.trim());
                else if (type == int.class)
                {
-                  int pos = val.indexOf('.');
-                  if (pos >= 0) val = val.substring(0, pos);
-                  field.setInt(obj, val.isEmpty() ? 0 : Integer.parseInt(val));
+                  int pos = value.indexOf('.');
+                  if (pos >= 0) value = value.substring(0, pos);
+                  field.setInt(obj, value.isEmpty() ? 0 : Integer.parseInt(value));
                }
                else if (type == double.class || type == Double.class)
-                  field.setDouble(obj, val.isEmpty() ? 0.0 : Double.parseDouble(val));
+                  field.setDouble(obj, value.isEmpty() ? 0.0 : Double.parseDouble(value));
                else if (type == float.class || type == Float.class)
-                  field.setFloat(obj, val.isEmpty() ? 0.0f : Float.parseFloat(val));
+                  field.setFloat(obj, value.isEmpty() ? 0.0f : Float.parseFloat(value));
                else if (type == boolean.class || type == Boolean.class)
                {
-                  if (val.isEmpty()) val = "0";
-                  field.setBoolean(obj, Integer.parseInt(val) != 0);
+                  if (value.isEmpty()) value = "0";
+                  field.setBoolean(obj, Integer.parseInt(value) != 0);
                }
                else
                {
                   final Class<?> fieldClass = (Class<?>) type;
-                  final boolean isArray = fieldClass.isArray();
                   final Class<?> componentType = fieldClass.getComponentType();
 
-                  if (isArray && componentType == byte.class)
+                  if (fieldClass.isArray() && componentType == byte.class)
                   {
                      // Assume hex data string
-                     final int len = val.length() >> 1;
+                     final int len = value.length() >> 1;
                      final byte[] data = new byte[len];
                      for (int k = 0, l = 0; k < len; ++k, l += 2)
-                        data[k] = (byte) (Integer.parseInt(val.substring(l, l + 2), 16));
+                        data[k] = (byte) (Integer.parseInt(value.substring(l, l + 2), 16));
                      field.set(obj, data);
+                  }
+                  else if (fieldClass.isEnum())
+                  {
+                     if (value.isEmpty())
+                     {
+                        field.set(obj, null);
+                     }
+                     else
+                     {
+                        @SuppressWarnings("unchecked")
+                        Enum<?> enumVal = Enum.valueOf((Class<? extends Enum>) type, value.toUpperCase().replace(' ', '_'));
+                        field.set(obj, enumVal);
+                     }
                   }
                   else
                   {

@@ -296,10 +296,9 @@ public final class VdxEntityManager
             else
             {
                final Class<?> fieldClass = (Class<?>) type;
-               final boolean isArray = fieldClass.isArray();
                final Class<?> componentType = fieldClass.getComponentType();
 
-               if (isArray && componentType == byte.class)
+               if (fieldClass.isArray() && componentType == byte.class)
                {
                   // Assume hex data string
                   final int len = value.length() >> 1;
@@ -307,6 +306,19 @@ public final class VdxEntityManager
                   for (int k = 0, l = 0; k < len; ++k, l += 2)
                      data[k] = (byte) (Integer.parseInt(value.substring(l, l + 2), 16));
                   field.set(obj, data);
+               }
+               else if (fieldClass.isEnum())
+               {
+                  if (value.isEmpty())
+                  {
+                     field.set(obj, null);
+                  }
+                  else
+                  {
+                     @SuppressWarnings("unchecked")
+                     Enum<?> enumVal = Enum.valueOf((Class<? extends Enum>) type, value.toUpperCase().replace(' ', '_'));
+                     field.set(obj, enumVal);
+                  }
                }
                else
                {
