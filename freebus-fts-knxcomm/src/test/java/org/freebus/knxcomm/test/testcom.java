@@ -1,8 +1,7 @@
-package comtest;
+package org.freebus.knxcomm.test;
 
 
 import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
@@ -14,11 +13,13 @@ import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
+
 public class testcom {
    private static int sequence = 0;
    private static BusInterface busInterface;
    private static Logger logger = Logger.getRootLogger();
-
+   private static String ftscomComport = "COM4";
+   private static String FT12simComport = "COM5";
    public static void main(String[] args)  {
 	   try {
 		      SimpleLayout layout = new SimpleLayout();
@@ -31,9 +32,13 @@ public class testcom {
 		    } catch( Exception ex ) {
 		      System.out.println( ex );
 		    }
+		  
+		    Thread t = new Thread(new FT12sim(FT12simComport));
+		    t.start();
 
+		  
 	try {
-		busInterface = BusInterfaceFactory.newSerialInterface("COM5");
+		busInterface = BusInterfaceFactory.newSerialInterface(ftscomComport);
 		logger.info("Start test com");
 		busInterface.open();
 		

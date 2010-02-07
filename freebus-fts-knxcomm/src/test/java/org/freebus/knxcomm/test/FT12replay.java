@@ -1,8 +1,9 @@
-package ft12sim;
+package org.freebus.knxcomm.test;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
+
 
 public class FT12replay {
 

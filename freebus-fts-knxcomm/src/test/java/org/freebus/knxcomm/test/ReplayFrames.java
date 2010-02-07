@@ -1,4 +1,4 @@
-package ft12sim;
+package org.freebus.knxcomm.test;
 
 import java.io.UnsupportedEncodingException;
 
