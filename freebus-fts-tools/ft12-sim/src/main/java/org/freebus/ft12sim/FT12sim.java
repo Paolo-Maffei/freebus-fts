@@ -3,6 +3,7 @@ package org.freebus.ft12sim;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import org.apache.log4j.BasicConfigurator;
 import org.freebus.knxcomm.serial.SerialPortUtil;
 import org.freebus.knxcomm.serial.SerialPortWrapper;
 
@@ -14,11 +15,12 @@ public class FT12sim implements Runnable
    static FT12replay ft12replay;
    static String comport;
 
-   /**
-    * Ensure that the native serial port library and the RXTX library are loaded.
-    */
    static
    {
+      // Configure Log4J
+      BasicConfigurator.configure();
+
+      // Ensure that the native serial port library and the RXTX library are loaded.
       SerialPortUtil.loadSerialPortLib();
    }
 
