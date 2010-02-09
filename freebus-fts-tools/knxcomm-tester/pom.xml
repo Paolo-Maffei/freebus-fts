@@ -45,5 +45,11 @@
    <version>2.08</version>
    <scope>test</scope>
   </dependency>
+  <dependency>
+  	<groupId>org.freebus.fts</groupId>
+  	<artifactId>freebus-fts-knxcomm</artifactId>
+  	<version>0.1-SNAPSHOT</version>
+  	<scope>compile</scope>
+  </dependency>
  </dependencies>
 </project>
