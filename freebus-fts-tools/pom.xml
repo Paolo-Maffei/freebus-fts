@@ -1,0 +1,27 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <parent>
+  <artifactId>freebus-fts-parent</artifactId>
+  <groupId>org.freebus.fts</groupId>
+  <version>0.1-SNAPSHOT</version>
+  <relativePath>..</relativePath>
+ </parent>
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.freebus.fts</groupId>
+ <artifactId>freebus-fts-tools</artifactId>
+ <version>0.1-SNAPSHOT</version>
+ <name>FTS Tools</name>
+ <packaging>pom</packaging>
+ <organization>
+  <name>The Freebus Project</name>
+  <url>http://www.freebus.org</url>
+ </organization>
+ <scm>
+  <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</connection>
+  <developerConnection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</developerConnection>
+ </scm>
+ <modules>
+  <module>ft12-sim</module>
+  <module>knxcomm-tester</module>
+ </modules>
+</project>

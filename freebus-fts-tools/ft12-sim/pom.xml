@@ -1,0 +1,55 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+ <parent>
+  <artifactId>freebus-fts-tools</artifactId>
+  <groupId>org.freebus.fts</groupId>
+  <version>0.1-SNAPSHOT</version>
+  <relativePath>..</relativePath>
+ </parent>
+ <modelVersion>4.0.0</modelVersion>
+ <groupId>org.freebus.fts.tools</groupId>
+ <artifactId>ft12-sim</artifactId>
+ <version>0.1-SNAPSHOT</version>
+ <name>freebus-fts-ft12sim</name>
+ <dependencyManagement>
+  <dependencies>
+  </dependencies>
+ </dependencyManagement>
+ <description>FT1.2 Simulator</description>
+ <url>http://www.freebus.org</url>
+ <issueManagement>
+  <system>Redmine</system>
+  <url>http://bugs.freebus.org</url>
+ </issueManagement>
+ <build>
+  <plugins>
+   <plugin>
+    <artifactId>maven-compiler-plugin</artifactId>
+    <configuration>
+     <source>1.6</source>
+     <target>1.6</target>
+    </configuration>
+   </plugin>
+   <plugin>
+    <artifactId>maven-jar-plugin</artifactId>
+    <configuration>
+     <finalName>freebus-ft12-sim</finalName>
+     <archive>
+      <manifest>
+       <addClasspath>false</addClasspath>
+       <mainClass>org.freebus.fts.FTS</mainClass>
+      </manifest>
+     </archive>
+    </configuration>
+   </plugin>
+  </plugins>
+ </build>
+ <dependencies>
+  <dependency>
+   <groupId>net.sf.jfcunit</groupId>
+   <artifactId>jfcunit</artifactId>
+   <version>2.08</version>
+   <scope>test</scope>
+  </dependency>
+ </dependencies>
+</project>
