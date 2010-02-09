@@ -1,19 +1,14 @@
 package org.freebus.knxcomm.serial;
 
-import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEvent;
 import gnu.io.SerialPortEventListener;
-import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
-import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
 
 /**
@@ -21,19 +16,10 @@ import org.freebus.knxcomm.KNXConnection;
  */
 public final class SerialFt12Connection extends Ft12Connection implements SerialPortEventListener
 {
+   protected final SerialPortWrapper port = new SerialPortWrapper();
+   private OutputStream outputStream;
+   private InputStream inputStream;
    protected final String portName;
-   protected CommPortIdentifier portIdent;
-   protected SerialPort serialPort = null;
-   protected InputStream inputStream = null;
-   protected OutputStream outputStream = null;
-
-   /**
-    * Ensure that the native serial port library is loaded.
-    */
-   static
-   {
-      SerialPortUtil.loadSerialPortLib();
-   }
 
    /**
     * Create a connection for the serial port portName.
@@ -51,46 +37,26 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    @Override
    public void open() throws IOException
    {
-      System.out.println("Opening serial port " + portName);
+      // Freebus RS-Interface: 115200, SerialPort.DATABITS_8,
+      // SerialPort.STOPBITS_1, SerialPort.PARITY_NONE.
+      //
+      // FT-1.2: 19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
+      // SerialPort.PARITY_EVEN.
+      port.open(portName, 19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
+
+      inputStream = port.getInputStream();
+      outputStream = port.getOutputStream();
+
       try
       {
-         portIdent = CommPortIdentifier.getPortIdentifier(portName);
-         serialPort = (SerialPort) portIdent.open("SerialBusInterface", 2000);
-
-         // Freebus RS-Interface: 115200, SerialPort.DATABITS_8,
-         // SerialPort.STOPBITS_1, SerialPort.PARITY_NONE.
-         //
-         // FT-1.2: 19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1,
-         // SerialPort.PARITY_EVEN.
-         serialPort.setSerialPortParams(19200, SerialPort.DATABITS_8, SerialPort.STOPBITS_1, SerialPort.PARITY_EVEN);
-
-         inputStream = serialPort.getInputStream();
-         outputStream = serialPort.getOutputStream();
-
-         serialPort.addEventListener(this);
-         serialPort.notifyOnDataAvailable(true);
-      }
-      catch (NoSuchPortException e)
-      {
-         throw new KNXConnectException("Cannot connect to serial port " + portName, e);
-      }
-      catch (PortInUseException e)
-      {
-         throw new KNXConnectException("Serial port " + portName + " is in use", e);
-      }
-      catch (UnsupportedCommOperationException e)
-      {
-         throw new KNXConnectException("Failed to set serial port parameters for " + portName, e);
-      }
-      catch (IOException e)
-      {
-         throw new KNXConnectException("Failed to open I/O streams for serial port " + portName, e);
+         port.addEventListener(this);
       }
       catch (TooManyListenersException e)
       {
-         throw new KNXConnectException("Failed to initialize internal listener", e);
+         throw new IOException(e);
       }
 
+      port.notifyOnDataAvailable(true);
       super.open();
    }
 
@@ -100,15 +66,9 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    @Override
    public void close()
    {
-      System.out.println("Closing serial port " + portName);
       inputStream = null;
       outputStream = null;
-
-      if (serialPort != null)
-      {
-         serialPort.removeEventListener();
-         serialPort = null;
-      }
+      port.close();
    }
 
    /**

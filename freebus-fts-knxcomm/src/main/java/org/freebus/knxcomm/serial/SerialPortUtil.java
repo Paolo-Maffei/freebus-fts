@@ -75,7 +75,7 @@ public final class SerialPortUtil
       }
 
       String libPath = "";
-      for (String dir : new String[] { "contrib/rxtx/", "../freebus-fts-knxcomm/contrib/rxtx/" })
+      for (String dir : new String[] { "contrib/rxtx/", "../freebus-fts-knxcomm/contrib/rxtx/", "../../freebus-fts-knxcomm/contrib/rxtx/" })
       {
          libPath = (new File(dir + dirName)).getAbsolutePath();
          try
@@ -99,7 +99,7 @@ public final class SerialPortUtil
       boolean jarLoaded = false;
       try
       {
-         JarLoader.loadJar(new String[] { "contrib/rxtx/RXTXcomm.jar", "../freebus-fts-knxcomm/contrib/rxtx/RXTXcomm.jar" });
+         JarLoader.loadJar(new String[] { "contrib/rxtx/RXTXcomm.jar", "../freebus-fts-knxcomm/contrib/rxtx/RXTXcomm.jar", "../../freebus-fts-knxcomm/contrib/rxtx/RXTXcomm.jar" });
          CommPortIdentifier.getPortIdentifiers();
          jarLoaded = true;
       }

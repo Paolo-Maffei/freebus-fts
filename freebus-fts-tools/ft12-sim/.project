@@ -3,6 +3,7 @@
 	<name>ft12-sim</name>
 	<comment></comment>
 	<projects>
+		<project>freebus-fts-knxcomm</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
