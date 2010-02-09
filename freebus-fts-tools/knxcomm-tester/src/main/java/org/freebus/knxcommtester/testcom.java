@@ -5,7 +5,6 @@ import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
-import org.freebus.ft12sim.FT12sim;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.telegram.Application;
@@ -20,7 +19,7 @@ public class testcom {
    private static BusInterface busInterface;
    private static Logger logger = Logger.getRootLogger();
    private static String ftscomComport = "COM4";
-   private static String FT12simComport = "COM5";
+
    public static void main(String[] args)  {
 	   try {
 		      SimpleLayout layout = new SimpleLayout();
@@ -34,9 +33,7 @@ public class testcom {
 		      System.out.println( ex );
 		    }
 		  
-		    Thread t = new Thread(new FT12sim(FT12simComport));
-		    t.start();
-
+		 
 		  
 	try {
 		busInterface = BusInterfaceFactory.newSerialInterface(ftscomComport);
