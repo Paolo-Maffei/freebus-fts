@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema targetNamespace="http://www.freebus.org/FT12sim" elementFormDefault="qualified" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:FT12sim="http://www.freebus.org/FT12sim">
+
+    <element name="sequences" type="FT12sim:sequences"></element>
+    
+    <complexType name="sequences">
+    	<sequence maxOccurs="unbounded" minOccurs="1">
+    		<element name="sequence" type="FT12sim:sequence"></element>
+    	</sequence>
+    </complexType>
+    
+    <complexType name="sequence">
+    	<sequence>
+            <element name="Discription" type="string" maxOccurs="1" minOccurs="1"></element>
+            <element name="resieve" type="FT12sim:frame" maxOccurs="1" minOccurs="1"></element>
+    		<element name="transmitframes" type="FT12sim:transmitframes"
+    			maxOccurs="1" minOccurs="1">
+    		</element>
+    	</sequence>
+    </complexType>
+
+
+    <complexType name="frame">
+    	<sequence>
+    		<element name="Telegram" type="FT12sim:Telegram"></element>
+    	</sequence>
+    </complexType>
+
+    <complexType name="transmitframes">
+    	<sequence>
+    		<element name="frame" type="FT12sim:frame" maxOccurs="unbounded" minOccurs="1"></element>
+    	</sequence>
+    </complexType>
+
+
+    <simpleType name="Telegram">
+    	<restriction base="string">
+    		<pattern value="[A-F 0-9]+"></pattern>
+    	</restriction>
+    </simpleType>
+</schema>
