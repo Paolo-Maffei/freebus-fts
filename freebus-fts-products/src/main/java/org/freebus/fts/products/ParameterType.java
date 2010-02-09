@@ -1,5 +1,8 @@
 package org.freebus.fts.products;
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -10,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -59,6 +63,10 @@ public class ParameterType
 
    @Column(name = "parameter_type_size")
    private int size;
+
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "parameter_type_id")
+   private Set<ParameterValue> values;
 
    /**
     * Create an empty parameter type.
@@ -165,6 +173,22 @@ public class ParameterType
    public void setMaxValue(double maxValue)
    {
       this.maxValue = maxValue;
+   }
+
+   /**
+    * @return the allowed values or null if no specific allowed values are set.
+    */
+   public Set<ParameterValue> getValues()
+   {
+      return values;
+   }
+
+   /**
+    * Set the allowed values or null if no specific allowed values are set.
+    */
+   public void setValues(Set<ParameterValue> values)
+   {
+      this.values = values;
    }
 
    /**

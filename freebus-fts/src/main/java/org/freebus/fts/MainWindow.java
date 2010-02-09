@@ -127,7 +127,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       final JMenu productsMenu = createJMenu(I18n.getMessage("MainWindow.ProductsMenu"));
       Actions.IMPORT_PRODUCTS.addTo(productsMenu);
+      productsMenu.addSeparator();
       Actions.BROWSE_PRODUCTS_VDX.addTo(productsMenu);
+      Actions.INSPECT_VDX_FILE.addTo(productsMenu);
 
       final JMenu viewMenu = createJMenu(I18n.getMessage("MainWindow.ViewMenu"));
       Actions.BUS_MONITOR.addTo(viewMenu);

@@ -1,5 +1,7 @@
 package org.freebus.fts.products;
 
+import java.io.File;
+
 import javax.persistence.PersistenceException;
 
 import org.freebus.fts.products.services.DAOException;
@@ -27,12 +29,24 @@ public final class ProductsManager
    /**
     * Get a products factory for the products stored in the given VDX file.
     * 
+    * @param file - the VDX file.
+    * @return the DAO factory for accessing the data in the file.
+    * @throws DAOException if the VDX file is not readable.
+    */
+   public static ProductsFactory getFactory(File file)
+   {
+      return new VdxProductsFactory(file);
+   }
+
+   /**
+    * Get a products factory for the products stored in the given VDX file.
+    * 
     * @param fileName - the name of the VDX file.
     * @return the DAO factory for accessing the data in the file.
     * @throws DAOException if the VDX file is not readable.
     */
    public static ProductsFactory getFactory(String fileName) throws PersistenceException
    {
-      return new VdxProductsFactory(fileName);
+      return getFactory(new File(fileName));
    }
 }

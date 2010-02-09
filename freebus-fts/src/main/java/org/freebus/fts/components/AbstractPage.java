@@ -1,6 +1,7 @@
 package org.freebus.fts.components;
 
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 
 
 /**
@@ -37,5 +38,25 @@ public abstract class AbstractPage extends JPanel
     */
    public void updateContents()
    {
+   }
+
+   /**
+    * Set the name of the page.
+    */
+   @Override
+   public void setName(String name)
+   {
+      super.setName(name);
+
+      if (!(getParent() instanceof JTabbedPane))
+         return;
+
+      final JTabbedPane parent = (JTabbedPane) getParent();
+      final int tabIndex = parent.indexOfComponent(this);
+      if (tabIndex >= 0)
+      {
+         parent.setTitleAt(tabIndex, name);
+         parent.getTabComponentAt(tabIndex).setName(name);
+      }
    }
 }

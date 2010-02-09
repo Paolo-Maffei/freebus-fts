@@ -1,5 +1,6 @@
 package org.freebus.fts.persistence.vdx;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.lang.annotation.Annotation;
@@ -36,17 +37,19 @@ public final class VdxFileReader
     * Create a new VDX-file reader object. The file <code>fileName</code> is read
     * upon creation.
     * 
+    * @param file is the file that shall be read.
+    * 
     * @throws IOException if the file cannot be read.
     */
-   public VdxFileReader(String fileName) throws IOException
+   public VdxFileReader(File file) throws IOException
    {
-      this.fileName = fileName;
+      this.fileName = file.getPath();
 
       try
       {
          // final ZipFileType zipFileType = ZipFileType.inspectFile(fileName);
 
-         in = new RandomAccessFile(fileName, "r");
+         in = new RandomAccessFile(file, "r");
          reader = new FileBlockReader(in, 1049600);
 
          scanHeader();
@@ -66,6 +69,19 @@ public final class VdxFileReader
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * Create a new VDX-file reader object. The file <code>fileName</code> is read
+    * upon creation.
+    * 
+    * @param fileName - the name of the file that shall be read.
+    * 
+    * @throws IOException if the file cannot be read.
+    */
+   public VdxFileReader(String fileName) throws IOException
+   {
+      this(new File(fileName));
    }
 
    /**

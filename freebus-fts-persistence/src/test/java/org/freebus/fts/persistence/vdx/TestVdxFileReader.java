@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Set;
 
@@ -23,7 +24,7 @@ public final class TestVdxFileReader
    @Before
    public void setUp() throws IOException
    {
-      reader = new VdxFileReader(vdxFileName);
+      reader = new VdxFileReader(new File(vdxFileName));
       assertEquals("5.10", reader.getVersion());
    }
 

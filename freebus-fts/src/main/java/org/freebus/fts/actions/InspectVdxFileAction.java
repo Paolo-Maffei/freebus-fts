@@ -10,22 +10,22 @@ import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.pages.ProductsImportBrowser;
+import org.freebus.fts.pages.InspectVdxFile;
 import org.freebus.fts.utils.VdxFileFilter;
 
 /**
- * Import products from of a VD_ file into the FTS database.
+ * Inspect the contents of a VD_ file.
  */
-public final class ImportProductsAction extends BasicAction
+public final class InspectVdxFileAction extends BasicAction
 {
-   private static final long serialVersionUID = 9028068427873919014L;
+   private static final long serialVersionUID = -7311738068495580033L;
 
    /**
     * Create an action object.
     */
-   ImportProductsAction()
+   InspectVdxFileAction()
    {
-      super(I18n.getMessage("ImportProductsAction.Name"), I18n.getMessage("ImportProductsAction.ToolTip"), ImageCache.getIcon("icons/filefind"));
+      super(I18n.getMessage("InspectVdxFileAction.Name"), I18n.getMessage("InspectVdxFileAction.ToolTip"), ImageCache.getIcon("icons/filefind"));
    }
 
    /**
@@ -42,7 +42,7 @@ public final class ImportProductsAction extends BasicAction
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
          dlg.addChoosableFileFilter(new VdxFileFilter());
-         dlg.setDialogTitle(I18n.getMessage("ImportProductsAction.openFileTitle"));
+         dlg.setDialogTitle(I18n.getMessage("InspectVdxFileAction.openFileTitle"));
 
          if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)
             return;
@@ -53,11 +53,11 @@ public final class ImportProductsAction extends BasicAction
          cfg.put("VdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 
-         MainWindow.getInstance().addPage(new ProductsImportBrowser(), file);
+         MainWindow.getInstance().addPage(new InspectVdxFile(), file);
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, "Failed to open products browser");
+         Dialogs.showExceptionDialog(e, "Failed to open vd_ file inspector");
       }
    }
 }

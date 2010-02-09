@@ -236,8 +236,16 @@ public class ProductsBrowser extends AbstractPage
       {
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-         if (obj instanceof File) productsFactory = ProductsManager.getFactory(((File) obj).getAbsolutePath());
-         else productsFactory = ProductsManager.getFactory();
+         if (obj instanceof File)
+         {
+            final File file = (File) obj;
+            setName(file.getName());
+            productsFactory = ProductsManager.getFactory(file);
+         }
+         else
+         {
+            productsFactory = ProductsManager.getFactory();
+         }
       }
       catch (Exception e)
       {

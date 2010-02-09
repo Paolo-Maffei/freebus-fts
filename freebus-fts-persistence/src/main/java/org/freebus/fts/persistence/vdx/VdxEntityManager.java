@@ -1,5 +1,6 @@
 package org.freebus.fts.persistence.vdx;
 
+import java.io.File;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -40,6 +41,41 @@ public final class VdxEntityManager
    /**
     * Create an entity-manager object that works on the VD_ file fileName
     * 
+    * @param file - The VD_ file that is processed.
+    * @param persistenceUnitName -The name of the persistence unit in
+    *           persistence.xml
+    * 
+    * @throws PersistenceException
+    */
+   public VdxEntityManager(File file, String persistenceUnitName) throws PersistenceException
+   {
+      inspector = new VdxEntityInspector(persistenceUnitName);
+      try
+      {
+         reader = new VdxFileReader(file);
+      }
+      catch (IOException e)
+      {
+         throw new PersistenceException("Failed to read file " + file.getName(), e);
+      }
+   }
+
+   /**
+    * Create an entity-manager object that works on the VD_ file fileName and
+    * uses the default persistence-unit of persistence.xml.
+    * 
+    * @param file - The VD_ file that is processed.
+    * 
+    * @throws PersistenceException
+    */
+   public VdxEntityManager(File file) throws PersistenceException
+   {
+      this(file, "default");
+   }
+
+   /**
+    * Create an entity-manager object that works on the VD_ file fileName
+    * 
     * @param fileName - The name of the VD_ file that is processed.
     * @param persistenceUnitName -The name of the persistence unit in
     *           persistence.xml
@@ -48,15 +84,7 @@ public final class VdxEntityManager
     */
    public VdxEntityManager(String fileName, String persistenceUnitName) throws PersistenceException
    {
-      inspector = new VdxEntityInspector(persistenceUnitName);
-      try
-      {
-         reader = new VdxFileReader(fileName);
-      }
-      catch (IOException e)
-      {
-         throw new PersistenceException("Failed to read file " + fileName, e);
-      }
+      this(new File(fileName), persistenceUnitName);
    }
 
    /**
@@ -69,7 +97,7 @@ public final class VdxEntityManager
     */
    public VdxEntityManager(String fileName) throws PersistenceException
    {
-      this(fileName, "default");
+      this(new File(fileName));
    }
 
    /**

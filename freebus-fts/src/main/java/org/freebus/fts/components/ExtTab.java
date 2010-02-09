@@ -29,7 +29,8 @@ class ExtTab extends JPanel
    private static final Icon closeButtonHighliteIcon = ImageCache.getIcon("gui-images/tab-close-highlite");
    private static final Icon closeButtonDimmedIcon = ImageCache.getIcon("gui-images/tab-close-dimmed");
    private final JTabbedPane pane;
-   private final TabButton closeButton;
+   private final CloseButton closeButton;
+   private final JLabel lblTitle;
 
    /**
     * Create a flexi-tab object.
@@ -41,17 +42,20 @@ class ExtTab extends JPanel
    public ExtTab(String title, JTabbedPane pane, Icon icon, boolean closable)
    {
       super(new BorderLayout(4, 0));
-//      setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
+      // setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
       this.pane = pane;
 
       setOpaque(false);
 
-      add(new JLabel(title), BorderLayout.CENTER);
-      if (icon != null) add(new JLabel(icon), BorderLayout.WEST);
+      lblTitle = new JLabel(title);
+      add(lblTitle, BorderLayout.CENTER);
+
+      if (icon != null)
+         add(new JLabel(icon), BorderLayout.WEST);
 
       if (closable)
       {
-         closeButton = new TabButton();
+         closeButton = new CloseButton();
          add(closeButton, BorderLayout.EAST);
       }
       else
@@ -71,11 +75,24 @@ class ExtTab extends JPanel
       this(title, pane, null, closable);
    }
 
-   private class TabButton extends JButton implements ActionListener
+   /**
+    * Set the name of the tab. This is also the displayed label.
+    */
+   @Override
+   public void setName(String name)
+   {
+      super.setName(name);
+      lblTitle.setText(name);
+   }
+
+   /**
+    * Internal class of {@link ExtTab} for the close button.
+    */
+   private class CloseButton extends JButton implements ActionListener
    {
       private static final long serialVersionUID = -1335643238071282239L;
 
-      public TabButton()
+      public CloseButton()
       {
          int size = 17;
          setPreferredSize(new Dimension(size, size));
@@ -93,7 +110,8 @@ class ExtTab extends JPanel
       public void actionPerformed(ActionEvent e)
       {
          int i = pane.indexOfTabComponent(ExtTab.this);
-         if (i != -1) pane.remove(i);
+         if (i != -1)
+            pane.remove(i);
       }
 
       @Override

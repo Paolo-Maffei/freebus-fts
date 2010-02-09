@@ -1,5 +1,6 @@
 package org.freebus.fts.products.services.vdx;
 
+import java.io.File;
 import java.io.IOException;
 
 import javax.persistence.EntityTransaction;
@@ -38,15 +39,15 @@ public final class VdxProductsFactory implements ProductsFactory
    /**
     * Create a factory for the file fileName.
     * 
-    * @param fileName - the name of the vd_ file that is processed.
+    * @param file - the vd_ file that is processed.
     * @throws DAOException
     */
-   public VdxProductsFactory(String fileName) throws PersistenceException
+   public VdxProductsFactory(File file) throws PersistenceException
    {
       try
       {
-         manager = new VdxEntityManager(fileName);
-         reader = new VdxFileReader(fileName);
+         manager = new VdxEntityManager(file);
+         reader = new VdxFileReader(file);
       }
       catch (IOException e)
       {

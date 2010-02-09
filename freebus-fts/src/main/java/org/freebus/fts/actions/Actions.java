@@ -26,6 +26,9 @@ public enum Actions
    /** Import products from of a VD_ file into the FTS database. */
    IMPORT_PRODUCTS(new ImportProductsAction()),
 
+   /** Inspect the contents of a VD_ file. */
+   INSPECT_VDX_FILE(new InspectVdxFileAction()),
+
    /** Open the logical structure of the project. */
    LOGICAL_VIEW(new LogicalViewAction()),
 

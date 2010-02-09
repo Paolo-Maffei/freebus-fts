@@ -4,8 +4,14 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * Values of a parameter type.
@@ -17,25 +23,28 @@ public class ParameterValue implements Serializable
    private static final long serialVersionUID = -8116925766267246754L;
 
    @Id
-   @Column(name = "parameter_value_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenParameterValueId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "parameter_value_id", nullable = false)
    private int id;
 
-   @Column(name = "parameter_type_id", columnDefinition = "INT", nullable = false)
-   private int parameterTypeId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @JoinColumn(name = "parameter_type_id", nullable = false)
+   private ParameterType parameterType;
 
    @Column(name = "displayed_value")
    private String displayedValue;
 
-   @Column(name = "display_oder", columnDefinition = "SMALLINT")
+   @Column(name = "display_oder")
    private int displayOrder;
 
-   @Column(name = "real_value", columnDefinition = "INT")
+   @Column(name = "real_value")
    private int intValue;
 
    @Column(name = "binary_value")
    private String binaryValue;
 
-   @Column(name = "double_value", columnDefinition = "DOUBLE")
+   @Column(name = "double_value")
    private double doubleValue;
 
    /**
@@ -55,19 +64,19 @@ public class ParameterValue implements Serializable
    }
 
    /**
-    * @return the parameterTypeId
+    * @return the parameter type to which this object belongs.
     */
-   public int getParameterTypeId()
+   public ParameterType getParameterType()
    {
-      return parameterTypeId;
+      return parameterType;
    }
 
    /**
-    * @param parameterTypeId the parameterTypeId to set
+    * Set the parameter type to which this object belongs.
     */
-   public void setParameterTypeId(int parameterTypeId)
+   public void setParameterType(ParameterType parameterType)
    {
-      this.parameterTypeId = parameterTypeId;
+      this.parameterType = parameterType;
    }
 
    /**
@@ -148,5 +157,14 @@ public class ParameterValue implements Serializable
    public void setDoubleValue(double doubleValue)
    {
       this.doubleValue = doubleValue;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 }

@@ -4,6 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.File;
 import java.util.List;
 import java.util.Set;
 
@@ -27,21 +28,21 @@ public class TestVdxEntityManager
    @Test(expected = PersistenceException.class)
    public final void testVdxEntityManagerUnknownFile() throws Exception
    {
-      new VdxEntityManager("unknown-file.vd_");
+      new VdxEntityManager(new File("unknown-file.vd_"));
    }
 
    
    @Test(expected = PersistenceException.class)
    public final void testVdxEntityManagerUnknownUnit() throws Exception
    {
-      new VdxEntityManager("src/test/resources/test-file.vd_", "unknown-unit");
+      new VdxEntityManager(new File("src/test/resources/test-file.vd_"), "unknown-unit");
    }
 
    
    @Test(expected = PersistenceException.class)
    public final void testVdxEntityManagerDuplicateEntities() throws Exception
    {
-      new VdxEntityManager("src/test/resources/test-file.vd_", "duplicate-entities");
+      new VdxEntityManager(new File("src/test/resources/test-file.vd_"), "duplicate-entities");
    }
 
    @Test(expected = PersistenceException.class)
@@ -61,7 +62,7 @@ public class TestVdxEntityManager
    @Test
    public final void testFetchAllSimple() throws Exception
    {
-      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      final VdxEntityManager mgr = new VdxEntityManager(new File("src/test/resources/test-file.vd_"));
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
