@@ -7,6 +7,7 @@ import org.apache.log4j.BasicConfigurator;
 import org.freebus.knxcomm.serial.SerialPortUtil;
 import org.freebus.knxcomm.serial.SerialPortWrapper;
 
+
 public class FT12sim implements Runnable
 {
    static SerialPortWrapper port;
@@ -14,7 +15,8 @@ public class FT12sim implements Runnable
    static OutputStream out;
    static FT12replay ft12replay;
    static String comport;
-
+   private static String ftscomComport;
+   private static Config cfg;
    static
    {
       // Configure Log4J
@@ -31,7 +33,9 @@ public class FT12sim implements Runnable
    public static void main(String[] args) throws Exception
    {
       //opencomport("/dev/ttyS0");  // Linux Default
-      opencomport("COM4");
+	   cfg = new Config();
+	   ftscomComport = cfg.get("comport");
+      opencomport(ftscomComport);
       ft12replay = new FT12replay(in, out);
    }
 

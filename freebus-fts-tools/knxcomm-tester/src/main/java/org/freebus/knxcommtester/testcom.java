@@ -1,10 +1,12 @@
 package org.freebus.knxcommtester;
 
 
+
 import org.apache.log4j.ConsoleAppender;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
+
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.telegram.Application;
@@ -18,9 +20,14 @@ public class testcom {
    private static int sequence = 0;
    private static BusInterface busInterface;
    private static Logger logger = Logger.getRootLogger();
-   private static String ftscomComport = "COM4";
-
-   public static void main(String[] args)  {
+   private static String ftscomComport;
+   
+   
+  
+   private static Config cfg;
+   public static void main(String[] args) throws Exception{
+	   cfg = new Config();
+	   ftscomComport = cfg.get("comport");
 	   try {
 		      SimpleLayout layout = new SimpleLayout();
 		      ConsoleAppender consoleAppender = new ConsoleAppender( layout );
@@ -36,6 +43,7 @@ public class testcom {
 		 
 		  
 	try {
+		logger.info("Try to open com " +ftscomComport );
 		busInterface = BusInterfaceFactory.newSerialInterface(ftscomComport);
 		logger.info("Start test com");
 		busInterface.open();
@@ -57,8 +65,9 @@ public class testcom {
     
 			busInterface.send(telegram);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
    }
+   
+ 
 }
