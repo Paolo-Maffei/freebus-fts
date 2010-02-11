@@ -36,7 +36,7 @@ public class VirtualDevice
    public CatalogEntry catalogEntry;
 
    @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = FunctionalEntity.class)
-   @JoinColumn(name = "functional_entity_id", nullable = false)
+   @JoinColumn(name = "functional_entity_id", nullable = false, referencedColumnName = "functional_entity_id")
    public FunctionalEntity functionalEntity;
 
    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)

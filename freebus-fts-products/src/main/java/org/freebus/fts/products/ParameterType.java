@@ -49,11 +49,21 @@ public class ParameterType
    @Column(name = "parameter_type_name", nullable = false)
    private String name;
 
-   @Column(name = "minimum_value")
-   private double minValue;
+   @VdxField(name = "parameter_minimum_value")
+   @Column(name = "min_value")
+   private int minValue;
 
-   @Column(name = "maximum_value")
-   private double maxValue;
+   @VdxField(name = "parameter_maximum_value")
+   @Column(name = "max_value")
+   private int maxValue;
+
+   @VdxField(name = "parameter_minimum_double_value")
+   @Column(name = "min_double_value")
+   private double minDoubleValue;
+
+   @VdxField(name = "parameter_maximum_double_value")
+   @Column(name = "max_double_value")
+   private double maxDoubleValue;
 
    @Column(name = "parameter_type_low_access")
    private int lowAccess;
@@ -140,39 +150,67 @@ public class ParameterType
    }
 
    /**
-    * @return the minimum value. The minimum value is always a double, even for integer
-    * parameters.
+    * @return the minimum value.
     */
-   public double getMinValue()
+   public int getMinValue()
    {
       return minValue;
    }
 
    /**
-    * Set the minimum value. The minimum value is always a double, even for integer
-    * parameters.
+    * Set the minimum value.
     */
-   public void setMinValue(double minValue)
+   public void setMinValue(int minValue)
    {
       this.minValue = minValue;
    }
 
    /**
-    * @return the maximum value. The maximum value is always a double, even for integer
-    * parameters.
+    * @return the maximum value.
     */
-   public double getMaxValue()
+   public int getMaxValue()
    {
       return maxValue;
    }
 
    /**
-    * Set the maximum value. The maximum value is always a double, even for integer
-    * parameters.
+    * Set the maximum value.
     */
-   public void setMaxValue(double maxValue)
+   public void setMaxValue(int maxValue)
    {
       this.maxValue = maxValue;
+   }
+
+   /**
+    * @return the minimum double value.
+    */
+   public double getMinDoubleValue()
+   {
+      return minDoubleValue;
+   }
+
+   /**
+    * Set the minimum value.
+    */
+   public void setMinDoubleValue(double minValue)
+   {
+      this.minDoubleValue = minValue;
+   }
+
+   /**
+    * @return the maximum value.
+    */
+   public double getMaxDoubleValue()
+   {
+      return maxDoubleValue;
+   }
+
+   /**
+    * Set the maximum value.
+    */
+   public void setMaxDoubleValue(double maxValue)
+   {
+      this.maxDoubleValue = maxValue;
    }
 
    /**
@@ -224,7 +262,7 @@ public class ParameterType
    }
 
    /**
-    * @return the size
+    * @return the size of the parameter in bits.
     */
    public int getSize()
    {
@@ -232,6 +270,7 @@ public class ParameterType
    }
 
    /**
+    * Set the size of the parameter in bits.
     * @param size the size to set
     */
    public void setSize(int size)

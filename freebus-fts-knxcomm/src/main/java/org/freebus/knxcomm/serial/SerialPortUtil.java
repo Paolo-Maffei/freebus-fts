@@ -17,11 +17,9 @@ public final class SerialPortUtil
 {
    private static boolean serialPortLibLoaded = false;
 
-   /**
-    * Ensure that the native serial port library is loaded.
-    */
    static
    {
+      // Ensure that the native serial port library is loaded.
       SerialPortUtil.loadSerialPortLib();
    }
 

@@ -1,5 +1,7 @@
 package org.freebus.fts.products;
 
+import java.util.Set;
+
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,6 +13,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
 
 /**
  * A parameter of a program.
@@ -52,8 +55,8 @@ public class Parameter
    @JoinColumn(name = "par_parameter_id", nullable = true)
    private Parameter parent;
 
-   @Column(name = "parent_parm_value", columnDefinition = "INT")
-   private int parentValue;
+   @Column(name = "parent_parm_value", nullable = true)
+   private Integer parentValue;
 
    @Column(name = "parameter_size", columnDefinition = "SMALLINT")
    private int size;
@@ -61,16 +64,16 @@ public class Parameter
    @Column(name = "parameter_function")
    private String function;
 
-   @Column(name = "parameter_display_order", columnDefinition = "INT")
+   @Column(name = "parameter_display_order")
    private int displayOrder;
 
-   @Column(name = "parameter_address", columnDefinition = "INT")
-   private int address;
+   @Column(name = "parameter_address")
+   private Integer address;
 
    @Column(name = "parameter_bitoffset", columnDefinition = "SMALLINT")
    private int bitOffset;
 
-   @Column(name = "parameter_default_long", columnDefinition = "INT")
+   @Column(name = "parameter_default_long")
    private int defaultLong;
 
    @Column(name = "parameter_default_string")
@@ -84,6 +87,9 @@ public class Parameter
 
    @Column(name = "address_space", columnDefinition = "SMALLINT")
    private int addressSpace;
+
+   @Transient
+   private Set<Parameter> childs;
 
    /**
     * @return the id
@@ -216,7 +222,7 @@ public class Parameter
    /**
     * @return the parent parameter
     */
-   public Parameter getParentId()
+   public Parameter getParent()
    {
       return parent;
    }
@@ -224,23 +230,57 @@ public class Parameter
    /**
     * Set the parent parameter.
     */
-   public void setParentId(Parameter parent)
+   public void setParent(Parameter parent)
    {
       this.parent = parent;
    }
 
    /**
-    * @return the parentValue
+    * Lazily acquire all child parameters. Requires that the owning program is
+    * set. Calls {@link Program#updateChildParameters()} to update the child
+    * parameters, if required.
+    * 
+    * @return The set of child parameters.
+    * 
+    * @see {@link #getProgram()}, {@link #setProgram(Program)}.
     */
-   public int getParentValue()
+   public Set<Parameter> getChildren()
+   {
+      if (childs == null && program != null)
+         program.updateChildParameters();
+
+      return childs;
+   }
+
+   /**
+    * Set the child parameters. This method is intended to be used by
+    * {@link Program#updateChildParameters()} only.
+    */
+   public void setChildren(Set<Parameter> childs)
+   {
+      this.childs = childs;
+   }
+
+   /**
+    * Test if the parameter has children.
+    */
+   public boolean hasChildren()
+   {
+      return !getChildren().isEmpty();
+   }
+
+   /**
+    * @return the parent parameter value, or null if undefined.
+    */
+   public Integer getParentValue()
    {
       return parentValue;
    }
 
    /**
-    * @param parentValue the parentValue to set
+    * Set the parent parameter value. May be null, if undefined.
     */
-   public void setParentValue(int parentValue)
+   public void setParentValue(Integer parentValue)
    {
       this.parentValue = parentValue;
    }
@@ -294,17 +334,17 @@ public class Parameter
    }
 
    /**
-    * @return the address
+    * @return the address, may be null.
     */
-   public int getAddress()
+   public Integer getAddress()
    {
       return address;
    }
 
    /**
-    * @param address the address to set
+    * @param address the address to set, may be null.
     */
-   public void setAddress(int address)
+   public void setAddress(Integer address)
    {
       this.address = address;
    }
@@ -323,6 +363,31 @@ public class Parameter
    public void setBitOffset(int bitOffset)
    {
       this.bitOffset = bitOffset;
+   }
+
+   /**
+    * Returns the default value. Depending on the atomic type of
+    * the parameter value this can be an {@link Integer}, {@link String},
+    * {@link Double} or <code>null</code>.
+    * 
+    * @return the default value.
+    */
+   public Object getDefault()
+   {
+      if (parameterType == null)
+         return null;
+
+      final ParameterAtomicType atomicType = parameterType.getAtomicType();
+
+      if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED ||
+            atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
+         return defaultLong;
+      else if (atomicType == ParameterAtomicType.STRING)
+         return defaultString;
+//      else if (atomicType == ParameterAtomicType.DOUBLE)
+//         return defaultDouble;
+
+      return null;
    }
 
    /**
@@ -420,13 +485,17 @@ public class Parameter
    @Override
    public boolean equals(Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof Parameter)) return false;
+      if (o == this)
+         return true;
+      if (!(o instanceof Parameter))
+         return false;
 
       final Parameter oo = (Parameter) o;
-      if (program == null && oo.program != null) return false;
-      if (name == null && oo.name != null) return false;
-      return id == oo.id && program.equals(oo.program) && name.equals(oo.name);
+      if (program == null && oo.program != null)
+         return false;
+      if (name == null && oo.name != null)
+         return false;
+      return id == oo.id && name.equals(oo.name) && program.equals(oo.program);
    }
 
    /**

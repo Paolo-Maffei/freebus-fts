@@ -5,7 +5,7 @@ import java.awt.event.ActionEvent;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.pages.ProductsToProjectBrowser;
+import org.freebus.fts.pages.AddVirtualDeviceBrowser;
 
 /**
  * Open a products browser that allows adding devices to the current project.
@@ -29,10 +29,10 @@ public final class AddDevicesAction extends BasicAction
    public void actionPerformed(ActionEvent event)
    {
       final MainWindow mainWin = MainWindow.getInstance();
-      final ProductsToProjectBrowser page;
+      final AddVirtualDeviceBrowser page;
 
-      mainWin.showUniquePage(ProductsToProjectBrowser.class, null);
-      page = (ProductsToProjectBrowser) mainWin.getUniquePage(ProductsToProjectBrowser.class);
+      mainWin.showUniquePage(AddVirtualDeviceBrowser.class, null);
+      page = (AddVirtualDeviceBrowser) mainWin.getUniquePage(AddVirtualDeviceBrowser.class);
       page.setProjectController(mainWin);
    }
 }

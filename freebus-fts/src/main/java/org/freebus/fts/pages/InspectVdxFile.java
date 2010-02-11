@@ -46,7 +46,7 @@ public class InspectVdxFile extends AbstractPage
 {
    private static final long serialVersionUID = 244934403536467189L;
 
-   private VdxFileReader reader;
+   private transient VdxFileReader reader;
 
    private final JCheckBox cbxTablesSorted = new JCheckBox();
    private final JComboBox cboTables = new JComboBox();
@@ -198,14 +198,23 @@ public class InspectVdxFile extends AbstractPage
                final VdxSection section = reader.getSection(selectedTableName);
 
                // Find a suitable key field
-               int keyIdx = 0;
+               int keyIdx = header.getIndexOf(selectedTableName + "_id");
                int nameIdx = -1;
-               for (int idx = header.fields.length - 1; idx >= 0; --idx)
+               final int numFields = header.fields.length;
+               for (int idx =  0; idx < numFields && (keyIdx < 0 || nameIdx < 0); ++idx)
                {
                   final String fieldName = header.fields[idx].toLowerCase();
-                  if (fieldName.endsWith("_name")) nameIdx = idx;
-                  else if (fieldName.endsWith("_id")) keyIdx = idx;
+
+                  if (nameIdx < 0)
+                  {
+                     if (fieldName.endsWith("_name")) nameIdx = idx;
+                     else if (fieldName.endsWith("text")) nameIdx = idx;
+                     else if (fieldName.startsWith("display")) nameIdx = idx;
+                  }
+
+                  if (keyIdx < 0 && fieldName.endsWith("_id")) keyIdx = idx;
                }
+               if (keyIdx < 0) keyIdx = 0;
 
                int numRecords = section.getNumElements();
                if (numRecords > maxRecords) numRecords = maxRecords;

@@ -323,7 +323,15 @@ public final class VdxEntityManager
 
             final Class<?> type = field.getType();
 
-            if (type == Integer.class || type == int.class)
+            if (type == Integer.class)
+            {
+               if (value.isEmpty())
+                  field.set(obj, null);
+               else if (value.indexOf('.') >= 0)
+                  field.set(obj, new Integer((int) Double.parseDouble(value)));
+               else field.set(obj, new Integer(Integer.parseInt(value)));
+            }
+            else if (type == int.class)
             {
                if (value.isEmpty())
                   field.setInt(obj, 0);

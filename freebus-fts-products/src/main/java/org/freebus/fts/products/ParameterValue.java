@@ -29,7 +29,7 @@ public class ParameterValue implements Serializable
    private int id;
 
    @ManyToOne(optional = false, fetch = FetchType.LAZY)
-   @JoinColumn(name = "parameter_type_id", nullable = false)
+   @JoinColumn(name = "parameter_type_id", nullable = false, referencedColumnName = "parameter_type_id")
    private ParameterType parameterType;
 
    @Column(name = "displayed_value")

@@ -13,12 +13,12 @@ import org.freebus.fts.products.VirtualDevice;
 
 
 /**
- * A products browser that has a button which imports the current
- * product into the project.
+ * A virtual-device browser that has a button which imports the current
+ * virtual-device into the project.
  * 
  * Requires that a project controller is set with {@link #setProjectController}.
  */
-public class ProductsToProjectBrowser extends ProductsBrowser
+public class AddVirtualDeviceBrowser extends ProductsBrowser
 {
    private static final long serialVersionUID = 5704775166874780673L;
 
@@ -28,7 +28,7 @@ public class ProductsToProjectBrowser extends ProductsBrowser
    /**
     * Create a products browser. 
     */
-   public ProductsToProjectBrowser()
+   public AddVirtualDeviceBrowser()
    {
       super();
       setName(I18n.getMessage("ProductsToProjectBrowser.Title"));

@@ -42,7 +42,7 @@ public class ProductsImportBrowser extends ProductsBrowser
       super();
       
       final Box boxBottom = getBottomBox();
-      boxBottom.setVisible(true);
+      boxBottom.setVisible(false);
       boxBottom.add(Box.createHorizontalGlue());
       boxBottom.add(cbxImport);
       boxBottom.add(Box.createHorizontalStrut(20));

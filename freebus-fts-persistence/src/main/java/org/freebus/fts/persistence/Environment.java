@@ -32,6 +32,15 @@ public final class Environment
    }
 
    /**
+    * Ensure that the environment is properly loaded. Do not be mistaken that
+    * this method is empty - it ensures that the class' static initializers have
+    * been executed.
+    */
+   public static void init()
+   {
+   }
+
+   /**
     * @return the name of the operating system.
     */
    public static String getOS()
@@ -56,8 +65,9 @@ public final class Environment
    }
 
    /**
-    * Returns the application's user-data directory. The name of the directory depends
-    * on the platform and uses the application name (see {@link setAppName}).
+    * Returns the application's user-data directory. The name of the directory
+    * depends on the platform and uses the application name (see
+    * {@link setAppName}).
     * 
     * @return the directory for application specific user data.
     */
@@ -89,7 +99,7 @@ public final class Environment
     */
    public static void setAppName(String appName)
    {
-      appName = appName.replace('\\', '-').replace('/',  '-').replace(':',  '-').replace(' ',  '_');
+      appName = appName.replace('\\', '-').replace('/', '-').replace(':', '-').replace(' ', '_');
       Environment.appName = appName;
       appDir = null;
    }

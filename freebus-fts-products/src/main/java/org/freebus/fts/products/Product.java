@@ -12,10 +12,9 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 /**
- * A Product contains the hardware details about a device,
- * taken from a .vdx or .xml specification file (HW_PRODUCTS section).
- * This is not a device that gets installed, it is the technical description
- * of the hardware.
+ * A Product contains the hardware details about a device, taken from a .VD_
+ * specification file (HW_PRODUCTS section). This is not a device that gets
+ * installed, it is the technical description of the hardware.
  */
 @Entity
 @Table(name = "hw_product")
@@ -46,7 +45,7 @@ public class Product
     * Create an empty product object.
     */
    public Product()
-   {      
+   {
    }
 
    /**
@@ -106,7 +105,7 @@ public class Product
    {
       return serial;
    }
-   
+
    /**
     * Set the current that the product requires, in milli-ampere.
     */

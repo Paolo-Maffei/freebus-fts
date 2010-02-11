@@ -384,6 +384,8 @@ public class SortedListModel extends AbstractListModel
 
    class SortedListEntry implements Comparable
    {
+      private int index;
+
       @SuppressWarnings("unused")
       private SortedListEntry()
       {
@@ -404,6 +406,7 @@ public class SortedListModel extends AbstractListModel
          this.index = index;
       }
 
+      @Override
       public int compareTo(Object o)
       {
          // retrieve the element that this entry points to
@@ -434,6 +437,16 @@ public class SortedListModel extends AbstractListModel
          return comparison;
       }
 
-      private int index;
+      @Override
+      public boolean equals(Object o)
+      {
+         return compareTo(o) == 0;
+      }
+
+      @Override
+      public int hashCode()
+      {
+         return index;
+      }
    }
 }
