@@ -1,9 +1,11 @@
-package test_tools;
+package non_unit_tests;
 
 import java.awt.BorderLayout;
 import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
@@ -39,6 +41,10 @@ public class DeviceEditor
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setTitle(appTitle);
       frame.setLayout(new BorderLayout());
+
+      final JLabel lbl = new JLabel("<html><h3>Device Editor</h3><p>This is a standalone test program to test the parameter editor of FTS.</p></html>");
+      lbl.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
+      frame.add(lbl, BorderLayout.NORTH);
 
       frame.add(progEdit, BorderLayout.CENTER);
 
