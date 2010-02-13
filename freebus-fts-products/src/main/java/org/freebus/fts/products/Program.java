@@ -75,6 +75,10 @@ public class Program
    @JoinColumn(name = "program_id", nullable = false)
    private Set<Parameter> parameters;
 
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "program_id", nullable = false)
+   private Set<CommunicationObject> communicationObjects;
+
    @Lob
    @Column(name = "eeprom_data")
    private byte[] eepromData;
@@ -355,6 +359,24 @@ public class Program
    public Set<Parameter> getParameters()
    {
       return parameters;
+   }
+
+   /**
+    * Set the communication objects of the program.
+    * 
+    * @param communicationObjects the set of communication objects.
+    */
+   public void setCommunicationObjects(Set<CommunicationObject> communicationObjects)
+   {
+      this.communicationObjects = communicationObjects;
+   }
+
+   /**
+    * @return the communication objects of the program.
+    */
+   public Set<CommunicationObject> getCommunicationObjects()
+   {
+      return communicationObjects;
    }
 
    /**

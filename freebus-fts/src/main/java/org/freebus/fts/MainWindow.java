@@ -201,7 +201,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    @Override
    public void addDevice(VirtualDevice virtualDevice)
    {
-      final Device device = new Device(virtualDevice);
+      final Device device = new Device(0, virtualDevice);
 
       final TopologyView topologyView = (TopologyView) getUniquePage(TopologyView.class);
       if (topologyView == null) return;

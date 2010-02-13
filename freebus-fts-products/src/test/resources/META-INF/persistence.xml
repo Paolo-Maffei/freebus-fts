@@ -7,6 +7,7 @@
  <persistence-unit name="default" transaction-type="RESOURCE_LOCAL">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <class>org.freebus.fts.products.CatalogEntry</class>
+  <class>org.freebus.fts.products.CommunicationObject</class>
   <class>org.freebus.fts.products.FunctionalEntity</class>
   <class>org.freebus.fts.products.Manufacturer</class>
   <class>org.freebus.fts.products.Parameter</class>

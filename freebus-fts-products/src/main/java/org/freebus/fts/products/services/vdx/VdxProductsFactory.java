@@ -1,13 +1,11 @@
 package org.freebus.fts.products.services.vdx;
 
 import java.io.File;
-import java.io.IOException;
 
 import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
 import org.freebus.fts.persistence.vdx.VdxEntityManager;
-import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;
@@ -25,8 +23,7 @@ import org.freebus.fts.products.services.VirtualDeviceService;
  */
 public final class VdxProductsFactory implements ProductsFactory
 {
-   private VdxFileReader reader;
-   private VdxEntityManager manager;
+   private final VdxEntityManager manager;
    private VdxEntityTransaction transaction = new VdxEntityTransaction();
 
    private CatalogEntryService catalogEntryService;
@@ -44,15 +41,7 @@ public final class VdxProductsFactory implements ProductsFactory
     */
    public VdxProductsFactory(File file) throws PersistenceException
    {
-      try
-      {
-         manager = new VdxEntityManager(file);
-         reader = new VdxFileReader(file);
-      }
-      catch (IOException e)
-      {
-         throw new PersistenceException(e);
-      }
+      manager = new VdxEntityManager(file);
    }
 
    @Override
@@ -79,7 +68,7 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public ProductDescriptionService getProductDescriptionService()
    {
-      if (productDescriptionService == null) productDescriptionService = new VdxProductDescriptionService(reader);
+      if (productDescriptionService == null) productDescriptionService = new VdxProductDescriptionService(manager.getReader());
       return productDescriptionService;
    }
 
@@ -93,7 +82,7 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public ProgramService getProgramService()
    {
-      if (programService == null) programService = new VdxProgramService(reader);
+      if (programService == null) programService = new VdxProgramService(manager.getReader());
       return programService;
    }
 

@@ -1,15 +1,25 @@
 package org.freebus.fts.project;
 
+import java.util.Map;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.MapKey;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 
@@ -30,9 +40,13 @@ public final class Device
    @Column(name = "device_address", nullable = false)
    private int address;
 
-   @ManyToOne(optional = true)
-   @JoinColumn(name = "virtual_device_id")
-   private VirtualDevice virtualDevice;
+   @ManyToOne(fetch = FetchType.LAZY, optional = false)
+   @JoinColumn(name = "catalog_entry_id", nullable = false)
+   public CatalogEntry catalogEntry;
+
+   @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "program_id", nullable = true)
+   private Program program;
 
    @ManyToOne(optional = false)
    @JoinColumn(name = "line_id")
@@ -42,6 +56,10 @@ public final class Device
    @JoinColumn(name = "room_id")
    private Room room;
 
+   @OneToMany(mappedBy = "device", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @MapKey(name = "parameter")
+   private Map<Parameter,DeviceParameterValue> parameterValues;
+
    /**
     * Create an empty device object.
     */
@@ -50,20 +68,34 @@ public final class Device
    }
 
    /**
-    * Create a device object from a virtual device.
+    * Create a device object.
     */
-   public Device(VirtualDevice virtualDevice)
+   public Device(int id, CatalogEntry catalogEntry, Program program)
    {
-      this.virtualDevice = virtualDevice;
+      this.id = id;
+      this.catalogEntry = catalogEntry;
+      this.program = program;
    }
 
    /**
     * Create a device object.
     */
+   public Device(CatalogEntry catalogEntry, Program program)
+   {
+      this(0, catalogEntry, program);
+   }
+
+   /**
+    * Create a device object by using {@link CatalogEntry} and {@link Program}
+    * of a given {@link VirtualDevice}.
+    * 
+    * @param id the id of the object
+    * @param virtualDevice the virtual device, from which the
+    *           {@link CatalogEntry} and {@link Program} are taken.
+    */
    public Device(int id, VirtualDevice virtualDevice)
    {
-      this.id = id;
-      this.virtualDevice = virtualDevice;
+      this(id, virtualDevice.getCatalogEntry(), virtualDevice.getProgram());
    }
 
    /**
@@ -112,24 +144,6 @@ public final class Device
    }
 
    /**
-    * Set the id of the {@link VirtualDevice} virtual device.
-    * 
-    * @param virtualDevice - the virtual device.
-    */
-   public void setVirtualDevice(VirtualDevice virtualDevice)
-   {
-      this.virtualDevice = virtualDevice;
-   }
-
-   /**
-    * @return the virtual device.
-    */
-   public VirtualDevice getVirtualDevice()
-   {
-      return virtualDevice;
-   }
-
-   /**
     * @return the line to which the device belongs.
     */
    public Line getLine()
@@ -162,15 +176,107 @@ public final class Device
    }
 
    /**
+    * @return the catalog entry of the device.
+    */
+   public CatalogEntry getCatalogEntry()
+   {
+      return catalogEntry;
+   }
+
+   /**
+    * Set the catalog entry of the device.
+    */
+   public void setCatalogEntry(CatalogEntry catalogEntry)
+   {
+      this.catalogEntry = catalogEntry;
+   }
+
+   /**
+    * @return the program of the device.
+    */
+   public Program getProgram()
+   {
+      return program;
+   }
+
+   /**
+    * Set the program of the device. You should consider calling
+    * {@link #clearDeviceParameterValues()} when changing the program.
+    */
+   public void setProgram(Program program)
+   {
+      this.program = program;
+   }
+
+   /**
+    * Returns the value for the parameter <code>param</code>. If the parameter
+    * has no value set, the parameter's default value is returned. The returned
+    * object can be {@link Integer}, {@link Double}, or {@link String}, depending
+    * on the parameter's {@link ParameterAtomicType}.
+    * 
+    * @param param the parameter whose value is requested.
+    * @param valueClass the class that the value is expected to have.
+    * 
+    * @return the parameter's value.
+    */
+   public <T extends Object> T getParameterValue(final Parameter param, Class<T> valueClass)
+   {
+//      T result;
+      // TODO
+
+//      if (parameterValues.contains(param))
+//      {
+//         T result = (T) parameterValues.get(param);
+//      }
+
+//      final VdxEntityInfo info = inspector.getInfo(entityClass);
+//
+//      if (info.getObjs() == null)
+//      {
+//         loadEntities(info);
+//         if (info.getObjs() == null)
+//            return null;
+//      }
+//
+//      @SuppressWarnings("unchecked")
+//      T result = (T) info.getIds().get(id.toString());
+//
+//      return result;
+      return null;
+   }
+
+   /**
+    * Clear all parameter values of the device. Should be called when the program
+    * is changed.
+    */
+   public void clearDeviceParameterValues()
+   {
+      parameterValues.clear();
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
    public boolean equals(Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof Device)) return false;
+      if (o == this)
+         return true;
+
+      if (!(o instanceof Device))
+         return false;
+
       final Device oo = (Device) o;
-      return (id == oo.id && address == oo.address && virtualDevice.equals(oo.virtualDevice));
+
+      if (catalogEntry == null && oo.catalogEntry != null)
+         return false;
+
+      if (program == null && oo.program != null)
+         return false;
+
+      return id == oo.id && address == oo.address
+            && (catalogEntry == oo.catalogEntry || catalogEntry.equals(oo.catalogEntry))
+            && (program == oo.program || program.equals(oo.program));
    }
 
    /**
@@ -189,10 +295,7 @@ public final class Device
    public String toString()
    {
       final StringBuilder sb = new StringBuilder();
-
-      sb.append(getPhysicalAddress().toString());
-      sb.append(" ").append("Device ").append(virtualDevice);
-
+      sb.append(getPhysicalAddress().toString()).append(" ").append(catalogEntry).append(" ").append(program);
       return sb.toString();
    }
 }

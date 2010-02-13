@@ -54,9 +54,10 @@ public final class FTS implements Runnable
       }
 
       MainWindow mainWin = new MainWindow();
-      ProjectManager.setProject(SampleProjectFactory.newProject());
 
       init();
+      ProjectManager.setProject(SampleProjectFactory.newProject());
+
       SwingUtilities.updateComponentTreeUI(mainWin);
 
       mainWin.setVisible(true);

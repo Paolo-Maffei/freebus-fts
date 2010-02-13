@@ -101,6 +101,14 @@ public final class VdxEntityManager
    }
 
    /**
+    * @return the internal VDX file reader of the entity manager.
+    */
+   public VdxFileReader getReader()
+   {
+      return reader;
+   }
+
+   /**
     * Fetch all entities of the class entityClass from the VD_ file. The
     * returned list is unsorted.
     * 

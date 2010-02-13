@@ -1,7 +1,13 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
+import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;
@@ -19,7 +25,8 @@ public class TestDevice
       assertNotNull(device);
       assertEquals(0, device.getId());
       assertEquals(0, device.getAddress());
-      assertNull(device.getVirtualDevice());
+      assertNull(device.getCatalogEntry());
+      assertNull(device.getProgram());
       assertNull(device.getLine());
       assertNull(device.getRoom());
    }
@@ -39,7 +46,7 @@ public class TestDevice
    @Test
    public final void testGetSetAddress()
    {
-      final Device device = new Device(33, null);
+      final Device device = new Device(33, null, null);
 
       device.setAddress(123);
       assertEquals(123, device.getAddress());
@@ -51,7 +58,7 @@ public class TestDevice
    @Test
    public final void testGetPhysicalAddr()
    {
-      final Device device = new Device(null);
+      final Device device = new Device(null, null);
       device.setAddress(12);
       assertEquals(PhysicalAddress.NULL, device.getPhysicalAddress());
 
@@ -67,16 +74,21 @@ public class TestDevice
    }
 
    @Test
-   public final void testGetSetVirtualDevice()
+   public final void testGetSetCatalogEntryProgram()
    {
       final Device device = new Device();
-      final VirtualDevice virtualDevice = new VirtualDevice();
+      final CatalogEntry catEntry = new CatalogEntry();
 
-      device.setVirtualDevice(virtualDevice);
-      assertEquals(virtualDevice, device.getVirtualDevice());
+      device.setCatalogEntry(catEntry);
+      assertEquals(catEntry, device.getCatalogEntry());
 
-      device.setVirtualDevice(null);
-      assertNull(device.getVirtualDevice());
+      device.setCatalogEntry(null);
+      assertNull(device.getCatalogEntry());
+
+      final Program program = new Program();
+
+      device.setProgram(program);
+      assertEquals(program, device.getProgram());
    }
 
    @Test
@@ -110,7 +122,7 @@ public class TestDevice
    {
       final Device device1 = new Device(1, new VirtualDevice());
       final Device device2 = new Device(1, new VirtualDevice());
-      final Device device3 = new Device(2, null);
+      final Device device3 = new Device(2, null, null);
 
       assertTrue(device1.equals(device1));
       assertTrue(device1.equals(device2));

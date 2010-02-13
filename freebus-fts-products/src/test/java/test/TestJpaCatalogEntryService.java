@@ -30,7 +30,6 @@ public class TestJpaCatalogEntryService extends PersistenceTestCase
    @Override
    public void setUp() throws Exception
    {
-      System.err.println("setUp");
       super.setUp();
 
       if (manuService == null)
@@ -56,7 +55,6 @@ public class TestJpaCatalogEntryService extends PersistenceTestCase
    public void tearDown() throws Exception
    {
       super.tearDown();
-      System.err.println("tearDown");
    }
 
    @Test

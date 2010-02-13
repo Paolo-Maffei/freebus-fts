@@ -2,10 +2,17 @@ package org.freebus.fts.products;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 /**
  * A communication object of a program.
@@ -17,49 +24,53 @@ public class CommunicationObject implements Serializable
    private static final long serialVersionUID = 3402103922389574903L;
 
    @Id
-   @Column(name = "object_id", columnDefinition = "INT", unique = true, nullable = false)
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenCommunicationObjectId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
+   @Column(name = "object_id", nullable = false)
    private int id;
 
    @Column(name = "object_name")
    private String name;
    
-   @Column(name = "program_id", columnDefinition = "INT", nullable = false)
-   private int programId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "program_id", nullable = false)
+   private Program program;
    
-   @Column(name = "parameter_id", columnDefinition = "INT", nullable = false)
-   private int parameterId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+   @JoinColumn(name = "parameter_id", nullable = true)
+   private Parameter parameter;
 
    @Column(name = "object_function")
    private String function;
 
-   @Column(name = "object_readenabled", columnDefinition = "BOOLEAN", nullable = false)
+   @Column(name = "object_readenabled", nullable = false)
    private boolean readEnabled;
 
-   @Column(name = "object_writeenabled", columnDefinition = "BOOLEAN", nullable = false)
+   @Column(name = "object_writeenabled", nullable = false)
    private boolean writeEnabled;
 
-   @Column(name = "object_commenabled", columnDefinition = "BOOLEAN", nullable = false)
+   @Column(name = "object_commenabled", nullable = false)
    private boolean commEnabled;
 
-   @Column(name = "object_transenabled", columnDefinition = "BOOLEAN", nullable = false)
+   @Column(name = "object_transenabled", nullable = false)
    private boolean transEnabled;
    
-   @Column(name = "display_order", columnDefinition = "INT")
+   @Column(name = "display_order")
    private int displayOrder;
    
-   @Column(name = "parent_parameter_value", columnDefinition = "INT")
+   @Column(name = "parent_parameter_value")
    private int parentParameterValue;
 
    @Column(name = "object_description")
    private String description;
    
-   @Column(name = "object_type", columnDefinition = "SMALLINT")
+   @Column(name = "object_type")
    private int objectType;
    
-   @Column(name = "object_priority", columnDefinition = "SMALLINT")
+   @Column(name = "object_priority")
    private int objectPriority;
 
-   @Column(name = "object_updateenabled", columnDefinition = "BOOLEAN", nullable = false)
+   @Column(name = "object_updateenabled", nullable = false)
    private boolean updateEnabled;
 
    /**
@@ -95,39 +106,39 @@ public class CommunicationObject implements Serializable
    }
 
    /**
-    * @return the programId
+    * @return the program
     */
-   public int getProgramId()
+   public Program getProgram()
    {
-      return programId;
+      return program;
    }
 
    /**
-    * @param programId the programId to set
+    * Set the program.
     */
-   public void setProgramId(int programId)
+   public void setProgram(Program program)
    {
-      this.programId = programId;
+      this.program = program;
    }
 
    /**
-    * @return the parameterId
+    * @return the parameter
     */
-   public int getParameterId()
+   public Parameter getParameter()
    {
-      return parameterId;
+      return parameter;
    }
 
    /**
-    * @param parameterId the parameterId to set
+    * Set the parameter.
     */
-   public void setParameterId(int parameterId)
+   public void setParameter(Parameter parameter)
    {
-      this.parameterId = parameterId;
+      this.parameter = parameter;
    }
 
    /**
-    * @return the function
+    * @return the descriptive function name.
     */
    public String getFunction()
    {
@@ -135,7 +146,7 @@ public class CommunicationObject implements Serializable
    }
 
    /**
-    * @param function the function to set
+    * Set the descriptive function name.
     */
    public void setFunction(String function)
    {

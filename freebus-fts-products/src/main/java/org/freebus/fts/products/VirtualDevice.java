@@ -43,6 +43,8 @@ public class VirtualDevice
    @JoinColumn(name = "program_id", nullable = true)
    private Program program;
 
+   // Column "PRODUCT_TYPE_ID" is the "ENTITY_ID" of VDX table "TEXT_ATTRIBUTE"
+   
    /**
     * Create an empty virtual-device object.
     */
