@@ -5,6 +5,10 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 
 
+/**
+ * @author Michael Masson
+ *Listen on the inputstream for a FT12 telegram and send for a telegram  replay
+ */
 public class FT12replay {
 
 	InputStream in;
@@ -12,14 +16,17 @@ public class FT12replay {
 	ConvertTools convertTools;
 	ReplayFrames replayFrames;
 
-	public FT12replay(InputStream in, OutputStream out) throws Exception {
+	public FT12replay(InputStream in, OutputStream out,Sequences sequences) throws Exception {
 		this.in = in;
 		this.out = out;
 		convertTools = new ConvertTools();
-		replayFrames = new ReplayFrames();
+		replayFrames = new ReplayFrames(sequences);
 		listen();
 	}
 
+	/**
+	 * @throws Exception
+	 * 	 */
 	public void listen() throws Exception {
 
 		int len = 0;

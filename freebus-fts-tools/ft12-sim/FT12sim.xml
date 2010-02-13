@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<FT12sim:sequences xmlns:FT12sim="http://www.freebus.org/FT12sim"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.freebus.org/FT12sim FT12sim.xsd ">
+	<FT12sim:sequence>
+		<FT12sim:Discription>test</FT12sim:Discription>
+		<FT12sim:resieve>
+			<FT12sim:Telegram>68 02 02 68 53 A7 FA 16</FT12sim:Telegram>
+		</FT12sim:resieve>
+		<FT12sim:transmitframes>
+			<FT12sim:Telegram>68 0A 0A 68 F3 A8 11 01 00 05 67 00 00 00 19 16</FT12sim:Telegram>
+
+		</FT12sim:transmitframes>
+	</FT12sim:sequence>
+	<FT12sim:sequence>
+		<FT12sim:Discription>test</FT12sim:Discription>
+		<FT12sim:resieve>
+			<FT12sim:Telegram>68 02 02 68 73 A7 1A 16</FT12sim:Telegram>
+		</FT12sim:resieve>
+		<FT12sim:transmitframes>
+			<FT12sim:Telegram>68 0A 0A 68 D3 A8 11 01 00 05 67 00 00 00 F9 16</FT12sim:Telegram>
+
+		</FT12sim:transmitframes>
+	</FT12sim:sequence>
+
+
+
+
+</FT12sim:sequences>

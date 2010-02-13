@@ -28,7 +28,9 @@
 
     <complexType name="transmitframes">
     	<sequence>
-    		<element name="frame" type="FT12sim:frame" maxOccurs="unbounded" minOccurs="1"></element>
+    		<element name="Telegram" type="FT12sim:Telegram"
+    			maxOccurs="unbounded" minOccurs="1">
+    		</element>
     	</sequence>
     </complexType>
 

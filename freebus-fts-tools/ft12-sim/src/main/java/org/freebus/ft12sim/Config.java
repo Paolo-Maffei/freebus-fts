@@ -18,7 +18,8 @@ public class Config extends SimpleConfig {
 			logger.info("Load Config");
 		} catch (FileNotFoundException e1) {
 			put("comport", "");
-
+			put("XMLfile", "");
+			put("XSDfile", "");
 			save(env.getAppDir() + "/config.ini");
 
 		} catch (IOException e1) {

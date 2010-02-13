@@ -14,7 +14,6 @@ public class FT12sim implements Runnable
    static InputStream in;
    static OutputStream out;
    static FT12replay ft12replay;
-   static String comport;
    private static String ftscomComport;
    private static Config cfg;
    static
@@ -34,30 +33,44 @@ public class FT12sim implements Runnable
    {
       //opencomport("/dev/ttyS0");  // Linux Default
 	   cfg = new Config();
+	   System.out.println(cfg.getStringValue("XMLfile"));
+	      XMLreader  xmlreader = new XMLreader(cfg.getStringValue("XMLfile"),cfg.getStringValue("XSDfile"));
+	      Sequences sequences = xmlreader.getSequences();
+	      ConvertTools converttools = new ConvertTools();
+	      for (Sequence b: sequences ){
+	    	  
+	    	 System.out.println( "Resivec "+converttools.getHexString(b.ResciveFrame));
+	    	 for (int[] x : b.getTransmitFrames()){
+	    		 System.out.println( "transmit "+converttools.getHexString(x));
+	    	 }
+	    	  
+	      }
 	   ftscomComport = cfg.get("comport");
       opencomport(ftscomComport);
-      ft12replay = new FT12replay(in, out);
+
+      ft12replay = new FT12replay(in, out,sequences);
    }
 
-   public void run()
-   {
-      try
-      {
-         opencomport(comport);
-         ft12replay = new FT12replay(in, out);
-      }
-      catch (Exception e)
-      {
-         // TODO Auto-generated catch block
-         e.printStackTrace();
-      }
-   }
+//   public void run()
+//   {
+//      try
+//      {
+//         opencomport(ftscomComport);
+//         ft12replay = new FT12replay(in, out);
+//      }
+//      catch (Exception e)
+//      {
+//         // TODO Auto-generated catch block
+//         e.printStackTrace();
+//      }
+//   }
 
    public FT12sim(String comport)
    {
-      FT12sim.comport = comport;
+      FT12sim.ftscomComport = comport;
    }
 
+   
    public static boolean opencomport(String comport) throws Exception
    {
       port = new SerialPortWrapper();
@@ -67,5 +80,11 @@ public class FT12sim implements Runnable
       System.out.println("Listen on" + comport);
       return false;
    }
+
+@Override
+public void run() {
+	// TODO Auto-generated method stub
+	
+}
 
 }

@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class ConvertTools {
 
-	private static int getIntValueforHEX(char c) {
+	private static  int getIntValueforHEX(char c) {
 
 		for (int i = 0; i < HEX_CHAR_TABLE.length; i++) {
 			if (HEX_CHAR_TABLE[i] == c){
@@ -14,30 +14,32 @@ public class ConvertTools {
 
 	}
 
-	
-
-	static final byte[] HEX_CHAR_TABLE = { (byte) '0', (byte) '1', (byte) '2',
+//	public static void main(String[] args) throws Exception {
+//		System.out.println(getHexString(String2IntArray("\n  AB C D4 ")));
+//	}
+ final static byte[] HEX_CHAR_TABLE = { (byte) '0', (byte) '1', (byte) '2',
 			(byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7',
 			(byte) '8', (byte) '9', (byte) 'A', (byte) 'B', (byte) 'C',
 			(byte) 'D', (byte) 'E', (byte) 'F' };
 
-	static public void main(String[] arg) throws Exception {
-		System.out.println(getHexString(String2IntArray("0AF0")));
-	}
+	
 
-	public static int[] String2IntArray(String string){
+	public static  int[] String2IntArray(String string){
 		 ArrayList<Integer> intarray = new ArrayList<Integer>();
 		  StringBuffer buf = new StringBuffer(string);
 		  
 		  int x=0;
 		  for ( int i = 0; i < buf.length(); i++ ) {
-			if(  buf.charAt(i)!=' ')
+			if(  buf.charAt(i)!=' ' &&  buf.charAt(i)!='\n'){
 				x = getIntValueforHEX( buf.charAt(i));
-			x = x << 8;
+			
 			i++;
-			if(  buf.charAt(i)!=' ' & i < buf.length()){
+			if(i < buf.length()){
+			if(  buf.charAt(i)!=' ' ){
+				x = x << 4;
 				x =x +getIntValueforHEX( buf.charAt(i));
-			}
+			}}
+			intarray.add(x);}
 		  }
 		  
 		  

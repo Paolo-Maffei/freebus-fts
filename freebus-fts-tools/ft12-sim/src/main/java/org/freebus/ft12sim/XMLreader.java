@@ -1,20 +1,31 @@
 package org.freebus.ft12sim;
 
 import java.io.*;
+import java.util.ArrayList;
+
 import org.w3c.dom.*;
-import org.xml.sax.*;
 import javax.xml.parsers.*;
-import javax.xml.transform.*;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamResult;
 
 public class XMLreader {
-	static Element element;
-static Sequences sequences;
-	static public void main(String[] arg) throws Exception {
-		
+	private Element element;
+	private Sequences sequences;
+	public Sequences getSequences() {
+		return sequences;
+	}
+
+	private String xmlFile;
+	private String xsdFile;
+	private ConvertTools convertools;
+
+	public XMLreader(String xmlFile, String xsdFile) throws Exception {
+		convertools = new ConvertTools();
+		this.xmlFile = xmlFile;
+		this.xsdFile = xsdFile;
 		sequences = new Sequences();
-		String xmlFile = "D:\\workspace\\freebus-fts-parent\\freebus-fts-knxcomm\\src\\test\\java\\org\\freebus\\knxcomm\\test\\FT12sim.xml";
+		loadFile();
+	}
+
+	private void loadFile() throws Exception {
 		File file = new File(xmlFile);
 
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -24,24 +35,57 @@ static Sequences sequences;
 		for (int i = 0; i < element.getChildNodes().getLength(); i++) {
 			if (element.getChildNodes().item(i).getNodeName().equals(
 					"FT12sim:sequence")) {
-				System.out.println(element.getChildNodes().item(i)
-						.getNodeName());
+				sequences.add(ParseFT12simSequence(element.getChildNodes().item(i)));
 			}
 		}
 
 	}
-	
-	static public void FT12simsequenceFound(Node node){
-		 Sequence sequence = new Sequence();
-		for (int i = 0; i < element.getChildNodes().getLength(); i++) {
-			if (element.getChildNodes().item(i).getNodeName().equals(
-					"FT12sim:Discription")) {
-				sequence.setDiscription(element.getChildNodes().item(i).getTextContent());
+
+	public Sequence ParseFT12simSequence(Node node) throws Exception {
+		int[] buf;
+		Sequence sequence = new Sequence();
+		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+			
+			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:Discription")) {
+				sequence.setDiscription(node.getChildNodes().item(i).getTextContent());
 			}
-			if (element.getChildNodes().item(i).getNodeName().equals(
-			"FT12sim:resieve")) {
-		sequence.setDiscription(element.getChildNodes().item(i).getTextContent());
-	}
+			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:resieve")) {
+				buf = ParseFT12simTelegram(node.getChildNodes().item(i));
+				sequence.setResciveFrame(buf);	
+			}
+			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:transmitframes")) {
+				int[][] a ;
+				a = ParseFT12simtransmitframes(node.getChildNodes().item(i));
+				sequence.setTransmitFrames(a);	
+			}
 		}
+		return sequence;
+	}
+	public int[][] ParseFT12simtransmitframes(Node node) throws Exception {
+		int[] buf = null;
+		ArrayList<int[]> intarray = new ArrayList<int[]>();
+		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:Telegram")) {
+				buf = convertools.String2IntArray(node.getChildNodes().item(i).getTextContent());
+				intarray.add(buf);	
+			}
+		}
+		 int[][] returnValue = new int[intarray.size()][];
+		 for (int i =0;i<intarray.size();i++){
+			 returnValue[i]= intarray.get(i);
+		 }
+		return returnValue;
+	}
+	public int[] ParseFT12simTelegram(Node node) throws Exception {
+		int[] buf = null;
+		
+		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
+			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:Telegram")) {
+				buf = convertools.String2IntArray(node.getChildNodes().item(i).getTextContent());
+			return buf;	
+			}
+		}
+		return buf;
+		
 	}
 }
