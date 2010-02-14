@@ -27,6 +27,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTree;
+import javax.swing.SwingUtilities;
 import javax.swing.border.BevelBorder;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -135,7 +136,14 @@ public class ProductsBrowser extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent e)
          {
-            updateCategories();
+            SwingUtilities.invokeLater(new Runnable()
+            {
+               @Override
+               public void run()
+               {
+                  updateCategories();
+               }
+            });
          }
       });
 
@@ -349,6 +357,7 @@ public class ProductsBrowser extends AbstractPage
       }
       finally
       {
+         trmCategories.reload();
          TreeUtils.expandAll(treCategories);
       }
    }
@@ -422,7 +431,9 @@ public class ProductsBrowser extends AbstractPage
     */
    protected Manufacturer getSelectedManufacturer()
    {
-      return ((ManufacturerItem) cboManufacturer.getSelectedItem()).getManufacturer();
+      final Manufacturer manu = ((ManufacturerItem) cboManufacturer.getSelectedItem()).getManufacturer();
+//      Logger.getLogger(getClass()).debug("selected manufacturer: " + manu);
+      return manu;
    }
 
    /**
