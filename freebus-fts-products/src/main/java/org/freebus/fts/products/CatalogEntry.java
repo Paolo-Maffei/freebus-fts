@@ -255,10 +255,21 @@ public class CatalogEntry implements Serializable
    {
       if (o == this)
          return true;
+
       if (!(o instanceof CatalogEntry))
          return false;
+
       final CatalogEntry oo = (CatalogEntry) o;
-      return id == oo.id && manufacturer.equals(oo.manufacturer) && product.equals(oo.product);
+
+      if (manufacturer == null && oo.manufacturer != null)
+         return false;
+
+      if (product == null && oo.product != null)
+         return false;
+
+      return id == oo.id
+            && (manufacturer == oo.manufacturer || manufacturer.equals(oo.manufacturer))
+            && (product == oo.product || product.equals(oo.product));
    }
 
    /**

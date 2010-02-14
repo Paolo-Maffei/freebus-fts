@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import javax.persistence.CascadeType;
@@ -18,7 +19,6 @@ import javax.persistence.TableGenerator;
 
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.Parameter;
-import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
@@ -209,40 +209,76 @@ public final class Device
    }
 
    /**
-    * Returns the value for the parameter <code>param</code>. If the parameter
-    * has no value set, the parameter's default value is returned. The returned
-    * object can be {@link Integer}, {@link Double}, or {@link String}, depending
-    * on the parameter's {@link ParameterAtomicType}.
+    * Set the value of a parameter.
+    * 
+    * @param param - the parameter for which a value will be set.
+    * @param value - the parameter value.
+    */
+   public void setParameterValue(final Parameter param, int value)
+   {
+      setParameterValueObject(param, value);
+   }
+
+   /**
+    * Set the value of a parameter.
+    * 
+    * @param param - the parameter for which a value will be set.
+    * @param value - the parameter value.
+    */
+   public void setParameterValue(final Parameter param, String value)
+   {
+      setParameterValueObject(param, value);
+   }
+
+   /**
+    * Set the value of a parameter. Internal worker method.
+    * Use {@link #setParameterValue} to set the value of a parameter.
+    * 
+    * @param param - the parameter for which a value will be set.
+    * @param value - the parameter value.
+    */
+   private void setParameterValueObject(final Parameter param, Object value)
+   {
+      if (parameterValues == null)
+         parameterValues = new HashMap<Parameter,DeviceParameterValue>();
+
+      final DeviceParameterValue val = parameterValues.get(param);
+      if (val == null) parameterValues.put(param, new DeviceParameterValue(this, param, value));
+      else val.setValue(value);
+   }
+
+   /**
+    * Returns the string value for the parameter <code>param</code>.
     * 
     * @param param the parameter whose value is requested.
-    * @param valueClass the class that the value is expected to have.
-    * 
     * @return the parameter's value.
     */
-   public <T extends Object> T getParameterValue(final Parameter param, Class<T> valueClass)
+   public String getParameterValue(final Parameter param)
    {
-//      T result;
-      // TODO
+      if (parameterValues == null)
+         return "";
 
-//      if (parameterValues.contains(param))
-//      {
-//         T result = (T) parameterValues.get(param);
-//      }
+      final DeviceParameterValue val = parameterValues.get(param);
+      if (val == null) return "";
 
-//      final VdxEntityInfo info = inspector.getInfo(entityClass);
-//
-//      if (info.getObjs() == null)
-//      {
-//         loadEntities(info);
-//         if (info.getObjs() == null)
-//            return null;
-//      }
-//
-//      @SuppressWarnings("unchecked")
-//      T result = (T) info.getIds().get(id.toString());
-//
-//      return result;
-      return null;
+      return val.getValue();
+   }
+
+   /**
+    * Returns the integer value for the parameter <code>param</code>.
+    * 
+    * @param param the parameter whose value is requested.
+    * @return the parameter's value, or zero if no parameter value is set.
+    */
+   public int getIntParameterValue(final Parameter param)
+   {
+      if (parameterValues == null)
+         return 0;
+
+      final DeviceParameterValue val = parameterValues.get(param);
+      if (val == null) return 0;
+
+      return val.getIntValue();
    }
 
    /**

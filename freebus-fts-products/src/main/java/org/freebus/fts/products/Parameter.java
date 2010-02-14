@@ -487,15 +487,16 @@ public class Parameter
    {
       if (o == this)
          return true;
+
       if (!(o instanceof Parameter))
          return false;
 
       final Parameter oo = (Parameter) o;
-      if (program == null && oo.program != null)
+
+      if ((program == null && oo.program != null) || (name == null && oo.name != null))
          return false;
-      if (name == null && oo.name != null)
-         return false;
-      return id == oo.id && name.equals(oo.name) && program.equals(oo.program);
+
+      return id == oo.id && name.equals(oo.name) && (program == oo.program || program.equals(oo.program));
    }
 
    /**

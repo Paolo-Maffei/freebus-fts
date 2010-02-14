@@ -65,9 +65,15 @@ public final class SampleProjectFactory
 
       final List<VirtualDevice> devs = vdxFactory.getVirtualDeviceService().getVirtualDevices();
 
-      productsFactory.getTransaction().begin();
+      final boolean ownTransaction = !productsFactory.getTransaction().isActive();
+
+      if (ownTransaction)
+         productsFactory.getTransaction().begin();
+
       importer.copy(devs);
-      productsFactory.getTransaction().commit();
+
+      if (ownTransaction)
+         productsFactory.getTransaction().commit();
 
       if (tempFile != null) tempFile.delete();
    }

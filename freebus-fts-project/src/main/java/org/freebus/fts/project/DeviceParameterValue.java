@@ -7,18 +7,16 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
-import org.freebus.fts.persistence.vdx.VdxEntity;
-import org.freebus.fts.persistence.vdx.VdxField;
 import org.freebus.fts.products.Parameter;
 
 /**
- * The parameter value of a {@link Device} device.
- * In ETS the table is named "device_parameter".
+ * The parameter value of a specific {@link Device} device.
  */
 @Entity
-@VdxEntity(name = "device_parameter")
 @Table(name = "device_parameter_value")
 public class DeviceParameterValue
 {
@@ -32,17 +30,28 @@ public class DeviceParameterValue
    @JoinColumn(name = "parameter_id", nullable = false)
    private Parameter parameter;
 
-   @VdxField(name = "parameter_value_long")
-   @Column(name = "value_long")
-   private int longValue;
+   @Transient
+   private Object value;
 
-   @VdxField(name = "parameter_value_string")
-   @Column(name = "value_string")
+   @Column(name = "parameter_value", nullable = false)
    private String stringValue;
 
-   @VdxField(name = "parameter_value_double")
-   @Column(name = "value_double")
-   private double doubleValue;
+   /**
+    * Create an empty device parameter-value object.
+    */
+   public DeviceParameterValue()
+   {
+   }
+
+   /**
+    * Create an initialized device parameter-value object.
+    */
+   public DeviceParameterValue(Device device, Parameter parameter, Object value)
+   {
+      this.device = device;
+      this.parameter = parameter;
+      this.value = value;
+   }
 
    /**
     * @return the device
@@ -69,58 +78,44 @@ public class DeviceParameterValue
    }
 
    /**
-    * @param parameter the parameter to set
+    * @return the value as string.
     */
-   public void setParameter(Parameter parameter)
+   public String getValue()
    {
-      this.parameter = parameter;
+      if (stringValue == null) return "";
+      if (value instanceof String) return (String) value;
+
+      value = stringValue;
+      return (String) value;
    }
 
    /**
-    * @return the longValue
+    * @return the value as integer. Returns zero if the value is not set.
     */
-   public int getLongValue()
+   public Integer getIntValue()
    {
-      return longValue;
+      if (stringValue == null) return 0;
+      if (value instanceof Integer) return (Integer) value;
+
+      value = Integer.parseInt(stringValue);
+      return (Integer) value;
    }
 
    /**
-    * @param longValue the longValue to set
+    * Set the value.
     */
-   public void setLongValue(int longValue)
+   public void setValue(Object o)
    {
-      this.longValue = longValue;
+      value = o;
    }
 
    /**
-    * @return the stringValue
+    * Prepare the value for persisting.
     */
-   public String getStringValue()
+   @PrePersist
+   protected void prePersist()
    {
-      return stringValue;
-   }
-
-   /**
-    * @param stringValue the stringValue to set
-    */
-   public void setStringValue(String stringValue)
-   {
-      this.stringValue = stringValue;
-   }
-
-   /**
-    * @return the doubleValue
-    */
-   public double getDoubleValue()
-   {
-      return doubleValue;
-   }
-
-   /**
-    * @param doubleValue the doubleValue to set
-    */
-   public void setDoubleValue(double doubleValue)
-   {
-      this.doubleValue = doubleValue;
+      if (value == null) stringValue = "";
+      else stringValue = value.toString();
    }
 }

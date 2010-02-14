@@ -346,6 +346,45 @@ public class Program
    }
 
    /**
+    * Add a parameter to the program.
+    * @param param - the parameter to add. 
+    */
+   public void addParameter(Parameter param)
+   {
+      if (parameters == null)
+         parameters = new HashSet<Parameter>();
+
+      parameters.add(param);
+      param.setProgram(this);
+   }
+
+   /**
+    * Remove a parameter from the program.
+    * @param param - the parameter to remove.
+    */
+   public void removeParameter(Parameter param)
+   {
+      if (parameters != null)
+         parameters.remove(param);
+
+      param.setProgram(null);
+   }
+
+   /**
+    * Remove all parameter from the program.
+    */
+   public void removeAllParameters()
+   {
+      if (parameters != null)
+      {
+         for (final Parameter param: parameters)
+            param.setProgram(null);
+
+         parameters.clear();
+      }
+   }
+
+   /**
     * Set the parameters of the program.
     */
    public void setParameters(Set<Parameter> parameters)
