@@ -265,16 +265,20 @@ public final class VdxEntityManager
                         coll.clear();
                      }
 
-                     for (Object assocObj : fetchAll(assoc.getTargetClass()))
+                     final List<?> assocTargetObjs = fetchAll(assoc.getTargetClass());
+                     if (assocTargetObjs != null)
                      {
-                        final Field targetField = assoc.getTargetField();
-                        final boolean targetAccessible = targetField.isAccessible();
-                        if (!targetAccessible) targetField.setAccessible(true);
-
-                        if (targetField.get(assocObj) == obj)
-                           coll.add(assocObj);
-
-                        if (!targetAccessible) targetField.setAccessible(false);
+                        for (Object assocObj : assocTargetObjs)
+                        {
+                           final Field targetField = assoc.getTargetField();
+                           final boolean targetAccessible = targetField.isAccessible();
+                           if (!targetAccessible) targetField.setAccessible(true);
+   
+                           if (targetField.get(assocObj) == obj)
+                              coll.add(assocObj);
+   
+                           if (!targetAccessible) targetField.setAccessible(false);
+                        }
                      }
 
                      if (!accessible)
@@ -288,11 +292,7 @@ public final class VdxEntityManager
             }
          }
       }
-      catch (InstantiationException e)
-      {
-         throw new PersistenceException("Could not create an instance of " + entityClass.getName(), e);
-      }
-      catch (IllegalAccessException e)
+      catch (Exception e)
       {
          throw new PersistenceException("Could not create an instance of " + entityClass.getName(), e);
       }

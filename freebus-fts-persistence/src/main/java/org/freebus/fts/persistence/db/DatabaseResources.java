@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.persistence.Environment;
+import org.freebus.fts.persistence.Rot13;
 import org.freebus.fts.persistence.SimpleConfig;
 
 public class DatabaseResources
@@ -81,17 +82,20 @@ public class DatabaseResources
       final String pfx = driver.getConfigPrefix();
 
       final String dbname = cfg.getStringValue(pfx + ".database");
+      final String host = cfg.getStringValue(pfx + ".host");
       final String user = cfg.getStringValue(pfx + ".user");
-      final String passwd = cfg.getStringValue(pfx + ".passwd");
+      final String passwd = Rot13.rotate(cfg.getStringValue(pfx + ".passwd"));
 
-      return createEntityManagerFactory(driver, dbname, user, passwd);
+      final String location = host.isEmpty() ? dbname : host + '/' + dbname;
+
+      return createEntityManagerFactory(driver, location, user, passwd);
    }
 
    /**
     * Create an entity manager factory.
     * 
     * @param driver - the database driver to use.
-    * @param dbname - the name of the database (or database file).
+    * @param location - the name of the database or host/database.
     * @param user - the database connect user.
     * @param password - the database connect password.
     * 
@@ -99,17 +103,10 @@ public class DatabaseResources
     * 
     * @see {@link #setEntityManagerFactory}
     */
-   static public EntityManagerFactory createEntityManagerFactory(DriverType driver, String dbname, String user,
+   static public EntityManagerFactory createEntityManagerFactory(DriverType driver, String location, String user,
          String password)
    {
-      // final Config cfg = Config.getInstance();
-      // final Driver driver = cfg.getProductsDbDriver();
-      // String url;
-      // if (driver.fileBased) url = driver.getConnectURL(cfg.getAppDir() + '/'
-      // +
-      // cfg.getProductsDbLocation());
-      // else url = driver.getConnectURL(cfg.getProductsDbLocation());
-      final String url = driver.getConnectURL(dbname);
+      final String url = driver.getConnectURL(location);
       Logger.getLogger(DatabaseResources.class).info("Connecting: " + url);
 
       final Properties props = new Properties();
