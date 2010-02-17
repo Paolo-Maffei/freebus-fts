@@ -17,10 +17,10 @@ import javax.swing.JTextField;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.persistence.Environment;
+import org.freebus.fts.persistence.Rot13;
 import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
-import org.freebus.fts.utils.Rot13;
 
 /**
  * A widget for configuring a serial bus interface connection.

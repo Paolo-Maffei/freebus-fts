@@ -1717,7 +1717,7 @@ aktuellen Eingangszustand senden
 R 25 T 22 parameter_list_of_values
 160386
 0
-1 äC
+1 °C
 0
 160859
 
@@ -1726,7 +1726,7 @@ R 25 T 22 parameter_list_of_values
 R 26 T 22 parameter_list_of_values
 160387
 3
-3 äC
+3 °C
 3
 160863
 
@@ -1735,7 +1735,7 @@ R 26 T 22 parameter_list_of_values
 R 27 T 22 parameter_list_of_values
 160387
 4
-4 äC
+4 °C
 4
 160866
 
@@ -1744,7 +1744,7 @@ R 27 T 22 parameter_list_of_values
 R 28 T 22 parameter_list_of_values
 160387
 5
-5 äC
+5 °C
 5
 160869
 
@@ -1753,7 +1753,7 @@ R 28 T 22 parameter_list_of_values
 R 29 T 22 parameter_list_of_values
 160387
 6
-6 äC
+6 °C
 6
 160872
 
@@ -1762,7 +1762,7 @@ R 29 T 22 parameter_list_of_values
 R 30 T 22 parameter_list_of_values
 160387
 7
-7 äC
+7 °C
 7
 160875
 
@@ -1771,7 +1771,7 @@ R 30 T 22 parameter_list_of_values
 R 31 T 22 parameter_list_of_values
 160387
 8
-8 äC
+8 °C
 8
 160878
 
@@ -1780,7 +1780,7 @@ R 31 T 22 parameter_list_of_values
 R 32 T 22 parameter_list_of_values
 160387
 9
-9 äC
+9 °C
 9
 160881
 
@@ -1789,7 +1789,7 @@ R 32 T 22 parameter_list_of_values
 R 33 T 22 parameter_list_of_values
 160387
 10
-10 äC
+10 °C
 10
 160884
 
@@ -1798,7 +1798,7 @@ R 33 T 22 parameter_list_of_values
 R 34 T 22 parameter_list_of_values
 160387
 11
-11 äC
+11 °C
 11
 160887
 
@@ -1807,7 +1807,7 @@ R 34 T 22 parameter_list_of_values
 R 35 T 22 parameter_list_of_values
 160387
 12
-12 äC
+12 °C
 12
 160890
 
@@ -1816,7 +1816,7 @@ R 35 T 22 parameter_list_of_values
 R 36 T 22 parameter_list_of_values
 160387
 13
-13 äC
+13 °C
 13
 160893
 
@@ -1825,7 +1825,7 @@ R 36 T 22 parameter_list_of_values
 R 37 T 22 parameter_list_of_values
 160387
 14
-14 äC
+14 °C
 14
 160896
 
@@ -1834,7 +1834,7 @@ R 37 T 22 parameter_list_of_values
 R 38 T 22 parameter_list_of_values
 160387
 15
-15 äC
+15 °C
 15
 160899
 
@@ -1843,7 +1843,7 @@ R 38 T 22 parameter_list_of_values
 R 39 T 22 parameter_list_of_values
 160387
 16
-16 äC
+16 °C
 16
 160902
 
@@ -1852,7 +1852,7 @@ R 39 T 22 parameter_list_of_values
 R 40 T 22 parameter_list_of_values
 160387
 17
-17 äC
+17 °C
 17
 160905
 
@@ -1861,7 +1861,7 @@ R 40 T 22 parameter_list_of_values
 R 41 T 22 parameter_list_of_values
 160387
 18
-18 äC
+18 °C
 18
 160908
 
@@ -1870,7 +1870,7 @@ R 41 T 22 parameter_list_of_values
 R 42 T 22 parameter_list_of_values
 160387
 19
-19 äC
+19 °C
 19
 160911
 
@@ -1879,7 +1879,7 @@ R 42 T 22 parameter_list_of_values
 R 43 T 22 parameter_list_of_values
 160387
 20
-20 äC
+20 °C
 20
 160914
 
@@ -1888,7 +1888,7 @@ R 43 T 22 parameter_list_of_values
 R 44 T 22 parameter_list_of_values
 160387
 21
-21 äC
+21 °C
 21
 160917
 
@@ -1897,7 +1897,7 @@ R 44 T 22 parameter_list_of_values
 R 45 T 22 parameter_list_of_values
 160387
 22
-22 äC
+22 °C
 22
 160920
 
@@ -1906,7 +1906,7 @@ R 45 T 22 parameter_list_of_values
 R 46 T 22 parameter_list_of_values
 160387
 23
-23 äC
+23 °C
 23
 160923
 
@@ -1915,7 +1915,7 @@ R 46 T 22 parameter_list_of_values
 R 47 T 22 parameter_list_of_values
 160387
 24
-24 äC
+24 °C
 24
 160926
 
@@ -1924,7 +1924,7 @@ R 47 T 22 parameter_list_of_values
 R 48 T 22 parameter_list_of_values
 160387
 25
-25 äC
+25 °C
 25
 160929
 
@@ -1933,7 +1933,7 @@ R 48 T 22 parameter_list_of_values
 R 49 T 22 parameter_list_of_values
 160387
 26
-26 äC
+26 °C
 26
 160932
 
@@ -1942,7 +1942,7 @@ R 49 T 22 parameter_list_of_values
 R 50 T 22 parameter_list_of_values
 160387
 27
-27 äC
+27 °C
 27
 160935
 
@@ -1951,7 +1951,7 @@ R 50 T 22 parameter_list_of_values
 R 51 T 22 parameter_list_of_values
 160387
 28
-28 äC
+28 °C
 28
 160938
 
@@ -1960,7 +1960,7 @@ R 51 T 22 parameter_list_of_values
 R 52 T 22 parameter_list_of_values
 160387
 29
-29 äC
+29 °C
 29
 160941
 
@@ -1969,7 +1969,7 @@ R 52 T 22 parameter_list_of_values
 R 53 T 22 parameter_list_of_values
 160387
 30
-30 äC
+30 °C
 30
 160944
 
@@ -1978,7 +1978,7 @@ R 53 T 22 parameter_list_of_values
 R 54 T 22 parameter_list_of_values
 160387
 31
-31 äC
+31 °C
 31
 160947
 
@@ -1987,7 +1987,7 @@ R 54 T 22 parameter_list_of_values
 R 55 T 22 parameter_list_of_values
 160387
 32
-32 äC
+32 °C
 32
 160950
 
@@ -1996,7 +1996,7 @@ R 55 T 22 parameter_list_of_values
 R 56 T 22 parameter_list_of_values
 160387
 33
-33 äC
+33 °C
 33
 160953
 
@@ -2005,7 +2005,7 @@ R 56 T 22 parameter_list_of_values
 R 57 T 22 parameter_list_of_values
 160387
 34
-34 äC
+34 °C
 34
 160956
 
@@ -2014,7 +2014,7 @@ R 57 T 22 parameter_list_of_values
 R 58 T 22 parameter_list_of_values
 160387
 35
-35 äC
+35 °C
 35
 160959
 
@@ -2023,7 +2023,7 @@ R 58 T 22 parameter_list_of_values
 R 59 T 22 parameter_list_of_values
 160387
 36
-36 äC
+36 °C
 36
 160962
 
@@ -2032,7 +2032,7 @@ R 59 T 22 parameter_list_of_values
 R 60 T 22 parameter_list_of_values
 160387
 37
-37 äC
+37 °C
 37
 160965
 
@@ -2041,7 +2041,7 @@ R 60 T 22 parameter_list_of_values
 R 61 T 22 parameter_list_of_values
 160387
 38
-38 äC
+38 °C
 38
 160968
 
@@ -2050,7 +2050,7 @@ R 61 T 22 parameter_list_of_values
 R 62 T 22 parameter_list_of_values
 160387
 39
-39 äC
+39 °C
 39
 160971
 
@@ -2059,7 +2059,7 @@ R 62 T 22 parameter_list_of_values
 R 63 T 22 parameter_list_of_values
 160387
 40
-40 äC
+40 °C
 40
 160974
 
@@ -2068,7 +2068,7 @@ R 63 T 22 parameter_list_of_values
 R 64 T 22 parameter_list_of_values
 160387
 0
-0 äC
+0 °C
 0
 160977
 
@@ -2077,7 +2077,7 @@ R 64 T 22 parameter_list_of_values
 R 65 T 22 parameter_list_of_values
 160387
 1
-1 äC
+1 °C
 1
 160980
 
@@ -2086,7 +2086,7 @@ R 65 T 22 parameter_list_of_values
 R 66 T 22 parameter_list_of_values
 160387
 2
-2 äC
+2 °C
 2
 160983
 
@@ -2428,7 +2428,7 @@ steigender und fallender Flanke
 R 104 T 22 parameter_list_of_values
 160391
 0
-nicht zuräcksetzen
+nicht zur°Cksetzen
 0
 161101
 
@@ -2710,7 +2710,7 @@ Eingang 1
 R 134 T 22 parameter_list_of_values
 160398
 0
-steigender Flanke (Taster als Schlieäer)
+steigender Flanke (Taster als Schließer)
 0
 161198
 
@@ -2719,7 +2719,7 @@ steigender Flanke (Taster als Schlieäer)
 R 135 T 22 parameter_list_of_values
 160398
 1
-fallender Flanke (Taster als äffner)
+fallender Flanke (Taster als Öffner)
 1
 161201
 
@@ -2891,7 +2891,7 @@ R 153 T 22 parameter_list_of_values
 R 154 T 22 parameter_list_of_values
 160402
 15
-kein zykl. Senden äber Schaltobjekt X.2
+kein zykl. Senden über Schaltobjekt X.2
 15
 161262
 
@@ -3206,7 +3206,7 @@ R 188 T 22 parameter_list_of_values
 R 189 T 22 parameter_list_of_values
 160404
 3
-3 äC
+3 °C
 3
 161324
 
@@ -3215,7 +3215,7 @@ R 189 T 22 parameter_list_of_values
 R 190 T 22 parameter_list_of_values
 160404
 4
-4 äC
+4 °C
 4
 161325
 
@@ -3224,7 +3224,7 @@ R 190 T 22 parameter_list_of_values
 R 191 T 22 parameter_list_of_values
 160404
 5
-5 äC
+5 °C
 5
 161326
 
@@ -3233,7 +3233,7 @@ R 191 T 22 parameter_list_of_values
 R 192 T 22 parameter_list_of_values
 160404
 6
-6 äC
+6 °C
 6
 161327
 
@@ -3242,7 +3242,7 @@ R 192 T 22 parameter_list_of_values
 R 193 T 22 parameter_list_of_values
 160404
 7
-7 äC
+7 °C
 7
 161328
 
@@ -3251,7 +3251,7 @@ R 193 T 22 parameter_list_of_values
 R 194 T 22 parameter_list_of_values
 160404
 8
-8 äC
+8 °C
 8
 161329
 
@@ -3260,7 +3260,7 @@ R 194 T 22 parameter_list_of_values
 R 195 T 22 parameter_list_of_values
 160404
 9
-9 äC
+9 °C
 9
 161330
 
@@ -3269,7 +3269,7 @@ R 195 T 22 parameter_list_of_values
 R 196 T 22 parameter_list_of_values
 160404
 10
-10 äC
+10 °C
 10
 161331
 
@@ -3278,7 +3278,7 @@ R 196 T 22 parameter_list_of_values
 R 197 T 22 parameter_list_of_values
 160404
 11
-11 äC
+11 °C
 11
 161332
 
@@ -3287,7 +3287,7 @@ R 197 T 22 parameter_list_of_values
 R 198 T 22 parameter_list_of_values
 160404
 12
-12 äC
+12 °C
 12
 161333
 
@@ -3296,7 +3296,7 @@ R 198 T 22 parameter_list_of_values
 R 199 T 22 parameter_list_of_values
 160404
 13
-13 äC
+13 °C
 13
 161334
 
@@ -3305,7 +3305,7 @@ R 199 T 22 parameter_list_of_values
 R 200 T 22 parameter_list_of_values
 160404
 14
-14 äC
+14 °C
 14
 161335
 
@@ -3314,7 +3314,7 @@ R 200 T 22 parameter_list_of_values
 R 201 T 22 parameter_list_of_values
 160404
 15
-15 äC
+15 °C
 15
 161336
 
@@ -3323,7 +3323,7 @@ R 201 T 22 parameter_list_of_values
 R 202 T 22 parameter_list_of_values
 160404
 16
-16 äC
+16 °C
 16
 161337
 
@@ -3332,7 +3332,7 @@ R 202 T 22 parameter_list_of_values
 R 203 T 22 parameter_list_of_values
 160404
 17
-17 äC
+17 °C
 17
 161338
 
@@ -3341,7 +3341,7 @@ R 203 T 22 parameter_list_of_values
 R 204 T 22 parameter_list_of_values
 160404
 18
-18 äC
+18 °C
 18
 161339
 
@@ -3350,7 +3350,7 @@ R 204 T 22 parameter_list_of_values
 R 205 T 22 parameter_list_of_values
 160404
 19
-19 äC
+19 °C
 19
 161340
 
@@ -3359,7 +3359,7 @@ R 205 T 22 parameter_list_of_values
 R 206 T 22 parameter_list_of_values
 160404
 20
-20 äC
+20 °C
 20
 161341
 
@@ -3368,7 +3368,7 @@ R 206 T 22 parameter_list_of_values
 R 207 T 22 parameter_list_of_values
 160404
 21
-21 äC
+21 °C
 21
 161342
 
@@ -3377,7 +3377,7 @@ R 207 T 22 parameter_list_of_values
 R 208 T 22 parameter_list_of_values
 160404
 22
-22 äC
+22 °C
 22
 161343
 
@@ -3386,7 +3386,7 @@ R 208 T 22 parameter_list_of_values
 R 209 T 22 parameter_list_of_values
 160404
 23
-23 äC
+23 °C
 23
 161344
 
@@ -3395,7 +3395,7 @@ R 209 T 22 parameter_list_of_values
 R 210 T 22 parameter_list_of_values
 160404
 24
-24 äC
+24 °C
 24
 161345
 
@@ -3404,7 +3404,7 @@ R 210 T 22 parameter_list_of_values
 R 211 T 22 parameter_list_of_values
 160404
 25
-25 äC
+25 °C
 25
 161346
 
@@ -3413,7 +3413,7 @@ R 211 T 22 parameter_list_of_values
 R 212 T 22 parameter_list_of_values
 160404
 26
-26 äC
+26 °C
 26
 161347
 
@@ -3422,7 +3422,7 @@ R 212 T 22 parameter_list_of_values
 R 213 T 22 parameter_list_of_values
 160404
 27
-27 äC
+27 °C
 27
 161348
 
@@ -3431,7 +3431,7 @@ R 213 T 22 parameter_list_of_values
 R 214 T 22 parameter_list_of_values
 160404
 28
-28 äC
+28 °C
 28
 161349
 
@@ -3440,7 +3440,7 @@ R 214 T 22 parameter_list_of_values
 R 215 T 22 parameter_list_of_values
 160404
 29
-29 äC
+29 °C
 29
 161350
 
@@ -3449,7 +3449,7 @@ R 215 T 22 parameter_list_of_values
 R 216 T 22 parameter_list_of_values
 160404
 30
-30 äC
+30 °C
 30
 161351
 
@@ -3458,7 +3458,7 @@ R 216 T 22 parameter_list_of_values
 R 217 T 22 parameter_list_of_values
 160404
 31
-31 äC
+31 °C
 31
 161352
 
@@ -3467,7 +3467,7 @@ R 217 T 22 parameter_list_of_values
 R 218 T 22 parameter_list_of_values
 160404
 32
-32 äC
+32 °C
 32
 161353
 
@@ -3476,7 +3476,7 @@ R 218 T 22 parameter_list_of_values
 R 219 T 22 parameter_list_of_values
 160404
 33
-33 äC
+33 °C
 33
 161354
 
@@ -3485,7 +3485,7 @@ R 219 T 22 parameter_list_of_values
 R 220 T 22 parameter_list_of_values
 160404
 34
-34 äC
+34 °C
 34
 161355
 
@@ -3494,7 +3494,7 @@ R 220 T 22 parameter_list_of_values
 R 221 T 22 parameter_list_of_values
 160404
 35
-35 äC
+35 °C
 35
 161356
 
@@ -3503,7 +3503,7 @@ R 221 T 22 parameter_list_of_values
 R 222 T 22 parameter_list_of_values
 160404
 36
-36 äC
+36 °C
 36
 161357
 
@@ -3512,7 +3512,7 @@ R 222 T 22 parameter_list_of_values
 R 223 T 22 parameter_list_of_values
 160404
 37
-37 äC
+37 °C
 37
 161358
 
@@ -3521,7 +3521,7 @@ R 223 T 22 parameter_list_of_values
 R 224 T 22 parameter_list_of_values
 160404
 38
-38 äC
+38 °C
 38
 161359
 
@@ -3530,7 +3530,7 @@ R 224 T 22 parameter_list_of_values
 R 225 T 22 parameter_list_of_values
 160404
 39
-39 äC
+39 °C
 39
 161360
 
@@ -3539,7 +3539,7 @@ R 225 T 22 parameter_list_of_values
 R 226 T 22 parameter_list_of_values
 160404
 40
-40 äC
+40 °C
 40
 161361
 
@@ -3548,7 +3548,7 @@ R 226 T 22 parameter_list_of_values
 R 227 T 22 parameter_list_of_values
 160404
 0
-0 äC
+0 °C
 0
 161362
 
@@ -3557,7 +3557,7 @@ R 227 T 22 parameter_list_of_values
 R 228 T 22 parameter_list_of_values
 160404
 1
-1 äC
+1 °C
 1
 161363
 
@@ -3566,7 +3566,7 @@ R 228 T 22 parameter_list_of_values
 R 229 T 22 parameter_list_of_values
 160404
 2
-2 äC
+2 °C
 2
 161364
 
@@ -4079,7 +4079,7 @@ gesperrt
 R 286 T 22 parameter_list_of_values
 160422
 0
-steigender Flanke (Taster als Schlieäer)
+steigender Flanke (Taster als Schließer)
 0
 161421
 
@@ -4088,7 +4088,7 @@ steigender Flanke (Taster als Schlieäer)
 R 287 T 22 parameter_list_of_values
 160422
 1
-fallender Flanke (Taster als äffner)
+fallender Flanke (Taster als Öffner)
 1
 161422
 
@@ -4468,7 +4468,7 @@ R 328 T 22 parameter_list_of_values
 R 329 T 22 parameter_list_of_values
 160430
 0
-Einflächenbedienung: dunkler/heller (UM)
+Einfl°Chenbedienung: dunkler/heller (UM)
 0
 161464
 
@@ -4477,7 +4477,7 @@ Einflächenbedienung: dunkler/heller (UM)
 R 330 T 22 parameter_list_of_values
 160430
 1
-Zweiflächenbedienung: heller (EIN)
+Zweifl°Chenbedienung: heller (EIN)
 1
 161465
 
@@ -4486,7 +4486,7 @@ Zweiflächenbedienung: heller (EIN)
 R 331 T 22 parameter_list_of_values
 160430
 2
-Zweiflächenbedienung: dunkler (AUS)
+Zweifl°Chenbedienung: dunkler (AUS)
 2
 161466
 
@@ -4495,7 +4495,7 @@ Zweiflächenbedienung: dunkler (AUS)
 R 332 T 22 parameter_list_of_values
 160430
 3
-Zweiflächenbedienung: heller (UM)
+Zweifl°Chenbedienung: heller (UM)
 3
 161467
 
@@ -4504,7 +4504,7 @@ Zweiflächenbedienung: heller (UM)
 R 333 T 22 parameter_list_of_values
 160430
 4
-Zweiflächenbedienung: dunkler (UM)
+Zweifl°Chenbedienung: dunkler (UM)
 4
 161468
 
@@ -4805,7 +4805,7 @@ Ver_Bspwdk_Basis
 20
 510
 0
-Verzägerung bei Busspannungswiederkehr\r
+Verzögerung bei Busspannungswiederkehr\r
 \\\nBasis
 161504
 
@@ -4828,7 +4828,7 @@ Ver_Bspwdk_Faktor
 30
 468
 1
-Verzägerung bei Busspannungswiederkehr\r
+Verzögerung bei Busspannungswiederkehr\r
 \\\nFaktor (3...127)
 161505
 
@@ -7994,7 +7994,7 @@ Synchron_Flanke_Reset
 473
 4
 Zählerstand und Intervallzeit durch\r\nS
-\\ynchronsignal zuräcksetzen bei
+\\ynchronsignal zur°Cksetzen bei
 162181
 161654
 
@@ -8638,7 +8638,7 @@ Synchron_Flanke_Reset
 469
 4
 Zählerstand und Intervallzeit durch\r\nS
-\\ynchronsignal zuräcksetzen bei
+\\ynchronsignal zur°Cksetzen bei
 162210
 161661
 
@@ -18774,7 +18774,7 @@ Wertverstellung_Freig_steiundfall
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163886
 162340
 
@@ -18818,7 +18818,7 @@ WertverstellungFreig_steigend
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163888
 162340
 
@@ -19150,7 +19150,7 @@ Wertverstellung_Freig
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163903
 162350
 
@@ -19238,7 +19238,7 @@ Wertverstellung_Freig
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163907
 162350
 
@@ -19260,7 +19260,7 @@ Wertverstellung_Freig_steiundfall
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163908
 162350
 
@@ -19414,7 +19414,7 @@ Wertverstellung_Freig
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163915
 162348
 
@@ -19502,7 +19502,7 @@ Wertverstellung_Freig
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163919
 162348
 
@@ -19612,7 +19612,7 @@ Wertverstellung_Freig_steiundfall
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163924
 162348
 
@@ -19878,7 +19878,7 @@ Wertverstellung_Freig_fallend
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163936
 162353
 
@@ -20055,7 +20055,7 @@ Wertverstellung_Freig_steigend
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163944
 162353
 
@@ -20100,7 +20100,7 @@ Wertverstellung_Freig_steiundfall
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163946
 162353
 
@@ -20408,7 +20408,7 @@ Wertverstellung_Freig_steigend
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163960
 162358
 
@@ -20474,7 +20474,7 @@ Wertverstellung_Freig_steiundfall
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163963
 162358
 
@@ -20804,7 +20804,7 @@ Wertverstellung_Freig_fallend
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163978
 162358
 
@@ -21160,7 +21160,7 @@ Wertverstellung_Freig_fallend
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163994
 162462
 
@@ -21710,7 +21710,7 @@ Wertverstellung_Freig_steiundfall
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164019
 162462
 
@@ -21732,7 +21732,7 @@ WertverstellungFreig_steigend
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164020
 162462
 
@@ -22198,7 +22198,7 @@ Wertverstellung_Freig
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164041
 162686
 
@@ -22220,7 +22220,7 @@ Wertverstellung_Freig
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164042
 162686
 
@@ -22242,7 +22242,7 @@ Wertverstellung_Freig_steiundfall
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164043
 162686
 
@@ -22616,7 +22616,7 @@ Wertverstellung_Freig_steigend
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164060
 162812
 
@@ -22638,7 +22638,7 @@ Wertverstellung_Freig_steiundfall
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164063
 162812
 
@@ -22946,7 +22946,7 @@ Wertverstellung_Freig_fallend
 1530
 469
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164106
 162812
 
@@ -23768,7 +23768,7 @@ Wertverstellung_Freig
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164395
 162915
 
@@ -23856,7 +23856,7 @@ Wertverstellung_Freig
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164411
 162915
 
@@ -23878,7 +23878,7 @@ Wertverstellung_Freig_steiundfall
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164420
 162915
 
@@ -24252,7 +24252,7 @@ Wertverstellung_Freig_fallend
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164513
 162918
 
@@ -24714,7 +24714,7 @@ Wertverstellung_Freig_steiundfall
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164610
 162918
 
@@ -24736,7 +24736,7 @@ WertverstellungFreig_steigend
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164613
 162918
 
@@ -25070,7 +25070,7 @@ Wertverstellung_Freig_fallend
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164707
 163011
 
@@ -25180,7 +25180,7 @@ Wertverstellung_Freig_steigend
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164712
 163011
 
@@ -25224,7 +25224,7 @@ Wertverstellung_Freig_steiundfall
 15530
 497
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164714
 163011
 
@@ -25954,7 +25954,7 @@ Wertverstellung_Freig_fallend
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164747
 163220
 
@@ -26020,7 +26020,7 @@ Wertverstellung_Freig_fallend
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164750
 163266
 
@@ -26086,7 +26086,7 @@ Wertverstellung_Freig_steigend
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164753
 163220
 
@@ -26196,7 +26196,7 @@ Wertverstellung_Freig_steiundfall
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164758
 163220
 
@@ -26834,7 +26834,7 @@ Wertverstellung_Freig_steiundfall
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164815
 163266
 
@@ -26856,7 +26856,7 @@ WertverstellungFreig_steigend
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164819
 163266
 
@@ -27076,7 +27076,7 @@ Wertverstellung_Freig
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164855
 163316
 
@@ -27098,7 +27098,7 @@ Wertverstellung_Freig
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164864
 163316
 
@@ -27143,7 +27143,7 @@ Wertverstellung_Freig_steiundfall
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 164874
 163316
 
@@ -27566,7 +27566,7 @@ Wertverstellung_Freig
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163351
 163345
 
@@ -27634,7 +27634,7 @@ Wertverstellung_Freig
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163362
 163345
 
@@ -27678,7 +27678,7 @@ Wertverstellung_Freig_steiundfall
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163372
 163345
 
@@ -28294,7 +28294,7 @@ Wertverstellung_Freig_fallend
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163471
 162258
 
@@ -28426,7 +28426,7 @@ Wertverstellung_Freig_steiundfall
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163495
 162239
 
@@ -28470,7 +28470,7 @@ WertverstellungFreig_steigend
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163499
 162239
 
@@ -28536,7 +28536,7 @@ Wertverstellung_Freig_fallend
 11530
 489
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163510
 162239
 
@@ -28668,7 +28668,7 @@ Wertverstellung_Freig_steigend
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163538
 162258
 
@@ -28712,7 +28712,7 @@ Wertverstellung_Freig_steiundfall
 3530
 473
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163548
 162258
 
@@ -29508,7 +29508,7 @@ Wertverstellung_Freig_steiundfall
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163662
 162303
 
@@ -29530,7 +29530,7 @@ WertverstellungFreig_steigend
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163665
 162303
 
@@ -29552,7 +29552,7 @@ Wertverstellung_Freig_fallend
 13530
 493
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163674
 162303
 
@@ -30084,7 +30084,7 @@ Wertverstellung_Freig_fallend
 9530
 485
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 163800
 162340
 
@@ -65992,7 +65992,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172032
 169440
 
@@ -66080,7 +66080,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169989
 167274
 
@@ -66102,7 +66102,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172039
 169348
 
@@ -66587,7 +66587,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172076
 169482
 
@@ -66675,7 +66675,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172083
 169401
 
@@ -66851,7 +66851,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170047
 167274
 
@@ -66917,7 +66917,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172098
 169482
 
@@ -66939,7 +66939,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170056
 167274
 
@@ -66983,7 +66983,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172107
 169440
 
@@ -67181,7 +67181,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172123
 169440
 
@@ -67559,7 +67559,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172147
 169482
 
@@ -68158,7 +68158,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172197
 169532
 
@@ -68629,7 +68629,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172233
 169532
 
@@ -68851,7 +68851,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170201
 167435
 
@@ -68962,7 +68962,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170210
 167435
 
@@ -69072,7 +69072,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172265
 169532
 
@@ -69650,7 +69650,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172300
 169652
 
@@ -70046,7 +70046,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170286
 167501
 
@@ -70157,7 +70157,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170296
 167501
 
@@ -70472,7 +70472,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170312
 167501
 
@@ -70648,7 +70648,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170324
 167435
 
@@ -70692,7 +70692,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172374
 169652
 
@@ -70714,7 +70714,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170332
 167545
 
@@ -70736,7 +70736,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172383
 169652
 
@@ -71002,7 +71002,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170348
 167545
 
@@ -71730,7 +71730,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170394
 167545
 
@@ -71752,7 +71752,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172445
 169756
 
@@ -71796,7 +71796,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170408
 167605
 
@@ -71840,7 +71840,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172463
 169756
 
@@ -71862,7 +71862,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172464
 169758
 
@@ -71928,7 +71928,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170421
 167605
 
@@ -72060,7 +72060,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170430
 167618
 
@@ -72127,7 +72127,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172483
 169756
 
@@ -72171,7 +72171,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172484
 169758
 
@@ -72282,7 +72282,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170443
 167618
 
@@ -72680,7 +72680,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170467
 167605
 
@@ -72834,7 +72834,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170482
 167665
 
@@ -73362,7 +73362,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170544
 167618
 
@@ -73450,7 +73450,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170556
 167726
 
@@ -73494,7 +73494,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170568
 167743
 
@@ -73648,7 +73648,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170583
 167743
 
@@ -73736,7 +73736,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170591
 167665
 
@@ -73934,7 +73934,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170608
 167665
 
@@ -74198,7 +74198,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170636
 167743
 
@@ -74220,7 +74220,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170639
 167797
 
@@ -74352,7 +74352,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170657
 167797
 
@@ -74528,7 +74528,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170675
 167726
 
@@ -74550,7 +74550,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170684
 167726
 
@@ -74704,7 +74704,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170705
 167797
 
@@ -75080,7 +75080,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170750
 167857
 
@@ -75235,7 +75235,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170783
 167857
 
@@ -75524,7 +75524,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170828
 167857
 
@@ -75902,7 +75902,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170893
 167998
 
@@ -76013,7 +76013,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170910
 167998
 
@@ -76212,7 +76212,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 170951
 167998
 
@@ -76476,7 +76476,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171021
 168137
 
@@ -76520,7 +76520,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171024
 168137
 
@@ -76542,7 +76542,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171025
 168137
 
@@ -77434,7 +77434,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171065
 168437
 
@@ -77702,7 +77702,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171077
 168437
 
@@ -77922,7 +77922,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171087
 168437
 
@@ -78230,7 +78230,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171106
 168516
 
@@ -78274,7 +78274,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171117
 168548
 
@@ -78296,7 +78296,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171126
 168548
 
@@ -78604,7 +78604,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171174
 168516
 
@@ -78648,7 +78648,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171184
 168516
 
@@ -78670,7 +78670,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171185
 168622
 
@@ -79022,7 +79022,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171227
 168617
 
@@ -79066,7 +79066,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171231
 168548
 
@@ -79132,7 +79132,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171242
 168617
 
@@ -79418,7 +79418,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171269
 168684
 
@@ -79528,7 +79528,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171282
 168684
 
@@ -79616,7 +79616,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171290
 168617
 
@@ -79770,7 +79770,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171305
 168622
 
@@ -79814,7 +79814,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171315
 168622
 
@@ -80034,7 +80034,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171347
 168756
 
@@ -80210,7 +80210,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171379
 168684
 
@@ -80434,7 +80434,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171397
 168756
 
@@ -80786,7 +80786,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171455
 168756
 
@@ -81190,7 +81190,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171543
 169005
 
@@ -81212,7 +81212,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171552
 169005
 
@@ -82118,7 +82118,7 @@ Wertverstellung_Freig
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171663
 169005
 
@@ -82140,7 +82140,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171664
 169043
 
@@ -82162,7 +82162,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171673
 169043
 
@@ -82184,7 +82184,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171682
 169043
 
@@ -82426,7 +82426,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171725
 169203
 
@@ -82448,7 +82448,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171728
 169197
 
@@ -82514,7 +82514,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171739
 169203
 
@@ -83046,7 +83046,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171787
 169197
 
@@ -83134,7 +83134,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171793
 169203
 
@@ -83486,7 +83486,7 @@ Wertverstellung_Freig_steigend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169781
 167244
 
@@ -83707,7 +83707,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171844
 169290
 
@@ -83774,7 +83774,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169797
 169758
 
@@ -83818,7 +83818,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171851
 169197
 
@@ -83884,7 +83884,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169808
 167244
 
@@ -83906,7 +83906,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171857
 169308
 
@@ -84678,7 +84678,7 @@ Wertverstellung_Freig_fallend
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169853
 167244
 
@@ -84744,7 +84744,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171905
 169290
 
@@ -84766,7 +84766,7 @@ Wertverstellung_Freig_steiundfall
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171908
 169348
 
@@ -84942,7 +84942,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169869
 167251
 
@@ -85514,7 +85514,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169910
 167251
 
@@ -85580,7 +85580,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171962
 169290
 
@@ -85734,7 +85734,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171974
 169308
 
@@ -85888,7 +85888,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 171986
 169308
 
@@ -86086,7 +86086,7 @@ Wertverstellung_Freig_fallend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 169961
 167251
 
@@ -86130,7 +86130,7 @@ Wertverstellung_Freig_steigend
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172011
 169401
 
@@ -86262,7 +86262,7 @@ Wertverstellung_Freig
 7530
 481
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172023
 169348
 
@@ -86306,7 +86306,7 @@ Wertverstellung_Freig_steiundfall
 5530
 477
 4
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 172027
 169401
 
@@ -126819,7 +126819,7 @@ R 25 T 30 text_attribute
 1031
 11
 161338
-17 äC
+17 °C
 R 26 T 30 text_attribute
 198665
 1031
@@ -126892,7 +126892,7 @@ R 37 T 30 text_attribute
 1031
 10
 172197
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 38 T 30 text_attribute
 184333
 1031
@@ -126964,7 +126964,7 @@ R 49 T 30 text_attribute
 1031
 11
 160884
-10 äC
+10 °C
 R 50 T 30 text_attribute
 182288
 1031
@@ -127203,7 +127203,7 @@ R 88 T 30 text_attribute
 1031
 11
 161339
-18 äC
+18 °C
 R 89 T 30 text_attribute
 184349
 1031
@@ -127378,7 +127378,7 @@ R 117 T 30 text_attribute
 1031
 10
 170544
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 118 T 30 text_attribute
 196645
 1031
@@ -127403,7 +127403,7 @@ R 121 T 30 text_attribute
 1031
 11
 160887
-11 äC
+11 °C
 R 122 T 30 text_attribute
 188455
 1031
@@ -127637,7 +127637,7 @@ R 159 T 30 text_attribute
 1031
 11
 161340
-19 äC
+19 °C
 R 160 T 30 text_attribute
 180275
 1031
@@ -127765,7 +127765,7 @@ R 180 T 30 text_attribute
 1031
 10
 170556
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 181 T 30 text_attribute
 194618
 1031
@@ -127874,7 +127874,7 @@ R 198 T 30 text_attribute
 1031
 11
 160890
-12 äC
+12 °C
 R 199 T 30 text_attribute
 198720
 1031
@@ -128102,7 +128102,7 @@ R 235 T 30 text_attribute
 1031
 11
 161341
-20 äC
+20 °C
 R 236 T 30 text_attribute
 190537
 1031
@@ -128388,7 +128388,7 @@ R 282 T 30 text_attribute
 1031
 11
 160893
-13 äC
+13 °C
 R 283 T 30 text_attribute
 198744
 1031
@@ -128538,7 +128538,7 @@ R 306 T 30 text_attribute
 1031
 11
 161342
-21 äC
+21 °C
 R 307 T 30 text_attribute
 180319
 1031
@@ -128749,7 +128749,7 @@ R 341 T 30 text_attribute
 1031
 10
 164750
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 342 T 30 text_attribute
 182377
 1031
@@ -128773,7 +128773,7 @@ R 345 T 30 text_attribute
 1031
 10
 163936
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 346 T 30 text_attribute
 198763
 1031
@@ -128889,7 +128889,7 @@ R 364 T 30 text_attribute
 1031
 11
 160896
-14 äC
+14 °C
 R 365 T 30 text_attribute
 184432
 1031
@@ -128943,7 +128943,7 @@ R 373 T 30 text_attribute
 1031
 11
 161343
-22 äC
+22 °C
 R 374 T 30 text_attribute
 188531
 1031
@@ -128973,7 +128973,7 @@ R 378 T 30 text_attribute
 1031
 10
 164041
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 379 T 30 text_attribute
 186486
 1031
@@ -129405,7 +129405,7 @@ R 449 T 30 text_attribute
 1031
 11
 161344
-23 äC
+23 °C
 R 450 T 30 text_attribute
 186504
 1031
@@ -129465,7 +129465,7 @@ R 459 T 30 text_attribute
 1031
 11
 160899
-15 äC
+15 °C
 R 460 T 30 text_attribute
 196747
 1031
@@ -129783,7 +129783,7 @@ R 511 T 30 text_attribute
 1031
 11
 161345
-24 äC
+24 °C
 R 512 T 30 text_attribute
 186524
 1031
@@ -129892,7 +129892,7 @@ R 529 T 30 text_attribute
 1031
 10
 171908
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 530 T 30 text_attribute
 194721
 1031
@@ -129966,7 +129966,7 @@ R 541 T 30 text_attribute
 1031
 11
 160902
-16 äC
+16 °C
 R 542 T 30 text_attribute
 186533
 1031
@@ -130263,7 +130263,7 @@ R 589 T 30 text_attribute
 1031
 11
 161346
-25 äC
+25 °C
 R 590 T 30 text_attribute
 180404
 1031
@@ -130397,7 +130397,7 @@ R 611 T 30 text_attribute
 1031
 11
 160905
-17 äC
+17 °C
 R 612 T 30 text_attribute
 184508
 1031
@@ -130458,7 +130458,7 @@ R 621 T 30 text_attribute
 1031
 10
 171106
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 622 T 30 text_attribute
 186558
 1031
@@ -130685,7 +130685,7 @@ R 658 T 30 text_attribute
 1031
 10
 164042
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 659 T 30 text_attribute
 198855
 1031
@@ -130697,7 +130697,7 @@ R 660 T 30 text_attribute
 1031
 11
 161347
-26 äC
+26 °C
 R 661 T 30 text_attribute
 194760
 1031
@@ -130790,7 +130790,7 @@ R 675 T 30 text_attribute
 1031
 10
 171905
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 676 T 30 text_attribute
 188620
 1031
@@ -130863,7 +130863,7 @@ R 687 T 30 text_attribute
 1031
 11
 160908
-18 äC
+18 °C
 R 688 T 30 text_attribute
 194770
 1031
@@ -131063,7 +131063,7 @@ R 719 T 30 text_attribute
 1031
 10
 170568
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 720 T 30 text_attribute
 196827
 1031
@@ -131075,13 +131075,13 @@ R 721 T 30 text_attribute
 1031
 11
 161348
-27 äC
+27 °C
 R 722 T 30 text_attribute
 188636
 1031
 10
 164043
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 723 T 30 text_attribute
 184540
 1031
@@ -131099,7 +131099,7 @@ R 725 T 30 text_attribute
 1031
 10
 164610
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 726 T 30 text_attribute
 196829
 1031
@@ -131253,7 +131253,7 @@ R 750 T 30 text_attribute
 1031
 10
 163994
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 751 T 30 text_attribute
 194787
 1031
@@ -131331,7 +131331,7 @@ R 763 T 30 text_attribute
 1031
 10
 164753
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 764 T 30 text_attribute
 186599
 1031
@@ -131368,7 +131368,7 @@ R 769 T 30 text_attribute
 1031
 11
 160911
-19 äC
+19 °C
 R 770 T 30 text_attribute
 180457
 1031
@@ -131566,7 +131566,7 @@ R 801 T 30 text_attribute
 1031
 11
 161349
-28 äC
+28 °C
 R 802 T 30 text_attribute
 184562
 1031
@@ -131584,7 +131584,7 @@ R 804 T 30 text_attribute
 1031
 10
 170583
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 805 T 30 text_attribute
 180468
 1031
@@ -131762,7 +131762,7 @@ R 833 T 30 text_attribute
 1031
 10
 171379
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 834 T 30 text_attribute
 196859
 1031
@@ -131818,7 +131818,7 @@ R 842 T 30 text_attribute
 1031
 10
 164758
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 843 T 30 text_attribute
 188669
 1031
@@ -131941,7 +131941,7 @@ R 862 T 30 text_attribute
 1031
 11
 160914
-20 äC
+20 °C
 R 863 T 30 text_attribute
 198914
 1031
@@ -132070,7 +132070,7 @@ R 883 T 30 text_attribute
 1031
 11
 161350
-29 äC
+29 °C
 R 884 T 30 text_attribute
 182536
 1031
@@ -132333,7 +132333,7 @@ R 926 T 30 text_attribute
 1031
 10
 171397
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 927 T 30 text_attribute
 178452
 1031
@@ -132377,7 +132377,7 @@ R 933 T 30 text_attribute
 1031
 10
 171117
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 934 T 30 text_attribute
 196886
 1031
@@ -132446,7 +132446,7 @@ R 944 T 30 text_attribute
 1031
 11
 160917
-21 äC
+21 °C
 R 945 T 30 text_attribute
 190745
 1031
@@ -132501,7 +132501,7 @@ R 953 T 30 text_attribute
 1031
 11
 161351
-30 äC
+30 °C
 R 954 T 30 text_attribute
 188699
 1031
@@ -132573,7 +132573,7 @@ R 965 T 30 text_attribute
 1031
 10
 172233
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 966 T 30 text_attribute
 196895
 1031
@@ -132823,7 +132823,7 @@ R 1006 T 30 text_attribute
 1031
 10
 171126
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1007 T 30 text_attribute
 180524
 1031
@@ -132861,7 +132861,7 @@ R 1012 T 30 text_attribute
 1031
 10
 163351
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1013 T 30 text_attribute
 186669
 1031
@@ -132929,7 +132929,7 @@ R 1023 T 30 text_attribute
 1031
 11
 160920
-22 äC
+22 °C
 R 1024 T 30 text_attribute
 194864
 1031
@@ -132947,7 +132947,7 @@ R 1026 T 30 text_attribute
 1031
 10
 164395
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1027 T 30 text_attribute
 178481
 1031
@@ -132966,7 +132966,7 @@ R 1029 T 30 text_attribute
 1031
 11
 161352
-31 äC
+31 °C
 R 1030 T 30 text_attribute
 182578
 1031
@@ -133175,7 +133175,7 @@ R 1063 T 30 text_attribute
 1031
 10
 164613
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1064 T 30 text_attribute
 184635
 1031
@@ -133464,7 +133464,7 @@ R 1110 T 30 text_attribute
 1031
 11
 161353
-32 äC
+32 °C
 R 1111 T 30 text_attribute
 178503
 1031
@@ -133482,7 +133482,7 @@ R 1113 T 30 text_attribute
 1031
 11
 160923
-23 äC
+23 °C
 R 1114 T 30 text_attribute
 178504
 1031
@@ -133886,7 +133886,7 @@ R 1179 T 30 text_attribute
 1031
 10
 170591
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1180 T 30 text_attribute
 196954
 1031
@@ -133941,13 +133941,13 @@ R 1188 T 30 text_attribute
 1031
 11
 160926
-24 äC
+24 °C
 R 1189 T 30 text_attribute
 196957
 1031
 11
 161354
-33 äC
+33 °C
 R 1190 T 30 text_attribute
 180573
 1031
@@ -134137,7 +134137,7 @@ R 1220 T 30 text_attribute
 1031
 10
 169781
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1221 T 30 text_attribute
 192870
 1031
@@ -134400,13 +134400,13 @@ R 1263 T 30 text_attribute
 1031
 11
 160929
-25 äC
+25 °C
 R 1264 T 30 text_attribute
 196979
 1031
 11
 161355
-34 äC
+34 °C
 R 1265 T 30 text_attribute
 186739
 1031
@@ -134730,7 +134730,7 @@ R 1317 T 30 text_attribute
 1031
 10
 163362
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1318 T 30 text_attribute
 186755
 1031
@@ -134863,7 +134863,7 @@ R 1339 T 30 text_attribute
 1031
 11
 161356
-35 äC
+35 °C
 R 1340 T 30 text_attribute
 190857
 1031
@@ -134896,7 +134896,7 @@ R 1344 T 30 text_attribute
 1031
 10
 170286
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1345 T 30 text_attribute
 180617
 1031
@@ -134915,7 +134915,7 @@ R 1347 T 30 text_attribute
 1031
 11
 160932
-26 äC
+26 °C
 R 1348 T 30 text_attribute
 186762
 1031
@@ -135019,7 +135019,7 @@ R 1364 T 30 text_attribute
 1031
 10
 169797
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1365 T 30 text_attribute
 197007
 1031
@@ -135050,7 +135050,7 @@ R 1369 T 30 text_attribute
 1031
 10
 169808
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1370 T 30 text_attribute
 197008
 1031
@@ -135196,13 +135196,13 @@ R 1393 T 30 text_attribute
 1031
 10
 163372
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1394 T 30 text_attribute
 186775
 1031
 10
 170893
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1395 T 30 text_attribute
 182680
 1031
@@ -135288,7 +135288,7 @@ R 1408 T 30 text_attribute
 1031
 10
 172265
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1409 T 30 text_attribute
 178588
 1031
@@ -135380,7 +135380,7 @@ R 1423 T 30 text_attribute
 1031
 11
 161357
-36 äC
+36 °C
 R 1424 T 30 text_attribute
 186784
 1031
@@ -135435,7 +135435,7 @@ R 1432 T 30 text_attribute
 1031
 11
 160935
-27 äC
+27 °C
 R 1433 T 30 text_attribute
 178594
 1031
@@ -135604,7 +135604,7 @@ R 1459 T 30 text_attribute
 1031
 10
 170608
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1460 T 30 text_attribute
 186793
 1031
@@ -135932,7 +135932,7 @@ R 1513 T 30 text_attribute
 1031
 11
 161358
-37 äC
+37 °C
 R 1514 T 30 text_attribute
 178615
 1031
@@ -135987,7 +135987,7 @@ R 1522 T 30 text_attribute
 1031
 11
 160938
-28 äC
+28 °C
 R 1523 T 30 text_attribute
 182714
 1031
@@ -136029,7 +136029,7 @@ R 1529 T 30 text_attribute
 1031
 10
 164411
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1530 T 30 text_attribute
 180668
 1031
@@ -136115,7 +136115,7 @@ R 1543 T 30 text_attribute
 1031
 10
 170047
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1544 T 30 text_attribute
 184767
 1031
@@ -136391,7 +136391,7 @@ R 1588 T 30 text_attribute
 1031
 11
 161359
-38 äC
+38 °C
 R 1589 T 30 text_attribute
 195021
 1031
@@ -136512,7 +136512,7 @@ R 1608 T 30 text_attribute
 1031
 11
 160941
-29 äC
+29 °C
 R 1609 T 30 text_attribute
 186834
 1031
@@ -136579,7 +136579,7 @@ R 1619 T 30 text_attribute
 1031
 10
 164420
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1620 T 30 text_attribute
 180692
 1031
@@ -136653,13 +136653,13 @@ R 1631 T 30 text_attribute
 1031
 10
 170056
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1632 T 30 text_attribute
 182743
 1031
 10
 170296
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1633 T 30 text_attribute
 184791
 1031
@@ -136775,7 +136775,7 @@ R 1651 T 30 text_attribute
 1031
 10
 163944
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1652 T 30 text_attribute
 197085
 1031
@@ -136910,7 +136910,7 @@ R 1673 T 30 text_attribute
 1031
 11
 161360
-39 äC
+39 °C
 R 1674 T 30 text_attribute
 180709
 1031
@@ -137053,7 +137053,7 @@ R 1696 T 30 text_attribute
 1031
 11
 161198
-steigender Flanke (Taster als Schlieäer)
+steigender Flanke (Taster als Schließer)
 R 1697 T 30 text_attribute
 199145
 1031
@@ -137071,7 +137071,7 @@ R 1699 T 30 text_attribute
 1031
 11
 160944
-30 äC
+30 °C
 R 1700 T 30 text_attribute
 188906
 1031
@@ -137183,7 +137183,7 @@ R 1717 T 30 text_attribute
 1031
 10
 163946
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1718 T 30 text_attribute
 180720
 1031
@@ -137258,7 +137258,7 @@ R 1729 T 30 text_attribute
 1031
 10
 170312
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1730 T 30 text_attribute
 199154
 1031
@@ -137380,7 +137380,7 @@ R 1749 T 30 text_attribute
 1031
 11
 161361
-40 äC
+40 °C
 R 1750 T 30 text_attribute
 178680
 1031
@@ -137562,7 +137562,7 @@ R 1779 T 30 text_attribute
 1031
 11
 161201
-fallender Flanke (Taster als äffner)
+fallender Flanke (Taster als Öffner)
 R 1780 T 30 text_attribute
 199168
 1031
@@ -137593,7 +137593,7 @@ R 1784 T 30 text_attribute
 1031
 11
 160947
-31 äC
+31 °C
 R 1785 T 30 text_attribute
 195074
 1031
@@ -137802,7 +137802,7 @@ R 1818 T 30 text_attribute
 1031
 11
 161362
-0 äC
+0 °C
 R 1819 T 30 text_attribute
 193036
 1031
@@ -137980,7 +137980,7 @@ R 1847 T 30 text_attribute
 1031
 10
 170910
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1848 T 30 text_attribute
 199187
 1031
@@ -138077,7 +138077,7 @@ R 1863 T 30 text_attribute
 1031
 11
 160950
-32 äC
+32 °C
 R 1864 T 30 text_attribute
 199193
 1031
@@ -138191,7 +138191,7 @@ R 1882 T 30 text_attribute
 1031
 10
 171663
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1883 T 30 text_attribute
 199197
 1031
@@ -138210,7 +138210,7 @@ R 1885 T 30 text_attribute
 1031
 10
 171664
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1886 T 30 text_attribute
 182815
 1031
@@ -138234,7 +138234,7 @@ R 1889 T 30 text_attribute
 1031
 11
 161363
-1 äC
+1 °C
 R 1890 T 30 text_attribute
 199200
 1031
@@ -138622,7 +138622,7 @@ R 1953 T 30 text_attribute
 1031
 11
 160953
-33 äC
+33 °C
 R 1954 T 30 text_attribute
 178738
 1031
@@ -138688,7 +138688,7 @@ R 1964 T 30 text_attribute
 1031
 11
 161364
-2 äC
+2 °C
 R 1965 T 30 text_attribute
 199220
 1031
@@ -138859,7 +138859,7 @@ R 1992 T 30 text_attribute
 1031
 10
 171962
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 1993 T 30 text_attribute
 195131
 1031
@@ -139171,7 +139171,7 @@ R 2043 T 30 text_attribute
 1031
 11
 160956
-34 äC
+34 °C
 R 2044 T 30 text_attribute
 178761
 1031
@@ -139274,7 +139274,7 @@ R 2060 T 30 text_attribute
 1031
 10
 170636
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2061 T 30 text_attribute
 178765
 1031
@@ -139628,7 +139628,7 @@ R 2118 T 30 text_attribute
 1031
 11
 160959
-35 äC
+35 °C
 R 2119 T 30 text_attribute
 180830
 1031
@@ -139744,7 +139744,7 @@ R 2137 T 30 text_attribute
 1031
 10
 170639
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2138 T 30 text_attribute
 197218
 1031
@@ -139810,7 +139810,7 @@ R 2148 T 30 text_attribute
 1031
 10
 170324
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2149 T 30 text_attribute
 180838
 1031
@@ -140239,7 +140239,7 @@ R 2219 T 30 text_attribute
 1031
 11
 160962
-36 äC
+36 °C
 R 2220 T 30 text_attribute
 182904
 1031
@@ -140251,7 +140251,7 @@ R 2221 T 30 text_attribute
 1031
 10
 171673
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2222 T 30 text_attribute
 180856
 1031
@@ -140318,7 +140318,7 @@ R 2232 T 30 text_attribute
 1031
 10
 171974
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2233 T 30 text_attribute
 178812
 1031
@@ -140612,7 +140612,7 @@ R 2280 T 30 text_attribute
 1031
 10
 163662
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2281 T 30 text_attribute
 182920
 1031
@@ -140709,7 +140709,7 @@ R 2296 T 30 text_attribute
 1031
 10
 171682
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2297 T 30 text_attribute
 189069
 1031
@@ -140764,7 +140764,7 @@ R 2305 T 30 text_attribute
 1031
 11
 160965
-37 äC
+37 °C
 R 2306 T 30 text_attribute
 187024
 1031
@@ -141241,7 +141241,7 @@ R 2384 T 30 text_attribute
 1031
 10
 170332
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2385 T 30 text_attribute
 187045
 1031
@@ -141308,7 +141308,7 @@ R 2395 T 30 text_attribute
 1031
 11
 160968
-38 äC
+38 °C
 R 2396 T 30 text_attribute
 180904
 1031
@@ -141437,7 +141437,7 @@ R 2416 T 30 text_attribute
 10
 162210
 Zählerstand und Intervallzeit durch\r\nS
-\\ynchronsignal zuräcksetzen bei
+\\ynchronsignal zur°Cksetzen bei
 R 2417 T 30 text_attribute
 195245
 1031
@@ -141832,7 +141832,7 @@ R 2481 T 30 text_attribute
 1031
 11
 160971
-39 äC
+39 °C
 R 2482 T 30 text_attribute
 197312
 1031
@@ -141975,7 +141975,7 @@ R 2504 T 30 text_attribute
 1031
 10
 163886
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2505 T 30 text_attribute
 195269
 1031
@@ -142218,7 +142218,7 @@ R 2544 T 30 text_attribute
 1031
 10
 171986
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2545 T 30 text_attribute
 191185
 1031
@@ -142272,7 +142272,7 @@ R 2553 T 30 text_attribute
 1031
 10
 170348
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2554 T 30 text_attribute
 197331
 1031
@@ -142402,7 +142402,7 @@ R 2574 T 30 text_attribute
 1031
 11
 160974
-40 äC
+40 °C
 R 2575 T 30 text_attribute
 195290
 1031
@@ -142469,7 +142469,7 @@ R 2585 T 30 text_attribute
 1031
 10
 170657
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2586 T 30 text_attribute
 197341
 1031
@@ -142591,7 +142591,7 @@ R 2605 T 30 text_attribute
 1031
 10
 163665
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2606 T 30 text_attribute
 191203
 1031
@@ -142639,7 +142639,7 @@ R 2613 T 30 text_attribute
 1031
 10
 172300
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2614 T 30 text_attribute
 191205
 1031
@@ -142913,7 +142913,7 @@ R 2657 T 30 text_attribute
 1031
 10
 171174
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2658 T 30 text_attribute
 193263
 1031
@@ -142931,7 +142931,7 @@ R 2660 T 30 text_attribute
 1031
 10
 169853
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2661 T 30 text_attribute
 178929
 1031
@@ -142949,7 +142949,7 @@ R 2663 T 30 text_attribute
 1031
 11
 160977
-0 äC
+0 °C
 R 2664 T 30 text_attribute
 195314
 1031
@@ -143436,7 +143436,7 @@ R 2743 T 30 text_attribute
 1031
 11
 160980
-1 äC
+1 °C
 R 2744 T 30 text_attribute
 189192
 1031
@@ -143454,7 +143454,7 @@ R 2746 T 30 text_attribute
 1031
 10
 171184
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2747 T 30 text_attribute
 195336
 1031
@@ -143478,7 +143478,7 @@ R 2750 T 30 text_attribute
 1031
 10
 171185
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2751 T 30 text_attribute
 197385
 1031
@@ -143737,7 +143737,7 @@ R 2793 T 30 text_attribute
 1031
 10
 163888
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2794 T 30 text_attribute
 193302
 1031
@@ -143902,7 +143902,7 @@ R 2820 T 30 text_attribute
 1031
 11
 160983
-2 äC
+2 °C
 R 2821 T 30 text_attribute
 185118
 1031
@@ -144131,7 +144131,7 @@ R 2858 T 30 text_attribute
 1031
 10
 170951
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2859 T 30 text_attribute
 193319
 1031
@@ -144486,7 +144486,7 @@ R 2916 T 30 text_attribute
 1031
 10
 163674
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2917 T 30 text_attribute
 193336
 1031
@@ -144715,7 +144715,7 @@ R 2953 T 30 text_attribute
 1031
 10
 170675
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2954 T 30 text_attribute
 183105
 1031
@@ -144885,7 +144885,7 @@ R 2981 T 30 text_attribute
 1031
 10
 171455
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 2982 T 30 text_attribute
 195400
 1031
@@ -145219,7 +145219,7 @@ R 3036 T 30 text_attribute
 1031
 10
 164815
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3037 T 30 text_attribute
 187224
 1031
@@ -145447,7 +145447,7 @@ R 3073 T 30 text_attribute
 1031
 10
 169869
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3074 T 30 text_attribute
 181088
 1031
@@ -145911,7 +145911,7 @@ R 3149 T 30 text_attribute
 1031
 10
 163960
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3150 T 30 text_attribute
 187252
 1031
@@ -146379,7 +146379,7 @@ R 3226 T 30 text_attribute
 1031
 10
 163963
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3227 T 30 text_attribute
 197513
 1031
@@ -146643,7 +146643,7 @@ R 3270 T 30 text_attribute
 1031
 10
 172011
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3271 T 30 text_attribute
 191380
 1031
@@ -146729,7 +146729,7 @@ R 3284 T 30 text_attribute
 1031
 10
 170684
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3285 T 30 text_attribute
 187288
 1031
@@ -147099,7 +147099,7 @@ R 3345 T 30 text_attribute
 1031
 10
 172027
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3346 T 30 text_attribute
 179112
 1031
@@ -147197,7 +147197,7 @@ R 3361 T 30 text_attribute
 1031
 10
 164819
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3362 T 30 text_attribute
 181166
 1031
@@ -147389,7 +147389,7 @@ R 3392 T 30 text_attribute
 1031
 11
 161464
-Einflächenbedienung: dunkler/heller (UM)
+Einfl°Chenbedienung: dunkler/heller (UM)
 R 3393 T 30 text_attribute
 183222
 1031
@@ -147585,7 +147585,7 @@ R 3424 T 30 text_attribute
 1031
 10
 172032
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3425 T 30 text_attribute
 183230
 1031
@@ -147609,7 +147609,7 @@ R 3428 T 30 text_attribute
 1031
 10
 164019
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3429 T 30 text_attribute
 181184
 1031
@@ -147899,7 +147899,7 @@ R 3476 T 30 text_attribute
 1031
 11
 161465
-Zweiflächenbedienung: heller (EIN)
+Zweifl°Chenbedienung: heller (EIN)
 R 3477 T 30 text_attribute
 179147
 1031
@@ -147954,7 +147954,7 @@ R 3485 T 30 text_attribute
 1031
 11
 161262
-kein zykl. Senden äber Schaltobjekt X.2
+kein zykl. Senden über Schaltobjekt X.2
 R 3486 T 30 text_attribute
 183246
 1031
@@ -147997,7 +147997,7 @@ R 3492 T 30 text_attribute
 1031
 10
 172023
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3493 T 30 text_attribute
 185295
 1031
@@ -148427,7 +148427,7 @@ R 3563 T 30 text_attribute
 1031
 11
 161466
-Zweiflächenbedienung: dunkler (AUS)
+Zweifl°Chenbedienung: dunkler (AUS)
 R 3564 T 30 text_attribute
 181219
 1031
@@ -148677,7 +148677,7 @@ R 3604 T 30 text_attribute
 1031
 10
 170705
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3605 T 30 text_attribute
 179183
 1031
@@ -148909,7 +148909,7 @@ R 3642 T 30 text_attribute
 1031
 11
 161467
-Zweiflächenbedienung: heller (UM)
+Zweifl°Chenbedienung: heller (UM)
 R 3643 T 30 text_attribute
 193530
 1031
@@ -149408,7 +149408,7 @@ R 3724 T 30 text_attribute
 1031
 11
 161468
-Zweiflächenbedienung: dunkler (UM)
+Zweifl°Chenbedienung: dunkler (UM)
 R 3725 T 30 text_attribute
 179215
 1031
@@ -149530,7 +149530,7 @@ R 3744 T 30 text_attribute
 1031
 10
 164020
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3745 T 30 text_attribute
 181268
 1031
@@ -149569,7 +149569,7 @@ R 3750 T 30 text_attribute
 10
 162181
 Zählerstand und Intervallzeit durch\r\nS
-\\ynchronsignal zuräcksetzen bei
+\\ynchronsignal zur°Cksetzen bei
 R 3751 T 30 text_attribute
 187413
 1031
@@ -149733,7 +149733,7 @@ R 3777 T 30 text_attribute
 1031
 10
 170394
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3778 T 30 text_attribute
 181276
 1031
@@ -149920,7 +149920,7 @@ R 3808 T 30 text_attribute
 1031
 10
 171725
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3809 T 30 text_attribute
 197668
 1031
@@ -150050,7 +150050,7 @@ R 3829 T 30 text_attribute
 1031
 10
 172039
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3830 T 30 text_attribute
 185387
 1031
@@ -150214,7 +150214,7 @@ R 3856 T 30 text_attribute
 1031
 10
 161504
-Verzägerung bei Busspannungswiederkehr\r
+Verzögerung bei Busspannungswiederkehr\r
 \\\nBasis
 R 3857 T 30 text_attribute
 187441
@@ -150386,7 +150386,7 @@ R 3884 T 30 text_attribute
 1031
 10
 171728
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3885 T 30 text_attribute
 185402
 1031
@@ -150674,7 +150674,7 @@ R 3931 T 30 text_attribute
 1031
 10
 161505
-Verzägerung bei Busspannungswiederkehr\r
+Verzögerung bei Busspannungswiederkehr\r
 \\\nFaktor (3...127)
 R 3932 T 30 text_attribute
 195654
@@ -150904,7 +150904,7 @@ R 3969 T 30 text_attribute
 1031
 10
 171739
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 3970 T 30 text_attribute
 187473
 1031
@@ -151613,7 +151613,7 @@ R 4084 T 30 text_attribute
 1031
 10
 171227
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4085 T 30 text_attribute
 199793
 1031
@@ -151859,7 +151859,7 @@ R 4124 T 30 text_attribute
 1031
 10
 169910
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4125 T 30 text_attribute
 181372
 1031
@@ -152077,7 +152077,7 @@ R 4160 T 30 text_attribute
 1031
 10
 164060
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4161 T 30 text_attribute
 197766
 1031
@@ -152114,7 +152114,7 @@ R 4166 T 30 text_attribute
 1031
 10
 171231
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4167 T 30 text_attribute
 195719
 1031
@@ -152436,7 +152436,7 @@ R 4219 T 30 text_attribute
 1031
 10
 170408
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4220 T 30 text_attribute
 195734
 1031
@@ -152637,7 +152637,7 @@ R 4252 T 30 text_attribute
 1031
 10
 164063
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4253 T 30 text_attribute
 183455
 1031
@@ -152716,7 +152716,7 @@ R 4265 T 30 text_attribute
 1031
 10
 171242
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4266 T 30 text_attribute
 179363
 1031
@@ -153063,7 +153063,7 @@ R 4322 T 30 text_attribute
 1031
 10
 163903
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4323 T 30 text_attribute
 193714
 1031
@@ -153325,7 +153325,7 @@ R 4365 T 30 text_attribute
 1031
 10
 170421
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4366 T 30 text_attribute
 179390
 1031
@@ -153343,7 +153343,7 @@ R 4368 T 30 text_attribute
 1031
 10
 164855
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4369 T 30 text_attribute
 183487
 1031
@@ -154305,7 +154305,7 @@ R 4525 T 30 text_attribute
 1031
 10
 172076
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4526 T 30 text_attribute
 191723
 1031
@@ -154685,7 +154685,7 @@ R 4587 T 30 text_attribute
 1031
 10
 163471
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4588 T 30 text_attribute
 187643
 1031
@@ -154819,7 +154819,7 @@ R 4609 T 30 text_attribute
 1031
 10
 163907
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4610 T 30 text_attribute
 199936
 1031
@@ -155211,7 +155211,7 @@ R 4673 T 30 text_attribute
 1031
 10
 164864
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4674 T 30 text_attribute
 187667
 1031
@@ -155266,7 +155266,7 @@ R 4682 T 30 text_attribute
 1031
 10
 163908
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4683 T 30 text_attribute
 185621
 1031
@@ -155291,7 +155291,7 @@ R 4686 T 30 text_attribute
 1031
 10
 172083
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4687 T 30 text_attribute
 189718
 1031
@@ -155561,7 +155561,7 @@ R 4731 T 30 text_attribute
 1031
 10
 170430
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4732 T 30 text_attribute
 179491
 1031
@@ -155750,7 +155750,7 @@ R 4762 T 30 text_attribute
 1031
 10
 164874
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4763 T 30 text_attribute
 193836
 1031
@@ -156162,7 +156162,7 @@ R 4830 T 30 text_attribute
 1031
 10
 170443
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4831 T 30 text_attribute
 195900
 1031
@@ -156193,7 +156193,7 @@ R 4835 T 30 text_attribute
 1031
 10
 172374
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4836 T 30 text_attribute
 195901
 1031
@@ -156462,13 +156462,13 @@ R 4879 T 30 text_attribute
 1031
 10
 172383
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4880 T 30 text_attribute
 185673
 1031
 10
 170750
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4881 T 30 text_attribute
 181578
 1031
@@ -156688,7 +156688,7 @@ R 4916 T 30 text_attribute
 1031
 10
 171787
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4917 T 30 text_attribute
 191827
 1031
@@ -157170,7 +157170,7 @@ R 4996 T 30 text_attribute
 1031
 10
 172098
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 4997 T 30 text_attribute
 195947
 1031
@@ -157540,7 +157540,7 @@ R 5057 T 30 text_attribute
 1031
 10
 163978
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5058 T 30 text_attribute
 179578
 1031
@@ -157692,7 +157692,7 @@ R 5082 T 30 text_attribute
 1031
 10
 163495
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5083 T 30 text_attribute
 200065
 1031
@@ -157873,7 +157873,7 @@ R 5112 T 30 text_attribute
 1031
 10
 171269
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5113 T 30 text_attribute
 200075
 1031
@@ -158415,7 +158415,7 @@ R 5200 T 30 text_attribute
 1031
 10
 164513
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5201 T 30 text_attribute
 179618
 1031
@@ -158536,7 +158536,7 @@ R 5220 T 30 text_attribute
 1031
 10
 171282
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5221 T 30 text_attribute
 179622
 1031
@@ -158642,7 +158642,7 @@ R 5237 T 30 text_attribute
 1031
 10
 171793
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5238 T 30 text_attribute
 185770
 1031
@@ -159144,7 +159144,7 @@ R 5320 T 30 text_attribute
 1031
 10
 171021
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5321 T 30 text_attribute
 183745
 1031
@@ -159253,7 +159253,7 @@ R 5338 T 30 text_attribute
 1031
 10
 172107
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5339 T 30 text_attribute
 189896
 1031
@@ -159571,7 +159571,7 @@ R 5390 T 30 text_attribute
 1031
 10
 163499
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5391 T 30 text_attribute
 185813
 1031
@@ -159988,7 +159988,7 @@ R 5458 T 30 text_attribute
 1031
 10
 163915
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5459 T 30 text_attribute
 189926
 1031
@@ -160598,7 +160598,7 @@ R 5557 T 30 text_attribute
 1031
 10
 164106
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5558 T 30 text_attribute
 196098
 1031
@@ -160756,7 +160756,7 @@ R 5583 T 30 text_attribute
 1031
 10
 170467
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5584 T 30 text_attribute
 189960
 1031
@@ -161013,7 +161013,7 @@ R 5625 T 30 text_attribute
 1031
 10
 171024
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5626 T 30 text_attribute
 194068
 1031
@@ -161122,7 +161122,7 @@ R 5643 T 30 text_attribute
 1031
 10
 171290
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5644 T 30 text_attribute
 196120
 1031
@@ -161405,7 +161405,7 @@ R 5689 T 30 text_attribute
 1031
 10
 171025
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5690 T 30 text_attribute
 179750
 1031
@@ -161552,7 +161552,7 @@ R 5713 T 30 text_attribute
 1031
 10
 163510
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5714 T 30 text_attribute
 189996
 1031
@@ -161815,7 +161815,7 @@ R 5756 T 30 text_attribute
 1031
 10
 164707
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5757 T 30 text_attribute
 198198
 1031
@@ -161878,7 +161878,7 @@ R 5766 T 30 text_attribute
 1031
 10
 163919
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5767 T 30 text_attribute
 179770
 1031
@@ -161902,7 +161902,7 @@ R 5770 T 30 text_attribute
 1031
 10
 171065
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5771 T 30 text_attribute
 192059
 1031
@@ -162147,7 +162147,7 @@ R 5810 T 30 text_attribute
 1031
 10
 170482
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5811 T 30 text_attribute
 194118
 1031
@@ -162202,7 +162202,7 @@ R 5819 T 30 text_attribute
 1031
 10
 172123
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5820 T 30 text_attribute
 200265
 1031
@@ -162295,7 +162295,7 @@ R 5834 T 30 text_attribute
 1031
 10
 163924
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5835 T 30 text_attribute
 194124
 1031
@@ -162693,7 +162693,7 @@ R 5899 T 30 text_attribute
 1031
 10
 170783
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 5900 T 30 text_attribute
 179806
 1031
@@ -163311,7 +163311,7 @@ R 5999 T 30 text_attribute
 1031
 10
 171305
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6000 T 30 text_attribute
 181880
 1031
@@ -163598,7 +163598,7 @@ R 6046 T 30 text_attribute
 1031
 10
 171543
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6047 T 30 text_attribute
 198276
 1031
@@ -163704,7 +163704,7 @@ R 6063 T 30 text_attribute
 1031
 10
 172147
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6064 T 30 text_attribute
 183945
 1031
@@ -163965,7 +163965,7 @@ R 6106 T 30 text_attribute
 1031
 10
 169961
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6107 T 30 text_attribute
 198294
 1031
@@ -164113,7 +164113,7 @@ R 6130 T 30 text_attribute
 1031
 10
 171552
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6131 T 30 text_attribute
 192156
 1031
@@ -164829,7 +164829,7 @@ R 6247 T 30 text_attribute
 1031
 10
 172445
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6248 T 30 text_attribute
 188092
 1031
@@ -165161,7 +165161,7 @@ R 6301 T 30 text_attribute
 1031
 10
 171077
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6302 T 30 text_attribute
 194252
 1031
@@ -165173,7 +165173,7 @@ R 6303 T 30 text_attribute
 1031
 11
 161101
-nicht zuräcksetzen
+nicht zur°Cksetzen
 R 6304 T 30 text_attribute
 200397
 1031
@@ -165413,7 +165413,7 @@ R 6342 T 30 text_attribute
 1031
 10
 171315
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6343 T 30 text_attribute
 186070
 1031
@@ -165485,7 +165485,7 @@ R 6354 T 30 text_attribute
 1031
 11
 161324
-3 äC
+3 °C
 R 6355 T 30 text_attribute
 200409
 1031
@@ -165970,7 +165970,7 @@ R 6433 T 30 text_attribute
 1031
 11
 161325
-4 äC
+4 °C
 R 6434 T 30 text_attribute
 179950
 1031
@@ -166069,7 +166069,7 @@ R 6449 T 30 text_attribute
 1031
 10
 171844
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6450 T 30 text_attribute
 179954
 1031
@@ -166441,7 +166441,7 @@ R 6510 T 30 text_attribute
 1031
 11
 161326
-5 äC
+5 °C
 R 6511 T 30 text_attribute
 179970
 1031
@@ -166722,7 +166722,7 @@ R 6556 T 30 text_attribute
 1031
 10
 172463
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6557 T 30 text_attribute
 192271
 1031
@@ -166747,7 +166747,7 @@ R 6560 T 30 text_attribute
 1031
 10
 172464
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6561 T 30 text_attribute
 182032
 1031
@@ -166863,7 +166863,7 @@ R 6579 T 30 text_attribute
 1031
 11
 161327
-6 äC
+6 °C
 R 6580 T 30 text_attribute
 200470
 1031
@@ -166936,7 +166936,7 @@ R 6591 T 30 text_attribute
 1031
 10
 170201
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6592 T 30 text_attribute
 184088
 1031
@@ -167146,7 +167146,7 @@ R 6625 T 30 text_attribute
 1031
 10
 172483
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6626 T 30 text_attribute
 192290
 1031
@@ -167170,7 +167170,7 @@ R 6629 T 30 text_attribute
 1031
 10
 163538
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6630 T 30 text_attribute
 198435
 1031
@@ -167182,7 +167182,7 @@ R 6631 T 30 text_attribute
 1031
 10
 172484
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6632 T 30 text_attribute
 186147
 1031
@@ -167428,7 +167428,7 @@ R 6671 T 30 text_attribute
 1031
 11
 161328
-7 äC
+7 °C
 R 6672 T 30 text_attribute
 182060
 1031
@@ -167545,7 +167545,7 @@ R 6690 T 30 text_attribute
 1031
 10
 170210
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6691 T 30 text_attribute
 194352
 1031
@@ -167729,7 +167729,7 @@ R 6720 T 30 text_attribute
 1031
 10
 163548
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6721 T 30 text_attribute
 196411
 1031
@@ -167878,7 +167878,7 @@ R 6744 T 30 text_attribute
 1031
 11
 161329
-8 äC
+8 °C
 R 6745 T 30 text_attribute
 200512
 1031
@@ -168018,7 +168018,7 @@ R 6767 T 30 text_attribute
 1031
 10
 171857
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6768 T 30 text_attribute
 182087
 1031
@@ -168127,7 +168127,7 @@ R 6785 T 30 text_attribute
 1031
 11
 160859
-1 äC
+1 °C
 R 6786 T 30 text_attribute
 188236
 1031
@@ -168360,7 +168360,7 @@ R 6823 T 30 text_attribute
 1031
 11
 161330
-9 äC
+9 °C
 R 6824 T 30 text_attribute
 198487
 1031
@@ -168454,7 +168454,7 @@ R 6838 T 30 text_attribute
 1031
 10
 171851
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6839 T 30 text_attribute
 200538
 1031
@@ -168773,7 +168773,7 @@ R 6890 T 30 text_attribute
 1031
 10
 164747
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6891 T 30 text_attribute
 196456
 1031
@@ -168828,7 +168828,7 @@ R 6899 T 30 text_attribute
 1031
 10
 170828
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 6900 T 30 text_attribute
 196459
 1031
@@ -168937,7 +168937,7 @@ R 6917 T 30 text_attribute
 1031
 11
 160863
-3 äC
+3 °C
 R 6918 T 30 text_attribute
 184175
 1031
@@ -168980,7 +168980,7 @@ R 6924 T 30 text_attribute
 1031
 11
 161331
-10 äC
+10 °C
 R 6925 T 30 text_attribute
 184176
 1031
@@ -169402,7 +169402,7 @@ R 6993 T 30 text_attribute
 1031
 11
 161332
-11 äC
+11 °C
 R 6994 T 30 text_attribute
 180101
 1031
@@ -169452,7 +169452,7 @@ R 7001 T 30 text_attribute
 1031
 11
 160866
-4 äC
+4 °C
 R 7002 T 30 text_attribute
 194439
 1031
@@ -169855,7 +169855,7 @@ R 7067 T 30 text_attribute
 1031
 11
 161333
-12 äC
+12 °C
 R 7068 T 30 text_attribute
 192410
 1031
@@ -169921,7 +169921,7 @@ R 7078 T 30 text_attribute
 1031
 11
 160869
-5 äC
+5 °C
 R 7079 T 30 text_attribute
 194461
 1031
@@ -169997,7 +169997,7 @@ R 7090 T 30 text_attribute
 1031
 10
 169989
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 7091 T 30 text_attribute
 194463
 1031
@@ -170275,7 +170275,7 @@ R 7135 T 30 text_attribute
 1031
 10
 171087
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 7136 T 30 text_attribute
 192429
 1031
@@ -170366,7 +170366,7 @@ R 7150 T 30 text_attribute
 1031
 11
 161334
-13 äC
+13 °C
 R 7151 T 30 text_attribute
 198577
 1031
@@ -170440,7 +170440,7 @@ R 7162 T 30 text_attribute
 1031
 11
 160872
-6 äC
+6 °C
 R 7163 T 30 text_attribute
 194484
 1031
@@ -170780,7 +170780,7 @@ R 7217 T 30 text_attribute
 1031
 10
 164712
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 7218 T 30 text_attribute
 200642
 1031
@@ -170877,7 +170877,7 @@ R 7233 T 30 text_attribute
 1031
 11
 161421
-steigender Flanke (Taster als Schlieäer)
+steigender Flanke (Taster als Schließer)
 R 7234 T 30 text_attribute
 182214
 1031
@@ -170959,7 +170959,7 @@ R 7246 T 30 text_attribute
 1031
 11
 161335
-14 äC
+14 °C
 R 7247 T 30 text_attribute
 190410
 1031
@@ -170977,7 +170977,7 @@ R 7249 T 30 text_attribute
 1031
 11
 160875
-7 äC
+7 °C
 R 7250 T 30 text_attribute
 196555
 1031
@@ -171249,7 +171249,7 @@ R 7293 T 30 text_attribute
 1031
 10
 164714
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 7294 T 30 text_attribute
 190422
 1031
@@ -171316,7 +171316,7 @@ R 7304 T 30 text_attribute
 1031
 10
 171347
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 7305 T 30 text_attribute
 184281
 1031
@@ -171370,7 +171370,7 @@ R 7313 T 30 text_attribute
 1031
 11
 161422
-fallender Flanke (Taster als äffner)
+fallender Flanke (Taster als Öffner)
 R 7314 T 30 text_attribute
 188380
 1031
@@ -171426,7 +171426,7 @@ R 7322 T 30 text_attribute
 1031
 11
 161336
-15 äC
+15 °C
 R 7323 T 30 text_attribute
 182239
 1031
@@ -171463,7 +171463,7 @@ R 7328 T 30 text_attribute
 1031
 10
 163800
-Verstellung äber lange Betätigung ?
+Verstellung über lange Betätigung ?
 R 7329 T 30 text_attribute
 186336
 1031
@@ -171499,7 +171499,7 @@ R 7334 T 30 text_attribute
 1031
 11
 160878
-8 äC
+8 °C
 R 7335 T 30 text_attribute
 198627
 1031
@@ -171830,7 +171830,7 @@ R 7388 T 30 text_attribute
 1031
 11
 161337
-16 äC
+16 °C
 R 7389 T 30 text_attribute
 188403
 1031
@@ -171984,7 +171984,7 @@ R 7413 T 30 text_attribute
 1031
 11
 160881
-9 äC
+9 °C
 R 7414 T 30 text_attribute
 180218
 1031

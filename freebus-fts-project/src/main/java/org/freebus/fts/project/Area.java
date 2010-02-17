@@ -155,11 +155,14 @@ public class Area
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof Area))
          return false;
 
       final Area oo = (Area) o;
-      return (id == oo.id && address == oo.address && name == oo.name && lines.equals(oo.lines));
+      return (id == oo.id && address == oo.address && name.equals(oo.name) && lines.equals(oo.lines));
    }
 
    /**

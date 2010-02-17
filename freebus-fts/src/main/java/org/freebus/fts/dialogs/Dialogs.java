@@ -43,7 +43,8 @@ public final class Dialogs
    {
       final MainWindow mainWin = MainWindow.getInstance();
 
-      mainWin.setCursor(Cursor.getDefaultCursor());
+      if (mainWin != null)
+         mainWin.setCursor(Cursor.getDefaultCursor());
 
       JOptionPane.showMessageDialog(mainWin, message, title, JOptionPane.ERROR_MESSAGE, ImageCache
             .getIcon("icons-large/error-dialog"));

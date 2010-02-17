@@ -18,7 +18,7 @@ import org.freebus.fts.products.services.VirtualDeviceService;
 public final class ProductsImporter
 {
    private final ProductsFactory sourceFactory, destFactory;
-   private final CatalogEntryService destCatalogEntryService;
+   private final CatalogEntryService catalogEntryService;
 
    private final Set<CatalogEntry> catalogEntries = new HashSet<CatalogEntry>();
 
@@ -31,7 +31,7 @@ public final class ProductsImporter
       this.sourceFactory = sourceFactory;
 
       this.destFactory = destFactory;
-      destCatalogEntryService = destFactory.getCatalogEntryService();
+      catalogEntryService = destFactory.getCatalogEntryService();
    }
 
    /**
@@ -46,7 +46,7 @@ public final class ProductsImporter
       for (VirtualDevice device: devices)
       {
          final CatalogEntry catalogEntry = device.getCatalogEntry();
-         if (!catalogEntries.contains(catalogEntry))
+         if (catalogEntryService.getCatalogEntry(catalogEntry.getId()) == null)
             copy(catalogEntry);
 
          final FunctionalEntity funcEnt = device.getFunctionalEntity();
@@ -74,7 +74,7 @@ public final class ProductsImporter
    public void copy(CatalogEntry catalogEntry)
    {
       destFactory.getManufacturerService().save(catalogEntry.getManufacturer());
-      destCatalogEntryService.save(catalogEntry);
+      catalogEntryService.save(catalogEntry);
       catalogEntries.add(catalogEntry);
    }
 

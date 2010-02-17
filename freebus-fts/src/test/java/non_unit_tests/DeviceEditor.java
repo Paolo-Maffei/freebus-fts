@@ -1,6 +1,7 @@
 package non_unit_tests;
 
 import java.awt.BorderLayout;
+import java.awt.Cursor;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -14,10 +15,12 @@ import javax.swing.event.ListSelectionListener;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.LookAndFeelManager;
+import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.persistence.Environment;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.project.Device;
 
 /**
  * A test program that opens an editor for a device.
@@ -33,6 +36,11 @@ public class DeviceEditor
    private final JList lstDevices;
    private final VirtualDevice[] virtualDevices;
 
+   /**
+    * Create a new device editor test-window.
+    *
+    * @param virtualDevs - the list of devices that can be edited.
+    */
    public DeviceEditor(final List<VirtualDevice> virtualDevs)
    {
       this.virtualDevices = new VirtualDevice[virtualDevs.size()];
@@ -53,13 +61,26 @@ public class DeviceEditor
       lstDevices.getSelectionModel().addListSelectionListener(new ListSelectionListener()
       {
          @Override
-         public void valueChanged(ListSelectionEvent e)
+         public void valueChanged(ListSelectionEvent event)
          {
             final int idx = lstDevices.getSelectedIndex();
             if (idx < 0) return;
 
-            final VirtualDevice virtDev = virtualDevices[idx];
-            progEdit.setProgram(virtDev.getProgram());
+            try
+            {
+               frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+               final Device dev = new Device(0, virtualDevices[idx]);
+               progEdit.setDevice(dev);
+            }
+            catch (Exception e)
+            {
+               e.printStackTrace();
+               Dialogs.showExceptionDialog(e, "Failed to open the parameter editor for the selected device.");
+            }
+            finally
+            {
+               frame.setCursor(Cursor.getDefaultCursor());
+            }
          }
       });
       

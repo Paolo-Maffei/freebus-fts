@@ -83,10 +83,8 @@ public class DeviceParameterValue
    public String getValue()
    {
       if (stringValue == null) return "";
-      if (value instanceof String) return (String) value;
-
-      value = stringValue;
-      return (String) value;
+      if (value == null) value = stringValue;
+      return value.toString();
    }
 
    /**
@@ -95,9 +93,7 @@ public class DeviceParameterValue
    public Integer getIntValue()
    {
       if (stringValue == null) return 0;
-      if (value instanceof Integer) return (Integer) value;
-
-      value = Integer.parseInt(stringValue);
+      if (value == null) value = Integer.parseInt(stringValue);
       return (Integer) value;
    }
 

@@ -12,8 +12,12 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.apache.log4j.Logger;
+import org.freebus.fts.components.parametereditor.Page;
+import org.freebus.fts.components.parametereditor.ParamData;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.Program;
+import org.freebus.fts.project.Device;
 
 /**
  * A panel that allows to edit the parameters of a program.
@@ -24,9 +28,9 @@ public class ParameterEditor extends JPanel implements ChangeListener
 
    private JTabbedPane paramTabs = new JTabbedPane(JTabbedPane.LEFT);
 
-   private Program program;
-   private final Map<Parameter,ParameterEditorPage> paramPages = new HashMap<Parameter,ParameterEditorPage>();
-   private final Map<Parameter,Object> paramValues = new HashMap<Parameter,Object>();
+   private Device device;
+   private final Map<ParamData, Page> paramPages = new HashMap<ParamData, Page>();
+   private final Map<Parameter, ParamData> paramData = new HashMap<Parameter, ParamData>();
    private boolean updateContentsEnabled = false;
 
    /**
@@ -43,29 +47,32 @@ public class ParameterEditor extends JPanel implements ChangeListener
          public void stateChanged(ChangeEvent e)
          {
             final Component comp = paramTabs.getSelectedComponent();
-            if (!(comp instanceof ParameterEditorPage)) return;
+            if (!(comp instanceof Page))
+               return;
 
             if (updateContentsEnabled)
-               ((ParameterEditorPage) comp).updateContents();
+               ((Page) comp).updateContents();
          }
       });
    }
 
    /**
-    * Set the program whose parameters are edited. Calls {@link #updateContents()}.
+    * Set the device whose parameters are edited. Calls
+    * {@link #updateContents()}.
     */
-   public void setProgram(Program program)
+   public void setDevice(Device device)
    {
-      this.program = program;
+      this.device = device;
       updateContents();
    }
 
    /**
-    * @return the program whose parameters are edited, or <code>null</code> if none.
+    * @return the device whose parameters are edited, or <code>null</code> if
+    *         none.
     */
-   public Program getProgram()
+   public Device getDevice()
    {
-      return program;
+      return device;
    }
 
    /**
@@ -74,87 +81,97 @@ public class ParameterEditor extends JPanel implements ChangeListener
    public void updateContents()
    {
       paramPages.clear();
-      paramValues.clear();
+      paramData.clear();
       paramTabs.removeAll();
 
+      final Program program = device.getProgram();
       final Set<Parameter> params = program.getParameters();
-      for (Parameter param: params)
+
+      // Create a ParamData object for every parameter
+      for (final Parameter param : params)
+         paramData.put(param, new ParamData(param));
+
+      // Set the dependent (child) parameters in the parameter-data objects.
+      for (final ParamData data : paramData.values())
       {
-         paramValues.put(param, param.getDefault());
+         final Parameter param = data.getParameter();
+         final Parameter parentParam = param.getParent();
+         if (parentParam == null)
+            continue;
 
-         if (param.getParent() == null || param.getAddress() == null)
+         if (!paramData.containsKey(parentParam))
          {
-            final ParameterEditorPage page = new ParameterEditorPage(param, paramValues);
-            page.addChangeListener(this);
-
-            paramPages.put(param, page);
+            Logger.getLogger(getClass()).error(
+                  String.format("Parameter #{0} has an unknown parent parameter #{1}", new Object[] { param.getId(),
+                        parentParam.getId() }));
+            continue;
          }
+
+         paramData.get(parentParam).addDependent(paramData.get(param));
       }
 
-      for (Parameter param: params)
+      // Create the parameter pages
+      for (final ParamData data : paramData.values())
       {
-         final Parameter parentParam = param.getParent();
+         if (!data.isPage())
+            continue;
 
-         if (!paramPages.containsKey(param))
-            paramPages.get(parentParam).addParameter(param);
-      }      
+         final Page page = new Page(data, paramData);
+         page.addChangeListener(this);
+
+         paramPages.put(data, page);
+      }
 
       updateVisibility();
 
-      ((ParameterEditorPage) paramTabs.getComponentAt(0)).updateContents();
+      ((Page) paramTabs.getComponentAt(0)).updateContents();
       paramTabs.setSelectedIndex(0);
    }
 
    /**
-    * Update the visibility of the tab pages.
+    * Update the visibility of the parameter pages.
     */
    public void updateVisibility()
    {
-      final Set<Parameter> visiblePageParams = new HashSet<Parameter>();
-      final Integer nullValue = Integer.valueOf(0);
-
-      for (final Parameter param: paramPages.keySet())
-      {
-         final Parameter parentParam = param.getParent();
-         final Object parentValue = parentParam == null ? nullValue : paramValues.get(parentParam);
-
-         if (parentParam == null || !(parentValue instanceof Integer) ||
-               ((Integer) parentValue).equals(param.getParentValue()))
-         {
-            visiblePageParams.add(param);
-         }
-      }
-
       updateContentsEnabled = false;
 
-      // Remove all visible pages that shall not be visible anymore
+      // Collect the parameter-pages that shall be visible
+      final Set<Page> visiblePages = new HashSet<Page>();
+      for (final ParamData data : paramPages.keySet())
+      {
+         if (data.isVisible())
+            visiblePages.add(paramPages.get(data));
+      }
+
+      // Remove all parameter-pages that are currently visible but that shall
+      // not be visible anymore. The pages that are visible and shall stay visible
+      // are removed from visiblePages. Afterwards, visiblePages only contains
+      // those pages that need to be shown.
       for (int i = paramTabs.getComponentCount() - 1; i >= 0; --i)
       {
-         final ParameterEditorPage page = (ParameterEditorPage) paramTabs.getComponentAt(i);
-         final Parameter param = page.getPageParameter();
+         final Page page = (Page) paramTabs.getComponentAt(i);
 
-         if (visiblePageParams.contains(param))
-            visiblePageParams.remove(param);
+         if (visiblePages.contains(page))
+            visiblePages.remove(page);
          else paramTabs.remove(i);
       }
 
-      // Add pages that shall be visible but are not yet
-      for (final Parameter param: visiblePageParams)
+      // Add pages that shall be visible but are not yet.
+      for (final Page page: visiblePages)
       {
-         final ParameterEditorPage page = paramPages.get(param);
          final int displayOrder = page.getDisplayOrder();
 
          int i;
          for (i = paramTabs.getComponentCount() - 1; i >= 0; --i)
          {
-            final ParameterEditorPage pg = (ParameterEditorPage) paramTabs.getComponentAt(i);
+            final Page pg = (Page) paramTabs.getComponentAt(i);
             if (pg.getDisplayOrder() < displayOrder)
                break;
          }
 
          paramTabs.add(page, i + 1);
       }
-    
+
       updateContentsEnabled = true;
    }
 

@@ -57,6 +57,7 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
    @Override
    public void save(VirtualDevice device) throws PersistenceException
    {
-      entityManager.persist(device);
+      if (device.getId() == 0) entityManager.persist(device);
+      else entityManager.merge(device);
    }
 }

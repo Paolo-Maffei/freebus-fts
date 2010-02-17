@@ -248,7 +248,8 @@ public final class Device
    }
 
    /**
-    * Returns the string value for the parameter <code>param</code>.
+    * Returns the string value for the parameter <code>param</code>. If no value
+    * is yet set, the parameter's default value is returned.
     * 
     * @param param the parameter whose value is requested.
     * @return the parameter's value.
@@ -256,7 +257,7 @@ public final class Device
    public String getParameterValue(final Parameter param)
    {
       if (parameterValues == null)
-         return "";
+         return param.getDefaultString();
 
       final DeviceParameterValue val = parameterValues.get(param);
       if (val == null) return "";
@@ -265,15 +266,16 @@ public final class Device
    }
 
    /**
-    * Returns the integer value for the parameter <code>param</code>.
+    * Returns the integer value for the parameter <code>param</code>. If no value
+    * is yet set, the parameter's default value is returned.
     * 
     * @param param the parameter whose value is requested.
-    * @return the parameter's value, or zero if no parameter value is set.
+    * @return the parameter's value.
     */
    public int getIntParameterValue(final Parameter param)
    {
       if (parameterValues == null)
-         return 0;
+         return param.getDefaultLong();
 
       final DeviceParameterValue val = parameterValues.get(param);
       if (val == null) return 0;

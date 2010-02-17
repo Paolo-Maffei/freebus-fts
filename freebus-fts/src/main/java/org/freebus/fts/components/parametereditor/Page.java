@@ -1,4 +1,4 @@
-package org.freebus.fts.components;
+package org.freebus.fts.components.parametereditor;
 
 import java.awt.Component;
 import java.awt.Font;
@@ -8,7 +8,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -28,6 +30,7 @@ import javax.swing.SpinnerNumberModel;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
+import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.ParameterType;
@@ -38,43 +41,46 @@ import org.freebus.fts.products.ParameterValue;
  * 
  * @see {@link ParameterEditor}.
  */
-public class ParameterEditorPage extends JPanel
+public class Page extends JPanel
 {
    private static final long serialVersionUID = 719661697391054660L;
 
+   private final ParamData pageData;
    private final Parameter pageParam;
    private final Set<ChangeListener> changeListeners = new HashSet<ChangeListener>();
-   private final Set<Parameter> childParams = new HashSet<Parameter>();
-   private final Map<Parameter, Object> paramValues;
+   private final Map<Integer, Parameter> childParams = new HashMap<Integer, Parameter>();
+   private final Map<Parameter, ParamData> paramData;
    private boolean childsChanged = false;
    private final JPanel content;
 
    /**
     * Create a tab page for the parameter editor.
     * 
-    * @param pageParam the parameter which is displayed in the page, including
-    *           its children.
+    * @param pageData the parameter-data for the parameter which is displayed on this
+    *           the page.
     */
-   public ParameterEditorPage(final Parameter pageParam, final Map<Parameter, Object> paramValues)
+   public Page(final ParamData pageData, final Map<Parameter, ParamData> paramData)
    {
       super(new GridBagLayout());
 
-      this.pageParam = pageParam;
-      this.paramValues = paramValues;
+      this.pageData = pageData;
+      this.paramData = paramData;
 
-      setName(pageParam.getDescription());
+      pageParam = pageData.getParameter();
+      setName(pageParam.getDescription() + " [" + pageParam.getId() + "]");
 
-      final Insets insets = new Insets(0, 0, 0, 0);
+      final Insets insets = new Insets(8, 8, 8, 8);
+      final Insets separatorInsets = new Insets(0, 8, 0, 8);
+
       final JLabel title = new JLabel(pageParam.getDescription());
-      title.setFont(title.getFont().deriveFont(Font.BOLD));
+      title.setFont(title.getFont().deriveFont(Font.BOLD).deriveFont(title.getFont().getSize() * 1.1f));
       add(title, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
-            new Insets(6, 4, 6, 4), 0, 0));
+            insets, 0, 0));
 
       add(new JSeparator(JSeparator.HORIZONTAL), new GridBagConstraints(0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER,
-            GridBagConstraints.HORIZONTAL, insets, 0, 0));
+            GridBagConstraints.HORIZONTAL, separatorInsets, 0, 0));
 
       content = new JPanel(new GridBagLayout());
-      content.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
       add(content, new GridBagConstraints(0, 2, 1, 1, 1, 10, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             insets, 0, 0));
 
@@ -91,11 +97,19 @@ public class ParameterEditorPage extends JPanel
    }
 
    /**
+    * @return the parameter-data that represents the page.
+    */
+   public ParamData getPageData()
+   {
+      return pageData;
+   }
+
+   /**
     * @return the display order of the page.
     */
    public int getDisplayOrder()
    {
-      return pageParam.getDisplayOrder();
+      return pageData.getDisplayOrder();
    }
 
    /**
@@ -123,7 +137,7 @@ public class ParameterEditorPage extends JPanel
     */
    public void addParameter(Parameter param)
    {
-      childParams.add(param);
+      childParams.put(param.getId(), param);
       childsChanged = true;
    }
 
@@ -132,17 +146,34 @@ public class ParameterEditorPage extends JPanel
     */
    public void updateContents()
    {
-      if (childsChanged)
+      if (true || childsChanged)
       {
          childsChanged = false;
          content.removeAll();
-   
+
          int gridRow = -1;
-         for (final Parameter param : sortByDisplayOrder(childParams))
+         for (final Parameter param : sortByDisplayOrder(childParams.values()))
          {
-            createParamComponent(param, ++gridRow);
+            if (isParamVisible(param))
+               createParamComponent(param, ++gridRow);
          }
       }
+   }
+
+   /**
+    * Test if the components for the given parameter shall be visible.
+    */
+   public boolean isParamVisible(final Parameter param)
+   {
+      final Parameter parentParam = param.getParent();
+      if (parentParam == null)
+         return true;
+
+      final Integer parentValue = param.getParentValue();
+      if (parentValue == null)
+         return true;
+
+      return parentValue.equals(paramData.get(parentParam));
    }
 
    /**
@@ -171,7 +202,7 @@ public class ParameterEditorPage extends JPanel
       else
       {
          createParamLabel(param, gridRow, 1);
-         contentsAddComponent(new JLabel("Unsupported atomic type " + atomicType), gridRow);
+         contentAddComponent(new JLabel("Unsupported atomic type " + atomicType), gridRow);
       }
    }
 
@@ -199,8 +230,9 @@ public class ParameterEditorPage extends JPanel
       });
 
       final JComboBox combo = new JComboBox(new DefaultComboBoxModel(values));
-      final ListCellRenderer origRenderer = combo.getRenderer();
+      combo.setName("param-" + param.getId());
 
+      final ListCellRenderer origRenderer = combo.getRenderer();
       combo.setRenderer(new ListCellRenderer()
       {
          @Override
@@ -222,14 +254,14 @@ public class ParameterEditorPage extends JPanel
             final ParameterValue val = (ParameterValue) combo.getSelectedItem();
             if (val != null)
             {
-               paramValues.put(param, val.getIntValue()); 
+               paramData.get(param).setValue(val.getIntValue());
                fireStateChanged(param);
             }
          }
       });
 
-      final int defaultValue = (Integer) paramValues.get(param);
-      for (final ParameterValue val: values)
+      final int defaultValue = (Integer) paramData.get(param).getValue();
+      for (final ParameterValue val : values)
       {
          if (val.getIntValue() == defaultValue)
          {
@@ -239,7 +271,7 @@ public class ParameterEditorPage extends JPanel
       }
 
       createParamLabel(param, gridRow, 1);
-      contentsAddComponent(combo, gridRow);
+      contentAddComponent(combo, gridRow);
    }
 
    /**
@@ -255,24 +287,25 @@ public class ParameterEditorPage extends JPanel
    {
       final ParameterType paramType = param.getParameterType();
 
-      final int value = (Integer)paramValues.get(param);
+      final int value = (Integer) paramData.get(param).getValue();
       final int min = paramType.getMinValue();
       final int max = paramType.getMaxValue();
       final SpinnerNumberModel model = new SpinnerNumberModel(value, min, max, 1);
       final JSpinner spinner = new JSpinner(model);
+      spinner.setName("param-" + param.getId());
 
       model.addChangeListener(new ChangeListener()
       {
          @Override
          public void stateChanged(ChangeEvent e)
          {
-            paramValues.put(param, model.getValue());
+            paramData.get(param).setValue(model.getValue());
             fireStateChanged(param);
          }
       });
 
       createParamLabel(param, gridRow, 1);
-      contentsAddComponent(spinner, gridRow);
+      contentAddComponent(spinner, gridRow);
    }
 
    /**
@@ -288,9 +321,12 @@ public class ParameterEditorPage extends JPanel
       createParamLabel(param, gridRow, 1);
 
       final JTextArea input = new JTextArea();
-      input.setText((String) paramValues.get(param));
+      input.setText((String) paramData.get(param).getValue());
+      input.setName("param-" + param.getId());
 
-      contentsAddComponent(input, gridRow);
+      // TODO add listener that sets the paramData's value on change.
+      
+      contentAddComponent(input, gridRow);
    }
 
    /**
@@ -315,15 +351,16 @@ public class ParameterEditorPage extends JPanel
     * @param gridRow the row of the contents grid in which the label is placed.
     * @param gridWidth the number of grid columns the label shall use (usually 1
     *           or 2).
-    *
+    * 
     * @return The created label.
     */
    public JLabel createParamLabel(final Parameter param, int gridRow, int gridWidth)
    {
       final JLabel lbl = new JLabel(param.getDescription());
+      lbl.setName("param-" + param.getId());
 
       content.add(lbl, new GridBagConstraints(0, gridRow, gridWidth, 1, 1, 0, GridBagConstraints.WEST,
-            GridBagConstraints.NONE, new Insets(0, 4, 0, 4), 0, 0));
+            GridBagConstraints.NONE, new Insets(0, 0, 0, 4), 0, 0));
 
       return lbl;
    }
@@ -336,7 +373,7 @@ public class ParameterEditorPage extends JPanel
     * @param gridRow the row of the contents grid in which the component is
     *           added.
     */
-   public void contentsAddComponent(final JComponent comp, int gridRow)
+   public void contentAddComponent(final JComponent comp, int gridRow)
    {
       content.add(comp, new GridBagConstraints(1, gridRow, 1, 1, 4, 0, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, new Insets(2, 4, 2, 4), 0, 0));
@@ -351,7 +388,7 @@ public class ParameterEditorPage extends JPanel
    {
       final ChangeEvent e = new ChangeEvent(param);
 
-      for (ChangeListener listener: changeListeners)
+      for (ChangeListener listener : changeListeners)
          listener.stateChanged(e);
    }
 
@@ -362,7 +399,7 @@ public class ParameterEditorPage extends JPanel
     * 
     * @return a sorted array of parameters.
     */
-   public static Parameter[] sortByDisplayOrder(final Set<Parameter> params)
+   public static Parameter[] sortByDisplayOrder(final Collection<Parameter> params)
    {
       final Parameter[] paramsSorted = new Parameter[params.size()];
       params.toArray(paramsSorted);
@@ -376,5 +413,27 @@ public class ParameterEditorPage extends JPanel
       });
 
       return paramsSorted;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return paramData.hashCode();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this) return true;
+      if (!(o instanceof Page)) return false;
+      final Page oo = (Page) o;
+
+      return paramData.equals(oo.paramData);
    }
 }

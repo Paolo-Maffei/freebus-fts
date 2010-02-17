@@ -20,6 +20,7 @@ public class TestArea extends TestCase
       assertEquals(0, area.getAddress());
       assertNull(area.getProject());
       assertNotNull(area.getLines());
+      assertEquals("", area.getName());
    }
 
    public final void testGetSetId()
