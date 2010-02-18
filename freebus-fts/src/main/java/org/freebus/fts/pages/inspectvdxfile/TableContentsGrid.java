@@ -16,7 +16,6 @@ import org.freebus.fts.persistence.vdx.VdxFieldType;
 import org.freebus.fts.persistence.vdx.VdxSection;
 import org.freebus.fts.persistence.vdx.VdxSectionHeader;
 import org.freebus.fts.utils.TableUtils;
-import org.hsqldb.lib.Sort.StringComparator;
 
 /**
  * Displays the contents of a VDX table, with a list of records on the left side
@@ -109,57 +108,6 @@ public class TableContentsGrid extends JScrollPane implements TableContents
             sorter.setComparator(col, compDouble);
             tcmData.getColumn(col).setCellRenderer(rendererNumber);
          }
-      }
-   }
-
-   /**
-    * Internal class for sorting the rows of a VDX table, depending on the
-    * data-type of the sorted column.
-    */
-   class DataRowSorter extends TableRowSorter<DefaultTableModel>
-   {
-      private VdxFieldType[] fieldTypes;
-
-      /**
-       * Create a row-sorter.
-       * 
-       * @param model - the model that is sorted.
-       */
-      public DataRowSorter(DefaultTableModel model)
-      {
-         super(model);
-      }
-
-      /**
-       * Set the field types of the table that shall be sorted.
-       */
-      public void setFieldTypes(final VdxFieldType[] fieldTypes)
-      {
-         this.fieldTypes = fieldTypes;
-      }
-
-      /**
-       * {@inheritDoc}
-       */
-      @Override
-      public Comparator<?> getComparator(int column)
-      {
-         final VdxFieldType type = fieldTypes[column];
-         if (type == VdxFieldType.INTEGER || type == VdxFieldType.SHORT)
-         {
-            return new Comparator<String>()
-            {
-               @Override
-               public int compare(String a, String b)
-               {
-                  final int ia = a.isEmpty() ? 0 : Integer.parseInt(a);
-                  final int ib = b.isEmpty() ? 0 : Integer.parseInt(b);
-                  return ib - ia;
-               }
-            };
-         }
-
-         return (Comparator<?>) new StringComparator();
       }
    }
 
