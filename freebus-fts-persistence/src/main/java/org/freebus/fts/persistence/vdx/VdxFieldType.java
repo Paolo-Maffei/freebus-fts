@@ -1,6 +1,5 @@
 package org.freebus.fts.persistence.vdx;
 
-
 /**
  * Types of VDX fields.
  */
@@ -22,6 +21,12 @@ public enum VdxFieldType
    STRING(3, String.class),
 
    /**
+    * Not sure if this is the correct type. Found e.g. in table
+    * "parametercalculation", field "LRTransformation", with length 32768
+    */
+   LONG_STRING(4, String.class),
+
+   /**
     * A floating point number.
     */
    FLOAT(5, float.class),
@@ -32,7 +37,8 @@ public enum VdxFieldType
    BYTE(6, short.class),
 
    /**
-    * A byte-array.
+    * A byte-array (?)
+    * Maybe LONG_STRING and BYTE_ARRAY should be swapped.
     */
    BYTE_ARRAY(8, byte.class, true);
 
@@ -53,12 +59,13 @@ public enum VdxFieldType
 
    /**
     * @return the field type for the VD_ type id.
-    * @throws IllegalArgumentException if the given id is unknown. 
+    * @throws IllegalArgumentException if the given id is unknown.
     */
    public static VdxFieldType valueOfTypeId(int id)
    {
-      for (final VdxFieldType type: values())
-         if (type.id == id) return type;
+      for (final VdxFieldType type : values())
+         if (type.id == id)
+            return type;
 
       throw new IllegalArgumentException("Invalid VD_ field type " + id);
    }

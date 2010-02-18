@@ -66,6 +66,8 @@ public class Telegram
       routingCounter = (drl >> 4) & 7;
 
       int dataLen = drl & 15;
+      if (dataLen + pos >= rawData.length)
+         throw new InvalidDataException("Invalid data length", dataLen);
 
       // TPCI - transport control field
       int tpci = rawData[pos++];

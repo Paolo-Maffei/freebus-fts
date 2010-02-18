@@ -18,7 +18,8 @@ import javax.persistence.Column;
 import org.freebus.fts.persistence.FileBlockReader;
 
 /**
- * A class that reads vd_ files. The section names are all converted to lower case.
+ * A class that reads vd_ files. The section names are all converted to lower
+ * case.
  */
 public final class VdxFileReader
 {
@@ -34,8 +35,8 @@ public final class VdxFileReader
    private Map<String, Integer> languages;
 
    /**
-    * Create a new VDX-file reader object. The file <code>fileName</code> is read
-    * upon creation.
+    * Create a new VDX-file reader object. The file <code>fileName</code> is
+    * read upon creation.
     * 
     * @param file is the file that shall be read.
     * 
@@ -57,7 +58,8 @@ public final class VdxFileReader
       }
       catch (IOException e)
       {
-         if (in != null) in.close();
+         if (in != null)
+            in.close();
          throw new IOException("Failed to read file " + fileName + ": " + e.getMessage(), e);
       }
 
@@ -72,8 +74,8 @@ public final class VdxFileReader
    }
 
    /**
-    * Create a new VDX-file reader object. The file <code>fileName</code> is read
-    * upon creation.
+    * Create a new VDX-file reader object. The file <code>fileName</code> is
+    * read upon creation.
     * 
     * @param fileName - the name of the file that shall be read.
     * 
@@ -104,18 +106,19 @@ public final class VdxFileReader
     */
    public void close()
    {
-      if (in != null) try
-      {
-         in.close();
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
-      }
-      finally
-      {
-         in = null;
-      }
+      if (in != null)
+         try
+         {
+            in.close();
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
+         finally
+         {
+            in = null;
+         }
    }
 
    /**
@@ -125,7 +128,7 @@ public final class VdxFileReader
    {
       return fileName;
    }
-   
+
    /**
     * @return the names of all found sections.
     */
@@ -153,17 +156,19 @@ public final class VdxFileReader
    /**
     * Get a specific section of the file. The section is read, if required.
     * 
-    * @return the section with the given name or null if no such section exists or
-    *         if the section contains no records.
+    * @return the section with the given name or null if no such section exists
+    *         or if the section contains no records.
     * @throws IOException
     */
    public VdxSection getSection(String name) throws IOException
    {
       name = name.toLowerCase();
-      if (sections.containsKey(name)) return sections.get(name);
+      if (sections.containsKey(name))
+         return sections.get(name);
 
       final VdxSectionHeader header = sectionHeaders.get(name);
-      if (header == null) return null;
+      if (header == null)
+         return null;
 
       final VdxSection section = new VdxSection(header);
       final int numFields = header.fields.length;
@@ -177,7 +182,8 @@ public final class VdxFileReader
       while (line != null)
       {
          line = reader.readLine();
-         if (line == null || !line.startsWith("C")) break;
+         if (line == null || !line.startsWith("C"))
+            break;
       }
 
       // Read the entries of the section
@@ -189,7 +195,8 @@ public final class VdxFileReader
             line = reader.readLine();
             if (line == null)
             {
-               if (i > 0 && i < numFields) throw new IOException("file is truncated");
+               if (i > 0 && i < numFields)
+                  throw new IOException("file is truncated");
                break;
             }
 
@@ -198,7 +205,8 @@ public final class VdxFileReader
                values[--i] += line.substring(2).replace("//", "/");
                continue;
             }
-            if (i == numFields) break;
+            if (i == numFields)
+               break;
 
             values[i] = line.replace("//", "/");
          }
@@ -211,8 +219,8 @@ public final class VdxFileReader
    }
 
    /**
-    * Loads the VDX section sectionName. For each record, creates an object of the type
-    * entryClass.
+    * Loads the VDX section sectionName. For each record, creates an object of
+    * the type entryClass.
     * 
     * @param sectionName - the name of the VDX section to process.
     * @param entryClass - the class for the entries.
@@ -238,13 +246,15 @@ public final class VdxFileReader
          else
          {
             a = field.getAnnotation(Column.class);
-            if (a == null) continue;
+            if (a == null)
+               continue;
             fieldName = ((Column) a).name();
          }
 
          int fieldIdx = header.getIndexOf(fieldName);
          field.setAccessible(true);
-         if (fieldIdx >= 0) fieldMappings.put(fieldIdx, field);
+         if (fieldIdx >= 0)
+            fieldMappings.put(fieldIdx, field);
       }
 
       final Object[] objs = new Object[num];
@@ -278,7 +288,8 @@ public final class VdxFileReader
                else if (type == int.class)
                {
                   int pos = value.indexOf('.');
-                  if (pos >= 0) value = value.substring(0, pos);
+                  if (pos >= 0)
+                     value = value.substring(0, pos);
                   field.setInt(obj, value.isEmpty() ? 0 : Integer.parseInt(value));
                }
                else if (type == double.class || type == Double.class)
@@ -287,7 +298,8 @@ public final class VdxFileReader
                   field.setFloat(obj, value.isEmpty() ? 0.0f : Float.parseFloat(value));
                else if (type == boolean.class || type == Boolean.class)
                {
-                  if (value.isEmpty()) value = "0";
+                  if (value.isEmpty())
+                     value = "0";
                   field.setBoolean(obj, Integer.parseInt(value) != 0);
                }
                else
@@ -318,8 +330,7 @@ public final class VdxFileReader
                         final int ordinal = Integer.parseInt(value);
                         Enum<?> enumVal = null;
 
-                        
-                        for (Enum<?> e: enumClass.getEnumConstants())
+                        for (Enum<?> e : enumClass.getEnumConstants())
                         {
                            if (e.ordinal() == ordinal)
                            {
@@ -330,7 +341,8 @@ public final class VdxFileReader
 
                         if (enumVal != null)
                            field.set(obj, enumVal);
-                        else throw new IllegalArgumentException("Could not initialize enum of type " + type + " with value: " + value);
+                        else throw new IllegalArgumentException("Could not initialize enum of type " + type
+                              + " with value: " + value);
                      }
                      else
                      {
@@ -364,7 +376,8 @@ public final class VdxFileReader
          int j = 0;
          for (int i = 0; i < num; ++i)
          {
-            if (objs[i] == null) continue;
+            if (objs[i] == null)
+               continue;
             tmpObjs[j++] = objs[i];
          }
          return tmpObjs;
@@ -374,11 +387,11 @@ public final class VdxFileReader
    }
 
    /**
-    * Remove a specific section contents from the reader. Only the contents of the
-    * section is removed, the section header stays loaded.
+    * Remove a specific section contents from the reader. Only the contents of
+    * the section is removed, the section header stays loaded.
     * 
-    * You can call this method free some memory, which is recommended when working with
-    * large files.
+    * You can call this method free some memory, which is recommended when
+    * working with large files.
     */
    public void removeSectionContents(String name)
    {
@@ -386,8 +399,8 @@ public final class VdxFileReader
    }
 
    /**
-    * Read the vdx file header. The read-pointer stands on the T line of the first section
-    * afterwards.
+    * Read the vdx file header. The read-pointer stands on the T line of the
+    * first section afterwards.
     * 
     * @throws IOException
     */
@@ -402,20 +415,26 @@ public final class VdxFileReader
       in.seek(0);
 
       line = reader.readLine();
-      if (line != null) line = line.trim();
-      if (!"EX-IM".equals(line)) throw new IOException("no vdx file");
+      if (line != null)
+         line = line.trim();
+      if (!"EX-IM".equals(line))
+         throw new IOException("no vdx file");
 
       while (true)
       {
          line = reader.readLine();
-         if (line == null) break;
+         if (line == null)
+            break;
          lineType = line.charAt(0);
-         if (lineType == '-' && line.startsWith(sectionSeparator)) break;
+         if (lineType == '-' && line.startsWith(sectionSeparator))
+            break;
          if (lineType == 'K')
          {
-            if (format == null || format.isEmpty()) format = line.substring(2).trim();
+            if (format == null || format.isEmpty())
+               format = line.substring(2).trim();
          }
-         else if (lineType == 'V') setVersion(line.substring(2).trim());
+         else if (lineType == 'V')
+            setVersion(line.substring(2).trim());
       }
    }
 
@@ -443,7 +462,8 @@ public final class VdxFileReader
 
          final int sectionId = Integer.parseInt(reader.readWord());
          String sectionName = reader.readLine();
-         if (sectionName != null) sectionName= sectionName.trim().toLowerCase();
+         if (sectionName != null)
+            sectionName = sectionName.trim().toLowerCase();
          if (sectionHeaders.containsKey(sectionName))
          {
             throw new IOException("Duplicate section \"" + sectionName + "\" at byte-pos "
@@ -457,18 +477,29 @@ public final class VdxFileReader
          {
             // A field definition line looks like this:
             // C1 T3 1 4 N MANUFACTURER_ID
-            reader.readWord(); // Skip the field-id "1" (we already read the 'C')
+            reader.readWord(); // Skip the field-id "1" (we already read the
+                               // 'C')
             reader.readWord(); // Skip the section name "T3"
-            
-            // the field data type
-            fieldTypes.add(VdxFieldType.valueOfTypeId(Integer.parseInt(reader.readWord())));
 
-            reader.readWord(); // Skip the size of the field in bytes (int:4, short:2, string:length, ...)
+            // the field data type
+            try
+            {
+               fieldTypes.add(VdxFieldType.valueOfTypeId(Integer.parseInt(reader.readWord())));
+            }
+            catch (Exception e)
+            {
+               throw new IOException("failed to get field type, section \"" + sectionName + "\" at byte-pos "
+                     + Long.toString(reader.getFilePointer()), e);
+            }
+
+            reader.readWord(); // Skip the size of the field in bytes (int:4,
+                               // short:2, string:length, ...)
             reader.readWord(); // Skip the null-allowed Y|N switch
 
             // the field name
             line = reader.readLine();
-            if (line == null) break;
+            if (line == null)
+               break;
             fieldNames.add(line.trim().toLowerCase());
          }
 
@@ -485,9 +516,11 @@ public final class VdxFileReader
          // Skip the section entries
          while (true)
          {
-            if (!reader.readUntil('-')) break;
+            if (!reader.readUntil('-'))
+               break;
             line = reader.readLine();
-            if (line == null || line.startsWith(sectionSeparator)) break;
+            if (line == null || line.startsWith(sectionSeparator))
+               break;
          }
       }
    }
@@ -509,8 +542,9 @@ public final class VdxFileReader
    }
 
    /**
-    * Set the language that shall be used for multi-lingual texts.
-    * Use {@link getLanguages} to obtain the list of available languages in a VD_ file.
+    * Set the language that shall be used for multi-lingual texts. Use
+    * {@link getLanguages} to obtain the list of available languages in a VD_
+    * file.
     */
    public synchronized void setLanguage(String language)
    {
@@ -521,9 +555,11 @@ public final class VdxFileReader
          languageId = languages.get(language);
       else languageId = 0;
    }
-   
+
    /**
-    * Set the language-id of the language that shall be used for multi-lingual texts.
+    * Set the language-id of the language that shall be used for multi-lingual
+    * texts.
+    * 
     * @see setLanguage
     */
    public void setLanguageId(int languageId)
@@ -551,7 +587,8 @@ public final class VdxFileReader
          try
          {
             section = getSection("ete_language");
-            if (section == null) return null;
+            if (section == null)
+               return null;
 
             final int langIdIdx = section.getHeader().getIndexOf("language_id");
             final int langNameIdx = section.getHeader().getIndexOf("language_name");

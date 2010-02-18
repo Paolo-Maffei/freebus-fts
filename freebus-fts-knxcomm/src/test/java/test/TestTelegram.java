@@ -1,6 +1,6 @@
 package test;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.*;
 
 import org.freebus.knxcomm.telegram.Application;
 import org.freebus.knxcomm.telegram.GroupAddress;
@@ -9,10 +9,11 @@ import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
+import org.junit.Test;
 
-public class TestTelegram extends TestCase
+public class TestTelegram
 {
-
+   @Test
    public void testTelegram()
    {
       final Telegram telegram = new Telegram();
@@ -22,6 +23,7 @@ public class TestTelegram extends TestCase
       assertEquals(Application.None, telegram.getApplication());
    }
 
+   @Test
    public void testGetSetApplication()
    {
       final Telegram telegram = new Telegram();
@@ -34,6 +36,7 @@ public class TestTelegram extends TestCase
       assertEquals(Application.GroupValue_Write, telegram.getApplication());
    }
 
+   @Test
    public void testGetSetFrom()
    {
       final Telegram telegram = new Telegram();
@@ -47,6 +50,7 @@ public class TestTelegram extends TestCase
       assertEquals(PhysicalAddress.NULL, telegram.getFrom());
    }
 
+   @Test
    public void testGetSetDest()
    {
       final Telegram telegram = new Telegram();
@@ -72,6 +76,7 @@ public class TestTelegram extends TestCase
       assertEquals(destPhys, telegram.getDest());
    }
 
+   @Test
    public void testGetSetPriority()
    {
       final Telegram telegram = new Telegram();
@@ -84,6 +89,7 @@ public class TestTelegram extends TestCase
       assertEquals(Priority.NORMAL, telegram.getPriority());
    }
 
+   @Test
    public void testIsSetRepeated()
    {
       final Telegram telegram = new Telegram();
@@ -96,6 +102,7 @@ public class TestTelegram extends TestCase
       assertFalse(telegram.isRepeated());
    }
 
+   @Test
    public void testGetSetRoutingCounter()
    {
       final Telegram telegram = new Telegram();
@@ -117,6 +124,7 @@ public class TestTelegram extends TestCase
       assertEquals(7, telegram.getRoutingCounter());
    }
 
+   @Test
    public void testGetSetData()
    {
       final Telegram telegram = new Telegram();
@@ -134,12 +142,12 @@ public class TestTelegram extends TestCase
       assertNull(telegram.getData());
    }
 
+   @Test
    public void testFromRawData() throws InvalidDataException
    {
       final Telegram telegram = new Telegram();
 
-      // TODO: fix byte #5 0xb0 and maybe checksum 0xdd
-      final int[] data1 = new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xe0, 0x00, 0x81, 0xc1 };
+      final int[] data1 = new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xe0, 0x00, 0x81 };
 
       telegram.fromRawData(data1, 0);
       assertFalse(telegram.isRepeated());
@@ -151,6 +159,17 @@ public class TestTelegram extends TestCase
       assertEquals(1, telegram.getData()[0]);
    }
 
+   @Test(expected = InvalidDataException.class)
+   public void testFromRawDataWrongLen() throws InvalidDataException
+   {
+      final Telegram telegram = new Telegram();
+
+      final int[] data1 = new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x64, 0x43, 0x40, 0x00, 0x12 };
+
+      telegram.fromRawData(data1, 0);
+   }
+
+   @Test
    public void testToRawData()
    {
       final Telegram telegram = new Telegram();
@@ -176,6 +195,7 @@ public class TestTelegram extends TestCase
       assertEquals(0x81, data[7]);
    }
 
+   @Test
    public void testGetSetTransport()
    {
       final Telegram telegram = new Telegram();
@@ -187,6 +207,7 @@ public class TestTelegram extends TestCase
       assertEquals(Transport.Individual, telegram.getTransport());
    }
 
+   @Test
    public void testGetSetSequence()
    {
       final Telegram telegram = new Telegram();
