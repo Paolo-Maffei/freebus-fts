@@ -5,6 +5,10 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 
+/**
+ * @author Michael Masson
+ * 
+ */
 public class Config extends SimpleConfig {
 	private Logger logger = Logger.getLogger(getClass());
 
@@ -12,7 +16,7 @@ public class Config extends SimpleConfig {
 
 	public Config() throws IOException {
 		env = new Environment();
-			try {
+		try {
 			load(env.getAppDir() + "/config.ini");
 
 			logger.info("Load Config");
@@ -25,8 +29,9 @@ public class Config extends SimpleConfig {
 		} catch (IOException e1) {
 
 		}
-		
+
 	}
+
 	public void save() throws IOException {
 		save(env.getAppDir() + "/config.ini");
 

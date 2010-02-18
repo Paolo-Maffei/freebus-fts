@@ -4,10 +4,9 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 
-
 /**
- * @author Michael Masson
- *Listen on the inputstream for a FT12 telegram and send for a telegram  replay
+ * 
+ *Listen on the inputstream for a FT12 telegram and send for a telegram replay
  */
 public class FT12replay {
 
@@ -16,7 +15,8 @@ public class FT12replay {
 	ConvertTools convertTools;
 	ReplayFrames replayFrames;
 
-	public FT12replay(InputStream in, OutputStream out,Sequences sequences) throws Exception {
+	public FT12replay(InputStream in, OutputStream out, Sequences sequences)
+			throws Exception {
 		this.in = in;
 		this.out = out;
 		convertTools = new ConvertTools();
@@ -26,7 +26,7 @@ public class FT12replay {
 
 	/**
 	 * @throws Exception
-	 * 	 */
+	 * */
 	public void listen() throws Exception {
 
 		int len = 0;
@@ -53,8 +53,8 @@ public class FT12replay {
 							if (replaybuffer.length > (replaycounter + 1)) {
 								replaycounter++;
 								System.out
-										.println("long Frame reply "
-												+ convertTools
+										.println("long Frame reply \t"
+												+ ConvertTools
 														.getHexString(replaybuffer[replaycounter]));
 								for (int b : replaybuffer[replaycounter])
 									out.write(b);
@@ -66,7 +66,7 @@ public class FT12replay {
 				if (rxarr.length >= 4) {
 					if (rxarr[0] == 0x10 && rxarr[3] == 0x16) {
 						System.out.println("Short Frame"
-								+ convertTools.getHexString(rxarr));
+								+ ConvertTools.getHexString(rxarr));
 						out.write(0xe5);
 						if (rxarr[1] == 0x49) {
 							out.write(0x10);
@@ -85,15 +85,15 @@ public class FT12replay {
 							&& rxarr[1] == rxarr[2]) {
 
 						if (rxarr.length > (rxarr[1] + 5)) {
-							
+
 							int[] knxtelegramm = new int[rxarr[1] + 6];
 							Thread.sleep(0);
 
 							out.write(0xe5);
-						System.arraycopy(rxarr, 0, knxtelegramm, 0,
+							System.arraycopy(rxarr, 0, knxtelegramm, 0,
 									rxarr[1] + 6);
-							System.out.println("long Frame "
-									+ convertTools.getHexString(rxarr));
+							System.out.println("long Frame \t\t\t"
+									+ ConvertTools.getHexString(rxarr));
 
 							Thread.sleep(0);
 							int[][] ft12anser = replayFrames
@@ -103,8 +103,8 @@ public class FT12replay {
 									replaybuffer = ft12anser;
 									replaycounter = 0;
 								}
-								System.out.println("long Frame reply "
-										+ convertTools
+								System.out.println("long Frame reply \t"
+										+ ConvertTools
 												.getHexString(ft12anser[0]));
 								for (int b : ft12anser[0]) {
 									Thread.sleep(0);

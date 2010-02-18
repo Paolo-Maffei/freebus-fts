@@ -9,18 +9,16 @@ import javax.xml.parsers.*;
 public class XMLreader {
 	private Element element;
 	private Sequences sequences;
+
 	public Sequences getSequences() {
 		return sequences;
 	}
 
 	private String xmlFile;
-	private String xsdFile;
-	private ConvertTools convertools;
 
 	public XMLreader(String xmlFile, String xsdFile) throws Exception {
-		convertools = new ConvertTools();
+
 		this.xmlFile = xmlFile;
-		this.xsdFile = xsdFile;
 		sequences = new Sequences();
 		loadFile();
 	}
@@ -35,7 +33,8 @@ public class XMLreader {
 		for (int i = 0; i < element.getChildNodes().getLength(); i++) {
 			if (element.getChildNodes().item(i).getNodeName().equals(
 					"FT12sim:sequence")) {
-				sequences.add(ParseFT12simSequence(element.getChildNodes().item(i)));
+				sequences.add(ParseFT12simSequence(element.getChildNodes()
+						.item(i)));
 			}
 		}
 
@@ -45,47 +44,57 @@ public class XMLreader {
 		int[] buf;
 		Sequence sequence = new Sequence();
 		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-			
-			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:Discription")) {
-				sequence.setDiscription(node.getChildNodes().item(i).getTextContent());
+
+			if (node.getChildNodes().item(i).getNodeName().equals(
+					"FT12sim:Discription")) {
+				sequence.setDiscription(node.getChildNodes().item(i)
+						.getTextContent());
 			}
-			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:resieve")) {
+			if (node.getChildNodes().item(i).getNodeName().equals(
+					"FT12sim:resieve")) {
 				buf = ParseFT12simTelegram(node.getChildNodes().item(i));
-				sequence.setResciveFrame(buf);	
+				sequence.setResciveFrame(buf);
 			}
-			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:transmitframes")) {
-				int[][] a ;
+			if (node.getChildNodes().item(i).getNodeName().equals(
+					"FT12sim:transmitframes")) {
+				int[][] a;
 				a = ParseFT12simtransmitframes(node.getChildNodes().item(i));
-				sequence.setTransmitFrames(a);	
+				sequence.setTransmitFrames(a);
 			}
 		}
 		return sequence;
 	}
+
 	public int[][] ParseFT12simtransmitframes(Node node) throws Exception {
 		int[] buf = null;
 		ArrayList<int[]> intarray = new ArrayList<int[]>();
 		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:Telegram")) {
-				buf = convertools.String2IntArray(node.getChildNodes().item(i).getTextContent());
-				intarray.add(buf);	
+			if (node.getChildNodes().item(i).getNodeName().equals(
+					"FT12sim:Telegram")) {
+				buf = ConvertTools.String2IntArray(node.getChildNodes().item(i)
+						.getTextContent());
+				intarray.add(buf);
 			}
 		}
-		 int[][] returnValue = new int[intarray.size()][];
-		 for (int i =0;i<intarray.size();i++){
-			 returnValue[i]= intarray.get(i);
-		 }
+		int[][] returnValue = new int[intarray.size()][];
+		for (int i = 0; i < intarray.size(); i++) {
+			returnValue[i] = intarray.get(i);
+		}
 		return returnValue;
 	}
+
 	public int[] ParseFT12simTelegram(Node node) throws Exception {
 		int[] buf = null;
-		
+
 		for (int i = 0; i < node.getChildNodes().getLength(); i++) {
-			if (node.getChildNodes().item(i).getNodeName().equals("FT12sim:Telegram")) {
-				buf = convertools.String2IntArray(node.getChildNodes().item(i).getTextContent());
-			return buf;	
+			if (node.getChildNodes().item(i).getNodeName().equals(
+					"FT12sim:Telegram")) {
+				buf = ConvertTools.String2IntArray(node.getChildNodes().item(i)
+						.getTextContent());
+				return buf;
 			}
 		}
 		return buf;
-		
+
 	}
 }

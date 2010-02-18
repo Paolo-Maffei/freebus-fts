@@ -78,7 +78,7 @@ public abstract class Ft12Connection implements KNXConnection
    @Override
    public void open() throws IOException
    {
-      logger.debug("WRITE: FT1.2-Reset");
+      //logger.debug("WRITE: FT1.2-Reset");
 
       // Send resets until the device acknowledges
       final int startAckCount = ackCount;
@@ -100,8 +100,8 @@ public abstract class Ft12Connection implements KNXConnection
          throw new KNXConnectException("Device not found");
 
       // Send a status request
-      logger.debug("WRITE: Status request");
-      write(statusReqMsg, statusReqMsg.length);
+//      logger.debug("WRITE: Status request");
+//      write(statusReqMsg, statusReqMsg.length);
    }
 
    /**
@@ -136,7 +136,7 @@ public abstract class Ft12Connection implements KNXConnection
          sb.append("WRITE: DATA");
          for (int i = 0; i < len + 7; ++i)
             sb.append(' ').append(Integer.toHexString(buffer[i]));
-         logger.debug(sb.toString());
+        // logger.debug(sb.toString());
       }
 
       //write(buffer, len + 7);

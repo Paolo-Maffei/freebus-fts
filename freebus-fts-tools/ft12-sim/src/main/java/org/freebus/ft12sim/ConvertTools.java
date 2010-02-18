@@ -2,52 +2,53 @@ package org.freebus.ft12sim;
 
 import java.util.ArrayList;
 
+/**
+ * @author Michael Masson
+ *Tools for convert string to INT array
+ */
 public class ConvertTools {
 
-	private static  int getIntValueforHEX(char c) {
+	private static int getIntValueforHEX(char c) {
 
 		for (int i = 0; i < HEX_CHAR_TABLE.length; i++) {
-			if (HEX_CHAR_TABLE[i] == c){
-				return i;}
+			if (HEX_CHAR_TABLE[i] == c) {
+				return i;
+			}
 		}
 		return c;
 
 	}
 
-//	public static void main(String[] args) throws Exception {
-//		System.out.println(getHexString(String2IntArray("\n  AB C D4 ")));
-//	}
- final static byte[] HEX_CHAR_TABLE = { (byte) '0', (byte) '1', (byte) '2',
+	final static byte[] HEX_CHAR_TABLE = { (byte) '0', (byte) '1', (byte) '2',
 			(byte) '3', (byte) '4', (byte) '5', (byte) '6', (byte) '7',
 			(byte) '8', (byte) '9', (byte) 'A', (byte) 'B', (byte) 'C',
 			(byte) 'D', (byte) 'E', (byte) 'F' };
 
-	
+	public static int[] String2IntArray(String string) {
+		ArrayList<Integer> intarray = new ArrayList<Integer>();
+		StringBuffer buf = new StringBuffer(string);
 
-	public static  int[] String2IntArray(String string){
-		 ArrayList<Integer> intarray = new ArrayList<Integer>();
-		  StringBuffer buf = new StringBuffer(string);
-		  
-		  int x=0;
-		  for ( int i = 0; i < buf.length(); i++ ) {
-			if(  buf.charAt(i)!=' ' &&  buf.charAt(i)!='\n'){
-				x = getIntValueforHEX( buf.charAt(i));
-			
-			i++;
-			if(i < buf.length()){
-			if(  buf.charAt(i)!=' ' ){
-				x = x << 4;
-				x =x +getIntValueforHEX( buf.charAt(i));
-			}}
-			intarray.add(x);}
-		  }
-		  
-		  
-		  int[] returnValue = new int[intarray.size()];
-		 for (int i =0;i<intarray.size();i++){
-			 returnValue[i]= intarray.get(i).intValue();
-		 }
-		
+		int x = 0;
+		for (int i = 0; i < buf.length(); i++) {
+			if (buf.charAt(i) != ' ' && buf.charAt(i) != '\n') {
+				x = getIntValueforHEX(buf.charAt(i));
+
+				i++;
+				if (i < buf.length()) {
+					if (buf.charAt(i) != ' ') {
+						x = x << 4;
+						x = x + getIntValueforHEX(buf.charAt(i));
+					}
+				}
+				intarray.add(x);
+			}
+		}
+
+		int[] returnValue = new int[intarray.size()];
+		for (int i = 0; i < intarray.size(); i++) {
+			returnValue[i] = intarray.get(i).intValue();
+		}
+
 		return returnValue;
 	}
 
@@ -68,6 +69,6 @@ public class ConvertTools {
 	}
 
 	public int unsignedByteToInt(byte b) {
-		return (int) b & 0xFF;
+		return b & 0xFF;
 	}
 }

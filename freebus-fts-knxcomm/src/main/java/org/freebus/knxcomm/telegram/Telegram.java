@@ -15,7 +15,9 @@ public class Telegram
    private int sequence = 0;
    private Application application = Application.None;
    private int[] data = null;
-
+   private boolean ChecksumeActive= false;
+   
+   
    /**
     * Create an empty telegram object.
     */
@@ -23,174 +25,7 @@ public class Telegram
    {
    }
 
-   /**
-    * Set the transport type.
-    */
-   public void setTransport(Transport transport)
-   {
-      this.transport = transport;
-   }
-
-   /**
-    * @return the transport type.
-    */
-   public Transport getTransport()
-   {
-      return transport;
-   }
-
-   /**
-    * Set the sequence number. Only used for connected-data mode transport types.
-    */
-   public void setSequence(int sequence)
-   {
-      this.sequence = sequence;
-   }
-
-   /**
-    * @return the sequence number. Only used for connected-data mode transport types.
-    */
-   public int getSequence()
-   {
-      return sequence;
-   }
-
-   /**
-    * Set the application type.
-    */
-   public void setApplication(Application application)
-   {
-      this.application = application;
-   }
-
-   /**
-    * @return the application type.
-    */
-   public Application getApplication()
-   {
-      return application;
-   }
-
-   /**
-    * @return the sender address.
-    */
-   public PhysicalAddress getFrom()
-   {
-      return from;
-   }
-
-   /**
-    * Set the sender address.
-    */
-   public void setFrom(PhysicalAddress from)
-   {
-      this.from = from;
-   }
-
-   /**
-    * Returns the destination address. This can either be a
-    * {@link PhysicalAddress} physical address, or a {@link GroupAddress} group
-    * address.
-    * 
-    * @return the destination address.
-    */
-   public Address getDest()
-   {
-      return dest;
-   }
-
-   /**
-    * Set the destination address. This can either be a {@link PhysicalAddress}
-    * physical address, or a {@link GroupAddress} group address.
-    * 
-    * Also sets the transport type, if it is yet unset: to {@link Transport#Individual}
-    * if the destination is a {@link PhysicalAddress}, or to {@link Transport#Group}
-    * if the destination is a {@link GroupAddress}.
-    */
-   public void setDest(Address dest)
-   {
-      this.dest = dest;
-
-      if (transport == null)
-      {
-         if (dest instanceof GroupAddress) transport = Transport.Group;
-         else transport = Transport.Individual;
-      }
-   }
-
-   /**
-    * @return the priority.
-    */
-   public Priority getPriority()
-   {
-      return priority;
-   }
-
-   /**
-    * Set the priority. The default priority is {@link Priority#LOW}.
-    */
-   public void setPriority(Priority priority)
-   {
-      this.priority = priority;
-   }
-
-   /**
-    * @return the repeated flag.
-    */
-   public boolean isRepeated()
-   {
-      return repeated;
-   }
-
-   /**
-    * Set the repeated flag.
-    */
-   public void setRepeated(boolean repeated)
-   {
-      this.repeated = repeated;
-   }
-
-   /**
-    * Returns the routing counter. 0 means never route, 1..6 is the number of routing
-    * hops that would occur, 7 means route always.
-    * 
-    * @return the routing counter.
-    */
-   public int getRoutingCounter()
-   {
-      return routingCounter;
-   }
-
-   /**
-    * Set the routing counter. 0 means never route, 1..6 is the number of routing
-    * hops that would occur, 7 means route always. Be careful with using 7, it may
-    * result in telegrams that run on the bus infinitely.
-    */
-   public void setRoutingCounter(int routingCounter)
-   {
-      if (routingCounter < 0) routingCounter = 0;
-      else if (routingCounter > 7) routingCounter = 7;
-
-      this.routingCounter = routingCounter;
-   }
-
-   /**
-    * Set the data.
-    */
-   public void setData(int[] data)
-   {
-      this.data = data;
-   }
-
-   /**
-    * @return the data
-    */
-   public int[] getData()
-   {
-      return data;
-   }
-
-   /**
+/**
     * Initialize the message from the given raw data, beginning at start.
     * @throws InvalidDataException 
     */
@@ -279,6 +114,7 @@ public class Telegram
 
       // TODO verify checksum
       // Calculate checksum byte
+      if (ChecksumeActive){
       int check = 0;
       for (int i = start; i < pos; ++i)
          check += rawData[i];
@@ -286,6 +122,181 @@ public class Telegram
 
 //      if (check != 0xff)
 //         throw new InvalidDataException("checksum error", check);
+   }
+   }
+/**
+    * @return the application type.
+    */
+   public Application getApplication()
+   {
+      return application;
+   }
+
+   /**
+    * @return the data
+    */
+   public int[] getData()
+   {
+      return data;
+   }
+
+   /**
+    * Returns the destination address. This can either be a
+    * {@link PhysicalAddress} physical address, or a {@link GroupAddress} group
+    * address.
+    * 
+    * @return the destination address.
+    */
+   public Address getDest()
+   {
+      return dest;
+   }
+
+   /**
+    * @return the sender address.
+    */
+   public PhysicalAddress getFrom()
+   {
+      return from;
+   }
+
+   /**
+    * @return the priority.
+    */
+   public Priority getPriority()
+   {
+      return priority;
+   }
+
+   /**
+    * Returns the routing counter. 0 means never route, 1..6 is the number of routing
+    * hops that would occur, 7 means route always.
+    * 
+    * @return the routing counter.
+    */
+   public int getRoutingCounter()
+   {
+      return routingCounter;
+   }
+
+   /**
+    * @return the sequence number. Only used for connected-data mode transport types.
+    */
+   public int getSequence()
+   {
+      return sequence;
+   }
+
+   /**
+    * @return the transport type.
+    */
+   public Transport getTransport()
+   {
+      return transport;
+   }
+
+   public boolean isChecksumeActive() {
+	return ChecksumeActive;
+}
+
+   /**
+    * @return the repeated flag.
+    */
+   public boolean isRepeated()
+   {
+      return repeated;
+   }
+
+   /**
+    * Set the application type.
+    */
+   public void setApplication(Application application)
+   {
+      this.application = application;
+   }
+
+   public void setChecksumeActive(boolean checksumeActive) {
+	ChecksumeActive = checksumeActive;
+}
+
+   /**
+    * Set the data.
+    */
+   public void setData(int[] data)
+   {
+      this.data = data;
+   }
+
+   /**
+    * Set the destination address. This can either be a {@link PhysicalAddress}
+    * physical address, or a {@link GroupAddress} group address.
+    * 
+    * Also sets the transport type, if it is yet unset: to {@link Transport#Individual}
+    * if the destination is a {@link PhysicalAddress}, or to {@link Transport#Group}
+    * if the destination is a {@link GroupAddress}.
+    */
+   public void setDest(Address dest)
+   {
+      this.dest = dest;
+
+      if (transport == null)
+      {
+         if (dest instanceof GroupAddress) transport = Transport.Group;
+         else transport = Transport.Individual;
+      }
+   }
+
+   /**
+    * Set the sender address.
+    */
+   public void setFrom(PhysicalAddress from)
+   {
+      this.from = from;
+   }
+
+   /**
+    * Set the priority. The default priority is {@link Priority#LOW}.
+    */
+   public void setPriority(Priority priority)
+   {
+      this.priority = priority;
+   }
+
+   /**
+    * Set the repeated flag.
+    */
+   public void setRepeated(boolean repeated)
+   {
+      this.repeated = repeated;
+   }
+
+   /**
+    * Set the routing counter. 0 means never route, 1..6 is the number of routing
+    * hops that would occur, 7 means route always. Be careful with using 7, it may
+    * result in telegrams that run on the bus infinitely.
+    */
+   public void setRoutingCounter(int routingCounter)
+   {
+      if (routingCounter < 0) routingCounter = 0;
+      else if (routingCounter > 7) routingCounter = 7;
+
+      this.routingCounter = routingCounter;
+   }
+
+   /**
+    * Set the sequence number. Only used for connected-data mode transport types.
+    */
+   public void setSequence(int sequence)
+   {
+      this.sequence = sequence;
+   }
+
+   /**
+    * Set the transport type.
+    */
+   public void setTransport(Transport transport)
+   {
+      this.transport = transport;
    }
 
    /**
@@ -359,13 +370,14 @@ public class Telegram
             rawData[pos++] = data[dataPos];
       }
 
-      // Calculate checksum byte
-      int check = 0;
-      for (int i = start; i < pos; ++i)
-         check += rawData[i];
+     //  Calculate checksum byte
+	if (ChecksumeActive) {
+		int check = 0;
+		for (int i = start; i < pos; ++i)
+			check += rawData[i];
 
-      rawData[pos++] = 255 - (check & 255);
-
+		rawData[pos++] = 255 - (check & 255);
+		}
       return pos - start;
    }
 }
