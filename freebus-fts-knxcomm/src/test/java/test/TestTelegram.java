@@ -164,7 +164,7 @@ public class TestTelegram extends TestCase
       telegram.setData(new int[] { 1 });
 
       len = telegram.toRawData(data, 0);
-      assertEquals(9, len);
+      assertEquals(8, len);
 
       assertEquals(0xbc, data[0]);
       assertEquals(0x11, data[1]);
@@ -174,12 +174,6 @@ public class TestTelegram extends TestCase
       assertEquals(0xb1, data[5]);
       assertEquals(0x00, data[6]);
       assertEquals(0x81, data[7]);
-      assertEquals(0xf0, data[8]);
-
-      int check = 0;
-      for (int i = 0; i < len; ++i)
-         check += data[i];
-      assertEquals(0xff, check & 0xff);
    }
 
    public void testGetSetTransport()

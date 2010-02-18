@@ -1,6 +1,5 @@
 package org.freebus.knxcomm.telegram;
 
-
 /**
  * A communication data packet as it is sent on the EIB bus.
  */
@@ -15,9 +14,7 @@ public class Telegram
    private int sequence = 0;
    private Application application = Application.None;
    private int[] data = null;
-   private boolean ChecksumeActive= false;
-   
-   
+
    /**
     * Create an empty telegram object.
     */
@@ -25,23 +22,21 @@ public class Telegram
    {
    }
 
-/**
+   /**
     * Initialize the message from the given raw data, beginning at start.
-    * @throws InvalidDataException 
+    * 
+    * @throws InvalidDataException
     */
    public void fromRawData(int[] rawData, int start) throws InvalidDataException
    {
       int pos = start;
 
       /*
-       * The control byte.
-       *
-       * bit 7: frame length-type: 0=extended frame, 1=standard frame.
-       * bit 6: frame type 1: 0=data telegram, 1=poll-data telegram.
-       * bit 5: repeated flag: 0=if the telegram is repeated, 1=not repeated.
-       * bit 4: frame type 2: 0=acknowledge frame, 1=normal frame.
-       * bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority.
-       * bit 1: 0
+       * The control byte. bit 7: frame length-type: 0=extended frame,
+       * 1=standard frame. bit 6: frame type 1: 0=data telegram, 1=poll-data
+       * telegram. bit 5: repeated flag: 0=if the telegram is repeated, 1=not
+       * repeated. bit 4: frame type 2: 0=acknowledge frame, 1=normal frame. bit
+       * 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority. bit 1: 0
        * bit 0: 0
        */
       final int ctrl = rawData[pos++];
@@ -54,18 +49,18 @@ public class Telegram
 
       // 16-bit destination address
       final int destAddr = (rawData[pos++] << 8) | rawData[pos++];
-       
+
       /*
-       * DRL byte (DRL means: destination address, routing, length).
-       *
-       * bit 7: destination is 0=physical address, 1=group address
-       * bit 6..4: routing hop count: 0=never route, 1..6=number of routings, 7=always route
-       * bit 3..0: data length minus 2: 0 means 2 bytes, 15 means 17 bytes
+       * DRL byte (DRL means: destination address, routing, length). bit 7:
+       * destination is 0=physical address, 1=group address bit 6..4: routing
+       * hop count: 0=never route, 1..6=number of routings, 7=always route bit
+       * 3..0: data length minus 2: 0 means 2 bytes, 15 means 17 bytes
        */
       final int drl = rawData[pos++];
 
       final boolean isGroup = (drl & 0x80) != 0;
-      if (isGroup) dest = new GroupAddress(destAddr);
+      if (isGroup)
+         dest = new GroupAddress(destAddr);
       else dest = new PhysicalAddress(destAddr);
 
       routingCounter = (drl >> 4) & 7;
@@ -73,10 +68,11 @@ public class Telegram
       int dataLen = drl & 15;
 
       // TPCI - transport control field
-      int tpci = rawData[pos++]; 
+      int tpci = rawData[pos++];
       transport = Transport.valueOf(isGroup, tpci);
 
-      if (transport.hasSequence) sequence = (tpci >> 2) & 15;
+      if (transport.hasSequence)
+         sequence = (tpci >> 2) & 15;
       else sequence = 0;
 
       if (rawData.length > pos && transport.mask < 255)
@@ -84,7 +80,7 @@ public class Telegram
          // APCI - application type
          final int apci = ((tpci & 3) << 8) | rawData[pos++];
          application = Application.valueOf(apci);
-   
+
          final int dataMask = application.getDataMask();
          if (dataMask != 0 && dataLen <= 1)
          {
@@ -111,20 +107,9 @@ public class Telegram
          application = Application.None;
          data = null;
       }
-
-      // TODO verify checksum
-      // Calculate checksum byte
-      if (ChecksumeActive){
-      int check = 0;
-      for (int i = start; i < pos; ++i)
-         check += rawData[i];
-      check = check & 0xff;
-
-//      if (check != 0xff)
-//         throw new InvalidDataException("checksum error", check);
    }
-   }
-/**
+
+   /**
     * @return the application type.
     */
    public Application getApplication()
@@ -169,8 +154,8 @@ public class Telegram
    }
 
    /**
-    * Returns the routing counter. 0 means never route, 1..6 is the number of routing
-    * hops that would occur, 7 means route always.
+    * Returns the routing counter. 0 means never route, 1..6 is the number of
+    * routing hops that would occur, 7 means route always.
     * 
     * @return the routing counter.
     */
@@ -180,7 +165,8 @@ public class Telegram
    }
 
    /**
-    * @return the sequence number. Only used for connected-data mode transport types.
+    * @return the sequence number. Only used for connected-data mode transport
+    *         types.
     */
    public int getSequence()
    {
@@ -194,10 +180,6 @@ public class Telegram
    {
       return transport;
    }
-
-   public boolean isChecksumeActive() {
-	return ChecksumeActive;
-}
 
    /**
     * @return the repeated flag.
@@ -215,10 +197,6 @@ public class Telegram
       this.application = application;
    }
 
-   public void setChecksumeActive(boolean checksumeActive) {
-	ChecksumeActive = checksumeActive;
-}
-
    /**
     * Set the data.
     */
@@ -231,9 +209,10 @@ public class Telegram
     * Set the destination address. This can either be a {@link PhysicalAddress}
     * physical address, or a {@link GroupAddress} group address.
     * 
-    * Also sets the transport type, if it is yet unset: to {@link Transport#Individual}
-    * if the destination is a {@link PhysicalAddress}, or to {@link Transport#Group}
-    * if the destination is a {@link GroupAddress}.
+    * Also sets the transport type, if it is yet unset: to
+    * {@link Transport#Individual} if the destination is a
+    * {@link PhysicalAddress}, or to {@link Transport#Group} if the destination
+    * is a {@link GroupAddress}.
     */
    public void setDest(Address dest)
    {
@@ -241,7 +220,8 @@ public class Telegram
 
       if (transport == null)
       {
-         if (dest instanceof GroupAddress) transport = Transport.Group;
+         if (dest instanceof GroupAddress)
+            transport = Transport.Group;
          else transport = Transport.Individual;
       }
    }
@@ -271,20 +251,23 @@ public class Telegram
    }
 
    /**
-    * Set the routing counter. 0 means never route, 1..6 is the number of routing
-    * hops that would occur, 7 means route always. Be careful with using 7, it may
-    * result in telegrams that run on the bus infinitely.
+    * Set the routing counter. 0 means never route, 1..6 is the number of
+    * routing hops that would occur, 7 means route always. Be careful with using
+    * 7, it may result in telegrams that run on the bus infinitely.
     */
    public void setRoutingCounter(int routingCounter)
    {
-      if (routingCounter < 0) routingCounter = 0;
-      else if (routingCounter > 7) routingCounter = 7;
+      if (routingCounter < 0)
+         routingCounter = 0;
+      else if (routingCounter > 7)
+         routingCounter = 7;
 
       this.routingCounter = routingCounter;
    }
 
    /**
-    * Set the sequence number. Only used for connected-data mode transport types.
+    * Set the sequence number. Only used for connected-data mode transport
+    * types.
     */
    public void setSequence(int sequence)
    {
@@ -300,8 +283,8 @@ public class Telegram
    }
 
    /**
-    * Fill the raw data of the message into the array rawData, starting at
-    * index start.
+    * Fill the raw data of the message into the array rawData, starting at index
+    * start.
     * 
     * @return number of bytes that were used.
     */
@@ -310,18 +293,16 @@ public class Telegram
       int pos = start;
 
       /*
-       * The control byte.
-       *
-       * bit 7: frame length-type: 0=extended frame, 1=standard frame.
-       * bit 6: frame type 1: 0=data telegram, 1=poll-data telegram.
-       * bit 5: repeated flag: 0=if the telegram is repeated, 1=not repeated.
-       * bit 4: frame type 2: 0=acknowledge frame, 1=normal frame.
-       * bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority.
-       * bit 1: 0
+       * The control byte. bit 7: frame length-type: 0=extended frame,
+       * 1=standard frame. bit 6: frame type 1: 0=data telegram, 1=poll-data
+       * telegram. bit 5: repeated flag: 0=if the telegram is repeated, 1=not
+       * repeated. bit 4: frame type 2: 0=acknowledge frame, 1=normal frame. bit
+       * 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority. bit 1: 0
        * bit 0: 0
        */
       int ctrl = (1 << 7) | (1 << 4);
-      if (!repeated) ctrl |= 1 << 5;
+      if (!repeated)
+         ctrl |= 1 << 5;
       ctrl |= priority.id << 2;
       rawData[pos++] = ctrl;
 
@@ -336,18 +317,22 @@ public class Telegram
       int apci = application.apci & 255;
       final int apciDataMask = application.getDataMask();
       int dataLen = data == null ? 0 : data.length;
-      if (dataLen > 0 && apciDataMask != 0) --dataLen;
+      if (dataLen > 0 && apciDataMask != 0)
+         --dataLen;
 
       int drl = (routingCounter & 7) << 4;
-      if (data != null) drl |= (dataLen + 1) & 15;
-      if (dest instanceof GroupAddress) drl |= 0x80;
+      if (data != null)
+         drl |= (dataLen + 1) & 15;
+      if (dest instanceof GroupAddress)
+         drl |= 0x80;
       rawData[pos++] = drl;
 
       int tpci = transport.value;
       tpci |= (application.apci >> 8) & ~transport.mask;
-      if (transport.hasSequence) tpci |= (sequence & 15) << 2;
+      if (transport.hasSequence)
+         tpci |= (sequence & 15) << 2;
       rawData[pos++] = tpci;
- 
+
       if (transport.mask == 255)
       {
          // no application
@@ -359,7 +344,7 @@ public class Telegram
       else
       {
          int dataPos = 0;
-   
+
          if (apciDataMask != 0)
          {
             apci |= data[dataPos++] & apciDataMask;
@@ -370,14 +355,6 @@ public class Telegram
             rawData[pos++] = data[dataPos];
       }
 
-     //  Calculate checksum byte
-	if (ChecksumeActive) {
-		int check = 0;
-		for (int i = start; i < pos; ++i)
-			check += rawData[i];
-
-		rawData[pos++] = 255 - (check & 255);
-		}
       return pos - start;
    }
 }

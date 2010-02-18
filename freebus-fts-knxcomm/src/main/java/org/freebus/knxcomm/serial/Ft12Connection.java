@@ -73,7 +73,8 @@ public abstract class Ft12Connection implements KNXConnection
 
    /**
     * Connect to the device.
-    * @throws IOException 
+    * 
+    * @throws IOException
     */
    @Override
    public void open() throws IOException
@@ -128,8 +129,9 @@ public abstract class Ft12Connection implements KNXConnection
       for (int i = -1; i < len; ++i)
          checksum += buffer[i + 5];
 
-      buffer[len + 5] = checksum & 0xff;
-      buffer[len + 6] = 0x16;
+       buffer[len + 5] = checksum & 0xff;
+       buffer[len + 6] = 0x16;
+      // buffer[len + 5] = 0x16;
 
       if (logger.isDebugEnabled())
       {
@@ -139,25 +141,32 @@ public abstract class Ft12Connection implements KNXConnection
         // logger.debug(sb.toString());
       }
 
-      //write(buffer, len + 7);
-		final int startAckCount = ackCount;
-		for (int i = 3; i > 0 && ackCount == startAckCount; --i) {
-			if (logger.isDebugEnabled())
-				logger.debug(sb.toString());
-			write(buffer, len + 7);
+      // write(buffer, len + 7);
+      final int startAckCount = ackCount;
+      for (int i = 3; i > 0 && ackCount == startAckCount; --i)
+      {
+         if (logger.isDebugEnabled())
+            logger.debug(sb.toString());
+         write(buffer, len + 7);
 
-			try {
-				Thread.sleep(100);
-			} catch (InterruptedException e) {
-			}
-		}
+         try
+         {
+            Thread.sleep(100);
+         }
+         catch (InterruptedException e)
+         {
+         }
+      }
 
-		if (startAckCount == ackCount) {
-			throw new KNXConnectException("No ACK( 0xE5) recived");
-		} else {
-			notifyListenersSent(message);
-		}
-	}
+      if (startAckCount == ackCount)
+      {
+         throw new KNXConnectException("No ACK( 0xE5) recived");
+      }
+      else
+      {
+         notifyListenersSent(message);
+      }
+   }
 
    /**
     * Called by the data transport methods when data is ready to be received.
@@ -191,7 +200,8 @@ public abstract class Ft12Connection implements KNXConnection
 
             // Bits of the command:
             // 7: direction - 1: BAU to us, 0: we to BAU
-            // 6: primary message - 0: message from secondary (responding) station
+            // 6: primary message - 0: message from secondary (responding)
+            // station
             // 5: reserved
             // 4: data flow control (not used)
             // 3..0: function code
@@ -200,7 +210,7 @@ public abstract class Ft12Connection implements KNXConnection
             if (cmd == 0)
             {
                logger.debug("READ: Confirm ACK");
-               readMsgCount = 0;  // Assume it was a Reset reply
+               readMsgCount = 0; // Assume it was a Reset reply
                writeMsgCount = 0;
             }
             else if (cmd == 1)
@@ -235,7 +245,7 @@ public abstract class Ft12Connection implements KNXConnection
       // Send acknowledge
       if (type != 0xe5)
       {
-//         logger.debug("WRITE: ACK [0xe5]");
+         // logger.debug("WRITE: ACK [0xe5]");
          write(ackMsg, ackMsg.length);
       }
    }
@@ -255,7 +265,8 @@ public abstract class Ft12Connection implements KNXConnection
       logMsg.append("READ: DATA [0x68] (").append(dataLen).append(" bytes): ");
 
       ++readMsgCount;
-      if (read() != 0x68) err += "|no boundary marker";
+      if (read() != 0x68)
+         err += "|no boundary marker";
 
       int controlByte = read();
       if (controlByte != 0xf3 && controlByte != 0xd3)
@@ -271,10 +282,12 @@ public abstract class Ft12Connection implements KNXConnection
       }
 
       final int checksum = read();
-      if (checksum != (ftCheckSum & 0xff)) err += "|FT checksum error";
+      if (checksum != (ftCheckSum & 0xff))
+         err += "|FT checksum error";
 
       final int eofMarker = read();
-      if (eofMarker != 0x16) err += "|no eof-marker 0x" + Integer.toHexString(eofMarker);
+      if (eofMarker != 0x16)
+         err += "|no eof-marker 0x" + Integer.toHexString(eofMarker);
 
       if (err.length() > 0)
       {
