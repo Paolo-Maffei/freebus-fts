@@ -27,14 +27,20 @@ public final class VdxSectionHeader
    public final String[] fields;
 
    /**
+    * The types of the fields of the section entries.
+    */
+   public final VdxFieldType[] types;
+
+   /**
     * Create a header object.
     */
-   VdxSectionHeader(String name, int id, long offset, final String[] fields)
+   VdxSectionHeader(String name, int id, long offset, final String[] fields, final VdxFieldType[] types)
    {
       this.name = name;
       this.id = id;
       this.offset = offset;
       this.fields = fields;
+      this.types = types;
    }
 
    /**

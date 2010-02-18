@@ -250,6 +250,8 @@ public class InspectVdxFile extends AbstractPage
          return;
 
       final String newSelectedTableName = (String) cboTables.getSelectedItem();
+      if (newSelectedTableName == null)
+         return;
 
       if (selectedTableName != null && !selectedTableName.equals(newSelectedTableName))
          reader.removeSectionContents(selectedTableName);

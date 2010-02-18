@@ -19,7 +19,8 @@ public class TestVdxSection
    public final void setUp()
    {
       final String[] fields = new String[] { "field1", "field2", "field3" };
-      header = new VdxSectionHeader("section-1", 1, 0, fields);
+      final VdxFieldType[] types = new VdxFieldType[] { VdxFieldType.STRING, VdxFieldType.STRING, VdxFieldType.STRING };
+      header = new VdxSectionHeader("section-1", 1, 0, fields, types);
 
       section = new VdxSection(header);
 

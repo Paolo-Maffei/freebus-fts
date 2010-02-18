@@ -76,7 +76,7 @@ public class ParamData
     */
    public boolean isPage()
    {
-      return param.getParent() == null || param.getAddress() == null;
+      return param.getAddress() == null;
    }
 
    /**
@@ -132,7 +132,7 @@ public class ParamData
       if (!(o instanceof ParamData)) return false;
       final ParamData oo = (ParamData) o;
 
-      return param.equals(oo.param);
+      return param.getId() == oo.param.getId();
    }
 
    /**

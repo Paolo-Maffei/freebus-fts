@@ -10,8 +10,9 @@ import java.awt.event.ActionListener;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -48,8 +49,9 @@ public class Page extends JPanel
    private final ParamData pageData;
    private final Parameter pageParam;
    private final Set<ChangeListener> changeListeners = new HashSet<ChangeListener>();
-   private final Map<Integer, Parameter> childParams = new HashMap<Integer, Parameter>();
+   private final List<ParamData> childsDataUnsorted = new LinkedList<ParamData>();
    private final Map<Parameter, ParamData> paramData;
+   private ParamData[] childsDataSorted;
    private boolean childsChanged = false;
    private final JPanel content;
 
@@ -133,11 +135,11 @@ public class Page extends JPanel
    }
 
    /**
-    * Add a parameter to the page.
+    * Add a parameter-data to the page.
     */
-   public void addParameter(Parameter param)
+   public void addParamData(ParamData data)
    {
-      childParams.put(param.getId(), param);
+      childsDataUnsorted.add(data);
       childsChanged = true;
    }
 
@@ -146,58 +148,46 @@ public class Page extends JPanel
     */
    public void updateContents()
    {
-      if (true || childsChanged)
+      if (childsChanged || childsDataSorted == null)
       {
+         childsDataSorted = sortByDisplayOrder(childsDataUnsorted);
          childsChanged = false;
-         content.removeAll();
+      }
 
-         int gridRow = -1;
-         for (final Parameter param : sortByDisplayOrder(childParams.values()))
-         {
-            if (isParamVisible(param))
-               createParamComponent(param, ++gridRow);
-         }
+      content.removeAll();
+
+      int gridRow = -1;
+      for (final ParamData data: childsDataSorted)
+      {
+//         if (data.isVisible())
+            createParamComponent(data, ++gridRow);
       }
    }
 
    /**
-    * Test if the components for the given parameter shall be visible.
+    * Create a component that can be used to edit the value of the parameter-data
+    * <code>data</code>.
     */
-   public boolean isParamVisible(final Parameter param)
+   public void createParamComponent(final ParamData data, int gridRow)
    {
-      final Parameter parentParam = param.getParent();
-      if (parentParam == null)
-         return true;
-
-      final Integer parentValue = param.getParentValue();
-      if (parentValue == null)
-         return true;
-
-      return parentValue.equals(paramData.get(parentParam));
-   }
-
-   /**
-    * Create a component that can be used to edit the value of the parameter
-    * <code>param</code>.
-    */
-   public void createParamComponent(final Parameter param, int gridRow)
-   {
+      final Parameter param = data.getParameter();
       final ParameterAtomicType atomicType = param.getParameterType().getAtomicType();
+
       if (atomicType == ParameterAtomicType.NONE)
       {
-         createParamNoneComponent(param, gridRow);
+         createParamNoneComponent(data, gridRow);
       }
       else if (atomicType == ParameterAtomicType.STRING)
       {
-         createParamStringComponent(param, gridRow);
+         createParamStringComponent(data, gridRow);
       }
       else if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED)
       {
-         createParamNumberComponent(param, gridRow);
+         createParamNumberComponent(data, gridRow);
       }
       else if (atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
       {
-         createParamEnumComponent(param, gridRow);
+         createParamEnumComponent(data, gridRow);
       }
       else
       {
@@ -210,12 +200,13 @@ public class Page extends JPanel
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType.ENUM}.
     * 
-    * @param param the parameter to process.
+    * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
     */
-   public void createParamEnumComponent(final Parameter param, int gridRow)
+   public void createParamEnumComponent(final ParamData data, int gridRow)
    {
+      final Parameter param = data.getParameter();
       final Set<ParameterValue> valuesSet = param.getParameterType().getValues();
       final ParameterValue[] values = new ParameterValue[valuesSet.size()];
       valuesSet.toArray(values);
@@ -254,7 +245,7 @@ public class Page extends JPanel
             final ParameterValue val = (ParameterValue) combo.getSelectedItem();
             if (val != null)
             {
-               paramData.get(param).setValue(val.getIntValue());
+               data.setValue(val.getIntValue());
                fireStateChanged(param);
             }
          }
@@ -279,15 +270,16 @@ public class Page extends JPanel
     * {@link ParameterAtomicType.SIGNED} or {@link ParameterAtomicType.UNSIGNED}
     * .
     * 
-    * @param param the parameter to process.
+    * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
     */
-   public void createParamNumberComponent(final Parameter param, int gridRow)
+   public void createParamNumberComponent(final ParamData data, int gridRow)
    {
+      final Parameter param = data.getParameter();
       final ParameterType paramType = param.getParameterType();
 
-      final int value = (Integer) paramData.get(param).getValue();
+      final int value = (Integer) data.getValue();
       final int min = paramType.getMinValue();
       final int max = paramType.getMaxValue();
       final SpinnerNumberModel model = new SpinnerNumberModel(value, min, max, 1);
@@ -316,15 +308,16 @@ public class Page extends JPanel
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
     */
-   public void createParamStringComponent(final Parameter param, int gridRow)
+   public void createParamStringComponent(final ParamData data, int gridRow)
    {
+      final Parameter param = data.getParameter();
       createParamLabel(param, gridRow, 1);
 
       final JTextArea input = new JTextArea();
       input.setText((String) paramData.get(param).getValue());
       input.setName("param-" + param.getId());
 
-      // TODO add listener that sets the paramData's value on change.
+      // TODO add a listener that sets the paramData's value on change.
       
       contentAddComponent(input, gridRow);
    }
@@ -333,12 +326,13 @@ public class Page extends JPanel
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType.NONE}.
     * 
-    * @param param the parameter to process.
+    * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
     */
-   public void createParamNoneComponent(final Parameter param, int gridRow)
+   public void createParamNoneComponent(final ParamData data, int gridRow)
    {
+      final Parameter param = data.getParameter();
       final JLabel lbl = createParamLabel(param, gridRow, 2);
       lbl.setBorder(BorderFactory.createEmptyBorder(8, 0, 4, 0));
    }
@@ -393,26 +387,26 @@ public class Page extends JPanel
    }
 
    /**
-    * Sort the parameters by display order {@link Parameter#getDisplayOrder()}.
+    * Sort the parameter-data by display order {@link Parameter#getDisplayOrder()}.
     * 
     * @param params the parameters to be sorted.
     * 
     * @return a sorted array of parameters.
     */
-   public static Parameter[] sortByDisplayOrder(final Collection<Parameter> params)
+   public static ParamData[] sortByDisplayOrder(final Collection<ParamData> paramsData)
    {
-      final Parameter[] paramsSorted = new Parameter[params.size()];
-      params.toArray(paramsSorted);
-      Arrays.sort(paramsSorted, new Comparator<Parameter>()
+      final ParamData[] paramsDataSorted = new ParamData[paramsData.size()];
+      paramsData.toArray(paramsDataSorted);
+      Arrays.sort(paramsDataSorted, new Comparator<ParamData>()
       {
          @Override
-         public int compare(Parameter a, Parameter b)
+         public int compare(ParamData a, ParamData b)
          {
             return a.getDisplayOrder() - b.getDisplayOrder();
          }
       });
 
-      return paramsSorted;
+      return paramsDataSorted;
    }
 
    /**
@@ -421,7 +415,7 @@ public class Page extends JPanel
    @Override
    public int hashCode()
    {
-      return paramData.hashCode();
+      return pageData.hashCode();
    }
 
    /**
@@ -434,6 +428,6 @@ public class Page extends JPanel
       if (!(o instanceof Page)) return false;
       final Page oo = (Page) o;
 
-      return paramData.equals(oo.paramData);
+      return pageData.equals(oo.pageData);
    }
 }

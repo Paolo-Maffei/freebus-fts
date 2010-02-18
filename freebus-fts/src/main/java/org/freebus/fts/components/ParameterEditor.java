@@ -2,8 +2,11 @@ package org.freebus.fts.components;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -30,7 +33,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
 
    private Device device;
    private final Map<ParamData, Page> paramPages = new HashMap<ParamData, Page>();
-   private final Map<Parameter, ParamData> paramData = new HashMap<Parameter, ParamData>();
+   private final Map<Parameter, ParamData> paramData = new LinkedHashMap<Parameter, ParamData>();
    private boolean updateContentsEnabled = false;
 
    /**
@@ -84,14 +87,25 @@ public class ParameterEditor extends JPanel implements ChangeListener
       paramData.clear();
       paramTabs.removeAll();
 
+      // Get the parameters and sort them by parameter-number
       final Program program = device.getProgram();
-      final Set<Parameter> params = program.getParameters();
+      final Set<Parameter> paramsSet = program.getParameters();
+      final Parameter[] params = new Parameter[paramsSet.size()];
+      paramsSet.toArray(params);
+      Arrays.sort(params, new Comparator<Parameter>()
+      {
+         @Override
+         public int compare(Parameter a, Parameter b)
+         {
+            return a.getNumber() - b.getNumber();
+         }
+      });
 
       // Create a ParamData object for every parameter
       for (final Parameter param : params)
          paramData.put(param, new ParamData(param));
 
-      // Set the dependent (child) parameters in the parameter-data objects.
+      // Set the dependent parameters in the parameter-data objects
       for (final ParamData data : paramData.values())
       {
          final Parameter param = data.getParameter();
@@ -113,13 +127,28 @@ public class ParameterEditor extends JPanel implements ChangeListener
       // Create the parameter pages
       for (final ParamData data : paramData.values())
       {
-         if (!data.isPage())
-            continue;
+         if (data.isPage())
+         {
+            final Page page = new Page(data, paramData);
+            page.addChangeListener(this);
+   
+            paramPages.put(data, page);
+         }
+      }
 
-         final Page page = new Page(data, paramData);
-         page.addChangeListener(this);
-
-         paramPages.put(data, page);
+      // Add the non-page parameters to the corresponding pages
+      Page page = null;
+      for (final Parameter param: params)
+      {
+         final ParamData data = paramData.get(param);
+         if (data.isPage())
+         {
+            page = paramPages.get(data.getParameter());
+         }
+         else if (page != null)
+         {
+            page.addParamData(data);
+         }
       }
 
       updateVisibility();

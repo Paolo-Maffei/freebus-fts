@@ -135,7 +135,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
             lmRecords.set(i, table.getValue(i, nameIdx) + " [" + keyStr + ']');
          else lmRecords.set(i, keyStr);
       }
-      lstRecords.setModel(lmRecords);
+      lstRecords.setModel(slmRecords);
 
       if (numRecords > 0)
          lstRecords.setSelectedIndex(0);

@@ -45,6 +45,9 @@ public class Parameter
    @JoinColumn(name = "parameter_type_id", nullable = false)
    private ParameterType parameterType;
 
+   @Column(name = "parameter_number")
+   private int number;
+
    @Column(name = "parameter_low_access", columnDefinition = "SMALLINT")
    private int lowAccess;
 
@@ -185,6 +188,22 @@ public class Parameter
    public void setParameterType(ParameterType parameterType)
    {
       this.parameterType = parameterType;
+   }
+
+   /**
+    * @param number the number to set
+    */
+   public void setNumber(int number)
+   {
+      this.number = number;
+   }
+
+   /**
+    * @return the number
+    */
+   public int getNumber()
+   {
+      return number;
    }
 
    /**
