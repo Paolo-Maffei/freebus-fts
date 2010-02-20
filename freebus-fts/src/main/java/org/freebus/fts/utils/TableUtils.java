@@ -45,8 +45,49 @@ public final class TableUtils
       }
    }
 
+   /**
+    * Create a string that contains the names of the table's columns in their
+    * current order, separated by comma.
+    * 
+    * @param table - the table to process.
+    * @return a string containing the comma separated names of the columns.
+    */
+   public static String getColumnOrderString(final JTable table)
+   {
+      final StringBuilder sb = new StringBuilder();
+
+      final TableColumnModel columnModel = table.getColumnModel();
+      final int numColumns = columnModel.getColumnCount();
+      for (int i = 0; i < numColumns; ++i)
+      {
+         if (i > 0) sb.append(',');
+         sb.append(columnModel.getColumn(i).getHeaderValue().toString());
+      }
+
+      return sb.toString();
+   }
+
+   /**
+    * Apply the order of the columns to the table.
+    * 
+    * @param table - the table to process.
+    * @param orderStr - the string with the column names, separated by comma.
+    */
+   public static void applyColumnOrder(final JTable table, final String orderStr)
+   {
+      final TableColumnModel columnModel = table.getColumnModel();
+      final String[] colNames = orderStr.split(",");
+
+      for (int i = 0; i < colNames.length; ++i)
+      {
+         final int idx = columnModel.getColumnIndex(colNames[i]);
+
+         if (idx >= 0) columnModel.moveColumn(idx, i);
+      }
+   }
+
    /*
-    * Not to be used.
+    * Disabled.
     */
    private TableUtils()
    {
