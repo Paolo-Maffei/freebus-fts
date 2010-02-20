@@ -18,6 +18,7 @@ import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.core.ProjectController;
 import org.freebus.fts.jobs.JobQueue;
 import org.freebus.fts.jobs.JobQueueEvent;
@@ -67,6 +68,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       setInstance(this);
 
       setTitle(I18n.getMessage("MainWindow.Title"));
+      setIconImage(ImageCache.getIcon("app-icon").getImage());
 
       createMenuBar();
       createToolBar();

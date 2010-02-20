@@ -3,7 +3,6 @@ package org.freebus.fts.core;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import org.apache.log4j.Logger;
@@ -13,14 +12,20 @@ import org.apache.log4j.Logger;
  */
 public final class ImageCache
 {
-   private static final Map<String, Icon> iconCache = new HashMap<String, Icon>();
+   private static final Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
 
    /**
     * Loads the icon with the given name.
+    * 
+    * @param iconName - the name of the icon, without extension. The path to the
+    *           icon shall be a resource path that can be resolved by
+    *           {@link ClassLoader#getResource(String)}.
+    * 
+    * @return the icon
     */
-   public static synchronized Icon getIcon(String iconName)
+   public static synchronized ImageIcon getIcon(String iconName)
    {
-      Icon icon = iconCache.get(iconName);
+      ImageIcon icon = iconCache.get(iconName);
       if (icon == null)
       {
          final ClassLoader classLoader = ImageCache.class.getClassLoader();
