@@ -49,7 +49,7 @@ public class testcom {
 
 			Telegram telegram = new Telegram();
 			telegram.setFrom(new PhysicalAddress(0, 0, 0));
-			telegram.setDest(new PhysicalAddress(3, 3, 6));
+			telegram.setDest(new PhysicalAddress(3, 3, 7));
 			telegram.setPriority(Priority.SYSTEM);
 			telegram.setRepeated(true);
 			telegram.setTransport(Transport.Connect);
@@ -64,8 +64,50 @@ public class testcom {
 			telegram.setSequence(0);
 			telegram.setApplication(Application.DeviceDescriptor_Read);
 
+			
+			busInterface.send(telegram);
+			telegram.setData(new int[] {1,1,4 });
+			telegram.setSequence(1);
+			telegram.setApplication(Application.Memory_Read);
 			busInterface.send(telegram);
 			
+			
+			telegram.setData(new int[] {1,8 });
+			telegram.setSequence(2);
+			telegram.setApplication(Application.ADC_Read);
+			busInterface.send(telegram);
+			
+			
+			telegram.setData(new int[] {1,0,0x60 });
+			telegram.setSequence(3);
+			telegram.setApplication(Application.Memory_Read);
+			busInterface.send(telegram);
+			
+			telegram.setData(new int[] {1,1,0x0D });
+			telegram.setSequence(4);
+			telegram.setApplication(Application.Memory_Read);
+			busInterface.send(telegram);
+			
+			telegram.setData(new int[] {0x84,8 });
+			telegram.setSequence(5);
+			telegram.setApplication(Application.ADC_Read);
+			busInterface.send(telegram);
+			
+			telegram.setData(new int[] {4,1,4 });
+			telegram.setSequence(6);
+			telegram.setApplication(Application.Memory_Read);
+			busInterface.send(telegram);
+			
+			telegram.setData(new int[] {1,0,0x60 });
+			telegram.setSequence(7);
+			telegram.setApplication(Application.Memory_Read);
+			busInterface.send(telegram);
+			
+			telegram.setData(new int[] {1,1,9 });
+			telegram.setSequence(8);
+			telegram.setApplication(Application.Memory_Read);
+			busInterface.send(telegram);
+			busInterface.close();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
