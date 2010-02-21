@@ -16,7 +16,7 @@ public final class EibdConnection implements KNXConnection
 
    /**
     * Create a new connection to an eibd listening on a custom port.
-    *
+    * 
     * @param host - the name or IP address of the host that is running eibd.
     * @param port - the TCP port of the eibd on the host. Default: 6720.
     */
@@ -27,8 +27,8 @@ public final class EibdConnection implements KNXConnection
    }
 
    /**
-    * Create a new connection to an eibd  listening on the default port (6720).
-    *
+    * Create a new connection to an eibd listening on the default port (6720).
+    * 
     * @param host - the name or IP address of the host that is running eibd.
     */
    public EibdConnection(String host)

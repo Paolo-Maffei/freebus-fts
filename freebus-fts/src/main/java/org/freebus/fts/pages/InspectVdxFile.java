@@ -61,7 +61,6 @@ public class InspectVdxFile extends AbstractPage
    {
       setLayout(new BorderLayout());
 
-      
       add(contents, BorderLayout.CENTER);
 
       final TableContentsPerRecord contentsPerRecord = new TableContentsPerRecord();
@@ -115,14 +114,16 @@ public class InspectVdxFile extends AbstractPage
       final ButtonGroup btnGrpLayout = new ButtonGroup();
       JToggleButton toggleButton;
 
-      toggleButton = createSwitchContentsToggleButton(tableContentsPerRecord, "icons/view_choose", I18n.getMessage("InspectVdxFile.ViewPerRecordToolTip"));
+      toggleButton = createSwitchContentsToggleButton(tableContentsPerRecord, "icons/view_choose", I18n
+            .getMessage("InspectVdxFile.ViewPerRecordToolTip"));
       toolBar.add(toggleButton);
       btnGrpLayout.add(toggleButton);
 
       toggleButton.setSelected(true);
       currentContents = tableContentsPerRecord;
 
-      toggleButton = createSwitchContentsToggleButton(tableContentsGrid, "icons/view_grid", I18n.getMessage("InspectVdxFile.ViewGridToolTip"));
+      toggleButton = createSwitchContentsToggleButton(tableContentsGrid, "icons/view_grid", I18n
+            .getMessage("InspectVdxFile.ViewGridToolTip"));
       toolBar.add(toggleButton);
       btnGrpLayout.add(toggleButton);
 
@@ -146,15 +147,16 @@ public class InspectVdxFile extends AbstractPage
          }
       });
 
-      for (final int val: new int[]{ 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 })
+      for (final int val : new int[] { 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 })
          cboMaxRecords.addItem(val);
       cboMaxRecords.setSelectedItem(maxRecords);
    }
 
    /**
-    * Create a toggle button for switching the contents type. 
+    * Create a toggle button for switching the contents type.
     */
-   private JToggleButton createSwitchContentsToggleButton(final TableContents tableContents, String iconName, String toolTipText)
+   private JToggleButton createSwitchContentsToggleButton(final TableContents tableContents, String iconName,
+         String toolTipText)
    {
       final JToggleButton toggleButton = new JToggleButton(ImageCache.getIcon(iconName));
       toggleButton.setToolTipText(toolTipText);
@@ -175,7 +177,8 @@ public class InspectVdxFile extends AbstractPage
    }
 
    /**
-    * Set the properties of the abstract button btn to match the tool-bar buttons.
+    * Set the properties of the abstract button btn to match the tool-bar
+    * buttons.
     */
    private void setToolButtonProperties(AbstractButton btn)
    {
@@ -220,7 +223,7 @@ public class InspectVdxFile extends AbstractPage
     */
    public void updateTables()
    {
-      final String selectedTableName = (String) cboTables.getSelectedItem(); 
+      final String selectedTableName = (String) cboTables.getSelectedItem();
 
       cboTables.removeAllItems();
 
@@ -231,7 +234,7 @@ public class InspectVdxFile extends AbstractPage
       if (cbxTablesSorted.isSelected())
          Arrays.sort(tableNames);
 
-      for (final String tableName: tableNames)
+      for (final String tableName : tableNames)
       {
          cboTables.addItem(tableName);
 
@@ -246,6 +249,8 @@ public class InspectVdxFile extends AbstractPage
    @Override
    public void updateContents()
    {
+      final Logger logger = Logger.getLogger(getClass());
+
       if (currentContents == null)
          return;
 
@@ -273,8 +278,8 @@ public class InspectVdxFile extends AbstractPage
                final int numRecords = selectedTable.getNumElements();
                if (numRecords >= maxRecords)
                {
-                  Logger.getLogger(getClass()).warn(
-                        I18n.formatMessage("InspectVdxFile.WarnListTruncated", new Object[] { maxRecords, numRecords }));
+                  logger.warn(I18n.formatMessage("InspectVdxFile.WarnListTruncated",
+                        new Object[] { maxRecords, numRecords }));
                }
             }
             catch (IOException e)

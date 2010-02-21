@@ -53,6 +53,9 @@ public enum Actions
    /** Send a test telegram to the KNX/EIB bus. */
    SEND_TEST_TELEGRAM(new SendTestTelegramAction()),
 
+   /** Open a dialog for setting the physical address of a device on the bus. */
+   SET_PHYSICAL_ADDRESS(new SetPhysicalAddressAction()),
+
    /** Open the settings dialog. */
    SETTINGS(new SettingsAction()),
 

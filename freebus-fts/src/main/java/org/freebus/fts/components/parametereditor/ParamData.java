@@ -3,16 +3,19 @@ package org.freebus.fts.components.parametereditor;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.products.Parameter;
 
 /**
- * Data / details about a parameter that gets edited in the {@link ParameterEditor}.
+ * Data / details about a parameter that gets edited in the
+ * {@link ParameterEditor}.
  */
 public class ParamData
 {
    private final Parameter param;
    private final Set<ParamData> dependents = new HashSet<ParamData>();
+   private ParamData parentData;
    private Object value;
 
    /**
@@ -26,11 +29,12 @@ public class ParamData
    }
 
    /**
-    * Cleanup. Call when the parameter data is no longer required.
+    * @return the parent parameter-data. This is the parameter on which the
+    *         visibility of this parameter depends.
     */
-   public void dispose()
+   public ParamData getParentData()
    {
-      dependents.clear();
+      return parentData;
    }
 
    /**
@@ -43,7 +47,7 @@ public class ParamData
 
    /**
     * Set the value of the parameter.
-    *
+    * 
     * @param value the value to set
     */
    public void setValue(Object value)
@@ -61,13 +65,71 @@ public class ParamData
 
    /**
     * Test the visibility of the parameter.
-    *
+    * 
     * @return true if the parameter is visible.
     */
    public boolean isVisible()
    {
-      return true;
+      if (parentData == null)
+         return true;
+
+      final Integer expectedValue = getExpectedValue();
+      final Integer parentValue = getParentValue();
+
+      if (param.getName().equals("Bspwdk"))
+      {
+         // Debug catcher
+         Logger.getLogger(getClass()).debug(
+               "isVisible param #" + param.getId() + ": parent-val expected=" + expectedValue + ", found=" + parentValue);
+      }
+
+      if (expectedValue == null)
+         return parentData.isVisible();
+
+      return expectedValue.equals(parentValue);
    }
+
+   /**
+    * Get the expected parent-value of this or any parent parameter.
+    *
+    * @return the expected parent-value. This is the first non-null
+    *         {@link Parameter#getParentValue} of the parameter or one of its
+    *         parents. However, the result can still be null.
+    */
+   public Integer getExpectedValue()
+   {
+      for (ParamData data = this; data != null; data = data.getParentData())
+      {
+         Integer val = data.getParameter().getParentValue();
+         if (val != null)
+            return val;
+      }
+
+      return null;
+   }
+
+   /**
+    * Get the current value of any parent parameter.
+    *
+    * @return the current value of the parent parameter, or of the parent's
+    *         parents. The first non-null value that is found is returned. If no
+    *         value is found, null is returned.
+    */
+   public Integer getParentValue()
+   {
+      for (ParamData data = getParentData(); data != null; data = data.getParentData())
+      {
+         final Object obj = data.getValue();
+         if (obj != null)
+         {
+            if (obj instanceof Integer) return (Integer) obj;
+            return null;
+         }
+      }
+
+      return null;
+   }
+   
 
    /**
     * Test if the parameter is a page.
@@ -88,12 +150,13 @@ public class ParamData
    }
 
    /**
-    * Add a dependent parameter-data. This is a parameter-data object
-    * whose {@link Parameter} has its parent-parameter set to the
-    * parameter of this object.
+    * Add a dependent parameter-data. This is a parameter-data object whose
+    * {@link Parameter} has its parent-parameter set to the parameter of this
+    * object.
     */
    public void addDependent(ParamData dependent)
    {
+      dependent.parentData = this;
       dependents.add(dependent);
    }
 
@@ -110,7 +173,18 @@ public class ParamData
     */
    public void removeAllDependents()
    {
+      for (final ParamData dependent : dependents)
+         dependent.parentData = null;
+
       dependents.clear();
+   }
+
+   /**
+    * @return if the object has dependent objects.
+    */
+   public boolean hasDependents()
+   {
+      return !dependents.isEmpty();
    }
 
    /**
@@ -128,8 +202,10 @@ public class ParamData
    @Override
    public boolean equals(Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof ParamData)) return false;
+      if (o == this)
+         return true;
+      if (!(o instanceof ParamData))
+         return false;
       final ParamData oo = (ParamData) o;
 
       return param.getId() == oo.param.getId();

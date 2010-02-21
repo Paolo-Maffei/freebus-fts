@@ -28,6 +28,7 @@ import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -69,7 +70,10 @@ public class Page extends JPanel
       this.paramData = paramData;
 
       pageParam = pageData.getParameter();
-      setName(pageParam.getDescription() + " [" + pageParam.getId() + "]");
+
+      String pageName = pageParam.getDescription();
+      if (pageName == null || pageName.isEmpty()) pageName = pageParam.getName();
+      setName(pageName + " [" + pageParam.getId() + "]");
 
       final Insets insets = new Insets(8, 8, 8, 8);
       final Insets separatorInsets = new Insets(0, 8, 0, 8);
@@ -237,20 +241,6 @@ public class Page extends JPanel
          }
       });
 
-      combo.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            final ParameterValue val = (ParameterValue) combo.getSelectedItem();
-            if (val != null)
-            {
-               data.setValue(val.getIntValue());
-               fireStateChanged(param);
-            }
-         }
-      });
-
       final int defaultValue = (Integer) paramData.get(param).getValue();
       for (final ParameterValue val : values)
       {
@@ -260,6 +250,17 @@ public class Page extends JPanel
             break;
          }
       }
+
+      combo.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            final ParameterValue val = (ParameterValue) combo.getSelectedItem();
+            data.setValue(val == null ? null : val.getIntValue());
+            fireStateChanged(data);
+         }
+      });
 
       createParamLabel(param, gridRow, 1);
       contentAddComponent(combo, gridRow);
@@ -279,9 +280,13 @@ public class Page extends JPanel
       final Parameter param = data.getParameter();
       final ParameterType paramType = param.getParameterType();
 
-      final int value = (Integer) data.getValue();
       final int min = paramType.getMinValue();
       final int max = paramType.getMaxValue();
+
+      int value = (Integer) data.getValue();
+      if (value < min) value = min;
+      else if (value > max) value = max;
+
       final SpinnerNumberModel model = new SpinnerNumberModel(value, min, max, 1);
       final JSpinner spinner = new JSpinner(model);
       spinner.setName("param-" + param.getId());
@@ -292,7 +297,7 @@ public class Page extends JPanel
          public void stateChanged(ChangeEvent e)
          {
             paramData.get(param).setValue(model.getValue());
-            fireStateChanged(param);
+            fireStateChanged(data);
          }
       });
 
@@ -378,12 +383,19 @@ public class Page extends JPanel
     * 
     * @param param the parameter that was changed.
     */
-   public void fireStateChanged(final Parameter param)
+   public void fireStateChanged(final ParamData data)
    {
-      final ChangeEvent e = new ChangeEvent(param);
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            final ChangeEvent e = new ChangeEvent(data);
 
-      for (ChangeListener listener : changeListeners)
-         listener.stateChanged(e);
+            for (ChangeListener listener : changeListeners)
+               listener.stateChanged(e);
+         }
+      });
    }
 
    /**

@@ -158,8 +158,6 @@ public class SimpleConfig
     */
    public void load(InputStream in) throws IOException
    {
-      clear();
-      init();
       props.load(in);
    }
 

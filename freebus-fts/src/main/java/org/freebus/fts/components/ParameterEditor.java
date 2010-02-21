@@ -23,7 +23,7 @@ import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 
 /**
- * A panel that allows to edit the parameters of a program.
+ * A widget that allows to edit the parameters of a program.
  */
 public class ParameterEditor extends JPanel implements ChangeListener
 {
@@ -35,6 +35,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
    private final Map<ParamData, Page> paramPages = new HashMap<ParamData, Page>();
    private final Map<Parameter, ParamData> paramData = new LinkedHashMap<Parameter, ParamData>();
    private boolean updateContentsEnabled = false;
+   private boolean inStateChanged = false;
 
    /**
     * Create a parameter editor.
@@ -83,6 +84,8 @@ public class ParameterEditor extends JPanel implements ChangeListener
     */
    public void updateContents()
    {
+      updateContentsEnabled = false;
+
       paramPages.clear();
       paramData.clear();
       paramTabs.removeAll();
@@ -101,7 +104,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
          }
       });
 
-      // Create a ParamData object for every parameter
+      // Create a parameter-data object for every parameter
       for (final Parameter param : params)
          paramData.put(param, new ParamData(param));
 
@@ -136,16 +139,18 @@ public class ParameterEditor extends JPanel implements ChangeListener
          }
       }
 
-      // Add the non-page parameters to the corresponding pages
+      // Add the (potentially) visible non-page parameters to the corresponding pages
       Page page = null;
       for (final Parameter param: params)
       {
          final ParamData data = paramData.get(param);
-         if (data.isPage())
+         final Integer addr = param.getAddress();
+
+         if (paramPages.containsKey(data))
          {
-            page = paramPages.get(data.getParameter());
+            page = paramPages.get(data);
          }
-         else if (page != null)
+         else if (page != null && addr != null && addr != 0)
          {
             page.addParamData(data);
          }
@@ -153,8 +158,10 @@ public class ParameterEditor extends JPanel implements ChangeListener
 
       updateVisibility();
 
+      updateContentsEnabled = false;
       ((Page) paramTabs.getComponentAt(0)).updateContents();
       paramTabs.setSelectedIndex(0);
+      updateContentsEnabled = true;
    }
 
    /**
@@ -169,7 +176,10 @@ public class ParameterEditor extends JPanel implements ChangeListener
       for (final ParamData data : paramPages.keySet())
       {
          if (data.isVisible())
+         {
             visiblePages.add(paramPages.get(data));
+//            Logger.getLogger(getClass()).debug("visible page: " + data.getParameter());
+         }
       }
 
       // Remove all parameter-pages that are currently visible but that shall
@@ -210,6 +220,23 @@ public class ParameterEditor extends JPanel implements ChangeListener
    @Override
    public void stateChanged(ChangeEvent e)
    {
-      updateVisibility();
+      final ParamData data = (ParamData) e.getSource();
+      if (updateContentsEnabled && !inStateChanged && data.hasDependents())
+      {
+         try
+         {
+            inStateChanged = true;
+
+            updateVisibility();
+   
+            final Component currentPageComp = paramTabs.getSelectedComponent();
+            if (currentPageComp instanceof Page)
+               ((Page) currentPageComp).updateContents();
+         }
+         finally
+         {
+            inStateChanged = false;
+         }
+      }
    }
 }
