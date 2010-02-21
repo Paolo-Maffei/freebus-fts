@@ -168,6 +168,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       toolBar.addSeparator();
       Actions.SEND_TEST_TELEGRAM.addTo(toolBar);
+      Actions.DEVICE_STATUS.addTo(toolBar);
    }
 
    /**

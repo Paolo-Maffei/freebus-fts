@@ -20,6 +20,9 @@ public enum Actions
    /** Show the bus-monitor. */
    BUS_MONITOR(new BusMonitorAction()),
 
+   /** Read the device status. */
+   DEVICE_STATUS(new DeviceStatusAction()),
+   
    /** Exit the application. */
    EXIT(new ExitAction()),
 
