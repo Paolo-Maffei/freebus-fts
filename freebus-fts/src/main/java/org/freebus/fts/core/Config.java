@@ -97,6 +97,7 @@ public final class Config extends SimpleConfig
          }
          catch (FileNotFoundException e)
          {
+            init();
          }
       }
       catch (Exception e)
@@ -126,6 +127,7 @@ public final class Config extends SimpleConfig
 
    /**
     * Initialize the configuration object with default values.
+    * Called when no config file exists.
     */
    @Override
    public void init()
@@ -147,5 +149,10 @@ public final class Config extends SimpleConfig
       put("commPort", commPort);
       setLookAndFeelName(lookAndFeel);
       put("knxConnectionType", "NONE");
+
+      put("databaseDriverType", "HSQL");
+      put("databaseHSQL.user", "sa");
+      put("databaseHSQL.password", "");
+      put("databaseHSQL.database", Environment.getAppDir() + "/db");
    }
 }
