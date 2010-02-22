@@ -79,13 +79,12 @@ public abstract class Ft12Connection implements KNXConnection
    @Override
    public void open() throws IOException
    {
-      //logger.debug("WRITE: FT1.2-Reset");
+      logger.debug("WRITE: Reset (resetting BCU)");
 
       // Send resets until the device acknowledges
       final int startAckCount = ackCount;
       for (int i = 50; i > 0 && ackCount == startAckCount; --i)
       {
-         logger.debug("WRITE: Reset");
          write(resetMsg, resetMsg.length);
 
          try

@@ -7,6 +7,7 @@ import java.util.concurrent.Semaphore;
 
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.utils.BusInterfaceService;
@@ -146,11 +147,16 @@ public final class JobQueue implements JobListener
 
       try
       {
-         final BusInterface bus = BusInterfaceService.getBusInterface();
-         if (bus == null)
-            return;
+         if (!BusInterfaceService.busInterfaceOpened())
+         {
+            progress(0, I18n.getMessage("JobQueue.OpeningBusInterface"));
+            Logger.getLogger(getClass()).info("Opening bus interface");
+         }
 
-         job.run(bus);
+         final BusInterface bus = BusInterfaceService.getBusInterface();
+
+         if (bus != null)
+            job.run(bus);
 
          masterEvent.progress = 100;
          notifyListeners(masterEvent);
@@ -166,9 +172,11 @@ public final class JobQueue implements JobListener
             }
          });
       }
-
-      job.removeListener(this);
-      currentJob = null;
+      finally
+      {
+         job.removeListener(this);
+         currentJob = null;
+      }
    }
 
    /**

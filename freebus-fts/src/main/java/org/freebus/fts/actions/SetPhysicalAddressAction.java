@@ -8,6 +8,8 @@ import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.SetPhysicalAddress;
+import org.freebus.fts.jobs.JobQueue;
+import org.freebus.fts.jobs.SetPhysicalAddressJob;
 
 /**
  * Set the physical address of a device on the bus that is in programming mode.
@@ -38,9 +40,8 @@ public final class SetPhysicalAddressAction extends BasicAction
          @Override
          public void windowClosed(WindowEvent e)
          {
-            if (!dlg.isAccepted()) return;
-
-            // TODO start the programming
+            if (dlg.isAccepted())
+               JobQueue.getDefaultJobQueue().add(new SetPhysicalAddressJob(dlg.getPhysicalAddress()));
          }
       });
 

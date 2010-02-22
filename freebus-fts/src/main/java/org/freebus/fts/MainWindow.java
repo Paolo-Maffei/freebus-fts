@@ -6,10 +6,13 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.logging.Logger;
 
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
 
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.JobQueueView;
@@ -42,6 +45,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    private static MainWindow instance;
 
    private final JobQueueView jobQueueView;
+   private Timer tmrJobQueueView;
 
    /**
     * @return the global {@link MainWindow} instance.
@@ -184,10 +188,43 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
     * Callback: A job-queue event occurred.
     */
    @Override
-   public void jobQueueEvent(JobQueueEvent event)
+   public synchronized void jobQueueEvent(JobQueueEvent event)
    {
-      if (!jobQueueView.isVisible())
-         jobQueueView.setVisible(true);
+      if (event.job != null)
+      {
+         if (tmrJobQueueView != null)
+         {
+            tmrJobQueueView.cancel();
+            tmrJobQueueView = null;
+         }
+   
+         if (!jobQueueView.isVisible())
+            jobQueueView.setVisible(true);
+      }
+
+      jobQueueView.jobQueueEvent(event);
+
+      if (event.job == null)
+      {
+         // Hide the job-queue view after some seconds of inactivity
+         tmrJobQueueView = new Timer();
+         tmrJobQueueView.schedule(new TimerTask()
+         {
+            @Override
+            public void run()
+            {
+               SwingUtilities.invokeLater(new Runnable()
+               {
+                  @Override
+                  public void run()
+                  {
+                     jobQueueView.setVisible(false);
+                  }
+               });
+               tmrJobQueueView = null;
+            }
+         }, 5000);
+      }
    }
 
    /**

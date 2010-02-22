@@ -50,8 +50,19 @@ public final class BusInterfaceService
    }
 
    /**
-    * Create the default bus interface. Automatically called on demand by {@link getBusInterface}.
-    * @throws Exception 
+    * @return true if the bus interface exists, false if it would be created
+    *         when calling {@link #getBusInterface}.
+    */
+   public synchronized static boolean busInterfaceOpened()
+   {
+      return busInterface != null;
+   }
+
+   /**
+    * Create the default bus interface. Automatically called on demand by
+    * {@link #getBusInterface}.
+    * 
+    * @throws Exception
     */
    private static void createBusInterface() throws Exception
    {

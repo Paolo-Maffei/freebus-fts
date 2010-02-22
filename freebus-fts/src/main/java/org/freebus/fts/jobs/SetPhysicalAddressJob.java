@@ -33,7 +33,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       dataTelegram.setDest(GroupAddress.BROADCAST);
       dataTelegram.setPriority(Priority.SYSTEM);
 
-      label = I18n.getMessage("SetPhysicalAddressJob_Label").replace("%1", newAddress.toString());
+      label = I18n.formatMessage("SetPhysicalAddressJob.Label", new Object[] { newAddress.toString() });
    }
 
    /**
