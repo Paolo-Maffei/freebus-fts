@@ -2,11 +2,8 @@ package org.freebus.fts.products;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-import javax.persistence.TableGenerator;
 
 /**
  * A manufacturer.
@@ -18,8 +15,6 @@ public class Manufacturer
    public final static Manufacturer NOBODY = new Manufacturer(0, "Nobody");
    
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenManufacturerId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "manufacturer_id", nullable = false)
    private int id;
 

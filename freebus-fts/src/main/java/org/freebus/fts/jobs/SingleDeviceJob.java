@@ -43,8 +43,18 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, Tele
       bus.addListener(this);
 
       init();
-      main(bus);
-      cleanup();
+      try
+      {
+         main(bus);
+      }
+      catch (InterruptedException e)
+      {
+         throw new IOException(e);
+      }
+      finally
+      {
+         cleanup();
+      }
 
       bus.removeListener(this);
       this.bus = null;
@@ -55,7 +65,7 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, Tele
     * 
     * @throws IOException
     */
-   public abstract void main(BusInterface bus) throws IOException;
+   public abstract void main(BusInterface bus) throws IOException, InterruptedException;
 
    /**
     * Initialization. Called by {@link #run}.

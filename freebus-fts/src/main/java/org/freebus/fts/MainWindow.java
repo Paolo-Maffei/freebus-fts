@@ -8,12 +8,12 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.logging.Logger;
 
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.LogLine;
@@ -78,7 +78,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       createToolBar();
 
       getStatusBar().add(new LogLine());
-      Logger.getAnonymousLogger().info("Initializing...");
+      Logger.getLogger(getClass()).info("Initializing...");
 
       jobQueueView = new JobQueueView();
       jobQueueView.setVisible(false);
@@ -180,11 +180,6 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    }
 
    /**
-    * Update the contents of the main window.
-    * Call this method if the active project was changed.
-    */
-
-   /**
     * Callback: A job-queue event occurred.
     */
    @Override
@@ -200,6 +195,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    
          if (!jobQueueView.isVisible())
             jobQueueView.setVisible(true);
+
+         if (event.message != null)
+            Logger.getLogger(getClass()).info(event.job.getLabel() + ": " + event.message);
       }
 
       jobQueueView.jobQueueEvent(event);
