@@ -74,13 +74,16 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    }
 
    /**
-    * Add an entry to the list of telegrams.
+    * Add an entry to the list of telegrams. The telegram is cloned to avoid
+    * problems.
     * 
     * @param telegram - The telegram that the entry is about.
     * @param isReceived - True if the telegram was received, false else.
     */
-   private void addBusMonitorItem(final Telegram telegram, final boolean isReceived)
+   private void addBusMonitorItem(Telegram telegram, final boolean isReceived)
    {
+      final Telegram tel = (Telegram) telegram.clone();
+
       try
       {
          SwingUtilities.invokeLater(new Runnable()
@@ -90,7 +93,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
             {
                final int numChilds = treeModel.getChildCount(rootNode);
 
-               DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(telegram, isReceived));
+               DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(tel, isReceived));
                treeModel.insertNodeInto(node, rootNode, numChilds);
 
                if (numChilds <= 1)

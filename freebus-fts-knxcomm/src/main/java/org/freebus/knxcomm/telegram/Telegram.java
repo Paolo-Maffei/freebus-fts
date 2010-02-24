@@ -2,8 +2,11 @@ package org.freebus.knxcomm.telegram;
 
 /**
  * A communication data packet as it is sent on the EIB bus.
+ * 
+ * It is mandatory for subclasses to override {@link #clone()} to avoid
+ * problems. 
  */
-public class Telegram
+public class Telegram implements Cloneable
 {
    private PhysicalAddress from = PhysicalAddress.NULL;
    private Address dest = GroupAddress.BROADCAST;
@@ -20,6 +23,21 @@ public class Telegram
     */
    public Telegram()
    {
+   }
+
+   /**
+    * Clone the telegram.
+    */
+   public Telegram clone()
+   {
+      try
+      {
+         return (Telegram) super.clone();
+      }
+      catch (CloneNotSupportedException e)
+      {
+         throw new RuntimeException(e);
+      }
    }
 
    /**
