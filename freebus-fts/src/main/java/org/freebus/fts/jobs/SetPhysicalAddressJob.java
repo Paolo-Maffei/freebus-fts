@@ -62,7 +62,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       //
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Scanning"));
       dataTelegram.setApplication(Application.IndividualAddress_Read);
-      dataTelegram.setData(new int[] { 0x01 });
+      dataTelegram.setData(new int[] { (int)(Math.random() * 256) & 0xff });
       telegrams.clear();
       applicationExpected = Application.IndividualAddress_Response;
       bus.send(dataTelegram);
@@ -100,6 +100,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Verify"));
       dataTelegram.setApplication(Application.Memory_Read);
       dataTelegram.setDest(newAddress);
+      dataTelegram.setData(new int[] { 1, 0, 0 });
       applicationExpected = null;
       telegrams.clear();
       bus.send(dataTelegram);
@@ -111,9 +112,10 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Success"));
       dataTelegram.setApplication(Application.Restart);
       dataTelegram.setDest(newAddress);
+      dataTelegram.setData(null);
       telegrams.clear();
       bus.send(dataTelegram);
-      waitForAnswer(Application.Memory_Response);
+      msleep(500);
    }
 
    /**

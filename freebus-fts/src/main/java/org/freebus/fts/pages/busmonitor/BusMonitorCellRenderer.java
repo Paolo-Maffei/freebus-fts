@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.text.SimpleDateFormat;
 
 import javax.swing.Icon;
 import javax.swing.JLabel;
@@ -22,9 +23,10 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
 {
    private static final Icon recvIcon = ImageCache.getIcon("icons/msg_receive");
    private static final Icon sendIcon = ImageCache.getIcon("icons/msg_send");
+   private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
    private final JPanel renderer;
-   private final JLabel lblDirection, lblAppName, lblFrom, lblDest, lblAppData, lblRaw;
+   private final JLabel lblWhen, lblDirection, lblAppName, lblFrom, lblDest, lblAppData, lblRaw;
 
    private final DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
 
@@ -42,35 +44,38 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
       c.ipadx = 8;
       c.ipady = 2;
 
-      lblDirection = new JLabel();
-      c.gridx = 0;
+      int col = -1;
+
+      lblWhen = new JLabel();
+      c.gridx = ++col;
       c.gridy = 0;
+      renderer.add(lblWhen, c);
+
+      lblDirection = new JLabel();
+      c.gridx = ++col;
       renderer.add(lblDirection, c);
 
       lblAppName = new JLabel();
-      c.gridx = 1;
-      c.gridy = 0;
+      c.gridx = ++col;
       renderer.add(lblAppName, c);
 
       lblFrom = new JLabel();
-      c.gridx = 2;
-      c.gridy = 0;
+      c.gridx = ++col;
       renderer.add(lblFrom, c);
 
       lblDest = new JLabel();
-      c.gridx = 3;
-      c.gridy = 0;
+      c.gridx = ++col;
       renderer.add(lblDest, c);
 
       lblAppData = new JLabel();
-      c.gridx = 4;
+      c.gridx = ++col;
       c.gridy = 0;
       renderer.add(lblAppData, c);
       
       lblRaw = new JLabel();
       lblRaw.setForeground(Color.gray);
-      c.gridx = 1;
-      c.gridwidth = 4;
+      c.gridx = 2;
+      c.gridwidth = col - 1;
       c.gridy = 1;
       renderer.add(lblRaw, c);
       c.gridwidth = 1;
@@ -92,6 +97,7 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
             final BusMonitorItem busMonitorItem = (BusMonitorItem) userObject;
             final Telegram telegram = busMonitorItem.getTelegram();
 
+            lblWhen.setText(dateFormatter.format(busMonitorItem.getWhen()));
             lblDirection.setIcon(busMonitorItem.isReceived() ? recvIcon : sendIcon);
 
             final Application application = telegram.getApplication();

@@ -2,6 +2,7 @@ package org.freebus.knxcomm;
 
 import java.io.IOException;
 
+import org.freebus.knxcomm.emi.EmiFrameType;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -48,7 +49,8 @@ public interface BusInterface
    public KNXConnection getConnection();
 
    /**
-    * Add a listener that gets informed when telegrams are sent or received.
+    * Add a listener that gets informed when telegrams are sent or received. Listeners
+    * are not informed about confirmations {@link EmiFrameType#isConfirmation()}.
     *
     * @param listener - the listener object.
     */

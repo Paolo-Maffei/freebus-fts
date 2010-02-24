@@ -1,6 +1,7 @@
 package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
+import java.util.Date;
 
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
@@ -83,6 +84,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    private void addBusMonitorItem(Telegram telegram, final boolean isReceived)
    {
       final Telegram tel = (Telegram) telegram.clone();
+      final Date when = new Date();
 
       try
       {
@@ -93,7 +95,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
             {
                final int numChilds = treeModel.getChildCount(rootNode);
 
-               DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(tel, isReceived));
+               DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(when, tel, isReceived));
                treeModel.insertNodeInto(node, rootNode, numChilds);
 
                if (numChilds <= 1)

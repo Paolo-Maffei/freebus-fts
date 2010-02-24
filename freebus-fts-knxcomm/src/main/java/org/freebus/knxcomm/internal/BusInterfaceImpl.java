@@ -79,7 +79,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameReceived(EmiFrame frame)
    {
-      if (frame instanceof EmiTelegramFrame)
+      if (frame instanceof EmiTelegramFrame && !frame.getType().isConfirmation())
       {
          final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
          notifyListenersReceived(telegram);
