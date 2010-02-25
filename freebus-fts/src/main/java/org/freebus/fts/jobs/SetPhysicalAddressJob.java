@@ -34,6 +34,10 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       super(GroupAddress.BROADCAST);
       this.newAddress = newAddress;
 
+      dataTelegram.setFrom(PhysicalAddress.NULL);
+      dataTelegram.setPriority(Priority.SYSTEM);
+      dataTelegram.setTransport(Transport.Individual);
+
       label = I18n.formatMessage("SetPhysicalAddressJob.Label", new Object[] { newAddress.toString() });
    }
 
@@ -55,9 +59,6 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
    @Override
    public void main(BusInterface bus) throws IOException, InterruptedException
    {
-      dataTelegram.setFrom(PhysicalAddress.NULL);
-      dataTelegram.setPriority(Priority.SYSTEM);
-
       //
       // Step 1: scan the bus for devices that are in programming mode
       //
@@ -92,7 +93,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       applicationExpected = null;
       telegrams.clear();
       bus.send(dataTelegram);
-      msleep(3000);
+      msleep(500);
 
       //
       // Step 3: verify the programmed address
@@ -112,8 +113,17 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       //
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
       dataTelegram.setApplication(Application.Restart);
+      dataTelegram.setTransport(Transport.Connect);
+      dataTelegram.setSequence(1);
       dataTelegram.setDest(newAddress);
       dataTelegram.setData(null);
+      bus.send(dataTelegram);
+      msleep(500);
+
+      dataTelegram.setApplication(Application.Restart);
+      dataTelegram.setTransport(Transport.Connected);
+      dataTelegram.setData(new int[] { 1 });
+      dataTelegram.setSequence(2);
       bus.send(dataTelegram);
       msleep(500);
    }

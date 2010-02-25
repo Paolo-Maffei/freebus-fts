@@ -386,13 +386,15 @@ public class Telegram implements Cloneable
    {
       final StringBuffer sb = new StringBuffer();
 
-      sb.append(getApplication()).append(" from ").append(getFrom()).append(" to ").append(getDest());
-      if (data == null) sb.append(" no data");
+      sb.append(getTransport()).append(" transport, ").append(getApplication())
+        .append(", from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
+
+      if (data == null) sb.append("no data");
       else
       {
-         sb.append(' ').append(data.length).append(" bytes data: ");
+         sb.append(data.length).append(" bytes data:");
          for (int i = 0; i < data.length; ++i)
-            sb.append(Integer.toHexString(data[i]));
+            sb.append(String.format(" %02x", data[i]));
       }
 
       return sb.toString();

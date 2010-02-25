@@ -127,17 +127,17 @@ public abstract class Ft12Connection implements KNXConnection
       int checksum = 0;
       for (int i = -1; i < len; ++i)
          checksum += buffer[i + 5];
+      checksum &= 0xff;
 
-       buffer[len + 5] = checksum & 0xff;
-       buffer[len + 6] = 0x16;
-      // buffer[len + 5] = 0x16;
+      buffer[len + 5] = checksum;
+      buffer[len + 6] = 0x16;
 
       if (logger.isDebugEnabled())
       {
          sb.append("WRITE: DATA [0x68] (").append(len).append(" bytes):");
          for (int i = 5; i < len + 5; ++i)
-            sb.append(' ').append(Integer.toHexString(buffer[i]));
-        // logger.debug(sb.toString());
+            sb.append(String.format(" %02x", buffer[i]));
+         sb.append(String.format(" (checksum %02x)", checksum));
       }
 
       notifyListenersSent(message);
@@ -218,7 +218,7 @@ public abstract class Ft12Connection implements KNXConnection
             {
                logger.debug("READ: Status response");
             }
-            else logger.error(" Unknown fixed-width frame 0x" + Integer.toHexString(cmd));
+            else logger.error(" Unknown fixed-width frame 0x" + String.format("%02x", cmd));
             break;
 
          default: // Unknown frame
@@ -234,7 +234,7 @@ public abstract class Ft12Connection implements KNXConnection
             }
             int val;
             while (isDataAvailable() && (val = read()) != 0x16)
-               sb.append(' ').append(Integer.toHexString(val));
+               sb.append(' ').append(String.format("%02x", val));
             logger.error(sb.toString());
             break;
       }
@@ -267,18 +267,19 @@ public abstract class Ft12Connection implements KNXConnection
 
       int controlByte = read();
       if (controlByte != 0xf3 && controlByte != 0xd3)
-         err += "|no control byte 0x" + Integer.toHexString(controlByte);
+         err += "|no control byte 0x" + String.format("%02x", controlByte);
 
       int ftCheckSum = controlByte;
       final int[] data = new int[dataLen];
       for (int i = 0; i < dataLen; ++i)
       {
          data[i] = read();
-         logMsg.append(' ').append(Integer.toHexString(data[i]));
+         logMsg.append(' ').append(String.format("%02x", data[i]));
          ftCheckSum += data[i];
       }
 
       final int checksum = read();
+      logMsg.append(String.format(" (checksum %02x)", checksum));
       if (checksum != (ftCheckSum & 0xff))
          err += "|FT checksum error";
 
