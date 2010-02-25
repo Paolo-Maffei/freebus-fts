@@ -1,7 +1,7 @@
 package org.freebus.knxcomm.emi;
 
 /**
- * Layer types
+ * PEI Layer types
  */
 public enum LayerType
 {

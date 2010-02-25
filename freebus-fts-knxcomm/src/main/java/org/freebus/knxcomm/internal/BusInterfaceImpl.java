@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
@@ -15,6 +16,8 @@ import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.PEISwitchMode;
 import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.emi.PEI_Identify_con;
+import org.freebus.knxcomm.emi.PEI_Identify_req;
 import org.freebus.knxcomm.emi.PEI_Switch_req;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Telegram;
@@ -27,6 +30,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
 {
    protected final CopyOnWriteArrayList<TelegramListener> listeners = new CopyOnWriteArrayList<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
+   private PhysicalAddress physicalAddr;
    private final KNXConnection con;
 
    /**
@@ -35,8 +39,6 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    public BusInterfaceImpl(KNXConnection con)
    {
       this.con = con;
-//      final Config cfg = Config.getInstance();
-//      L_Data_con = new SerialFt12Connection(cfg.getCommPort());
    }
 
    /**
@@ -79,6 +81,12 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameReceived(EmiFrame frame)
    {
+      if (frame instanceof PEI_Identify_con)
+      {
+         Logger.getLogger(getClass()).info("PEI_Identify: " + frame);
+         physicalAddr = new PhysicalAddress(((PEI_Identify_con) frame).getAddr());
+      }
+
       if (frame instanceof EmiTelegramFrame && !frame.getType().isConfirmation())
       {
          final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
@@ -106,6 +114,15 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    public KNXConnection getConnection()
    {
       return con;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public PhysicalAddress getPhysicalAddress()
+   {
+      return physicalAddr;
    }
 
    /**
@@ -141,15 +158,20 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void open() throws IOException
    {
+      physicalAddr = null;
+
       con.open();
       con.addListener(this);
+
+      // Identify the BCU
+      con.send(new PEI_Identify_req());
 
       // A pei_switch that EIBD sends on startup, so we do it here too
       con.send(new PEI_Switch_req(PEISwitchMode.INIT));
 
       // Switch to bus monitor mode
       con.send(new PEI_Switch_req(PEISwitchMode.BUSMON));
-      //L_Data_con.send(new PEI_Switch.req(PEI_Switch.Mode.LINK));
+      //con.send(new PEI_Switch_req(PEISwitchMode.LINK));
    }
 
    /**
@@ -168,6 +190,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    public void send(Telegram telegram) throws IOException
    {
       if (con == null) throw new IOException("Not open");
+
+      if (telegram.getFrom() == PhysicalAddress.NULL)
+         telegram.setFrom(physicalAddr);
 
       con.send(new L_Data_req(telegram));
    }

@@ -62,4 +62,12 @@ public interface BusInterface
     * @param listener - the listener object.
     */
    public void removeListener(TelegramListener listener);
+
+   /**
+    * Returns the physical address of the BCU that is used to access the KNX/EIB bus.
+    * Valid after a successful {@link #open()}.
+    * 
+    * @return the physical address of the BCU.
+    */
+   public PhysicalAddress getPhysicalAddress();
 }

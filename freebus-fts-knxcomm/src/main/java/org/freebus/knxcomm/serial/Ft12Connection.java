@@ -15,7 +15,7 @@ import org.freebus.knxcomm.emi.EmiFrameType;
  */
 public abstract class Ft12Connection implements KNXConnection
 {
-   private Logger logger = Logger.getLogger(getClass());
+   private Logger logger = Logger.getLogger(Ft12Connection.class);
 
    protected final CopyOnWriteArrayList<EmiFrameListener> listeners = new CopyOnWriteArrayList<EmiFrameListener>();
    protected boolean connected = false;
@@ -134,8 +134,8 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (logger.isDebugEnabled())
       {
-         sb.append("WRITE: DATA");
-         for (int i = 0; i < len + 7; ++i)
+         sb.append("WRITE: DATA [0x68] (").append(len).append(" bytes):");
+         for (int i = 5; i < len + 5; ++i)
             sb.append(' ').append(Integer.toHexString(buffer[i]));
         // logger.debug(sb.toString());
       }
@@ -223,7 +223,7 @@ public abstract class Ft12Connection implements KNXConnection
 
          default: // Unknown frame
             final StringBuffer sb = new StringBuffer();
-            sb.append("READ:  UNKNOWN [").append(Integer.toHexString(type)).append(']');
+            sb.append("READ: UNKNOWN [").append(Integer.toHexString(type)).append(']');
             try
             {
                Thread.sleep(500);
@@ -259,7 +259,7 @@ public abstract class Ft12Connection implements KNXConnection
 
       String err = "";
       final StringBuffer logMsg = new StringBuffer();
-      logMsg.append("READ: DATA [0x68] (").append(dataLen).append(" bytes): ");
+      logMsg.append("READ: DATA [0x68] (").append(dataLen).append(" bytes):");
 
       ++readMsgCount;
       if (read() != 0x68)
@@ -288,7 +288,7 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (err.length() > 0)
       {
-         logMsg.append(err.substring(1));
+         logMsg.append(' ').append(err.substring(1));
          logger.error(logMsg.toString());
       }
       else
