@@ -1,4 +1,4 @@
-package test;
+package org.freebus.knxcomm;
 
 import junit.framework.TestCase;
 

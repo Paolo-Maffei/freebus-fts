@@ -1,5 +1,6 @@
 package example;
 
+import org.apache.log4j.BasicConfigurator;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
@@ -42,6 +43,15 @@ public class BusMonitor implements TelegramListener
    }
 
    /**
+    * Close the resources
+    */
+   public void dispose()
+   {
+      if (iface != null && iface.isConnected())
+         iface.close();
+   }
+
+   /**
     * A telegram was received.
     */
    @Override
@@ -65,9 +75,22 @@ public class BusMonitor implements TelegramListener
     */
    public static void main(String[] args) throws Exception
    {
-      new BusMonitor();
+      // Configure Log4J
+      BasicConfigurator.configure();
 
-      while (true)
-         Thread.sleep(1000);
+      BusMonitor mon = null;
+      try
+      {
+         mon = new BusMonitor();
+
+         while (true)
+            Thread.sleep(1000);
+            
+      }
+      finally
+      {
+         if (mon != null)
+            mon.dispose();
+      }
    }
 }
