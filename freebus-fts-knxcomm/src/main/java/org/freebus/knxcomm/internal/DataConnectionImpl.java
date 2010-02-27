@@ -1,15 +1,21 @@
 package org.freebus.knxcomm.internal;
 
 import java.io.IOException;
+import java.util.concurrent.Semaphore;
 
+import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
+import org.freebus.knxcomm.TelegramListener;
+import org.freebus.knxcomm.telegram.Application;
 import org.freebus.knxcomm.telegram.PhysicalAddress;
+import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.Transport;
 
 /**
  * A direct connection to a device on the KNX/EIB bus.
  */
-public class DataConnectionImpl implements DataConnection
+public class DataConnectionImpl implements DataConnection, TelegramListener
 {
    /**
     * The state of the connection.
@@ -41,6 +47,8 @@ public class DataConnectionImpl implements DataConnection
    private State state = State.CLOSED;
    private final PhysicalAddress addr;
    private final BusInterface busInterface;
+   private final Telegram telegram;
+   private final Semaphore waitDataSemaphore = new Semaphore(0);
 
    /**
     * Create a connection to the device with the given physical address.
@@ -52,24 +60,31 @@ public class DataConnectionImpl implements DataConnection
    {
       this.addr = addr;
       this.busInterface = busInterface;
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   public void open() throws IOException
-   {
-      
+      telegram = new Telegram();
+      telegram.setDest(addr);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void close()
+   public synchronized void close()
    {
-      // TODO Auto-generated method stub
-      
+      busInterface.removeListener(this);
+
+      incSequence();
+      telegram.setTransport(Transport.Disconnect);
+
+      state = State.CLOSED;
+      try
+      {
+         busInterface.send(telegram);
+      }
+      catch (IOException e)
+      {
+         e.printStackTrace();
+      }
    }
 
    /**
@@ -94,5 +109,67 @@ public class DataConnectionImpl implements DataConnection
    public State getState()
    {
       return state;
+   }
+
+   /**
+    * Increase the sequence number of the internal telegram.
+    */
+   private void incSequence()
+   {
+      telegram.setSequence(telegram.getSequence() + 1);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isOpened()
+   {
+      return state != State.CLOSED;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public synchronized void open() throws IOException
+   {
+      if (isOpened())
+         throw new IOException("Connection is open");
+
+      busInterface.addListener(this);
+
+      telegram.setApplication(Application.GroupValue_Read);
+      telegram.setTransport(Transport.Connect);
+      telegram.setSequence(1);
+
+      state = State.CONNECTING;
+      try
+      {
+         busInterface.send(telegram);
+      }
+      finally
+      {
+         state = State.CLOSED;
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void telegramReceived(Telegram telegram)
+   {
+      if (!telegram.getFrom().equals(addr))
+         return;
+
+      Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void telegramSent(Telegram telegram)
+   {
    }
 }

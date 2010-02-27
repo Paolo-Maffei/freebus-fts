@@ -3,7 +3,7 @@ package org.freebus.knxcomm.internal;
 import java.io.IOException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
@@ -14,8 +14,8 @@ import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
-import org.freebus.knxcomm.emi.PEISwitchMode;
 import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.emi.PEISwitchMode;
 import org.freebus.knxcomm.emi.PEI_Identify_con;
 import org.freebus.knxcomm.emi.PEI_Identify_req;
 import org.freebus.knxcomm.emi.PEI_Switch_req;
@@ -28,7 +28,7 @@ import org.freebus.knxcomm.telegram.Telegram;
  */
 public class BusInterfaceImpl implements BusInterface, EmiFrameListener
 {
-   protected final CopyOnWriteArrayList<TelegramListener> listeners = new CopyOnWriteArrayList<TelegramListener>();
+   protected final CopyOnWriteArraySet<TelegramListener> listeners = new CopyOnWriteArraySet<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
    private PhysicalAddress physicalAddr;
    private final KNXConnection con;
@@ -83,7 +83,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       if (frame instanceof PEI_Identify_con)
       {
-         Logger.getLogger(getClass()).info("PEI_Identify: " + frame);
+         Logger.getLogger(getClass()).info(frame);
          physicalAddr = new PhysicalAddress(((PEI_Identify_con) frame).getAddr());
       }
 

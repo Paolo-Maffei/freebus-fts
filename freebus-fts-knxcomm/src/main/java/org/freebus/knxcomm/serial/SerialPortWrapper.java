@@ -1,11 +1,8 @@
 package org.freebus.knxcomm.serial;
 
 import gnu.io.CommPortIdentifier;
-import gnu.io.NoSuchPortException;
-import gnu.io.PortInUseException;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEventListener;
-import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,7 +23,7 @@ public class SerialPortWrapper
    public static final int DATABITS_6 = SerialPort.DATABITS_6;
    public static final int DATABITS_7 = SerialPort.DATABITS_7;
    public static final int DATABITS_8 = SerialPort.DATABITS_8;
-   
+
    /**
     * Constants for the number of stop bits.
     */
@@ -43,7 +40,6 @@ public class SerialPortWrapper
    public static final int PARITY_MARK = SerialPort.PARITY_MARK;
    public static final int PARITY_SPACE = SerialPort.PARITY_SPACE;
 
-
    private SerialPort serialPort;
    private InputStream inputStream;
    private OutputStream outputStream;
@@ -58,6 +54,16 @@ public class SerialPortWrapper
    }
 
    /**
+    * Throw a runtime exception if the serial port was not properly closed.
+    */
+   @Override
+   protected void finalize()
+   {
+      if (serialPort != null)
+         throw new RuntimeException("Internal error: serial port " + portName + " was not properly closed");
+   }
+
+   /**
     * Connect to the serial port.
     * 
     * @param portName - the name of the port.
@@ -66,38 +72,39 @@ public class SerialPortWrapper
     * @param stopBits - the number of stop bits, e.g. 1
     * @param parity - the parity, e.g. {@link SerialPortWrapper#PARITY_EVEN}.
     * 
-    * @throws IOException if the port could not be opened.
+    * @throws IOException if the port could not be opened or is already open.
+    * 
+    * @see {@link SerialPortUtil#getPortNames()} to get the available serial
+    *      port names.
     */
    public void open(String portName, int baudRate, int dataBits, int stopBits, int parity) throws IOException
    {
+      if (serialPort != null)
+         throw new IOException("port is open");
+
       try
       {
-         Logger.getLogger(getClass()).info("Opening serial port " + portName);
+         Logger.getLogger(getClass()).debug("Opening serial port " + portName);
 
          inputStream = null;
          outputStream = null;
+         serialPort = null;
 
          final CommPortIdentifier portIdent = CommPortIdentifier.getPortIdentifier(portName);
          serialPort = (SerialPort) portIdent.open(portName, 2000);
-   
+
          serialPort.setSerialPortParams(baudRate, dataBits, stopBits, parity);
-   
-         inputStream = serialPort.getInputStream();
-         outputStream = serialPort.getOutputStream();
-         this.portName = portName;
       }
-      catch (NoSuchPortException e)
+      catch (Exception e)
       {
+         serialPort = null;
          throw new IOException("cannot open port: " + portName, e);
       }
-      catch (UnsupportedCommOperationException e)
-      {
-         throw new IOException(e);
-      }
-      catch (PortInUseException e)
-      {
-         throw new IOException("port is in use: " + portName, e);
-      }
+
+      inputStream = serialPort.getInputStream();
+      outputStream = serialPort.getOutputStream();
+
+      this.portName = portName;
    }
 
    /**
@@ -105,7 +112,10 @@ public class SerialPortWrapper
     */
    public void close()
    {
-      Logger.getLogger(getClass()).info("Closing serial port " + portName);
+      if (serialPort == null)
+         return;
+
+      Logger.getLogger(getClass()).debug("Closing serial port " + portName);
 
       try
       {
@@ -127,12 +137,21 @@ public class SerialPortWrapper
       if (serialPort != null)
       {
          serialPort.removeEventListener();
+         serialPort.close();
          serialPort = null;
       }
 
       inputStream = null;
       outputStream = null;
       portName = null;
+   }
+
+   /**
+    * @return true if the serial port is opened.
+    */
+   public boolean isOpened()
+   {
+      return serialPort != null;
    }
 
    /**
@@ -152,10 +171,12 @@ public class SerialPortWrapper
    }
 
    /**
-    * Add a port listener to the serial port.
+    * Add a port listener to the serial port. Only one listener is allowed at
+    * the same time. The port must be opened before a listener can be added.
     * 
-    * @param listener
-    * @throws TooManyListenersException
+    * @param listener is the listener to add.
+    * @throws TooManyListenersException is thrown if another listener was
+    *            previously added.
     */
    public void addEventListener(SerialPortEventListener listener) throws TooManyListenersException
    {
@@ -163,7 +184,16 @@ public class SerialPortWrapper
    }
 
    /**
+    * Remove the serial port listener.
+    */
+   public void removeEventListener()
+   {
+      serialPort.removeEventListener();
+   }
+
+   /**
     * Notify the listeners when data is available on the serial port.
+    * 
     * @param enable
     */
    public void notifyOnDataAvailable(boolean enable)

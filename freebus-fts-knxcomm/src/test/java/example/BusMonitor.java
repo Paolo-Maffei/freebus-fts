@@ -7,8 +7,8 @@ import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
- * A simple bus monitor that opens a bus interface, and prints the received telegrams to
- * the console.
+ * A simple bus monitor that opens a bus interface, and prints the received
+ * telegrams to the console.
  */
 public class BusMonitor implements TelegramListener
 {
@@ -85,7 +85,7 @@ public class BusMonitor implements TelegramListener
 
          while (true)
             Thread.sleep(1000);
-            
+
       }
       finally
       {

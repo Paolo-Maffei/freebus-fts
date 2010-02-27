@@ -66,6 +66,8 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    @Override
    public void close()
    {
+      port.removeEventListener();
+
       inputStream = null;
       outputStream = null;
       port.close();
