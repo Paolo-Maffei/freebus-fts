@@ -216,4 +216,13 @@ public class TestTelegram
       telegram.setSequence(123);
       assertEquals(123, telegram.getSequence());
    }
+
+   @Test
+   public void testClone()
+   {
+      final Telegram telegram = new Telegram();
+      final Telegram clonedTelegram = telegram.clone();
+      assertEquals(telegram, clonedTelegram);
+      assertEquals(telegram.hashCode(), clonedTelegram.hashCode());
+   }
 }

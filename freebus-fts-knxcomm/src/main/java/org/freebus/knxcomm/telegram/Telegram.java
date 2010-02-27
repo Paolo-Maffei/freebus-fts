@@ -1,10 +1,12 @@
 package org.freebus.knxcomm.telegram;
 
+import java.util.Arrays;
+
 /**
  * A communication data packet as it is sent on the EIB bus.
  * 
  * It is mandatory for subclasses to override {@link #clone()} to avoid
- * problems. 
+ * problems.
  */
 public class Telegram implements Cloneable
 {
@@ -382,14 +384,42 @@ public class Telegram implements Cloneable
     * {@inheritDoc}
     */
    @Override
+   public int hashCode()
+   {
+      return from.getAddr() * 13 + dest.getAddr();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(final Object o)
+   {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof Telegram))
+         return false;
+
+      final Telegram oo = (Telegram) o;
+
+      return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && application == oo.application
+            && sequence == oo.sequence && Arrays.equals(data, oo.data);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public String toString()
    {
       final StringBuffer sb = new StringBuffer();
 
-      sb.append(getTransport()).append(" transport, ").append(getApplication())
-        .append(", from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
+      sb.append(getTransport()).append(" transport, ").append(getApplication()).append(", from ").append(getFrom())
+            .append(" to ").append(getDest()).append(", ");
 
-      if (data == null) sb.append("no data");
+      if (data == null)
+         sb.append("no data");
       else
       {
          sb.append(data.length).append(" bytes data:");
