@@ -22,17 +22,16 @@ public abstract class Ft12Connection implements KNXConnection
    protected final CopyOnWriteArrayList<EmiFrameListener> listeners = new CopyOnWriteArrayList<EmiFrameListener>();
    protected final Semaphore waitAckSemaphore = new Semaphore(0);
    protected boolean connected = false;
-   protected boolean debug = true;
+   protected int resetPending = 0;
 
    // FT1.2 end-of-message byte.
    protected final int eofMarker = 0x16;
 
-   // Message counters
-   protected int readMsgCount = 0;
-   protected int writeMsgCount = 0;
-   protected int ackCount = 0;
+   // Message counters for frames with valid frame-count bit
+   protected int readFcbCount = 0;
+   protected int writeFcbCount = 0;
 
-   // FT1.2 acknowledge message
+   // FT1.2 acknowledgment message
    protected static final int[] ackMsg = { 0xe5 };
 
    /**
@@ -51,46 +50,169 @@ public abstract class Ft12Connection implements KNXConnection
     */
    protected void dataAvailable() throws IOException
    {
-      final int typeCode = read();
-      final Ft12MessageType type = Ft12MessageType.valueOf(typeCode);
+      final int formatByte = read();
+      final Ft12FrameFormat format = Ft12FrameFormat.valueOf(formatByte);
 
-      if (type == Ft12MessageType.ACK)
+      if (format == Ft12FrameFormat.ACK)
       {
          logger.debug("READ: ACK");
          waitAckSemaphore.release();
+         return;
       }
-      else if (type == Ft12MessageType.LONG)
+
+      int dataLen = 0;
+      int formatByteRepeat = formatByte;
+
+      if (format == Ft12FrameFormat.VARIABLE)
       {
-         readMessage();
+         dataLen = read() - 1;
+         read(); // repeated dataLen
+         formatByteRepeat = read();
       }
-      else if (type == Ft12MessageType.SHORT)
+
+      // Format of the control byte:
+      // bit 7: 1=BAU to us, 0=we to BAU
+      // bit 6: 1=message from initiating station (i.e. request)
+      // bit 5: frame count bit, 0/1 alternating
+      // bit 4: frame count bit (bit 5) valid
+      // bit 3..0: function code, see Ft12ReceiveFunc / Ft12SendFunc
+      final int controlByte = read();
+
+      int checksumCalc = controlByte;
+      final int[] data = dataLen > 0 ? new int[dataLen] : null;
+      for (int i = 0; i < dataLen; ++i)
       {
-         readShortMessage();
+         data[i] = read();
+         checksumCalc += data[i];
+      }
+
+      checksumCalc &= 0xff;
+      final int checksum = read();
+
+      final int eofByte = read();
+      String errMsg = null;
+
+      if (format == null)
+      {
+         errMsg = String.format("invalid FT1.2 frame-format 0x%02x", formatByte);
+      }
+      else if (formatByte != formatByteRepeat)
+      {
+         errMsg = String.format("invalid FT1.2 repeated frame-format 0x%02x, expected 0x%02x", formatByteRepeat,
+               formatByte);
+      }
+      else if (checksum != checksumCalc)
+      {
+         errMsg = String.format("wrong FT1.2 frame checksum 0x%02x, expected 0x%02x", checksum, checksumCalc);
+      }
+      else if (eofByte != eofMarker)
+      {
+         errMsg = String.format("wrong FT1.2 frame end-marker 0x%02x, expected 0x%02x", eofMarker, eofByte);
+      }
+
+      final Ft12Function func = Ft12Function.valueOf(controlByte & 0x0f);
+
+      if (logger.isDebugEnabled() || errMsg != null)
+      {
+         final StringBuffer sb = new StringBuffer();
+         sb.append("READ: ");
+
+         if (errMsg != null)
+            sb.append(errMsg).append(": ");
+
+         sb.append(format).append(' ').append(func);
+         for (int i = 0; i < dataLen; ++i)
+            sb.append(String.format(" %02x", data[i]));
+
+         if (errMsg == null)
+            logger.debug(sb);
+         else logger.error(errMsg);
+      }
+
+      // Send acknowledgment
+      if (format == Ft12FrameFormat.VARIABLE)
+      {
+         logger.debug("WRITE: ACK");
+         write(ackMsg, ackMsg.length);
+      }
+
+      try
+      {
+         processFrame(format, func, data);
+      }
+      catch (Exception e)
+      {
+         logger.error("failed to process FT1.2 frame", e);
+         e.printStackTrace();
+      }
+
+   }
+
+   /**
+    * Process the FT1.2 frame that {@link #dataAvailable()} has read. This is an
+    * internal method that gets called by {@link #dataAvailable()}.
+    * 
+    * @throws IOException
+    */
+   public void processFrame(final Ft12FrameFormat format, final Ft12Function func, final int[] data) throws IOException
+   {
+      if (format == Ft12FrameFormat.FIXED)
+         processFixedFrame(func);
+      else if (format == Ft12FrameFormat.VARIABLE)
+         processVariableFrame(func, data);
+      else throw new IllegalArgumentException("Unknown FT1.2 frame format: " + format);
+   }
+
+   /**
+    * Process a FT1.2 frame of the format {Ft12FrameFormat#FIXED}.
+    * 
+    * @param func - the frame function
+    * 
+    * @throws IllegalArgumentException if the function is invalid
+    */
+   protected void processFixedFrame(final Ft12Function func)
+   {
+      if (func == Ft12Function.ACK)
+      {
+         logger.debug("READ: Confirm-ACK");
+         if (resetPending > 0)
+         {
+            --resetPending;
+            readFcbCount = 0;
+            writeFcbCount = 0;
+         }
+      }
+      else if (func == Ft12Function.NACK)
+      {
+         logger.debug("READ: Confirm-NACK");
+      }
+      else if (func == Ft12Function.STATUS_RESP)
+      {
+         logger.debug("READ: Status response");
       }
       else
       {
-         final StringBuffer sb = new StringBuffer();
-         sb.append(String.format("READ: UNKNOWN [%02x]", typeCode));
-         try
-         {
-            Thread.sleep(500);
-         }
-         catch (InterruptedException e)
-         {
-            e.printStackTrace();
-         }
-         int val;
-         while (isDataAvailable() && (val = read()) != eofMarker)
-            sb.append(String.format(" %02x", val));
-         logger.error(sb.toString());
+         throw new IllegalArgumentException("Unknown fixed-width FT1.2 frame: " + func);
+      }
+   }
+
+   /**
+    * Process a FT1.2 frame of the format {Ft12FrameFormat#VARIABLE}.
+    * 
+    * @throws IOException
+    */
+   protected void processVariableFrame(final Ft12Function func, final int[] data) throws IOException
+   {
+      final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);
+
+      final EmiFrame msg = msgType.newInstance();
+      if (msg == null)
+      {
+         throw new IllegalArgumentException("Unknown EMI message: " + msgType);
       }
 
-      // Send acknowledge
-      if (type != Ft12MessageType.ACK)
-      {
-         // logger.debug("WRITE: ACK [0xe5]");
-         write(ackMsg, ackMsg.length);
-      }
+      msg.fromRawData(data, 0);
+      notifyListenersReceived(msg);
    }
 
    /**
@@ -118,7 +240,7 @@ public abstract class Ft12Connection implements KNXConnection
    }
 
    /**
-    * Connect to the BCU.
+    * Connect to the BAU.
     * 
     * @throws IOException
     */
@@ -127,129 +249,22 @@ public abstract class Ft12Connection implements KNXConnection
    {
       try
       {
-         send(Ft12ShortMessage.RESET, 30);
+         readFcbCount = 0;
+         writeFcbCount = 0;
+         resetPending = 0;
+
+         send(Ft12Function.RESET, 30);
       }
       catch (IOException e)
       {
-         throw new KNXConnectException("Failed to open a connection to the BCU", e);
+         throw new KNXConnectException("Failed to open a connection to the BAU", e);
       }
    }
 
    /**
-    * Read the next byte from the BCU device. Bytes are in the range 0..255.
+    * Read the next byte from the BAU device. Bytes are in the range 0..255.
     */
    protected abstract int read() throws IOException;
-
-   /**
-    * Read a FT1.2 message.
-    * 
-    * @throws IOException
-    */
-   protected void readMessage() throws IOException
-   {
-      final int dataLen = read() - 1;
-      read(); // dataLen repeated
-
-      String err = "";
-      final StringBuffer logMsg = new StringBuffer();
-      logMsg.append("READ: DATA [0x68] (").append(dataLen).append(" bytes):");
-
-      ++readMsgCount;
-      if (read() != Ft12MessageType.LONG.code)
-         err += "|no boundary marker";
-
-      int controlByte = read();
-      if (controlByte != 0xf3 && controlByte != 0xd3)
-         err += "|no control byte 0x" + String.format("%02x", controlByte);
-
-      int ftCheckSum = controlByte;
-      final int[] data = new int[dataLen];
-      for (int i = 0; i < dataLen; ++i)
-      {
-         data[i] = read();
-         logMsg.append(' ').append(String.format("%02x", data[i]));
-         ftCheckSum += data[i];
-      }
-
-      final int checksum = read();
-      logMsg.append(String.format(" (checksum %02x)", checksum));
-      if (checksum != (ftCheckSum & 0xff))
-         err += "|FT checksum error";
-
-      if (read() != eofMarker)
-         err += "|no eof-marker";
-
-      if (err.length() > 0)
-      {
-         logMsg.append(' ').append(err.substring(1));
-         logger.error(logMsg.toString());
-      }
-      else
-      {
-         logger.debug(logMsg.toString());
-         try
-         {
-            final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);
-
-            final EmiFrame msg = msgType.newInstance();
-            if (msg == null)
-            {
-               System.out.println("Ignoring unimplemented message " + msgType.toString());
-            }
-            else
-            {
-               msg.fromRawData(data, 0);
-               notifyListenersReceived(msg);
-            }
-         }
-         catch (Exception e)
-         {
-            e.printStackTrace();
-         }
-      }
-   }
-
-   /**
-    * Read a short FT1.2 message.
-    * 
-    * @throws IOException
-    */
-   protected void readShortMessage() throws IOException
-   {
-      int cmd = read();
-      final int checksum = read();
-      final int end = read();
-      if (cmd != checksum || end != 0x16)
-      {
-         logger.error("READ: Malformed short message");
-         return;
-      }
-
-      // Bits of the command:
-      // 7: direction - 1: BAU to us, 0: we to BAU
-      // 6: primary message - 0: message from secondary (responding)
-      // station
-      // 5: reserved
-      // 4: data flow control (not used)
-      // 3..0: function code
-
-      cmd &= 0xf;
-      if (cmd == 0)
-      {
-         logger.debug("READ: Confirm ACK");
-         readMsgCount = 0; // Assume it was a Reset reply
-         writeMsgCount = 0;
-      }
-      else if (cmd == 1)
-      {
-         logger.debug("READ: Confirm NACK !");
-      }
-      else if (cmd == 0xb)
-      {
-         logger.debug("READ: Status response");
-      }
-      else logger.error(" Unknown fixed-width frame 0x" + String.format("%02x", cmd));
-   }
 
    /**
     * Remove a bus listener.
@@ -262,17 +277,21 @@ public abstract class Ft12Connection implements KNXConnection
 
    /**
     * Send a message using a FT1.2 frame with variable length. Waits until the
-    * BCU confirms the send.
+    * BAU confirms the send.
     */
    @Override
    public void send(EmiFrame message) throws IOException
    {
       final int[] buffer = new int[32];
       StringBuffer sb = new StringBuffer();
-      buffer[0] = Ft12MessageType.LONG.code;
+      buffer[0] = Ft12FrameFormat.VARIABLE.code;
       // bytes 1+2 contain the data length
       buffer[3] = buffer[0];
-      buffer[4] = (++writeMsgCount & 1) == 1 ? 0x73 : 0x53;
+
+      int controlByte = 0x50 | Ft12Function.DATA.code;
+      if ((writeFcbCount++ & 1) == 1)
+         controlByte |= 0x20;
+      buffer[4] = controlByte;
 
       final int len = message.toRawData(buffer, 5);
       assert (buffer[5] == message.getType().id);
@@ -281,8 +300,8 @@ public abstract class Ft12Connection implements KNXConnection
       buffer[1] = len + 1;
       buffer[2] = buffer[1];
 
-      int checksum = 0;
-      for (int i = -1; i < len; ++i)
+      int checksum = controlByte;
+      for (int i = 0; i < len; ++i)
          checksum += buffer[i + 5];
       checksum &= 0xff;
 
@@ -291,7 +310,7 @@ public abstract class Ft12Connection implements KNXConnection
 
       if (logger.isDebugEnabled())
       {
-         sb.append("WRITE: DATA [0x68] (").append(len).append(" bytes):");
+         sb.append("WRITE: DATA (").append(len).append(" bytes):");
          for (int i = 5; i < len + 5; ++i)
             sb.append(String.format(" %02x", buffer[i]));
          sb.append(String.format(" (checksum %02x)", checksum));
@@ -306,48 +325,51 @@ public abstract class Ft12Connection implements KNXConnection
    }
 
    /**
-    * Send a short FT1.2 message of the type {@link Ft12MessageType#SHORT}. The
-    * message is sent 3 times before sending fails if not acknowledged.
+    * Send a FT1.2 frame of the type {@link Ft12MessageType#FIXED}. The message
+    * is sent 3 times before sending fails if it is not acknowledged.
     * 
-    * @param type - the type of the short message, see {@link Ft12ShortMessage}.
+    * @param func - the function of the frame, see {@link Ft12Function}.
     * 
     * @throws IOException
     */
-   public void send(final Ft12ShortMessage type) throws IOException
+   public void send(final Ft12Function func) throws IOException
    {
-      send(type, 3);
+      if (func == Ft12Function.RESET)
+         ++resetPending;
+
+      send(func, 3);
    }
 
    /**
-    * Send a short FT1.2 message of the type {@link Ft12MessageType#SHORT}.
+    * Send a FT1.2 frame of the type {@link Ft12MessageType#FIXED}.
     * 
-    * @param type - the type of the short message, see {@link Ft12ShortMessage}.
+    * @param func - the function of the frame, see {@link Ft12Function}.
     * @param tries - how many times the sending is repeated until it fails if
     *           not acknowledged.
     * 
     * @throws IOException
     */
-   protected void send(final Ft12ShortMessage type, int tries) throws IOException
+   public void send(final Ft12Function func, int tries) throws IOException
    {
       final int[] data = new int[4];
-      data[0] = Ft12MessageType.SHORT.code;
-      data[1] = type.code;
+      data[0] = Ft12FrameFormat.FIXED.code;
+      data[1] = func.code;
       data[2] = data[1];
       data[3] = eofMarker;
 
-      logger.debug("WRITE: " + type.toString());
+      logger.debug("WRITE: " + func.toString());
       writeConfirmed(data, data.length, tries);
    }
 
    /**
-    * Send length bytes of the given data to the BCU device.
+    * Send length bytes of the given data to the BAU.
     */
    protected abstract void write(int[] data, int length) throws IOException;
 
    /**
-    * Send length bytes of the given data to the BCU device and wait for an
-    * acknowledge (ACK). Retries up to <code>tries</code> times if no
-    * acknowledge is received.
+    * Send length bytes of the given data to the BAU and wait for an acknowledge
+    * (ACK). Retries up to <code>tries</code> times if no acknowledge is
+    * received.
     * 
     * @param data is the data to be sent.
     * @param len is the number of bytes of <code>data</code> that are sent.
@@ -358,7 +380,6 @@ public abstract class Ft12Connection implements KNXConnection
     */
    private synchronized final void writeConfirmed(final int[] data, int len, int tries) throws IOException
    {
-      waitAckSemaphore.drainPermits();
       for (int turn = 0; turn < tries; ++turn)
       {
          write(data, len);
@@ -374,6 +395,6 @@ public abstract class Ft12Connection implements KNXConnection
          }
       }
 
-      throw new IOException("Failed to send data: no ACK from the BCU received (" + tries + " tries)");
+      throw new IOException("Failed to send data: no ACK from the BAU received (" + tries + " tries)");
    }
 }

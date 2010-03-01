@@ -21,6 +21,7 @@ public class TestTelegram
       assertFalse(telegram.isRepeated());
       assertEquals(Priority.LOW, telegram.getPriority());
       assertEquals(Application.None, telegram.getApplication());
+      assertNotNull(telegram.toString());
    }
 
    @Test

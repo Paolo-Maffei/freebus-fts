@@ -3,6 +3,7 @@ package example;
 import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
@@ -13,6 +14,8 @@ import org.freebus.knxcomm.telegram.PhysicalAddress;
  */
 public final class ConnectedDataTransfer
 {
+   private static final Logger logger = Logger.getLogger(ConnectedDataTransfer.class);
+
    private final BusInterface iface;
 
    /**
@@ -28,6 +31,7 @@ public final class ConnectedDataTransfer
    public ConnectedDataTransfer() throws Exception
    {
       // Create the bus interface
+      logger.info("*** Opening bus connection");
       iface = createBusInterface();
       iface.open();
    }
@@ -38,7 +42,10 @@ public final class ConnectedDataTransfer
    public void dispose()
    {
       if (iface != null && iface.isConnected())
+      {
+         logger.info("*** Closing bus connection");
          iface.close();
+      }
    }
 
    /**
@@ -72,6 +79,7 @@ public final class ConnectedDataTransfer
    public void run() throws IOException
    {
       // Create a data connection to the device and open the connection
+      logger.info("*** Connecting to " + deviceAddress);
       final DataConnection con = iface.connect(deviceAddress);
       con.open();
    }
@@ -89,6 +97,10 @@ public final class ConnectedDataTransfer
       {
          cdt = new ConnectedDataTransfer();
          cdt.run();
+
+         Thread.sleep(500);
+         logger.info("*** Sleeping some seconds to allow any timeout to occur");
+         Thread.sleep(8000);
       }
       finally
       {

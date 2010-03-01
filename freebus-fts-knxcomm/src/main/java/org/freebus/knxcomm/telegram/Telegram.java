@@ -415,8 +415,13 @@ public class Telegram implements Cloneable
    {
       final StringBuffer sb = new StringBuffer();
 
-      sb.append(getTransport()).append(" transport, ").append(getApplication()).append(", from ").append(getFrom())
-            .append(" to ").append(getDest()).append(", ");
+      sb.append(getTransport()).append(' ');
+
+      final Application app = getApplication();
+      if (app != Application.None)
+         sb.append(app).append(' ');
+      
+      sb.append("from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
 
       if (data == null)
          sb.append("no data");
