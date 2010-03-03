@@ -1,7 +1,6 @@
 package org.freebus.knxcomm.serial;
 
 import java.io.IOException;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -9,17 +8,16 @@ import org.apache.log4j.Logger;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
-import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiFrameType;
+import org.freebus.knxcomm.internal.ListenableConnection;
 
 /**
  * An EIB/KNX bus connection to a device that speaks the FT1.2 protocol.
  */
-public abstract class Ft12Connection implements KNXConnection
+public abstract class Ft12Connection extends ListenableConnection implements KNXConnection
 {
    private Logger logger = Logger.getLogger(Ft12Connection.class);
 
-   protected final CopyOnWriteArrayList<EmiFrameListener> listeners = new CopyOnWriteArrayList<EmiFrameListener>();
    protected final Semaphore waitAckSemaphore = new Semaphore(0);
    protected boolean connected = false;
    protected int resetPending = 0;
@@ -33,15 +31,6 @@ public abstract class Ft12Connection implements KNXConnection
 
    // FT1.2 acknowledgment message
    protected static final int[] ackMsg = { 0xe5 };
-
-   /**
-    * Add a bus listener. Listeners get called when messages arrive.
-    */
-   @Override
-   public void addListener(EmiFrameListener listener)
-   {
-      listeners.add(listener);
-   }
 
    /**
     * Called by the data transport methods when data is ready to be received.
@@ -222,24 +211,6 @@ public abstract class Ft12Connection implements KNXConnection
    protected abstract boolean isDataAvailable() throws IOException;
 
    /**
-    * Notify all listeners that the given message was received.
-    */
-   public void notifyListenersReceived(final EmiFrame message)
-   {
-      for (EmiFrameListener listener : listeners)
-         listener.frameReceived(message);
-   }
-
-   /**
-    * Notify all listeners that the given message was sent.
-    */
-   public void notifyListenersSent(final EmiFrame message)
-   {
-      for (EmiFrameListener listener : listeners)
-         listener.frameSent(message);
-   }
-
-   /**
     * Connect to the BAU.
     * 
     * @throws IOException
@@ -265,15 +236,6 @@ public abstract class Ft12Connection implements KNXConnection
     * Read the next byte from the BAU device. Bytes are in the range 0..255.
     */
    protected abstract int read() throws IOException;
-
-   /**
-    * Remove a bus listener.
-    */
-   @Override
-   public void removeListener(EmiFrameListener listener)
-   {
-      listeners.add(listener);
-   }
 
    /**
     * Send a message using a FT1.2 frame with variable length. Waits until the

@@ -1,7 +1,7 @@
 package org.freebus.knxcomm;
 
-import org.freebus.knxcomm.eibd.EibdConnection;
 import org.freebus.knxcomm.internal.BusInterfaceImpl;
+import org.freebus.knxcomm.netip.KNXnetConnection;
 import org.freebus.knxcomm.serial.SerialFt12Connection;
 import org.freebus.knxcomm.serial.SerialPortUtil;
 
@@ -25,13 +25,15 @@ public final class BusInterfaceFactory
    }
 
    /**
-    * Create a new KNX/EIB bus interface that connects to an eibd.
+    * Create a new KNXnet/IP bus interface that connects e.g. to an eibd.
     * 
-    * @param host - the name or IP address of the host that is running eibd.
-    * @param port - the TCP port of the eibd on the host. Default: 6720.
+    * @param host - the name or IP address of the host that is running the
+    *           KNXnet/IP server.
+    * @param port - the UDP port of the KNXnet/IP server on the host. Default:
+    *           3671.
     */
-   public static BusInterface newEibdInterface(String host, int port)
+   public static BusInterface newKNXnetInterface(String host, int port)
    {
-      return new BusInterfaceImpl(new EibdConnection(host, port));
+      return new BusInterfaceImpl(new KNXnetConnection(host, port));
    }
 }

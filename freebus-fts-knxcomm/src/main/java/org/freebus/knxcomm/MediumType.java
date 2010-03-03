@@ -6,6 +6,11 @@ package org.freebus.knxcomm;
 public enum MediumType
 {
    /**
+    * Unspecified medium type.
+    */
+   UNKNOWN(0, null),
+
+   /**
     * Twisted pair.
     */
    TWISTED_PAIR(0x02, "TP"),
