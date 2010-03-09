@@ -13,6 +13,7 @@ import java.util.Set;
 
 import org.freebus.fts.persistence.test_entities.SampleBaggage;
 import org.freebus.fts.persistence.test_entities.SampleManufacturer;
+import org.freebus.fts.persistence.test_entities.SampleParameterValue;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -133,11 +134,26 @@ public final class TestVdxFileReader
    }
 
    @Test
+   public void testGetSectionEntriesParameterListOfValues() throws IOException
+   {
+      final Object[] entries = reader.getSectionEntries("parameter_list_of_values", SampleParameterValue.class);
+      assertNotNull(entries);
+      assertEquals(5, entries.length);
+      assertEquals(SampleParameterValue.class, entries[0].getClass());
+
+      SampleParameterValue val0 = (SampleParameterValue) entries[0];
+      assertEquals(0, val0.displayOrder);
+
+      SampleParameterValue val1 = (SampleParameterValue) entries[1];
+      assertEquals(1, val1.displayOrder);
+   }
+
+   @Test
    public void testScan() throws Exception
    {
       final Set<String> sectionNames = reader.getSectionNames();
 
-      assertEquals(7, sectionNames.size());
+      assertEquals(8, sectionNames.size());
       assertEquals(true, sectionNames.contains("manufacturer"));
 
       final VdxSectionHeader sectionHeader3 = reader.getSectionHeader("manufacturer");

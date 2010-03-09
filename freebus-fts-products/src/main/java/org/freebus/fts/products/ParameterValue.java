@@ -37,8 +37,7 @@ public class ParameterValue implements Serializable
    @Column(name = "displayed_value")
    private String displayedValue;
 
-   @VdxField(name = "display_oder")
-   @Column(name = "display_oder")
+   @Column(name = "display_order")
    private int displayOrder;
 
    @Column(name = "real_value")
