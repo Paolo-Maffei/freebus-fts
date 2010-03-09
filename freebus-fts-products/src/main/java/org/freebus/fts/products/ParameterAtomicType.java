@@ -1,13 +1,13 @@
 package org.freebus.fts.products;
 
-
 /**
- * The atomic type of a parameter: none, unsigned, signed, string, enum, long enum.
+ * The atomic type of a parameter: none, unsigned, signed, string, enum, long
+ * enum.
  */
 public enum ParameterAtomicType
 {
    /**
-    * No parameter type.
+    * No parameter type. Used for labels and pages in the parameter editor.
     */
    NONE(' ', null),
 
@@ -35,7 +35,6 @@ public enum ParameterAtomicType
     * Long enumeration.
     */
    LONG_ENUM('Z', Integer.class);
-
 
    private final char dispAttr;
    private final Class<?> parameterClass;
@@ -70,7 +69,7 @@ public enum ParameterAtomicType
     */
    public static ParameterAtomicType valueOf(int ordinal)
    {
-      for (ParameterAtomicType o: values())
+      for (ParameterAtomicType o : values())
          if (o.ordinal() == ordinal)
             return o;
       return null;

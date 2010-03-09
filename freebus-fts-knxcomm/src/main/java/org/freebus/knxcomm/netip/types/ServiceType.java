@@ -1,7 +1,8 @@
 package org.freebus.knxcomm.netip.types;
 
 import org.freebus.knxcomm.netip.frames.DescriptionRequest;
-import org.freebus.knxcomm.netip.frames.FrameBody;
+import org.freebus.knxcomm.netip.frames.DescriptionResponse;
+import org.freebus.knxcomm.netip.frames.Frame;
 import org.freebus.knxcomm.netip.frames.SearchRequest;
 import org.freebus.knxcomm.netip.frames.SearchResponse;
 
@@ -32,7 +33,7 @@ public enum ServiceType
     * KNXnet/IP server to client: the information about the server that was
     * requested with {@link #DESCRIPTION_REQUEST}.
     */
-   DESCRIPTION_RESPONSE(0x204, null),
+   DESCRIPTION_RESPONSE(0x204, DescriptionResponse.class),
 
    /**
     * The KNXnet/IP client wants to connect to a server. The server answers with
@@ -79,14 +80,14 @@ public enum ServiceType
    /**
     * Default class of the frame body of this type.
     */
-   public final Class<? extends FrameBody> frameBodyClass;
+   public final Class<? extends Frame> frameBodyClass;
 
    /**
     * Create an instance of the default frame body class of this type.
     * 
     * @return the created object, or null if no default class is set.
     */
-   public FrameBody newFrameBodyInstance()
+   public Frame newFrameBodyInstance()
    {
       if (frameBodyClass == null)
          return null;
@@ -124,7 +125,7 @@ public enum ServiceType
    /*
     * Internal constructor.
     */
-   private ServiceType(int code, Class<? extends FrameBody> frameBodyClass)
+   private ServiceType(int code, Class<? extends Frame> frameBodyClass)
    {
       this.code = code;
       this.frameBodyClass = frameBodyClass;

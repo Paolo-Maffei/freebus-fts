@@ -1,13 +1,13 @@
 package org.freebus.knxcomm.netip.blocks;
 
 import org.freebus.knxcomm.MediumType;
-import org.freebus.knxcomm.netip.types.DeviceDescriptionType;
+import org.freebus.knxcomm.netip.types.DescriptionInfoType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Device information block. Contains description about the device.
  */
-public final class DeviceInfoBlock implements Block
+public final class DeviceInfoBlock implements DescriptionInfoBlock
 {
    private MediumType medium;
    private int status;
@@ -158,32 +158,43 @@ public final class DeviceInfoBlock implements Block
     * {@inheritDoc}
     */
    @Override
-   public int fromRawData(int[] rawData, int start) throws InvalidDataException
+   public int fromData(int[] data, int start) throws InvalidDataException
    {
-      int pos = start + 1;
+      int pos = start;
 
-      medium = MediumType.valueOf(rawData[++pos]);
-      status = rawData[++pos];
-      busAddress = (rawData[++pos] << 8) | rawData[++pos];
-      projectId = (rawData[++pos] << 8) | rawData[++pos];
+      final int blockLength = data[pos++];
+
+      final int typeCode = data[pos++];
+      final DescriptionInfoType type = DescriptionInfoType.valueOf(typeCode);
+      if (type != DescriptionInfoType.DEVICE_INFO)
+         throw new InvalidDataException("Invalid type " + type + ", expected " + DescriptionInfoType.DEVICE_INFO, typeCode);
+      
+      medium = MediumType.valueOf(data[pos++]);
+      status = data[pos++];
+      busAddress = (data[pos++] << 8) | data[pos++];
+      projectId = (data[pos++] << 8) | data[pos++];
 
       for (int i = 0; i < 6; ++i)
-         serial[i] = rawData[++pos];
+         serial[i] = data[pos++];
 
       for (int i = 0; i < 4; ++i)
-         routingAddr[i] = (byte) rawData[++pos];
+         routingAddr[i] = (byte) data[pos++];
 
       for (int i = 0; i < 6; ++i)
-         macAddr[i] = rawData[++pos];
+         macAddr[i] = data[pos++];
 
       final StringBuffer sb = new StringBuffer();
       for (int i = 0; i < 30; ++i)
       {
-         char ch = (char) rawData[++pos];
+         char ch = (char) data[pos + i];
          if (ch == 0) break;
          sb.append(ch);
       }
+      pos += 30;
       name = sb.toString();
+
+      if (pos - start != blockLength)
+         throw new InvalidDataException("Invalid block length: expected " + blockLength + " read " + (pos - start), blockLength);
 
       return pos - start;
    }
@@ -192,28 +203,31 @@ public final class DeviceInfoBlock implements Block
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public int toData(int[] data, int start)
    {
       int pos = start;
 
-      // rawData[pos] = length  ... done at end
-      rawData[++pos] = DeviceDescriptionType.DEVICE_INFO.code;
-      rawData[++pos] = medium.code;
-      rawData[++pos] = status;
-      rawData[++pos] = busAddress;
-      rawData[++pos] = projectId;
+      ++pos; // length is written at end
+
+      data[pos++] = DescriptionInfoType.DEVICE_INFO.code;
+      data[pos++] = medium.code;
+      data[pos++] = status;
+      data[pos++] = (busAddress >> 8) & 0xff;
+      data[pos++] = busAddress & 0xff;
+      data[pos++] = (projectId >> 8) & 0xff;
+      data[pos++] = projectId & 0xff;
 
       for (int i = 0; i < 6; ++i)
-         rawData[++pos] = serial[i];
+         data[pos++] = serial[i];
 
       for (int i = 0; i < 4; ++i)
-         rawData[++pos] = routingAddr[i];
+         data[pos++] = routingAddr[i];
 
       for (int i = 0; i < 6; ++i)
-         rawData[++pos] = macAddr[i];
+         data[pos++] = macAddr[i];
 
       for (int i = 0; i < 30; ++i)
-         rawData[++pos] = name.length() <= i ? 0 : name.charAt(i);
+         data[pos++] = name.length() <= i ? 0 : name.charAt(i);
 
       return pos - start;
    }

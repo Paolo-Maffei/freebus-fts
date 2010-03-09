@@ -336,8 +336,8 @@ public final class VdxEntityManager
                if (value.isEmpty())
                   field.set(obj, null);
                else if (value.indexOf('.') >= 0)
-                  field.set(obj, new Integer((int) Double.parseDouble(value)));
-               else field.set(obj, new Integer(Integer.parseInt(value)));
+                  field.set(obj, (int) Double.parseDouble(value));
+               else field.set(obj, Integer.valueOf(value));
             }
             else if (type == int.class)
             {
@@ -345,7 +345,7 @@ public final class VdxEntityManager
                   field.setInt(obj, 0);
                else if (value.indexOf('.') >= 0)
                   field.setInt(obj, (int) Double.parseDouble(value));
-               else field.setInt(obj, Integer.parseInt(value));
+               else field.setInt(obj, Integer.valueOf(value));
             }
             else if (type == String.class)
             {
@@ -355,7 +355,7 @@ public final class VdxEntityManager
             {
                if (value.isEmpty())
                   field.setBoolean(obj, false);
-               else field.setBoolean(obj, Integer.parseInt(value) != 0);
+               else field.setBoolean(obj, Integer.valueOf(value) != 0);
             }
             else if (type == Float.class || type == float.class)
             {

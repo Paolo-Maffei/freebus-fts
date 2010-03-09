@@ -8,7 +8,7 @@ import org.freebus.knxcomm.netip.types.ServiceType;
 /**
  * Request a description of the KNXnet/IP server.
  */
-public class DescriptionRequest extends BasicRequest
+public class DescriptionRequest extends AbstractRequest
 {
    /**
     * Create a request object.

@@ -3,7 +3,6 @@ package org.freebus.fts.components.parametereditor;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.products.Parameter;
 
@@ -70,23 +69,23 @@ public class ParamData
     */
    public boolean isVisible()
    {
+//      if (param.getId() == 23315)
+//      {
+//         // Debug hook
+//         Logger.getLogger(getClass()).debug("Param: " + param);
+//      }
+
       if (parentData == null)
          return true;
 
-      final Integer expectedValue = getExpectedValue();
-      final Integer parentValue = getParentValue();
+      if (!parentData.isVisible())
+         return false;
 
-      if (param.getName().equals("Bspwdk"))
-      {
-         // Debug catcher
-         Logger.getLogger(getClass()).debug(
-               "isVisible param #" + param.getId() + ": parent-val expected=" + expectedValue + ", found=" + parentValue);
-      }
-
-      if (expectedValue == null)
+      final Integer expectedParentValue = param.getParentValue();
+      if (expectedParentValue == null)
          return parentData.isVisible();
 
-      return expectedValue.equals(parentValue);
+      return expectedParentValue.equals(parentData.getValue());
    }
 
    /**
@@ -132,7 +131,7 @@ public class ParamData
    
 
    /**
-    * Test if the parameter is a page.
+    * Test if the parameter denotes a page. 
     * 
     * @return true if the parameter is a page.
     */

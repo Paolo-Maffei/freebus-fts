@@ -2,6 +2,7 @@ package org.freebus.knxcomm.netip.blocks;
 
 import java.util.Arrays;
 
+import org.freebus.knxcomm.netip.types.DescriptionInfoType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -52,18 +53,28 @@ public final class ManufacturerData implements Block
     * {@inheritDoc}
     */
    @Override
-   public int fromRawData(int[] rawData, int start) throws InvalidDataException
+   public int fromData(int[] data, int start) throws InvalidDataException
    {
       int pos = start;
+      final int blockLength = data[pos++];
 
-      final int dataLen = rawData[pos++] - 4;
-      ++pos; // skip block type code
+      final int typeCode = data[pos++];
+      final DescriptionInfoType type = DescriptionInfoType.valueOf(typeCode);
+      if (type != DescriptionInfoType.MANUFACTURER_DATA)
+         throw new InvalidDataException("Invalid type-code", typeCode);
 
-      id = (rawData[pos++] << 8) | rawData[pos++];
+      id = (data[pos++] << 8) | data[pos++];
 
-      if (dataLen > 0)
-         data = Arrays.copyOfRange(rawData, pos, pos + dataLen);
-      else data = null;
+      if (blockLength > 4)
+      {
+         final int len = blockLength - 4;
+         this.data = Arrays.copyOfRange(data, pos, pos + len);
+         pos += len;
+      }
+      else this.data = null;
+
+      if (pos - start != blockLength)
+         throw new InvalidDataException("Invalid block length", blockLength);
 
       return pos - start;
    }
@@ -72,17 +83,18 @@ public final class ManufacturerData implements Block
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public int toData(int[] data, int start)
    {
       int pos = start;
-      final int dataLen = data == null ? 0 : data.length;
+      final int dataLen = (this.data == null ? 0 : this.data.length);
 
-      rawData[pos++] = dataLen + 4;
-      rawData[pos++] = id >> 8;
-      rawData[pos++] = id & 0xff;
+      data[pos++] = dataLen + 4;
+      data[pos++] = DescriptionInfoType.MANUFACTURER_DATA.code;
+      data[pos++] = (id >> 8) & 0xff;
+      data[pos++] = id & 0xff;
 
       for (int i = 0; i < dataLen; ++i)
-         rawData[pos++] = data[i];
+         data[pos++] = this.data[i];
 
       return pos - start;
    }

@@ -13,6 +13,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.persistence.vdx.VdxField;
+
 /**
  * Values of a parameter type.
  */
@@ -35,6 +37,7 @@ public class ParameterValue implements Serializable
    @Column(name = "displayed_value")
    private String displayedValue;
 
+   @VdxField(name = "display_oder")
    @Column(name = "display_oder")
    private int displayOrder;
 

@@ -346,6 +346,27 @@ public class Program
    }
 
    /**
+    * Get a parameter by parameter-id
+    * 
+    * @param id - the parameter id
+    *
+    * @return the parameter, or null if not found.
+    */
+   public Parameter getParameter(int id)
+   {
+      if (parameters == null)
+         return null;
+
+      for (final Parameter param: parameters)
+      {
+         if (param.getId() == id)
+            return param;
+      }
+
+      return null;
+   }
+   
+   /**
     * Add a parameter to the program.
     * @param param - the parameter to add. 
     */

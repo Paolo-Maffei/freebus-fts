@@ -9,18 +9,18 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 public interface Block
 {
    /**
-    * Initialize the object from the given raw data, beginning at start.
+    * Initialize the object from the given data, beginning at start.
     * 
     * @return number of bytes that were used.
     * @throws InvalidDataException
     */
-   public int fromRawData(int[] rawData, int start) throws InvalidDataException;
+   public int fromData(int[] data, int start) throws InvalidDataException;
 
    /**
-    * Fill the raw data of the object into the array rawData, starting at index
+    * Fill the data of the object into the array <code>data</code>, starting at index
     * start. The bytes in rawData are in the range 0..255.
     * 
     * @return number of bytes that were used.
     */
-   public int toRawData(int[] rawData, int start);
+   public int toData(int[] data, int start);
 }

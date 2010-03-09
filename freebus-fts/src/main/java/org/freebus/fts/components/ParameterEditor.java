@@ -2,14 +2,17 @@ package org.freebus.fts.components;
 
 import java.awt.BorderLayout;
 import java.awt.Component;
+import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Vector;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
@@ -30,10 +33,11 @@ public class ParameterEditor extends JPanel implements ChangeListener
    private static final long serialVersionUID = -2143429346277511397L;
 
    private JTabbedPane paramTabs = new JTabbedPane(JTabbedPane.LEFT);
+   private int tabWidth = 200;
 
    private Device device;
-   private final Map<ParamData, Page> paramPages = new HashMap<ParamData, Page>();
-   private final Map<Parameter, ParamData> paramData = new LinkedHashMap<Parameter, ParamData>();
+   private final List<Page> paramPages = new Vector<Page>();
+   private final Map<Parameter, ParamData> paramDatas = new HashMap<Parameter, ParamData>();
    private boolean updateContentsEnabled = false;
    private boolean inStateChanged = false;
 
@@ -87,36 +91,40 @@ public class ParameterEditor extends JPanel implements ChangeListener
       updateContentsEnabled = false;
 
       paramPages.clear();
-      paramData.clear();
+      paramDatas.clear();
       paramTabs.removeAll();
 
-      // Get the parameters and sort them by parameter-number
+      // Create a parameter-data object for every parameter
       final Program program = device.getProgram();
       final Set<Parameter> paramsSet = program.getParameters();
-      final Parameter[] params = new Parameter[paramsSet.size()];
-      paramsSet.toArray(params);
-      Arrays.sort(params, new Comparator<Parameter>()
+      final ParamData[] paramDataArr = new ParamData[paramsSet.size()];
+      int i = -1;
+      for (final Parameter param : paramsSet)
+      {
+         final ParamData data = new ParamData(param);
+         paramDataArr[++i] = data;
+         paramDatas.put(param, data);
+      }
+
+      // Sort the parameter-data objects by display-order
+      Arrays.sort(paramDataArr, new Comparator<ParamData>()
       {
          @Override
-         public int compare(Parameter a, Parameter b)
+         public int compare(ParamData a, ParamData b)
          {
-            return a.getNumber() - b.getNumber();
+            return a.getDisplayOrder() - b.getDisplayOrder();
          }
       });
 
-      // Create a parameter-data object for every parameter
-      for (final Parameter param : params)
-         paramData.put(param, new ParamData(param));
-
-      // Set the dependent parameters in the parameter-data objects
-      for (final ParamData data : paramData.values())
+      // Set the dependent parameters of the parameter-data objects
+      for (final ParamData data : paramDataArr)
       {
          final Parameter param = data.getParameter();
          final Parameter parentParam = param.getParent();
          if (parentParam == null)
             continue;
 
-         if (!paramData.containsKey(parentParam))
+         if (!paramDatas.containsKey(parentParam))
          {
             Logger.getLogger(getClass()).error(
                   String.format("Parameter #{0} has an unknown parent parameter #{1}", new Object[] { param.getId(),
@@ -124,44 +132,40 @@ public class ParameterEditor extends JPanel implements ChangeListener
             continue;
          }
 
-         paramData.get(parentParam).addDependent(paramData.get(param));
+         paramDatas.get(parentParam).addDependent(paramDatas.get(param));
       }
 
-      // Create the parameter pages
-      for (final ParamData data : paramData.values())
-      {
-         if (data.isPage())
-         {
-            final Page page = new Page(data, paramData);
-            page.addChangeListener(this);
-   
-            paramPages.put(data, page);
-         }
-      }
-
-      // Add the (potentially) visible non-page parameters to the corresponding pages
+      // Create the parameter pages and add the parameter-data objects to their pages
       Page page = null;
-      for (final Parameter param: params)
+      for (final ParamData data : paramDataArr)
       {
-         final ParamData data = paramData.get(param);
-         final Integer addr = param.getAddress();
-
-         if (paramPages.containsKey(data))
+         if (data.isPage() && (page == null || page.getDisplayOrder() != data.getDisplayOrder()))
          {
-            page = paramPages.get(data);
+            page = new Page(data);
+            page.addChangeListener(this);
+
+            paramPages.add(page);
          }
-         else if (page != null && addr != null && addr != 0)
+         else if (page != null)
          {
             page.addParamData(data);
+         }
+         else
+         {
+            // Parameter does not belong to a page
+            Logger.getLogger(getClass()).debug("Skipping orphaned parameter: " + data.getParameter());
          }
       }
 
       updateVisibility();
 
-      updateContentsEnabled = false;
-      ((Page) paramTabs.getComponentAt(0)).updateContents();
-      paramTabs.setSelectedIndex(0);
-      updateContentsEnabled = true;
+      if (paramTabs.getComponentCount() > 0)
+      {
+         updateContentsEnabled = false;
+         ((Page) paramTabs.getComponentAt(0)).updateContents();
+         paramTabs.setSelectedIndex(0);
+         updateContentsEnabled = true;
+      }
    }
 
    /**
@@ -171,45 +175,59 @@ public class ParameterEditor extends JPanel implements ChangeListener
    {
       updateContentsEnabled = false;
 
-      // Collect the parameter-pages that shall be visible
+      // Collect the pages that shall be visible
       final Set<Page> visiblePages = new HashSet<Page>();
-      for (final ParamData data : paramPages.keySet())
+      for (final Page page : paramPages)
       {
-         if (data.isVisible())
-         {
-            visiblePages.add(paramPages.get(data));
-//            Logger.getLogger(getClass()).debug("visible page: " + data.getParameter());
-         }
+         if (page.getPageData().isVisible())
+            visiblePages.add(page);
       }
 
-      // Remove all parameter-pages that are currently visible but that shall
-      // not be visible anymore. The pages that are visible and shall stay visible
-      // are removed from visiblePages. Afterwards, visiblePages only contains
-      // those pages that need to be shown.
-      for (int i = paramTabs.getComponentCount() - 1; i >= 0; --i)
+      // Remove all pages that are currently visible but that shall
+      // not be visible anymore. The pages that are visible and shall stay
+      // visible are removed from visiblePages. Afterwards, visiblePages only
+      // contains those pages that need to be shown.
+      for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
       {
          final Page page = (Page) paramTabs.getComponentAt(i);
 
          if (visiblePages.contains(page))
+         {
+            paramTabs.setTitleAt(i, page.getName());
+            paramTabs.setToolTipTextAt(i, "Debug: parameter-id is " + page.getPageParameter().getId());
             visiblePages.remove(page);
+         }
          else paramTabs.remove(i);
       }
 
       // Add pages that shall be visible but are not yet.
-      for (final Page page: visiblePages)
+      for (final Page page : visiblePages)
       {
          final int displayOrder = page.getDisplayOrder();
 
          int i;
-         for (i = paramTabs.getComponentCount() - 1; i >= 0; --i)
+         for (i = paramTabs.getTabCount() - 1; i >= 0; --i)
          {
             final Page pg = (Page) paramTabs.getComponentAt(i);
             if (pg.getDisplayOrder() < displayOrder)
                break;
          }
 
-         paramTabs.add(page, i + 1);
+         final JLabel tabLabel = new JLabel(page.getName());
+         int width = tabLabel.getPreferredSize().width;
+         if (width > tabWidth) tabWidth = width;
+
+         ++i;
+         paramTabs.add(page, i);
+         paramTabs.setTabComponentAt(i, tabLabel);
+         paramTabs.setToolTipTextAt(i, "Debug: parameter-id is " + page.getPageParameter().getId());
       }
+
+      // Ensure that all tabs have the same width and that the tabs will not shrink
+      // if the widest tab is removed.
+      final Dimension preferredSize = new Dimension(tabWidth, 10);
+      for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
+         paramTabs.getTabComponentAt(i).setPreferredSize(preferredSize);
 
       updateContentsEnabled = true;
    }
@@ -221,6 +239,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
    public void stateChanged(ChangeEvent e)
    {
       final ParamData data = (ParamData) e.getSource();
+
       if (updateContentsEnabled && !inStateChanged && data.hasDependents())
       {
          try
@@ -228,7 +247,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
             inStateChanged = true;
 
             updateVisibility();
-   
+
             final Component currentPageComp = paramTabs.getSelectedComponent();
             if (currentPageComp instanceof Page)
                ((Page) currentPageComp).updateContents();

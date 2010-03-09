@@ -8,7 +8,7 @@ import org.freebus.knxcomm.netip.types.ServiceType;
 /**
  * A request for searching KNXnet/IP servers.
  */
-public class SearchRequest extends BasicRequest
+public class SearchRequest extends AbstractRequest
 {
    /**
     * Create a search request object.

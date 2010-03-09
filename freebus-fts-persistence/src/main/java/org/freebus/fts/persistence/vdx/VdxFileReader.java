@@ -562,7 +562,7 @@ public final class VdxFileReader
     * 
     * @see setLanguage
     */
-   public void setLanguageId(int languageId)
+   public synchronized void setLanguageId(int languageId)
    {
       this.languageId = languageId;
    }
@@ -570,7 +570,7 @@ public final class VdxFileReader
    /**
     * @return the language-id that is currently set.
     */
-   public int getLanguageId()
+   public synchronized int getLanguageId()
    {
       return languageId;
    }

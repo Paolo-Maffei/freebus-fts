@@ -6,7 +6,7 @@ import org.freebus.knxcomm.netip.blocks.DeviceInfoBlock;
  * KNXnet/IP description type codes of {@link DeviceInfoBlock} device
  * information blocks.
  */
-public enum DeviceDescriptionType
+public enum DescriptionInfoType
 {
    /**
     * Device information.
@@ -29,7 +29,7 @@ public enum DeviceDescriptionType
    /**
     * Further data defined by the device manufacturer.
     */
-   MFR_DATA(0xfe),
+   MANUFACTURER_DATA(0xfe),
 
    /**
     * Not used.
@@ -45,16 +45,16 @@ public enum DeviceDescriptionType
     * @return the device-info type for the given value.
     * @throws IllegalArgumentException if no matching device-info type is found.
     */
-   static public DeviceDescriptionType valueOf(int code)
+   static public DescriptionInfoType valueOf(int code)
    {
-      for (DeviceDescriptionType v : values())
+      for (DescriptionInfoType v : values())
       {
          if (v.code == code)
             return v;
       }
 
       if (code >= 0x03 && code <= 0xfd)
-         return DeviceDescriptionType.RESERVED;
+         return DescriptionInfoType.RESERVED;
 
       throw new IllegalArgumentException("Invalid KNXnet/IP device-info type: " + code);
    }
@@ -62,7 +62,7 @@ public enum DeviceDescriptionType
    /*
     * Internal constructor
     */
-   private DeviceDescriptionType(int code)
+   private DescriptionInfoType(int code)
    {
       this.code = code;
    }

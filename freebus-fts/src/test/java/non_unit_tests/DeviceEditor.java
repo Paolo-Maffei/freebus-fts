@@ -86,7 +86,7 @@ public class DeviceEditor
          }
       });
       
-      frame.setSize(900, 800);
+      frame.setSize(1200, 800);
       frame.setVisible(true);
    }
 

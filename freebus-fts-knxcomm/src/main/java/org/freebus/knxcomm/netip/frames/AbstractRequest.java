@@ -7,10 +7,10 @@ import org.freebus.knxcomm.netip.types.ProtocolType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
- * A basic request structure that consists only of one {@link HostProtAddrInfo}
- * block.
+ * A abstract request that consists only of one {@link HostProtAddrInfo} block
+ * and can be used as a base class for most request types.
  */
-public abstract class BasicRequest implements FrameBody
+public abstract class AbstractRequest extends AbstractFrame
 {
    private final HostProtAddrInfo hpai;
 
@@ -21,7 +21,7 @@ public abstract class BasicRequest implements FrameBody
     * @param addr - the address of the sender.
     * @param port - the port of the sender
     */
-   public BasicRequest(ProtocolType protocol, InetAddress addr, int port)
+   public AbstractRequest(ProtocolType protocol, InetAddress addr, int port)
    {
       hpai = new HostProtAddrInfo(protocol, addr, port);
    }
@@ -29,7 +29,7 @@ public abstract class BasicRequest implements FrameBody
    /**
     * Create an empty request object.
     */
-   public BasicRequest()
+   public AbstractRequest()
    {
       hpai = new HostProtAddrInfo();
    }
@@ -46,18 +46,17 @@ public abstract class BasicRequest implements FrameBody
     * {@inheritDoc}
     */
    @Override
-   public int fromRawData(int[] rawData, int start) throws InvalidDataException
+   public int bodyFromData(int[] data, int start) throws InvalidDataException
    {
-      return hpai.fromRawData(rawData, start);
+      return hpai.fromData(data, start);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public int bodyToData(int[] data, int start)
    {
-      return hpai.toRawData(rawData, start);
+      return hpai.toData(data, start);
    }
-
 }

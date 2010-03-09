@@ -2,7 +2,7 @@ package org.freebus.knxcomm.netip;
 
 import static org.junit.Assert.*;
 
-import org.freebus.knxcomm.netip.types.DeviceDescriptionType;
+import org.freebus.knxcomm.netip.types.DescriptionInfoType;
 import org.junit.Test;
 
 public class TestDeviceDescriptionType
@@ -10,13 +10,13 @@ public class TestDeviceDescriptionType
    @Test
    public final void testValueOf()
    {
-      assertEquals(DeviceDescriptionType.DEVICE_INFO, DeviceDescriptionType.valueOf(0x1));
-      assertEquals(DeviceDescriptionType.RESERVED, DeviceDescriptionType.valueOf(0xa1));
+      assertEquals(DescriptionInfoType.DEVICE_INFO, DescriptionInfoType.valueOf(0x1));
+      assertEquals(DescriptionInfoType.RESERVED, DescriptionInfoType.valueOf(0xa1));
    }
 
    @Test(expected = IllegalArgumentException.class)
    public final void testValueOfInvalid()
    {
-      DeviceDescriptionType.valueOf(-1);
+      DescriptionInfoType.valueOf(-1);
    }
 }

@@ -93,33 +93,71 @@ public final class HostProtAddrInfo implements Block
     * {@inheritDoc}
     */
    @Override
-   public int fromRawData(int[] rawData, int start) throws InvalidDataException
+   public int fromData(int[] data, int start) throws InvalidDataException
    {
       int pos = start;
 
-      int len = rawData[pos++] - 2;
-      protocolType = ProtocolType.valueOf(rawData[pos++]);
+      int len = data[pos++] - 2;
+      protocolType = ProtocolType.valueOf(data[pos++]);
 
       if (len > 0)
-         data = Arrays.copyOfRange(rawData, pos, pos + len);
-      else data = null;
+         this.data = Arrays.copyOfRange(data, pos, pos + len);
+      else this.data = null;
 
-      return pos - start;
+      return pos - start + len;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public int toData(int[] data, int start)
    {
-      final int dataLen = data == null ? 0 : data.length;
-      rawData[start++] = dataLen + 2;
-      rawData[start++] = protocolType.code;
+      final int dataLen = this.data == null ? 0 : this.data.length;
+      data[start++] = dataLen + 2;
+      data[start++] = protocolType.code;
 
       for (int i = 0; i < dataLen; ++i)
-         rawData[start++] = data[i];
+         data[start++] = this.data[i];
 
       return dataLen + 2;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      int code = protocolType == null ? 0 : protocolType.code;
+      if (data != null)
+      {
+         for (int i = 0; i < data.length; ++i)
+            code = (code << 7) | data[i];
+      }
+      return code;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(final Object o)
+   {
+      if (this == o)
+         return true;
+
+      if (!(o instanceof HostProtAddrInfo))
+         return false;
+
+      final HostProtAddrInfo oo = (HostProtAddrInfo) o;
+
+      if (protocolType != oo.protocolType)
+         return false;
+
+      if (data == null && oo.data != null)
+         return false;
+
+      return data == oo.data || Arrays.equals(data, oo.data);
    }
 }

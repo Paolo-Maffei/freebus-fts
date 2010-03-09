@@ -1,12 +1,21 @@
 package test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
+import java.util.Set;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
-import org.freebus.fts.products.ProductsManager;
+import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
+import org.freebus.fts.products.ParameterType;
+import org.freebus.fts.products.ParameterValue;
 import org.freebus.fts.products.ProductsImporter;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -50,5 +59,16 @@ public class TestProductsImporter extends PersistenceTestCase
       assertEquals(vdxDevId, jpaDev.getId());
       assertEquals(vdxDev.getFunctionalEntity(), jpaDev.getFunctionalEntity());
       assertEquals(vdxDev.getCatalogEntry(), jpaDev.getCatalogEntry());
+
+      final Parameter param = jpaDev.getProgram().getParameter(161483);
+      assertEquals(9001, param.getDisplayOrder());
+
+      final ParameterType paramType = param.getParameterType();
+      assertEquals("Funktion_Auswahl", paramType.getName());
+      assertEquals(ParameterAtomicType.ENUM, paramType.getAtomicType());
+
+      final Set<ParameterValue> values = paramType.getValues();
+      assertEquals(5, values.size());
+//      assertTrue(values.iterator().next().getDisplayOrder() != 0);
    }
 }

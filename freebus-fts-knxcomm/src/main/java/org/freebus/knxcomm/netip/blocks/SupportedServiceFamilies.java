@@ -3,14 +3,14 @@ package org.freebus.knxcomm.netip.blocks;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.freebus.knxcomm.netip.types.DeviceDescriptionType;
+import org.freebus.knxcomm.netip.types.DescriptionInfoType;
 import org.freebus.knxcomm.netip.types.ServiceFamily;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Supported service families device information block.
  */
-public class SupportedServiceFamilies implements Block
+public class SupportedServiceFamilies implements DescriptionInfoBlock
 {
    private final Map<ServiceFamily, Integer> families = new HashMap<ServiceFamily, Integer>();
 
@@ -45,16 +45,20 @@ public class SupportedServiceFamilies implements Block
     * {@inheritDoc}
     */
    @Override
-   public int fromRawData(int[] rawData, int start) throws InvalidDataException
+   public int fromData(int[] data, int start) throws InvalidDataException
    {
       int pos = start;
 
-      final int numServices = (rawData[pos++] - 2) >> 1;
-      // type code is skipped
+      final int numServices = (data[pos++] - 2) >> 1;
+
+      final int typeCode = data[pos++];
+      final DescriptionInfoType type = DescriptionInfoType.valueOf(typeCode);
+      if (type != DescriptionInfoType.SERVICE_FAMILIES)
+         throw new InvalidDataException("Invalid type " + type + ", expected " + DescriptionInfoType.SERVICE_FAMILIES, typeCode);
 
       families.clear();
       for (int i = 0; i < numServices; ++i)
-         families.put(ServiceFamily.valueOf(rawData[++pos]), rawData[++pos]);
+         families.put(ServiceFamily.valueOf(data[pos++]), data[pos++]);
 
       return pos - start;
    }
@@ -63,17 +67,17 @@ public class SupportedServiceFamilies implements Block
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public int toData(int[] data, int start)
    {
-      int pos = start - 1;
+      int pos = start;
 
-      rawData[++pos] = (families.size() << 1) + 2;
-      rawData[++pos] = DeviceDescriptionType.SERVICE_FAMILIES.code;
+      data[pos++] = (families.size() << 1) + 2;
+      data[pos++] = DescriptionInfoType.SERVICE_FAMILIES.code;
 
       for (ServiceFamily sf: families.keySet())
       {
-         rawData[++pos] = sf.code;
-         rawData[++pos] = families.get(sf);
+         data[pos++] = sf.code;
+         data[pos++] = families.get(sf);
       }
 
       return pos - start;
