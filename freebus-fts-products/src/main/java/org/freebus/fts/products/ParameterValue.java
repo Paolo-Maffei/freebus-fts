@@ -13,8 +13,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-import org.freebus.fts.persistence.vdx.VdxField;
-
 /**
  * Values of a parameter type.
  */

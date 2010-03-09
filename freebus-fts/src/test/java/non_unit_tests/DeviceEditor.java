@@ -33,7 +33,7 @@ public class DeviceEditor
 {
    static private final String appTitle = "FTS Device Editor";
    private final JFrame frame = new JFrame();
-   private final ParameterEditor progEdit = new ParameterEditor();
+   private final ParameterEditor paramEdit = new ParameterEditor();
    private final JList lstDevices;
    private final VirtualDevice[] virtualDevices;
 
@@ -56,7 +56,7 @@ public class DeviceEditor
       lbl.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));
       frame.add(lbl, BorderLayout.NORTH);
 
-      frame.add(progEdit, BorderLayout.CENTER);
+      frame.add(paramEdit, BorderLayout.CENTER);
 
       lstDevices = new JList(this.virtualDevices);
       frame.add(lstDevices, BorderLayout.WEST);
@@ -72,7 +72,7 @@ public class DeviceEditor
             {
                frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                final Device dev = new Device(0, virtualDevices[idx]);
-               progEdit.setDevice(dev);
+               paramEdit.setDevice(dev);
             }
             catch (Exception e)
             {

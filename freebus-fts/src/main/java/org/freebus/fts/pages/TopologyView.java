@@ -2,6 +2,7 @@ package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -20,6 +21,7 @@ import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.components.ToolBar;
+import org.freebus.fts.components.ToolBarButton;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.project.Area;
@@ -39,7 +41,7 @@ public class TopologyView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
-   private JButton btnAddArea, btnAddLine, btnAddDevice;
+   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEdit;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -64,6 +66,8 @@ public class TopologyView extends AbstractPage
          {
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             final Object userObject = node != null ? node.getUserObject() : null;
+
+            btnEdit.setEnabled(userObject instanceof Device);
 
             if (userObject instanceof Area)
             {
@@ -123,6 +127,21 @@ public class TopologyView extends AbstractPage
       btnAddDevice.setEnabled(false);
       btnAddDevice.setIcon(ImageCache.getIcon("icons/device-new"));
       btnAddDevice.setToolTipText(I18n.getMessage("TopologyView.AddDeviceTip"));
+
+      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
+      toolBar.add(btnEdit);
+      btnEdit.setEnabled(false);
+      btnEdit.setToolTipText(I18n.getMessage("TopologyView.EditDeviceTip"));
+      btnEdit.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent arg0)
+         {
+            final Object obj = getSelectedUserObject();
+            if (obj instanceof Device)
+               editDevice((Device) obj);
+         }
+      });
    }
 
    /**
@@ -209,6 +228,16 @@ public class TopologyView extends AbstractPage
       treeModel.insertNodeInto(deviceNode, lineNode, 0);
 
       tree.expandPath(new TreePath(lineNode));
+   }
+
+   /**
+    * Edit the device.
+    * 
+    * @param device - the device to edit.
+    */
+   public void editDevice(final Device device)
+   {
+      MainWindow.getInstance().showUniquePage(DeviceEditor.class, device);
    }
 
    /**

@@ -52,11 +52,7 @@ public class ToolBar extends JToolBar
    protected JButton createActionComponent(Action a)
    {
       final JButton btn = super.createActionComponent(a);
-
-      btn.setFocusable(false);
-      btn.setBorderPainted(false);
-      btn.setOpaque(false);
-
+      ToolBarButton.useToolBarStyle(btn);
       return btn;
    }
 }
