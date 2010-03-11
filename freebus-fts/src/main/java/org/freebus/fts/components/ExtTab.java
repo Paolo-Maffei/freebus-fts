@@ -1,15 +1,12 @@
 package org.freebus.fts.components;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 
-import javax.swing.AbstractButton;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -31,6 +28,7 @@ class ExtTab extends JPanel
    private final JTabbedPane pane;
    private final CloseButton closeButton;
    private final JLabel lblTitle;
+   private boolean mouseInTab, mouseInCloseButton;
 
    /**
     * Create a flexi-tab object.
@@ -57,6 +55,23 @@ class ExtTab extends JPanel
       {
          closeButton = new CloseButton();
          add(closeButton, BorderLayout.EAST);
+
+         addMouseListener(new MouseAdapter()
+         {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+               mouseInTab = true;
+               updateCloseButton();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+               mouseInTab = false;
+               updateCloseButton();
+            }
+         });
       }
       else
       {
@@ -86,6 +101,18 @@ class ExtTab extends JPanel
    }
 
    /**
+    * Set the close button icon, depending on where the mouse is.
+    */
+   private void updateCloseButton()
+   {
+      if (mouseInCloseButton)
+         closeButton.setIcon(closeButtonHighliteIcon);
+      else if (mouseInTab)
+         closeButton.setIcon(closeButtonIcon);
+      else closeButton.setIcon(closeButtonDimmedIcon);
+   }
+
+   /**
     * Internal class of {@link ExtTab} for the close button.
     */
    private class CloseButton extends JButton implements ActionListener
@@ -102,9 +129,25 @@ class ExtTab extends JPanel
          setFocusable(false);
          setBorderPainted(false);
          setIcon(closeButtonDimmedIcon);
-         addMouseListener(buttonMouseListener);
          setRolloverEnabled(true);
          addActionListener(this);
+
+         addMouseListener(new MouseAdapter()
+         {
+            @Override
+            public void mouseEntered(MouseEvent e)
+            {
+               mouseInCloseButton = true;
+               updateCloseButton();
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e)
+            {
+               mouseInCloseButton = false;
+               updateCloseButton();
+            }
+         });
       }
 
       public void actionPerformed(ActionEvent e)
@@ -119,30 +162,4 @@ class ExtTab extends JPanel
       {
       }
    }
-
-   private final static MouseListener buttonMouseListener = new MouseAdapter()
-   {
-      @Override
-      public void mouseEntered(MouseEvent e)
-      {
-         Component component = e.getComponent();
-         if (component instanceof AbstractButton)
-         {
-            AbstractButton button = (AbstractButton) component;
-            button.setIcon(closeButtonHighliteIcon);
-         }
-      }
-
-      @Override
-      public void mouseExited(MouseEvent e)
-      {
-         Component component = e.getComponent();
-         if (component instanceof AbstractButton)
-         {
-            AbstractButton button = (AbstractButton) component;
-            if (button.getIcon() == closeButtonHighliteIcon)
-               button.setIcon(closeButtonIcon);
-         }
-      }
-   };
 }

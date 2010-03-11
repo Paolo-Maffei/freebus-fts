@@ -26,7 +26,7 @@ import org.freebus.knxcomm.internal.JarLoader;
  */
 public final class FTS implements Runnable
 {
-   // Use {@link Config#getInstance} to access the global configuration object
+   // Use Config.getInstance() to access the global configuration object
    protected static final Config globalConfig;
 
    private static LookAndFeelManager lafLoader;
