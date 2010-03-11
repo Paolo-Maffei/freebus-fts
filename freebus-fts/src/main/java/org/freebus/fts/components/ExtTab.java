@@ -22,13 +22,12 @@ import org.freebus.fts.core.ImageCache;
 class ExtTab extends JPanel
 {
    private static final long serialVersionUID = 600126632738870853L;
-   private static final Icon closeButtonIcon = ImageCache.getIcon("gui-images/tab-close");
+//   private static final Icon closeButtonIcon = ImageCache.getIcon("gui-images/tab-close");
    private static final Icon closeButtonHighliteIcon = ImageCache.getIcon("gui-images/tab-close-highlite");
    private static final Icon closeButtonDimmedIcon = ImageCache.getIcon("gui-images/tab-close-dimmed");
    private final JTabbedPane pane;
    private final CloseButton closeButton;
    private final JLabel lblTitle;
-   private boolean mouseInTab, mouseInCloseButton;
 
    /**
     * Create a flexi-tab object.
@@ -55,23 +54,6 @@ class ExtTab extends JPanel
       {
          closeButton = new CloseButton();
          add(closeButton, BorderLayout.EAST);
-
-         addMouseListener(new MouseAdapter()
-         {
-            @Override
-            public void mouseEntered(MouseEvent e)
-            {
-               mouseInTab = true;
-               updateCloseButton();
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e)
-            {
-               mouseInTab = false;
-               updateCloseButton();
-            }
-         });
       }
       else
       {
@@ -101,18 +83,6 @@ class ExtTab extends JPanel
    }
 
    /**
-    * Set the close button icon, depending on where the mouse is.
-    */
-   private void updateCloseButton()
-   {
-      if (mouseInCloseButton)
-         closeButton.setIcon(closeButtonHighliteIcon);
-      else if (mouseInTab)
-         closeButton.setIcon(closeButtonIcon);
-      else closeButton.setIcon(closeButtonDimmedIcon);
-   }
-
-   /**
     * Internal class of {@link ExtTab} for the close button.
     */
    private class CloseButton extends JButton implements ActionListener
@@ -137,19 +107,20 @@ class ExtTab extends JPanel
             @Override
             public void mouseEntered(MouseEvent e)
             {
-               mouseInCloseButton = true;
-               updateCloseButton();
+               closeButton.setIcon(closeButtonHighliteIcon);
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-               mouseInCloseButton = false;
-               updateCloseButton();
+               closeButton.setIcon(closeButtonDimmedIcon);
             }
          });
       }
 
+      /**
+       * Called when the close button is clicked.
+       */
       public void actionPerformed(ActionEvent e)
       {
          int i = pane.indexOfTabComponent(ExtTab.this);

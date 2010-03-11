@@ -52,7 +52,7 @@ public class InspectVdxFile extends AbstractPage
 
    private String selectedTableName;
    private TableContents currentContents;
-   private int maxRecords = 1000;
+   private int maxRecords = 10000;
 
    /**
     * Create a VDX browser page.
@@ -119,13 +119,13 @@ public class InspectVdxFile extends AbstractPage
       toolBar.add(toggleButton);
       btnGrpLayout.add(toggleButton);
 
-      toggleButton.setSelected(true);
-      currentContents = tableContentsPerRecord;
-
       toggleButton = createSwitchContentsToggleButton(tableContentsGrid, "icons/view_grid", I18n
             .getMessage("InspectVdxFile.ViewGridToolTip"));
       toolBar.add(toggleButton);
       btnGrpLayout.add(toggleButton);
+
+      toggleButton.setSelected(true);
+      currentContents = tableContentsGrid;
 
       toolBar.addSeparator();
 

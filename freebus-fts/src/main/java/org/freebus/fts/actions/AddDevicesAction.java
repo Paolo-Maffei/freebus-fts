@@ -19,7 +19,7 @@ public final class AddDevicesAction extends BasicAction
     */
    AddDevicesAction()
    {
-      super(I18n.getMessage("AddDevicesAction.Name"), I18n.getMessage("AddDevicesAction.ToolTip"), ImageCache.getIcon("icons/filefind"));
+      super(I18n.getMessage("AddDevicesAction.Name"), I18n.getMessage("AddDevicesAction.ToolTip"), ImageCache.getIcon("icons/device-new"));
    }
 
    /**

@@ -28,6 +28,7 @@ import javax.swing.JTextArea;
 import javax.swing.ListCellRenderer;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.DocumentEvent;
@@ -241,12 +242,25 @@ public class Page extends JPanel
       final ParameterValue[] values = new ParameterValue[valuesSet.size()];
       valuesSet.toArray(values);
 
+      createParamLabel(param, gridRow, 1);
+
+      if (values.length <= 1)
+      {
+         if (values.length == 1)
+         {
+            final JLabel lbl = new JLabel(values[0].getDisplayedValue());
+            lbl.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+            contentAddComponent(lbl, gridRow);
+         }
+         return;
+      }
+
       Arrays.sort(values, new Comparator<ParameterValue>()
       {
          @Override
          public int compare(ParameterValue a, ParameterValue b)
          {
-            return b.getDisplayOrder() - a.getDisplayOrder();
+            return a.getDisplayOrder() - b.getDisplayOrder();
          }
       });
 
@@ -288,7 +302,6 @@ public class Page extends JPanel
          }
       });
 
-      createParamLabel(param, gridRow, 1);
       contentAddComponent(combo, gridRow);
    }
 
@@ -401,7 +414,7 @@ public class Page extends JPanel
     */
    public JLabel createParamLabel(final Parameter param, int gridRow, int gridWidth)
    {
-      final String str = "<html>" + param.getDescription().replace("\\r\\n", "<br>") + "</html>";
+      final String str = "<html>" + param.getDescription().replace("\\r", "").replace("\\n", "<br>") + "</html>";
       final JLabel lbl = new JLabel(str);
       lbl.setToolTipText("Debug: parameter-id is " + param.getId());
       lbl.setName("param-" + param.getId());

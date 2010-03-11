@@ -15,6 +15,7 @@ import java.util.Vector;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
+import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
@@ -33,7 +34,8 @@ public class ParameterEditor extends JPanel implements ChangeListener
    private static final long serialVersionUID = -2143429346277511397L;
 
    private JTabbedPane paramTabs = new JTabbedPane(JTabbedPane.LEFT);
-   private int tabWidth = 200;
+   private int tabWidth = 150;
+   private int tabHeight;
 
    private Device device;
    private final List<Page> paramPages = new Vector<Page>();
@@ -135,7 +137,8 @@ public class ParameterEditor extends JPanel implements ChangeListener
          paramDatas.get(parentParam).addDependent(paramDatas.get(param));
       }
 
-      // Create the parameter pages and add the parameter-data objects to their pages
+      // Create the parameter pages and add the parameter-data objects to their
+      // pages
       Page page = null;
       for (final ParamData data : paramDataArr)
       {
@@ -173,6 +176,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
     */
    public void updateVisibility()
    {
+//      Logger.getLogger(getClass()).debug("start updateVisibility");
       updateContentsEnabled = false;
 
       // Collect the pages that shall be visible
@@ -215,7 +219,10 @@ public class ParameterEditor extends JPanel implements ChangeListener
 
          final JLabel tabLabel = new JLabel(page.getName());
          int width = tabLabel.getPreferredSize().width;
-         if (width > tabWidth) tabWidth = width;
+         if (width > tabWidth)
+            tabWidth = width;
+         if (tabHeight <= 0)
+            tabHeight = tabLabel.getPreferredSize().height;
 
          ++i;
          paramTabs.add(page, i);
@@ -223,13 +230,18 @@ public class ParameterEditor extends JPanel implements ChangeListener
          paramTabs.setToolTipTextAt(i, "Debug: parameter-id is " + page.getPageParameter().getId());
       }
 
-      // Ensure that all tabs have the same width and that the tabs will not shrink
+      // Ensure that all tabs have the same width and that the tabs will not
+      // shrink
       // if the widest tab is removed.
-      final Dimension preferredSize = new Dimension(tabWidth, 10);
-      for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
-         paramTabs.getTabComponentAt(i).setPreferredSize(preferredSize);
+      if (paramTabs.getTabCount() > 0)
+      {
+         final Dimension preferredSize = new Dimension(tabWidth, tabHeight + 4);
+         for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
+            paramTabs.getTabComponentAt(i).setPreferredSize(preferredSize);
+      }
 
       updateContentsEnabled = true;
+//      Logger.getLogger(getClass()).debug("end updateVisibility");
    }
 
    /**
@@ -242,20 +254,27 @@ public class ParameterEditor extends JPanel implements ChangeListener
 
       if (updateContentsEnabled && !inStateChanged && data.hasDependents())
       {
-         try
-         {
-            inStateChanged = true;
 
-            updateVisibility();
-
-            final Component currentPageComp = paramTabs.getSelectedComponent();
-            if (currentPageComp instanceof Page)
-               ((Page) currentPageComp).updateContents();
-         }
-         finally
+         SwingUtilities.invokeLater(new Runnable()
          {
-            inStateChanged = false;
-         }
+            @Override
+            public void run()
+            {
+               try
+               {
+                  inStateChanged = true;
+                  updateVisibility();
+
+                  final Component currentPageComp = paramTabs.getSelectedComponent();
+                  if (currentPageComp instanceof Page)
+                     ((Page) currentPageComp).updateContents();
+               }
+               finally
+               {
+                  inStateChanged = false;
+               }
+            }
+         });
       }
    }
 }
