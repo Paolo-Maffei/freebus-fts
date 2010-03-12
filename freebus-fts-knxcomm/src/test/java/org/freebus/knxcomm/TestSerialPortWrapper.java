@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.TooManyListenersException;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.freebus.knxcomm.serial.SerialPortUtil;
 import org.freebus.knxcomm.serial.SerialPortWrapper;
 import org.junit.After;
@@ -22,13 +23,38 @@ import org.junit.Test;
  */
 public class TestSerialPortWrapper
 {
-   final static private String portName = SerialPortUtil.getPortNames()[0];
+   private static String portName;
    private SerialPortWrapper wrapper;
 
    static
    {
       // Configure Log4J
       BasicConfigurator.configure();
+      
+      final String[] portNames = SerialPortUtil.getPortNames();
+      if (portNames == null || portNames.length == 0)
+      {
+         portName = null;
+         Logger.getLogger(TestSerialPortWrapper.class).info("Cannot run some unit tests: no serial port found");
+      }
+      else
+      {
+         portName = portNames[0];
+
+         try
+         {
+            // Test if the port is usable
+
+            final SerialPortWrapper wrapper = new SerialPortWrapper();
+            wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
+            wrapper.close();
+         }
+         catch (Exception e)
+         {
+            Logger.getLogger(TestSerialPortWrapper.class).info("Cannot run some unit tests: serial port " + portName + " cannot be opened");
+            portName = null;
+         }
+      }
    }
 
    @Before
@@ -50,6 +76,9 @@ public class TestSerialPortWrapper
    @Test
    public final void testOpenClose() throws IOException
    {
+      if (portName == null)
+         return;
+
       assertFalse(wrapper.isOpened());
 
       wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
@@ -80,6 +109,9 @@ public class TestSerialPortWrapper
    @Test(expected = IOException.class)
    public final void testOpenTwice() throws IOException
    {
+      if (portName == null)
+         return;
+
       wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
       wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
    }
@@ -87,6 +119,9 @@ public class TestSerialPortWrapper
    @Test
    public final void testGetStreams() throws IOException
    {
+      if (portName == null)
+         return;
+
       assertNull(wrapper.getInputStream());
       assertNull(wrapper.getOutputStream());
 
@@ -99,6 +134,9 @@ public class TestSerialPortWrapper
    @Test
    public final void testAddRemoveEventListener() throws TooManyListenersException, IOException
    {
+      if (portName == null)
+         return;
+
       wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
       wrapper.addEventListener(new MyListener());
       wrapper.removeEventListener();
