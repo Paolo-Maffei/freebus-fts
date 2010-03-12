@@ -2,10 +2,10 @@ package org.freebus.knxcomm;
 
 import static org.junit.Assert.*;
 
+import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Application;
-import org.freebus.knxcomm.telegram.GroupAddress;
 import org.freebus.knxcomm.telegram.InvalidDataException;
-import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;

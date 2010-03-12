@@ -2,8 +2,8 @@ package org.freebus.knxcomm;
 
 import java.io.IOException;
 
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.EmiFrameType;
-import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**

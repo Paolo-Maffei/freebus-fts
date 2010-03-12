@@ -7,15 +7,15 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.knxcomm.serial.SerialPortUtil;
 
 /**
  * A widget for configuring a serial bus interface connection.
  */
-public final class SerialBusInterface extends JPanel
+final class SerialBusInterface extends JPanel
 {
    private static final long serialVersionUID = 1457255663125616282L;
    private final static String configKey = "knxConnectionSerial";
@@ -67,7 +67,7 @@ public final class SerialBusInterface extends JPanel
    /**
     * Apply the widget's contents to the configuration.
     */
-   public void apply()
+   protected void apply()
    {
       final SimpleConfig cfg = Config.getInstance();
       cfg.put(configKey + ".port", (String) cboPort.getSelectedItem());

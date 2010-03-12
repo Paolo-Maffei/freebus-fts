@@ -27,16 +27,9 @@ public class TestVdxEntityInspector
    }
 
    @Test
-   final public void testVdxEntityInspectorString()
-   {
-      final VdxEntityInspector inspector = new VdxEntityInspector("default");
-      assertNotNull(inspector);
-   }
-
-   @Test
    final public void testGetClasses()
    {
-      final VdxEntityInspector inspector = new VdxEntityInspector("default");
+      final VdxEntityInspector inspector = new VdxEntityInspector("test-entities");
       assertNotNull(inspector);
 
       Set<Class<?>> classes = inspector.getClasses();
@@ -50,7 +43,7 @@ public class TestVdxEntityInspector
    @Test
    final public void testGetInfo()
    {
-      final VdxEntityInspector inspector = new VdxEntityInspector("default");
+      final VdxEntityInspector inspector = new VdxEntityInspector("test-entities");
       assertNotNull(inspector);
 
       VdxEntityInfo info = inspector.getInfo(SampleManufacturer.class);

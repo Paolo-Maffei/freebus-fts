@@ -22,13 +22,13 @@ public class TestVdxEntityManager
    @Test
    public final void testVdxEntityManager() throws Exception
    {
-      assertNotNull(new VdxEntityManager("src/test/resources/test-file.vd_"));
+      assertNotNull(new VdxEntityManager("src/test/resources/test-file.vd_", "test-entities"));
    }
    
    @Test(expected = PersistenceException.class)
    public final void testVdxEntityManagerUnknownFile() throws Exception
    {
-      new VdxEntityManager(new File("unknown-file.vd_"));
+      new VdxEntityManager(new File("unknown-file.vd_"), "test-entities");
    }
 
    
@@ -62,7 +62,7 @@ public class TestVdxEntityManager
    @Test
    public final void testFetchAllSimple() throws Exception
    {
-      final VdxEntityManager mgr = new VdxEntityManager(new File("src/test/resources/test-file.vd_"));
+      final VdxEntityManager mgr = new VdxEntityManager(new File("src/test/resources/test-file.vd_"), "test-entities");
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
@@ -88,7 +88,7 @@ public class TestVdxEntityManager
    @Test
    public final void testFetchAllLocalized() throws Exception
    {
-      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "test-entities");
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
@@ -100,7 +100,7 @@ public class TestVdxEntityManager
    @Test
    public final void testFetchAllUniDirectionalReference() throws Exception
    {
-      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "test-entities");
       assertNotNull(mgr);
 
       @SuppressWarnings("unchecked")
@@ -151,14 +151,14 @@ public class TestVdxEntityManager
    @Test(expected = PersistenceException.class)
    public final void testFetchNull() throws PersistenceException
    {
-      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "test-entities");
       mgr.fetch(null, null);
    }
 
    @Test(expected = PersistenceException.class)
    public final void testFetchInvalidClass() throws PersistenceException
    {
-      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_");
+      final VdxEntityManager mgr = new VdxEntityManager("src/test/resources/test-file.vd_", "test-entities");
       mgr.fetch(Object.class, null);
    }
 

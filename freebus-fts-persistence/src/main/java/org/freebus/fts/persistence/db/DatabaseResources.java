@@ -1,5 +1,7 @@
 package org.freebus.fts.persistence.db;
 
+import java.sql.Connection;
+import java.sql.Driver;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -8,15 +10,20 @@ import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
+import liquibase.ClassLoaderFileOpener;
+import liquibase.Liquibase;
+import liquibase.database.Database;
+import liquibase.database.DatabaseFactory;
+
 import org.apache.log4j.Logger;
-import org.freebus.fts.persistence.Environment;
-import org.freebus.fts.persistence.Rot13;
-import org.freebus.fts.persistence.SimpleConfig;
+import org.freebus.fts.common.Environment;
+import org.freebus.fts.common.Rot13;
+import org.freebus.fts.common.SimpleConfig;
 
 public class DatabaseResources
 {
-   static protected EntityManagerFactory entityManagerFactory;
-   static protected EntityManager entityManager;
+   static private EntityManagerFactory entityManagerFactory;
+   static private EntityManager entityManager;
 
    static
    {
@@ -57,7 +64,8 @@ public class DatabaseResources
       final String driverStr = cfg.getStringValue("databaseDriverType");
 
       final DriverType driver = driverStr.isEmpty() ? DriverType.getDefault() : DriverType.valueOf(driverStr);
-      if (driver == null) return null;
+      if (driver == null)
+         return null;
 
       return createEntityManagerFactory(driver);
    }
@@ -67,8 +75,9 @@ public class DatabaseResources
     * {@link SimpleConfig} configuration for database, user and password.
     * 
     * This method fetches the required parameters from the global
-    * {@link SimpleConfig} configuration, using {@link DriverType#getConfigPrefix()}
-    * as prefix for the configuration options.
+    * {@link SimpleConfig} configuration, using
+    * {@link DriverType#getConfigPrefix()} as prefix for the configuration
+    * options.
     * 
     * @param driver - the database driver to use.
     * 
@@ -88,12 +97,14 @@ public class DatabaseResources
 
       final String location = host.isEmpty() ? dbname : host + '/' + dbname;
 
-      return createEntityManagerFactory(driver, location, user, passwd);
+      return createEntityManagerFactory("default", driver, location, user, passwd);
    }
 
    /**
     * Create an entity manager factory.
     * 
+    * @param persistenceUnitName - the name of the persistence unit, e.g.
+    *           "default".
     * @param driver - the database driver to use.
     * @param location - the name of the database or host/database.
     * @param user - the database connect user.
@@ -103,8 +114,8 @@ public class DatabaseResources
     * 
     * @see {@link #setEntityManagerFactory}
     */
-   static public EntityManagerFactory createEntityManagerFactory(DriverType driver, String location, String user,
-         String password)
+   static public EntityManagerFactory createEntityManagerFactory(final String persistenceUnitName, DriverType driver,
+         String location, String user, String password)
    {
       final String url = driver.getConnectURL(location);
       Logger.getLogger(DatabaseResources.class).info("Connecting: " + url);
@@ -114,18 +125,19 @@ public class DatabaseResources
       props.setProperty("javax.persistence.jdbc.url", url);
       props.setProperty("javax.persistence.jdbc.user", user);
       props.setProperty("javax.persistence.jdbc.password", password);
-      // props.setProperty("eclipselink.logging.level", "FINEST");
       props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
 
       props.setProperty("hsqldb.default_table_type", "cached");
 
       try
       {
-         return Persistence.createEntityManagerFactory("default", props);
+         return Persistence.createEntityManagerFactory(persistenceUnitName, props);
       }
       catch (PersistenceException e)
       {
-         System.err.println("Cannot create entity manager factory: " + e.getMessage());
+         Logger.getLogger(DatabaseResources.class).error(
+               "Cannot create entity manager factory for persistence-unit \"" + persistenceUnitName + "\": "
+                     + e.getMessage());
          throw e;
       }
    }
@@ -167,5 +179,39 @@ public class DatabaseResources
          entityManagerFactory.close();
          entityManagerFactory = null;
       }
+   }
+
+   /**
+    * Create a {@link Liquibase} database migrator for migrating a database.
+    * 
+    * @param changeLogFile - the name of the Liquibase change-log file.
+    * @param driverType - the database driver to use.
+    * @param location - the name of the database or host/database.
+    * @param user - the database connect user.
+    * @param password - the database connect password.
+    * 
+    * @return The created {@link Liquibase} object.
+    */
+   public static Liquibase createMigrator(String changeLogFile, DriverType driver, String location, String user,
+         String password) throws Exception
+   {
+      final Driver dbDriver = (Driver) ClassLoader.getSystemClassLoader().loadClass(driver.className).newInstance();
+
+      final String url = driver.getConnectURL(location);
+      Logger.getLogger(DatabaseResources.class).info("Connecting: " + url);
+
+      final Properties props = new Properties();
+      props.setProperty("javax.persistence.jdbc.url", url);
+      props.setProperty("javax.persistence.jdbc.user", user);
+      props.setProperty("javax.persistence.jdbc.password", password);
+      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
+
+      props.setProperty("hsqldb.default_table_type", "cached");
+
+      final Connection con = dbDriver.connect(url, props);
+      final Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(con);
+
+      final Liquibase liquibase = new Liquibase(changeLogFile, new ClassLoaderFileOpener(), database);
+      return liquibase;
    }
 }

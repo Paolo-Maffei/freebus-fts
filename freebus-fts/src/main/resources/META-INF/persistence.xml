@@ -41,4 +41,9 @@
   </properties>
  </persistence-unit>
 
+ <persistence-unit name="connect-test">
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINE" />
+ </persistence-unit>
+
 </persistence>

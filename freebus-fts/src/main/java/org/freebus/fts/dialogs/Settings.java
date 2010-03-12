@@ -92,7 +92,7 @@ public final class Settings extends JDialog
    /**
     * Add a settings page to the settings dialog.
     */
-   protected void addSettingsPage(SettingsPage page)
+   private void addSettingsPage(SettingsPage page)
    {
       pages.add(page);
       tabbedPane.addTab(page.getTitle(), page);
@@ -101,7 +101,7 @@ public final class Settings extends JDialog
    /**
     * Apply the changes to the configuration and close the dialog.
     */
-   protected void accepted()
+   private void accepted()
    {
       for (SettingsPage page: pages)
          page.apply();
@@ -113,7 +113,7 @@ public final class Settings extends JDialog
    /**
     * Revert any changes to the configuration and close the dialog.
     */
-   protected void rejected()
+   private void rejected()
    {
       for (SettingsPage page: pages)
          page.revert();

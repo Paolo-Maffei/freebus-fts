@@ -12,9 +12,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JSeparator;
 
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.fts.persistence.db.DriverClass;
 import org.freebus.fts.persistence.db.DriverType;
 
@@ -31,12 +31,12 @@ public final class DatabasePage extends SettingsPage
    /**
     * Internal class for the database-driver selection combo-box.
     */
-   protected static class DriverTypeItem
+   private static class DriverTypeItem
    {
       private final DriverType type;
       private final String label;
       
-      public DriverTypeItem(final DriverType type, final String label)
+      private DriverTypeItem(final DriverType type, final String label)
       {
          this.type = type;
          this.label = label;
@@ -146,7 +146,7 @@ public final class DatabasePage extends SettingsPage
     * Called when a connection type is selected. Show the connection-details
     * widget.
     */
-   protected void showConnectionDetails()
+   private void showConnectionDetails()
    {
       final int selected = cboConnectionType.getSelectedIndex();
 
@@ -158,7 +158,7 @@ public final class DatabasePage extends SettingsPage
     * @return the connection type of the selected item in the connection-type
     *         combo-box.
     */
-   protected DriverType getSelectedDriverType()
+   private DriverType getSelectedDriverType()
    {
       return ((DriverTypeItem) cboConnectionType.getSelectedItem()).getType();
    }

@@ -22,7 +22,7 @@ import org.freebus.fts.persistence.db.DriverType;
 /**
  * Abstract base class for database-driver specific settings pages.
  */
-public abstract class DatabaseDriverPage extends JPanel
+abstract class DatabaseDriverPage extends JPanel
 {
    private static final long serialVersionUID = -4422819869584669896L;
 

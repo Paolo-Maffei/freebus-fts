@@ -12,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.knxcomm.KNXConnectionType;
 
 /**
@@ -26,7 +26,7 @@ public final class BusInterfacePage extends SettingsPage
    private final JComboBox cboConnectionType;
    private final SerialBusInterface cfgSerial;
    private final EibdBusInterface cfgEibd;
-   final JPanel cfgNone;
+   private final JPanel cfgNone;
 
    /**
     * Create a bus-interface settings page.
@@ -117,7 +117,7 @@ public final class BusInterfacePage extends SettingsPage
    /**
     * Called when a connection type is selected. Show the connection-details widget.
     */
-   protected void showConnectionDetails()
+   private void showConnectionDetails()
    {
       final KNXConnectionType type = getSelectedConnectionType();
       
@@ -129,7 +129,7 @@ public final class BusInterfacePage extends SettingsPage
    /**
     * @return the connection type of the selected item in the connection-type combobox.
     */
-   protected KNXConnectionType getSelectedConnectionType()
+   private KNXConnectionType getSelectedConnectionType()
    {
       return KNXConnectionType.values()[cboConnectionType.getSelectedIndex()];
    }

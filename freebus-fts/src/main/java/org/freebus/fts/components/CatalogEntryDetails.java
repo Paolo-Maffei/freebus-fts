@@ -87,7 +87,7 @@ public final class CatalogEntryDetails extends JPanel
    }
 
    /**
-    * Set the {@link ProductsFactory} products-factory that is used for accessing details
+    * Set the {@link ProductsFactory} org.freebus.fts.products-factory that is used for accessing details
     * about a catalog entry.
     */
    public void setProductsFactory(ProductsFactory productsFactory)

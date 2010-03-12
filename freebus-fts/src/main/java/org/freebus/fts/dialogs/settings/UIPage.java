@@ -18,10 +18,10 @@ import javax.swing.UnsupportedLookAndFeelException;
 import javax.swing.UIManager.LookAndFeelInfo;
 
 import org.freebus.fts.MainWindow;
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.persistence.SimpleConfig;
 
 /**
  * Settings page for user interface settings.
@@ -35,11 +35,11 @@ public final class UIPage extends SettingsPage
    /**
     * Internal class for look-and-feel combo box entries
     */
-   static class LookAndFeelItem implements Comparable<LookAndFeelItem>
+   private static class LookAndFeelItem implements Comparable<LookAndFeelItem>
    {
-      public final LookAndFeelInfo info;
+      private final LookAndFeelInfo info;
 
-      public LookAndFeelItem(LookAndFeelInfo info)
+      private LookAndFeelItem(LookAndFeelInfo info)
       {
          this.info = info;
       }
@@ -149,7 +149,7 @@ public final class UIPage extends SettingsPage
    /**
     * Called when the user selects a look-and-feel.
     */
-   protected void lookAndFeelSelected(final LookAndFeelItem item)
+   private void lookAndFeelSelected(final LookAndFeelItem item)
    {
       SwingUtilities.invokeLater(new Runnable()
       {

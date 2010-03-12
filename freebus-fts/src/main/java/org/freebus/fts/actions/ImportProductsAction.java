@@ -14,7 +14,7 @@ import org.freebus.fts.pages.ProductsImportBrowser;
 import org.freebus.fts.utils.VdxFileFilter;
 
 /**
- * Import products from of a VD_ file into the FTS database.
+ * Import org.freebus.fts.products from of a VD_ file into the FTS database.
  */
 public final class ImportProductsAction extends BasicAction
 {
@@ -57,7 +57,7 @@ public final class ImportProductsAction extends BasicAction
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, "Failed to open products browser");
+         Dialogs.showExceptionDialog(e, "Failed to open org.freebus.fts.products browser");
       }
    }
 }

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Application;
-import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 

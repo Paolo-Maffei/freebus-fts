@@ -2,8 +2,8 @@ package org.freebus.fts.jobs;
 
 import java.io.IOException;
 
+import org.freebus.fts.common.address.Address;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.telegram.Address;
 
 public class ReadDeviceStatusJob extends SingleDeviceJob
 {

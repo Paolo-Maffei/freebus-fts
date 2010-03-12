@@ -26,7 +26,7 @@ public class AddVirtualDeviceBrowser extends ProductsBrowser
    private ProjectController controller;
 
    /**
-    * Create a products browser. 
+    * Create a org.freebus.fts.products browser. 
     */
    public AddVirtualDeviceBrowser()
    {

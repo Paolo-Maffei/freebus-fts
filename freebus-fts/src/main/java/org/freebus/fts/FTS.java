@@ -11,11 +11,11 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.Environment;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.LookAndFeelManager;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.persistence.Environment;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
@@ -27,7 +27,7 @@ import org.freebus.knxcomm.internal.JarLoader;
 public final class FTS implements Runnable
 {
    // Use Config.getInstance() to access the global configuration object
-   protected static final Config globalConfig;
+   private static final Config globalConfig;
 
    private static LookAndFeelManager lafLoader;
 
@@ -66,7 +66,7 @@ public final class FTS implements Runnable
    /**
     * Initialize global components.
     */
-   public void init()
+   private void init()
    {
       final Config cfg = Config.getInstance();
 
@@ -95,18 +95,13 @@ public final class FTS implements Runnable
       }
    }
 
-   /**
-    * Cleanup global components.
-    */
-   public void cleanup()
-   {
-   }
+   
 
    /**
     * Load all JARs from the plugins directory pluginsDir. The method silently
     * returns if the plugins directory does not exist.
     */
-   static public void loadPlugins(String pluginsDir)
+   static private void loadPlugins(String pluginsDir)
    {
       final Logger logger = Logger.getLogger(FTS.class);
 

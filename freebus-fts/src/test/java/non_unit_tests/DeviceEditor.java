@@ -12,12 +12,12 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.freebus.fts.common.Environment;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.core.LookAndFeelManager;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.persistence.Environment;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
@@ -106,7 +106,7 @@ public class DeviceEditor
       if (virtualDevices.isEmpty())
       {
          JOptionPane.showMessageDialog(null,
-               "No virtual devices found.\n\nPlease import products from vd_\nfiles with FTS and try again.",
+               "No virtual devices found.\n\nPlease import org.freebus.fts.products from vd_\nfiles with FTS and try again.",
                "Error - " + appTitle, JOptionPane.ERROR_MESSAGE);
          System.exit(1);
       }

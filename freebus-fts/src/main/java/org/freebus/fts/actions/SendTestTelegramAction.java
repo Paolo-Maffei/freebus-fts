@@ -2,13 +2,13 @@ package org.freebus.fts.actions;
 
 import java.awt.event.ActionEvent;
 
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.telegram.Application;
-import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;

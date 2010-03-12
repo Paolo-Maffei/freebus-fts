@@ -14,18 +14,18 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.freebus.fts.common.Environment;
+import org.freebus.fts.common.Rot13;
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.persistence.Environment;
-import org.freebus.fts.persistence.Rot13;
-import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 
 /**
  * A widget for configuring a serial bus interface connection.
  */
-public final class FileBasedDatabase extends DatabaseDriverPage
+final class FileBasedDatabase extends DatabaseDriverPage
 {
    private static final long serialVersionUID = 789090230895L;
    private final JTextField inpDatabase, inpUser, inpPasswd;
@@ -34,7 +34,7 @@ public final class FileBasedDatabase extends DatabaseDriverPage
    /**
     * Create a new serial bus-interface configuration widget.
     */
-   public FileBasedDatabase(DriverType driverType)
+   protected FileBasedDatabase(DriverType driverType)
    {
       super(driverType);
       configKey = driverType.getConfigPrefix();
@@ -102,11 +102,13 @@ public final class FileBasedDatabase extends DatabaseDriverPage
       final SimpleConfig cfg = Config.getInstance();
 
       String val = cfg.getStringValue(configKey + ".database");
-      if (val.isEmpty()) val = Environment.getAppDir() + "/db";
+      if (val.isEmpty())
+         val = Environment.getAppDir() + "/db";
       inpDatabase.setText(val);
 
       val = cfg.getStringValue(configKey + ".user");
-      if (val.isEmpty()) val = "sa";
+      if (val.isEmpty())
+         val = "sa";
       inpUser.setText(val);
 
       inpPasswd.setText(Rot13.rotate(cfg.getStringValue(configKey + ".passwd")));
@@ -115,10 +117,11 @@ public final class FileBasedDatabase extends DatabaseDriverPage
    /**
     * Open a file chooser and let the user select the database file.
     */
-   protected void selectDatabase()
+   private void selectDatabase()
    {
       String cur = inpDatabase.getText();
-      if (cur.isEmpty()) cur = Environment.getAppDir() + "/db";
+      if (cur.isEmpty())
+         cur = Environment.getAppDir() + "/db";
 
       final JFileChooser dlg = new JFileChooser();
       dlg.setSelectedFile(new File(cur));
@@ -130,12 +133,14 @@ public final class FileBasedDatabase extends DatabaseDriverPage
    /**
     * Try to open a database connection.
     */
+   @Override
    protected void connectNow() throws Exception
    {
-      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(getDriverType(), inpDatabase.getText(),
-            inpUser.getText(), inpPasswd.getText());
+      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("connect-test", getDriverType(),
+            inpDatabase.getText(), inpUser.getText(), inpPasswd.getText());
 
       emf.createEntityManager().close();
+      emf.close();
    }
 
    /**

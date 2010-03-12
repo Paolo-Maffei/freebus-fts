@@ -1,0 +1,14 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ <modelVersion>4.0.0</modelVersion>
+ <parent>
+  <artifactId>freebus-fts-parent</artifactId>
+  <groupId>org.freebus.fts</groupId>
+  <version>0.1-SNAPSHOT</version>
+  <relativePath>..</relativePath>
+ </parent>
+ <groupId>org.freebus.fts</groupId>
+ <artifactId>freebus-fts-common</artifactId>
+ <name>freebus-fts-common</name>
+ <description>FTS common components</description>
+</project>

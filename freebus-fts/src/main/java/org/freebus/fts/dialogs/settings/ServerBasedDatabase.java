@@ -9,17 +9,17 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.freebus.fts.common.Rot13;
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.persistence.Rot13;
-import org.freebus.fts.persistence.SimpleConfig;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 
 /**
  * A widget for configuring a database connection to a database server.
  */
-public final class ServerBasedDatabase extends DatabaseDriverPage
+final class ServerBasedDatabase extends DatabaseDriverPage
 {
    private static final long serialVersionUID = -221274503273310361L;
    private final JTextField inpHost, inpDatabase, inpUser, inpPasswd;
@@ -28,7 +28,7 @@ public final class ServerBasedDatabase extends DatabaseDriverPage
    /**
     * Create a new serial bus-interface configuration widget.
     */
-   public ServerBasedDatabase(DriverType driverType)
+   protected ServerBasedDatabase(DriverType driverType)
    {
       super(driverType);
       configKey = driverType.getConfigPrefix();
@@ -95,26 +95,30 @@ public final class ServerBasedDatabase extends DatabaseDriverPage
       final SimpleConfig cfg = Config.getInstance();
 
       String val = cfg.getStringValue(configKey + ".host");
-      if (val.isEmpty()) val = "localhost";
+      if (val.isEmpty())
+         val = "localhost";
       inpHost.setText(val);
 
       inpUser.setText(cfg.getStringValue(configKey + ".user"));
       inpPasswd.setText(Rot13.rotate(cfg.getStringValue(configKey + ".passwd")));
 
       val = cfg.getStringValue(configKey + ".database");
-      if (val.isEmpty()) val = "fts";
+      if (val.isEmpty())
+         val = "fts";
       inpDatabase.setText(val);
    }
 
    /**
     * Try to open a database connection.
     */
+   @Override
    protected void connectNow() throws Exception
    {
-      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(getDriverType(), inpHost.getText() + '/'
-            + inpDatabase.getText(), inpUser.getText(), inpPasswd.getText());
+      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("connect-test", getDriverType(),
+            inpHost.getText() + '/' + inpDatabase.getText(), inpUser.getText(), inpPasswd.getText());
 
       emf.createEntityManager().close();
+      emf.close();
    }
 
    /**

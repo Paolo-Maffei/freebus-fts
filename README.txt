@@ -16,3 +16,6 @@ fts.sh, je nach System.
 
 Zum selbst übersetzen aus dem Subversion heraus braucht
 man Maven, bzw. das m2eclipse Plugin für Eclipse.
+
+Entwickler, die an FTS arbeiten, sollten README_CODING.txt
+beachten.

@@ -7,14 +7,14 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.persistence.SimpleConfig;
 
 /**
  * A widget for configuring an eibd bus interface connection.
  */
-public final class EibdBusInterface extends JPanel
+final class EibdBusInterface extends JPanel
 {
    private static final long serialVersionUID = 1457255663125616282L;
    private final static String configKey = "knxConnectionEibd";
@@ -74,7 +74,7 @@ public final class EibdBusInterface extends JPanel
    /**
     * Apply the widget's contents to the configuration.
     */
-   public void apply()
+   protected void apply()
    {
       final SimpleConfig cfg = Config.getInstance();
       cfg.put(configKey + ".host", inpHost.getText());

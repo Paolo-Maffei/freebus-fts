@@ -3,11 +3,12 @@ package org.freebus.fts.persistence;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
 
-import org.freebus.fts.persistence.FileBlockReader;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -21,7 +22,7 @@ public class TestFileBlockReader
    public void setUp() throws Exception
    {
       in = new RandomAccessFile("src/test/resources/test-fileblockreader.txt", "r");
-      reader = new FileBlockReader(in, 10);
+      reader = new FileBlockReader(in, 8);
    }
 
    @After
@@ -39,13 +40,20 @@ public class TestFileBlockReader
    }
 
    @Test
-   public void testAtEnd() throws IOException
+   public void testFileBlockReader() throws IOException
+   {
+      assertNotNull(new FileBlockReader(in));
+   }
+
+   @Test
+   public void testAtEndFileSize() throws IOException
    {
       assertFalse(reader.atEnd());
       while (!reader.atEnd())
          reader.read();
 
       assertEquals(in.length(), in.getFilePointer());
+      assertEquals(in.length(), reader.getFileSize());
    }
 
    @Test
@@ -86,6 +94,14 @@ public class TestFileBlockReader
       assertEquals('1', reader.read());
       assertEquals('2', reader.read());
       assertEquals('3', reader.read());
+   }
+
+   @Test
+   public void testReadUntil() throws IOException
+   {
+      while (reader.readUntil('a'))
+         ;
+      assertTrue(reader.atEnd());
    }
 
    @Test

@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
@@ -19,7 +20,6 @@ import org.freebus.knxcomm.emi.PEISwitchMode;
 import org.freebus.knxcomm.emi.PEI_Identify_con;
 import org.freebus.knxcomm.emi.PEI_Identify_req;
 import org.freebus.knxcomm.emi.PEI_Switch_req;
-import org.freebus.knxcomm.telegram.PhysicalAddress;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**

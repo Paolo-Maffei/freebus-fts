@@ -8,7 +8,7 @@ import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.pages.AddVirtualDeviceBrowser;
 
 /**
- * Open a products browser that allows adding devices to the current project.
+ * Open a org.freebus.fts.products browser that allows adding devices to the current project.
  */
 public final class AddDevicesAction extends BasicAction
 {

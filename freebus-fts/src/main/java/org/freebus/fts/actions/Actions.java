@@ -11,10 +11,10 @@ import javax.swing.JToolBar;
  */
 public enum Actions
 {
-   /** Open a products browser that allows adding devices to the current project. */
+   /** Open a org.freebus.fts.products browser that allows adding devices to the current project. */
    ADD_DEVICES(new AddDevicesAction()),
 
-   /** Browse the contents of a VD_ products file. */
+   /** Browse the contents of a VD_ org.freebus.fts.products file. */
    BROWSE_PRODUCTS_VDX(new BrowseProductsVdxAction()),
 
    /** Show the bus-monitor. */
@@ -26,7 +26,7 @@ public enum Actions
    /** Exit the application. */
    EXIT(new ExitAction()),
 
-   /** Import products from of a VD_ file into the FTS database. */
+   /** Import org.freebus.fts.products from of a VD_ file into the FTS database. */
    IMPORT_PRODUCTS(new ImportProductsAction()),
 
    /** Inspect the contents of a VD_ file. */

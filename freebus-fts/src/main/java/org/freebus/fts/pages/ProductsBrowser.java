@@ -60,7 +60,7 @@ import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
- * A browser for a products database.
+ * A browser for a org.freebus.fts.products database.
  */
 public class ProductsBrowser extends AbstractPage
 {
@@ -231,8 +231,8 @@ public class ProductsBrowser extends AbstractPage
    }
 
    /**
-    * Set the object that is displayed. This can bei either a {@link File} for a VD_ products
-    * file, or anything else for FTS' products.
+    * Set the object that is displayed. This can bei either a {@link File} for a VD_ org.freebus.fts.products
+    * file, or anything else for FTS' org.freebus.fts.products.
     */
    @Override
    public void setObject(Object obj)
@@ -257,7 +257,7 @@ public class ProductsBrowser extends AbstractPage
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, "Failed to open products database");
+         Dialogs.showExceptionDialog(e, "Failed to open org.freebus.fts.products database");
       }
       finally
       {
@@ -269,7 +269,7 @@ public class ProductsBrowser extends AbstractPage
    }
 
    /**
-    * @return The products factory that contains the entities of the products that are displayed. 
+    * @return The org.freebus.fts.products factory that contains the entities of the org.freebus.fts.products that are displayed. 
     */
    public ProductsFactory getProductsFactory()
    {

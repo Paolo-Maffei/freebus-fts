@@ -2,7 +2,7 @@ package org.freebus.knxcomm;
 
 import java.io.IOException;
 
-import org.freebus.knxcomm.telegram.PhysicalAddress;
+import org.freebus.fts.common.address.PhysicalAddress;
 
 /**
  * A direct connection to a device on the KNX/EIB bus.

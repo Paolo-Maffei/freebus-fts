@@ -57,7 +57,7 @@ public final class BrowseProductsVdxAction extends BasicAction
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, "Failed to open vdx products browser");
+         Dialogs.showExceptionDialog(e, "Failed to open vdx org.freebus.fts.products browser");
       }
    }
 }

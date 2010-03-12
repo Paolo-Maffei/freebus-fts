@@ -120,7 +120,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    /**
     * Create the menu-bar.
     */
-   protected void createMenuBar()
+   private void createMenuBar()
    {
       final JMenu fileMenu = createJMenu(I18n.getMessage("MainWindow.FileMenu"));
       Actions.NEW_PROJECT.addTo(fileMenu);
@@ -155,7 +155,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    /**
     * Create the tool-bar.
     */
-   protected void createToolBar()
+   private void createToolBar()
    {
       final Container content = getContentPane();
 

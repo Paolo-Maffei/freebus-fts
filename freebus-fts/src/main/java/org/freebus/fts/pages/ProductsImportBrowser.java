@@ -24,7 +24,7 @@ import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.ProductsFactory;
 
 /**
- * A products browser that allows to mark products for import.
+ * A org.freebus.fts.products browser that allows to mark org.freebus.fts.products for import.
  */
 public class ProductsImportBrowser extends ProductsBrowser
 {
@@ -35,7 +35,7 @@ public class ProductsImportBrowser extends ProductsBrowser
    private final Set<VirtualDevice> importDevices = new HashSet<VirtualDevice>();
 
    /**
-    * Create a import-products browser page.
+    * Create a import-org.freebus.fts.products browser page.
     */
    public ProductsImportBrowser()
    {

@@ -4,10 +4,10 @@ import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.telegram.PhysicalAddress;
 
 /**
  * An example program that shows the connected data transfer methods.

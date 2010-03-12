@@ -2,6 +2,10 @@ package org.freebus.knxcomm.telegram;
 
 import java.util.Arrays;
 
+import org.freebus.fts.common.address.Address;
+import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.common.address.PhysicalAddress;
+
 /**
  * A communication data packet as it is sent on the EIB bus.
  * 
