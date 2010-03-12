@@ -36,8 +36,8 @@ public class TestVdxFunctionalEntityService extends ProductsTestCase
       List<FunctionalEntity> ents = funcService.getFunctionalEntities();
       assertNotNull(ents);
       assertEquals(2, ents.size());
-      assertEquals("Eingabe", ents.get(0).getName());
-      assertEquals("Binäreingang, 8fach", ents.get(1).getName());
+      assertEquals("Phys. Sensoren", ents.get(0).getName());
+      assertEquals("Helligkeit und Temperatur", ents.get(1).getName());
       assertEquals(ents.get(0), ents.get(1).getParent());
    }
 
@@ -50,20 +50,20 @@ public class TestVdxFunctionalEntityService extends ProductsTestCase
       assertNotNull(ents);
       assertEquals(0, ents.size());
 
-      final Manufacturer manu4 = manuService.getManufacturer(4);
-      assertNotNull(manu4);
+      final Manufacturer manu = manuService.getManufacturer(1);
+      assertNotNull(manu);
 
-      ents = funcService.getFunctionalEntities(manu4);
+      ents = funcService.getFunctionalEntities(manu);
       assertNotNull(ents);
       assertEquals(2, ents.size());
 
-      assertEquals(funcService.getFunctionalEntity(22804), ents.get(0));
-      assertEquals(funcService.getFunctionalEntity(160234), ents.get(1));
+      assertEquals(funcService.getFunctionalEntity(22482), ents.get(0));
+      assertEquals(funcService.getFunctionalEntity(22536), ents.get(1));
 
-      final Manufacturer manu10 = manuService.getManufacturer(10);
-      assertNotNull(manu10);
+      final Manufacturer manu72 = manuService.getManufacturer(72);
+      assertNotNull(manu72);
 
-      ents = funcService.getFunctionalEntities(manu10);
+      ents = funcService.getFunctionalEntities(manu72);
       assertNotNull(ents);
       assertEquals(0, ents.size());
    }
@@ -74,16 +74,12 @@ public class TestVdxFunctionalEntityService extends ProductsTestCase
       assertNull(funcService.getFunctionalEntity(0));
       assertNull(funcService.getFunctionalEntity(-1));
 
-      FunctionalEntity ent = funcService.getFunctionalEntity(22804);
+      FunctionalEntity ent = funcService.getFunctionalEntity(22482);
       assertNotNull(ent);
-      assertEquals(22804, ent.getId());
+      assertEquals(22482, ent.getId());
 
-      ent = funcService.getFunctionalEntity(160234);
+      ent = funcService.getFunctionalEntity(22536);
       assertNotNull(ent);
-      assertEquals(160234, ent.getId());
-
-      ent = funcService.getFunctionalEntity(22804);
-      assertNotNull(ent);
-      assertEquals(22804, ent.getId());
+      assertEquals(22536, ent.getId());
    }
 }

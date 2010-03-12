@@ -38,7 +38,7 @@ public abstract class ProductsTestCase extends PersistenceTestCase
    {
       if (vdxProductsFactory == null)
       {
-         vdxProductsFactory = ProductsManager.getFactory(new File("src/test/resources/230V in LPC_.vd_"),
+         vdxProductsFactory = ProductsManager.getFactory(new File("src/test/resources/test-device.vd_"),
                persistenceUnitName);
       }
 

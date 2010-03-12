@@ -34,16 +34,16 @@ public class TestVdxVirtualDeviceService extends ProductsTestCase
       assertNull(virtDevService.getVirtualDevice(-1));
       assertNull(virtDevService.getVirtualDevice(0));
 
-      final VirtualDevice virtDev = virtDevService.getVirtualDevice(160245);
+      final VirtualDevice virtDev = virtDevService.getVirtualDevice(23652);
 
       assertNotNull(virtDev);
-      assertEquals(160245, virtDev.getId());
+      assertEquals(23652, virtDev.getId());
 
       assertNotNull(virtDev.getCatalogEntry());
-      assertEquals(160239, virtDev.getCatalogEntry().getId());
+      assertEquals(23101, virtDev.getCatalogEntry().getId());
 
       assertNotNull(virtDev.getFunctionalEntity());
-      assertEquals(160234, virtDev.getFunctionalEntity().getId());
+      assertEquals(22536, virtDev.getFunctionalEntity().getId());
    }
 
    @Test
@@ -53,7 +53,7 @@ public class TestVdxVirtualDeviceService extends ProductsTestCase
 
       assertNotNull(virtDevs);
       assertEquals(1, virtDevs.size());
-      assertEquals(160245, virtDevs.get(0).getId());
+      assertEquals(23652, virtDevs.get(0).getId());
    }
 
    @Test
@@ -65,7 +65,7 @@ public class TestVdxVirtualDeviceService extends ProductsTestCase
       assertNotNull(virtDevs);
       assertEquals(0, virtDevs.size());
 
-      final FunctionalEntity funcEnt = funcEntService.getFunctionalEntity(160234);
+      final FunctionalEntity funcEnt = funcEntService.getFunctionalEntity(22536);
       assertNotNull(funcEnt);
 
       virtDevs = virtDevService.getVirtualDevices(new FunctionalEntity[] { new FunctionalEntity() });
@@ -75,7 +75,7 @@ public class TestVdxVirtualDeviceService extends ProductsTestCase
       virtDevs = virtDevService.getVirtualDevices(new FunctionalEntity[] { funcEnt });
       assertNotNull(virtDevs);
       assertEquals(1, virtDevs.size());
-      assertEquals(160245, virtDevs.get(0).getId());
+      assertEquals(23652, virtDevs.get(0).getId());
    }
 
 }

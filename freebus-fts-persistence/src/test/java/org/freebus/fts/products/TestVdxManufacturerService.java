@@ -25,15 +25,15 @@ public class TestVdxManufacturerService extends ProductsTestCase
    @Test
    public final void getManufacturer()
    {
-      Manufacturer manu = manuService.getManufacturer(4);
+      Manufacturer manu = manuService.getManufacturer(1);
       assertNotNull(manu);
-      assertEquals(4, manu.getId());
-      assertEquals("Albrecht Jung", manu.getName());
+      assertEquals(1, manu.getId());
+      assertEquals("Siemens", manu.getName());
 
-      manu = manuService.getManufacturer(10);
+      manu = manuService.getManufacturer(72);
       assertNotNull(manu);
-      assertEquals(10, manu.getId());
-      assertEquals("INSTA ELEKTRO", manu.getName());
+      assertEquals(72, manu.getId());
+      assertEquals("Theben AG", manu.getName());
    }
 
    @Test
@@ -42,8 +42,8 @@ public class TestVdxManufacturerService extends ProductsTestCase
       List<Manufacturer> manus = manuService.getManufacturers();
       assertNotNull(manus);
       assertEquals(2, manus.size());
-      assertEquals("Albrecht Jung", manus.get(0).getName());
-      assertEquals("INSTA ELEKTRO", manus.get(1).getName());
+      assertEquals("Siemens", manus.get(0).getName());
+      assertEquals("Theben AG", manus.get(1).getName());
    }
 
    @Test

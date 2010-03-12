@@ -20,7 +20,7 @@ import org.junit.Test;
 
 public class TestProductsImporter extends ProductsTestCase
 {
-   private static final File productsFile = new File("src/test/resources/230V in LPC_.vd_");
+   private static final File productsFile = new File("src/test/resources/test-device.vd_");
 
    @Before
    public final void setUp()
@@ -63,15 +63,14 @@ public class TestProductsImporter extends ProductsTestCase
       assertEquals(vdxDev.getFunctionalEntity(), jpaDev.getFunctionalEntity());
       assertEquals(vdxDev.getCatalogEntry(), jpaDev.getCatalogEntry());
 
-      final Parameter param = jpaDev.getProgram().getParameter(161483);
-      assertEquals(9001, param.getDisplayOrder());
+      final Parameter param = jpaDev.getProgram().getParameter(42854);
+      assertEquals(150, param.getDisplayOrder());
 
       final ParameterType paramType = param.getParameterType();
-      assertEquals("Funktion_Auswahl", paramType.getName());
+      assertEquals("Anzahl der Temp. Schwellen", paramType.getName());
       assertEquals(ParameterAtomicType.ENUM, paramType.getAtomicType());
 
       final Set<ParameterValue> values = paramType.getValues();
-      assertEquals(5, values.size());
-//      assertTrue(values.iterator().next().getDisplayOrder() != 0);
+      assertEquals(3, values.size());
    }
 }
