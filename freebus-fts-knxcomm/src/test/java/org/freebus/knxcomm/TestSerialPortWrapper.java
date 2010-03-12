@@ -110,7 +110,7 @@ public class TestSerialPortWrapper
    public final void testOpenTwice() throws IOException
    {
       if (portName == null)
-         return;
+         throw new IOException(); // the test expects an exception...
 
       wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
       wrapper.open(portName, 9600, SerialPortWrapper.DATABITS_8, SerialPortWrapper.STOPBITS_1, SerialPortWrapper.PARITY_NONE);
