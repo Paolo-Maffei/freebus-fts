@@ -1,16 +1,14 @@
 package org.freebus.fts.project;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
-import org.freebus.fts.project.Area;
-import org.freebus.fts.project.Device;
-import org.freebus.fts.project.Line;
 import org.junit.Test;
 
 public class TestLine
@@ -44,6 +42,7 @@ public class TestLine
    public final void testGetSetName()
    {
       final Line line = new Line();
+      assertEquals("", line.getName());
 
       line.setName("line-1");
       assertEquals("line-1", line.getName());
@@ -52,6 +51,9 @@ public class TestLine
       assertEquals("line-2", line.getName());
 
       line.setName("");
+      assertEquals("", line.getName());
+
+      line.setName(null);
       assertEquals("", line.getName());
    }
 
@@ -90,7 +92,7 @@ public class TestLine
       final Line line = new Line();
       assertNotNull(line.getDevices());
 
-      Set<Device> newDevices = new HashSet<Device>();
+      List<Device> newDevices = new Vector<Device>();
       line.setDevices(newDevices);
       assertEquals(newDevices, line.getDevices());
    }
@@ -117,5 +119,39 @@ public class TestLine
       final Device device = new Device();
       line.add(device);
       line.add(device);
+   }
+
+   @Test
+   public final void testEquals()
+   {
+      final Line line1 = new Line();
+      final Line line2 = new Line();
+
+      assertTrue(line1.equals(line1));
+      assertTrue(line1.equals(line2));
+      assertTrue(line2.equals(line1));
+
+      line1.add(new Device());
+      assertFalse(line1.equals(line2));
+      assertFalse(line2.equals(line1));
+
+      line2.add(new Device());
+      assertTrue(line1.equals(line2));
+      assertTrue(line2.equals(line1));
+
+      line1.setName("line-1");
+      line2.setName("line-2");
+      assertFalse(line1.equals(line2));
+      assertFalse(line2.equals(line1));
+
+      line1.setAddress(1);
+      line2.setAddress(2);
+      assertFalse(line1.equals(line2));
+      assertFalse(line2.equals(line1));
+
+      line1.setId(1);
+      line2.setId(2);
+      assertFalse(line1.equals(line2));
+      assertFalse(line2.equals(line1));
    }
 }

@@ -1,4 +1,4 @@
-package org.freebus.fts.products;
+package org.freebus.fts.products.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -36,17 +37,19 @@ public class Building
    @Column(name = "building_name", nullable = false)
    private String name = "";
 
-   @Column(name = "description")
-   private String description;
+   @Column(name = "description", nullable = false)
+   private String description = "";
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "building")
-   private Set<Room> rooms = new HashSet<Room>();
+   @OrderBy("id")
+   private List<Room> rooms = new Vector<Room>();
 
    /**
     * Create a new building.
     */
    public Building()
    {
+      this(0);
    }
 
    /**
@@ -102,7 +105,7 @@ public class Building
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -118,22 +121,40 @@ public class Building
     */
    public void setDescription(String description)
    {
-      this.description = description;
+      this.description = description == null ? "" : description;
    }
 
    /**
     * Add a room to the building.
+    *
+    * @param room - the room to add.
+    *
+    * @throws IllegalArgumentException - If the room was already added to the building.
     */
    public void add(Room room)
    {
+      if (rooms.contains(room))
+         throw new IllegalArgumentException("Room was previously added: " + room);
+
       room.setBuilding(this);
       rooms.add(room);
    }
 
    /**
+    * Remove a room from the building.
+    *
+    * @param room - the room to remove.
+    */
+   public void remove(Room room)
+   {
+      room.setBuilding(null);
+      rooms.remove(room);
+   }
+
+   /**
     * @return the rooms.
     */
-   public Set<Room> getRooms()
+   public List<Room> getRooms()
    {
       return rooms;
    }
@@ -141,7 +162,7 @@ public class Building
    /**
     * @param rooms the rooms to set.
     */
-   public void setRooms(Set<Room> rooms)
+   public void setRooms(List<Room> rooms)
    {
       this.rooms = rooms;
    }
@@ -152,11 +173,14 @@ public class Building
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof Building))
          return false;
 
       final Building oo = (Building) o;
-      return (id == oo.id && name == oo.name && description == oo.description && rooms.equals(oo.rooms));
+      return id == oo.id && name.equals(oo.name) && description.equals(oo.description) && rooms.equals(oo.rooms);
    }
 
    /**
@@ -174,6 +198,6 @@ public class Building
    @Override
    public String toString()
    {
-      return getName();
+      return name;
    }
 }

@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -32,7 +33,7 @@ public class MidGroup
    @Column(name = "mid_group_id", nullable = false)
    private int id;
 
-   @Column(name = "mid_group_name", nullable = true)
+   @Column(name = "mid_group_name", nullable = false)
    private String name = "";
 
    @Column(name = "mid_group_address", nullable = false)
@@ -43,7 +44,8 @@ public class MidGroup
    private MainGroup mainGroup;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "midGroup")
-   private Set<SubGroup> subGroups = new HashSet<SubGroup>();
+   @OrderBy("address")
+   private List<SubGroup> subGroups = new Vector<SubGroup>();
 
    /**
     * Create a new mid-group.
@@ -89,7 +91,7 @@ public class MidGroup
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -126,9 +128,16 @@ public class MidGroup
 
    /**
     * Add a sub-group to the mid-group.
+    *
+    * @param group - the sub-group to add
+    *
+    * @throws IllegalArgumentException - if the mid-group already contains the sub-group.
     */
    public void add(SubGroup group)
    {
+      if (subGroups.contains(group))
+         throw new IllegalArgumentException("Sub-group was previously added: " + group);
+
       group.setMidGroup(this);
       subGroups.add(group);
    }
@@ -136,7 +145,7 @@ public class MidGroup
    /**
     * @return the sub-groups container.
     */
-   public Set<SubGroup> getSubGroups()
+   public List<SubGroup> getSubGroups()
    {
       return subGroups;
    }
@@ -144,7 +153,7 @@ public class MidGroup
    /**
     * Set the sub-groups container.
     */
-   public void setSubGroups(Set<SubGroup> groups)
+   public void setSubGroups(List<SubGroup> groups)
    {
       this.subGroups = groups;
    }
@@ -155,11 +164,20 @@ public class MidGroup
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof MidGroup))
          return false;
 
       final MidGroup oo = (MidGroup) o;
-      return (id == oo.id && address == oo.address && name == oo.name && subGroups.equals(oo.subGroups));
+      if (id != oo.id || address != oo.address || !name.equals(oo.name))
+         return false;
+
+      if (!subGroups.equals(oo.subGroups))
+         return false;
+
+      return true;
    }
 
    /**

@@ -1,7 +1,5 @@
 package org.freebus.fts.products;
 
-import java.io.Serializable;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -19,23 +17,21 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "communication_object")
-public class CommunicationObject implements Serializable
+public class CommunicationObject
 {
-   private static final long serialVersionUID = 3402103922389574903L;
-
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenCommunicationObjectId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "object_id", nullable = false)
    private int id;
 
-   @Column(name = "object_name")
-   private String name;
-   
+   @Column(name = "object_name", nullable = false)
+   private String name = "";
+
    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "program_id", nullable = false)
    private Program program;
-   
+
    @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "parameter_id", nullable = true)
    private Parameter parameter;
@@ -54,19 +50,19 @@ public class CommunicationObject implements Serializable
 
    @Column(name = "object_transenabled", nullable = false)
    private boolean transEnabled;
-   
+
    @Column(name = "display_order")
    private int displayOrder;
-   
+
    @Column(name = "parent_parameter_value")
    private int parentParameterValue;
 
    @Column(name = "object_description")
    private String description;
-   
+
    @Column(name = "object_type")
    private int objectType;
-   
+
    @Column(name = "object_priority")
    private int objectPriority;
 
@@ -102,7 +98,7 @@ public class CommunicationObject implements Serializable
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**

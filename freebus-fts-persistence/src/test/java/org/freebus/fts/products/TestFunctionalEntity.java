@@ -15,9 +15,10 @@ public class TestFunctionalEntity extends TestCase
       assertNotNull(fun);
 
       assertEquals(0, fun.getId());
-      assertEquals(null, fun.getName());
-      assertEquals(null, fun.getDescription());
+      assertEquals("", fun.getName());
+      assertEquals("", fun.getDescription());
       assertEquals(null, fun.getManufacturer());
+      assertNotNull(fun.toString());
    }
 
    @Test
@@ -47,5 +48,32 @@ public class TestFunctionalEntity extends TestCase
 
       fun.setParent(null);
       assertEquals(null, fun.getParent());
+   }
+
+   @Test
+   public final void testEquals()
+   {
+      final FunctionalEntity fun1 = new FunctionalEntity();
+      final FunctionalEntity fun2 = new FunctionalEntity();
+
+      assertFalse(fun1.equals(null));
+      assertFalse(fun1.equals(new Object()));
+
+      assertTrue(fun1.equals(fun1));
+      assertTrue(fun1.equals(fun2));
+      assertTrue(fun2.equals(fun1));
+      assertEquals(fun1.hashCode(), fun2.hashCode());
+
+      fun1.setManufacturer(new Manufacturer(1, "manu-1"));
+      assertFalse(fun1.equals(fun2));
+      assertFalse(fun2.equals(fun1));
+
+      fun2.setManufacturer(new Manufacturer(1, "manu-1"));
+      assertTrue(fun1.equals(fun2));
+      assertTrue(fun2.equals(fun1));
+
+      fun1.setId(1);
+      assertFalse(fun1.equals(fun2));
+      assertFalse(fun2.equals(fun1));
    }
 }

@@ -1,13 +1,9 @@
 package org.freebus.fts.project;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import junit.framework.TestCase;
-
-import org.freebus.fts.project.MainGroup;
-import org.freebus.fts.project.MidGroup;
-import org.freebus.fts.project.Project;
 
 public class TestMainGroup extends TestCase
 {
@@ -60,6 +56,7 @@ public class TestMainGroup extends TestCase
    public final void testGetSetName()
    {
       final MainGroup mainGroup = new MainGroup();
+      assertEquals("", mainGroup.getName());
 
       mainGroup.setName("mainGroup-1");
       assertEquals("mainGroup-1", mainGroup.getName());
@@ -68,6 +65,9 @@ public class TestMainGroup extends TestCase
       assertEquals("mainGroup-2", mainGroup.getName());
 
       mainGroup.setName("");
+      assertEquals("", mainGroup.getName());
+
+      mainGroup.setName(null);
       assertEquals("", mainGroup.getName());
    }
 
@@ -90,7 +90,7 @@ public class TestMainGroup extends TestCase
    {
       final MainGroup mainGroup = new MainGroup();
 
-      final Set<MidGroup> newMidGroups = new HashSet<MidGroup>();
+      final List<MidGroup> newMidGroups = new Vector<MidGroup>();
       mainGroup.setMidGroups(newMidGroups);
 
       assertEquals(newMidGroups, mainGroup.getMidGroups());
@@ -112,7 +112,7 @@ public class TestMainGroup extends TestCase
       assertEquals(1, mainGroup.getMidGroups().size());
 
       mainGroup.add(new MidGroup(3));
-      assertEquals(2, mainGroup.getMidGroups().size());      
+      assertEquals(2, mainGroup.getMidGroups().size());
    }
 
    public final void testEquals()

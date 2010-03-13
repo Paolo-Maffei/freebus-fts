@@ -28,8 +28,8 @@ public class Parameter
    @Column(name = "parameter_id", nullable = false)
    private int id;
 
-   @Column(name = "parameter_name")
-   private String name;
+   @Column(name = "parameter_name", nullable = false)
+   private String name = "";
 
    @Column(name = "parameter_label")
    private String label;
@@ -123,7 +123,7 @@ public class Parameter
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -258,9 +258,9 @@ public class Parameter
     * Lazily acquire all child parameters. Requires that the owning program is
     * set. Calls {@link Program#updateChildParameters()} to update the child
     * parameters, if required.
-    * 
+    *
     * @return The set of child parameters.
-    * 
+    *
     * @see {@link #getProgram()}, {@link #setProgram(Program)}.
     */
    public Set<Parameter> getChildren()
@@ -387,8 +387,8 @@ public class Parameter
    /**
     * Returns the default value. Depending on the atomic type of
     * the parameter value this can be an {@link Integer}, {@link String},
-    * {@link Double} or <code>null</code>.
-    * 
+    * or <code>null</code>.
+    *
     * @return the default value.
     */
    public Object getDefault()
@@ -403,8 +403,6 @@ public class Parameter
          return defaultLong;
       else if (atomicType == ParameterAtomicType.STRING)
          return defaultString;
-//      else if (atomicType == ParameterAtomicType.DOUBLE)
-//         return defaultDouble;
 
       return null;
    }
@@ -515,7 +513,7 @@ public class Parameter
       if ((program == null && oo.program != null) || (name == null && oo.name != null))
          return false;
 
-      return id == oo.id && name.equals(oo.name) && (program == oo.program || program.equals(oo.program));
+      return true;
    }
 
    /**

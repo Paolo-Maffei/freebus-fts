@@ -27,7 +27,7 @@
    <groupId>hsqldb</groupId>
    <artifactId>hsqldb</artifactId>
    <version>1.8.0.7</version>
-   <scope>test</scope>
+   <scope>compile</scope>
   </dependency>
   <dependency>
    <groupId>org.eclipse.persistence</groupId>
@@ -41,15 +41,4 @@
   	<version>1.9.5</version>
   </dependency>
  </dependencies>
- <build>
-  <plugins>
-   <plugin>
-    <artifactId>maven-compiler-plugin</artifactId>
-    <configuration>
-     <source>1.6</source>
-     <target>1.6</target>
-    </configuration>
-   </plugin>
-  </plugins>
- </build>
 </project>

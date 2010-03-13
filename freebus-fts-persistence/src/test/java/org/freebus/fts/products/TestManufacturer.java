@@ -47,6 +47,12 @@ public class TestManufacturer extends TestCase
 
       manu.setName("Tester-2");
       assertEquals("Tester-2", manu.getName());
+
+      manu.setName("");
+      assertEquals("", manu.getName());
+
+      manu.setName(null);
+      assertEquals("", manu.getName());
    }
 
    public final void testEqualsObject()

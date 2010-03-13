@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -43,7 +44,8 @@ public class MainGroup
    private Project project;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "mainGroup")
-   private Set<MidGroup> midGroups = new HashSet<MidGroup>();
+   @OrderBy("address")
+   private List<MidGroup> midGroups = new Vector<MidGroup>();
 
    /**
     * Create a new main-group.
@@ -106,7 +108,7 @@ public class MainGroup
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -127,9 +129,16 @@ public class MainGroup
 
    /**
     * Add a mid-group to the main-group.
+    *
+    * @param midGroup - the mid-group to add
+    *
+    * @throws IllegalArgumentException - if the main-group already contains the mid-group.
     */
    public void add(MidGroup midGroup)
    {
+      if (midGroups.contains(midGroup))
+         throw new IllegalArgumentException("Mid-group was previously added: " + midGroup);
+
       midGroup.setMainGroup(this);
       midGroups.add(midGroup);
    }
@@ -137,7 +146,7 @@ public class MainGroup
    /**
     * @return the mid-groups container.
     */
-   public Set<MidGroup> getMidGroups()
+   public List<MidGroup> getMidGroups()
    {
       return midGroups;
    }
@@ -145,7 +154,7 @@ public class MainGroup
    /**
     * Set the mid-groups container.
     */
-   public void setMidGroups(Set<MidGroup> midGroups)
+   public void setMidGroups(List<MidGroup> midGroups)
    {
       this.midGroups = midGroups;
    }
@@ -156,11 +165,20 @@ public class MainGroup
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof MainGroup))
          return false;
 
       final MainGroup oo = (MainGroup) o;
-      return (id == oo.id && address == oo.address && name == oo.name && midGroups.equals(oo.midGroups));
+      if (id != oo.id || address != oo.address || !name.equals(oo.name))
+         return false;
+
+      if (!midGroups.equals(oo.midGroups))
+         return false;
+
+      return true;
    }
 
    /**

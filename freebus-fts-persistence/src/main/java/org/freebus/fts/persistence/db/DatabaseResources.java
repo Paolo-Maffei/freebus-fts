@@ -33,7 +33,7 @@ public class DatabaseResources
 
    /**
     * Lazily acquire the global entity manager and cache it.
-    * 
+    *
     * @return the global {@link EntityManager} entity manager.
     */
    static public EntityManager getEntityManager()
@@ -53,9 +53,9 @@ public class DatabaseResources
    /**
     * Create an entity manager factory, using the values from the
     * {@link SimpleConfig} configuration.
-    * 
+    *
     * @return The created entity-manager factory.
-    * 
+    *
     * @see {@link #setEntityManagerFactory}
     */
    static public EntityManagerFactory createDefaultEntityManagerFactory()
@@ -73,16 +73,16 @@ public class DatabaseResources
    /**
     * Create an entity manager factory, using the values from the
     * {@link SimpleConfig} configuration for database, user and password.
-    * 
+    *
     * This method fetches the required parameters from the global
     * {@link SimpleConfig} configuration, using
     * {@link DriverType#getConfigPrefix()} as prefix for the configuration
     * options.
-    * 
+    *
     * @param driver - the database driver to use.
-    * 
+    *
     * @return The created entity-manager factory.
-    * 
+    *
     * @see {@link #setEntityManagerFactory}
     */
    static public EntityManagerFactory createEntityManagerFactory(DriverType driver)
@@ -102,16 +102,16 @@ public class DatabaseResources
 
    /**
     * Create an entity manager factory.
-    * 
+    *
     * @param persistenceUnitName - the name of the persistence unit, e.g.
     *           "default".
     * @param driver - the database driver to use.
     * @param location - the name of the database or host/database.
     * @param user - the database connect user.
     * @param password - the database connect password.
-    * 
+    *
     * @return The created entity-manager factory.
-    * 
+    *
     * @see {@link #setEntityManagerFactory}
     */
    static public EntityManagerFactory createEntityManagerFactory(final String persistenceUnitName, DriverType driver,
@@ -145,12 +145,13 @@ public class DatabaseResources
    /**
     * Set the default entity manager factory. Must be called before
     * {@link #getEntityManager} can be used.
-    * 
+    *
     * @see {@link #createEntityManagerFactory}.
     */
    public static void setEntityManagerFactory(EntityManagerFactory entityManagerFactory)
    {
       DatabaseResources.entityManagerFactory = entityManagerFactory;
+//      DatabaseResources.entityManager = null;
    }
 
    /**
@@ -183,13 +184,13 @@ public class DatabaseResources
 
    /**
     * Create a {@link Liquibase} database migrator for migrating a database.
-    * 
+    *
     * @param changeLogFile - the name of the Liquibase change-log file.
     * @param driverType - the database driver to use.
     * @param location - the name of the database or host/database.
     * @param user - the database connect user.
     * @param password - the database connect password.
-    * 
+    *
     * @return The created {@link Liquibase} object.
     */
    public static Liquibase createMigrator(String changeLogFile, DriverType driver, String location, String user,

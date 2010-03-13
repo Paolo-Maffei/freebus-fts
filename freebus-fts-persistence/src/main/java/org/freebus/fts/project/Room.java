@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,10 +33,10 @@ public class Room
    @Column(name = "room_name", nullable = false)
    private String name = "";
 
-   @Column(name = "room_number")
+   @Column(name = "room_number", nullable = false)
    private String number = "";
 
-   @Column(name = "description")
+   @Column(name = "description", nullable = false)
    private String description = "";
 
    @ManyToOne(optional = false)
@@ -44,7 +44,7 @@ public class Room
    private Building building;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "room")
-   private Set<Device> devices = new HashSet<Device>();
+   private List<Device> devices = new Vector<Device>();
 
    /**
     * Create a new room.
@@ -82,7 +82,7 @@ public class Room
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -98,7 +98,7 @@ public class Room
     */
    public void setNumber(String number)
    {
-      this.number = number;
+      this.number = number == null ? "" : number;
    }
 
    /**
@@ -114,7 +114,7 @@ public class Room
     */
    public void setDescription(String description)
    {
-      this.description = description;
+      this.description = description == null ? "" : description;
    }
 
    /**
@@ -135,7 +135,9 @@ public class Room
 
    /**
     * Add a device to the room.
-    * 
+    *
+    * @param device - the device to add.
+    *
     * @throws IllegalArgumentException - If the device was already added to the room.
     */
    public void add(Device device)
@@ -148,17 +150,30 @@ public class Room
    }
 
    /**
+    * Remove a device from the room.
+    *
+    * @param device - the device to remove.
+    */
+   public void remove(Device device)
+   {
+      device.setRoom(null);
+      devices.remove(device);
+   }
+
+   /**
     * @return the devices
     */
-   public Set<Device> getDevices()
+   public List<Device> getDevices()
    {
       return devices;
    }
 
    /**
+    * Set the devices.
+    *
     * @param devices the devices to set
     */
-   public void setDevices(Set<Device> devices)
+   public void setDevices(List<Device> devices)
    {
       this.devices = devices;
    }
@@ -169,11 +184,20 @@ public class Room
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof Room))
          return false;
 
       final Room oo = (Room) o;
-      return (id == oo.id && name == oo.name && number == oo.number && description == oo.description && devices == oo.devices);
+      if (id != oo.id || !name.equals(oo.name) || !description.equals(oo.description))
+         return false;
+
+      if (!devices.equals(oo.devices))
+         return false;
+
+      return true;
    }
 
    /**

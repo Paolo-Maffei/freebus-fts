@@ -5,17 +5,18 @@
  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
 
  <changeSet author="stefant" id="1">
-  <createTable tableName="area">
-   <column name="area_id" type="INT">
+  <createTable tableName="functional_entity">
+   <column name="functional_entity_id" type="INT">
     <constraints nullable="false" primaryKey="true" />
    </column>
-   <column name="area_address" type="INT">
+   <column name="manufacturer_id" type="INT">
     <constraints nullable="false" />
    </column>
-   <column name="area_name" type="VARCHAR(255)" />
-   <column name="project_id" type="INT" />
+   <column name="functional_entity_name" type="VARCHAR(255)" />
+   <column name="fun_functional_entity_id" type="INT" />
   </createTable>
  </changeSet>
+
  <changeSet author="stefant" id="2">
   <createTable tableName="building">
    <column name="building_id" type="INT">

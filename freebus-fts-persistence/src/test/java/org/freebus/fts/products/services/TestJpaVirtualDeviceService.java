@@ -1,4 +1,4 @@
-package org.freebus.fts.products;
+package org.freebus.fts.products.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -7,6 +7,11 @@ import static org.junit.Assert.assertNull;
 import java.util.List;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Product;
+import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.test_utils.ProductsTestCase;

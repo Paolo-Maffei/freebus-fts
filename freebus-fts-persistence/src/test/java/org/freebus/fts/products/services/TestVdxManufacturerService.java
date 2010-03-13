@@ -1,10 +1,11 @@
-package org.freebus.fts.products;
+package org.freebus.fts.products.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.List;
 
+import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.test_utils.ProductsTestCase;
 import org.junit.Before;

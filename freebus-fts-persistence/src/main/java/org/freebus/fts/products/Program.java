@@ -34,8 +34,8 @@ public class Program
    @Column(name = "mask_id")
    private int maskId;
 
-   @Column(name = "program_name", length = 50)
-   private String name;
+   @Column(name = "program_name", nullable = false, length = 50)
+   private String name = "";
 
    @Column(name = "program_version", length = 5)
    private String version;
@@ -166,7 +166,7 @@ public class Program
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -347,7 +347,7 @@ public class Program
 
    /**
     * Get a parameter by parameter-id
-    * 
+    *
     * @param id - the parameter id
     *
     * @return the parameter, or null if not found.
@@ -357,7 +357,7 @@ public class Program
       if (parameters == null)
          return null;
 
-      for (final Parameter param: parameters)
+      for (final Parameter param : parameters)
       {
          if (param.getId() == id)
             return param;
@@ -365,10 +365,11 @@ public class Program
 
       return null;
    }
-   
+
    /**
     * Add a parameter to the program.
-    * @param param - the parameter to add. 
+    *
+    * @param param - the parameter to add.
     */
    public void addParameter(Parameter param)
    {
@@ -381,6 +382,7 @@ public class Program
 
    /**
     * Remove a parameter from the program.
+    *
     * @param param - the parameter to remove.
     */
    public void removeParameter(Parameter param)
@@ -398,7 +400,7 @@ public class Program
    {
       if (parameters != null)
       {
-         for (final Parameter param: parameters)
+         for (final Parameter param : parameters)
             param.setProgram(null);
 
          parameters.clear();
@@ -423,7 +425,7 @@ public class Program
 
    /**
     * Set the communication objects of the program.
-    * 
+    *
     * @param communicationObjects the set of communication objects.
     */
    public void setCommunicationObjects(Set<CommunicationObject> communicationObjects)
@@ -440,11 +442,11 @@ public class Program
    }
 
    /**
-    * Returns all parameters that have no parent parameter set.
-    * If you manipulate the parameters it might be required that
-    * you call {@link #updateChildParameters()} manually in order
-    * to get correct results from this method.
-    * 
+    * Returns all parameters that have no parent parameter set. If you
+    * manipulate the parameters it might be required that you call
+    * {@link #updateChildParameters()} manually in order to get correct results
+    * from this method.
+    *
     * @return the top level parameters.
     */
    public Set<Parameter> getTopLevelParameters()
@@ -575,14 +577,15 @@ public class Program
    {
       topLevelParameters = new HashSet<Parameter>();
 
-      for (final Parameter param: parameters)
+      for (final Parameter param : parameters)
          param.setChildren(new HashSet<Parameter>());
 
-      for (final Parameter param: parameters)
+      for (final Parameter param : parameters)
       {
          final Parameter parentParam = param.getParent();
 
-         if (parentParam == null) topLevelParameters.add(param);
+         if (parentParam == null)
+            topLevelParameters.add(param);
          else parentParam.getChildren().add(param);
       }
    }
@@ -604,10 +607,11 @@ public class Program
    {
       if (o == this)
          return true;
+
       if (!(o instanceof Program))
          return false;
+
       final Program oo = (Program) o;
-      return id == oo.id && maskId == oo.maskId && peiType == oo.peiType
-            && ((name == null && oo.name == null) || name.equals(oo.name));
+      return id == oo.id && maskId == oo.maskId && peiType == oo.peiType && name.equals(oo.name);
    }
 }

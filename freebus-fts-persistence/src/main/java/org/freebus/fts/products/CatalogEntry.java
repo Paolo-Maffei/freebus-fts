@@ -261,15 +261,18 @@ public class CatalogEntry implements Serializable
 
       final CatalogEntry oo = (CatalogEntry) o;
 
-      if (manufacturer == null && oo.manufacturer != null)
+      if (id != oo.id || !name.equals(oo.name))
          return false;
 
-      if (product == null && oo.product != null)
+      if ((manufacturer == null && oo.manufacturer != null) ||
+          (manufacturer != null && !manufacturer.equals(oo.manufacturer)))
          return false;
 
-      return id == oo.id
-            && (manufacturer == oo.manufacturer || manufacturer.equals(oo.manufacturer))
-            && (product == oo.product || product.equals(oo.product));
+      if ((product == null && oo.product != null) ||
+          (product != null && !product.equals(oo.product)))
+         return false;
+
+      return true;
    }
 
    /**

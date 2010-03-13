@@ -1,13 +1,14 @@
 package org.freebus.fts.project;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
-import org.freebus.fts.project.Building;
-import org.freebus.fts.project.Device;
-import org.freebus.fts.project.Room;
 import org.junit.Test;
 
 public class TestRoom
@@ -21,6 +22,8 @@ public class TestRoom
       assertNull(room.getBuilding());
       assertNotNull(room.getDevices());
       assertTrue(room.getDevices().isEmpty());
+      assertNotNull(room.hashCode());
+      assertNotNull(room.toString());
    }
 
    @Test
@@ -36,6 +39,28 @@ public class TestRoom
 
       room.setId(0);
       assertEquals(0, room.getId());
+   }
+
+   @Test
+   public final void testGetSetNumber()
+   {
+      final Room room = new Room();
+      assertEquals("", room.getNumber());
+
+      room.setNumber("12.34");
+      assertEquals("12.34", room.getNumber());
+
+      room.setNumber("45-67");
+      assertEquals("45-67", room.getNumber());
+
+      room.setNumber("");
+      assertEquals("", room.getNumber());
+
+      room.setNumber("");
+      assertEquals("", room.getNumber());
+
+      room.setNumber(null);
+      assertEquals("", room.getNumber());
    }
 
    @Test
@@ -63,6 +88,9 @@ public class TestRoom
       room.setName("");
       assertEquals("", room.getName());
 
+      room.setName(null);
+      assertEquals("", room.getName());
+
       room.setName("room-2");
       assertEquals("room-2", room.getName());
    }
@@ -78,6 +106,9 @@ public class TestRoom
       room.setDescription("");
       assertEquals("", room.getDescription());
 
+      room.setDescription(null);
+      assertEquals("", room.getDescription());
+
       room.setDescription("room-desc-2");
       assertEquals("room-desc-2", room.getDescription());
    }
@@ -86,25 +117,30 @@ public class TestRoom
    public final void testGetSetDevices()
    {
       final Room room = new Room();
-      final Set<Device> newDevices = new HashSet<Device>();
+      final List<Device> newDevices = new Vector<Device>();
 
       room.setDevices(newDevices);
       assertEquals(newDevices, room.getDevices());
    }
 
    @Test
-   public final void testAdd()
+   public final void testAddRemove()
    {
       final Room room = new Room();
       assertTrue(room.getDevices().isEmpty());
 
       final Device device = new Device(1, null, null);
       room.add(device);
+      assertNotNull(device.getRoom());
       assertEquals(1, room.getDevices().size());
       assertEquals(device, room.getDevices().iterator().next());
 
       room.add(new Device(2, null, null));
       assertEquals(2, room.getDevices().size());
+
+      room.remove(device);
+      assertNull(device.getRoom());
+      assertEquals(1, room.getDevices().size());
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -114,5 +150,32 @@ public class TestRoom
       final Device device = new Device();
       room.add(device);
       room.add(device);
+   }
+
+   @Test
+   public final void testEquals()
+   {
+      final Room room1 = new Room();
+      final Room room2 = new Room();
+
+      assertFalse(room1.equals(null));
+      assertFalse(room1.equals(new Object()));
+      assertTrue(room1.equals(room1));
+
+      assertTrue(room1.equals(room2));
+      assertTrue(room2.equals(room1));
+
+      room1.add(new Device());
+      assertFalse(room1.equals(room2));
+      assertFalse(room2.equals(room1));
+
+      room2.add(new Device());
+      assertTrue(room1.equals(room2));
+      assertTrue(room2.equals(room1));
+
+      room1.setDescription("desc-1");
+      room2.setDescription("desc-2");
+      assertFalse(room1.equals(room2));
+      assertFalse(room2.equals(room1));
    }
 }

@@ -88,7 +88,7 @@ public final class Device
    /**
     * Create a device object by using {@link CatalogEntry} and {@link Program}
     * of a given {@link VirtualDevice}.
-    * 
+    *
     * @param id the id of the object
     * @param virtualDevice the virtual device, from which the
     *           {@link CatalogEntry} and {@link Program} are taken.
@@ -210,7 +210,7 @@ public final class Device
 
    /**
     * Set the value of a parameter.
-    * 
+    *
     * @param param - the parameter for which a value will be set.
     * @param value - the parameter value.
     */
@@ -221,7 +221,7 @@ public final class Device
 
    /**
     * Set the value of a parameter.
-    * 
+    *
     * @param param - the parameter for which a value will be set.
     * @param value - the parameter value.
     */
@@ -233,7 +233,7 @@ public final class Device
    /**
     * Set the value of a parameter. Internal worker method.
     * Use {@link #setParameterValue} to set the value of a parameter.
-    * 
+    *
     * @param param - the parameter for which a value will be set.
     * @param value - the parameter value.
     */
@@ -250,7 +250,7 @@ public final class Device
    /**
     * Returns the string value for the parameter <code>param</code>. If no value
     * is yet set, the parameter's default value is returned.
-    * 
+    *
     * @param param the parameter whose value is requested.
     * @return the parameter's value.
     */
@@ -268,7 +268,7 @@ public final class Device
    /**
     * Returns the integer value for the parameter <code>param</code>. If no value
     * is yet set, the parameter's default value is returned.
-    * 
+    *
     * @param param the parameter whose value is requested.
     * @return the parameter's value.
     */
@@ -306,15 +306,18 @@ public final class Device
 
       final Device oo = (Device) o;
 
-      if (catalogEntry == null && oo.catalogEntry != null)
+      if (id != oo.id || address != oo.address)
          return false;
 
-      if (program == null && oo.program != null)
+      if ((catalogEntry == null && oo.catalogEntry != null) ||
+          (catalogEntry != null && !catalogEntry.equals(oo.catalogEntry)))
          return false;
 
-      return id == oo.id && address == oo.address
-            && (catalogEntry == oo.catalogEntry || catalogEntry.equals(oo.catalogEntry))
-            && (program == oo.program || program.equals(oo.program));
+      if ((program == null && oo.program != null) ||
+          (program != null && !program.equals(oo.program)))
+         return false;
+
+      return true;
    }
 
    /**

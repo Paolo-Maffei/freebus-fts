@@ -15,7 +15,7 @@ public class TestProgram
       assertNotNull(prog);
 
       assertEquals(0, prog.getId());
-      assertEquals(null, prog.getName());
+      assertEquals("", prog.getName());
       assertNotNull(prog.toString());
    }
 
@@ -61,7 +61,7 @@ public class TestProgram
       assertEquals("", prog.getName());
 
       prog.setName(null);
-      assertEquals(null, prog.getName());
+      assertEquals("", prog.getName());
 
       prog.setName("str-2");
       assertEquals("str-2", prog.getName());
@@ -378,13 +378,15 @@ public class TestProgram
       final Program prog3 = new Program();
       prog3.setId(3);
 
+      assertFalse(prog1.equals(null));
+      assertFalse(prog1.equals(new Object()));
+
+      assertTrue(prog2.equals(prog1));
       assertEquals(prog2.hashCode(), prog1.hashCode());
 
       assertTrue(prog1.equals(prog1));
       assertTrue(prog1.equals(prog2));
       assertFalse(prog1.equals(prog3));
-      assertFalse(prog1.equals(null));
-      assertFalse(prog1.equals(new Object()));
 
       prog1.setName("prog");
       assertFalse(prog1.equals(prog2));

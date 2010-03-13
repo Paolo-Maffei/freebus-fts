@@ -19,6 +19,11 @@ public abstract class PersistenceTestCase
    protected final String persistenceUnitName;
 
    /**
+    * The name of the HSQL database.
+    */
+   protected final String databaseName = getClass().getName();
+
+   /**
     * Create a persistence test case.
     *
     * @param persistenceUnitName - the name of the persistence unit to use.
@@ -28,7 +33,7 @@ public abstract class PersistenceTestCase
       this.persistenceUnitName = persistenceUnitName;
 
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName,
-            DriverType.HSQL_MEM, getClass().getName(), "sa", "");
+            DriverType.HSQL_MEM, databaseName, "sa", "");
       DatabaseResources.setEntityManagerFactory(emf);
    }
 

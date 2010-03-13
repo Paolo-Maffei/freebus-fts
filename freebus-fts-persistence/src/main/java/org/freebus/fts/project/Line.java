@@ -1,17 +1,21 @@
 package org.freebus.fts.project;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -42,9 +46,10 @@ public class Line
    @JoinColumn(name = "area_id")
    private Area area;
 
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "line")
-   private Set<Device> devices = new HashSet<Device>();
-   
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "line")
+   @OrderBy("address")
+   private List<Device> devices = new Vector<Device>();
+
    /**
     * Create a new line.
     */
@@ -81,7 +86,7 @@ public class Line
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -118,9 +123,9 @@ public class Line
 
    /**
     * Add a device to the line.
-    * 
+    *
     * @throws IllegalArgumentException - If the device was already added to the room.
-    * 
+    *
     * @see {@link #getFreeAddress} to obtain a free address for the device.
     */
    public void add(Device device)
@@ -134,7 +139,7 @@ public class Line
 
    /**
     * @return an address that is not used in the line.
-    * 
+    *
     * @throws RuntimeException if no free address can be found.
     */
    public int getFreeAddress()
@@ -156,7 +161,7 @@ public class Line
    /**
     * @return the devices
     */
-   public Set<Device> getDevices()
+   public List<Device> getDevices()
    {
       return devices;
    }
@@ -164,7 +169,7 @@ public class Line
    /**
     * @param devices the devices to set
     */
-   public void setDevices(Set<Device> devices)
+   public void setDevices(List<Device> devices)
    {
       this.devices = devices;
    }
@@ -175,11 +180,14 @@ public class Line
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof Line))
          return false;
 
       final Line oo = (Line) o;
-      return (id == oo.id && address == oo.address && name == oo.name && devices == oo.devices);
+      return (id == oo.id && address == oo.address && name.equals(oo.name) && devices.equals(oo.devices));
    }
 
    /**

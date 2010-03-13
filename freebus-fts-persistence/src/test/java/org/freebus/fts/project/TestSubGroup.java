@@ -1,11 +1,17 @@
 package org.freebus.fts.project;
 
-import junit.framework.TestCase;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.freebus.fts.common.address.GroupAddress;
+import org.junit.Test;
 
-public class TestSubGroup extends TestCase
+public class TestSubGroup
 {
+   @Test
    public final void testSubGroup()
    {
       final SubGroup group = new SubGroup();
@@ -17,6 +23,7 @@ public class TestSubGroup extends TestCase
       assertNotNull(group.toString());
    }
 
+   @Test
    public final void testGetSetId()
    {
       final SubGroup group = new SubGroup(1);
@@ -28,6 +35,7 @@ public class TestSubGroup extends TestCase
       assertEquals(0, group.getId());
    }
 
+   @Test
    public final void testGetSetAddress()
    {
       final SubGroup group = new SubGroup();
@@ -39,9 +47,11 @@ public class TestSubGroup extends TestCase
       assertEquals(0, group.getAddress());
    }
 
+   @Test
    public final void testGetSetName()
    {
       final SubGroup group = new SubGroup();
+      assertEquals("", group.getName());
 
       group.setName("group-1");
       assertEquals("group-1", group.getName());
@@ -51,8 +61,12 @@ public class TestSubGroup extends TestCase
 
       group.setName("");
       assertEquals("", group.getName());
+
+      group.setName(null);
+      assertEquals("", group.getName());
    }
 
+   @Test
    public final void testGetPhysicalAddr()
    {
       final SubGroup group = new SubGroup();
@@ -70,6 +84,7 @@ public class TestSubGroup extends TestCase
       assertEquals(new GroupAddress(2, 3, 88), group.getGroupAddress());
    }
 
+   @Test
    public final void testGetSetMidGroup()
    {
       final SubGroup group = new SubGroup();
@@ -82,6 +97,7 @@ public class TestSubGroup extends TestCase
       assertNull(group.getMidGroup());
    }
 
+   @Test
    public final void testEquals()
    {
       final SubGroup sg1 = new SubGroup(1);

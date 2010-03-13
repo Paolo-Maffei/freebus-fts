@@ -13,13 +13,13 @@ import javax.persistence.Table;
 public class Manufacturer
 {
    public final static Manufacturer NOBODY = new Manufacturer(0, "Nobody");
-   
+
    @Id
    @Column(name = "manufacturer_id", nullable = false)
    private int id;
 
    @Column(name = "manufacturer_name", length = 50, nullable = false)
-   private String name;
+   private String name = "";
 
    /**
     * Create an empty manufacturer.
@@ -58,16 +58,15 @@ public class Manufacturer
     */
    public String getName()
    {
-      if (name == null) return "";
       return name;
    }
-   
+
    /**
     * Set the name of the manufacturer.
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -85,10 +84,14 @@ public class Manufacturer
    @Override
    public boolean equals(final Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof Manufacturer)) return false;
+      if (o == this)
+         return true;
+
+      if (!(o instanceof Manufacturer))
+         return false;
+
       final Manufacturer oo = (Manufacturer) o;
-      return id == oo.id && name == oo.name;
+      return id == oo.id && name.equals(oo.name);
    }
 
    /**

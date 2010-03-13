@@ -11,7 +11,6 @@ import javax.persistence.Table;
 
 import org.freebus.fts.persistence.vdx.VdxField;
 
-
 /**
  * Functional entities are for grouping of the virtual devices.
  */
@@ -28,10 +27,10 @@ public class FunctionalEntity
    private Manufacturer manufacturer;
 
    @Column(name = "functional_entity_name", nullable = false)
-   private String name;
+   private String name = "";
 
-   @Column(name = "functional_entity_description")
-   private String description;
+   @Column(name = "functional_entity_description", nullable = false)
+   private String description = "";
 
    @ManyToOne(fetch = FetchType.EAGER, optional = false, cascade = CascadeType.PERSIST)
    @JoinColumn(name = "parent_id", nullable = true)
@@ -44,7 +43,7 @@ public class FunctionalEntity
    public FunctionalEntity()
    {
    }
-   
+
    /**
     * Create a new functional entity.
     *
@@ -70,11 +69,29 @@ public class FunctionalEntity
    }
 
    /**
+    * Set the id.
+    */
+   public void setId(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return The manufacturer to whom the functional entity belongs.
     */
    public Manufacturer getManufacturer()
    {
       return manufacturer;
+   }
+
+   /**
+    * Set the manufacturer.
+    *
+    * @param manufacturer - the manufacturer to set.
+    */
+   public void setManufacturer(Manufacturer manufacturer)
+   {
+      this.manufacturer = manufacturer;
    }
 
    /**
@@ -115,19 +132,23 @@ public class FunctionalEntity
    @Override
    public int hashCode()
    {
-      return (id << 10) | (manufacturer == null ? 0 : manufacturer.getId());
+      return id;
    }
-   
+
    /**
     * Compare two objects.
     */
    @Override
    public boolean equals(final Object o)
    {
-      if (o==this) return true;
-      if (!(o instanceof FunctionalEntity)) return false;
-      final FunctionalEntity oo = (FunctionalEntity)o;
-      return id == oo.id && manufacturer == oo.manufacturer;
+      if (o == this)
+         return true;
+
+      if (!(o instanceof FunctionalEntity))
+         return false;
+
+      final FunctionalEntity oo = (FunctionalEntity) o;
+      return id == oo.id && (manufacturer == null ? oo.manufacturer == null : manufacturer.equals(oo.manufacturer));
    }
 
    /**

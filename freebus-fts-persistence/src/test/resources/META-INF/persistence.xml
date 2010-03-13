@@ -2,8 +2,8 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence persistence_2_0.xsd"
- version="1.0">
- 
+ version="2.0">
+
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <properties>
@@ -36,24 +36,28 @@
   <class>org.freebus.fts.project.Room</class>
   <class>org.freebus.fts.project.SubGroup</class>
   <properties>
-   <property name="eclipselink.logging.level" value="INFO" />
+   <property name="eclipselink.logging.level" value="FINEST" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation.output-mode"
+    value="database" />
   </properties>
  </persistence-unit>
- 
+
  <persistence-unit name="test-entities">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <class>org.freebus.fts.persistence.test_entities.SampleBaggage</class>
-  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntity</class>
-  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntity
+  </class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer
+  </class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation.output-mode"
+    value="database" />
   </properties>
  </persistence-unit>
- 
+
  <persistence-unit name="test-empty">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <properties>
@@ -63,24 +67,31 @@
 
  <persistence-unit name="duplicate-entities">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer</class>
-  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntity</class>
-  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer2</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer
+  </class>
+  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntity
+  </class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer2
+  </class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation.output-mode"
+    value="database" />
   </properties>
  </persistence-unit>
-  
+
  <persistence-unit name="with-children">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer</class>
-  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntityTree</class>
+  <class>org.freebus.fts.persistence.test_entities.SampleManufacturer
+  </class>
+  <class>org.freebus.fts.persistence.test_entities.SampleFunctionalEntityTree
+  </class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation.output-mode"
+    value="database" />
   </properties>
  </persistence-unit>
 

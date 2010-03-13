@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,6 +12,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -36,13 +37,14 @@ public class Area
    private Project project;
 
    @Column(name = "area_name")
-   private String name;
+   private String name = "";
 
    @Column(name = "area_address", nullable = false)
    private int address;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "area")
-   private Set<Line> lines = new HashSet<Line>();
+   @OrderBy("address")
+   private List<Line> lines = new Vector<Line>();
 
    /**
     * Create a new area.
@@ -105,7 +107,7 @@ public class Area
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -125,10 +127,17 @@ public class Area
    }
 
    /**
-    * Add a line to the area.    
+    * Add a line to the area.
+    *
+    * @param line - the line to add
+    *
+    * @throws IllegalArgumentException - if the area already contains the line.
     */
    public void add(Line line)
    {
+      if (lines.contains(line))
+         throw new IllegalArgumentException("Line was previously added: " + line);
+
       line.setArea(this);
       lines.add(line);
    }
@@ -136,7 +145,7 @@ public class Area
    /**
     * @return the lines
     */
-   public Set<Line> getLines()
+   public List<Line> getLines()
    {
       return lines;
    }
@@ -144,7 +153,7 @@ public class Area
    /**
     * @param lines the lines to set
     */
-   public void setLines(Set<Line> lines)
+   public void setLines(List<Line> lines)
    {
       this.lines = lines;
    }
@@ -162,6 +171,7 @@ public class Area
          return false;
 
       final Area oo = (Area) o;
+
       return (id == oo.id && address == oo.address && name.equals(oo.name) && lines.equals(oo.lines));
    }
 

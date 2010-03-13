@@ -1,16 +1,18 @@
 package org.freebus.fts.project;
 
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -18,7 +20,7 @@ import javax.persistence.TemporalType;
 
 /**
  * Main class for a FTS project.
- * 
+ *
  * @See {@link ProjectManager#getProject} - to access the global project
  *      instance.
  * @See {@link ProjectManager#openProject} - to open an existing project.
@@ -45,18 +47,21 @@ public class Project
    @Temporal(TemporalType.TIMESTAMP)
    private Date lastModified = new Date();
 
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-   private Set<Area> areas = new HashSet<Area>();
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "project")
+   @OrderBy("id")
+   private List<Area> areas = new Vector<Area>();
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-   private Set<Building> buildings = new HashSet<Building>();
+   @OrderBy("id")
+   private List<Building> buildings = new Vector<Building>();
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-   private Set<MainGroup> mainGroups = new HashSet<MainGroup>();
+   @OrderBy("address")
+   private List<MainGroup> mainGroups = new Vector<MainGroup>();
 
    /**
     * Create a new project.
-    * 
+    *
     * @see {@link ProjectManager#newProject}.
     */
    public Project()
@@ -82,7 +87,7 @@ public class Project
 
    /**
     * Set the name of the project
-    * 
+    *
     * @param name is the new name
     */
    public void setName(String name)
@@ -132,35 +137,83 @@ public class Project
 
    /**
     * Add an area to the project.
+    *
+    * @param area - the area to add.
+    *
+    * @throws IllegalArgumentException - if the project already contains the area.
     */
    public void add(Area area)
    {
+      if (areas.contains(area))
+         throw new IllegalArgumentException("Area was previously added: " + area);
+
       area.setProject(this);
       areas.add(area);
    }
 
    /**
     * Add a building to the project.
+    *
+    * @param building - the building to add.
+    *
+    * @throws IllegalArgumentException - if the project already contains the building.
     */
    public void add(Building building)
    {
+      if (buildings.contains(building))
+         throw new IllegalArgumentException("Building was previously added: " + building);
+
       building.setProject(this);
       buildings.add(building);
    }
 
    /**
     * Add a main-group to the project.
+    *
+    * @param mainGroup - the main-group to add.
+    *
+    * @throws IllegalArgumentException - if the project already contains the main-group.
     */
    public void add(MainGroup mainGroup)
    {
+      if (mainGroups.contains(mainGroup))
+         throw new IllegalArgumentException("Main-group was previously added: " + mainGroup);
+
       mainGroup.setProject(this);
       mainGroups.add(mainGroup);
    }
 
    /**
+    * Remove an area from the project.
+    */
+   public void remove(Area area)
+   {
+      area.setProject(null);
+      areas.remove(area);
+   }
+
+   /**
+    * Remove a building from the project.
+    */
+   public void remove(Building building)
+   {
+      building.setProject(null);
+      buildings.remove(building);
+   }
+
+   /**
+    * Remove a main-group from the project.
+    */
+   public void remove(MainGroup mainGroup)
+   {
+      mainGroup.setProject(null);
+      mainGroups.remove(mainGroup);
+   }
+
+   /**
     * Set the areas container.
     */
-   public void setAreas(Set<Area> areas)
+   public void setAreas(List<Area> areas)
    {
       this.areas = areas;
    }
@@ -168,7 +221,7 @@ public class Project
    /**
     * @return the areas container.
     */
-   public Set<Area> getAreas()
+   public List<Area> getAreas()
    {
       return areas;
    }
@@ -176,7 +229,7 @@ public class Project
    /**
     * Set the buildings container.
     */
-   public void setBuildings(Set<Building> buildings)
+   public void setBuildings(List<Building> buildings)
    {
       this.buildings = buildings;
    }
@@ -184,7 +237,7 @@ public class Project
    /**
     * @return the buildings container.
     */
-   public Set<Building> getBuildings()
+   public List<Building> getBuildings()
    {
       return buildings;
    }
@@ -192,7 +245,7 @@ public class Project
    /**
     * Set the main-groups container.
     */
-   public void setMainGroups(Set<MainGroup> mainGroups)
+   public void setMainGroups(List<MainGroup> mainGroups)
    {
       this.mainGroups = mainGroups;
    }
@@ -200,7 +253,7 @@ public class Project
    /**
     * @return the main-groups container.
     */
-   public Set<MainGroup> getMainGroups()
+   public List<MainGroup> getMainGroups()
    {
       return mainGroups;
    }
@@ -227,8 +280,20 @@ public class Project
          return false;
 
       final Project oo = (Project) o;
-      return id == oo.id && name == oo.name && description == oo.description && areas.equals(oo.areas)
-            && buildings.equals(oo.buildings) && mainGroups.equals(oo.mainGroups);
+
+      if (id != oo.id || name != oo.name || description != oo.description)
+         return false;
+
+      if (!areas.equals(oo.areas))
+         return false;
+
+      if (!buildings.equals(oo.buildings))
+         return false;
+
+      if (!mainGroups.equals(oo.mainGroups))
+         return false;
+
+      return true;
    }
 
    /**

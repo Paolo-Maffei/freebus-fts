@@ -21,7 +21,7 @@ import org.freebus.fts.project.internal.I18n;
 public final class SampleProjectFactory
 {
    private static final String persistenceUnitName = "test-full";
-   private static final int sampleVirtualDeviceId = 1000000000;
+   private static final int sampleVirtualDeviceId = 23652;
    private static String sampleImportFileName = "sample-products.vd_";
 
    /**
@@ -127,7 +127,7 @@ public final class SampleProjectFactory
          {
             // should not happen, as importSampleDevices() imports the
             // device(s).
-            throw new RuntimeException("Internal error: example device not found in database after import");
+            throw new RuntimeException("Internal error: example device #" + sampleVirtualDeviceId + " not found in database after import");
          }
       }
 
@@ -155,16 +155,20 @@ public final class SampleProjectFactory
       mainGroup1.add(midGroup1);
 
       final MidGroup midGroup2 = new MidGroup();
-      midGroup1.setAddress(6);
+      midGroup2.setAddress(6);
       mainGroup1.add(midGroup2);
 
-      final SubGroup group1 = new SubGroup();
-      group1.setAddress(101);
-      midGroup1.add(group1);
+      final SubGroup group11 = new SubGroup();
+      group11.setAddress(111);
+      midGroup1.add(group11);
 
-      final SubGroup group2 = new SubGroup();
-      group2.setAddress(102);
-      midGroup1.add(group2);
+      final SubGroup group12 = new SubGroup();
+      group12.setAddress(112);
+      midGroup1.add(group12);
+
+      final SubGroup group21 = new SubGroup();
+      group21.setAddress(121);
+      midGroup2.add(group21);
 
       return project;
    }

@@ -121,4 +121,38 @@ public class Product
    {
       return busCurrent;
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(final Object o)
+   {
+      if (o == this)
+         return true;
+
+      if (!(o instanceof Product))
+         return false;
+
+      final Product oo = (Product) o;
+      return id == oo.id && name.equals(oo.name) && manufacturer.equals(oo.manufacturer);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
+   }
 }

@@ -76,13 +76,16 @@ public class TestProjectService extends ProjectTestCase
       final ProjectService projectService = getProjectFactory().getProjectService();
 
       final Project project = SampleProjectFactory.newProject();
-      project.setName("Sample Project");
+      project.setName("Sample Project 1");
       projectService.save(project);
       DatabaseResources.getEntityManager().flush();
-      assertTrue(project.getId() != 0);
 
-      final Project loadedProject = projectService.getProject(project.getId());
+      final int projectId = project.getId();
+      assertTrue(projectId != 0);
+      DatabaseResources.getEntityManager().clear();
+
+      final Project loadedProject = projectService.getProject(projectId);
       assertNotNull(loadedProject);
-      assertSame(project, loadedProject);
+      assertEquals(project, loadedProject);
    }
 }

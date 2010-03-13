@@ -27,7 +27,7 @@ public class SubGroup
    @Column(name = "sub_group_id", nullable = false)
    private int id;
 
-   @Column(name = "sub_group_name", nullable = true)
+   @Column(name = "sub_group_name", nullable = false)
    private String name = "";
 
    @Column(name = "sub_group_address", nullable = false)
@@ -81,7 +81,7 @@ public class SubGroup
     */
    public void setName(String name)
    {
-      this.name = name;
+      this.name = name == null ? "" : name;
    }
 
    /**
@@ -105,9 +105,11 @@ public class SubGroup
     */
    public GroupAddress getGroupAddress()
    {
-      if (midGroup == null) return GroupAddress.BROADCAST;
+      if (midGroup == null)
+         return GroupAddress.BROADCAST;
       final MainGroup mainGroup = midGroup.getMainGroup();
-      if (mainGroup == null) return GroupAddress.BROADCAST;
+      if (mainGroup == null)
+         return GroupAddress.BROADCAST;
       return new GroupAddress(mainGroup.getAddress(), midGroup.getAddress(), address);
    }
 
@@ -133,11 +135,14 @@ public class SubGroup
    @Override
    public boolean equals(Object o)
    {
+      if (o == this)
+         return true;
+
       if (!(o instanceof SubGroup))
          return false;
 
       final SubGroup oo = (SubGroup) o;
-      return (id == oo.id && address == oo.address && name == oo.name);
+      return id == oo.id && address == oo.address && name.equals(oo.name);
    }
 
    /**
@@ -156,7 +161,8 @@ public class SubGroup
    public String toString()
    {
       String nm = getName();
-      if (nm == null || nm.isEmpty()) nm = I18n.getMessage("Group.DefaultName");
+      if (nm == null || nm.isEmpty())
+         nm = I18n.getMessage("Group.DefaultName");
 
       return String.format("%s  %s", getGroupAddress().toString(), nm);
    }

@@ -1,19 +1,16 @@
 package org.freebus.fts.project;
 
+import static org.junit.Assert.*;
+
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
+import java.util.Vector;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-import org.freebus.fts.project.Area;
-import org.freebus.fts.project.Building;
-import org.freebus.fts.project.MainGroup;
-import org.freebus.fts.project.Project;
-
-public class TestProject extends TestCase
+public class TestProject
 {
-
+   @Test
    public final void testProject()
    {
       final Project project = new Project();
@@ -22,8 +19,11 @@ public class TestProject extends TestCase
       assertNotNull(project.getAreas());
       assertNotNull(project.getBuildings());
       assertNotNull(project.getMainGroups());
+      assertNotNull(project.toString());
+      assertNotNull(project.hashCode());
    }
 
+   @Test
    public final void testGetSetId()
    {
       final Project project = new Project();
@@ -37,6 +37,7 @@ public class TestProject extends TestCase
       assertEquals(4567, project.getId());
    }
 
+   @Test
    public final void testGetSetName()
    {
       final Project project = new Project();
@@ -49,6 +50,7 @@ public class TestProject extends TestCase
       assertEquals("", project.getName());
    }
 
+   @Test
    public final void testGetSetDescription()
    {
       final Project project = new Project();
@@ -61,6 +63,7 @@ public class TestProject extends TestCase
       assertEquals("", project.getDescription());
    }
 
+   @Test
    public final void testGetSetLastModified()
    {
       final Project project = new Project();
@@ -71,49 +74,53 @@ public class TestProject extends TestCase
       assertEquals(date1, project.getLastModified());
    }
 
+   @Test
    public final void testGetSetAreas()
    {
       final Project project = new Project();
       assertNotNull(project);
 
-      Set<Area> areas = project.getAreas();
+      List<Area> areas = project.getAreas();
       assertNotNull(areas);
       assertTrue(areas.isEmpty());
 
-      Set<Area> newAreas = new HashSet<Area>();
+      List<Area> newAreas = new Vector<Area>();
       project.setAreas(newAreas);
       assertEquals(newAreas, project.getAreas());
    }
 
+   @Test
    public final void testGetSetBuildings()
    {
       final Project project = new Project();
       assertNotNull(project);
 
-      Set<Building> buildings = project.getBuildings();
+      List<Building> buildings = project.getBuildings();
       assertNotNull(buildings);
       assertTrue(buildings.isEmpty());
 
-      Set<Building> newBuildings = new HashSet<Building>();
+      List<Building> newBuildings = new Vector<Building>();
       project.setBuildings(newBuildings);
       assertEquals(newBuildings, project.getBuildings());
    }
 
+   @Test
    public final void testGetSetMainGroups()
    {
       final Project project = new Project();
       assertNotNull(project);
 
-      Set<MainGroup> mainGroups = project.getMainGroups();
+      List<MainGroup> mainGroups = project.getMainGroups();
       assertNotNull(mainGroups);
       assertTrue(mainGroups.isEmpty());
 
-      Set<MainGroup> newMainGroups = new HashSet<MainGroup>();
+      List<MainGroup> newMainGroups = new Vector<MainGroup>();
       project.setMainGroups(newMainGroups);
       assertEquals(newMainGroups, project.getBuildings());
    }
 
-   public final void testAddArea()
+   @Test
+   public final void testAddRemoveArea()
    {
       final Project project = new Project();
       assertNotNull(project);
@@ -122,21 +129,35 @@ public class TestProject extends TestCase
       final Area area = new Area(1);
       project.add(area);
 
+      assertNotNull(area.getProject());
       assertNotNull(project.getAreas());
       assertFalse(project.getAreas().isEmpty());
-      assertEquals(1, project.getAreas().size());
-      assertEquals(area, project.getAreas().iterator().next());
-
-      project.add(area);
       assertEquals(1, project.getAreas().size());
       assertEquals(area, project.getAreas().iterator().next());
 
       final Area area2 = new Area(2);
       project.add(area2);
       assertEquals(2, project.getAreas().size());
+
+      project.remove(area);
+      assertNull(area.getProject());
+      assertEquals(1, project.getAreas().size());
+
+      project.remove(area);
+      assertEquals(1, project.getAreas().size());
    }
 
-   public final void testAddBuilding()
+   @Test(expected = IllegalArgumentException.class)
+   public final void testAddAreaTwice()
+   {
+      final Project project = new Project();
+      final Area area = new Area(1);
+      project.add(area);
+      project.add(area);
+   }
+
+   @Test
+   public final void testAddRemoveBuilding()
    {
       final Project project = new Project();
       assertNotNull(project);
@@ -153,9 +174,26 @@ public class TestProject extends TestCase
       Building building2 = new Building(2);
       project.add(building2);
       assertEquals(2, project.getBuildings().size());
+
+      project.remove(building);
+      assertNull(building.getProject());
+      assertEquals(1, project.getBuildings().size());
+
+      project.remove(building);
+      assertEquals(1, project.getBuildings().size());
    }
 
-   public final void testAddMainGroup()
+   @Test(expected = IllegalArgumentException.class)
+   public final void testAddBuildingTwice()
+   {
+      final Project project = new Project();
+      final Building building = new Building(1);
+      project.add(building);
+      project.add(building);
+   }
+
+   @Test
+   public final void testAddRemoveMainGroup()
    {
       final Project project = new Project();
       assertNotNull(project);
@@ -169,12 +207,65 @@ public class TestProject extends TestCase
       assertEquals(1, project.getMainGroups().size());
       assertEquals(mainGroup, project.getMainGroups().iterator().next());
 
-      project.add(mainGroup);
-      assertEquals(1, project.getMainGroups().size());
-      assertEquals(mainGroup, project.getMainGroups().iterator().next());
-
       final MainGroup mainGroup2 = new MainGroup(2);
       project.add(mainGroup2);
       assertEquals(2, project.getMainGroups().size());
+
+      project.remove(mainGroup2);
+      assertNull(mainGroup2.getProject());
+      assertEquals(1, project.getMainGroups().size());
+
+      project.remove(mainGroup2);
+      assertEquals(1, project.getMainGroups().size());
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public final void testAddMainGroupTwice()
+   {
+      final Project project = new Project();
+      final Building building = new Building(1);
+      project.add(building);
+      project.add(building);
+   }
+
+   @Test
+   public final void testEquals()
+   {
+      final Project project1 = new Project();
+      final Project project2 = new Project();
+
+      assertFalse(project1.equals(null));
+      assertFalse(project1.equals(new Object()));
+
+      assertEquals(project1, project1);
+      assertEquals(project1, project2);
+      assertEquals(project2, project1);
+
+      project1.add(new MainGroup(1));
+      assertFalse(project1.equals(project2));
+      project2.add(new MainGroup(1));
+      assertTrue(project1.equals(project2));
+
+      project1.add(new Building(1));
+      assertFalse(project1.equals(project2));
+      project2.add(new Building(1));
+      assertTrue(project1.equals(project2));
+
+      project1.add(new Area(1));
+      assertFalse(project1.equals(project2));
+      project2.add(new Area(1));
+      assertTrue(project1.equals(project2));
+
+      project1.setDescription("desc-1");
+      project2.setDescription("desc-2");
+      assertFalse(project1.equals(project2));
+
+      project1.setName("project-1");
+      project2.setName("project-2");
+      assertFalse(project1.equals(project2));
+
+      project1.setId(1);
+      project2.setId(2);
+      assertFalse(project1.equals(project2));
    }
 }
