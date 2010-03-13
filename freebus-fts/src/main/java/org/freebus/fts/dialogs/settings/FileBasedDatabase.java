@@ -2,6 +2,7 @@ package org.freebus.fts.dialogs.settings;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -45,6 +46,7 @@ final class FileBasedDatabase extends DatabaseDriverPage
       final GridBagConstraints c = new GridBagConstraints();
       int gridY = -1;
 
+      c.insets = new Insets(4, 4, 2, 2);
       c.fill = GridBagConstraints.NONE;
       c.weightx = 1;
       c.gridx = 0;
@@ -58,7 +60,7 @@ final class FileBasedDatabase extends DatabaseDriverPage
       c.gridy = gridY;
       base.add(inpDatabase, c);
 
-      final JButton btnSelDatabase = new JButton("...");
+      final JButton btnSelDatabase = new JButton(" ... ");
       c.fill = GridBagConstraints.NONE;
       c.weightx = 1;
       c.gridx = 2;

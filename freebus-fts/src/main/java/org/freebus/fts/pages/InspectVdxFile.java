@@ -63,13 +63,13 @@ public class InspectVdxFile extends AbstractPage
 
       add(contents, BorderLayout.CENTER);
 
-      final TableContentsPerRecord contentsPerRecord = new TableContentsPerRecord();
-      contents.add(contentsPerRecord, contentsPerRecord.getName());
-      tableContentsPerRecord = contentsPerRecord;
-
       final TableContentsGrid contentsGrid = new TableContentsGrid();
       contents.add(contentsGrid, contentsGrid.getName());
       tableContentsGrid = contentsGrid;
+
+      final TableContentsPerRecord contentsPerRecord = new TableContentsPerRecord();
+      contents.add(contentsPerRecord, contentsPerRecord.getName());
+      tableContentsPerRecord = contentsPerRecord;
 
       createToolBar();
    }

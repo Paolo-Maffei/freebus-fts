@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
@@ -18,6 +19,7 @@ import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
+import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Appender;
 import org.apache.log4j.Level;
@@ -94,6 +96,7 @@ public class LogLine extends JPanel
    private void showLogHistory()
    {
       pmnHistory = new JPopupMenu();
+      pmnHistory.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 
       for (final LogEvent ev : logEventsHistory)
       {
@@ -124,7 +127,7 @@ public class LogLine extends JPanel
       final Color c = levelColors.get(level);
       return c == null ? defaultColor : c;
    }
-   
+
    /**
     * Append a log event. Automatically called by the internal log appender when
     * a new log event arrives.

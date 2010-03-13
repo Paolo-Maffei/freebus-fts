@@ -2,6 +2,7 @@ package org.freebus.fts.dialogs.settings;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.persistence.EntityManagerFactory;
 import javax.swing.JLabel;
@@ -40,6 +41,7 @@ final class ServerBasedDatabase extends DatabaseDriverPage
       final GridBagConstraints c = new GridBagConstraints();
       int gridY = -1;
 
+      c.insets = new Insets(4, 4, 2, 2);
       c.fill = GridBagConstraints.NONE;
       c.weightx = 1;
       c.gridx = 0;

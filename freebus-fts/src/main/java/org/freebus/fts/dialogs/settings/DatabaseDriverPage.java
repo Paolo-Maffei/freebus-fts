@@ -1,6 +1,5 @@
 package org.freebus.fts.dialogs.settings;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.GridBagConstraints;
@@ -27,7 +26,7 @@ abstract class DatabaseDriverPage extends JPanel
    private static final long serialVersionUID = -4422819869584669896L;
 
    private final DriverType driverType;
-   private final JPanel configPanel, testPanel;
+   private final JPanel configPanel;
    private final JTextArea txtTestResults;
 
    /**
@@ -37,17 +36,13 @@ abstract class DatabaseDriverPage extends JPanel
    {
       this.driverType = driverType;
 
-      setLayout(new BorderLayout(0, 8));
+      setLayout(new GridBagLayout());
 
       configPanel = new JPanel();
-      add(configPanel, BorderLayout.CENTER);
+      add(configPanel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL, new Insets(8, 2, 8, 2), 0, 0));
 
-      testPanel = new JPanel();
-      testPanel.setLayout(new GridBagLayout());
-      add(testPanel, BorderLayout.SOUTH);
-      
       JButton btnTest = new JButton(I18n.getMessage("Settings.DatabaseDriverPage.Test"));
-      testPanel.add(btnTest, new GridBagConstraints(0, 0, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(8, 2, 8, 2), 0, 0));
+      add(btnTest, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(8, 2, 8, 2), 0, 0));
       btnTest.addActionListener(new ActionListener()
       {
          @Override
@@ -61,9 +56,9 @@ abstract class DatabaseDriverPage extends JPanel
       txtTestResults.setEditable(false);
       txtTestResults.setLineWrap(true);
       txtTestResults.setOpaque(false);
-      testPanel.add(txtTestResults, new GridBagConstraints(0, 1, 2, 1, 1, 1, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
+      add(txtTestResults, new GridBagConstraints(0, 2, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(8, 2, 8, 2), 0, 0));
 
-      testPanel.add(new JPanel(), new GridBagConstraints(0, 2, 1, 1, 10, 10, GridBagConstraints.NORTH, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+      add(new JPanel(), new GridBagConstraints(0, 3, 1, 1, 1, 100, GridBagConstraints.NORTH, GridBagConstraints.BOTH, new Insets(0, 0, 0, 0), 0, 0));
    }
 
    /**
@@ -72,14 +67,6 @@ abstract class DatabaseDriverPage extends JPanel
    public JPanel getConfigPanel()
    {
       return configPanel;
-   }
-
-   /**
-    * @return The {@link JPanel} panel, which is the parent of the test GUI elements.
-    */
-   public JPanel getTestPanel()
-   {
-      return testPanel;
    }
 
    /**
@@ -125,7 +112,7 @@ abstract class DatabaseDriverPage extends JPanel
       }
 
       txtTestResults.setBorder(new CompoundBorder(new LineBorder(borderColor, 5),
-                                                  new EmptyBorder(5, 5, 5, 5)));
+                                                  new EmptyBorder(8, 8, 8, 8)));
       txtTestResults.setVisible(true);
 
    }

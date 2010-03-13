@@ -25,8 +25,8 @@ public class VirtualDevice
    @Column(name = "virtual_device_id", nullable = false)
    private int id;
 
-   @Column(name = "virtual_device_name", length = 50)
-   private String name;
+   @Column(name = "virtual_device_name", nullable = false, length = 50)
+   private String name = "";
 
    @Column(name = "virtual_device_description", length = 80)
    private String description;
@@ -44,7 +44,7 @@ public class VirtualDevice
    private Program program;
 
    // Column "PRODUCT_TYPE_ID" is the "ENTITY_ID" of VDX table "TEXT_ATTRIBUTE"
-   
+
    /**
     * Create an empty virtual-device object.
     */
@@ -71,7 +71,7 @@ public class VirtualDevice
    {
       return id;
    }
-   
+
    /**
     * @return the functional entity.
     */
