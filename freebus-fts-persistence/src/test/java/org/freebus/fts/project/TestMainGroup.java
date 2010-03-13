@@ -1,13 +1,19 @@
 package org.freebus.fts.project;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 import java.util.Vector;
 
-import junit.framework.TestCase;
+import org.junit.Test;
 
-public class TestMainGroup extends TestCase
+public class TestMainGroup
 {
-
+   @Test
    public final void testMainGroup()
    {
       final MainGroup mainGroup = new MainGroup();
@@ -20,6 +26,7 @@ public class TestMainGroup extends TestCase
       assertNotNull(mainGroup.toString());
    }
 
+   @Test
    public final void testGetSetId()
    {
       final MainGroup mainGroup = new MainGroup();
@@ -35,6 +42,7 @@ public class TestMainGroup extends TestCase
       assertEquals(0, mainGroup.getId());
    }
 
+   @Test
    public final void testGetSetProject()
    {
       final MainGroup mainGroup = new MainGroup();
@@ -53,6 +61,7 @@ public class TestMainGroup extends TestCase
       assertEquals(project, mainGroup.getProject());
    }
 
+   @Test
    public final void testGetSetName()
    {
       final MainGroup mainGroup = new MainGroup();
@@ -71,6 +80,7 @@ public class TestMainGroup extends TestCase
       assertEquals("", mainGroup.getName());
    }
 
+   @Test
    public final void testGetSetAddress()
    {
       final MainGroup mainGroup = new MainGroup();
@@ -86,6 +96,7 @@ public class TestMainGroup extends TestCase
       assertEquals(0, mainGroup.getAddress());
    }
 
+   @Test
    public final void testGetSetMidGroups()
    {
       final MainGroup mainGroup = new MainGroup();
@@ -96,6 +107,7 @@ public class TestMainGroup extends TestCase
       assertEquals(newMidGroups, mainGroup.getMidGroups());
    }
 
+   @Test
    public final void testAdd()
    {
       final MainGroup mainGroup = new MainGroup(1);
@@ -108,13 +120,20 @@ public class TestMainGroup extends TestCase
       assertEquals(1, mainGroup.getMidGroups().size());
       assertEquals(midGroup, mainGroup.getMidGroups().iterator().next());
 
-      mainGroup.add(midGroup);
-      assertEquals(1, mainGroup.getMidGroups().size());
-
       mainGroup.add(new MidGroup(3));
       assertEquals(2, mainGroup.getMidGroups().size());
    }
 
+   @Test(expected = IllegalArgumentException.class)
+   public final void testAddTwice()
+   {
+      final MainGroup mainGroup = new MainGroup(1);
+      final MidGroup midGroup = new MidGroup(2);
+      mainGroup.add(midGroup);
+      mainGroup.add(midGroup);
+   }
+
+   @Test
    public final void testEquals()
    {
       final MainGroup o1 = new MainGroup(1);
