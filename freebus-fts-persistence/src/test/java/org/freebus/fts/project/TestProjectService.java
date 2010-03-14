@@ -75,7 +75,7 @@ public class TestProjectService extends ProjectTestCase
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
-      final Project project = SampleProjectFactory.newProject();
+      final Project project = SampleProjectFactory.newProject(persistenceUnitName);
       project.setName("Sample Project 1");
       projectService.save(project);
       DatabaseResources.getEntityManager().flush();

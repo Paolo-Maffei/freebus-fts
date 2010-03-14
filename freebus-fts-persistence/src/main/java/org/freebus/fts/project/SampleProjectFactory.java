@@ -20,14 +20,13 @@ import org.freebus.fts.project.internal.I18n;
  */
 public final class SampleProjectFactory
 {
-   private static final String persistenceUnitName = "test-full";
    private static final int sampleVirtualDeviceId = 23652;
    private static String sampleImportFileName = "sample-products.vd_";
 
    /**
     * Import the example org.freebus.fts.products.
     */
-   private synchronized static void importSampleDevices()
+   private synchronized static void importSampleDevices(final String persistenceUnitName)
    {
       Logger.getLogger(SampleProjectFactory.class).info("Importing sample org.freebus.fts.products");
 
@@ -80,9 +79,20 @@ public final class SampleProjectFactory
    }
 
    /**
-    * Creates a project that gets initialized with example values.
+    * Creates a project that gets initialized with example values, using the
+    * persistence unit "default".
     */
    public static Project newProject()
+   {
+      return newProject("default");
+   }
+
+   /**
+    * Creates a project that gets initialized with example values.
+    *
+    * @param persistenceUnitName - the name of the persistence unit that is used for the import.
+    */
+   public static Project newProject(final String persistenceUnitName)
    {
       final ProductsFactory productsFactory = ProductsManager.getFactory();
       final VirtualDeviceService virtDevService = productsFactory.getVirtualDeviceService();
@@ -120,7 +130,7 @@ public final class SampleProjectFactory
       VirtualDevice virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
       if (virtDev == null)
       {
-         importSampleDevices();
+         importSampleDevices(persistenceUnitName);
 
          virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
          if (virtDev == null)

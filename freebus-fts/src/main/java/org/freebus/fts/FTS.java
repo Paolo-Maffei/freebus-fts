@@ -156,6 +156,15 @@ public final class FTS extends Application
    }
 
    /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void fatalException(Exception e)
+   {
+      Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrTopLevelException"));
+   }
+
+   /**
     * Load all JARs from the plugins directory <code>pluginsDir</code>. The
     * method silently returns if the plugins directory does not exist.
     */
