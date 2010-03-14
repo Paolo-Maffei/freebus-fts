@@ -19,7 +19,7 @@ public final class BusInterfaceService
     * Returns the default bus-interface. If no default bus-interface exists, one
     * is created. If the creation of the bus-interface fails, an error dialog is
     * shown and null is returned.
-    * 
+    *
     * @return The default {@link BusInterface} bus-interface, or null if no
     *         bus-interface could be created.
     */
@@ -61,7 +61,7 @@ public final class BusInterfaceService
    /**
     * Create the default bus interface. Automatically called on demand by
     * {@link #getBusInterface}.
-    * 
+    *
     * @throws Exception
     */
    private static void createBusInterface() throws Exception
@@ -78,7 +78,7 @@ public final class BusInterfaceService
     * Close the default bus-interface. The bus-interface will be re-created upon
     * the next {@link getBusInterface} call.
     */
-   public synchronized void closeBusInterface()
+   public synchronized static void closeBusInterface()
    {
       if (busInterface != null)
       {

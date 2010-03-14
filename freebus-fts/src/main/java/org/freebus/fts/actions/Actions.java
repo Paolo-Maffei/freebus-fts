@@ -22,7 +22,7 @@ public enum Actions
 
    /** Read the device status. */
    DEVICE_STATUS(new DeviceStatusAction()),
-   
+
    /** Exit the application. */
    EXIT(new ExitAction()),
 
@@ -47,6 +47,9 @@ public enum Actions
    /** Show the properties of the current project. */
    PROJECT_PROPERTIES(new ProjectPropertiesAction()),
 
+   /** Restart the application. */
+   RESTART(new RestartAction()),
+
    /** Save the current project. */
    SAVE_PROJECT(new SaveProjectAction()),
 
@@ -67,7 +70,7 @@ public enum Actions
 
    /**
     * Add the action to the given menu.
-    * 
+    *
     * @param menu - the menu to which the action is added.
     * @return The created menu item.
     */
@@ -78,7 +81,7 @@ public enum Actions
 
    /**
     * Add the action to the tool bar.
-    * 
+    *
     * @param toolBar - the tool bar to which the action is added.
     * @return The created tool bar button.
     */

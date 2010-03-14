@@ -7,7 +7,6 @@ import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.FTS;
 
 /**
  * A helper class that gets the class names for a bunch of custom look&feels.
@@ -18,7 +17,7 @@ public final class LookAndFeelManager
    private final Set<Class<? extends LookAndFeel>> lafClasses = new HashSet<Class<? extends LookAndFeel>>();
 
    /**
-    * Set the default look and feel.
+    * Set the default look and feel for the current platform.
     */
    static public void setDefaultLookAndFeel()
    {
@@ -46,7 +45,7 @@ public final class LookAndFeelManager
    public void add(String lookAndFeelClassName) throws ClassNotFoundException
    {
       final Class<? extends LookAndFeel> lafClass =
-         (Class<? extends LookAndFeel>) FTS.class.getClassLoader().loadClass(lookAndFeelClassName);
+         (Class<? extends LookAndFeel>) getClass().getClassLoader().loadClass(lookAndFeelClassName);
 
       lafClasses.add(lafClass);
    }
@@ -57,7 +56,7 @@ public final class LookAndFeelManager
     */
    public void install()
    {
-      final Logger logger = Logger.getLogger(FTS.class);
+      final Logger logger = Logger.getLogger(getClass());
 
       for (Class<? extends LookAndFeel> lafClass: lafClasses)
       {

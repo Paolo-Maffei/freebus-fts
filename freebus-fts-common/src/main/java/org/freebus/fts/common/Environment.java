@@ -15,11 +15,6 @@ public final class Environment
    private String appDir = null;
    private String appName = "fts";
 
-   static
-   {
-      Logging.setup();
-   }
-
    /**
     * Initialize the environment. Usually programmers do not need to create
     * environment objects, as the global environment object is created
@@ -53,21 +48,22 @@ public final class Environment
          homeDir = envHomeDir;
       else
          homeDir = tempDir;
+
+      Logging.setup();
    }
 
    /**
-    * Ensure that the environment is properly loaded. Do not be mistaken that
-    * this method is empty - it ensures that the class' static initializers have
-    * been executed.
+    * Ensure that the environment is properly loaded.
     */
    public static void init()
    {
+      getInstance();
    }
 
    /**
     * Returns the lower-case name of the operation system: "windows" for Windows
     * systems, "linux" for Linux systems, "other" for unknown systems.
-    * 
+    *
     * @return the name of the operating system
     */
    public static String getOS()
@@ -95,9 +91,9 @@ public final class Environment
     * Returns the application's user-data directory. The name of the directory
     * depends on the platform and uses the application name (see
     * {@link setAppName}).
-    * 
+    *
     * The user-data directory is created if it does not exist.
-    * 
+    *
     * @return the directory for application specific user data.
     */
    public static String getAppDir()
@@ -113,10 +109,10 @@ public final class Environment
    /**
     * Returns the application's user-data directory for the given home
     * directory and application name.
-    * 
+    *
     * @param homeDir - the home directory to use.
     * @param appName - the name of the application.
-    * 
+    *
     * @return the application directory
     */
    public static String getAppDir(final String homeDir, final String appName)
@@ -130,9 +126,9 @@ public final class Environment
     * Set the name of the application (default is "fts"). Slashes, semicolons,
     * and double-colons are replaced with dashes, white-spaces are replaced with
     * underlines.
-    * 
+    *
     * Creates the user-data directory if it does not exist.
-    * 
+    *
     * @see {@link #getAppDir()}
     */
    public static void setAppName(String appName)
@@ -164,7 +160,7 @@ public final class Environment
    /**
     * Returns the global environment object. The object is created if it does
     * not yet exist.
-    * 
+    *
     * @return the global environment object.
     */
    public static Environment getInstance()

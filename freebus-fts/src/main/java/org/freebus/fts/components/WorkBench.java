@@ -40,7 +40,6 @@ public class WorkBench extends JFrame
     */
    public WorkBench()
    {
-      setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       setMinimumSize(new Dimension(600, 400));
       setLayout(new BorderLayout(2, 2));
       setJMenuBar(menuBar);
@@ -72,10 +71,10 @@ public class WorkBench extends JFrame
 
       add(statusBar, BorderLayout.SOUTH);
    }
-   
+
    /**
     * Add the given page to the work-bench and show it.
-    * 
+    *
     * @param page - the page to show.
     * @return true if the page was successfully added.
     */
@@ -111,7 +110,7 @@ public class WorkBench extends JFrame
    /**
     * Add the given page to the work-bench and show it. When the page is created
     * and visible, the page's {@link AbstractPage#setObject(Object)} is called.
-    * 
+    *
     * @param page - the page to show.
     * @param obj - the object that is given to the page via
     *           {@link AbstractPage#setObject(Object)}.
@@ -178,7 +177,7 @@ public class WorkBench extends JFrame
    /**
     * Set the page-object of the given page. The actual setting of the object
     * happens after all pending Swing events are processed.
-    * 
+    *
     * @param page - the page to process.
     * @param obj - the object to set.
     */

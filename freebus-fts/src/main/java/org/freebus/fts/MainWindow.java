@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
@@ -29,7 +30,6 @@ import org.freebus.fts.jobs.JobQueueListener;
 import org.freebus.fts.pages.LogicalView;
 import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
-import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
@@ -73,12 +73,12 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       setTitle(I18n.getMessage("MainWindow.Title"));
       setIconImage(ImageCache.getIcon("app-icon").getImage());
+      setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
       createMenuBar();
       createToolBar();
 
       getStatusBar().add(new LogLine());
-      Logger.getLogger(getClass()).info("Initializing...");
 
       jobQueueView = new JobQueueView();
       jobQueueView.setVisible(false);
@@ -107,12 +107,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
          @Override
          public void windowClosing(WindowEvent event)
          {
-            final Config cfg = Config.getInstance();
-            cfg.setMainWindowSize(getSize());
-
-            DatabaseResources.close();
-
-            cfg.save();
+            Config.getInstance().setMainWindowSize(getSize());
          }
       });
    }
@@ -129,6 +124,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       fileMenu.addSeparator();
       Actions.PROJECT_PROPERTIES.addTo(fileMenu);
       fileMenu.addSeparator();
+      Actions.RESTART.addTo(fileMenu);
       Actions.EXIT.addTo(fileMenu);
 
       final JMenu productsMenu = createJMenu(I18n.getMessage("MainWindow.ProductsMenu"));
@@ -192,7 +188,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
             tmrJobQueueView.cancel();
             tmrJobQueueView = null;
          }
-   
+
          if (!jobQueueView.isVisible())
             jobQueueView.setVisible(true);
 

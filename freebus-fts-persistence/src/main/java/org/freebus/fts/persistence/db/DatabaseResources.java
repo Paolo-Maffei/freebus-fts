@@ -16,7 +16,6 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.Rot13;
 import org.freebus.fts.common.SimpleConfig;
 
@@ -24,12 +23,6 @@ public class DatabaseResources
 {
    static private EntityManagerFactory entityManagerFactory;
    static private EntityManager entityManager;
-
-   static
-   {
-      // Ensure that Environment is loaded, which also initializes the logging
-      Environment.getOS();
-   }
 
    /**
     * Lazily acquire the global entity manager and cache it.
