@@ -18,6 +18,8 @@ import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.LookAndFeelManager;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.knxcomm.internal.JarLoader;
 
@@ -129,6 +131,11 @@ public final class FTS extends Application
    protected void ready()
    {
       Logger.getLogger(getClass()).debug("FTS ready");
+
+      //
+      // Create a sample project and show it in the main window
+      //
+      ProjectManager.setProject(SampleProjectFactory.newProject());
    }
 
    /**
