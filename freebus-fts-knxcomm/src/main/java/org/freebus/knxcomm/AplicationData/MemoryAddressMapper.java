@@ -30,9 +30,9 @@ public class MemoryAddressMapper {
 		for (MemoryAddressTypes a : MemoryAddressTypes.values()) {
 
 			strAddress = deviceProperties.getProperty("MemoryAddress."
-					+ a.getfunction() + "Address");
+					+ a.toString() + "Address");
 			strlength = deviceProperties.getProperty("MemoryAddress."
-					+ a.getfunction() + "Length");
+					+ a.toString() + "Length");
 			// System.out.println(strAddress);
 			if (strAddress != null) {
 				MemoryAddress memoryAddress = new MemoryAddress(

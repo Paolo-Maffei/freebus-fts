@@ -4,245 +4,230 @@ public enum MemoryAddressTypes {
 	/**
   *
   */
-	AND_TAB("AND_TAB"),
+	AND_TAB,
 
 	/**
    *
    */
-	ApplicationID("ApplicationID"),
+	ApplicationID,
 
 	/**
    *
    */
-	AssocTabPtr("AssocTabPtr"),
+	AssocTabPtr,
 
 	/**
    *
    */
-	BootloaderROM("BootloaderROM"),
+	BootloaderROM,
 
 	/**
    *
    */
-	Bootloadervectors("Bootloadervectors"),
+	Bootloadervectors,
 
 	/**
    *
    */
-	CheckLim("CheckLim"),
+	CheckLim,
 
 	/**
    *
    */
-	CommsTabPtr("CommsTabPtr"),
+	CommsTabPtr,
 
 	/**
    *
    */
-	ConfigDes("ConfigDes"),
+	ConfigDes,
 
 	/**
     *
     */
-	I_O_space1("I_O_space1"),
+	I_O_space1,
 
 	/**
  *
  */
-	I_O_space2("I_O_space2"),
+	I_O_space2,
 
 	/**
    *
    */
-	IregB_N("IregB_N"),
+	IregB_N,
 
 	/**
    *
    */
-	ManData("ManData"),
+	ManData,
 
 	/**
    *
    */
-	Masktype("Masktype"),
+	Masktype,
 
 	/**
    *
    */
-	maskversion("maskversion"),
+	maskversion,
 
 	/**
    *
    */
-	MS_Buffer("MS_Buffer"),
+	MS_Buffer,
 
 	/**
    *
    */
-	MxRstCnt("MxRstCnt"),
+	MxRstCnt,
 
 	/**
    *
    */
-	OptionReg("OptionReg"),
+	OptionReg,
 
 	/**
    *
    */
-	OR_TAB("OR_TAB"),
+	OR_TAB,
 
 	/**
 *
 */
-	Page0ROM("Page0ROM"),
+	Page0ROM,
 
 	/**
    *
    */
-	PEI_Buff("PEI_Buff"),
+	PEI_Buff,
 
 	/**
    *
    */
-	PEI_Info("PEI_Info"),
+	PEI_Info,
 
 	/**
    *
    */
-	PEI_Interface("PEI_Interface"),
+	PEI_Interface,
 
 	/**
    *
    */
-	PEI_RecBuf("PEI_RecBuf"),
+	PEI_RecBuf,
 
 	/**
    *
    */
-	PEI_SndBuf("PEI_SndBuf"),
+	PEI_SndBuf,
 
 	/**
    *
    */
-	PEI_Type("PEI_Type"),
+	PEI_Type,
 
 	/**
    *
    */
-	PortADDR("PortADDR"),
+	PortADDR,
 
 	/**
    *
    */
-	PortCDDR("PortCDDR"),
+	PortCDDR,
 
 	/**
    *
    */
-	protectedEEPROM("protectedEEPROM"),
+	protectedEEPROM,
 
 	/**
    *
    */
-	RegB_N("RegB_N"),
+	RegB_N,
 
 	/**
    *
    */
-	RouteCnt("RouteCnt"),
+	RouteCnt,
 
 	/**
    *
    */
-	RunError("RunError"),
+	RunError,
 
 	/**
    *
    */
-	stack("stack"),
+	stack,
 
 	/**
    *
    */
-	SyncRate("SyncRate"),
+	SyncRate,
 
 	/**
    *
    */
-	System("System"),
+	System,
 
 	/**
    *
    */
-	system1("system1"),
+	system1,
 
 	/**
    *
    */
-	system2("system2"),
+	system2,
 
 	/**
    *
    */
-	SystemROM("SystemROM"),
+	SystemROM,
 
 	/**
    *
    */
-	SystemROMvectors(""),
+	SystemROMvectors,
 
 	/**
    *
    */
-	SystemState("SystemState"),
+	SystemState,
 
 	/**
    *
    */
-	UserRAM("UserRAM"),
+	UserRAM,
 
 	/**
    *
    */
-	userRAM2("userRAM2"),
+	userRAM2,
 
 	/**
    *
    */
-	UsrEEPROM("UsrEEPROM"),
+	UsrEEPROM,
 
 	/**
    *
    */
-	UsrInitPtr("UsrInitPtr"),
+	UsrInitPtr,
 
 	/**
    *
    */
-	UsrPrgPtr("UsrPrgPtr"),
+	UsrPrgPtr,
 
 	/**
    *
    */
-	UsrSavPtr("UsrSavPtr"),
+	UsrSavPtr,
 
 	;
 
-	public final String function;
-
-	/**
-	 * Internal constructor
-	 */
-	private MemoryAddressTypes(String function) {
-		this.function = function;
-
-	}
-
-	/**
-	 * @return the application type in human readable form.
-	 */
-	public String getfunction() {
-		return function;
-	}
+	
 
 }
