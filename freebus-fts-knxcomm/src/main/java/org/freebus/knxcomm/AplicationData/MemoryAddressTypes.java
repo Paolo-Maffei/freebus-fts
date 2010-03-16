@@ -228,6 +228,4 @@ public enum MemoryAddressTypes {
 
 	;
 
-	
-
 }

@@ -3,7 +3,7 @@ package org.freebus.knxcomm.AplicationData;
 public class DeviceDescriptorType3 implements DeviceDescriptor {
 
 	@Override
-	public void formRawData(int[] Data) {
+	public void fromRawData(int[] Data) {
 		// TODO Auto-generated method stub
 
 	}

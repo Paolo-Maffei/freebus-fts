@@ -13,6 +13,7 @@ public class MemoryAddressMapper {
 		private static final long serialVersionUID = 7126842835606550631L;
 
 	}
+
 	/**
 	 * 
 	 */

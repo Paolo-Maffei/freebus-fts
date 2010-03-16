@@ -2,7 +2,15 @@ package org.freebus.knxcomm.AplicationData;
 
 public interface DeviceDescriptor {
 
-	public void formRawData(int[] Data) throws Exception;
+	/**
+	 *
+	 * @param Data
+	 * @throws Exception
+	 */
+	public void fromRawData(int[] Data) throws Exception;
 
+	/**
+	 * @return
+	 */
 	public MemoryAddressMapper getMemoryAddressMapper();
 }

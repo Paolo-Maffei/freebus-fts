@@ -14,6 +14,7 @@ public class MemoryAddress {
 		this.adress = adress;
 		this.length = length;
 	}
+
 	public int getAdress() {
 		return adress;
 	}

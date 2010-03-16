@@ -19,12 +19,12 @@ public class DeviceDescriptorFactory {
 
 		if ((data[0] & 0x3F) == 0) {
 			deviceDescriptor = new DeviceDescriptorType0();
-			deviceDescriptor.formRawData(data);
+			deviceDescriptor.fromRawData(data);
 
 		}
 		if ((data[0] & 0x3F) == 3) {
 			deviceDescriptor = new DeviceDescriptorType3();
-			deviceDescriptor.formRawData(data);
+			deviceDescriptor.fromRawData(data);
 		}
 		return deviceDescriptor;
 

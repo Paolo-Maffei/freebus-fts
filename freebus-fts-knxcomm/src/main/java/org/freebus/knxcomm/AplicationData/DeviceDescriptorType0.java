@@ -4,6 +4,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
+
 public class DeviceDescriptorType0 implements DeviceDescriptor {
 	Properties deviceProperties;
 
@@ -16,20 +17,13 @@ public class DeviceDescriptorType0 implements DeviceDescriptor {
 	 * @return Mask String
 	 */
 	private String Data2MaskString(int data[]) {
-		String[] HEX_String_TABLE = { "0", "1", "2", "3", "4", "5", "6", "7",
-				"8", "9", "A", "B", "C", "D", "E", "F" };
-		String mask = "";
-		mask = HEX_String_TABLE[(data[1] & 0xF0) >> 4];
-		mask = mask + HEX_String_TABLE[data[1] & 0x0F];
-		mask = mask + HEX_String_TABLE[(data[2] & 0xF0) >> 4];
-		mask = mask + HEX_String_TABLE[data[2] & 0x0F];
-		return mask;
+		return String.format("%02x%02x", data[1], data[2]).toUpperCase();
 	}
 
 	@Override
-	public void formRawData(int[] Data) throws Exception {
+	public void fromRawData(int[] Data) throws Exception {
 
-		loadpropertries(Data2MaskString(Data));
+		loadProperties(Data2MaskString(Data));
 	}
 
 	public Properties getDeviceProperties() {
@@ -45,21 +39,24 @@ public class DeviceDescriptorType0 implements DeviceDescriptor {
 		return new MemoryAddressMapper(deviceProperties);
 	}
 
-	public MemoryAddressMapper getMemoryAdressMapper() {
-		MemoryAddressMapper memoryAddressMapper;
-		memoryAddressMapper = new MemoryAddressMapper(deviceProperties);
-		return memoryAddressMapper;
 
-	}
 
-	private void loadpropertries(String mask) throws Exception {
+	/**
+	 * Load the property file for a given device descriptor. 
+	 * 
+	 * @param mask
+	 * @throws Exception
+	 */
+	private void loadProperties(String mask) throws Exception {
 		deviceProperties = new Properties();
 		InputStream in = null;
-
-		in = new FileInputStream(
-				"../freebus-fts-knxcomm/resources/DeviceDescriptorType0_"
-						+ mask + ".properties");
-
+		ClassLoader cl = this.getClass().getClassLoader();
+		in = cl.getResourceAsStream("resource/fts-messages.properties");
+		if (in == null) {
+			in = new FileInputStream(
+					"../freebus-fts-knxcomm/resources/DeviceDescriptorType0_"
+							+ mask + ".properties");
+		}
 		deviceProperties.load(in);
 
 		in.close();
