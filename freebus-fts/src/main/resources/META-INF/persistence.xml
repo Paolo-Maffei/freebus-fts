@@ -31,11 +31,12 @@
   <class>org.freebus.fts.project.SubGroup</class>
   <properties>
    <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
-   <property name="eclipselink.logging.level" value="INFO" />
-   <property name="eclipselink.ddl-generation" value="create-tables" />
-   <!-- property name="eclipselink.ddl-generation" value="create-tables"/-->
-   <!-- property name="eclipselink.ddl-generation" value="drop-and-create-tables" /-->
+   <property name="eclipselink.logging.level" value="FINEST" />
    <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation" value="none" />
+   <!-- property name="eclipselink.ddl-generation" value="create-tables" /-->
+   <!-- property name="eclipselink.ddl-generation" value="drop-and-create-tables" /-->
+   <!-- property name="eclipselink.ddl-generation.output-mode" value="database" /-->
 
    <property name="hsqldb.default_table_type" value="cached" />
   </properties>

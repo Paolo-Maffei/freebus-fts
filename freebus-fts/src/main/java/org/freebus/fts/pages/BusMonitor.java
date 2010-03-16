@@ -11,7 +11,6 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.pages.busmonitor.BusMonitorCellRenderer;
 import org.freebus.fts.pages.busmonitor.BusMonitorItem;
 import org.freebus.fts.utils.BusInterfaceService;
@@ -61,29 +60,22 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    public void setObject(Object o)
    {
       if (bus == null)
-      {
-         try
-         {
-            bus = BusInterfaceService.getBusInterface();
-            bus.addListener(this);
-         }
-         catch (Exception e)
-         {
-            Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrOpenBus"));
-         }
-      }
+         bus = BusInterfaceService.getBusInterface();
+
+      if (bus != null)
+         bus.addListener(this);
    }
 
    /**
     * Add an entry to the list of telegrams. The telegram is cloned to avoid
     * problems.
-    * 
+    *
     * @param telegram - The telegram that the entry is about.
     * @param isReceived - True if the telegram was received, false else.
     */
    private void addBusMonitorItem(Telegram telegram, final boolean isReceived)
    {
-      final Telegram tel = (Telegram) telegram.clone();
+      final Telegram tel = telegram.clone();
       final Date when = new Date();
 
       try

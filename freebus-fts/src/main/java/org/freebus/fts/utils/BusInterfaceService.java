@@ -3,8 +3,8 @@ package org.freebus.fts.utils;
 import javax.swing.SwingUtilities;
 
 import org.freebus.fts.core.Config;
+import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.project.internal.I18n;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 
@@ -69,9 +69,12 @@ public final class BusInterfaceService
       final Config cfg = Config.getInstance();
 
       // TODO use the configured bus interface type here
-      busInterface = BusInterfaceFactory.newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
+      final BusInterface newBusInterface = BusInterfaceFactory.newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
 
-      busInterface.open();
+      newBusInterface.open();
+      // if open() fails an exception will be thrown
+
+      busInterface = newBusInterface;
    }
 
    /**

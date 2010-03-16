@@ -3,6 +3,8 @@ package org.freebus.fts.test_utils;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.freebus.fts.common.Environment;
+import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 import org.junit.After;
@@ -13,15 +15,25 @@ import org.junit.Before;
  */
 public abstract class PersistenceTestCase
 {
+   static
+   {
+      Environment.init();
+   }
+
    /**
     * The name of the persistence unit, as given in the constructor.
     */
    protected final String persistenceUnitName;
 
    /**
+    * The connection details for the test connection.
+    */
+   protected final ConnectionDetails conDetails;
+
+   /**
     * The name of the HSQL database.
     */
-   protected final String databaseName = getClass().getName();
+   protected final String databaseName = getClass().getSimpleName();
 
    /**
     * Create a persistence test case.
@@ -31,9 +43,9 @@ public abstract class PersistenceTestCase
    public PersistenceTestCase(final String persistenceUnitName)
    {
       this.persistenceUnitName = persistenceUnitName;
+      conDetails = new ConnectionDetails(DriverType.HSQL_MEM, databaseName);
 
-      final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName,
-            DriverType.HSQL_MEM, databaseName, "sa", "");
+      final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName, conDetails);
       DatabaseResources.setEntityManagerFactory(emf);
    }
 

@@ -5,7 +5,7 @@ import java.awt.event.InputEvent;
 
 import javax.swing.KeyStroke;
 
-import org.freebus.fts.common.Application;
+import org.freebus.fts.FTS;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 
@@ -32,6 +32,6 @@ public final class ExitAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      Application.exit();
+      FTS.getInstance().exit();
    }
 }

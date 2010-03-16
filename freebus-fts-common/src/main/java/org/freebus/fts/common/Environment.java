@@ -119,7 +119,7 @@ public final class Environment
    {
       if (getInstance().osname.startsWith("linux"))
          return homeDir + "/." + appName;
-      else return homeDir + '/' + appName;
+      else return homeDir + "/" + appName;
    }
 
    /**

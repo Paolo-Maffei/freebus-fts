@@ -7,7 +7,7 @@
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <properties>
-   <property name="eclipselink.logging.level" value="INFO" />
+   <property name="eclipselink.logging.level" value="FINER" />
   </properties>
  </persistence-unit>
 
@@ -38,8 +38,7 @@
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode"
-    value="database" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
   </properties>
  </persistence-unit>
 
@@ -53,8 +52,7 @@
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode"
-    value="database" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
   </properties>
  </persistence-unit>
 
@@ -76,8 +74,7 @@
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode"
-    value="database" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
   </properties>
  </persistence-unit>
 
@@ -90,8 +87,7 @@
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode"
-    value="database" />
+   <property name="eclipselink.ddl-generation.output-mode" value="database" />
   </properties>
  </persistence-unit>
 

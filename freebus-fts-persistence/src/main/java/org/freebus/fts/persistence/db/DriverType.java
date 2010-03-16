@@ -8,7 +8,12 @@ public enum DriverType
    /**
     * No driver.
     */
-   None(null, null, null, DriverClass.NONE),
+   NONE(null, null, null, DriverClass.NONE),
+
+   /**
+    * H2 file based database driver.
+    */
+   H2("org.h2.Driver", "jdbc:h2:", null, DriverClass.FILE_BASED),
 
    /**
     * Hypersonic SQL (HSQL) file based driver.
@@ -50,7 +55,7 @@ public enum DriverType
     */
    static public DriverType getDefault()
    {
-      return HSQL;
+      return H2;
    }
 
    /**

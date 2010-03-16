@@ -16,10 +16,9 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import org.freebus.fts.common.Environment;
-import org.freebus.fts.common.Rot13;
-import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 
@@ -30,7 +29,6 @@ final class FileBasedDatabase extends DatabaseDriverPage
 {
    private static final long serialVersionUID = 789090230895L;
    private final JTextField inpDatabase, inpUser, inpPasswd;
-   private final String configKey;
 
    /**
     * Create a new serial bus-interface configuration widget.
@@ -38,7 +36,6 @@ final class FileBasedDatabase extends DatabaseDriverPage
    protected FileBasedDatabase(DriverType driverType)
    {
       super(driverType);
-      configKey = driverType.getConfigPrefix();
 
       final JPanel base = getConfigPanel();
       base.setLayout(new GridBagLayout());
@@ -101,19 +98,12 @@ final class FileBasedDatabase extends DatabaseDriverPage
       c.gridy = gridY;
       base.add(inpPasswd, c);
 
-      final SimpleConfig cfg = Config.getInstance();
+      final ConnectionDetails conDetails = new ConnectionDetails();
+      conDetails.fromConfig(Config.getInstance(), driverType);
 
-      String val = cfg.getStringValue(configKey + ".database");
-      if (val.isEmpty())
-         val = Environment.getAppDir() + "/db";
-      inpDatabase.setText(val);
-
-      val = cfg.getStringValue(configKey + ".user");
-      if (val.isEmpty())
-         val = "sa";
-      inpUser.setText(val);
-
-      inpPasswd.setText(Rot13.rotate(cfg.getStringValue(configKey + ".passwd")));
+      inpDatabase.setText(conDetails.getDbName());
+      inpUser.setText(conDetails.getUser());
+      inpPasswd.setText(conDetails.getPassword());
    }
 
    /**
@@ -138,22 +128,27 @@ final class FileBasedDatabase extends DatabaseDriverPage
    @Override
    protected void connectNow() throws Exception
    {
-      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("connect-test", getDriverType(),
-            inpDatabase.getText(), inpUser.getText(), inpPasswd.getText());
+      final ConnectionDetails conDetails = new ConnectionDetails(getDriverType(), inpDatabase.getText(), "", inpUser
+            .getText(), inpPasswd.getText());
 
+      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("connect-test", conDetails);
       emf.createEntityManager().close();
       emf.close();
    }
 
    /**
-    * Apply the widget's contents to the configuration.
+    * Apply the frame's contents to the configuration.
     */
    @Override
    public void apply()
    {
-      final SimpleConfig cfg = Config.getInstance();
-      cfg.put(configKey + ".database", inpDatabase.getText());
-      cfg.put(configKey + ".user", inpUser.getText());
-      cfg.put(configKey + ".passwd", Rot13.rotate(inpPasswd.getText()));
+      final ConnectionDetails conDetails = new ConnectionDetails();
+
+      conDetails.setType(getDriverType());
+      conDetails.setDbName(inpDatabase.getText());
+      conDetails.setUser(inpUser.getText());
+      conDetails.setPassword(inpPasswd.getText());
+
+      conDetails.toConfig(Config.getInstance());
    }
 }

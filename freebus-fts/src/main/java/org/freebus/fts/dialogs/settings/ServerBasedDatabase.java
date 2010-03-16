@@ -10,10 +10,9 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import org.freebus.fts.common.Rot13;
-import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 
@@ -24,7 +23,6 @@ final class ServerBasedDatabase extends DatabaseDriverPage
 {
    private static final long serialVersionUID = -221274503273310361L;
    private final JTextField inpHost, inpDatabase, inpUser, inpPasswd;
-   private final String configKey;
 
    /**
     * Create a new serial bus-interface configuration widget.
@@ -32,7 +30,6 @@ final class ServerBasedDatabase extends DatabaseDriverPage
    protected ServerBasedDatabase(DriverType driverType)
    {
       super(driverType);
-      configKey = driverType.getConfigPrefix();
 
       final JPanel base = getConfigPanel();
       GridBagLayout layout = new GridBagLayout();
@@ -94,20 +91,16 @@ final class ServerBasedDatabase extends DatabaseDriverPage
       c.gridy = gridY;
       base.add(inpPasswd, c);
 
-      final SimpleConfig cfg = Config.getInstance();
+      final ConnectionDetails conDetails = new ConnectionDetails();
+      conDetails.fromConfig(Config.getInstance(), driverType);
 
-      String val = cfg.getStringValue(configKey + ".host");
-      if (val.isEmpty())
-         val = "localhost";
+      inpDatabase.setText(conDetails.getDbName());
+      inpUser.setText(conDetails.getUser());
+      inpPasswd.setText(conDetails.getPassword());
+
+      String val = conDetails.getHost();
+      if (val.isEmpty()) val = "localhost";
       inpHost.setText(val);
-
-      inpUser.setText(cfg.getStringValue(configKey + ".user"));
-      inpPasswd.setText(Rot13.rotate(cfg.getStringValue(configKey + ".passwd")));
-
-      val = cfg.getStringValue(configKey + ".database");
-      if (val.isEmpty())
-         val = "fts";
-      inpDatabase.setText(val);
    }
 
    /**
@@ -116,9 +109,10 @@ final class ServerBasedDatabase extends DatabaseDriverPage
    @Override
    protected void connectNow() throws Exception
    {
-      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("connect-test", getDriverType(),
-            inpHost.getText() + '/' + inpDatabase.getText(), inpUser.getText(), inpPasswd.getText());
+      final ConnectionDetails conDetails = new ConnectionDetails(getDriverType(), inpDatabase.getText(), inpHost
+            .getText(), inpUser.getText(), inpPasswd.getText());
 
+      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("connect-test", conDetails);
       emf.createEntityManager().close();
       emf.close();
    }
@@ -129,10 +123,14 @@ final class ServerBasedDatabase extends DatabaseDriverPage
    @Override
    public void apply()
    {
-      final SimpleConfig cfg = Config.getInstance();
-      cfg.put(configKey + ".host", inpHost.getText());
-      cfg.put(configKey + ".user", inpUser.getText());
-      cfg.put(configKey + ".passwd", Rot13.rotate(inpPasswd.getText()));
-      cfg.put(configKey + ".database", inpDatabase.getText());
+      final ConnectionDetails conDetails = new ConnectionDetails();
+
+      conDetails.setType(getDriverType());
+      conDetails.setDbName(inpDatabase.getText());
+      conDetails.setHost(inpHost.getText());
+      conDetails.setUser(inpUser.getText());
+      conDetails.setPassword(inpPasswd.getText());
+
+      conDetails.toConfig(Config.getInstance());
    }
 }

@@ -4,8 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -20,7 +18,6 @@ import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.LogLine;
 import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
-import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.core.ProjectController;
@@ -71,7 +68,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       super();
       setInstance(this);
 
-      setTitle(I18n.getMessage("MainWindow.Title"));
+      setTitle(I18n.getMessage("MainWindow.TitleNoProject"));
       setIconImage(ImageCache.getIcon("app-icon").getImage());
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
@@ -94,22 +91,8 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       setSelectedPage(getUniquePage(TopologyView.class));
 
-      Dimension size = Config.getInstance().getMainWindowSize();
-      if (size == null)
-      {
-         final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-         size = new Dimension((int) (screenSize.width * 0.9), (int) (screenSize.height * 0.9));
-      }
-      setSize(size);
-
-      addWindowListener(new WindowAdapter()
-      {
-         @Override
-         public void windowClosing(WindowEvent event)
-         {
-            Config.getInstance().setMainWindowSize(getSize());
-         }
-      });
+      final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      setSize((int) (screenSize.width * 0.9), (int) (screenSize.height * 0.9));
    }
 
    /**
@@ -228,7 +211,10 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    public void projectChange(Project project)
    {
       updateContents();
-      setTitle(I18n.formatMessage("MainWindow.Title", new Object[] { project.getName() }));
+
+      if (project == null)
+         setTitle(I18n.getMessage("MainWindow.TitleNoProject"));
+      else setTitle(I18n.formatMessage("MainWindow.Title", new Object[] { project.getName() }));
    }
 
    /**

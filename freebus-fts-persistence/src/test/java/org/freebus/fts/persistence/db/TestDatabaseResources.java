@@ -2,6 +2,9 @@ package org.freebus.fts.persistence.db;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.sql.Connection;
+import java.sql.SQLException;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 
@@ -27,11 +30,19 @@ public class TestDatabaseResources extends PersistenceTestCase
    @Test
    public void testCreateEntityManagerFactory()
    {
-      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-entities", DriverType.HSQL_MEM, "test", "sa", "");
+      final ConnectionDetails cd = new ConnectionDetails(DriverType.HSQL_MEM, "test");
+      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-entities", cd);
       assertNotNull(emf);
 
       EntityManager em = emf.createEntityManager();
       assertNotNull(em);
+   }
+
+   @Test
+   public void testCreateConnection() throws SQLException, ClassNotFoundException
+   {
+      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.HSQL_MEM, "testCreateConnection"));
+      con.close();
    }
 
    /**
@@ -40,8 +51,8 @@ public class TestDatabaseResources extends PersistenceTestCase
    @Test
    public void testCreateMigrator() throws Exception
    {
-      Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml",
-            DriverType.HSQL_MEM, "migrator-test", "sa", "");
+      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.HSQL_MEM, "migrator-test", "", "sa", ""));
+      Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml", con);
       assertNotNull(liq);
 
       liq.dropAll();
@@ -54,30 +65,32 @@ public class TestDatabaseResources extends PersistenceTestCase
    @Test
    public void testCreateMigratorEmptyDatabase() throws Exception
    {
-      Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml",
-            DriverType.HSQL_MEM, "migrator-test-empty", "sa", "");
+      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.HSQL_MEM, "migrator-test-empty", "", "sa", ""));
+      Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml", con);
       assertNotNull(liq);
-      
+
       liq.checkDatabaseChangeLogTable();
    }
 
    /**
     * Let JPA create database tables, then tell Liquibase to drop them all
-    * and create it's own scheme. 
+    * and create it's own scheme.
     */
    @Test
    public void testMigrateOldDatabase() throws Exception
    {
       final String dbName = "migrator-test-exists";
-      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-entities", DriverType.HSQL_MEM, dbName, "sa", "");
+      final ConnectionDetails cd = new ConnectionDetails(DriverType.HSQL_MEM, dbName);
+
+      EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-entities", cd);
       assertNotNull(emf);
 
       EntityManager em = emf.createEntityManager();
       em.persist(new SampleFunctionalEntity());
       em.close();
 
-      Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml",
-            DriverType.HSQL_MEM, dbName, "sa", "");
+      final Connection con = DatabaseResources.createConnection(cd);
+      Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml", con);
       assertNotNull(liq);
 
       liq.validate();

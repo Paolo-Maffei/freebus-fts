@@ -23,7 +23,7 @@ public abstract class Application
    /**
     * Restart the application by setting the restart flag and sending a close
     * event to the main window. Only works if the main window has been set.
-    *
+    * 
     * @see {@link #setMainWindow(JFrame)}
     */
    public static void restart()
@@ -34,7 +34,7 @@ public abstract class Application
 
    /**
     * Terminate the application. Only works if the main window has been set.
-    *
+    * 
     * @see {@link #setMainWindow(JFrame)}
     */
    public static void exit()
@@ -45,7 +45,7 @@ public abstract class Application
 
    /**
     * Close the main window. Does nothing if the main window was not set.
-    *
+    * 
     * @see {@link #setMainWindow(JFrame)}
     */
    public static void closeMainWindow()
@@ -74,10 +74,12 @@ public abstract class Application
             restart = false;
 
             app = appClass.newInstance();
+            app.waitEventsDone();
 
             app.initialize(args);
             app.startup();
             app.waitEventsDone();
+
             app.ready();
 
             Logger.getLogger(appClass).debug("FTS startup done");
@@ -99,7 +101,7 @@ public abstract class Application
    /**
     * Set the main window. Setting the main window will exit or restart the
     * application when the main window is disposed.
-    *
+    * 
     * Use
     * <code>mainWin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</code> to
     * set your main window to dispose when the close button is clicked.
@@ -121,7 +123,10 @@ public abstract class Application
 
    /**
     * Non-GUI application initialization.
-    *
+    * <p>
+    * This method is called by the static {@code launch} method, subclasses must
+    * override it.
+    * 
     * @param args - the application's command line arguments
     */
    protected void initialize(String[] args)
@@ -131,22 +136,31 @@ public abstract class Application
    /**
     * Application startup. Responsible for starting the application; for
     * creating and showing the initial GUI.
+    * <p>
+    * This method is called by the static {@code launch} method, subclasses must
+    * override it.
     */
-   protected void startup()
-   {
-   }
+   protected abstract void startup();
 
    /**
     * Startup finished, the application is ready to run. Called after all
     * pending Swing events have been processed.
+    * <p>
+    * It's usually important for an application to start up as quickly as
+    * possible. Applications can override this method to do some additional
+    * start up work, after the GUI is up and ready to use.
+    * <p>
+    * This method is called by the static {@code launch} method, subclasses must
+    * override it.
     */
    protected void ready()
    {
    }
 
    /**
-    * The application is shutting down. Called when the main window is closed.
-    *
+    * Called when the application {@link #exit exits} or {@link #restart
+    * restarts}. (Currently?) called when the main window is disposed.
+    * 
     * @see {#setMainWindow(JFrame)}
     */
    protected void shutdown()
@@ -156,7 +170,7 @@ public abstract class Application
    /**
     * Wait until all Swing events are processed
     */
-   private void waitEventsDone()
+   protected final void waitEventsDone()
    {
       try
       {
@@ -176,7 +190,7 @@ public abstract class Application
    /**
     * Called when an exception is caught from {@link #launch()}. The default
     * implementation prints the stack trace to the console.
-    *
+    * 
     * The application will terminate after this method in any case.
     */
    protected void fatalException(Exception e)

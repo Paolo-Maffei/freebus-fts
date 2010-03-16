@@ -2,7 +2,7 @@ package org.freebus.fts.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.common.Application;
+import org.freebus.fts.FTS;
 import org.freebus.fts.core.I18n;
 
 /**
@@ -26,6 +26,6 @@ public final class RestartAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      Application.restart();
+      FTS.getInstance().restart();
    }
 }

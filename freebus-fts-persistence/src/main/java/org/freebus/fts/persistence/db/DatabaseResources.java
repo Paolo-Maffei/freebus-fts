@@ -2,6 +2,7 @@ package org.freebus.fts.persistence.db;
 
 import java.sql.Connection;
 import java.sql.Driver;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.persistence.EntityManager;
@@ -16,7 +17,6 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.Rot13;
 import org.freebus.fts.common.SimpleConfig;
 
 public class DatabaseResources
@@ -44,53 +44,22 @@ public class DatabaseResources
    }
 
    /**
-    * Create an entity manager factory, using the values from the
-    * {@link SimpleConfig} configuration.
+    * Create an entity manager factory for the persistence unit "default", using
+    * the configured values from the {@link SimpleConfig configuration}.
     *
     * @return The created entity-manager factory.
     *
     * @see {@link #setEntityManagerFactory}
+    * @see {@link ConnectionDetails#fromConfig(SimpleConfig)}
     */
    static public EntityManagerFactory createDefaultEntityManagerFactory()
    {
       final SimpleConfig cfg = SimpleConfig.getInstance();
-      final String driverStr = cfg.getStringValue("databaseDriverType");
 
-      final DriverType driver = driverStr.isEmpty() ? DriverType.getDefault() : DriverType.valueOf(driverStr);
-      if (driver == null)
-         return null;
+      final ConnectionDetails conDetails = new ConnectionDetails();
+      conDetails.fromConfig(cfg);
 
-      return createEntityManagerFactory(driver);
-   }
-
-   /**
-    * Create an entity manager factory, using the values from the
-    * {@link SimpleConfig} configuration for database, user and password.
-    *
-    * This method fetches the required parameters from the global
-    * {@link SimpleConfig} configuration, using
-    * {@link DriverType#getConfigPrefix()} as prefix for the configuration
-    * options.
-    *
-    * @param driver - the database driver to use.
-    *
-    * @return The created entity-manager factory.
-    *
-    * @see {@link #setEntityManagerFactory}
-    */
-   static public EntityManagerFactory createEntityManagerFactory(DriverType driver)
-   {
-      final SimpleConfig cfg = SimpleConfig.getInstance();
-      final String pfx = driver.getConfigPrefix();
-
-      final String dbname = cfg.getStringValue(pfx + ".database");
-      final String host = cfg.getStringValue(pfx + ".host");
-      final String user = cfg.getStringValue(pfx + ".user");
-      final String passwd = Rot13.rotate(cfg.getStringValue(pfx + ".passwd"));
-
-      final String location = host.isEmpty() ? dbname : host + '/' + dbname;
-
-      return createEntityManagerFactory("default", driver, location, user, passwd);
+      return createEntityManagerFactory("default", conDetails);
    }
 
    /**
@@ -98,32 +67,20 @@ public class DatabaseResources
     *
     * @param persistenceUnitName - the name of the persistence unit, e.g.
     *           "default".
-    * @param driver - the database driver to use.
-    * @param location - the name of the database or host/database.
-    * @param user - the database connect user.
-    * @param password - the database connect password.
+    * @param conDetails - the database connection-details to use.
     *
     * @return The created entity-manager factory.
     *
     * @see {@link #setEntityManagerFactory}
     */
-   static public EntityManagerFactory createEntityManagerFactory(final String persistenceUnitName, DriverType driver,
-         String location, String user, String password)
+   static public EntityManagerFactory createEntityManagerFactory(String persistenceUnitName,
+         ConnectionDetails conDetails)
    {
-      final String url = driver.getConnectURL(location);
-      Logger.getLogger(DatabaseResources.class).info("Connecting: " + url);
-
-      final Properties props = new Properties();
-      props.setProperty("javax.persistence.jdbc.driver", driver.className);
-      props.setProperty("javax.persistence.jdbc.url", url);
-      props.setProperty("javax.persistence.jdbc.user", user);
-      props.setProperty("javax.persistence.jdbc.password", password);
-      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
-
-      props.setProperty("hsqldb.default_table_type", "cached");
+      Logger.getLogger(DatabaseResources.class).info("JPA Connecting: " + conDetails.getConnectURL());
 
       try
       {
+         final Properties props = getPropertiesFor(conDetails);
          return Persistence.createEntityManagerFactory(persistenceUnitName, props);
       }
       catch (PersistenceException e)
@@ -144,7 +101,7 @@ public class DatabaseResources
    public static void setEntityManagerFactory(EntityManagerFactory entityManagerFactory)
    {
       DatabaseResources.entityManagerFactory = entityManagerFactory;
-//      DatabaseResources.entityManager = null;
+      // DatabaseResources.entityManager = null;
    }
 
    /**
@@ -157,7 +114,8 @@ public class DatabaseResources
    }
 
    /**
-    * Close all database resources.
+    * Close all database resources. Does not close the created {@link Liquibase}
+    * migrators.
     */
    public static void close()
    {
@@ -176,36 +134,78 @@ public class DatabaseResources
    }
 
    /**
-    * Create a {@link Liquibase} database migrator for migrating a database.
+    * Create a {@link Liquibase} database migrator for migrating a database. The
+    * change log files are loaded using a class-loader file-opener.
     *
     * @param changeLogFile - the name of the Liquibase change-log file.
-    * @param driverType - the database driver to use.
-    * @param location - the name of the database or host/database.
-    * @param user - the database connect user.
-    * @param password - the database connect password.
+    * @param con - the database connection that is used for migration.
     *
     * @return The created {@link Liquibase} object.
+    *
+    * @see {@link #createConnection(ConnectionDetails)}
     */
-   public static Liquibase createMigrator(String changeLogFile, DriverType driver, String location, String user,
-         String password) throws Exception
+   public static Liquibase createMigrator(String changeLogFile, Connection con) throws Exception
    {
-      final Driver dbDriver = (Driver) ClassLoader.getSystemClassLoader().loadClass(driver.className).newInstance();
-
-      final String url = driver.getConnectURL(location);
-      Logger.getLogger(DatabaseResources.class).info("Connecting: " + url);
-
-      final Properties props = new Properties();
-      props.setProperty("javax.persistence.jdbc.url", url);
-      props.setProperty("javax.persistence.jdbc.user", user);
-      props.setProperty("javax.persistence.jdbc.password", password);
-      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
-
-      props.setProperty("hsqldb.default_table_type", "cached");
-
-      final Connection con = dbDriver.connect(url, props);
       final Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(con);
 
-      final Liquibase liquibase = new Liquibase(changeLogFile, new ClassLoaderFileOpener(), database);
-      return liquibase;
+      return new Liquibase(changeLogFile, new ClassLoaderFileOpener(), database);
+   }
+
+   /**
+    * Create a {@link Connection connection} using the given connection-details.
+    *
+    * @param conDetails - the database connection-details to use.
+    *
+    * @return The created database connection.
+    *
+    * @throws SQLException - if there was an error connecting to the database
+    * @throws ClassNotFoundException - if the database driver was not found
+    */
+   public static Connection createConnection(ConnectionDetails conDetails) throws SQLException, ClassNotFoundException
+   {
+      try
+      {
+         final DriverType type = conDetails.getType();
+         final Driver dbDriver = (Driver) ClassLoader.getSystemClassLoader().loadClass(type.className).newInstance();
+
+         final String url = conDetails.getConnectURL();
+         Logger.getLogger(DatabaseResources.class).info("JDBC Connecting: " + url);
+
+         final Properties props = new Properties();
+         props.setProperty("user", conDetails.getUser());
+         props.setProperty("password", conDetails.getPassword());
+         props.setProperty("hsqldb.default_table_type", "cached");
+
+         return dbDriver.connect(url, props);
+      }
+      catch (IllegalAccessException e)
+      {
+         throw new SQLException(e);
+      }
+      catch (InstantiationException e)
+      {
+         throw new SQLException(e);
+      }
+   }
+
+   /**
+    * @return a {@link Properties database properties} object filled from the
+    *         given connection-details object
+    */
+   public static Properties getPropertiesFor(final ConnectionDetails conDetails)
+   {
+      final Properties props = new Properties();
+      props.setProperty("javax.persistence.jdbc.driver", conDetails.getType().className);
+      props.setProperty("javax.persistence.jdbc.url", conDetails.getConnectURL());
+      props.setProperty("javax.persistence.jdbc.user", conDetails.getUser());
+      props.setProperty("javax.persistence.jdbc.password", conDetails.getPassword());
+
+      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
+
+      final DriverType type = conDetails.getType();
+      if (type == DriverType.HSQL || type == DriverType.HSQL_MEM)
+         props.setProperty("hsqldb.default_table_type", "cached");
+
+      return props;
    }
 }

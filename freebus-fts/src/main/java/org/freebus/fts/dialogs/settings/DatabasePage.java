@@ -15,6 +15,7 @@ import javax.swing.JSeparator;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DriverClass;
 import org.freebus.fts.persistence.db.DriverType;
 
@@ -35,7 +36,7 @@ public final class DatabasePage extends SettingsPage
    {
       private final DriverType type;
       private final String label;
-      
+
       private DriverTypeItem(final DriverType type, final String label)
       {
          this.type = type;
@@ -170,11 +171,10 @@ public final class DatabasePage extends SettingsPage
    @Override
    public void apply()
    {
-      final SimpleConfig cfg = Config.getInstance();
-      cfg.put("databaseDriverType", getSelectedDriverType().toString());
-
       for (int i = cfgPages.size() - 1; i >= 0; --i)
          cfgPages.get(i).apply();
+
+      Config.getInstance().put(ConnectionDetails.driverTypeConfigKey, getSelectedDriverType().toString());
    }
 
    /**

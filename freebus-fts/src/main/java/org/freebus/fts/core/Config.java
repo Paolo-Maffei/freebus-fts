@@ -27,7 +27,7 @@ public final class Config extends SimpleConfig
    /**
     * Create a configuration object. Automatically loads the application's
     * default configuration.
-    * 
+    *
     * @see {@link #getConfig} - To access the global configuration object.
     */
    public Config()
@@ -84,7 +84,7 @@ public final class Config extends SimpleConfig
     * file. Automatically called by the constructor. No error occurs if the
     * configuration file does not exist (but the configuration object is empty
     * afterwards).
-    * 
+    *
     * Opens an error dialog if an error occurs.
     */
    public void load()
@@ -109,7 +109,7 @@ public final class Config extends SimpleConfig
    /**
     * Save the configuration object to the default application configuration
     * file.
-    * 
+    *
     * Opens an error dialog if an error occurs.
     */
    public void save()
@@ -149,10 +149,5 @@ public final class Config extends SimpleConfig
       put("commPort", commPort);
       setLookAndFeelName(lookAndFeel);
       put("knxConnectionType", "NONE");
-
-      put("databaseDriverType", "HSQL");
-      put("databaseHSQL.user", "sa");
-      put("databaseHSQL.password", "");
-      put("databaseHSQL.database", Environment.getAppDir() + "/db");
    }
 }

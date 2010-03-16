@@ -1,38 +1,58 @@
 package org.freebus.fts;
 
+import java.awt.Cursor;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.IOException;
+import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceException;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import liquibase.Liquibase;
+import liquibase.exception.LiquibaseException;
+
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.Application;
 import org.freebus.fts.common.Environment;
-import org.freebus.fts.components.SplashScreen;
+import org.freebus.fts.components.StartupIndicator;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.LookAndFeelManager;
 import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.knxcomm.internal.JarLoader;
+import org.jdesktop.application.Application;
+import org.jdesktop.application.SessionStorage;
 
 /**
  * The FTS application class
  */
 public final class FTS extends Application
 {
-
-   private SplashScreen splash = new SplashScreen();
+   private StartupIndicator startupIndicator;
    private LookAndFeelManager lafLoader;
    private Config config;
    private MainWindow mainWin;
+   private int exitCode = 0;
+
+   /**
+    * {@inheritDoc}
+    */
+   public static FTS getInstance()
+   {
+      return (FTS) Application.getInstance();
+   }
 
    /**
     * {@inheritDoc}
@@ -42,6 +62,8 @@ public final class FTS extends Application
    {
       Environment.setAppName("fts");
       Logger.getLogger(getClass()).debug("FTS initialize");
+
+      getContext().getResourceManager().getResourceMap(getClass());
    }
 
    /**
@@ -50,26 +72,66 @@ public final class FTS extends Application
    @Override
    protected void startup()
    {
-      Logger.getLogger(getClass()).debug("FTS startup");
-      splash.setVisible(true);
+      try
+      {
+         Logger.getLogger(getClass()).debug("FTS startup");
+         startupIndicator = new StartupIndicator();
 
-      //
-      // Load the configuration
-      //
-      splash.setProgress(10, I18n.getMessage("FTS.InitConfig"));
+         // The startup steps
+         startupConfig(10);
+         startupPlugins(20);
+         startupLookAndFeel(30);
+         startupUpgradeDatabase(40);
+         startupConnectDatabase(60);
+         startupMainWindow(90);
+
+         // Final steps
+         startupIndicator.setProgress(100, "");
+         mainWin.setVisible(true);
+         startupIndicator.close();
+         startupIndicator = null;
+         config.save();
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrStartup"));
+         Runtime.getRuntime().exit(1);
+      }
+   }
+
+   /**
+    * Load the configuration. Called from {@link #startup()}.
+    *
+    * @param progress - the initial value of the progress indicator.
+    */
+   private void startupConfig(int progress)
+   {
+      startupIndicator.setProgress(progress, I18n.getMessage("FTS.StartupConfig"));
       config = new Config();
+   }
 
-      //
-      // Load custom plugins
-      //
-      splash.setProgress(20, I18n.getMessage("FTS.InitPlugins"));
+   /**
+    * Load the plugins. Called from {@link #startup()}.
+    *
+    * @param progress - the initial value of the progress indicator.
+    */
+   private void startupPlugins(int progress)
+   {
+      startupIndicator.setProgress(progress, I18n.getMessage("FTS.StartupPlugins"));
+
       loadPlugins(Environment.getAppDir() + "/plugins");
       loadPlugins("plugins");
+   }
 
-      //
-      // Activate the look & feel
-      //
-      splash.setProgress(30, I18n.getMessage("FTS.InitLookAndFeel"));
+   /**
+    * Load the plugins. Called from {@link #startup()}.
+    *
+    * @param progress - the initial value of the progress indicator.
+    */
+   private void startupLookAndFeel(int progress)
+   {
+      startupIndicator.setProgress(progress, I18n.getMessage("FTS.StartupLookAndFeel"));
+
       if (lafLoader != null)
       {
          lafLoader.install();
@@ -89,39 +151,179 @@ public final class FTS extends Application
             LookAndFeelManager.setDefaultLookAndFeel();
          }
       }
+   }
 
-      //
-      // Upgrade the database, if required
-      //
-      splash.setProgress(40, I18n.getMessage("FTS.InitUpgradeDatabase"));
-      // TODO: DatabaseResources.createMigrator().upgrade();
+   /**
+    * Upgrade the database, if required. Called from {@link #startup()}.
+    *
+    * @param progress - the initial value of the progress indicator.
+    *
+    * @throws Exception
+    */
+   private void startupUpgradeDatabase(int progress) throws Exception
+   {
+      startupIndicator.setProgress(progress, I18n.getMessage("FTS.StartupUpgradeDatabase"));
 
-      //
-      // Open the database connection
-      //
-      splash.setProgress(60, I18n.getMessage("FTS.InitDatabase"));
-      DatabaseResources.close();
-      final EntityManagerFactory emf = DatabaseResources.createDefaultEntityManagerFactory();
-      DatabaseResources.setEntityManagerFactory(emf);
-      splash.setProgress(70);
-      emf.createEntityManager();
+      Connection con;
+      ConnectionDetails conDetails = null;
+      boolean dbConfigExisted = true;
 
-      //
-      // Open the main window
-      //
-      splash.setProgress(90, I18n.getMessage("FTS.InitMainWindow"));
+      try
+      {
+         conDetails = new ConnectionDetails();
+         dbConfigExisted = conDetails.fromConfig(config);
+
+         con = DatabaseResources.createConnection(conDetails);
+
+         if (!dbConfigExisted)
+            conDetails.toConfig(config);
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrConnectDatabase"));
+
+         conDetails = new ConnectionDetails();
+         con = DatabaseResources.createConnection(conDetails);
+         conDetails.toConfig(config);
+      }
+
+      Liquibase liq;
+      try
+      {
+         liq = DatabaseResources.createMigrator("db-changes/changelog-0.1.xml", con);
+         liq.validate();
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrUpgradeDatabaseSkip"));
+         return;
+      }
+
+      try
+      {
+         liq.update(null);
+      }
+      catch (LiquibaseException e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrUpgradeDatabase"));
+
+         if (!dbConfigExisted)
+            Runtime.getRuntime().exit(1);
+
+         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
+               + I18n.getMessage("FTS.UpgradeDatabaseWipe") + "</body></html>", I18n
+               .getMessage("Dialogs.Exception_Caption"), JOptionPane.YES_NO_OPTION);
+
+         if (ret != JOptionPane.YES_OPTION)
+            Runtime.getRuntime().exit(2);
+
+         startupIndicator.setProgress(progress + 5, I18n.getMessage("FTS.StartupUpgradeDatabaseDrop"));
+         Logger.getLogger(getClass()).info("Dropping all database tables");
+
+         try
+         {
+            // Don't ask me why, but Liquibase (1.9.5) sometimes needs some tries until it can
+            // wipe all tables and constraints.
+            int tries = 10;
+            while (tries > 0)
+            {
+               try
+               {
+                  liq.dropAll();
+                  break;
+               }
+               catch (LiquibaseException le)
+               {
+                  Logger.getLogger(getClass()).warn(le);
+               }
+               --tries;
+            }
+
+            if (tries <= 0)
+            {
+               // This last try will be catched below if it still fails and an error dialog
+               // will be shown
+               liq.dropAll();
+            }
+
+            startupIndicator.setProgress(progress + 10, I18n.getMessage("FTS.StartupUpgradeDatabase"));
+            liq.update(null);
+         }
+         catch (LiquibaseException e1)
+         {
+            Dialogs.showExceptionDialog(e, I18n.formatMessage("FTS.ErrUpgradeDatabaseFailed",
+                  new Object[] { Environment.getAppDir() }));
+            Runtime.getRuntime().exit(1);
+         }
+      }
+      finally
+      {
+         if (!con.isClosed())
+            con.close();
+      }
+   }
+
+   /**
+    * Connect to the database. Called from {@link #startup()}.
+    *
+    * @param progress - the initial value of the progress indicator.
+    */
+   private void startupConnectDatabase(int progress)
+   {
+      startupIndicator.setProgress(progress, I18n.getMessage("FTS.StartupConnectDatabase"));
+
+      try
+      {
+         DatabaseResources.close();
+         final EntityManagerFactory emf = DatabaseResources.createDefaultEntityManagerFactory();
+         DatabaseResources.setEntityManagerFactory(emf);
+
+         startupIndicator.setProgress(progress + 5);
+         emf.createEntityManager();
+      }
+      catch (PersistenceException e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrConnectDatabase"));
+
+         DatabaseResources.close();
+
+         final ConnectionDetails conDetails = new ConnectionDetails();
+         final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("default", conDetails);
+         DatabaseResources.setEntityManagerFactory(emf);
+
+         startupIndicator.setProgress(progress + 2);
+         emf.createEntityManager();
+      }
+   }
+
+   /**
+    * Create the main window. Called from {@link #startup()}.
+    *
+    * @param progress - the initial value of the progress indicator.
+    */
+   private void startupMainWindow(int progress)
+   {
+      startupIndicator.setProgress(90, I18n.getMessage("FTS.StartupMainWindow"));
+
       mainWin = new MainWindow();
-      setMainWindow(mainWin);
+      mainWin.setName("mainWindow-0");
+      mainWin.addWindowListener(new WindowAdapter()
+      {
+         @Override
+         public void windowClosed(WindowEvent e)
+         {
+            exit();
+         }
+      });
 
-      //
-      // All done. Show the main window and close the splash screen
-      //
-      splash.setProgress(100, "");
-      mainWin.setVisible(true);
-
-      splash.setVisible(false);
-      splash.dispose();
-      splash = null;
+      try
+      {
+         getContext().getSessionStorage().restore(mainWin, "session.xml");
+      }
+      catch (IOException e1)
+      {
+         e1.printStackTrace();
+      }
    }
 
    /**
@@ -132,10 +334,19 @@ public final class FTS extends Application
    {
       Logger.getLogger(getClass()).debug("FTS ready");
 
-      //
-      // Create a sample project and show it in the main window
-      //
-      ProjectManager.setProject(SampleProjectFactory.newProject());
+      mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+      try
+      {
+         //
+         // Create a sample project and show it in the main window
+         //
+         ProjectManager.setProject(SampleProjectFactory.newProject());
+      }
+      finally
+      {
+         mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+      }
    }
 
    /**
@@ -146,22 +357,57 @@ public final class FTS extends Application
    {
       Logger.getLogger(getClass()).debug("FTS shutdown");
 
+      //
+      // Save the state of the main window
+      //
+      if (mainWin != null)
+      {
+         mainWin.setVisible(false);
+
+         final SessionStorage sessStore = getContext().getSessionStorage();
+         try
+         {
+            sessStore.save(mainWin, "session.xml");
+         }
+         catch (IOException e)
+         {
+            Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrSavingSession"));
+         }
+      }
+
+      //
+      // Close the bus interface
+      //
       if (BusInterfaceService.busInterfaceOpened())
          BusInterfaceService.closeBusInterface();
 
-      mainWin = null;
-
-      config.save();
       DatabaseResources.close();
+      config.save();
    }
 
    /**
+    * Restart the application. This terminates the application with return-code
+    * 120. The restart has to be handled by the script that started the
+    * application.
+    *
+    * @see {@link Application#exit()}.
+    */
+   public void restart()
+   {
+      exitCode = 120;
+      exit();
+   }
+
+   /**
+    * Terminates the application with return-code 120 if {@link #restart()} was
+    * called, or with return-code 0 in all other cases.
+    * <p>
     * {@inheritDoc}
     */
    @Override
-   protected void fatalException(Exception e)
+   protected void end()
    {
-      Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrTopLevelException"));
+      Runtime.getRuntime().exit(exitCode);
    }
 
    /**
