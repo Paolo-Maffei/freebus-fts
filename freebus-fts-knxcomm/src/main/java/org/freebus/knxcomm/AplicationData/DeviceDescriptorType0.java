@@ -51,10 +51,10 @@ public class DeviceDescriptorType0 implements DeviceDescriptor {
 		deviceProperties = new Properties();
 		InputStream in = null;
 		ClassLoader cl = this.getClass().getClassLoader();
-		in = cl.getResourceAsStream("resource/fts-messages.properties");
+		in = cl.getResourceAsStream("src/main/resources/fts-messages.properties");
 		if (in == null) {
 			in = new FileInputStream(
-					"../freebus-fts-knxcomm/resources/DeviceDescriptorType0_"
+					"../freebus-fts-knxcomm/src/main/resources/DeviceDescriptorType0_"
 							+ mask + ".properties");
 		}
 		deviceProperties.load(in);
