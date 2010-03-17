@@ -7,6 +7,7 @@ import java.awt.Toolkit;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JToolBar;
@@ -69,8 +70,11 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       setInstance(this);
 
       setTitle(I18n.getMessage("MainWindow.TitleNoProject"));
-      setIconImage(ImageCache.getIcon("app-icon").getImage());
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+      final ImageIcon appIcon = ImageCache.getIcon("app-icon");
+      if (appIcon != null)
+         setIconImage(appIcon.getImage());
 
       createMenuBar();
       createToolBar();
