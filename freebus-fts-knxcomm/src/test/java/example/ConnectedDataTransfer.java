@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -99,8 +100,7 @@ public final class ConnectedDataTransfer
     */
    public static void main(String[] args) throws Exception
    {
-      // Configure Log4J
-      BasicConfigurator.configure();
+      Environment.init();
 
       ConnectedDataTransfer cdt = null;
       try

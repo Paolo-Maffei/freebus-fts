@@ -1,6 +1,6 @@
 package example;
 
-import org.apache.log4j.BasicConfigurator;
+import org.freebus.fts.common.Environment;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
@@ -16,7 +16,7 @@ public class KNXnetBusMonitor implements TelegramListener
 
    /**
     * Create the bus monitor.
-    * 
+    *
     * @throws Exception
     */
    public KNXnetBusMonitor() throws Exception
@@ -54,13 +54,12 @@ public class KNXnetBusMonitor implements TelegramListener
 
    /**
     * Start the application.
-    * 
+    *
     * @throws Exception
     */
    public static void main(String[] args) throws Exception
    {
-      // Configure Log4J
-      BasicConfigurator.configure();
+      Environment.init();
 
       KNXnetBusMonitor mon = null;
       try
