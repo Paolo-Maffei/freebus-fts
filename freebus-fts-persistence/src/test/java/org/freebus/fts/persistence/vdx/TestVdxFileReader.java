@@ -160,7 +160,7 @@ public final class TestVdxFileReader
       assertNotNull(sectionHeader3);
       assertEquals("manufacturer", sectionHeader3.name);
       assertEquals(3, sectionHeader3.id);
-      assertEquals(122, sectionHeader3.offset);
+      assertTrue(sectionHeader3.offset >= 122);
       assertEquals(3, sectionHeader3.fields.length);
 
       final VdxSectionHeader sectionHeader4 = reader.getSectionHeader("functional_entity");
