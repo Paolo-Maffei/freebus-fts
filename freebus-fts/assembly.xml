@@ -42,15 +42,14 @@
  <files>
   <file>
    <source>src/main/resources/gui-images/splash.png</source>
-   <outputDirectory>/</outputDirectory>
+   <outputDirectory>/libs</outputDirectory>
    <fileMode>0644</fileMode>
   </file>
  </files>
  <dependencySets>
   <dependencySet>
    <useProjectArtifact>true</useProjectArtifact>
-   <outputDirectory>libs</outputDirectory>
-   <directoryMode>0755</directoryMode>
+   <outputDirectory>/libs</outputDirectory>
    <fileMode>0644</fileMode>
   </dependencySet>
  </dependencySets>
