@@ -1,4 +1,4 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.telegram;
 
 import static org.junit.Assert.*;
 
@@ -164,10 +164,19 @@ public class TestTelegram
    public void testFromRawDataWrongLen() throws InvalidDataException
    {
       final Telegram telegram = new Telegram();
-
       final int[] data1 = new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x64, 0x43, 0x40, 0x00, 0x12 };
-
       telegram.fromRawData(data1, 0);
+   }
+
+   /**
+    * A negative reply from a Merten switch.
+    */
+   @Test
+   public void testFromRawDataConnectedNack() throws InvalidDataException
+   {
+      final Telegram telegram = new Telegram();
+      final int[] data = new int[] { 0x90, 0x11, 0x06, 0x11, 0xff, 0x60, 0x81, 0x77 };
+      telegram.fromRawData(data, 0);
    }
 
    @Test

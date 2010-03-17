@@ -33,7 +33,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       OPEN_IDLE,
 
       /**
-       * The connection is open, a T_ACK from the remote device is awaited.  
+       * The connection is open, a T_ACK from the remote device is awaited.
        */
       OPEN_WAIT,
 
@@ -49,6 +49,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final BusInterface busInterface;
    private final Telegram telegram;
    private final Semaphore waitDataSemaphore = new Semaphore(0);
+   private int sendSequence = 1;
 
    /**
     * Create a connection to the device with the given physical address.
@@ -140,17 +141,44 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
       telegram.setApplication(Application.GroupValue_Read);
       telegram.setTransport(Transport.Connect);
-      telegram.setSequence(1);
+
+      sendSequence = 0;
+      telegram.setSequence(++sendSequence);
 
       state = State.CONNECTING;
+
       try
       {
          busInterface.send(telegram);
       }
-      finally
+      catch (Exception e)
       {
          state = State.CLOSED;
+         throw new IOException(e);
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Telegram receive() throws IOException
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void send(Telegram telegram) throws IOException
+   {
+      telegram.setDest(addr);
+      telegram.setTransport(Transport.Connected);
+      telegram.setSequence(++sendSequence);
+
+      busInterface.send(telegram);
    }
 
    /**

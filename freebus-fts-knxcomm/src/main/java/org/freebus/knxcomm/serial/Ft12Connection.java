@@ -99,7 +99,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          errMsg = String.format("wrong FT1.2 frame end-marker 0x%02x, expected 0x%02x", eofMarker, eofByte);
       }
 
-      final Ft12Function func = Ft12Function.valueOf(controlByte);
+      final Ft12Function func = Ft12Function.valueOf(controlByte & 0x0f);
 
       if (logger.isDebugEnabled() || errMsg != null)
       {

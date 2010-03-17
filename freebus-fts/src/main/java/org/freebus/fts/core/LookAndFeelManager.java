@@ -21,8 +21,8 @@ public final class LookAndFeelManager
     */
    static public void setDefaultLookAndFeel()
    {
-      for (String lafName: new String[] { "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
-                                          "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" })
+      for (String lafName : new String[] { "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
+            "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" })
       {
          try
          {
@@ -31,7 +31,15 @@ public final class LookAndFeelManager
          }
          catch (Exception e)
          {
-            // Never mind if this does not work
+            try
+            {
+               // use the system look and feel instead
+               UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+            }
+            catch (Exception e1)
+            {
+               // Never mind if this does not work
+            }
          }
       }
    }
@@ -44,21 +52,22 @@ public final class LookAndFeelManager
    @SuppressWarnings("unchecked")
    public void add(String lookAndFeelClassName) throws ClassNotFoundException
    {
-      final Class<? extends LookAndFeel> lafClass =
-         (Class<? extends LookAndFeel>) getClass().getClassLoader().loadClass(lookAndFeelClassName);
+      final Class<? extends LookAndFeel> lafClass = (Class<? extends LookAndFeel>) getClass().getClassLoader()
+            .loadClass(lookAndFeelClassName);
 
       lafClasses.add(lafClass);
    }
 
    /**
-    * Install all look&feel classes that were previously added with {@link #addLookAndFeel(String)}.
-    * Must be called from within Swing's UI thread.
+    * Install all look&feel classes that were previously added with
+    * {@link #addLookAndFeel(String)}. Must be called from within Swing's UI
+    * thread.
     */
    public void install()
    {
       final Logger logger = Logger.getLogger(getClass());
 
-      for (Class<? extends LookAndFeel> lafClass: lafClasses)
+      for (Class<? extends LookAndFeel> lafClass : lafClasses)
       {
          try
          {

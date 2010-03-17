@@ -29,15 +29,18 @@ public interface BusInterface
 
    /**
     * Send a telegram to the bus.
-    * 
+    *
     * @throws IOException
     */
    public void send(Telegram telegram) throws IOException;
 
    /**
-    * Open a data connection to the device with the given physical address.
-    * Always close the connection with {@link DataConnection#close} after using it.
-    * 
+    * Open a data connection to the device with the given physical address. Also
+    * calls {@link DataConnection#open()}.
+    * <p>
+    * Always close the connection with {@link DataConnection#close()} after
+    * using it.
+    *
     * @param addr - the physical address of the target device.
     * @return The connection.
     */
@@ -49,8 +52,9 @@ public interface BusInterface
    public KNXConnection getConnection();
 
    /**
-    * Add a listener that gets informed when telegrams are sent or received. Listeners
-    * are not informed about confirmations {@link EmiFrameType#isConfirmation()}.
+    * Add a listener that gets informed when telegrams are sent or received.
+    * Listeners are not informed about confirmations
+    * {@link EmiFrameType#isConfirmation()}.
     *
     * @param listener - the listener object.
     */
@@ -64,9 +68,9 @@ public interface BusInterface
    public void removeListener(TelegramListener listener);
 
    /**
-    * Returns the physical address of the BCU that is used to access the KNX/EIB bus.
-    * Valid after a successful {@link #open()}.
-    * 
+    * Returns the physical address of the BCU that is used to access the KNX/EIB
+    * bus. Valid after a successful {@link #open()}.
+    *
     * @return the physical address of the BCU.
     */
    public PhysicalAddress getPhysicalAddress();

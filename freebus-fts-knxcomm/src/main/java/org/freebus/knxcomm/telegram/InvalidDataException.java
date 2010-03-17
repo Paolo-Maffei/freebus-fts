@@ -39,6 +39,6 @@ public final class InvalidDataException extends IOException
    @Override
    public String toString()
    {
-      return super.toString() + " contents=0x" + Integer.toHexString(contents);
+      return super.toString() + ", contents=0x" + Integer.toHexString(contents);
    }
 }

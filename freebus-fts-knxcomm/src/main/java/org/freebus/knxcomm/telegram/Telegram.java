@@ -8,7 +8,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 
 /**
  * A communication data packet as it is sent on the EIB bus.
- * 
+ *
  * It is mandatory for subclasses to override {@link #clone()} to avoid
  * problems.
  */
@@ -34,6 +34,7 @@ public class Telegram implements Cloneable
    /**
     * Clone the telegram.
     */
+   @Override
    public Telegram clone()
    {
       try
@@ -48,7 +49,7 @@ public class Telegram implements Cloneable
 
    /**
     * Initialize the message from the given raw data, beginning at start.
-    * 
+    *
     * @throws InvalidDataException
     */
    public void fromRawData(int[] rawData, int start) throws InvalidDataException
@@ -101,7 +102,7 @@ public class Telegram implements Cloneable
          sequence = (tpci >> 2) & 15;
       else sequence = 0;
 
-      if (rawData.length > pos && transport.mask < 255)
+      if (rawData.length > pos && (transport.mask & 3) == 0)
       {
          // APCI - application type
          final int apci = ((tpci & 3) << 8) | rawData[pos++];
@@ -155,7 +156,7 @@ public class Telegram implements Cloneable
     * Returns the destination address. This can either be a
     * {@link PhysicalAddress} physical address, or a {@link GroupAddress} group
     * address.
-    * 
+    *
     * @return the destination address.
     */
    public Address getDest()
@@ -182,7 +183,7 @@ public class Telegram implements Cloneable
    /**
     * Returns the routing counter. 0 means never route, 1..6 is the number of
     * routing hops that would occur, 7 means route always.
-    * 
+    *
     * @return the routing counter.
     */
    public int getRoutingCounter()
@@ -234,7 +235,7 @@ public class Telegram implements Cloneable
    /**
     * Set the destination address. This can either be a {@link PhysicalAddress}
     * physical address, or a {@link GroupAddress} group address.
-    * 
+    *
     * Also sets the transport type, if it is yet unset: to
     * {@link Transport#Individual} if the destination is a
     * {@link PhysicalAddress}, or to {@link Transport#Group} if the destination
@@ -311,7 +312,7 @@ public class Telegram implements Cloneable
    /**
     * Fill the raw data of the message into the array rawData, starting at index
     * start.
-    * 
+    *
     * @return number of bytes that were used.
     */
    public int toRawData(int[] rawData, int start)
@@ -424,7 +425,7 @@ public class Telegram implements Cloneable
       final Application app = getApplication();
       if (app != Application.None)
          sb.append(app).append(' ');
-      
+
       sb.append("from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
 
       if (data == null)

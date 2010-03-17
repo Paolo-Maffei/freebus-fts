@@ -2,13 +2,14 @@ package example;
 
 import java.io.IOException;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
+import org.freebus.knxcomm.telegram.Application;
+import org.freebus.knxcomm.telegram.Telegram;
 
 /**
  * An example program that shows the connected data transfer methods.
@@ -79,20 +80,18 @@ public final class ConnectedDataTransfer
     */
    public void run() throws IOException
    {
-      // Create a data connection to the device and open the connection
-      logger.info("*** Connecting to " + deviceAddress);
+      // Create a data connection to the device
+      logger.info("*** Opening data-connection to " + deviceAddress);
       final DataConnection con = iface.connect(deviceAddress);
+      logger.debug("Data-connection to " + deviceAddress + " established");
 
-      try
-      {
-         con.open();
-         logger.debug("Connected.");
-      }
-      catch (Exception e)
-      {
-         logger.error("*** Connect failed: " + e);
-         throw new IOException(e);
-      }
+      logger.info("*** Sending memory-read telegram");
+      final Telegram telegram = new Telegram();
+      telegram.setApplication(Application.Memory_Read);
+      telegram.setData(new int[] { 10, 0, 1 });
+      con.send(telegram);
+
+      logger.info("*** done, waiting some seconds before terminating");
    }
 
    /**
@@ -108,8 +107,8 @@ public final class ConnectedDataTransfer
          cdt = new ConnectedDataTransfer();
          cdt.run();
 
-         Thread.sleep(1000);
-         logger.info("*** Sleeping some seconds to allow any timeout to occur");
+         Thread.sleep(500);
+         logger.info("*** Sleeping some seconds to allow device timeouts to occur");
          Thread.sleep(7000);
       }
       finally

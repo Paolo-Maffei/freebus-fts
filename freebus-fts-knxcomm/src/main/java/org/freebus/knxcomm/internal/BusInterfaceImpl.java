@@ -191,7 +191,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       if (con == null) throw new IOException("Not open");
 
-      if (telegram.getFrom() == PhysicalAddress.NULL)
+      if (PhysicalAddress.NULL.equals(telegram.getFrom()))
          telegram.setFrom(physicalAddr);
 
       con.send(new L_Data_req(telegram));
