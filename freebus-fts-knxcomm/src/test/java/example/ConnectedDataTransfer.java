@@ -25,7 +25,7 @@ public final class ConnectedDataTransfer
 
    /**
     * Create the example main object.
-    * 
+    *
     * @throws Exception
     */
    public ConnectedDataTransfer() throws Exception
@@ -50,7 +50,7 @@ public final class ConnectedDataTransfer
 
    /**
     * Create the bus interface
-    * @throws Exception 
+    * @throws Exception
     */
    public BusInterface createBusInterface() throws Exception
    {
@@ -81,7 +81,17 @@ public final class ConnectedDataTransfer
       // Create a data connection to the device and open the connection
       logger.info("*** Connecting to " + deviceAddress);
       final DataConnection con = iface.connect(deviceAddress);
-      con.open();
+
+      try
+      {
+         con.open();
+         logger.debug("Connected.");
+      }
+      catch (Exception e)
+      {
+         logger.error("*** Connect failed: " + e);
+         throw new IOException(e);
+      }
    }
 
    /**
@@ -98,9 +108,9 @@ public final class ConnectedDataTransfer
          cdt = new ConnectedDataTransfer();
          cdt.run();
 
-         Thread.sleep(500);
+         Thread.sleep(1000);
          logger.info("*** Sleeping some seconds to allow any timeout to occur");
-         Thread.sleep(8000);
+         Thread.sleep(7000);
       }
       finally
       {

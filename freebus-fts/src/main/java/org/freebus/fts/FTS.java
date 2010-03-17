@@ -18,6 +18,8 @@ import javax.swing.UIManager;
 
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
+import liquibase.exception.LockException;
+import liquibase.lock.LockHandler;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
@@ -36,7 +38,9 @@ import org.jdesktop.application.Application;
 import org.jdesktop.application.SessionStorage;
 
 /**
- * The FTS application class
+ * The FTS application class. This class is responsible for starting the
+ * application and shutting it down. GUI related stuff is handled by the
+ * {@link MainWindow main window} class.
  */
 public final class FTS extends Application
 {
@@ -199,6 +203,36 @@ public final class FTS extends Application
          return;
       }
 
+      int tries = 10;
+      final LockHandler liqLockHandler = LockHandler.getInstance(liq.getDatabase());
+      for (; tries > 0; --tries)
+      {
+         try
+         {
+            liqLockHandler.acquireLock();
+            liqLockHandler.releaseLock();
+            break;
+         }
+         catch (LockException e)
+         {
+            if (tries >= 10)
+               startupIndicator.setProgress(++progress, I18n.getMessage("FTS.StartupUpgradeDatabaseWaitLock"));
+            Thread.sleep(500);
+         }
+      }
+
+      if (tries <= 0)
+      {
+         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
+               + I18n.getMessage("FTS.UpgradeDatabaseForceLock") + "</body></html>", I18n
+               .getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
+
+         if (ret != JOptionPane.YES_OPTION)
+            Runtime.getRuntime().exit(2);
+
+         liq.forceReleaseLocks();
+      }
+
       try
       {
          liq.update(null);
@@ -212,19 +246,20 @@ public final class FTS extends Application
 
          int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
                + I18n.getMessage("FTS.UpgradeDatabaseWipe") + "</body></html>", I18n
-               .getMessage("Dialogs.Exception_Caption"), JOptionPane.YES_NO_OPTION);
+               .getMessage("Dialogs.Error_Title"), JOptionPane.YES_NO_OPTION);
 
          if (ret != JOptionPane.YES_OPTION)
-            Runtime.getRuntime().exit(2);
+            Runtime.getRuntime().exit(3);
 
          startupIndicator.setProgress(progress + 5, I18n.getMessage("FTS.StartupUpgradeDatabaseDrop"));
          Logger.getLogger(getClass()).info("Dropping all database tables");
 
          try
          {
-            // Don't ask me why, but Liquibase (1.9.5) sometimes needs some tries until it can
+            // Don't ask me why, but Liquibase (1.9.5) sometimes needs some
+            // tries until it can
             // wipe all tables and constraints.
-            int tries = 10;
+            tries = 10;
             while (tries > 0)
             {
                try
@@ -241,7 +276,8 @@ public final class FTS extends Application
 
             if (tries <= 0)
             {
-               // This last try will be catched below if it still fails and an error dialog
+               // This last try will be catched below if it still fails and an
+               // error dialog
                // will be shown
                liq.dropAll();
             }

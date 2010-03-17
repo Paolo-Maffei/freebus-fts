@@ -79,7 +79,7 @@ public class StartupIndicator
     */
    protected synchronized void redraw()
    {
-      if (splash == null)
+      if (splash == null || !splash.isVisible())
          return;
 
       graphics.setComposite(AlphaComposite.Clear);

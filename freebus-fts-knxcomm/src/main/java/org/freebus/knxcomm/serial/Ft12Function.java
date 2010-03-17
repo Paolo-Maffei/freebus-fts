@@ -59,7 +59,7 @@ public enum Ft12Function
             return fc;
       }
 
-      throw new IllegalArgumentException("Invalid FT1.2 function code: " + code);
+      throw new IllegalArgumentException(String.format("Invalid FT1.2 function code: 0x%02x", code));
    }
 
    /*

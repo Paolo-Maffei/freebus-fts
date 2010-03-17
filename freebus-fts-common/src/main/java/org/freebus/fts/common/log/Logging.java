@@ -1,14 +1,17 @@
 package org.freebus.fts.common.log;
 
+import java.net.URL;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogManager;
 
 import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.PropertyConfigurator;
+import org.freebus.fts.common.Environment;
 
 /**
  * Helper class that sets up the logging.
- * 
+ *
  * Call {@link #setup()} to setup the logging system.
  */
 public final class Logging
@@ -26,14 +29,27 @@ public final class Logging
 
       setupDone = true;
 
-      BasicConfigurator.configure();
+      final URL logProps = ClassLoader.getSystemResource("log4j.properties");
+
+      if (logProps != null)
+      {
+         // ensure that "app.dir" property is initialized, for Log4J's FileAppender
+         Environment.getAppDir();
+
+         PropertyConfigurator.configure(logProps);
+      }
+      else
+      {
+         BasicConfigurator.configure();
+      }
+
       activateLogBridge(Level.ALL);
    }
 
    /**
     * Activate the logging bridge from java.util.logging to log4j. All
     * java.util.logging log handlers are removed.
-    * 
+    *
     * Called by {@link #setup()}.
     */
    public static void activateLogBridge(Level logLevel)

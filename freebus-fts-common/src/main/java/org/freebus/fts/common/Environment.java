@@ -101,7 +101,10 @@ public final class Environment
       final Environment env = getInstance();
 
       if (env.appDir == null)
+      {
          env.appDir = getAppDir(env.homeDir, env.appName);
+         System.setProperty("app.dir", env.appDir);
+      }
 
       return env.appDir;
    }

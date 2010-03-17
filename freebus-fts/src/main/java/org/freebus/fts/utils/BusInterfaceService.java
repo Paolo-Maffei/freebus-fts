@@ -72,8 +72,9 @@ public final class BusInterfaceService
       final BusInterface newBusInterface = BusInterfaceFactory.newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
 
       newBusInterface.open();
-      // if open() fails an exception will be thrown
 
+      // if open() fails an exception will be thrown.
+      // if not, we keep the bus interface for later use.
       busInterface = newBusInterface;
    }
 

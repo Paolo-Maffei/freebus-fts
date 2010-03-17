@@ -342,7 +342,7 @@
    <column name="SEQ_NAME" type="VARCHAR(50)">
     <constraints nullable="false" primaryKey="true" />
    </column>
-   <column name="SEQ_COUNT" type="DECIMAL(38,0)" />
+   <column name="SEQ_COUNT" type="INT" />
   </createTable>
  </changeSet>
  <changeSet author="stefant" id="0.1.1-22">
@@ -560,6 +560,12 @@
   <createIndex indexName="FK_virtual_device_program_id"
    tableName="virtual_device" unique="false">
    <column name="program_id" />
+  </createIndex>
+ </changeSet>
+ <changeSet author="stefant" id="0.1.1-56">
+  <createIndex indexName="PRIMARY_KEY_SEQUENCE"
+   tableName="SEQUENCE" unique="true">
+   <column name="SEQ_NAME" />
   </createIndex>
  </changeSet>
 </databaseChangeLog>

@@ -46,28 +46,8 @@ public final class CommonsLoggingSessionLog extends AbstractSessionLog
          return;
 
       final String message = formatMessage(entry);
-      if (message.isEmpty())
-         return;
-
-      int end = message.indexOf('\n');
-      if (end >= 0)
-      {
-         int beg = 0;
-         while (end >= 0)
-         {
-            logger.log(level, message.substring(beg, end));
-
-            beg = end + 1;
-            end = message.indexOf('\n', beg);
-         }
-
-         if (beg < message.length())
-            logger.log(level, message.substring(beg));
-      }
-      else
-      {
+      if (!message.isEmpty())
          logger.log(level, message);
-      }
    }
 
    /**

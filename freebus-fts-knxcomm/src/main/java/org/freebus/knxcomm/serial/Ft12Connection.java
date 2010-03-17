@@ -34,7 +34,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    /**
     * Called by the data transport methods when data is ready to be received.
-    * 
+    *
     * @throws IOException
     */
    protected void dataAvailable() throws IOException
@@ -99,7 +99,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          errMsg = String.format("wrong FT1.2 frame end-marker 0x%02x, expected 0x%02x", eofMarker, eofByte);
       }
 
-      final Ft12Function func = Ft12Function.valueOf(controlByte & 0x0f);
+      final Ft12Function func = Ft12Function.valueOf(controlByte);
 
       if (logger.isDebugEnabled() || errMsg != null)
       {
@@ -140,7 +140,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    /**
     * Process the FT1.2 frame that {@link #dataAvailable()} has read. This is an
     * internal method that gets called by {@link #dataAvailable()}.
-    * 
+    *
     * @throws IOException
     */
    public void processFrame(final Ft12FrameFormat format, final Ft12Function func, final int[] data) throws IOException
@@ -154,9 +154,9 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    /**
     * Process a FT1.2 frame of the format {Ft12FrameFormat#FIXED}.
-    * 
+    *
     * @param func - the frame function
-    * 
+    *
     * @throws IllegalArgumentException if the function is invalid
     */
    protected void processFixedFrame(final Ft12Function func)
@@ -187,7 +187,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    /**
     * Process a FT1.2 frame of the format {Ft12FrameFormat#VARIABLE}.
-    * 
+    *
     * @throws IOException
     */
    protected void processVariableFrame(final Ft12Function func, final int[] data) throws IOException
@@ -212,7 +212,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    /**
     * Connect to the BAU.
-    * 
+    *
     * @throws IOException
     */
    @Override
@@ -289,9 +289,9 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    /**
     * Send a FT1.2 frame of the type {@link Ft12MessageType#FIXED}. The message
     * is sent 3 times before sending fails if it is not acknowledged.
-    * 
+    *
     * @param func - the function of the frame, see {@link Ft12Function}.
-    * 
+    *
     * @throws IOException
     */
    public void send(final Ft12Function func) throws IOException
@@ -304,11 +304,11 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    /**
     * Send a FT1.2 frame of the type {@link Ft12MessageType#FIXED}.
-    * 
+    *
     * @param func - the function of the frame, see {@link Ft12Function}.
     * @param tries - how many times the sending is repeated until it fails if
     *           not acknowledged.
-    * 
+    *
     * @throws IOException
     */
    public void send(final Ft12Function func, int tries) throws IOException
@@ -332,12 +332,12 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     * Send length bytes of the given data to the BAU and wait for an acknowledge
     * (ACK). Retries up to <code>tries</code> times if no acknowledge is
     * received.
-    * 
+    *
     * @param data is the data to be sent.
     * @param len is the number of bytes of <code>data</code> that are sent.
     * @param tries is the maximum number of times the sending is retried.
     *           Usually 3.
-    * 
+    *
     * @throw IOException if no acknowledge is received at all or the write fails
     */
    private synchronized final void writeConfirmed(final int[] data, int len, int tries) throws IOException
