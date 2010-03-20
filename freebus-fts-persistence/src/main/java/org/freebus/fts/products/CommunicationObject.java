@@ -315,13 +315,4 @@ public class CommunicationObject
    {
       this.updateEnabled = updateEnabled;
    }
-
-   /**
-    * Prepare the value for persisting.
-    */
-   @PrePersist
-   protected void prePersist()
-   {
-      Logger.getLogger(getClass()).info("CommunicationObject.prePersist: objectType=" + objectType);
-   }
 }
