@@ -3,14 +3,19 @@ package org.freebus.fts.products;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+
+import org.apache.log4j.Logger;
 
 /**
  * A communication object of a program.
@@ -20,7 +25,7 @@ import javax.persistence.TableGenerator;
 public class CommunicationObject
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenCommunicationObjectId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenCommunicationObjectId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "object_id", nullable = false)
    private int id;
@@ -60,11 +65,13 @@ public class CommunicationObject
    @Column(name = "object_description")
    private String description;
 
-   @Column(name = "object_type")
-   private int objectType;
+   @Enumerated(EnumType.ORDINAL)
+   @Column(name = "object_type", nullable = false)
+   private ObjectType objectType;
 
-   @Column(name = "object_priority")
-   private int objectPriority;
+   @Enumerated(EnumType.ORDINAL)
+   @Column(name = "object_priority", nullable = false)
+   private ObjectPriority objectPriority;
 
    @Column(name = "object_updateenabled", nullable = false)
    private boolean updateEnabled;
@@ -262,17 +269,17 @@ public class CommunicationObject
    }
 
    /**
-    * @return the objectType
+    * @return the object type
     */
-   public int getObjectType()
+   public ObjectType getObjectType()
    {
       return objectType;
    }
 
    /**
-    * @param objectType the objectType to set
+    * Set the object type
     */
-   public void setObjectType(int objectType)
+   public void setObjectType(ObjectType objectType)
    {
       this.objectType = objectType;
    }
@@ -280,7 +287,7 @@ public class CommunicationObject
    /**
     * @return the objectPriority
     */
-   public int getObjectPriority()
+   public ObjectPriority getObjectPriority()
    {
       return objectPriority;
    }
@@ -288,7 +295,7 @@ public class CommunicationObject
    /**
     * @param objectPriority the objectPriority to set
     */
-   public void setObjectPriority(int objectPriority)
+   public void setObjectPriority(ObjectPriority objectPriority)
    {
       this.objectPriority = objectPriority;
    }
@@ -307,5 +314,14 @@ public class CommunicationObject
    public void setUpdateEnabled(boolean updateEnabled)
    {
       this.updateEnabled = updateEnabled;
+   }
+
+   /**
+    * Prepare the value for persisting.
+    */
+   @PrePersist
+   protected void prePersist()
+   {
+      Logger.getLogger(getClass()).info("CommunicationObject.prePersist: objectType=" + objectType);
    }
 }

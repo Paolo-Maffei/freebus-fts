@@ -36,24 +36,40 @@ public final class ProductsImporter
 
    /**
     * Import a list of virtual devices.
-    * @throws PersistenceException 
+    * @throws PersistenceException
     */
    public void copy(List<VirtualDevice> devices) throws PersistenceException
    {
       final VirtualDeviceService virtDevService = destFactory.getVirtualDeviceService();
       final FunctionalEntityService funcEntService = destFactory.getFunctionalEntityService();
 
-      for (VirtualDevice device: devices)
+      final boolean ownTransaction = !destFactory.getTransaction().isActive();
+
+      if (ownTransaction)
+         destFactory.getTransaction().begin();
+
+      try
       {
-         final CatalogEntry catalogEntry = device.getCatalogEntry();
-         if (catalogEntryService.getCatalogEntry(catalogEntry.getId()) == null)
-            copy(catalogEntry);
+         for (VirtualDevice device: devices)
+         {
+            final CatalogEntry catalogEntry = device.getCatalogEntry();
+            if (catalogEntryService.getCatalogEntry(catalogEntry.getId()) == null)
+               copy(catalogEntry);
 
-         final FunctionalEntity funcEnt = device.getFunctionalEntity();
-         if (funcEntService.getFunctionalEntity(funcEnt.getId()) == null)
-            funcEntService.save(funcEnt);
+            final FunctionalEntity funcEnt = device.getFunctionalEntity();
+            if (funcEntService.getFunctionalEntity(funcEnt.getId()) == null)
+               funcEntService.save(funcEnt);
 
-         virtDevService.save(device);
+            virtDevService.save(device);
+         }
+
+         if (ownTransaction)
+            destFactory.getTransaction().commit();
+      }
+      finally
+      {
+         if (ownTransaction)
+            destFactory.getTransaction().rollback();
       }
    }
 

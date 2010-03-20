@@ -36,7 +36,7 @@ public final class SaveProjectAction extends BasicAction
     * Perform the action.
     */
    @Override
-   public void actionPerformed(ActionEvent e)
+   public void actionPerformed(ActionEvent event)
    {
       final ProjectFactory projectFactory = ProjectManager.getProjectFactory();
       final Project project = ProjectManager.getProject();
@@ -52,10 +52,17 @@ public final class SaveProjectAction extends BasicAction
 
          Logger.getLogger(getClass()).info("Project saved");
       }
-      catch (Exception ex)
+      catch (Exception e)
       {
-         projectFactory.getTransaction().rollback();
-         Dialogs.showExceptionDialog(ex, I18n.getMessage("SaveProjectAction.ErrSaving"));
+         try
+         {
+            projectFactory.getTransaction().rollback();
+         }
+         catch (Exception e1)
+         {
+         }
+
+         Dialogs.showExceptionDialog(e, I18n.getMessage("SaveProjectAction.ErrSaving"));
       }
       finally
       {

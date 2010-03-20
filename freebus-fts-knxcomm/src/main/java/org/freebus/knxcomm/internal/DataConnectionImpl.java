@@ -49,7 +49,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final BusInterface busInterface;
    private final Telegram telegram;
    private final Semaphore waitDataSemaphore = new Semaphore(0);
-   private int sendSequence = 1;
+   private int sendSequence, recvSequence;
 
    /**
     * Create a connection to the device with the given physical address.
@@ -139,10 +139,11 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
       busInterface.addListener(this);
 
+      sendSequence = 0;
+      recvSequence = 0;
+
       telegram.setApplication(Application.GroupValue_Read);
       telegram.setTransport(Transport.Connect);
-
-      sendSequence = 0;
       telegram.setSequence(++sendSequence);
 
       state = State.CONNECTING;

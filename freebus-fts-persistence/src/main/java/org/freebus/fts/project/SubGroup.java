@@ -22,7 +22,7 @@ import org.freebus.fts.project.internal.I18n;
 public class SubGroup
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenGroupId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenGroupId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "sub_group_id", nullable = false)
    private int id;

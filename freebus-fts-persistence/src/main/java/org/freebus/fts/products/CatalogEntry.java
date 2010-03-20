@@ -26,7 +26,7 @@ public class CatalogEntry implements Serializable
    private static final long serialVersionUID = 4022059156749728267L;
 
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenCatalogEntryId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenCatalogEntryId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "catalog_entry_id", nullable = false)
    private int id;

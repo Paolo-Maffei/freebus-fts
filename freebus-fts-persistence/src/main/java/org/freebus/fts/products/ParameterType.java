@@ -22,7 +22,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
 /**
  * The type of a program's parameter. The parameter type holds the
  * possible values for a parameter.
- * 
+ *
  * What one would expect here, which type a parameter is, contains
  * the class {@link ParameterAtomicType}, which can be access with
  * {@link #getAtomicType()}.
@@ -32,7 +32,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
 public class ParameterType
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenParameterTypeId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenParameterTypeId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "parameter_type_id", nullable = false)
    private int id;

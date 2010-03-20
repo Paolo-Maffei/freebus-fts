@@ -62,9 +62,9 @@ public class WorkBench extends JFrame
 
       leftCenterSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, centerTabbedPane);
       add(leftCenterSplit, BorderLayout.CENTER);
-      leftCenterSplit.setOneTouchExpandable(true);
+      leftCenterSplit.setOneTouchExpandable(false);
       leftCenterSplit.setDividerLocation(250);
-      leftCenterSplit.setResizeWeight(0.9);
+      leftCenterSplit.setResizeWeight(0);
       leftCenterSplit.setDividerSize(6);
       leftCenterSplit.setContinuousLayout(true);
       leftCenterSplit.setFocusable(false);
@@ -73,9 +73,9 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Add the given page to the work-bench and show it.
+    * Add a page to the work-bench and show it.
     *
-    * @param page - the page to show.
+    * @param page - the page to add.
     * @return true if the page was successfully added.
     */
    public synchronized boolean addPage(AbstractPage page)
@@ -108,10 +108,10 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Add the given page to the work-bench and show it. When the page is created
+    * Add a page to the work-bench and show it. When the page is created
     * and visible, the page's {@link AbstractPage#setObject(Object)} is called.
     *
-    * @param page - the page to show.
+    * @param page - the page to add.
     * @param obj - the object that is given to the page via
     *           {@link AbstractPage#setObject(Object)}.
     * @return true if the page was successfully added.

@@ -26,7 +26,7 @@ import javax.persistence.Transient;
 public class Program
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenProgramId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenProgramId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "program_id", nullable = false)
    private int id;
@@ -72,11 +72,11 @@ public class Program
    private Manufacturer manufacturer;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "program_id", nullable = false)
+   @JoinColumn(name = "program_id")
    private Set<Parameter> parameters;
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-   @JoinColumn(name = "program_id", nullable = false)
+   @JoinColumn(name = "program_id")
    private Set<CommunicationObject> communicationObjects;
 
    @Lob

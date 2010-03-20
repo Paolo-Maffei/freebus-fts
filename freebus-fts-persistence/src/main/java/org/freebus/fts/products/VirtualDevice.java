@@ -13,14 +13,14 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 /**
- * A virtual-device.
+ * A virtual device.
  */
 @Entity
 @Table(name = "virtual_device")
 public class VirtualDevice
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenVirtualDeviceId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenVirtualDeviceId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "virtual_device_id", nullable = false)
    private int id;

@@ -32,7 +32,8 @@ import javax.persistence.TemporalType;
 public class Project
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 1, table = "sequences", name = "GenProjectId")
+   @TableGenerator(initialValue = 1, allocationSize = 1, table = "sequence",  name = "GenProjectId",
+         pkColumnName = "seq_name", valueColumnName = "seq_count")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "project_id", nullable = false)
    private int id;

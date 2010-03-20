@@ -1,14 +1,15 @@
 package org.freebus.knxcomm.telegram;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.telegram.Application;
-import org.freebus.knxcomm.telegram.InvalidDataException;
-import org.freebus.knxcomm.telegram.Priority;
-import org.freebus.knxcomm.telegram.Telegram;
-import org.freebus.knxcomm.telegram.Transport;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestTelegram
@@ -177,6 +178,29 @@ public class TestTelegram
       final Telegram telegram = new Telegram();
       final int[] data = new int[] { 0x90, 0x11, 0x06, 0x11, 0xff, 0x60, 0x81, 0x77 };
       telegram.fromRawData(data, 0);
+   }
+
+   /**
+    * A negative reply (T_NAK-PDU) from a real switch.
+    *
+    * Hmm... seems to be a T_Disconnect....
+    *
+    * TODO this test currently fails
+    */
+   @Ignore
+   @Test
+   public void testFromToRawDataConnectedNack() throws InvalidDataException
+   {
+      final int[] data = new int[] { 0x90, 0x11, 0x06, 0x11, 0xff, 0x60, 0x81, 0x77 };
+      final Telegram telegram = new Telegram();
+
+      telegram.fromRawData(data, 0);
+      assertEquals(Transport.Disconnect, telegram.getTransport());
+
+      final int[] dataOut = new int[data.length];
+      telegram.toRawData(dataOut, 0);
+
+      assertArrayEquals(data, dataOut);
    }
 
    @Test

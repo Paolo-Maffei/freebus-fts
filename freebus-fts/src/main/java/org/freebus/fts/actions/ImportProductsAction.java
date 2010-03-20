@@ -38,18 +38,18 @@ public final class ImportProductsAction extends BasicAction
       {
          final Config cfg = Config.getInstance();
          String lastDir = cfg.getStringValue("VdxFile.lastDir");
-   
+
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
-         dlg.addChoosableFileFilter(new VdxFileFilter());
+         dlg.addChoosableFileFilter(new VdxFileFilter(true, false));
          dlg.setDialogTitle(I18n.getMessage("ImportProductsAction.openFileTitle"));
 
          if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)
             return;
-   
+
          final File file = dlg.getSelectedFile();
          if (file == null) return;
-   
+
          cfg.put("VdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 

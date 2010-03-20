@@ -22,15 +22,15 @@ import org.freebus.fts.utils.TableUtils;
 /**
  * Displays the contents of a VDX table, with a list of records on the left side
  * and the fields of the selected record on the right side.
- * 
+ *
  * This is an internal class of {@link InspectVdxFile}.
  */
 public class TableContentsPerRecord extends JSplitPane implements TableContents
 {
    private static final long serialVersionUID = -3850390134630129910L;
 
-   private final DefaultListModel lmRecords = new DefaultListModel();
-   private final SortedListModel slmRecords = new SortedListModel(lmRecords);
+   private DefaultListModel lmRecords = new DefaultListModel();
+   private SortedListModel slmRecords = new SortedListModel(lmRecords);
    private final JList lstRecords = new JList(slmRecords);
 
    private final DefaultTableModel tbmFields = new DefaultTableModel();
@@ -59,7 +59,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
             updateFields();
          }
       });
-      
+
       add(new JScrollPane(lstRecords));
 
       final JScrollPane scpFields = new JScrollPane(tblFields);
@@ -126,7 +126,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
          numRecords = maxRecords;
 
       // fill the list
-      lstRecords.setModel(new DefaultListModel());
+      lmRecords = new DefaultListModel();
       lmRecords.setSize(numRecords);
       for (int i = 0; i < numRecords; ++i)
       {
@@ -135,6 +135,8 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
             lmRecords.set(i, table.getValue(i, nameIdx) + " [" + keyStr + ']');
          else lmRecords.set(i, keyStr);
       }
+
+      slmRecords = new SortedListModel(lmRecords);
       lstRecords.setModel(slmRecords);
 
       if (numRecords > 0)
@@ -145,7 +147,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
 
    /**
     * Update the list of record fields of the currently selected record.
-    * 
+    *
     * @throws IOException if there is an error reading the VD_ file.
     */
    public void updateFields()

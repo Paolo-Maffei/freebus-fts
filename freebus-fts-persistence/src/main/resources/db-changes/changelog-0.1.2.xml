@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+ <changeSet author="stefant" id="0.1.2-2">
+  <addNotNullConstraint tableName="communication_object"
+   columnName="object_priority" columnDataType="INT" defaultNullValue="3" />
+ </changeSet>
+ <changeSet author="stefant" id="0.1.2-3">
+  <insert tableName="SEQUENCE">
+   <column name="seq_name" value="SEQ_GEN_TABLE" />
+   <column name="seq_count" valueNumeric="0" />
+  </insert>
+ </changeSet>
+</databaseChangeLog>

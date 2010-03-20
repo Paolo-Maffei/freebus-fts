@@ -19,7 +19,7 @@ import org.freebus.fts.persistence.vdx.VdxEntity;
 public class SampleManufacturer
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenManufacturerId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenManufacturerId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "manufacturer_id", nullable = false)
    public int id;

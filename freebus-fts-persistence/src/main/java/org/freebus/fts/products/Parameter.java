@@ -23,7 +23,7 @@ import javax.persistence.Transient;
 public class Parameter
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenParameterId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenParameterId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "parameter_id", nullable = false)
    private int id;

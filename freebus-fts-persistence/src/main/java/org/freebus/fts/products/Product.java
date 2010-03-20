@@ -23,7 +23,7 @@ public class Product
    public final static Product NONE = new Product(0, "NONE", null);
 
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenProductId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenProductId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "product_id", nullable = false)
    private int id;

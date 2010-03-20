@@ -208,8 +208,11 @@ public class LogLine extends JPanel
       @Override
       public void append(final LoggingEvent event)
       {
-         final String message = layout.format(event);
          final Level level = event.getLevel();
+         if (!level.isGreaterOrEqual(Level.INFO))
+            return;
+
+         final String message = layout.format(event);
 
          SwingUtilities.invokeLater(new Runnable()
          {

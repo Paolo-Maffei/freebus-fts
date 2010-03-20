@@ -25,7 +25,7 @@ import javax.persistence.TableGenerator;
 public class Building
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenBuildingId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenBuildingId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "building_id", nullable = false)
    private int id;

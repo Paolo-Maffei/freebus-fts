@@ -1,13 +1,15 @@
 package org.freebus.fts.project;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNotSame;
+import static org.junit.Assert.assertSame;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 import java.util.Map;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
-import org.freebus.fts.project.Project;
-import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.project.service.ProjectService;
 import org.freebus.fts.test_utils.ProjectTestCase;
 import org.junit.Test;
@@ -71,7 +73,7 @@ public class TestProjectService extends ProjectTestCase
    }
 
    @Test
-   public final void saveGetSampleProject()
+   public final void saveLoadSampleProject()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
@@ -82,6 +84,7 @@ public class TestProjectService extends ProjectTestCase
 
       final int projectId = project.getId();
       assertTrue(projectId != 0);
+
       DatabaseResources.getEntityManager().clear();
 
       final Project loadedProject = projectService.getProject(projectId);

@@ -52,7 +52,7 @@ public class InspectVdxFile extends AbstractPage
 
    private String selectedTableName;
    private TableContents currentContents;
-   private int maxRecords = 10000;
+   private int maxRecords;
 
    /**
     * Create a VDX browser page.
@@ -147,9 +147,11 @@ public class InspectVdxFile extends AbstractPage
          }
       });
 
-      for (final int val : new int[] { 1000, 2500, 5000, 10000, 25000, 50000, 100000, 250000, 500000, 1000000 })
+      for (final int val : new int[] { 1000, 2500, 5000, 10000, 25000, 50000, 100000 })
          cboMaxRecords.addItem(val);
-      cboMaxRecords.setSelectedItem(maxRecords);
+
+      maxRecords = 10000;
+      cboMaxRecords.setSelectedIndex(3);
    }
 
    /**

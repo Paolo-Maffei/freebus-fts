@@ -12,13 +12,21 @@ import org.freebus.fts.core.I18n;
  */
 public final class VdxFileFilter extends FileFilter
 {
+   private final boolean showVdx, showProjects;
+
+   public VdxFileFilter(boolean showVdx, boolean showProjects)
+   {
+      this.showVdx = showVdx;
+      this.showProjects = showProjects;
+   }
+
    @Override
    public boolean accept(File file)
    {
       if (file.isDirectory()) return true;
 
       final String ext = FileUtils.getExtension(file);
-      return "vd_".equals(ext);
+      return (showVdx && "vd_".equals(ext)) || (showProjects && "pr_".equals(ext));
    }
 
    @Override

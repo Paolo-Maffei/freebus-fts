@@ -31,7 +31,7 @@ import javax.persistence.TableGenerator;
 public class Line
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenLineId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenLineId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "line_id", nullable = false)
    private int id;

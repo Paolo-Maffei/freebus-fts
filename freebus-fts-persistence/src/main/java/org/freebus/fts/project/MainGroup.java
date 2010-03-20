@@ -28,7 +28,7 @@ import org.freebus.fts.project.internal.I18n;
 public class MainGroup
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenMainGroupId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenMainGroupId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "main_group_id", nullable = false)
    private int id;

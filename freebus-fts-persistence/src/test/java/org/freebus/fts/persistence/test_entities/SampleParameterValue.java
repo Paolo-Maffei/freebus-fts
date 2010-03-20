@@ -25,7 +25,7 @@ public class SampleParameterValue implements Serializable
    public static final long serialVersionUID = -1L;
 
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenParameterValueId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenParameterValueId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "parameter_value_id", nullable = false)
    public int id;

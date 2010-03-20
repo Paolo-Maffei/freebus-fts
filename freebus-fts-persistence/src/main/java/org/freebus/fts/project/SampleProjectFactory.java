@@ -67,15 +67,24 @@ public final class SampleProjectFactory
 
       final boolean ownTransaction = !productsFactory.getTransaction().isActive();
 
-      if (ownTransaction)
-         productsFactory.getTransaction().begin();
+      try
+      {
+         if (ownTransaction)
+            productsFactory.getTransaction().begin();
 
-      importer.copy(devs);
+         importer.copy(devs);
 
-      if (ownTransaction)
-         productsFactory.getTransaction().commit();
+         if (ownTransaction)
+            productsFactory.getTransaction().commit();
+      }
+      finally
+      {
+         if (ownTransaction && productsFactory.getTransaction().isActive())
+            productsFactory.getTransaction().rollback();
 
-      if (tempFile != null) tempFile.delete();
+         if (tempFile != null)
+            tempFile.delete();
+      }
    }
 
    /**

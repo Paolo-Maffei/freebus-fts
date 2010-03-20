@@ -11,12 +11,14 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.freebus.fts.persistence.vdx.VdxEntity;
 import org.freebus.fts.products.Parameter;
 
 /**
  * The parameter value of a specific {@link Device} device.
  */
 @Entity
+@VdxEntity(name = "device_parameter")
 @Table(name = "device_parameter_value")
 public class DeviceParameterValue
 {

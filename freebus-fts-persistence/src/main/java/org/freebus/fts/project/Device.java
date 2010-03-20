@@ -32,7 +32,7 @@ import org.freebus.fts.products.VirtualDevice;
 public final class Device
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenDeviceId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenDeviceId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "device_id", nullable = false)
    private int id;

@@ -27,7 +27,7 @@ import javax.persistence.TableGenerator;
 public class Area
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequences", name = "GenAreaId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenAreaId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "area_id", nullable = false)
    private int id;

@@ -26,8 +26,7 @@
    <column name="program_name" type="VARCHAR(50)" />
    <column name="program_type" type="INT" />
    <column name="program_serial_number" type="VARCHAR(20)" />
-   <column defaultValueBoolean="false" name="dynamic_management"
-    type="BIT" />
+   <column defaultValueBoolean="false" name="dynamic_management" type="BIT" />
    <column name="manufacturer_id" type="INT">
     <constraints nullable="false" />
    </column>
@@ -339,7 +338,7 @@
  </changeSet>
  <changeSet author="stefant" id="0.1.1-21">
   <createTable tableName="SEQUENCE">
-   <column name="SEQ_NAME" type="VARCHAR(50)">
+   <column name="SEQ_NAME" type="VARCHAR(256)">
     <constraints nullable="false" primaryKey="true" />
    </column>
    <column name="SEQ_COUNT" type="INT" />

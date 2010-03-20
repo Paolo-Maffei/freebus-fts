@@ -41,6 +41,8 @@ import org.jdesktop.application.SessionStorage;
  * The FTS application class. This class is responsible for starting the
  * application and shutting it down. GUI related stuff is handled by the
  * {@link MainWindow main window} class.
+ * <p>
+ * This class also contains the {@link #main} of FTS.
  */
 public final class FTS extends Application
 {
@@ -86,7 +88,7 @@ public final class FTS extends Application
          startupPlugins(20);
          startupLookAndFeel(30);
          startupUpgradeDatabase(40);
-         startupConnectDatabase(60);
+         startupConnectDatabase(70);
          startupMainWindow(90);
 
          // Final steps
@@ -100,6 +102,29 @@ public final class FTS extends Application
       {
          Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrStartup"));
          Runtime.getRuntime().exit(1);
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void ready()
+   {
+      mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+      try
+      {
+         Logger.getLogger(getClass()).info("Creating an example project");
+         ProjectManager.setProject(SampleProjectFactory.newProject());
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrCreatingSampleProject"));
+      }
+      finally
+      {
+         mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       }
    }
 
@@ -185,6 +210,13 @@ public final class FTS extends Application
       catch (Exception e)
       {
          Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrConnectDatabase"));
+
+         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
+               + I18n.getMessage("FTS.ConnectDatabaseProblem") + "</body></html>", I18n
+               .getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
+
+         if (ret != JOptionPane.YES_OPTION)
+            Runtime.getRuntime().exit(2);
 
          conDetails = new ConnectionDetails();
          con = DatabaseResources.createConnection(conDetails);
@@ -321,6 +353,13 @@ public final class FTS extends Application
       {
          Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrConnectDatabase"));
 
+         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
+               + I18n.getMessage("FTS.ConnectDatabaseProblem") + "</body></html>", I18n
+               .getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
+
+         if (ret != JOptionPane.YES_OPTION)
+            Runtime.getRuntime().exit(2);
+
          DatabaseResources.close();
 
          final ConnectionDetails conDetails = new ConnectionDetails();
@@ -359,29 +398,6 @@ public final class FTS extends Application
       catch (IOException e1)
       {
          e1.printStackTrace();
-      }
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void ready()
-   {
-      Logger.getLogger(getClass()).debug("FTS ready");
-
-      mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-      try
-      {
-         //
-         // Create a sample project and show it in the main window
-         //
-         ProjectManager.setProject(SampleProjectFactory.newProject());
-      }
-      finally
-      {
-         mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
       }
    }
 
