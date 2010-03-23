@@ -207,6 +207,7 @@ public class TestTelegram
    public void testToRawData()
    {
       final Telegram telegram = new Telegram();
+      final Telegram telegramNullData = new Telegram();
       final int[] data = new int[1024];
       int len;
 
@@ -227,8 +228,30 @@ public class TestTelegram
       assertEquals(0xb1, data[5]);
       assertEquals(0x00, data[6]);
       assertEquals(0x81, data[7]);
+      
+      
+      // Telegram with empty data
+      telegramNullData.setFrom(new PhysicalAddress(1, 1, 1));
+      telegramNullData.setDest(new PhysicalAddress(3, 3, 7));
+      telegramNullData.setPriority(Priority.SYSTEM);
+      telegramNullData.setRepeated(true);
+      telegramNullData.setTransport(Transport.Connected);
+      telegramNullData.setSequence(0);
+      telegramNullData.setApplication(Application.DeviceDescriptor_Read);
+      telegramNullData.toRawData(data, 0);
+      assertEquals(0x90, data[0]);
+      assertEquals(0x11, data[1]);
+      assertEquals(0x01, data[2]);
+      assertEquals(0x33, data[3]);
+      assertEquals(0x07, data[4]);
+      assertEquals(0x61, data[5]);
+      assertEquals(0x43, data[6]);
+      assertEquals(0x00, data[7]);
+      
    }
 
+   
+   
    @Test
    public void testGetSetTransport()
    {
