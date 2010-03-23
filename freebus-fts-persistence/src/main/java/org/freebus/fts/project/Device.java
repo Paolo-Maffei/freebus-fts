@@ -44,7 +44,7 @@ public final class Device
    @JoinColumn(name = "catalog_entry_id", nullable = false)
    public CatalogEntry catalogEntry;
 
-   @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.PERSIST)
+   @ManyToOne(fetch = FetchType.LAZY, optional = true)
    @JoinColumn(name = "program_id", nullable = true)
    private Program program;
 
@@ -115,6 +115,8 @@ public final class Device
    }
 
    /**
+    * Set the address of the device. This is the last number of
+    * a physical address (e.g. 12 for 1.3.12)
     * @param address the address to set
     */
    public void setAddress(int address)
@@ -123,7 +125,7 @@ public final class Device
    }
 
    /**
-    * @return the address
+    * @return the address of the device.
     */
    public int getAddress()
    {
@@ -131,6 +133,8 @@ public final class Device
    }
 
    /**
+    * Get the physical address of the device.
+    *
     * @return the physical address of the device.
     */
    public PhysicalAddress getPhysicalAddress()
@@ -287,7 +291,7 @@ public final class Device
     * Clear all parameter values of the device. Should be called when the program
     * is changed.
     */
-   public void clearDeviceParameterValues()
+   public void clearParameterValues()
    {
       parameterValues.clear();
    }

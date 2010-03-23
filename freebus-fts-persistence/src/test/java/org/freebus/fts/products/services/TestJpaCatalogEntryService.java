@@ -28,11 +28,8 @@ public class TestJpaCatalogEntryService extends ProductsTestCase
    @Before
    public void setUp() throws Exception
    {
-      if (manuService == null)
-         manuService = getJpaProductsFactory().getManufacturerService();
-
-      if (catService == null)
-          catService = getJpaProductsFactory().getCatalogEntryService();
+      manuService = getJpaProductsFactory().getManufacturerService();
+      catService = getJpaProductsFactory().getCatalogEntryService();
 
       manu1 = new Manufacturer(1, "Manufacturer-1");
       manu2 = new Manufacturer(2, "Manufacturer-2");

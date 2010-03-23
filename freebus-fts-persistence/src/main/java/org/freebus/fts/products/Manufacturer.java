@@ -91,7 +91,7 @@ public class Manufacturer
          return false;
 
       final Manufacturer oo = (Manufacturer) o;
-      return id == oo.id && name.equals(oo.name);
+      return id == oo.id;
    }
 
    /**

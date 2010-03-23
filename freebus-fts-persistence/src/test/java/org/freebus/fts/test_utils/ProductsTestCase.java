@@ -4,6 +4,8 @@ import java.io.File;
 
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.services.ProductsFactory;
+import org.junit.After;
+import org.junit.Before;
 
 public abstract class ProductsTestCase extends PersistenceTestCase
 {
@@ -18,6 +20,26 @@ public abstract class ProductsTestCase extends PersistenceTestCase
    public ProductsTestCase()
    {
       this("test-full");
+   }
+
+   /**
+    * Setup for the next test
+    */
+   @Before
+   public final void setUpProductsTestCase()
+   {
+      jpaProductsFactory = null;
+      vdxProductsFactory = null;
+   }
+
+   /**
+    * Cleanup
+    */
+   @After
+   public final void tearDownProductsTestCase()
+   {
+      jpaProductsFactory = null;
+      vdxProductsFactory = null;
    }
 
    /**

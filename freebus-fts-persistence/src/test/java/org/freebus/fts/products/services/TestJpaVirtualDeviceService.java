@@ -12,8 +12,6 @@ import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Product;
 import org.freebus.fts.products.VirtualDevice;
-import org.freebus.fts.products.services.ProductsFactory;
-import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.test_utils.ProductsTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -29,10 +27,12 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
       final ProductsFactory productsFactory = getJpaProductsFactory();
       virtDevService = productsFactory.getVirtualDeviceService();
 
-      final Manufacturer manu = new Manufacturer(1, "manu-1");
-      final FunctionalEntity funcEnt = new FunctionalEntity(1234, manu, "func-ent-1", "func-ent-desc-1");
-      final Product product = new Product(1234, "prod-1", manu);
-      final CatalogEntry catEnt = new CatalogEntry(321, "cat-ent-1", manu, product);
+      final Manufacturer manu1 = new Manufacturer(1, "manu-1");
+      productsFactory.getManufacturerService().save(manu1);
+
+      final FunctionalEntity funcEnt = new FunctionalEntity(1234, manu1, "func-ent-1", "func-ent-desc-1");
+      final Product product = new Product(1234, "prod-1", manu1);
+      final CatalogEntry catEnt = new CatalogEntry(321, "cat-ent-1", manu1, product);
 
       productsFactory.getFunctionalEntityService().save(funcEnt);
       productsFactory.getCatalogEntryService().save(catEnt);

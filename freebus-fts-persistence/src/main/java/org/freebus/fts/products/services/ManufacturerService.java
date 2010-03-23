@@ -13,7 +13,7 @@ public interface ManufacturerService
 {
    /**
     * Get a manufacturer by id.
-    * 
+    *
     * @throws DAONotFoundException if the object does not exist
     */
    public Manufacturer getManufacturer(int manufacturerId) throws PersistenceException;
@@ -24,9 +24,15 @@ public interface ManufacturerService
    public List<Manufacturer> getManufacturers() throws PersistenceException;
 
    /**
-    * Get all manufacturers that own at least one functional entity. 
+    * Get all manufacturers that own at least one functional entity.
     */
    public List<Manufacturer> getActiveManufacturers() throws PersistenceException;
+
+   /**
+    * Save the manufacturer if no manufacturer with the same manufacturer-id
+    * exists in the database.
+    */
+   public void saveIfMissing(Manufacturer manufacturer) throws PersistenceException;
 
    /**
     * Save a manufacturer.

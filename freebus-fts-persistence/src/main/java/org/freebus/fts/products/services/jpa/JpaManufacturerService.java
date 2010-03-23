@@ -2,6 +2,7 @@ package org.freebus.fts.products.services.jpa;
 
 import java.util.List;
 
+import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
@@ -29,7 +30,7 @@ public final class JpaManufacturerService implements ManufacturerService
    public List<Manufacturer> getManufacturers() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select m from Manufacturer m");
-      return (List<Manufacturer>) query.getResultList();
+      return query.getResultList();
    }
 
    @SuppressWarnings("unchecked")
@@ -37,7 +38,7 @@ public final class JpaManufacturerService implements ManufacturerService
    public List<Manufacturer> getActiveManufacturers() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select distinct fe.manufacturer from FunctionalEntity fe");
-      return (List<Manufacturer>) query.getResultList();
+      return query.getResultList();
    }
 
    @Override
@@ -47,9 +48,17 @@ public final class JpaManufacturerService implements ManufacturerService
    }
 
    @Override
+   public void saveIfMissing(Manufacturer manufacturer) throws PersistenceException
+   {
+      final Manufacturer m = entityManager.find(Manufacturer.class, manufacturer.getId());
+      if (m == null)
+         entityManager.persist(manufacturer);
+   }
+
+   @Override
    public void save(Manufacturer manufacturer) throws PersistenceException
    {
-      entityManager.persist(manufacturer);
+      entityManager.merge(manufacturer);
    }
 
    @Override

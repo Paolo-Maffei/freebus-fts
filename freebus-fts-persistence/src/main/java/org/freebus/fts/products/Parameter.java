@@ -41,7 +41,7 @@ public class Parameter
    @JoinColumn(name = "program_id", nullable = false)
    private Program program;
 
-   @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    @JoinColumn(name = "parameter_type_id", nullable = false)
    private ParameterType parameterType;
 
@@ -54,7 +54,7 @@ public class Parameter
    @Column(name = "parameter_high_access", columnDefinition = "SMALLINT")
    private int highAccess;
 
-   @ManyToOne(optional = true, fetch = FetchType.EAGER)
+   @ManyToOne(optional = true)
    @JoinColumn(name = "par_parameter_id", nullable = true)
    private Parameter parent;
 

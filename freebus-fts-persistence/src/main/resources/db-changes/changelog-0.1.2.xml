@@ -12,4 +12,14 @@
    <column name="seq_count" valueNumeric="0" />
   </insert>
  </changeSet>
+ <!-- changeSet author="stefant" id="0.1.2-4">
+  <addColumn tableName="device_parameter_value">
+   <column name="visible" type="BIT" defaultValueBoolean="true">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet -->
+ <changeSet author="stefant" id="0.1.2-5">
+  <dropNotNullConstraint tableName="device_parameter_value" columnName="parameter_value" columnDataType="VARCHAR(255)" />
+ </changeSet>
 </databaseChangeLog>

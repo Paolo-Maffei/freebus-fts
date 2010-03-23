@@ -5,15 +5,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.persistence.PersistenceException;
-
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
 /**
- * Class for importing parts of a org.freebus.fts.products database into FTS' internal database.
+ * Class for importing parts of a org.freebus.fts.products database into FTS'
+ * internal database.
  */
 public final class ProductsImporter
 {
@@ -36,9 +35,8 @@ public final class ProductsImporter
 
    /**
     * Import a list of virtual devices.
-    * @throws PersistenceException
     */
-   public void copy(List<VirtualDevice> devices) throws PersistenceException
+   public void copy(List<VirtualDevice> devices)
    {
       final VirtualDeviceService virtDevService = destFactory.getVirtualDeviceService();
       final FunctionalEntityService funcEntService = destFactory.getFunctionalEntityService();
@@ -48,29 +46,23 @@ public final class ProductsImporter
       if (ownTransaction)
          destFactory.getTransaction().begin();
 
-      try
+      for (VirtualDevice device : devices)
       {
-         for (VirtualDevice device: devices)
-         {
-            final CatalogEntry catalogEntry = device.getCatalogEntry();
-            if (catalogEntryService.getCatalogEntry(catalogEntry.getId()) == null)
-               copy(catalogEntry);
+         final CatalogEntry catalogEntry = device.getCatalogEntry();
+         if (catalogEntryService.getCatalogEntry(catalogEntry.getId()) == null)
+            copy(catalogEntry);
 
-            final FunctionalEntity funcEnt = device.getFunctionalEntity();
+         for (FunctionalEntity funcEnt = device.getFunctionalEntity(); funcEnt != null; funcEnt = funcEnt.getParent())
+         {
             if (funcEntService.getFunctionalEntity(funcEnt.getId()) == null)
                funcEntService.save(funcEnt);
-
-            virtDevService.save(device);
          }
 
-         if (ownTransaction)
-            destFactory.getTransaction().commit();
+         virtDevService.save(device);
       }
-      finally
-      {
-         if (ownTransaction)
-            destFactory.getTransaction().rollback();
-      }
+
+      if (ownTransaction)
+         destFactory.getTransaction().commit();
    }
 
    /**
@@ -89,13 +81,15 @@ public final class ProductsImporter
     */
    public void copy(CatalogEntry catalogEntry)
    {
-      destFactory.getManufacturerService().save(catalogEntry.getManufacturer());
+      destFactory.getManufacturerService().saveIfMissing(catalogEntry.getManufacturer());
+
       catalogEntryService.save(catalogEntry);
       catalogEntries.add(catalogEntry);
    }
 
    /**
-    * @return the org.freebus.fts.products factory from where the org.freebus.fts.products are imported.
+    * @return the org.freebus.fts.products factory from where the
+    *         org.freebus.fts.products are imported.
     */
    public ProductsFactory getSourceFactory()
    {
@@ -103,7 +97,8 @@ public final class ProductsImporter
    }
 
    /**
-    * @return the org.freebus.fts.products factory into which the org.freebus.fts.products are imported.
+    * @return the org.freebus.fts.products factory into which the
+    *         org.freebus.fts.products are imported.
     */
    public ProductsFactory getDestFactory()
    {

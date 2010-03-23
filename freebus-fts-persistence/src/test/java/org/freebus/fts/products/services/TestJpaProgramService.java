@@ -10,8 +10,6 @@ import java.util.List;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Program;
-import org.freebus.fts.products.services.DAOException;
-import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.test_utils.ProductsTestCase;
 import org.junit.Before;
 import org.junit.Test;
@@ -27,7 +25,8 @@ public class TestJpaProgramService extends ProductsTestCase
       progService = getJpaProductsFactory().getProgramService();
 
       final Manufacturer manu = new Manufacturer(1, "manu-1");
-      
+      getJpaProductsFactory().getManufacturerService().save(manu);
+
       progService.save(new Program(11, "Program-11", manu));
       progService.save(new Program(12, "Program-12", manu));
       progService.save(new Program(13, "Program-13", manu));
@@ -53,7 +52,10 @@ public class TestJpaProgramService extends ProductsTestCase
    @Test
    public final void testSave()
    {
-      final Program prog = new Program(0, "Program-88", new Manufacturer(88, "manu-88"));
+      final Manufacturer manu88 = new Manufacturer(88, "manu-88");
+      getJpaProductsFactory().getManufacturerService().save(manu88);
+
+      final Program prog = new Program(0, "Program-88", manu88);
       final byte[] data = new byte[] { 0, 1, 2, 45, 0, 127, 4, -128, 0, 7, 1 };
       prog.setEepromData(data);
 

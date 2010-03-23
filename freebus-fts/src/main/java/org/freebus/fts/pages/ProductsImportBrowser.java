@@ -40,7 +40,7 @@ public class ProductsImportBrowser extends ProductsBrowser
    public ProductsImportBrowser()
    {
       super();
-      
+
       final Box boxBottom = getBottomBox();
       boxBottom.setVisible(false);
       boxBottom.add(Box.createHorizontalGlue());
@@ -57,7 +57,7 @@ public class ProductsImportBrowser extends ProductsBrowser
             if (cbxImport.isSelected()) importDevices.add(currentDevice);
             else importDevices.remove(currentDevice);
             btnImport.setEnabled(!importDevices.isEmpty());
-            
+
          }
       });
 
@@ -123,7 +123,7 @@ public class ProductsImportBrowser extends ProductsBrowser
          importer.copy(virtDevsList);
 
          transaction.commit();
- 
+
          importDevices.clear();
          updateCatalogEntry();
 

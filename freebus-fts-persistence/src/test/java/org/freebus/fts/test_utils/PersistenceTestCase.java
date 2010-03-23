@@ -44,9 +44,6 @@ public abstract class PersistenceTestCase
    {
       this.persistenceUnitName = persistenceUnitName;
       conDetails = new ConnectionDetails(DriverType.HSQL_MEM, databaseName);
-
-      final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName, conDetails);
-      DatabaseResources.setEntityManagerFactory(emf);
    }
 
    /**
@@ -55,6 +52,9 @@ public abstract class PersistenceTestCase
    @Before
    public final void setUpPersistenceTestCase()
    {
+      final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName, conDetails);
+      DatabaseResources.setEntityManagerFactory(emf);
+
       final EntityTransaction trans = DatabaseResources.getEntityManager().getTransaction();
       trans.begin();
       trans.setRollbackOnly();
@@ -67,5 +67,6 @@ public abstract class PersistenceTestCase
    public final void tearDownPersistenceTestCase()
    {
       DatabaseResources.getEntityManager().getTransaction().rollback();
+      DatabaseResources.close();
    }
 }

@@ -35,7 +35,7 @@ public class VirtualDevice
    @JoinColumn(name = "catalog_entry_id", nullable = false)
    public CatalogEntry catalogEntry;
 
-   @ManyToOne(fetch = FetchType.LAZY, optional = false, targetEntity = FunctionalEntity.class)
+   @ManyToOne(fetch = FetchType.LAZY, optional = false)
    @JoinColumn(name = "functional_entity_id", nullable = false, referencedColumnName = "functional_entity_id")
    public FunctionalEntity functionalEntity;
 

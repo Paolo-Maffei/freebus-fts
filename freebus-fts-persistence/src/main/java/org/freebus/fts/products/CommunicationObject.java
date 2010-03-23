@@ -1,21 +1,16 @@
 package org.freebus.fts.products;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-
-import org.apache.log4j.Logger;
 
 /**
  * A communication object of a program.
@@ -33,12 +28,12 @@ public class CommunicationObject
    @Column(name = "object_name", nullable = false)
    private String name = "";
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+   @ManyToOne(optional = false)
    @JoinColumn(name = "program_id", nullable = false)
    private Program program;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
-   @JoinColumn(name = "parameter_id", nullable = true)
+   @ManyToOne(optional = false)
+   @JoinColumn(name = "parameter_id")
    private Parameter parameter;
 
    @Column(name = "object_function")

@@ -52,8 +52,10 @@ public final class OpenProjectAction extends BasicAction
             public void windowClosed(WindowEvent e)
             {
                if (!dlg.isAccepted()) return;
+
                final Project project = dlg.getSelectedProject();
                if (project == null) return;
+
                ProjectManager.setProject(project);
                Logger.getLogger(getClass()).info("Project loaded: " + project.getName());
             }

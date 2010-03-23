@@ -69,6 +69,12 @@ public final class VdxManufacturerService implements ManufacturerService
    }
 
    @Override
+   public void saveIfMissing(Manufacturer manufacturer) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   @Override
    public void save(Manufacturer manufacturer) throws PersistenceException
    {
       throw new PersistenceException("Sorry, not implemented");
