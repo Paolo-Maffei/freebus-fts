@@ -442,7 +442,7 @@ public final class FTS extends Application
     * 120. The restart has to be handled by the script that started the
     * application.
     *
-    * @see {@link Application#exit()}.
+    * @see {@link ApplicationType#exit()}.
     */
    public void restart()
    {

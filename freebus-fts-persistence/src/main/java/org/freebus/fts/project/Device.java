@@ -220,7 +220,7 @@ public final class Device
     */
    public void setParameterValue(final Parameter param, int value)
    {
-      setParameterValueObject(param, value);
+      setParameterValue(param, (Object) value);
    }
 
    /**
@@ -231,17 +231,16 @@ public final class Device
     */
    public void setParameterValue(final Parameter param, String value)
    {
-      setParameterValueObject(param, value);
+      setParameterValue(param, (Object) value);
    }
 
    /**
-    * Set the value of a parameter. Internal worker method.
-    * Use {@link #setParameterValue} to set the value of a parameter.
+    * Set the value of a parameter.
     *
     * @param param - the parameter for which a value will be set.
     * @param value - the parameter value.
     */
-   private void setParameterValueObject(final Parameter param, Object value)
+   public void setParameterValue(final Parameter param, Object value)
    {
       if (parameterValues == null)
          parameterValues = new HashMap<Parameter,DeviceParameterValue>();
@@ -249,6 +248,27 @@ public final class Device
       final DeviceParameterValue val = parameterValues.get(param);
       if (val == null) parameterValues.put(param, new DeviceParameterValue(this, param, value));
       else val.setValue(value);
+   }
+
+   /**
+    * Set the visibility of a parameter. A parameter-value with value null
+    * is created for the parameter, if the parameter has no value.
+    *
+    * @param param - the parameter for which the visibility is set.
+    * @param visible - the visibility indicator.
+    */
+   public void setParameterVisible(final Parameter param, boolean visible)
+   {
+      if (parameterValues == null)
+         parameterValues = new HashMap<Parameter,DeviceParameterValue>();
+
+      DeviceParameterValue val = parameterValues.get(param);
+      if (val == null)
+      {
+         val = new DeviceParameterValue(this, param, null);
+         parameterValues.put(param, val);
+      }
+      val.setVisible(visible);
    }
 
    /**

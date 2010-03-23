@@ -8,7 +8,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.TelegramListener;
-import org.freebus.knxcomm.telegram.Application;
+import org.freebus.knxcomm.telegram.ApplicationType;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
@@ -142,7 +142,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       sendSequence = 0;
       recvSequence = 0;
 
-      telegram.setApplication(Application.GroupValue_Read);
+      telegram.setApplication(ApplicationType.GroupValue_Read);
       telegram.setTransport(Transport.Connect);
       telegram.setSequence(++sendSequence);
 

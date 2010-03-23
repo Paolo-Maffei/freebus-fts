@@ -11,7 +11,7 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.telegram.Application;
+import org.freebus.knxcomm.telegram.ApplicationType;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
@@ -26,7 +26,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
    private final String label;
    final Telegram dataTelegram = new Telegram();
    final List<Telegram> telegrams = new LinkedList<Telegram>();
-   private Application applicationExpected;
+   private ApplicationType applicationExpected;
    private final Semaphore semaphore = new Semaphore(0);
 
    public SetPhysicalAddressJob(PhysicalAddress newAddress)
@@ -63,11 +63,11 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 1: scan the bus for devices that are in programming mode
       //
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Scanning"));
-      dataTelegram.setApplication(Application.IndividualAddress_Read);
+      dataTelegram.setApplication(ApplicationType.IndividualAddress_Read);
       dataTelegram.setDest(GroupAddress.BROADCAST);
       dataTelegram.setData(new int[] { (int)(Math.random() * 256) & 0xff });
       telegrams.clear();
-      applicationExpected = Application.IndividualAddress_Response;
+      applicationExpected = ApplicationType.IndividualAddress_Response;
       bus.send(dataTelegram);
 
       // Wait 3 seconds for devices that answer our telegram
@@ -88,7 +88,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 2: set the physical address
       //
       notifyListener(60, I18n.getMessage("SetPhysicalAddressJob.Programming"));
-      dataTelegram.setApplication(Application.IndividualAddress_Write);
+      dataTelegram.setApplication(ApplicationType.IndividualAddress_Write);
       dataTelegram.setData(newAddress.getBytes());
       applicationExpected = null;
       telegrams.clear();
@@ -99,20 +99,20 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 3: verify the programmed address
       //
 //      notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Verify"));
-//      dataTelegram.setApplication(Application.Memory_Read);
+//      dataTelegram.setApplication(ApplicationType.Memory_Read);
 //      dataTelegram.setDest(newAddress);
 //      dataTelegram.setData(new int[] { 1, 0, 0 });
 //      applicationExpected = null;
 //      semaphore.drainPermits();
 //      telegrams.clear();
 //      bus.send(dataTelegram);
-//      waitForAnswer(Application.Memory_Response);
+//      waitForAnswer(ApplicationType.Memory_Response);
 
       //
       // Step 4: restart the device to clear the programming mode
       //
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
-      dataTelegram.setApplication(Application.Restart);
+      dataTelegram.setApplication(ApplicationType.Restart);
       dataTelegram.setTransport(Transport.Connect);
       dataTelegram.setSequence(1);
       dataTelegram.setDest(newAddress);
@@ -120,7 +120,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       bus.send(dataTelegram);
       msleep(500);
 
-      dataTelegram.setApplication(Application.Restart);
+      dataTelegram.setApplication(ApplicationType.Restart);
       dataTelegram.setTransport(Transport.Connected);
       dataTelegram.setData(new int[] { 1 });
       dataTelegram.setSequence(2);
@@ -135,7 +135,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
     * @param appExpected - the type of the telegram application that is waited for.
     * @throws IOException - if the answer telegram does not arrive within the timeout.
     */
-   public void waitForAnswer(Application appExpected) throws IOException
+   public void waitForAnswer(ApplicationType appExpected) throws IOException
    {
       applicationExpected = appExpected;
 

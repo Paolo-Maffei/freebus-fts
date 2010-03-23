@@ -47,7 +47,7 @@ public class DeviceParameterValue
 
    @VdxField(name = "device_parameter_visible")
    @Column(name = "visible", nullable = false)
-   private boolean visible;
+   private boolean visible = true;
 
    /**
     * Create an empty device parameter-value object.

@@ -5,7 +5,7 @@ import javax.swing.JTabbedPane;
 
 
 /**
- * Common class for pages that are usually displayed in the {@link WorkBench} application window. 
+ * Common class for pages that are usually displayed in the {@link WorkBench} application window.
  */
 public abstract class AbstractPage extends JPanel
 {

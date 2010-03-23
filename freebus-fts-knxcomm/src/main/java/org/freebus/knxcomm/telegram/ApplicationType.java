@@ -4,7 +4,7 @@ package org.freebus.knxcomm.telegram;
  * Types of telegram applications. The types are stored in the APCI field of a
  * telegram.
  */
-public enum Application
+public enum ApplicationType
 {
    /**
     * Read the value of an ASAP (communication object). Response:
@@ -442,9 +442,9 @@ public enum Application
     * @return the application type for the given APCI field.
     * @throws InvalidDataException
     */
-   public static Application valueOf(int apci) throws InvalidDataException
+   public static ApplicationType valueOf(int apci) throws InvalidDataException
    {
-      for (Application a : values())
+      for (ApplicationType a : values())
       {
          if ((apci & apciMasks[a.bits]) == a.apci)
             return a;
@@ -456,7 +456,7 @@ public enum Application
    /*
     * Internal constructor.
     */
-   private Application(int apci, int apciBits, int minData, int maxData)
+   private ApplicationType(int apci, int apciBits, int minData, int maxData)
    {
       this.apci = apci;
       this.bits = apciBits;

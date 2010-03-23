@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.util.Arrays;
 import java.util.Set;
 
-import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -33,6 +32,7 @@ import org.freebus.fts.pages.inspectvdxfile.TableContentsGrid;
 import org.freebus.fts.pages.inspectvdxfile.TableContentsPerRecord;
 import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.persistence.vdx.VdxSection;
+import org.freebus.fts.utils.ButtonUtils;
 
 /**
  * A page that displays the contents of a VDX file.
@@ -96,7 +96,7 @@ public class InspectVdxFile extends AbstractPage
       });
 
       toolBar.add(cbxTablesSorted);
-      setToolButtonProperties(cbxTablesSorted);
+      ButtonUtils.setToolButtonProperties(cbxTablesSorted);
       cbxTablesSorted.setSelected("1".equals(Config.getInstance().getStringValue("InspectVdxFile.sortTables")));
       cbxTablesSorted.setText(I18n.getMessage("InspectVdxFile.CbxTablesSorted"));
       cbxTablesSorted.addActionListener(new ActionListener()
@@ -162,7 +162,7 @@ public class InspectVdxFile extends AbstractPage
    {
       final JToggleButton toggleButton = new JToggleButton(ImageCache.getIcon(iconName));
       toggleButton.setToolTipText(toolTipText);
-      setToolButtonProperties(toggleButton);
+      ButtonUtils.setToolButtonProperties(toggleButton);
 
       toggleButton.addActionListener(new ActionListener()
       {
@@ -176,17 +176,6 @@ public class InspectVdxFile extends AbstractPage
       });
 
       return toggleButton;
-   }
-
-   /**
-    * Set the properties of the abstract button btn to match the tool-bar
-    * buttons.
-    */
-   private void setToolButtonProperties(AbstractButton btn)
-   {
-      btn.setFocusable(false);
-      btn.setBorderPainted(false);
-      btn.setOpaque(false);
    }
 
    /**

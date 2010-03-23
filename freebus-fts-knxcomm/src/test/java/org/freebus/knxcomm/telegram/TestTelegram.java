@@ -21,7 +21,7 @@ public class TestTelegram
 
       assertFalse(telegram.isRepeated());
       assertEquals(Priority.LOW, telegram.getPriority());
-      assertEquals(Application.None, telegram.getApplication());
+      assertEquals(ApplicationType.None, telegram.getApplication());
       assertNotNull(telegram.toString());
    }
 
@@ -29,13 +29,13 @@ public class TestTelegram
    public void testGetSetApplication()
    {
       final Telegram telegram = new Telegram();
-      assertEquals(Application.None, telegram.getApplication());
+      assertEquals(ApplicationType.None, telegram.getApplication());
 
-      telegram.setApplication(Application.ADC_Read);
-      assertEquals(Application.ADC_Read, telegram.getApplication());
+      telegram.setApplication(ApplicationType.ADC_Read);
+      assertEquals(ApplicationType.ADC_Read, telegram.getApplication());
 
-      telegram.setApplication(Application.GroupValue_Write);
-      assertEquals(Application.GroupValue_Write, telegram.getApplication());
+      telegram.setApplication(ApplicationType.GroupValue_Write);
+      assertEquals(ApplicationType.GroupValue_Write, telegram.getApplication());
    }
 
    @Test
@@ -157,7 +157,7 @@ public class TestTelegram
       assertEquals(6, telegram.getRoutingCounter());
       assertEquals(new PhysicalAddress(1, 1, 1), telegram.getFrom());
       assertEquals(new GroupAddress(1, 2, 5), telegram.getDest());
-      assertEquals(Application.GroupValue_Write, telegram.getApplication());
+      assertEquals(ApplicationType.GroupValue_Write, telegram.getApplication());
       assertEquals(1, telegram.getData()[0]);
    }
 
@@ -214,7 +214,7 @@ public class TestTelegram
       telegram.setFrom(new PhysicalAddress(1, 1, 1));
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
-      telegram.setApplication(Application.GroupValue_Write);
+      telegram.setApplication(ApplicationType.GroupValue_Write);
       telegram.setData(new int[] { 1 });
 
       len = telegram.toRawData(data, 0);
@@ -237,7 +237,7 @@ public class TestTelegram
       telegramNullData.setRepeated(true);
       telegramNullData.setTransport(Transport.Connected);
       telegramNullData.setSequence(0);
-      telegramNullData.setApplication(Application.DeviceDescriptor_Read);
+      telegramNullData.setApplication(ApplicationType.DeviceDescriptor_Read);
       telegramNullData.toRawData(data, 0);
       assertEquals(0x90, data[0]);
       assertEquals(0x11, data[1]);

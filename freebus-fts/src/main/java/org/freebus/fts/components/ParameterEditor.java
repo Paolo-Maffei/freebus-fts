@@ -245,6 +245,24 @@ public class ParameterEditor extends JPanel implements ChangeListener
    }
 
    /**
+    * Apply the parameter values and visibility to the device.
+    */
+   public void apply()
+   {
+      if (device == null)
+         return;
+
+      device.clearParameterValues();
+
+      for (final ParamData data: paramDatas.values())
+      {
+         device.setParameterValue(data.getParameter(), data.getValue());
+         if (!data.isVisible())
+            device.setParameterVisible(data.getParameter(), false);
+      }
+   }
+
+   /**
     * Called when a parameter value was changed.
     */
    @Override

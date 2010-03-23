@@ -8,7 +8,7 @@ import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.telegram.Application;
+import org.freebus.knxcomm.telegram.ApplicationType;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
@@ -78,7 +78,7 @@ public final class SendTestTelegramAction extends BasicAction
          telegram.setPriority(Priority.SYSTEM);
          telegram.setTransport(Transport.Connected);
          telegram.setSequence(sequence++);
-         telegram.setApplication(Application.Memory_Read);
+         telegram.setApplication(ApplicationType.Memory_Read);
          telegram.setData(new int[] { 0, 0, 0 });
       }
       else
@@ -102,7 +102,7 @@ public final class SendTestTelegramAction extends BasicAction
 //         telegram.setPriority(Priority.SYSTEM);
 //         telegram.setTransport(Transport.Connected);
 //         telegram.setSequence(sequence++);
-//         telegram.setApplication(Application.Restart);
+//         telegram.setApplication(ApplicationType.Restart);
 //         telegram.setData(new int[] { 0 });
 //      }
 

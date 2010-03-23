@@ -21,7 +21,7 @@ public class Telegram implements Cloneable
    private boolean repeated = false;
    private Transport transport = Transport.Individual;
    private int sequence = 0;
-   private Application application = Application.None;
+   private ApplicationType applicationType = ApplicationType.None;
    private int[] data = null;
 
    /**
@@ -104,11 +104,11 @@ public class Telegram implements Cloneable
 
       if (rawData.length > pos && (transport.mask & 3) == 0)
       {
-         // APCI - application type
+         // APCI - applicationType type
          final int apci = ((tpci & 3) << 8) | rawData[pos++];
-         application = Application.valueOf(apci);
+         applicationType = ApplicationType.valueOf(apci);
 
-         final int dataMask = application.getDataMask();
+         final int dataMask = applicationType.getDataMask();
          if (dataMask != 0 && dataLen <= 1)
          {
             // ACPI byte contains data bits
@@ -131,17 +131,17 @@ public class Telegram implements Cloneable
       }
       else
       {
-         application = Application.None;
+         applicationType = ApplicationType.None;
          data = null;
       }
    }
 
    /**
-    * @return the application type.
+    * @return the applicationType type.
     */
-   public Application getApplication()
+   public ApplicationType getApplication()
    {
-      return application;
+      return applicationType;
    }
 
    /**
@@ -217,11 +217,11 @@ public class Telegram implements Cloneable
    }
 
    /**
-    * Set the application type.
+    * Set the applicationType type.
     */
-   public void setApplication(Application application)
+   public void setApplication(ApplicationType applicationType)
    {
-      this.application = application;
+      this.applicationType = applicationType;
    }
 
    /**
@@ -341,8 +341,8 @@ public class Telegram implements Cloneable
       rawData[pos++] = addr >> 8;
       rawData[pos++] = addr & 255;
 
-      int apci = application.apci & 255;
-      final int apciDataMask = application.getDataMask();
+      int apci = applicationType.apci & 255;
+      final int apciDataMask = applicationType.getDataMask();
       int dataLen = data == null ? 0 : data.length;
       if (dataLen > 0 && apciDataMask != 0)
          --dataLen;
@@ -355,14 +355,14 @@ public class Telegram implements Cloneable
       rawData[pos++] = drl;
 
       int tpci = transport.value;
-      tpci |= (application.apci >> 8) & ~transport.mask;
+      tpci |= (applicationType.apci >> 8) & ~transport.mask;
       if (transport.hasSequence)
          tpci |= (sequence & 15) << 2;
       rawData[pos++] = tpci;
 
       if (transport.mask == 255)
       {
-         // no application
+         // no applicationType
       }
       else if (data == null)
       {
@@ -408,7 +408,7 @@ public class Telegram implements Cloneable
 
       final Telegram oo = (Telegram) o;
 
-      return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && application == oo.application
+      return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && applicationType == oo.applicationType
             && sequence == oo.sequence && Arrays.equals(data, oo.data);
    }
 
@@ -422,8 +422,8 @@ public class Telegram implements Cloneable
 
       sb.append(getTransport()).append(' ');
 
-      final Application app = getApplication();
-      if (app != Application.None)
+      final ApplicationType app = getApplication();
+      if (app != ApplicationType.None)
          sb.append(app).append(' ');
 
       sb.append("from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
