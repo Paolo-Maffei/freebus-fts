@@ -91,6 +91,15 @@ public class DeviceDescriptorResponse extends DeviceDescriptor
     * {@inheritDoc}
     */
    @Override
+   public int hashCode()
+   {
+      return (getType().apci << 8) | (deviceDescriptor == null ? 0 : deviceDescriptor[0]);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(Object o)
    {
       if (o == this)

@@ -36,12 +36,13 @@ public class TestCustomSequencesTable
             + "SEQ_COUNT NUMERIC(38), PRIMARY KEY (SEQ_NAME))");
       stmt.execute();
 
-      stmt = con
-            .prepareStatement("create table sample_entity (project_id INT NOT NULL, name VARCHAR(255), PRIMARY KEY (project_id))");
+      stmt = con.prepareStatement("create table sample_entity (project_id INT NOT NULL, name VARCHAR(255), PRIMARY KEY (project_id))");
       stmt.execute();
+      stmt.close();
 
       stmt = con.prepareStatement("insert into SEQUENCE values('SEQ_GEN_TABLE', 0)");
       stmt.execute();
+      stmt.close();
 
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("custom-seq-table", conDetails);
       assertNotNull(emf);

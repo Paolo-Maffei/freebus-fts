@@ -153,5 +153,7 @@ public class TestProductsImporter
          importer.copy(vdxDev);
          trans.commit();
       }
+
+      con.close();
    }
 }

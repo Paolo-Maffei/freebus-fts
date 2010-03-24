@@ -101,6 +101,15 @@ public class MemoryRead extends Memory
     * {@inheritDoc}
     */
    @Override
+   public int hashCode()
+   {
+      return (getAddress() << 8) | count;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(Object o)
    {
       if (o == this)

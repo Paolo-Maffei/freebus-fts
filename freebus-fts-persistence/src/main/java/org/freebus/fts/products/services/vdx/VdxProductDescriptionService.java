@@ -68,7 +68,7 @@ public final class VdxProductDescriptionService implements ProductDescriptionSer
    }
 
    @Override
-   public List<String> getProductDescription(CatalogEntry entry) throws DAOException
+   public synchronized List<String> getProductDescription(CatalogEntry entry) throws DAOException
    {
       if (descriptions == null) fetchData();
       return descriptions.get(entry.getId());

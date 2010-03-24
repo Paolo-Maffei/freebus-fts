@@ -2,6 +2,7 @@ package org.freebus.fts.actions;
 
 import java.awt.event.ActionEvent;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
@@ -105,13 +106,17 @@ public final class SendTestTelegramAction extends BasicAction
 //         telegram.setData(new int[] { 0 });
 //      }
 
-      if (telegram != null) try
+      if (telegram != null)
       {
-         bus.send(telegram);
-      }
-      catch (Exception e)
-      {
-         Dialogs.showExceptionDialog(e, I18n.formatMessage("SendTestTelegramAction.ErrSendTelegram", new Object[]{ telegramType }));
+         try
+         {
+            Logger.getLogger(getClass()).debug("Sending test telegram: " + telegramType);
+            bus.send(telegram);
+         }
+         catch (Exception e)
+         {
+            Dialogs.showExceptionDialog(e, I18n.formatMessage("SendTestTelegramAction.ErrSendTelegram", new Object[]{ telegramType }));
+         }
       }
    }
 }

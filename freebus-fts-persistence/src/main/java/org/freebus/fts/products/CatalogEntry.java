@@ -21,10 +21,8 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "catalog_entry")
-public class CatalogEntry implements Serializable
+public class CatalogEntry
 {
-   private static final long serialVersionUID = 4022059156749728267L;
-
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenCatalogEntryId")
    @GeneratedValue(strategy = GenerationType.TABLE)

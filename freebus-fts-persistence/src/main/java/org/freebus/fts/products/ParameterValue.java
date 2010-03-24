@@ -18,10 +18,8 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "parameter_list_of_values")
-public class ParameterValue implements Serializable
+public class ParameterValue
 {
-   private static final long serialVersionUID = -8116925766267246754L;
-
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenParameterValueId")
    @GeneratedValue(strategy = GenerationType.TABLE)
