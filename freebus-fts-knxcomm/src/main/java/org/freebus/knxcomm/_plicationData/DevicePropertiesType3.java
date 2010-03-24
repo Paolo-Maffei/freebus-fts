@@ -1,6 +1,6 @@
-package org.freebus.knxcomm.AplicationData;
+package org.freebus.knxcomm._plicationData;
 
-public class DeviceDescriptorType3 implements DeviceDescriptor {
+public class DevicePropertiesType3 implements DeviceProperties {
 
 	@Override
 	public void fromRawData(int[] Data) {

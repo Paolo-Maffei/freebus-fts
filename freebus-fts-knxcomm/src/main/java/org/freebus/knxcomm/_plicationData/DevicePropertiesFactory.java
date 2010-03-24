@@ -1,10 +1,10 @@
-package org.freebus.knxcomm.AplicationData;
+package org.freebus.knxcomm._plicationData;
 
 /**
  *Factory Class for DeviceDescriptors
  * 
  */
-public class DeviceDescriptorFactory {
+public class DevicePropertiesFactory {
 
 	/**
 	 * Creates the DeviceDescriptor class in depends of the DeviceDescriptortype
@@ -14,16 +14,16 @@ public class DeviceDescriptorFactory {
 	 * 
 	 */
 
-	public DeviceDescriptor getDeviceDescriptor(int[] data) throws Exception {
-		DeviceDescriptor deviceDescriptor = null;
+	public DeviceProperties getDeviceDescriptor(int[] data) throws Exception {
+		DeviceProperties deviceDescriptor = null;
 
 		if ((data[0] & 0x3F) == 0) {
-			deviceDescriptor = new DeviceDescriptorType0();
+			deviceDescriptor = new DevicePropertiesType0();
 			deviceDescriptor.fromRawData(data);
 
 		}
 		if ((data[0] & 0x3F) == 3) {
-			deviceDescriptor = new DeviceDescriptorType3();
+			deviceDescriptor = new DevicePropertiesType3();
 			deviceDescriptor.fromRawData(data);
 		}
 		return deviceDescriptor;

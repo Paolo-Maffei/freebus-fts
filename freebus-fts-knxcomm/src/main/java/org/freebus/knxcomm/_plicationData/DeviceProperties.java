@@ -1,6 +1,6 @@
-package org.freebus.knxcomm.AplicationData;
+package org.freebus.knxcomm._plicationData;
 
-public interface DeviceDescriptor {
+public interface DeviceProperties {
 
 	/**
 	 *

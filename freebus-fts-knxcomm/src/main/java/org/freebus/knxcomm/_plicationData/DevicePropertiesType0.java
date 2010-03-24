@@ -1,11 +1,11 @@
-package org.freebus.knxcomm.AplicationData;
+package org.freebus.knxcomm._plicationData;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
 
-public class DeviceDescriptorType0 implements DeviceDescriptor {
+public class DevicePropertiesType0 implements DeviceProperties {
 	Properties deviceProperties;
 
 	/**
