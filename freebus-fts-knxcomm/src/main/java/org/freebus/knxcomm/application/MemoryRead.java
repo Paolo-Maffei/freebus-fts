@@ -22,11 +22,17 @@ public class MemoryRead extends Memory
     * Create a memory read object.
     *
     * @param address - the 16 bit memory address.
-    * @param count - the number of bytes to read/write.
+    * @param count - the number of bytes to read/write, in the range 0..63
+    *
+    * @throws IllegalArgumentException if count is not in the range 0..63
     */
    protected MemoryRead(int address, int count)
    {
       super(address);
+
+      if (count < 0 || count > 63)
+         throw new IllegalArgumentException("count must be 0..63");
+
       this.count = count;
    }
 
@@ -43,9 +49,14 @@ public class MemoryRead extends Memory
     * Set the number of bytes to read.
     *
     * @param count - the number of bytes to read. Range 1-63.
+    *
+    * @throws IllegalArgumentException if count is not in the range 0..63
     */
    public void setCount(int count)
    {
+      if (count < 0 || count > 63)
+         throw new IllegalArgumentException("count must be 0..63");
+
       this.count = count;
    }
 
@@ -95,7 +106,7 @@ public class MemoryRead extends Memory
       if (o == this)
          return true;
 
-      if (!(o instanceof Memory) || !super.equals(o))
+      if (!(o instanceof MemoryRead) || !super.equals(o))
          return false;
 
       final MemoryRead oo = (MemoryRead) o;

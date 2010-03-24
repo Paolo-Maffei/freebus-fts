@@ -12,14 +12,6 @@ public abstract class MemoryData extends Memory
    private int[] data;
 
    /**
-    * Create a memory data object with address 0 and no data.
-    */
-   public MemoryData()
-   {
-      this(0, null);
-   }
-
-   /**
     * Create a memory data object.
     *
     * @param address - the 16 bit memory address.
@@ -31,11 +23,7 @@ public abstract class MemoryData extends Memory
    protected MemoryData(int address, int[] data)
    {
       super(address);
-
-      if (data != null && data.length > 63)
-         throw new IllegalArgumentException("memory data is too long");
-
-      this.data = data;
+      setData(data);
    }
 
    /**
@@ -47,19 +35,26 @@ public abstract class MemoryData extends Memory
    }
 
    /**
-    * Set the data. Up to 63 bytes are allowed.
+    * Set the data. Up to 63 bytes are allowed. The supplied data is copied.
     *
-    * @param data the data to set
+    * @param data the data to set.
     *
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
    public void setData(int[] data)
    {
-      if (data != null && data.length > 63)
-         throw new IllegalArgumentException("memory data is too long");
+      if (data == null)
+      {
+         this.data = null;
+      }
+      else
+      {
+         if (data.length > 63)
+            throw new IllegalArgumentException("memory data is too long");
 
-      this.data = data;
+         this.data = data.clone();
+      }
    }
 
    /**
@@ -80,7 +75,7 @@ public abstract class MemoryData extends Memory
       final int count = rawData[start++] & 0x3f;
       setAddress((rawData[start++] << 8) | rawData[start++]);
 
-      setData(Arrays.copyOfRange(rawData, start, count));
+      setData(Arrays.copyOfRange(rawData, start, start + count));
    }
 
    /**
@@ -92,11 +87,16 @@ public abstract class MemoryData extends Memory
       final ApplicationType appType = getType();
       int pos = start;
 
-      rawData[pos++] = (appType.apci & 255) | (getCount() & 0x3f);
+      final int count = getCount();
+      rawData[pos++] = (appType.apci & 255) | (count & 0x3f);
 
       final int address = getAddress();
       rawData[pos++] = (address >> 8) & 255;
       rawData[pos++] = address & 255;
+
+      final int[] data = getData();
+      for (int i = 0; i < count; ++i)
+         rawData[pos++] = data[i];
 
       return pos - start;
    }
