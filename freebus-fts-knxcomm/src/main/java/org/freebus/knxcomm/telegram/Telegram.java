@@ -373,7 +373,7 @@ public class Telegram implements Cloneable
       rawData[pos++] = addr >> 8;
       rawData[pos++] = addr & 255;
 
-      int applicationLen = 1;
+      int applicationLen = 0;
       int apci = 0;
 
       if (transport.mask != 255 && application != null)

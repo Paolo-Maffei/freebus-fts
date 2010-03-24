@@ -191,8 +191,8 @@ public class TestTelegram
    /**
     * A negative reply (T_NAK-PDU) from a real switch.
     *
-    * TODO this test currently fails. The test might as well be simply wrong
-    *      ... seems to be a T_Disconnect anyways ...
+    * TODO this test currently fails. The test might as well be simply wrong ...
+    * seems to be a T_Disconnect anyways ...
     */
    @Ignore
    @Test
@@ -223,10 +223,16 @@ public class TestTelegram
       telegram.setApplication(ApplicationType.GroupValue_Write, new int[] { 1 });
 
       len = telegram.toRawData(data, 0);
-      assertEquals(8, len);
       assertArrayEquals(new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xb1, 0x00, 0x81 }, Arrays.copyOf(data, len));
+   }
 
-      // Telegram with empty data
+   @Test
+   public void testToRawData2()
+   {
+      final int[] data = new int[256];
+      int len;
+
+      // Telegram without application data
       final Telegram telegramNullData = new Telegram();
       telegramNullData.setFrom(new PhysicalAddress(1, 1, 1));
       telegramNullData.setDest(new PhysicalAddress(3, 3, 7));
@@ -235,9 +241,24 @@ public class TestTelegram
       telegramNullData.setTransport(Transport.Connected);
       telegramNullData.setSequence(0);
       telegramNullData.setApplication(ApplicationType.IndividualAddress_Read);
+
       len = telegramNullData.toRawData(data, 0);
-      assertEquals(8, len);
       assertArrayEquals(new int[] { 0x90, 0x11, 0x01, 0x33, 0x07, 0x61, 0x41, 0x00 }, Arrays.copyOf(data, len));
+   }
+
+   @Test
+   public void testToRawData3()
+   {
+      final int[] rawData = new int[256];
+
+      final Telegram telegram = new Telegram();
+      telegram.setFrom(new PhysicalAddress(1, 1, 255));
+      telegram.setDest(new PhysicalAddress(1, 1, 6));
+      telegram.setPriority(Priority.SYSTEM);
+      telegram.setTransport(Transport.Connect);
+
+      final int len = telegram.toRawData(rawData, 0);
+      assertArrayEquals(new int[] { 0xb0, 0x11, 0xff, 0x11, 0x06, 0x60, 0x80 }, Arrays.copyOf(rawData, len));
    }
 
    @Test
