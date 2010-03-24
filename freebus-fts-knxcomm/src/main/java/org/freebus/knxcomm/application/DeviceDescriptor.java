@@ -64,7 +64,7 @@ public abstract class DeviceDescriptor implements Application
    public int toRawData(int[] rawData, int start)
    {
       final ApplicationType appType = getType();
-      rawData[start] = appType.apci | (descriptorType & DESCRIPTOR_TYPE_MASK);
+      rawData[start] = (appType.apci & 255) | (descriptorType & DESCRIPTOR_TYPE_MASK);
       return 1;
    }
 
