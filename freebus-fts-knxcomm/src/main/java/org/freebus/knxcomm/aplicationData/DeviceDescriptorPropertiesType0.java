@@ -1,11 +1,13 @@
-package org.freebus.knxcomm._plicationData;
+package org.freebus.knxcomm.aplicationData;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.Properties;
 
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 
-public class DevicePropertiesType0 implements DeviceProperties {
+
+public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperties {
 	Properties deviceProperties;
 
 	/**
@@ -16,19 +18,13 @@ public class DevicePropertiesType0 implements DeviceProperties {
 	 * 
 	 * @return Mask String
 	 */
-	private String Data2MaskString(int data[]) {
-		return String.format("%02x%02x", data[1], data[2]).toUpperCase();
+	private String Type2MaskString(int data) {
+		return String.format("%02x%02x", data & 0xFF00, data & 0xFF).toUpperCase();
 	}
 
-	@Override
-	public void fromRawData(int[] Data) throws Exception {
 
-		loadProperties(Data2MaskString(Data));
-	}
 
-	public Properties getDeviceProperties() {
-		return deviceProperties;
-	}
+
 
 	/**
 	 * @return
@@ -47,10 +43,13 @@ public class DevicePropertiesType0 implements DeviceProperties {
 	 * @param mask
 	 * @throws Exception
 	 */
-	private void loadProperties(String mask) throws Exception {
+	public void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws Exception {
 		deviceProperties = new Properties();
+		String mask = Type2MaskString(deviceDescriptorResponse.getDescriptorType());
 		InputStream in = null;
 		ClassLoader cl = this.getClass().getClassLoader();
+		
+		
 		in = cl.getResourceAsStream("DeviceDescriptorType0_"+ mask + ".properties");
 		if (in == null) {
 			in = new FileInputStream(

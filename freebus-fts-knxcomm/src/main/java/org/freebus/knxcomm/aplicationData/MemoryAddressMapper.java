@@ -1,4 +1,4 @@
-package org.freebus.knxcomm._plicationData;
+package org.freebus.knxcomm.aplicationData;
 
 import java.util.ArrayList;
 import java.util.Properties;
