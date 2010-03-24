@@ -87,13 +87,13 @@ public enum ApplicationType
    IndividualAddressSerialNumber_Write(0x3de, 10, 12, 12),
 
    /**
-    * Read the value of the A/D converter.
+    * Read the value of an A/D converter.
     * <p>
     * 2 data bytes: channel number, read count.
     * <p>
     * Response: {@link #ADC_Response}.
     */
-   ADC_Read(0x180, 4, 3, 3),
+   ADC_Read(0x180, 4, 3, 3, ADCRead.class),
 
    /**
     * Response to the {@link #ADC_Read} request.
@@ -101,7 +101,7 @@ public enum ApplicationType
     * 4 data bytes: channel number, read count, sum of A/D converter values
     * high/low.
     */
-   ADC_Response(0x1c0, 4, 4, 4),
+   ADC_Response(0x1c0, 4, 4, 4, ADCResponse.class),
 
    /**
     * Read application memory.
