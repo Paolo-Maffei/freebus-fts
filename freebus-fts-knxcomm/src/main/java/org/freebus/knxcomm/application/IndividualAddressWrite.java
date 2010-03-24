@@ -1,28 +1,27 @@
 package org.freebus.knxcomm.application;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.telegram.ApplicationType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Set the physical address of all devices that are in programming mode.
  * To be sent as a broadcast to {@link PhysicalAddress#NULL 0.0.0}
  */
-public class IndividualAddress_Write implements Application
+public class IndividualAddressWrite implements Application
 {
    private PhysicalAddress address = null;
 
    /**
-    * Create an empty instance, with an undefined address.
+    * Create an object with an undefined address.
     */
-   public IndividualAddress_Write()
+   public IndividualAddressWrite()
    {
    }
 
    /**
     * Create an empty instance, with the given address.
     */
-   public IndividualAddress_Write(PhysicalAddress address)
+   public IndividualAddressWrite(PhysicalAddress address)
    {
       this.address = address;
    }
@@ -56,9 +55,9 @@ public class IndividualAddress_Write implements Application
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] data, int start, int length) throws InvalidDataException
+   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
    {
-      // TODO Auto-generated method stub
+      address = new PhysicalAddress(rawData[start + 1], rawData[start + 2]);
    }
 
    /**
@@ -67,7 +66,12 @@ public class IndividualAddress_Write implements Application
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      // TODO Auto-generated method stub
-      return 0;
+      final int[] addrData = (address == null ? PhysicalAddress.NULL : address).getBytes();
+
+      rawData[start++] = ApplicationType.IndividualAddress_Write.apci;
+      rawData[start++] = addrData[0];
+      rawData[start++] = addrData[1];
+
+      return 3;
    }
 }

@@ -11,7 +11,10 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.telegram.ApplicationType;
+import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.IndividualAddressRead;
+import org.freebus.knxcomm.application.IndividualAddressWrite;
+import org.freebus.knxcomm.application.Restart;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
@@ -52,7 +55,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
 
    /**
     * {@inheritDoc}
-    * 
+    *
     * @throws IOException
     * @throws InterruptedException
     */
@@ -63,9 +66,8 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 1: scan the bus for devices that are in programming mode
       //
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Scanning"));
-      dataTelegram.setApplication(ApplicationType.IndividualAddress_Read);
       dataTelegram.setDest(GroupAddress.BROADCAST);
-      dataTelegram.setData(new int[] { (int)(Math.random() * 256) & 0xff });
+      dataTelegram.setApplication(new IndividualAddressRead());
       telegrams.clear();
       applicationExpected = ApplicationType.IndividualAddress_Response;
       bus.send(dataTelegram);
@@ -88,8 +90,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 2: set the physical address
       //
       notifyListener(60, I18n.getMessage("SetPhysicalAddressJob.Programming"));
-      dataTelegram.setApplication(ApplicationType.IndividualAddress_Write);
-      dataTelegram.setData(newAddress.getBytes());
+      dataTelegram.setApplication(new IndividualAddressWrite(newAddress));
       applicationExpected = null;
       telegrams.clear();
       bus.send(dataTelegram);
@@ -112,17 +113,17 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 4: restart the device to clear the programming mode
       //
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
-      dataTelegram.setApplication(ApplicationType.Restart);
+      dataTelegram.setApplication(new Restart());
       dataTelegram.setTransport(Transport.Connect);
       dataTelegram.setSequence(1);
       dataTelegram.setDest(newAddress);
-      dataTelegram.setData(null);
       bus.send(dataTelegram);
       msleep(500);
 
-      dataTelegram.setApplication(ApplicationType.Restart);
+      dataTelegram.setApplication(new Restart());
       dataTelegram.setTransport(Transport.Connected);
-      dataTelegram.setData(new int[] { 1 });
+      // TODO: is the data byte required?
+//      dataTelegram.setData(new int[] { 1 });
       dataTelegram.setSequence(2);
       bus.send(dataTelegram);
       msleep(500);
@@ -131,7 +132,7 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
    /**
     * Wait for a telegram of the given type to arrive. Throws an {@link IOException} if
     * the telegram does not arrive within the timeout (3 seconds).
-    * 
+    *
     * @param appExpected - the type of the telegram application that is waited for.
     * @throws IOException - if the answer telegram does not arrive within the timeout.
     */
@@ -171,10 +172,10 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      if (applicationExpected != null && telegram.getApplication() == applicationExpected)
+      if (applicationExpected != null && telegram.getApplicationType() == applicationExpected)
       {
          telegrams.add(telegram);
-         Logger.getLogger(getClass()).debug("received answer: " + telegram);
+         Logger.getLogger(getClass()).debug("Received answer: " + telegram);
          semaphore.release();
       }
    }

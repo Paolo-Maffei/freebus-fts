@@ -1,10 +1,11 @@
 package org.freebus.knxcomm.telegram;
 
-import java.util.Arrays;
-
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.ApplicationFactory;
+import org.freebus.knxcomm.application.ApplicationType;
 
 /**
  * A communication data packet as it is sent on the EIB bus.
@@ -21,8 +22,7 @@ public class Telegram implements Cloneable
    private boolean repeated = false;
    private Transport transport = Transport.Individual;
    private int sequence = 0;
-   private ApplicationType applicationType = ApplicationType.None;
-   private int[] data = null;
+   private Application application = null;
 
    /**
     * Create an empty telegram object.
@@ -104,52 +104,51 @@ public class Telegram implements Cloneable
 
       if (rawData.length > pos && (transport.mask & 3) == 0)
       {
-         // APCI - applicationType type
-         final int apci = ((tpci & 3) << 8) | rawData[pos++];
-         applicationType = ApplicationType.valueOf(apci);
+         // APCI - application type & data bits
+         final int apciByte = rawData[pos++];
+         final int apci = ((tpci & 3) << 8) | apciByte;
+         final ApplicationType type = ApplicationType.valueOf(apci);
+         application = ApplicationFactory.createApplication(type);
 
-         final int dataMask = applicationType.getDataMask();
+         final int dataMask = type.getDataMask();
          if (dataMask != 0 && dataLen <= 1)
          {
             // ACPI byte contains data bits
-            data = new int[1];
-            data[0] = apci & dataMask;
+            application.fromRawData(new int[] { apciByte }, 0, 1);
          }
          else if (dataLen > 1)
          {
             // telegram contains extra data
             --dataLen;
-            data = new int[dataLen];
-            for (int i = 0; i < dataLen; ++i)
-               data[i] = rawData[pos++];
+            application.fromRawData(rawData, pos, dataLen - 1);
+            pos += dataLen;
          }
          else
          {
             // telegram contains no extra data
-            data = null;
+            application.fromRawData(rawData, pos, 0);
          }
       }
       else
       {
-         applicationType = ApplicationType.None;
-         data = null;
+         application = null;
       }
    }
 
    /**
-    * @return the applicationType type.
+    * @return the application.
     */
-   public ApplicationType getApplication()
+   public Application getApplication()
    {
-      return applicationType;
+      return application;
    }
 
    /**
-    * @return the data
+    * @return the application type.
     */
-   public int[] getData()
+   public ApplicationType getApplicationType()
    {
-      return data;
+      return application == null ? ApplicationType.None : application.getType();
    }
 
    /**
@@ -217,19 +216,52 @@ public class Telegram implements Cloneable
    }
 
    /**
-    * Set the applicationType type.
+    * Set the application.
+    *
+    * @param application - the application to set.
     */
-   public void setApplication(ApplicationType applicationType)
+   public void setApplication(Application application)
    {
-      this.applicationType = applicationType;
+      this.application = application;
    }
 
    /**
-    * Set the data.
+    * Set the application by specifying the {@link ApplicationType application
+    * type} and the application's raw data. {@link Application#fromRawData()} is
+    * used to populate the application object.
+    *
+    * @param type - the application type.
+    * @param rawData - the raw data of the application.
+    *
+    * @throws IllegalArgumentException if the raw data cannot be read by
+    *            {@link Application#fromRawData()}.
     */
-   public void setData(int[] data)
+   public void setApplication(ApplicationType type, final int[] rawData)
    {
-      this.data = data;
+      application = ApplicationFactory.createApplication(type);
+
+      try
+      {
+         if (rawData != null)
+            application.fromRawData(rawData, -1, rawData.length);
+      }
+      catch (InvalidDataException e)
+      {
+         throw new IllegalArgumentException(e);
+      }
+   }
+
+   /**
+    * Set the application by specifying the {@link ApplicationType application
+    * type}.
+    *
+    * @param type - the application type.
+    *
+    * @throws InvalidDataException if the raw data is invalid.
+    */
+   public void setApplication(ApplicationType type)
+   {
+      application = ApplicationFactory.createApplication(type);
    }
 
    /**
@@ -341,46 +373,28 @@ public class Telegram implements Cloneable
       rawData[pos++] = addr >> 8;
       rawData[pos++] = addr & 255;
 
-      int apci = applicationType.apci & 255;
-      final int apciDataMask = applicationType.getDataMask();
-      int dataLen = data == null ? 0 : data.length;
-      if (dataLen > 0 && apciDataMask != 0)
-         --dataLen;
+      int applicationLen = 1;
+      int apci = 0;
+
+      if (transport.mask != 255 && application != null)
+      {
+         applicationLen = application.toRawData(rawData, pos + 2);
+         apci = application.getType().apci;
+      }
 
       int drl = (routingCounter & 7) << 4;
-      if (data != null)
-         drl |= (dataLen + 1) & 15;
+      drl |= applicationLen & 15;
       if (dest instanceof GroupAddress)
          drl |= 0x80;
       rawData[pos++] = drl;
 
       int tpci = transport.value;
-      tpci |= (applicationType.apci >> 8) & ~transport.mask;
+      tpci |= (apci >> 8) & ~transport.mask;
       if (transport.hasSequence)
          tpci |= (sequence & 15) << 2;
       rawData[pos++] = tpci;
 
-      if (transport.mask == 255)
-      {
-         // no applicationType
-      }
-      else if (data == null)
-      {
-         rawData[pos++] = apci;
-      }
-      else
-      {
-         int dataPos = 0;
-
-         if (apciDataMask != 0)
-         {
-            apci |= data[dataPos++] & apciDataMask;
-         }
-         rawData[pos++] = apci;
-
-         for (; dataPos < data.length; ++dataPos)
-            rawData[pos++] = data[dataPos];
-      }
+      pos += applicationLen;
 
       return pos - start;
    }
@@ -408,8 +422,8 @@ public class Telegram implements Cloneable
 
       final Telegram oo = (Telegram) o;
 
-      return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && applicationType == oo.applicationType
-            && sequence == oo.sequence && Arrays.equals(data, oo.data);
+      return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && sequence == oo.sequence
+            && (application == null ? oo.application == null : application.equals(oo.application));
    }
 
    /**
@@ -421,21 +435,8 @@ public class Telegram implements Cloneable
       final StringBuffer sb = new StringBuffer();
 
       sb.append(getTransport()).append(' ');
-
-      final ApplicationType app = getApplication();
-      if (app != ApplicationType.None)
-         sb.append(app).append(' ');
-
       sb.append("from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
-
-      if (data == null)
-         sb.append("no data");
-      else
-      {
-         sb.append(data.length).append(" bytes data:");
-         for (int i = 0; i < data.length; ++i)
-            sb.append(String.format(" %02x", data[i]));
-      }
+      sb.append(application == null ? "no application" : application.toString());
 
       return sb.toString();
    }

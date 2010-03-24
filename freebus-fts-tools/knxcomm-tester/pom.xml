@@ -4,6 +4,7 @@
   <artifactId>freebus-fts-tools</artifactId>
   <groupId>org.freebus.fts</groupId>
   <version>0.1-SNAPSHOT</version>
+  <relativePath>..</relativePath>
  </parent>
  <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts.tools</groupId>
@@ -49,7 +50,6 @@
   	<groupId>org.freebus.fts</groupId>
   	<artifactId>freebus-fts-knxcomm</artifactId>
   	<version>0.1-SNAPSHOT</version>
-  	<scope>compile</scope>
   </dependency>
  </dependencies>
 </project>

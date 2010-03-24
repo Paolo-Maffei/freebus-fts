@@ -16,7 +16,8 @@ import javax.swing.tree.TreeCellRenderer;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.knxcomm.telegram.ApplicationType;
+import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.telegram.Telegram;
 
 public final class BusMonitorCellRenderer implements TreeCellRenderer
@@ -71,7 +72,7 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
       c.gridx = ++col;
       c.gridy = 0;
       renderer.add(lblAppData, c);
-      
+
       lblRaw = new JLabel();
       lblRaw.setForeground(Color.gray);
       c.gridx = 2;
@@ -100,9 +101,9 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
             lblWhen.setText(dateFormatter.format(busMonitorItem.getWhen()));
             lblDirection.setIcon(busMonitorItem.isReceived() ? recvIcon : sendIcon);
 
-            final ApplicationType applicationType = telegram.getApplication();
-            if (applicationType == ApplicationType.None) lblAppName.setText(telegram.getTransport().name());
-            else lblAppName.setText(applicationType.name());
+            final ApplicationType type = telegram.getApplicationType();
+            if (type == ApplicationType.None) lblAppName.setText(telegram.getTransport().name());
+            else lblAppName.setText(type.name());
 
             lblFrom.setText(I18n.formatMessage("BusMonitorCellRenderer.From", new Object[] { telegram.getFrom().toString() }));
             lblDest.setText(I18n.formatMessage("BusMonitorCellRenderer.Dest", new Object[] { telegram.getDest().toString() }));
@@ -110,22 +111,15 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
             final int[] rawData = new int[256];
             final StringBuilder rawDataSB = new StringBuilder(1024);
             final int len = telegram.toRawData(rawData, 0);
-            
+
             for (int i = 0; i < len; ++i)
                rawDataSB.append(String.format("%02x ", rawData[i]));
-            
+
             lblRaw.setText(rawDataSB.toString());
 
-            final int[] appData = telegram.getData();
-            if (appData != null)
-            {
-               final StringBuilder appDataSB = new StringBuilder(256);
-               for (int i = 0; i < appData.length; ++i)
-                  appDataSB.append(String.format("%02x ", appData[i]));
-               lblAppData.setText(I18n.formatMessage("BusMonitorCellRenderer.Data", new Object[] { appDataSB.toString() }));
-            }
-            else lblAppData.setText("");
-            
+            final Application app = telegram.getApplication();
+            lblAppData.setText(app == null ? "" : app.toString());
+
             renderer.setBackground(selected ? backgroundSelectionColor : backgroundNonSelectionColor);
             renderer.setEnabled(tree.isEnabled());
 

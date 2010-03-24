@@ -7,8 +7,14 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.GenericApplication;
+import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -21,21 +27,9 @@ public class TestTelegram
 
       assertFalse(telegram.isRepeated());
       assertEquals(Priority.LOW, telegram.getPriority());
-      assertEquals(ApplicationType.None, telegram.getApplication());
+      assertNull(telegram.getApplication());
+      assertEquals(ApplicationType.None, telegram.getApplicationType());
       assertNotNull(telegram.toString());
-   }
-
-   @Test
-   public void testGetSetApplication()
-   {
-      final Telegram telegram = new Telegram();
-      assertEquals(ApplicationType.None, telegram.getApplication());
-
-      telegram.setApplication(ApplicationType.ADC_Read);
-      assertEquals(ApplicationType.ADC_Read, telegram.getApplication());
-
-      telegram.setApplication(ApplicationType.GroupValue_Write);
-      assertEquals(ApplicationType.GroupValue_Write, telegram.getApplication());
    }
 
    @Test
@@ -127,21 +121,36 @@ public class TestTelegram
    }
 
    @Test
-   public void testGetSetData()
+   public void testGetSetApplicationApplicationType()
    {
       final Telegram telegram = new Telegram();
-      assertNull(telegram.getData());
+      assertEquals(ApplicationType.None, telegram.getApplicationType());
 
-      final int[] data = new int[3];
-      telegram.setData(data);
-      assertEquals(data, telegram.getData());
+      telegram.setApplication(ApplicationType.ADC_Read);
+      assertEquals(ApplicationType.ADC_Read, telegram.getApplicationType());
 
-      final int[] data2 = new int[3];
-      telegram.setData(data2);
-      assertEquals(data2, telegram.getData());
+      telegram.setApplication(ApplicationType.GroupValue_Write);
+      assertEquals(ApplicationType.GroupValue_Write, telegram.getApplicationType());
+   }
 
-      telegram.setData(null);
-      assertNull(telegram.getData());
+   @Test
+   public void testGetSetApplication()
+   {
+      final Telegram telegram = new Telegram();
+      assertNull(telegram.getApplication());
+
+      final Application app1 = new IndividualAddressWrite(PhysicalAddress.ONE);
+      telegram.setApplication(app1);
+      assertEquals(app1, telegram.getApplication());
+
+      final Application app2 = new GenericApplication(ApplicationType.NetworkParameter_Read);
+      telegram.setApplication(app2);
+      assertEquals(app2, telegram.getApplication());
+
+      final int[] app3data = new int[] { 1, 2 };
+      telegram.setApplication(ApplicationType.ADC_Read, app3data);
+      assertNotNull(telegram.getApplication());
+      assertEquals(ApplicationType.ADC_Read, telegram.getApplication().getType());
    }
 
    @Test
@@ -149,7 +158,7 @@ public class TestTelegram
    {
       final Telegram telegram = new Telegram();
 
-      final int[] data1 = new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xe0, 0x00, 0x81 };
+      final int[] data1 = new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xe0, 0x01, 0x00 };
 
       telegram.fromRawData(data1, 0);
       assertFalse(telegram.isRepeated());
@@ -157,8 +166,7 @@ public class TestTelegram
       assertEquals(6, telegram.getRoutingCounter());
       assertEquals(new PhysicalAddress(1, 1, 1), telegram.getFrom());
       assertEquals(new GroupAddress(1, 2, 5), telegram.getDest());
-      assertEquals(ApplicationType.GroupValue_Write, telegram.getApplication());
-      assertEquals(1, telegram.getData()[0]);
+      assertEquals(ApplicationType.IndividualAddress_Read, telegram.getApplicationType());
    }
 
    @Test(expected = InvalidDataException.class)
@@ -183,9 +191,8 @@ public class TestTelegram
    /**
     * A negative reply (T_NAK-PDU) from a real switch.
     *
-    * Hmm... seems to be a T_Disconnect....
-    *
-    * TODO this test currently fails
+    * TODO this test currently fails. The test might as well be simply wrong
+    *      ... seems to be a T_Disconnect anyways ...
     */
    @Ignore
    @Test
@@ -206,35 +213,33 @@ public class TestTelegram
    @Test
    public void testToRawData()
    {
-      final Telegram telegram = new Telegram();
-      final int[] data = new int[1024];
+      final int[] data = new int[256];
       int len;
 
+      final Telegram telegram = new Telegram();
       telegram.setFrom(new PhysicalAddress(1, 1, 1));
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
-      telegram.setApplication(ApplicationType.GroupValue_Write);
-      telegram.setData(new int[] { 1 });
+      telegram.setApplication(ApplicationType.GroupValue_Write, new int[] { 1 });
 
       len = telegram.toRawData(data, 0);
       assertEquals(8, len);
+      assertArrayEquals(new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xb1, 0x00, 0x81 }, Arrays.copyOf(data, len));
 
-      assertEquals(0xbc, data[0]);
-      assertEquals(0x11, data[1]);
-      assertEquals(0x01, data[2]);
-      assertEquals(0x0a, data[3]);
-      assertEquals(0x05, data[4]);
-      assertEquals(0xb1, data[5]);
-      assertEquals(0x00, data[6]);
-      assertEquals(0x81, data[7]);
-      
-      
-
-      
+      // Telegram with empty data
+      final Telegram telegramNullData = new Telegram();
+      telegramNullData.setFrom(new PhysicalAddress(1, 1, 1));
+      telegramNullData.setDest(new PhysicalAddress(3, 3, 7));
+      telegramNullData.setPriority(Priority.SYSTEM);
+      telegramNullData.setRepeated(true);
+      telegramNullData.setTransport(Transport.Connected);
+      telegramNullData.setSequence(0);
+      telegramNullData.setApplication(ApplicationType.IndividualAddress_Read);
+      len = telegramNullData.toRawData(data, 0);
+      assertEquals(8, len);
+      assertArrayEquals(new int[] { 0x90, 0x11, 0x01, 0x33, 0x07, 0x61, 0x41, 0x00 }, Arrays.copyOf(data, len));
    }
 
-   
-   
    @Test
    public void testGetSetTransport()
    {

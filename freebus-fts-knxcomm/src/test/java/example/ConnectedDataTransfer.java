@@ -8,7 +8,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.telegram.ApplicationType;
+import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
@@ -87,8 +87,7 @@ public final class ConnectedDataTransfer
 
       logger.info("*** Sending memory-read telegram");
       final Telegram telegram = new Telegram();
-      telegram.setApplication(ApplicationType.Memory_Read);
-      telegram.setData(new int[] { 10, 0, 1 });
+      telegram.setApplication(ApplicationType.Memory_Read, new int[] { 10, 0, 1 });
       con.send(telegram);
 
       logger.info("*** done, waiting some seconds before terminating");
