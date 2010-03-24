@@ -24,4 +24,13 @@ public class DeviceDescriptorRead extends DeviceDescriptor
    {
       super(descriptorType);
    }
+
+   /**
+    * @return The type of the application: {@link ApplicationType#DeviceDescriptor_Read}.
+    */
+   @Override
+   public ApplicationType getType()
+   {
+      return ApplicationType.DeviceDescriptor_Read;
+   }
 }

@@ -49,15 +49,6 @@ public abstract class DeviceDescriptor implements Application
    }
 
    /**
-    * @return The type of the application: {@link ApplicationType#DeviceDescriptor_Read}.
-    */
-   @Override
-   public ApplicationType getType()
-   {
-      return ApplicationType.DeviceDescriptor_Read;
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override

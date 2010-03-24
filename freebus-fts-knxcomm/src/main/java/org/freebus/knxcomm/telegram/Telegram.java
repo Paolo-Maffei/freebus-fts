@@ -126,7 +126,6 @@ public class Telegram implements Cloneable
          else
          {
             // telegram contains no extra data
-            application.fromRawData(rawData, pos, 0);
          }
       }
       else

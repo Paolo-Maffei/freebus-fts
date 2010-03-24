@@ -211,6 +211,14 @@ public class TestTelegram
    }
 
    @Test
+   public void testFromRawDataDeviceDescriptorResponse() throws InvalidDataException
+   {
+      final Telegram telegram = new Telegram();
+
+      telegram.fromRawData(new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x61, 0x43, 0x00 }, 0);
+   }
+
+   @Test
    public void testToRawData()
    {
       final int[] data = new int[256];
