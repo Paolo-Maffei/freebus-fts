@@ -228,9 +228,9 @@ public class TestTelegram
       telegram.setFrom(new PhysicalAddress(1, 1, 1));
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
-      telegram.setApplication(ApplicationType.GroupValue_Write, new int[] { 1 });
+      telegram.setApplication(ApplicationType.GroupValue_Write, new int[] { 0, 1 });
 
-      len = telegram.toRawData(data, 0);
+      len = telegram.toRawData(data, 1);
       assertArrayEquals(new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xb1, 0x00, 0x81 }, Arrays.copyOf(data, len));
    }
 

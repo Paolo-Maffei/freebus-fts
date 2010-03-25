@@ -19,7 +19,7 @@ public class TestDeviceDescriptorResponse
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
       assertEquals(0, app.getDescriptorType());
-      assertNull(app.getDeviceDescriptor());
+      assertNull(app.getDescriptor());
       assertNotNull(app.hashCode());
       assertNotNull(app.toString());
    }
@@ -32,22 +32,22 @@ public class TestDeviceDescriptorResponse
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
       assertEquals(3, app.getDescriptorType());
-      assertFalse(descr == app.getDeviceDescriptor());
-      assertArrayEquals(descr, app.getDeviceDescriptor());
+      assertFalse(descr == app.getDescriptor());
+      assertArrayEquals(descr, app.getDescriptor());
       assertNotNull(app.hashCode());
       assertNotNull(app.toString());
    }
 
    @Test
-   public final void testGetSetDeviceDescriptor()
+   public final void testGetSetDescriptor()
    {
       final DeviceDescriptorResponse app = new DeviceDescriptorResponse();
 
-      app.setDeviceDescriptor(new int[] { 7, 4, 1 });
-      assertArrayEquals(new int[] { 7, 4, 1 }, app.getDeviceDescriptor());
+      app.setDescriptor(new int[] { 7, 4, 1 });
+      assertArrayEquals(new int[] { 7, 4, 1 }, app.getDescriptor());
 
-      app.setDeviceDescriptor(null);
-      assertNull(app.getDeviceDescriptor());
+      app.setDescriptor(null);
+      assertNull(app.getDescriptor());
    }
 
    @Test
@@ -71,7 +71,7 @@ public class TestDeviceDescriptorResponse
       app.fromRawData(rawData, 0, 4);
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
       assertEquals(8, app.getDescriptorType());
-      assertArrayEquals(new int[] { 1, 8, 17 }, app.getDeviceDescriptor());
+      assertArrayEquals(new int[] { 1, 8, 17 }, app.getDescriptor());
    }
 
    @Test
@@ -83,7 +83,7 @@ public class TestDeviceDescriptorResponse
       app.fromRawData(rawData, 0, 1);
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
       assertEquals(DeviceDescriptorRead.INVALID_DESCRIPTOR_TYPE, app.getDescriptorType());
-      assertNull(app.getDeviceDescriptor());
+      assertNull(app.getDescriptor());
    }
 
    @Test
@@ -109,14 +109,14 @@ public class TestDeviceDescriptorResponse
       assertTrue(app1.equals(app2));
       assertFalse(app1.equals(app3));
 
-      app2.setDeviceDescriptor(null);
+      app2.setDescriptor(null);
       assertFalse(app1.equals(app2));
       assertFalse(app2.equals(app1));
 
-      app1.setDeviceDescriptor(null);
+      app1.setDescriptor(null);
       assertTrue(app1.equals(app2));
 
-      app1.setDeviceDescriptor(new int[] { 1, 3, 7 });
+      app1.setDescriptor(new int[] { 1, 3, 7 });
       assertFalse(app1.equals(app2));
 
       app2.setDescriptorType(12);
