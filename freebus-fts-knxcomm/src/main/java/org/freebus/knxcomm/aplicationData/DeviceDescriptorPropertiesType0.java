@@ -1,6 +1,8 @@
 package org.freebus.knxcomm.aplicationData;
 
 import java.io.FileInputStream;
+
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -11,7 +13,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 	Properties deviceProperties;
 
 	/**
-	 * Create a DeviceDescriptorRead String from the Application data Array
+	 * Create a DeviceDescriptor String from the Application data Array
 	 * 
 	 * @param data
 	 *            Application data Array
@@ -41,9 +43,9 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 	 * Load the property file for a given device descriptor. 
 	 * 
 	 * @param mask
-	 * @throws Exception
+	 * @throws IOException 
 	 */
-	public void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws Exception {
+	public void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws IOException {
 		deviceProperties = new Properties();
 		String mask = Type2MaskString(deviceDescriptorResponse.getDescriptorType());
 		InputStream in = null;
