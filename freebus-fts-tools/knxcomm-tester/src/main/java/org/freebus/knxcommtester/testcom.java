@@ -3,7 +3,9 @@ package org.freebus.knxcommtester;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
@@ -60,37 +62,37 @@ public class testcom {
 
 			busInterface.send(telegram);
 			telegram.setSequence(1);
-			telegram.setApplication(ApplicationType.Memory_Read, new int[] {1,1,4 });
+			telegram.setApplication(new MemoryRead(0x104, 1));
 			busInterface.send(telegram);
 
 
 			telegram.setSequence(2);
-			telegram.setApplication(ApplicationType.ADC_Read, new int[] {1,8 });
+			telegram.setApplication(new ADCRead(1, 8));
 			busInterface.send(telegram);
 
 
 			telegram.setSequence(3);
-			telegram.setApplication(ApplicationType.Memory_Read, new int[] {1,0,0x60 });
+			telegram.setApplication(new MemoryRead(0x60, 1));
 			busInterface.send(telegram);
 
 			telegram.setSequence(4);
-			telegram.setApplication(ApplicationType.Memory_Read, new int[] {1,1,0x0D });
+			telegram.setApplication(new MemoryRead(0x10D, 1));
 			busInterface.send(telegram);
 
 			telegram.setSequence(5);
-			telegram.setApplication(ApplicationType.ADC_Read, new int[] {0x84,8 });
+			telegram.setApplication(new ADCRead(4, 8));
 			busInterface.send(telegram);
 
 			telegram.setSequence(6);
-			telegram.setApplication(ApplicationType.Memory_Read, new int[] {4,1,4 });
+			telegram.setApplication(new MemoryRead(0x104, 4));
 			busInterface.send(telegram);
 
 			telegram.setSequence(7);
-			telegram.setApplication(ApplicationType.Memory_Read, new int[] {1,0,0x60 });
+			telegram.setApplication(new MemoryRead(0x60, 1));
 			busInterface.send(telegram);
 
 			telegram.setSequence(8);
-			telegram.setApplication(ApplicationType.Memory_Read, new int[] {1,1,9 });
+			telegram.setApplication(new MemoryRead(0x109, 1));
 			busInterface.send(telegram);
 			busInterface.close();
 		} catch (Exception e) {

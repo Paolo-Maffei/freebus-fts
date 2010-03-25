@@ -26,7 +26,7 @@ public class MemoryRead extends Memory
     *
     * @throws IllegalArgumentException if count is not in the range 0..63
     */
-   protected MemoryRead(int address, int count)
+   public MemoryRead(int address, int count)
    {
       super(address);
 

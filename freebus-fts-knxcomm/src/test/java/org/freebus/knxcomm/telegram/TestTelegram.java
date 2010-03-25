@@ -13,7 +13,9 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.GenericApplication;
+import org.freebus.knxcomm.application.GenericDataApplication;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -146,11 +148,6 @@ public class TestTelegram
       final Application app2 = new GenericApplication(ApplicationType.NetworkParameter_Read);
       telegram.setApplication(app2);
       assertEquals(app2, telegram.getApplication());
-
-      final int[] app3data = new int[] { 1, 2 };
-      telegram.setApplication(ApplicationType.ADC_Read, app3data);
-      assertNotNull(telegram.getApplication());
-      assertEquals(ApplicationType.ADC_Read, telegram.getApplication().getType());
    }
 
    @Test
@@ -175,6 +172,22 @@ public class TestTelegram
       final Telegram telegram = new Telegram();
       final int[] data1 = new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x64, 0x43, 0x40, 0x00, 0x12 };
       telegram.fromRawData(data1, 0);
+   }
+
+   @Test
+   public final void testFromRawData3() throws InvalidDataException
+   {
+      final Telegram telegram = new Telegram();
+      final int[] rawData = new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x63, 0x43, 0x40, 0x00, 0x12 };
+
+      telegram.fromRawData(rawData, 0);
+
+      assertEquals(ApplicationType.DeviceDescriptor_Response, telegram.getApplicationType());
+      final DeviceDescriptorResponse app = (DeviceDescriptorResponse) telegram.getApplication();
+
+      assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
+      assertEquals(0, app.getDescriptorType());
+      assertArrayEquals(new int[] { 0, 18 }, app.getDescriptor());
    }
 
    /**
@@ -228,10 +241,10 @@ public class TestTelegram
       telegram.setFrom(new PhysicalAddress(1, 1, 1));
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
-      telegram.setApplication(ApplicationType.GroupValue_Write, new int[] { 0, 1 });
+      telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new int[] { 0, 1 }));
 
-      len = telegram.toRawData(data, 1);
-      assertArrayEquals(new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xb1, 0x00, 0x81 }, Arrays.copyOf(data, len));
+      len = telegram.toRawData(data, 0);
+      assertArrayEquals(new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xb2, 0x00, 0x80, 0x01 }, Arrays.copyOf(data, len));
    }
 
    @Test

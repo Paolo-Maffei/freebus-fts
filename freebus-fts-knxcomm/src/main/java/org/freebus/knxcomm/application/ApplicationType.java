@@ -205,13 +205,13 @@ public enum ApplicationType
     * <p>
     * Response: {@link #DeviceDescriptor_Response}.
     */
-   DeviceDescriptor_Read(0x300, 10, 1, 1, DeviceDescriptorRead.class),
+   DeviceDescriptor_Read(0x300, 4, 1, 1, DeviceDescriptorRead.class),
 
    /**
     * Response to {@link #DeviceDescriptor_Read}. Also called
     * DeviceDescriptor_InfoReport.
     */
-   DeviceDescriptor_Response(0x340, 10, 1, 15, DeviceDescriptorResponse.class),
+   DeviceDescriptor_Response(0x340, 4, 1, 15, DeviceDescriptorResponse.class),
 
    /**
     * Reset / restart the device.

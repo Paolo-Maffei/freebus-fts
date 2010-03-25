@@ -7,6 +7,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Arrays;
+
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 
@@ -137,6 +139,17 @@ public class TestGenericDataApplication
 
       assertEquals(4, app.toRawData(rawData, 0));
       assertArrayEquals(new int[] { 0x45, 1, 4, 9 }, rawData);
+   }
+
+   @Test
+   public final void testToRawData5()
+   {
+      final int[] data = new int[] { 0, 1 };
+      final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Write, data);
+      final int[] rawData = new int[2];
+
+      assertEquals(2, app.toRawData(rawData, 0));
+      assertArrayEquals(new int[] { 0x80, 0x01 }, rawData);
    }
 
    @Test

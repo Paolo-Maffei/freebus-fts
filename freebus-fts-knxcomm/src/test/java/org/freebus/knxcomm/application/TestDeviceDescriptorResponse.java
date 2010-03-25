@@ -87,6 +87,18 @@ public class TestDeviceDescriptorResponse
    }
 
    @Test
+   public final void testFromRawData3() throws InvalidDataException
+   {
+      final DeviceDescriptorResponse app = new DeviceDescriptorResponse();
+      final int[] rawData = new int[] { 0x29, 0x90, 0x33, 0x07, 0, 0, 0x63, 0x43, 0x40, 0x00, 0x12 };
+
+      app.fromRawData(rawData, 8, 3);
+      assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
+      assertEquals(0, app.getDescriptorType());
+      assertArrayEquals(new int[] { 0, 18 }, app.getDescriptor());
+   }
+
+   @Test
    public final void testToRawData()
    {
       final DeviceDescriptorResponse app = new DeviceDescriptorResponse(8, new int[] { 1, 8, 17 });

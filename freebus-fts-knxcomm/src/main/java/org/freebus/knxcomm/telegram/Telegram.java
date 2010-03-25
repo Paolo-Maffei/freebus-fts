@@ -119,8 +119,8 @@ public class Telegram implements Cloneable
          else if (dataLen > 1)
          {
             // telegram contains extra data
-            --dataLen;
-            application.fromRawData(rawData, pos, dataLen - 1);
+            --pos;
+            application.fromRawData(rawData, pos, dataLen);
             pos += dataLen;
          }
          else
@@ -222,32 +222,6 @@ public class Telegram implements Cloneable
    public void setApplication(Application application)
    {
       this.application = application;
-   }
-
-   /**
-    * Set the application by specifying the {@link ApplicationType application
-    * type} and the application's raw data. {@link Application#fromRawData()} is
-    * used to populate the application object.
-    *
-    * @param type - the application type.
-    * @param rawData - the raw data of the application.
-    *
-    * @throws IllegalArgumentException if the raw data cannot be read by
-    *            {@link Application#fromRawData()}.
-    */
-   public void setApplication(ApplicationType type, final int[] rawData)
-   {
-      application = ApplicationFactory.createApplication(type);
-
-      try
-      {
-         if (rawData != null)
-            application.fromRawData(rawData, -1, rawData.length);
-      }
-      catch (InvalidDataException e)
-      {
-         throw new IllegalArgumentException(e);
-      }
    }
 
    /**
