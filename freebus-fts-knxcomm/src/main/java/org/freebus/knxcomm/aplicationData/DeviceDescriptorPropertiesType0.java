@@ -11,7 +11,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 	Properties deviceProperties;
 
 	/**
-	 * Create a DeviceDescriptor String from the Application data Array
+	 * Create a DeviceDescriptorRead String from the Application data Array
 	 * 
 	 * @param data
 	 *            Application data Array

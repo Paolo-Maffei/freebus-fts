@@ -419,7 +419,7 @@ public enum ApplicationType
    Link_Write(0x3e7, 10, 4, 4),
 
    /**
-    * Group properties value-read.
+    * Read a group properties value.
     */
    GroupPropValue_Read(0x3e8, 10, -1, -1),
 
@@ -429,7 +429,7 @@ public enum ApplicationType
    GroupPropValue_Response(0x3e9, 10, -1, -1),
 
    /**
-    * Group properties value-write
+    * Write a group properties value.
     */
    GroupPropValue_Write(0x3ea, 10, -1, -1),
 
@@ -443,37 +443,59 @@ public enum ApplicationType
     */
    None(0xffff, 10, 0, 0);
 
-   /**
-    * The contents of the APCI field.
-    */
-   public final int apci;
-
-   /**
-    * Number of bits that the APCI type requires (1..10).
-    */
-   public final int bits;
-
-   /**
-    * Minimum length for data in the telegram in bytes. -1 if unspecified.
-    */
-   public final int minData;
-
-   /**
-    * Maximum length for data in the telegram in bytes. -1 if unspecified.
-    */
-   public final int maxData;
-
-   /**
-    * The class for objects of this application type.
-    */
-   public final Class<? extends Application> clazz;
+   private final int apci;
+   private final int minData;
+   private final int maxData;
+   private final int bits;
+   private final Class<? extends Application> applicationClass;
 
    // The bit-masks for the values of the APCI-bits
    private static final int[] apciMasks = new int[] { 0, 0x200, 0x300, 0x380, 0x3c0, 0x3e0, 0x3f0, 0x3f8, 0x3fc, 0x3fe,
          0x3ff };
 
    /**
-    * @return the bit-mask for the APCI field.
+    * Get the contents of the APCI field. This is the type identifier of an
+    * application.
+    *
+    * @return The contents of the APCI field.
+    *
+    * @see {@link #getBits()} - to get the number of bits that the field uses.
+    * @see {@link #getMask()} - to get a bit mask for the APCI field.
+    */
+   public int getApci()
+   {
+      return apci;
+   }
+
+   /**
+    * @return The minimum length for application specific data in the telegram
+    *         in bytes. -1 if unspecified.
+    */
+   public int getMinDataBytes()
+   {
+      return minData;
+   }
+
+   /**
+    * @return The maximum length for application specific data in the telegram
+    *         in bytes. -1 if unspecified.
+    */
+   public int getMaxDataBytes()
+   {
+      return maxData;
+   }
+
+   /**
+    * @return The number of bits that the {@link #getAcpi APCI type id} requires
+    *         (1..10).
+    */
+   public int getBits()
+   {
+      return bits;
+   }
+
+   /**
+    * @return The bit-mask for the APCI field.
     */
    public int getMask()
    {
@@ -481,7 +503,7 @@ public enum ApplicationType
    }
 
    /**
-    * @return the bit-mask for the data area in the APCI bytes. Zero indicates
+    * @return The bit-mask for the data area in the APCI bytes. Zero indicates
     *         that no data can be stored in the APCI byte.
     */
    public int getDataMask()
@@ -490,12 +512,23 @@ public enum ApplicationType
    }
 
    /**
+    * Returns the class of the {@link Application application}. If no specific
+    * class exists for an application type, null is returned.
+    *
+    * @return The class of the application.
+    */
+   public Class<? extends Application> getApplicationClass()
+   {
+      return applicationClass;
+   }
+
+   /**
     * @return the application type in human readable form.
     */
    @Override
    public String toString()
    {
-      return name() + String.format(" [%03x]", apci);
+      return name() + String.format(" [%03X]", apci);
    }
 
    /**
@@ -530,6 +563,6 @@ public enum ApplicationType
       this.bits = apciBits;
       this.minData = minData;
       this.maxData = maxData;
-      this.clazz = clazz;
+      this.applicationClass = clazz;
    }
 }

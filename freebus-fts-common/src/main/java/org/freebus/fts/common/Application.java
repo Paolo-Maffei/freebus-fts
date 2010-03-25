@@ -11,8 +11,8 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 
 /**
- * An application main class. Inherit this class in your application and you get
- * common tasks done automatically.
+ * A Swing application main class. Inherit this class in your application and
+ * you get common tasks done automatically.
  */
 public abstract class Application
 {
@@ -23,7 +23,7 @@ public abstract class Application
    /**
     * Restart the application by setting the restart flag and sending a close
     * event to the main window. Only works if the main window has been set.
-    * 
+    *
     * @see {@link #setMainWindow(JFrame)}
     */
    public static void restart()
@@ -34,7 +34,7 @@ public abstract class Application
 
    /**
     * Terminate the application. Only works if the main window has been set.
-    * 
+    *
     * @see {@link #setMainWindow(JFrame)}
     */
    public static void exit()
@@ -45,7 +45,7 @@ public abstract class Application
 
    /**
     * Close the main window. Does nothing if the main window was not set.
-    * 
+    *
     * @see {@link #setMainWindow(JFrame)}
     */
    public static void closeMainWindow()
@@ -101,7 +101,7 @@ public abstract class Application
    /**
     * Set the main window. Setting the main window will exit or restart the
     * application when the main window is disposed.
-    * 
+    *
     * Use
     * <code>mainWin.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);</code> to
     * set your main window to dispose when the close button is clicked.
@@ -126,7 +126,7 @@ public abstract class Application
     * <p>
     * This method is called by the static {@code launch} method, subclasses must
     * override it.
-    * 
+    *
     * @param args - the application's command line arguments
     */
    protected void initialize(String[] args)
@@ -160,7 +160,7 @@ public abstract class Application
    /**
     * Called when the application {@link #exit exits} or {@link #restart
     * restarts}. (Currently?) called when the main window is disposed.
-    * 
+    *
     * @see {#setMainWindow(JFrame)}
     */
    protected void shutdown()
@@ -190,7 +190,7 @@ public abstract class Application
    /**
     * Called when an exception is caught from {@link #launch()}. The default
     * implementation prints the stack trace to the console.
-    * 
+    *
     * The application will terminate after this method in any case.
     */
    protected void fatalException(Exception e)

@@ -9,8 +9,8 @@ import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 public class DeviceDescriptorPropertiesFactory {
 
 	/**
-	 * Creates the DeviceDescriptor class in depends of the DeviceDescriptortype
-	 * bits in a DeviceDescriptor request
+	 * Creates the DeviceDescriptorRead class in depends of the DeviceDescriptortype
+	 * bits in a DeviceDescriptorRead request
 	 * 
 	 * @throws Exception
 	 * 

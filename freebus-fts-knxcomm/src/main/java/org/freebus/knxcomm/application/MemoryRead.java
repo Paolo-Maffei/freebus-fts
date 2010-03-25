@@ -88,7 +88,7 @@ public class MemoryRead extends Memory
       final ApplicationType appType = getType();
       int pos = start;
 
-      rawData[pos++] = (appType.apci & 255) | (count & 0x3f);
+      rawData[pos++] = (appType.getApci() & 255) | (count & appType.getDataMask());
 
       final int address = getAddress();
       rawData[pos++] = (address >> 8) & 255;
@@ -115,11 +115,11 @@ public class MemoryRead extends Memory
       if (o == this)
          return true;
 
-      if (!(o instanceof MemoryRead) || !super.equals(o))
+      if (!(o instanceof MemoryRead))
          return false;
 
       final MemoryRead oo = (MemoryRead) o;
-      return count == oo.count;
+      return getAddress() == oo.getAddress() && count == oo.count;
    }
 
    /**

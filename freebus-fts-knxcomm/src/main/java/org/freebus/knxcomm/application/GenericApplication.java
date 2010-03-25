@@ -14,9 +14,14 @@ public class GenericApplication implements Application
     * Create an instance for a specific application type.
     *
     * @param type - the application type.
+    *
+    * @throws IllegalArgumentException if the type is null
     */
    public GenericApplication(ApplicationType type)
    {
+      if (type == null)
+         throw new IllegalArgumentException("type is null");
+
       this.type = type;
    }
 
@@ -43,7 +48,7 @@ public class GenericApplication implements Application
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      rawData[start] = type == null ? 0 : (type.apci & 255);
+      rawData[start] = type.getApci() & 255;
       return 1;
    }
 
@@ -53,7 +58,7 @@ public class GenericApplication implements Application
    @Override
    public int hashCode()
    {
-      return type == null ? 0 : type.apci;
+      return type.getApci();
    }
 
    /**

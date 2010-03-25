@@ -17,6 +17,8 @@ public class GenericDataApplication implements Application
     * Create an instance for a specific application type.
     *
     * @param type - the application type.
+    *
+    * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type)
    {
@@ -28,11 +30,16 @@ public class GenericDataApplication implements Application
     *
     * @param type - the application type.
     * @param data - the application's data.
+    *
+    * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type, int[] data)
    {
+      if (type == null)
+         throw new IllegalArgumentException("type is null");
+
       this.type = type;
-      this.data = (data == null ? null : data.clone());
+      setData(data);
    }
 
    /**
@@ -68,8 +75,22 @@ public class GenericDataApplication implements Application
    @Override
    public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
    {
-      ++start;
-      this.setData(Arrays.copyOfRange(rawData, start, start + length));
+      final int dataMask = type.getDataMask();
+
+      if (dataMask != 0)
+      {
+         final int[] tmpData = Arrays.copyOfRange(rawData, start, start + length);
+         tmpData[0] &= dataMask;
+         setData(tmpData);
+      }
+      else if (length <= 1)
+      {
+         setData(null);
+      }
+      else
+      {
+         setData(Arrays.copyOfRange(rawData, start + 1, start + length));
+      }
    }
 
    /**
@@ -80,21 +101,19 @@ public class GenericDataApplication implements Application
    {
       final int dataMask = type.getDataMask();
       final int[] data = getData();
+      final int apci = type.getApci();
       int pos = start;
 
-      if (data == null)
-      {
-         rawData[pos++] = type.apci & 255;
-      }
-      else if (data.length == 1 && dataMask != 0)
-      {
-         rawData[pos++] = (type.apci & ~dataMask & 255) | (data[0] & dataMask);
-      }
-      else
-      {
-         rawData[pos++] = type.apci & 255;
+      rawData[pos++] = apci & ~dataMask & 255;
 
-         for (int i = 0; i < data.length; ++i)
+      if (data != null)
+      {
+         int i = 0;
+
+         if (dataMask > 0)
+            rawData[pos - 1] |= data[i++] & dataMask;
+
+         for (; i < data.length; ++i)
             rawData[pos++] = data[i];
       }
 
@@ -107,7 +126,7 @@ public class GenericDataApplication implements Application
    @Override
    public int hashCode()
    {
-      return type == null ? 0 : type.apci;
+      return type.getApci();
    }
 
    /**

@@ -6,10 +6,8 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * A response to a {@link DeviceDescriptorRead device descriptor read} request.
- * A {@link #getType()
-
  */
-public class DeviceDescriptorResponse extends DeviceDescriptor
+public class DeviceDescriptorResponse extends DeviceDescriptorRead
 {
    private int[] deviceDescriptor;
 
@@ -19,28 +17,30 @@ public class DeviceDescriptorResponse extends DeviceDescriptor
     */
    public DeviceDescriptorResponse()
    {
-      super(0);
+      this(0, null);
    }
 
    /**
-    * Create a request object with a device descriptor type.
+    * Create a request object with a device descriptor type. The device
+    * descriptor is cloned.
     *
     * @param descriptorType - the device descriptor type.
-    * @param descriptor - the device descriptor.
+    * @param deviceDescriptor - the device descriptor.
     */
-   public DeviceDescriptorResponse(int descriptorType, int[] descriptor)
+   public DeviceDescriptorResponse(int descriptorType, int[] deviceDescriptor)
    {
       super(descriptorType);
+      setDeviceDescriptor(deviceDescriptor);
    }
 
    /**
-    * Set the device descriptor.
+    * Set the device descriptor. The device descriptor is cloned.
     *
     * @param deviceDescriptor - the device descriptor to set
     */
    public void setDeviceDescriptor(int[] deviceDescriptor)
    {
-      this.deviceDescriptor = deviceDescriptor;
+      this.deviceDescriptor = deviceDescriptor == null ? null : deviceDescriptor.clone();
    }
 
    /**
@@ -52,7 +52,8 @@ public class DeviceDescriptorResponse extends DeviceDescriptor
    }
 
    /**
-    * @return The type of the application: {@link ApplicationType#DeviceDescriptor_Read}.
+    * @return The type of the application:
+    *         {@link ApplicationType#DeviceDescriptor_Read}.
     */
    @Override
    public ApplicationType getType()
@@ -67,7 +68,10 @@ public class DeviceDescriptorResponse extends DeviceDescriptor
    public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
    {
       super.fromRawData(rawData, start++, length--);
-      deviceDescriptor = Arrays.copyOfRange(rawData, start, start + length);
+
+      if (length > 0)
+         deviceDescriptor = Arrays.copyOfRange(rawData, start, start + length);
+      else deviceDescriptor = null;
    }
 
    /**
@@ -93,7 +97,7 @@ public class DeviceDescriptorResponse extends DeviceDescriptor
    @Override
    public int hashCode()
    {
-      return (getType().apci << 8) | (deviceDescriptor == null ? 0 : deviceDescriptor[0]);
+      return (getType().getApci() << 8) | (deviceDescriptor == null ? 0 : deviceDescriptor[0]);
    }
 
    /**
@@ -105,13 +109,14 @@ public class DeviceDescriptorResponse extends DeviceDescriptor
       if (o == this)
          return true;
 
-      if (!super.equals(o))
-         return false;
-
-      if (!(o instanceof DeviceDescriptor))
+      if (!(o instanceof DeviceDescriptorRead))
          return false;
 
       final DeviceDescriptorResponse oo = (DeviceDescriptorResponse) o;
+
+      if (getDescriptorType() != oo.getDescriptorType())
+         return false;
+
       return deviceDescriptor == null ? oo.deviceDescriptor == null : Arrays.equals(deviceDescriptor,
             oo.deviceDescriptor);
    }

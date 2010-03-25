@@ -1,6 +1,11 @@
 package org.freebus.knxcomm.application;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
@@ -27,6 +32,7 @@ public class TestMemoryResponse
       final MemoryResponse app = new MemoryResponse(1230, data);
 
       assertNotNull(app.toString());
+      assertNotNull(app.hashCode());
 
       assertEquals(1230, app.getAddress());
       assertEquals(3, app.getCount());

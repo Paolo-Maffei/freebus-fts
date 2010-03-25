@@ -1,36 +1,121 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
- * Read the device descriptor of a remote device.
+ * Read a device descriptor.
  */
-public class DeviceDescriptorRead extends DeviceDescriptor
+public class DeviceDescriptorRead implements Application
 {
    /**
-    * Create an object with device descriptor type 0.
+    * An invalid device descriptor type.
+    */
+   final public static int INVALID_DESCRIPTOR_TYPE = 0x3f;
+
+   /**
+    * The bit mask for the device descriptor types.
+    */
+   final public static int DESCRIPTOR_TYPE_MASK = 0x3f;
+
+   private int descriptorType;
+
+   /**
+    * Create a device descriptor object for device descriptor type 0.
     */
    public DeviceDescriptorRead()
    {
-      super(0);
+      this(0);
    }
 
    /**
-    * Create a request object with a device descriptor type.
+    * Create a device descriptor object.
     *
     * @param descriptorType - the device descriptor type.
-    * @param descriptor - the device descriptor.
     */
-   public DeviceDescriptorRead(int descriptorType, int[] descriptor)
+   public DeviceDescriptorRead(int descriptorType)
    {
-      super(descriptorType);
+      setDescriptorType(descriptorType);
    }
 
    /**
-    * @return The type of the application: {@link ApplicationType#DeviceDescriptor_Read}.
+    * @return the device descriptor type
+    */
+   public int getDescriptorType()
+   {
+      return descriptorType;
+   }
+
+   /**
+    * Set the device descriptor type.
+    *
+    * @param descriptorType - the descriptor type to set
+    */
+   public void setDescriptorType(int descriptorType)
+   {
+      this.descriptorType = descriptorType;
+   }
+
+   /**
+    * @return The type of the application:
+    *         {@link ApplicationType#DeviceDescriptor_Read}.
     */
    @Override
    public ApplicationType getType()
    {
       return ApplicationType.DeviceDescriptor_Read;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   {
+      descriptorType = rawData[start] & DESCRIPTOR_TYPE_MASK;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int toRawData(int[] rawData, int start)
+   {
+      final ApplicationType appType = getType();
+      rawData[start] = (appType.getApci() & 255) | (descriptorType & DESCRIPTOR_TYPE_MASK);
+      return 1;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return getType().getApci() | descriptorType;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this)
+         return true;
+
+      if (!(o instanceof DeviceDescriptorRead))
+         return false;
+
+      final DeviceDescriptorRead oo = (DeviceDescriptorRead) o;
+      return descriptorType == oo.descriptorType;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return getType().toString() + " descriptor #" + descriptorType;
    }
 }

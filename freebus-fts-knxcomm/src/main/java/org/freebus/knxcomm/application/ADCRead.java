@@ -29,11 +29,8 @@ public class ADCRead implements Application
     */
    public ADCRead(int channel, int count)
    {
-      if (channel < 0 || channel > 63)
-         throw new IllegalArgumentException("invalid ADC channel");
-
-      this.channel = channel;
-      this.count = count;
+      setChannel(channel);
+      setCount(count);
    }
 
    /**
@@ -92,8 +89,8 @@ public class ADCRead implements Application
    @Override
    public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
    {
-      channel = rawData[start++] & 0x3f;
-      count = rawData[start++];
+      setChannel(rawData[start++] & 0x3f);
+      setCount(rawData[start++]);
    }
 
    /**
@@ -105,8 +102,8 @@ public class ADCRead implements Application
       final ApplicationType appType = getType();
       int pos = start;
 
-      rawData[pos++] = (appType.apci & 255) | (count & 0x3f);
-      rawData[pos++] = count & 255;
+      rawData[pos++] = (appType.getApci() & 255) | (getChannel() & 0x3f);
+      rawData[pos++] = getCount() & 255;
 
       return pos - start;
    }
@@ -117,7 +114,7 @@ public class ADCRead implements Application
    @Override
    public int hashCode()
    {
-      return (getType().apci << 6) | channel;
+      return (getType().getApci() << 6) | channel;
    }
 
    /**

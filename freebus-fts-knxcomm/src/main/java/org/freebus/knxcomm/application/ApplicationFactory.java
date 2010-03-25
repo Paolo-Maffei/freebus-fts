@@ -19,21 +19,24 @@ public final class ApplicationFactory
     * can contain data bytes, or a {@link GenericDataApplication} object is created
     * if the application type cannot contain data bytes.
     *
-    * @param type - the application type.
+    * @param type - the {@link ApplicationType application type}.
     *
     * @return the created application object.
     */
    public static Application createApplication(final ApplicationType type)
    {
-      if (type.clazz == null)
+      final Class<? extends Application> appClass = type.getApplicationClass();
+
+      if (appClass == null)
       {
-         if (type.maxData == 0)
+         if (type.getMaxDataBytes() == 0)
             return new GenericApplication(type);
          return new GenericDataApplication(type);
       }
+
       try
       {
-         return type.clazz.newInstance();
+         return appClass.newInstance();
       }
       catch (InstantiationException e)
       {

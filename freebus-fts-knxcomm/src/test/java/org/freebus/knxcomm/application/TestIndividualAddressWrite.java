@@ -50,7 +50,7 @@ public class TestIndividualAddressWrite
       final IndividualAddressWrite app = new IndividualAddressWrite(new PhysicalAddress(50, 60));
       final int[] rawData = new int[16];
       assertEquals(3, app.toRawData(rawData, 0));
-      assertEquals(ApplicationType.IndividualAddress_Write.apci & 255, rawData[0]);
+      assertEquals(ApplicationType.IndividualAddress_Write.getApci() & 255, rawData[0]);
       assertEquals(50, rawData[1]);
       assertEquals(60, rawData[2]);
    }
@@ -61,7 +61,7 @@ public class TestIndividualAddressWrite
       final IndividualAddressWrite app = new IndividualAddressWrite();
       final int[] rawData = new int[16];
       assertEquals(3, app.toRawData(rawData, 0));
-      assertEquals(ApplicationType.IndividualAddress_Write.apci & 255, rawData[0]);
+      assertEquals(ApplicationType.IndividualAddress_Write.getApci() & 255, rawData[0]);
       assertEquals(0, rawData[1]);
       assertEquals(0, rawData[2]);
    }

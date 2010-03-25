@@ -88,7 +88,7 @@ public abstract class MemoryData extends Memory
       int pos = start;
 
       final int count = getCount();
-      rawData[pos++] = (appType.apci & 255) | (count & 0x3f);
+      rawData[pos++] = (appType.getApci() & 255) | (count & appType.getDataMask());
 
       final int address = getAddress();
       rawData[pos++] = (address >> 8) & 255;
@@ -105,16 +105,25 @@ public abstract class MemoryData extends Memory
     * {@inheritDoc}
     */
    @Override
+   public int hashCode()
+   {
+      return (getAddress() << 8) | (data == null ? 0 : data.length);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(Object o)
    {
       if (o == this)
          return true;
 
-      if (!(o instanceof MemoryData) || !super.equals(o))
+      if (!(o instanceof MemoryData))
          return false;
 
       final MemoryData oo = (MemoryData) o;
-      return data == null ? oo.data == null : Arrays.equals(data, oo.data);
+      return getAddress() == oo.getAddress() && (data == null ? oo.data == null : Arrays.equals(data, oo.data));
    }
 
    /**

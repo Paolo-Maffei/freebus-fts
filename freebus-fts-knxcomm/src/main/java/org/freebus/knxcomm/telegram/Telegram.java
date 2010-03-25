@@ -378,7 +378,7 @@ public class Telegram implements Cloneable
       if (transport.mask != 255 && application != null)
       {
          applicationLen = application.toRawData(rawData, pos + 2);
-         apci = application.getType().apci;
+         apci = application.getType().getApci();
       }
 
       int drl = (routingCounter & 7) << 4;

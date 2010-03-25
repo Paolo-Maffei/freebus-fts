@@ -5,7 +5,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 /**
  * Response to an A/D converter {@link ADCRead read request}.
  */
-public abstract class ADCResponse extends ADCRead
+public class ADCResponse extends ADCRead
 {
    private int value;
 
@@ -72,7 +72,7 @@ public abstract class ADCResponse extends ADCRead
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      int pos = toRawData(rawData, start);
+      int pos = super.toRawData(rawData, start);
 
       rawData[pos++] = (value >> 8) & 255;
       rawData[pos++] = value & 255;
@@ -98,7 +98,7 @@ public abstract class ADCResponse extends ADCRead
       if (o == this)
          return true;
 
-      if (!(o instanceof ADCResponse))
+      if (!(o instanceof ADCResponse) || !super.equals(o))
          return false;
 
       final ADCResponse oo = (ADCResponse) o;

@@ -46,31 +46,6 @@ public abstract class Memory implements Application
     * {@inheritDoc}
     */
    @Override
-   public int hashCode()
-   {
-      return (getType().apci << 8) | address;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object o)
-   {
-      if (o == this)
-         return true;
-
-      if (!(o instanceof Memory))
-         return false;
-
-      final Memory oo = (Memory) o;
-      return address == oo.address;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public String toString()
    {
       return getType().name() + String.format(" address 0x%04x", address);

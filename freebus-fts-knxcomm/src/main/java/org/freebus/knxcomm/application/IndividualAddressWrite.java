@@ -68,7 +68,7 @@ public class IndividualAddressWrite implements Application
    {
       final int[] addrData = (address == null ? PhysicalAddress.NULL : address).getBytes();
 
-      rawData[start++] = ApplicationType.IndividualAddress_Write.apci;
+      rawData[start++] = ApplicationType.IndividualAddress_Write.getApci() & 255;
       rawData[start++] = addrData[0];
       rawData[start++] = addrData[1];
 
