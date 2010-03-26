@@ -69,7 +69,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       super();
       setInstance(this);
 
-      setTitle(I18n.getMessage("MainWindow.TitleNoProject"));
+      setTitle(FTS.getInstance().getName());
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
       final ImageIcon appIcon = ImageCache.getIcon("app-icon");
@@ -133,6 +133,9 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       final JMenu settingsMenu = createJMenu(I18n.getMessage("MainWindow.SettingsMenu"));
       Actions.SETTINGS.addTo(settingsMenu);
+
+      final JMenu helpMenu = createJMenu(I18n.getMessage("MainWindow.HelpMenu"));
+      Actions.ABOUT.addTo(helpMenu);
    }
 
    /**
@@ -217,8 +220,8 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       updateContents();
 
       if (project == null)
-         setTitle(I18n.getMessage("MainWindow.TitleNoProject"));
-      else setTitle(I18n.formatMessage("MainWindow.Title", new Object[] { project.getName() }));
+         setTitle(FTS.getInstance().getName());
+      else setTitle(project.getName() + " - " + FTS.getInstance().getName());
    }
 
    /**

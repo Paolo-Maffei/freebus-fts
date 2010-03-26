@@ -5,9 +5,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.sql.Connection;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
@@ -33,6 +35,7 @@ import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.utils.BusInterfaceService;
+import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SessionStorage;
@@ -46,6 +49,7 @@ import org.jdesktop.application.SessionStorage;
  */
 public final class FTS extends Application
 {
+   private Properties manifestProps;
    private StartupIndicator startupIndicator;
    private LookAndFeelManager lafLoader;
    private Config config;
@@ -58,6 +62,52 @@ public final class FTS extends Application
    public static FTS getInstance()
    {
       return (FTS) Application.getInstance();
+   }
+
+   /**
+    * Returns the name of the application. May include version and/or
+    * revision information.
+    *
+    * @return the name of the application.
+    */
+   public String getName()
+   {
+      return "Freebus FTS";
+   }
+
+   /**
+    * @return the manifest's properties of the main JAR of FTS.
+    */
+   public Properties getManifestProperties()
+   {
+      if (manifestProps == null)
+      {
+         manifestProps = new Properties();
+
+         try
+         {
+            final String classContainer = getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+
+            if (classContainer.toLowerCase().endsWith(".jar"))
+            {
+               final URL manifestUrl = new URL("jar:" + classContainer + "!/META-INF/MANIFEST.MF");
+               manifestProps.load(manifestUrl.openStream());
+            }
+            else
+            {
+               Logger.getLogger(getClass()).info("FTS is not started from a jar. Manifest information is unavailable.");
+            }
+         }
+         catch (IOException e)
+         {
+            Dialogs.formatExceptionMessage(e, "Failed to load the manifest from the FTS jar");
+         }
+      }
+
+      for (Object key : manifestProps.keySet())
+         System.err.println(key + "=" + manifestProps.getProperty((String) key));
+
+      return manifestProps;
    }
 
    /**
@@ -78,6 +128,8 @@ public final class FTS extends Application
    @Override
    protected void startup()
    {
+      getManifestProperties();
+
       try
       {
          Logger.getLogger(getClass()).debug("FTS startup");
@@ -277,8 +329,8 @@ public final class FTS extends Application
             Runtime.getRuntime().exit(1);
 
          int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
-               + I18n.getMessage("FTS.UpgradeDatabaseWipe") + "</body></html>", I18n
-               .getMessage("Dialogs.Error_Title"), JOptionPane.YES_NO_OPTION);
+               + I18n.getMessage("FTS.UpgradeDatabaseWipe") + "</body></html>", I18n.getMessage("Dialogs.Error_Title"),
+               JOptionPane.YES_NO_OPTION);
 
          if (ret != JOptionPane.YES_OPTION)
             Runtime.getRuntime().exit(3);

@@ -1,6 +1,8 @@
 package org.freebus.fts.components;
 
 import java.awt.Component;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.JTabbedPane;
 
@@ -14,7 +16,7 @@ public class ExtTabbedPane extends JTabbedPane
    /**
     * Creates an empty <code>ExtTabbedPane</code> with a default tab placement
     * of <code>JTabbedPane.TOP</code>.
-    * 
+    *
     * @see #addTab
     */
    public ExtTabbedPane()
@@ -26,7 +28,7 @@ public class ExtTabbedPane extends JTabbedPane
     * Creates an empty <code>TabbedPane</code> with the specified tab placement
     * of either: <code>JTabbedPane.TOP</code>, <code>JTabbedPane.BOTTOM</code>,
     * <code>JTabbedPane.LEFT</code>, or <code>JTabbedPane.RIGHT</code>.
-    * 
+    *
     * @param tabPlacement the placement for the tabs relative to the content
     * @see #addTab
     */
@@ -42,7 +44,7 @@ public class ExtTabbedPane extends JTabbedPane
     * <code>JTabbedPane.LEFT</code>, or <code>JTabbedPane.RIGHT</code>. Tab
     * layout policy may be either: <code>JTabbedPane.WRAP_TAB_LAYOUT</code> or
     * <code>JTabbedPane.SCROLL_TAB_LAYOUT</code>.
-    * 
+    *
     * @param tabPlacement the placement for the tabs relative to the content
     * @param tabLayoutPolicy the policy for laying out tabs when all tabs will
     *           not fit on one run
@@ -63,6 +65,35 @@ public class ExtTabbedPane extends JTabbedPane
    public void addTab(String title, Component component)
    {
       super.addTab(title, component);
-      setTabComponentAt(getTabCount() - 1, new ExtTab(title, this, true));
+
+      final ExtTab tab = new ExtTab(title, true);
+      tab.addCloseListener(closeListener);
+
+      setTabComponentAt(getTabCount() - 1, tab);
    }
+
+   /**
+    * Action listener that gets called when the close button of a tab is
+    * clicked.
+    */
+   private final ActionListener closeListener = new ActionListener()
+   {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+         if (!(e.getSource() instanceof ExtTab))
+            return;
+
+         final ExtTab tab = (ExtTab) e.getSource();
+
+         final int idx = indexOfTabComponent(tab);
+         if (idx < 0)
+            return;
+
+         final Component page = getComponentAt(idx);
+         if (page instanceof AbstractPage)
+            ((AbstractPage) page).close();
+         else remove(idx);
+      }
+   };
 }

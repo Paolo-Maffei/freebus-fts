@@ -11,7 +11,7 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
+import javax.swing.event.EventListenerList;
 import javax.swing.plaf.basic.BasicButtonUI;
 
 import org.freebus.fts.core.ImageCache;
@@ -22,26 +22,23 @@ import org.freebus.fts.core.ImageCache;
 class ExtTab extends JPanel
 {
    private static final long serialVersionUID = 600126632738870853L;
-//   private static final Icon closeButtonIcon = ImageCache.getIcon("gui-images/tab-close");
    private static final Icon closeButtonHighliteIcon = ImageCache.getIcon("gui-images/tab-close-highlite");
    private static final Icon closeButtonDimmedIcon = ImageCache.getIcon("gui-images/tab-close-dimmed");
-   private final JTabbedPane pane;
+
    private final CloseButton closeButton;
    private final JLabel lblTitle;
+   private final EventListenerList listenerList = new EventListenerList();
 
    /**
-    * Create a flexi-tab object.
-    * 
+    * Create a closable tab object.
+    *
     * @param title - the title of the tab.
     * @param icon - an optional icon.
     * @param closable - true if the tab shall have a close button.
     */
-   public ExtTab(String title, JTabbedPane pane, Icon icon, boolean closable)
+   public ExtTab(String title, Icon icon, boolean closable)
    {
       super(new BorderLayout(4, 0));
-      // setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 0));
-      this.pane = pane;
-
       setOpaque(false);
 
       lblTitle = new JLabel(title);
@@ -54,6 +51,15 @@ class ExtTab extends JPanel
       {
          closeButton = new CloseButton();
          add(closeButton, BorderLayout.EAST);
+
+         closeButton.addActionListener(new ActionListener()
+         {
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+               fireCloseButtonClicked(e);
+            }
+         });
       }
       else
       {
@@ -62,14 +68,49 @@ class ExtTab extends JPanel
    }
 
    /**
-    * Create a flexi-tab object.
-    * 
+    * Create a closable tab object.
+    *
     * @param title - the title of the tab.
-    * @param closable - true if the tab shall have a close button.
+     * @param closable - true if the tab shall have a close button.
     */
-   public ExtTab(String title, JTabbedPane pane, boolean closable)
+   public ExtTab(String title, boolean closable)
    {
-      this(title, pane, null, closable);
+      this(title, null, closable);
+   }
+
+   /**
+    * Add a close button {@link ActionListener action listener} that gets called
+    * when the close button is clicked.
+    */
+   public void addCloseListener(ActionListener l)
+   {
+      listenerList.add(ActionListener.class, l);
+   }
+
+   /**
+    * Remove a close button {@link ActionListener action listener} from the tab.
+    */
+   public void removeCloseListener(ActionListener l)
+   {
+      listenerList.remove(ActionListener.class, l);
+   }
+
+   /**
+    * Notifies all listeners that have registered interest for notification on
+    * when the close button is clicked.
+    */
+   protected void fireCloseButtonClicked(ActionEvent e)
+   {
+      e.setSource(ExtTab.this);
+
+      // Process the listeners last to first, notifying
+      // those that are interested in this event
+      final Object[] listeners = listenerList.getListenerList();
+      for (int i = listeners.length - 2; i >= 0; i -= 2)
+      {
+         if (listeners[i] == ActionListener.class)
+            ((ActionListener) listeners[i + 1]).actionPerformed(e);
+      }
    }
 
    /**
@@ -85,7 +126,7 @@ class ExtTab extends JPanel
    /**
     * Internal class of {@link ExtTab} for the close button.
     */
-   private class CloseButton extends JButton implements ActionListener
+   private class CloseButton extends JButton
    {
       private static final long serialVersionUID = -1335643238071282239L;
 
@@ -100,7 +141,6 @@ class ExtTab extends JPanel
          setBorderPainted(false);
          setIcon(closeButtonDimmedIcon);
          setRolloverEnabled(true);
-         addActionListener(this);
 
          addMouseListener(new MouseAdapter()
          {
@@ -116,21 +156,6 @@ class ExtTab extends JPanel
                closeButton.setIcon(closeButtonDimmedIcon);
             }
          });
-      }
-
-      /**
-       * Called when the close button is clicked.
-       */
-      public void actionPerformed(ActionEvent e)
-      {
-         int i = pane.indexOfTabComponent(ExtTab.this);
-         if (i != -1)
-            pane.remove(i);
-      }
-
-      @Override
-      public void updateUI()
-      {
       }
    }
 }

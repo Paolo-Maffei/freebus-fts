@@ -64,7 +64,7 @@ public final class Dialogs
    }
 
    /**
-    * Format the exeception and the message as it is used in
+    * Format the exception and the message as it is used in
     * {@link #showExceptionDialog(Exception, String)}.
     *
     * @param e - the exception.

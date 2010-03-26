@@ -18,18 +18,20 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
+import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.components.parametereditor.Page;
 import org.freebus.fts.components.parametereditor.ParamData;
 import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 
 /**
  * A widget that allows to edit the parameters of a program.
  */
-public class ParameterEditor extends JPanel implements ChangeListener
+public class ParameterEditor extends JPanel
 {
    private static final long serialVersionUID = -2143429346277511397L;
 
@@ -40,8 +42,10 @@ public class ParameterEditor extends JPanel implements ChangeListener
    private Device device;
    private final List<Page> paramPages = new Vector<Page>();
    private final Map<Parameter, ParamData> paramDatas = new HashMap<Parameter, ParamData>();
-   private boolean updateContentsEnabled = false;
-   private boolean inStateChanged = false;
+   private final EventListenerList listenerList = new EventListenerList();
+   private transient ChangeEvent changeEvent = null;
+   private boolean updateContentsEnabled;
+   private boolean inStateChanged;
 
    /**
     * Create a parameter editor.
@@ -86,6 +90,54 @@ public class ParameterEditor extends JPanel implements ChangeListener
    }
 
    /**
+    * Adds a <code>ChangeListener</code> to this object.
+    *
+    * @param l the <code>ChangeListener</code> to add
+    *
+    * @see #fireStateChanged
+    * @see #removeChangeListener
+    */
+   public void addChangeListener(ChangeListener l)
+   {
+      listenerList.add(ChangeListener.class, l);
+   }
+
+   /**
+    * Removes a <code>ChangeListener</code> from this object.
+    *
+    * @param l the <code>ChangeListener</code> to remove
+    * @see #fireStateChanged
+    * @see #addChangeListener
+    */
+   public void removeChangeListener(ChangeListener l)
+   {
+      listenerList.remove(ChangeListener.class, l);
+   }
+
+   /**
+    * Sends a {@code ChangeEvent}, with this {@code ParameterEditor} as the
+    * source, to each registered listener. This method is called each time there
+    * is a change of a parameter value.
+    */
+   protected void fireStateChanged()
+   {
+      Object[] listeners = listenerList.getListenerList();
+
+      // Process the listeners last to first, notifying
+      // those that are interested in this event
+      for (int i = listeners.length - 2; i >= 0; i -= 2)
+      {
+         if (listeners[i] == ChangeListener.class)
+         {
+            // Lazily create the event:
+            if (changeEvent == null)
+               changeEvent = new ChangeEvent(this);
+            ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
+         }
+      }
+   }
+
+   /**
     * Update the contents of the editor.
     */
    public void updateContents()
@@ -104,6 +156,11 @@ public class ParameterEditor extends JPanel implements ChangeListener
       for (final Parameter param : paramsSet)
       {
          final ParamData data = new ParamData(param);
+
+         if (param.getParameterType().getAtomicType() == ParameterAtomicType.STRING)
+            data.setValue(device.getParameterValue(param));
+         else data.setValue(device.getParameterIntValue(param));
+
          paramDataArr[++i] = data;
          paramDatas.put(param, data);
       }
@@ -145,7 +202,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
          if (data.isPage() && (page == null || page.getDisplayOrder() != data.getDisplayOrder()))
          {
             page = new Page(data);
-            page.addChangeListener(this);
+            page.addChangeListener(paramValueChangedListener);
 
             paramPages.add(page);
          }
@@ -176,7 +233,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
     */
    public void updateVisibility()
    {
-//      Logger.getLogger(getClass()).debug("start updateVisibility");
+      // Logger.getLogger(getClass()).debug("start updateVisibility");
       updateContentsEnabled = false;
 
       // Collect the pages that shall be visible
@@ -241,7 +298,7 @@ public class ParameterEditor extends JPanel implements ChangeListener
       }
 
       updateContentsEnabled = true;
-//      Logger.getLogger(getClass()).debug("end updateVisibility");
+      // Logger.getLogger(getClass()).debug("end updateVisibility");
    }
 
    /**
@@ -254,9 +311,21 @@ public class ParameterEditor extends JPanel implements ChangeListener
 
       device.clearParameterValues();
 
-      for (final ParamData data: paramDatas.values())
+      for (final ParamData data : paramDatas.values())
       {
-         device.setParameterValue(data.getParameter(), data.getValue());
+         final Parameter param = data.getParameter();
+         final Object value = data.getValue();
+         Object defaultValue;
+
+         if (param.getParameterType().getAtomicType() == ParameterAtomicType.STRING)
+            defaultValue = device.getParameterValue(param);
+         else defaultValue = device.getParameterIntValue(param);
+
+         final boolean isDefaultValue = (value == null ? defaultValue == null : value.equals(defaultValue));
+         if (isDefaultValue)
+            continue;
+
+         device.setParameterValue(data.getParameter(), value);
          if (!data.isVisible())
             device.setParameterVisible(data.getParameter(), false);
       }
@@ -265,34 +334,40 @@ public class ParameterEditor extends JPanel implements ChangeListener
    /**
     * Called when a parameter value was changed.
     */
-   @Override
-   public void stateChanged(ChangeEvent e)
+   private final ChangeListener paramValueChangedListener = new ChangeListener()
    {
-      final ParamData data = (ParamData) e.getSource();
-
-      if (updateContentsEnabled && !inStateChanged && data.hasDependents())
+      @Override
+      public void stateChanged(final ChangeEvent e)
       {
+         if (!updateContentsEnabled)
+            return;
 
-         SwingUtilities.invokeLater(new Runnable()
+         final ParamData data = (ParamData) e.getSource();
+         fireStateChanged();
+
+         if (!inStateChanged && data.hasDependents())
          {
-            @Override
-            public void run()
+            SwingUtilities.invokeLater(new Runnable()
             {
-               try
+               @Override
+               public void run()
                {
-                  inStateChanged = true;
-                  updateVisibility();
+                  try
+                  {
+                     inStateChanged = true;
+                     updateVisibility();
 
-                  final Component currentPageComp = paramTabs.getSelectedComponent();
-                  if (currentPageComp instanceof Page)
-                     ((Page) currentPageComp).updateContents();
+                     final Component currentPageComp = paramTabs.getSelectedComponent();
+                     if (currentPageComp instanceof Page)
+                        ((Page) currentPageComp).updateContents();
+                  }
+                  finally
+                  {
+                     inStateChanged = false;
+                  }
                }
-               finally
-               {
-                  inStateChanged = false;
-               }
-            }
-         });
+            });
+         }
       }
-   }
+   };
 }

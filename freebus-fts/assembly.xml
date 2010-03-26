@@ -5,6 +5,7 @@
   <format>zip</format>
  </formats>
  <baseDirectory>${project.artifactId}</baseDirectory>
+ <includeSiteDirectory>false</includeSiteDirectory>
  <fileSets>
   <fileSet>
    <includes>
@@ -39,17 +40,21 @@
    <fileMode>0755</fileMode>
   </fileSet>
  </fileSets>
- <files>
+ <!-- files>
   <file>
    <source>src/main/resources/gui-images/splash.png</source>
-   <outputDirectory>/libs</outputDirectory>
+   <outputDirectory>libs</outputDirectory>
+   <directoryMode>0755</directoryMode>
    <fileMode>0644</fileMode>
   </file>
- </files>
+ </files -->
  <dependencySets>
   <dependencySet>
    <useProjectArtifact>true</useProjectArtifact>
-   <outputDirectory>/libs</outputDirectory>
+   <scope>runtime</scope>
+   <unpack>false</unpack>
+   <outputDirectory>libs</outputDirectory>
+   <directoryMode>0755</directoryMode>
    <fileMode>0644</fileMode>
   </dependencySet>
  </dependencySets>

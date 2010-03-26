@@ -83,7 +83,7 @@ public class TestDevicePersistence extends ProjectTestCase
       final Device loadedDev = entityManager.find(Device.class, 18);
       assertNotNull(loadedDev);
 
-      assertEquals(1001, loadedDev.getIntParameterValue(param1));
+      assertEquals(1001, loadedDev.getParameterIntValue(param1));
       assertEquals("a string value", loadedDev.getParameterValue(param2));
    }
 }

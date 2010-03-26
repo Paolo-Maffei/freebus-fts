@@ -42,7 +42,7 @@ import org.freebus.fts.products.ParameterValue;
 
 /**
  * A tab page of the parameter editor.
- * 
+ *
  * @see {@link ParameterEditor}.
  */
 public class Page extends JPanel
@@ -58,7 +58,7 @@ public class Page extends JPanel
 
    /**
     * Create a tab page for the parameter editor.
-    * 
+    *
     * @param data the parameter-data for the parameter which is displayed on
     *           this the page.
     */
@@ -101,7 +101,7 @@ public class Page extends JPanel
    /**
     * Returns the first visible parameter-data. If no parameter-data is visible,
     * the first parameter-data of the page parameter-data's is returned anyways.
-    * 
+    *
     * @return the parameter-data that represents the page.
     */
    public ParamData getPageData()
@@ -127,7 +127,7 @@ public class Page extends JPanel
 
    /**
     * Add a listener that gets called when a parameter value is changed.
-    * 
+    *
     * @param listener the listener to be added.
     */
    public void addChangeListener(ChangeListener listener)
@@ -137,7 +137,7 @@ public class Page extends JPanel
 
    /**
     * Remove a change listener.
-    * 
+    *
     * @param listener the listener to be removed.
     */
    public void removeChangeListener(ChangeListener listener)
@@ -230,7 +230,7 @@ public class Page extends JPanel
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType.ENUM}.
-    * 
+    *
     * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
@@ -309,7 +309,7 @@ public class Page extends JPanel
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType.SIGNED} or {@link ParameterAtomicType.UNSIGNED}
     * .
-    * 
+    *
     * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
@@ -349,7 +349,7 @@ public class Page extends JPanel
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType.STRING}.
-    * 
+    *
     * @param param the parameter to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
@@ -371,14 +371,16 @@ public class Page extends JPanel
          public void removeUpdate(DocumentEvent e)
          {
             data.setValue(input.getText());
+            fireStateChanged(data);
          }
-         
+
          @Override
          public void insertUpdate(DocumentEvent e)
          {
             data.setValue(input.getText());
+            fireStateChanged(data);
          }
-         
+
          @Override
          public void changedUpdate(DocumentEvent e)
          {
@@ -389,7 +391,7 @@ public class Page extends JPanel
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType.NONE}.
-    * 
+    *
     * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
@@ -404,12 +406,12 @@ public class Page extends JPanel
    /**
     * Create a label for the parameter. The label is added to the contents grid
     * in column zero, spanning one or more columns.
-    * 
+    *
     * @param param the parameter whose label shall be used.
     * @param gridRow the row of the contents grid in which the label is placed.
     * @param gridWidth the number of grid columns the label shall use (usually 1
     *           or 2).
-    * 
+    *
     * @return The created label.
     */
    public JLabel createParamLabel(final Parameter param, int gridRow, int gridWidth)
@@ -428,7 +430,7 @@ public class Page extends JPanel
    /**
     * Add the component to the grid in column zero, row <code>gridRow</code>,
     * using suitable grid bag constraints.
-    * 
+    *
     * @param comp the component to be added.
     * @param gridRow the row of the contents grid in which the component is
     *           added.
@@ -441,7 +443,7 @@ public class Page extends JPanel
 
    /**
     * Inform all change listeners that a parameter was changed.
-    * 
+    *
     * @param param the parameter that was changed.
     */
    public void fireStateChanged(final ParamData data)
@@ -462,9 +464,9 @@ public class Page extends JPanel
    /**
     * Sort the parameter-data by display order
     * {@link Parameter#getDisplayOrder()}.
-    * 
+    *
     * @param params the parameters to be sorted.
-    * 
+    *
     * @return a sorted array of parameters.
     */
    public static ParamData[] sortByDisplayOrder(final Collection<ParamData> paramsData)

@@ -296,7 +296,7 @@ public final class Device
     * @param param the parameter whose value is requested.
     * @return the parameter's value.
     */
-   public int getIntParameterValue(final Parameter param)
+   public int getParameterIntValue(final Parameter param)
    {
       if (parameterValues == null)
          return param.getDefaultLong();
@@ -313,7 +313,8 @@ public final class Device
     */
    public void clearParameterValues()
    {
-      parameterValues.clear();
+      if (parameterValues != null)
+         parameterValues.clear();
    }
 
    /**

@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -39,7 +40,7 @@ public class Dialog extends JDialog
 
    /**
     * Create a dialog window.
-    * 
+    *
     * @param owner the <code>Window</code> from which the dialog is displayed or
     *           <code>null</code> if this dialog has no owner
     * @param modalityType specifies whether dialog blocks input to other windows
@@ -73,7 +74,7 @@ public class Dialog extends JDialog
 
    /**
     * Create a modeless dialog window.
-    * 
+    *
     * @param owner the <code>Window</code> from which the dialog is displayed or
     *           <code>null</code> if this dialog has no owner
     * @exception HeadlessException when
@@ -111,11 +112,11 @@ public class Dialog extends JDialog
    /**
     * Add a button to the dialog's buttons. When clicked, the button will call
     * the dialog's standard action, depending on the button's role.
-    * 
+    *
     * If the button's role is {@link #ACCEPT}, the {@link #accept} method is
     * called when the button is clicked. If the button's role is {@link #REJECT}
     * then the {@link #reject} method is called when the button is clicked.
-    * 
+    *
     * @param button - The button to add.
     * @param role - The button's role: {@link #ACCEPT}, {@link #REJECT}.
     */
@@ -156,8 +157,17 @@ public class Dialog extends JDialog
    }
 
    /**
+    * Center the dialog on the screen.
+    */
+   public void center()
+   {
+      final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+      setLocation((screenSize.width - getWidth()) >> 1, (screenSize.height - getHeight()) >> 1);
+   }
+
+   /**
     * Set the accepted flag. Called automatically.
-    * 
+    *
     * @See isAccepted
     */
    public final void setAccepted(boolean accepted)

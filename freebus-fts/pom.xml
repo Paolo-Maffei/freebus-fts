@@ -1,5 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
- xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <parent>
   <artifactId>freebus-fts-parent</artifactId>
@@ -26,6 +25,23 @@
   <plugins>
 
    <plugin>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>buildnumber-maven-plugin</artifactId>
+    <executions>
+     <execution>
+      <phase>validate</phase>
+      <goals>
+       <goal>create</goal>
+      </goals>
+     </execution>
+    </executions>
+    <configuration>
+     <doCheck>false</doCheck>
+     <doUpdate>false</doUpdate>
+    </configuration>
+   </plugin>
+
+   <plugin>
     <artifactId>maven-jar-plugin</artifactId>
     <version>2.3</version>
     <configuration>
@@ -37,6 +53,8 @@
       </manifest>
       <manifestEntries>
        <SplashScreen-Image>splash.png</SplashScreen-Image>
+       <SCM-Revision>${buildNumber}</SCM-Revision>
+       <Version>${project.version}</Version>
       </manifestEntries>
      </archive>
     </configuration>
@@ -155,11 +173,11 @@
    <scope>test</scope>
   </dependency>
   <dependency>
-  	<groupId>com.h2database</groupId>
-  	<artifactId>h2</artifactId>
-  	<version>1.2.131</version>
-  	<type>jar</type>
-  	<scope>runtime</scope>
+   <groupId>com.h2database</groupId>
+   <artifactId>h2</artifactId>
+   <version>1.2.131</version>
+   <type>jar</type>
+   <scope>runtime</scope>
   </dependency>
  </dependencies>
 </project>

@@ -30,7 +30,7 @@ public final class I18n
     * language. The variables {0}, {1}, ... are replaced with the arguments given in args.
     *
     * @see {@link MessageFormat} for more information on formatting the arguments.
-    * 
+    *
     * @param msgid - the message id
     * @param args - an array of arguments.
     * @return the message string

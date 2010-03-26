@@ -11,6 +11,9 @@ import javax.swing.JToolBar;
  */
 public enum Actions
 {
+   /** Show the "about" dialog. */
+   ABOUT(new AboutAction()),
+
    /** Open a org.freebus.fts.products browser that allows adding devices to the current project. */
    ADD_DEVICES(new AddDevicesAction()),
 
