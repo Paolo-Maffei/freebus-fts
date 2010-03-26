@@ -20,8 +20,8 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 	 * 
 	 * @return Mask String
 	 */
-	private String Type2MaskString(int data) {
-		return String.format("%02x%02x", data & 0xFF00, data & 0xFF).toUpperCase();
+	private String Type2MaskString(int[] data) {
+		return String.format("%02X%02X", data[0] , data[1]);
 	}
 
 
@@ -47,7 +47,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 	 */
 	public void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws IOException {
 		deviceProperties = new Properties();
-		String mask = Type2MaskString(deviceDescriptorResponse.getDescriptorType());
+		String mask = Type2MaskString(deviceDescriptorResponse.getDescriptor());
 		InputStream in = null;
 		ClassLoader cl = this.getClass().getClassLoader();
 		

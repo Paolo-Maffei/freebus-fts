@@ -8,7 +8,7 @@ public class MemoryAddress {
 
 	int offset;
 
-	public MemoryAddress(int adress, int length,
+	protected MemoryAddress(int adress, int length,
 			MemoryAddressTypes memoryAddressType) {
 		this.MemoryAddressTypes = memoryAddressType;
 		this.adress = adress;
@@ -31,15 +31,7 @@ public class MemoryAddress {
 		return offset;
 	}
 
-	public void setAdress(int adress) {
-		this.adress = adress;
-	}
-
-	public void setLength(int length) {
-		this.length = length;
-	}
-
-	public void setMemoryAddress(MemoryAddressTypes memoryAddress) {
+	protected void setMemoryAddress(MemoryAddressTypes memoryAddress) {
 		this.MemoryAddressTypes = memoryAddress;
 	}
 

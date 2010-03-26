@@ -23,7 +23,11 @@ public class MemoryAddressMapper {
 
 	private MemoryAddressList memoryAddressList;
 
-	public MemoryAddressMapper(Properties deviceProperties) {
+	/**
+	 * Creates the MemoryAddressList with Parameters from the Properties File
+	 * @param deviceProperties
+	 */
+	protected MemoryAddressMapper(Properties deviceProperties) {
 		this.deviceProperties = deviceProperties;
 		String strlength;
 		String strAddress;
@@ -87,7 +91,17 @@ public class MemoryAddressMapper {
 
 		return null;
 	}
+	
+	public MemoryAddress getMemoryAddress(MemoryAddressTypes AddressType) {
+		for (MemoryAddress m : memoryAddressList) {
+			
+			if (m.getMemoryAddressType() == AddressType)
+				return m;
 
+		}
+
+		return null;
+	}
 	private int memadrArray2int(int[] Address) {
 		int a = Address[0];
 		a = a << 8;

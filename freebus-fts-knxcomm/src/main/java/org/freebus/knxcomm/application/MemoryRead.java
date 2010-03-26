@@ -1,5 +1,6 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.aplicationData.MemoryAddress;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 
@@ -34,6 +35,17 @@ public class MemoryRead extends Memory
          throw new IllegalArgumentException("count must be 0..63");
 
       this.count = count;
+   }
+   
+   /**
+    * Create a memory read object.
+    *
+    * @param memoryAddress a MemoryAddress Class
+    */
+   public MemoryRead(MemoryAddress memoryAddress )
+   {
+      super(memoryAddress.getAdress());
+     this.count = memoryAddress.getLength();
    }
 
    /**
