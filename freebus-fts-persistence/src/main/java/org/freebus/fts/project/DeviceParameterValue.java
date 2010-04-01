@@ -98,7 +98,7 @@ public class DeviceParameterValue
     */
    public Integer getIntValue()
    {
-      if (stringValue == null) return 0;
+      if (stringValue == null || stringValue.isEmpty()) return 0;
       if (value == null) value = Integer.parseInt(stringValue);
       return (Integer) value;
    }

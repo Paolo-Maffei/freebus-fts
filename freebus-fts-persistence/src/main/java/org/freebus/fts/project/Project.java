@@ -282,7 +282,13 @@ public class Project
 
       final Project oo = (Project) o;
 
-      if (id != oo.id || name.equals(oo.name) || description.equals(oo.description))
+      if (id != oo.id)
+         return false;
+
+      if (name == null ? name != oo.name : !name.equals(oo.name))
+         return false;
+
+      if (description == null ? description != oo.description : !description.equals(oo.description))
          return false;
 
       if (!areas.equals(oo.areas))

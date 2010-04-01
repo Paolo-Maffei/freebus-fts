@@ -237,9 +237,9 @@ public class TestProject
       assertFalse(project1.equals(null));
       assertFalse(project1.equals(new Object()));
 
-      assertEquals(project1, project1);
-      assertEquals(project1, project2);
-      assertEquals(project2, project1);
+      assertTrue(project1.equals(project1));
+      assertTrue(project1.equals(project2));
+      assertTrue(project2.equals(project1));
 
       project1.add(new MainGroup(1));
       assertFalse(project1.equals(project2));

@@ -1,7 +1,5 @@
 package org.freebus.knxcomm.application;
 
-
-
 /**
  * Abstract base class for device memory access.
  */
@@ -38,7 +36,7 @@ public abstract class Memory implements Application
    }
 
    /**
-    * @return the number of bytes to read / write.
+    * @return the number of bytes to read from the memory / write to the memory.
     */
    public abstract int getCount();
 
@@ -48,6 +46,6 @@ public abstract class Memory implements Application
    @Override
    public String toString()
    {
-      return getType().name() + String.format(" address 0x%04x", address);
+      return getType().name() + String.format(" address 0x%04x, %d bytes", address, getCount());
    }
 }

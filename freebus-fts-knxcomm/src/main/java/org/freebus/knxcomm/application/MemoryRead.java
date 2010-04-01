@@ -5,7 +5,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 
 
 /**
- * Read the memory of a remote device.
+ * Read a block of bytes from the memory of a remote device.
  */
 public class MemoryRead extends Memory
 {
@@ -36,7 +36,7 @@ public class MemoryRead extends Memory
 
       this.count = count;
    }
-   
+
    /**
     * Create a memory read object.
     *
@@ -49,7 +49,7 @@ public class MemoryRead extends Memory
    }
 
    /**
-    * @return the number of bytes to read.
+    * @return the number of bytes to read from the memory.
     */
    @Override
    public int getCount()
@@ -58,7 +58,7 @@ public class MemoryRead extends Memory
    }
 
    /**
-    * Set the number of bytes to read.
+    * Set the number of bytes to read from the memory.
     *
     * @param count - the number of bytes to read. Range 1-63.
     *
@@ -132,14 +132,5 @@ public class MemoryRead extends Memory
 
       final MemoryRead oo = (MemoryRead) o;
       return getAddress() == oo.getAddress() && count == oo.count;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public String toString()
-   {
-      return super.toString() + " " + count + " bytes";
    }
 }

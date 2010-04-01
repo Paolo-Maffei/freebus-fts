@@ -13,7 +13,6 @@ import javax.persistence.Query;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.service.ProjectService;
 
-
 public final class JpaProjectService implements ProjectService
 {
    private final EntityManager entityManager;
@@ -35,7 +34,10 @@ public final class JpaProjectService implements ProjectService
       try
       {
          project.setLastModified(new Date());
-         entityManager.persist(project);
+
+         if (project.getId() != 0)
+            entityManager.merge(project);
+         else entityManager.persist(project);
       }
       catch (PersistenceException e)
       {
@@ -51,7 +53,7 @@ public final class JpaProjectService implements ProjectService
 
       @SuppressWarnings("unchecked")
       Vector<Object[]> results = (Vector<Object[]>) query.getResultList();
-      for (Object[] fields: results)
+      for (Object[] fields : results)
       {
          map.put((Integer) fields[0], (String) fields[1]);
       }

@@ -133,7 +133,7 @@ public abstract class MemoryData extends Memory
    public String toString()
    {
       final StringBuffer sb = new StringBuffer();
-      sb.append(super.toString()).append(' ').append(getCount()).append(" bytes");
+      sb.append(super.toString());
 
       if (data != null)
       {

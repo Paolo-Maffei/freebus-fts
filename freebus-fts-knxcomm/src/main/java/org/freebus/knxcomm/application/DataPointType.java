@@ -4,7 +4,7 @@ package org.freebus.knxcomm.application;
  * Datapoint types for data exchange, e.g. with {@link GroupValueRead} and
  * {@link GroupValueWrite} telegrams.
  *
- * TODO  Not complete!
+ * TODO Not complete!
  */
 public enum DataPointType
 {
@@ -101,8 +101,7 @@ public enum DataPointType
    SignedLong(32),
 
    /**
-    * Float value (4 bytes). Encoded in the IEEE 754 floating point
-    * format.
+    * Float value (4 bytes). Encoded in the IEEE 754 floating point format.
     */
    Float(32),
 
@@ -217,6 +216,15 @@ public enum DataPointType
    _END(0);
 
    private final int bits;
+
+   /**
+    * @return the number of bits that the datapoint type requires. -1 if
+    *         variable.
+    */
+   public int getBits()
+   {
+      return bits;
+   }
 
    /*
     * Internal constructor.

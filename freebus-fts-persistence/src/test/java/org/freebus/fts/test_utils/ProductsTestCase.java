@@ -9,8 +9,8 @@ import org.junit.Before;
 
 public abstract class ProductsTestCase extends PersistenceTestCase
 {
-   private static ProductsFactory jpaProductsFactory;
-   private static ProductsFactory vdxProductsFactory;
+   private ProductsFactory jpaProductsFactory;
+   private ProductsFactory vdxProductsFactory;
 
    public ProductsTestCase(final String persistenceUnitName)
    {
@@ -26,7 +26,7 @@ public abstract class ProductsTestCase extends PersistenceTestCase
     * Setup for the next test
     */
    @Before
-   public final void setUpProductsTestCase()
+   public synchronized final void setUpProductsTestCase()
    {
       jpaProductsFactory = null;
       vdxProductsFactory = null;
@@ -36,7 +36,7 @@ public abstract class ProductsTestCase extends PersistenceTestCase
     * Cleanup
     */
    @After
-   public final void tearDownProductsTestCase()
+   public synchronized final void tearDownProductsTestCase()
    {
       jpaProductsFactory = null;
       vdxProductsFactory = null;
