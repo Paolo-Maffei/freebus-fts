@@ -574,6 +574,22 @@ public class Program
    }
 
    /**
+    * @param parameterTypes the parameterTypes to set
+    */
+   public void setParameterTypes(Set<ParameterType> parameterTypes)
+   {
+      this.parameterTypes = parameterTypes;
+   }
+
+   /**
+    * @return the parameterTypes
+    */
+   public Set<ParameterType> getParameterTypes()
+   {
+      return parameterTypes;
+   }
+
+   /**
     * Update the child parameter sets of all parameters. Automatically called on
     * demand by {@link Parameter#getChildren()}.
     */

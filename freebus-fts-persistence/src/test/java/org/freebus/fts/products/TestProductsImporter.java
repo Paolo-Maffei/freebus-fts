@@ -90,7 +90,6 @@ public class TestProductsImporter
 
       // Create a database connection so that the database does not get deleted within the
       // test steps
-      @SuppressWarnings("unused")
       final Connection con = DatabaseResources.createConnection(conDetails);
 
       int vdxDevId = 0;

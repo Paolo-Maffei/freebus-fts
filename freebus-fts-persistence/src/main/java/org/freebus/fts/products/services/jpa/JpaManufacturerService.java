@@ -2,7 +2,6 @@ package org.freebus.fts.products.services.jpa;
 
 import java.util.List;
 
-import javax.persistence.EntityExistsException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceException;
 import javax.persistence.Query;
