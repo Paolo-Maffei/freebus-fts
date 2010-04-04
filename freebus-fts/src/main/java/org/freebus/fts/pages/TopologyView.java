@@ -29,6 +29,7 @@ import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
@@ -53,6 +54,12 @@ public class TopologyView extends AbstractPage
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
+
+      final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
+      tree.setCellRenderer(renderer);
+      renderer.setCellTypeIcon(Area.class, ImageCache.getIcon("icons/area"));
+      renderer.setCellTypeIcon(Line.class, ImageCache.getIcon("icons/line"));
+      renderer.setCellTypeIcon(Device.class, ImageCache.getIcon("icons/device"));
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
@@ -187,7 +194,7 @@ public class TopologyView extends AbstractPage
       area.add(line);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
-      
+
       final DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(line, true);
       treeModel.insertNodeInto(lineNode, areaNode, 0);
 
@@ -223,7 +230,7 @@ public class TopologyView extends AbstractPage
       line.add(device);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
-      
+
       final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
       treeModel.insertNodeInto(deviceNode, lineNode, 0);
 
@@ -232,7 +239,7 @@ public class TopologyView extends AbstractPage
 
    /**
     * Edit the device.
-    * 
+    *
     * @param device - the device to edit.
     */
    public void editDevice(final Device device)
@@ -249,7 +256,7 @@ public class TopologyView extends AbstractPage
       if (node == null) return null;
       return node.getUserObject();
    }
-   
+
    /**
     * @return the preferred position of the page: {@link PagePosition#LEFT}.
     */

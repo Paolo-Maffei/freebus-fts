@@ -10,11 +10,13 @@ import javax.swing.tree.DefaultTreeModel;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
@@ -39,6 +41,12 @@ public class PhysicalView extends AbstractPage
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
+
+      final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
+      tree.setCellRenderer(renderer);
+      renderer.setCellTypeIcon(Building.class, ImageCache.getIcon("icons/building"));
+      renderer.setCellTypeIcon(Room.class, ImageCache.getIcon("icons/room"));
+      renderer.setCellTypeIcon(Device.class, ImageCache.getIcon("icons/device"));
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
@@ -75,17 +83,17 @@ public class PhysicalView extends AbstractPage
 
       for (Building building : project.getBuildings())
       {
-         DefaultMutableTreeNode buildingNode = new DefaultMutableTreeNode(building.toString(), true);
+         DefaultMutableTreeNode buildingNode = new DefaultMutableTreeNode(building, true);
          rootNode.add(buildingNode);
 
          for (Room room : building.getRooms())
          {
-            DefaultMutableTreeNode roomNode = new DefaultMutableTreeNode(room.toString(), true);
+            DefaultMutableTreeNode roomNode = new DefaultMutableTreeNode(room, true);
             buildingNode.add(roomNode);
 
             for (Device device: room.getDevices())
             {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device.toString(), true);
+               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
                roomNode.add(deviceNode);
             }
          }
