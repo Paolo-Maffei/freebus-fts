@@ -191,7 +191,7 @@ public class ParameterEditor extends JPanel
             continue;
          }
 
-         paramDatas.get(parentParam).addDependent(paramDatas.get(param));
+         paramDatas.get(parentParam).addChild(paramDatas.get(param));
       }
 
       // Create the parameter pages and add the parameter-data objects to their
@@ -345,7 +345,7 @@ public class ParameterEditor extends JPanel
          final ParamData data = (ParamData) e.getSource();
          fireStateChanged();
 
-         if (!inStateChanged && data.hasDependents())
+         if (!inStateChanged && data.hasChildren())
          {
             SwingUtilities.invokeLater(new Runnable()
             {

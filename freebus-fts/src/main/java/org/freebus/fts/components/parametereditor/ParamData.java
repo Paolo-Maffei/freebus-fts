@@ -13,7 +13,7 @@ import org.freebus.fts.products.Parameter;
 public class ParamData
 {
    private final Parameter param;
-   private final Set<ParamData> dependents = new HashSet<ParamData>();
+   private final Set<ParamData> childs = new HashSet<ParamData>();
    private ParamData parentData;
    private Object value;
 
@@ -46,7 +46,7 @@ public class ParamData
 
    /**
     * Set the value of the parameter.
-    * 
+    *
     * @param value the value to set
     */
    public void setValue(Object value)
@@ -64,7 +64,7 @@ public class ParamData
 
    /**
     * Test the visibility of the parameter.
-    * 
+    *
     * @return true if the parameter is visible.
     */
    public boolean isVisible()
@@ -128,11 +128,11 @@ public class ParamData
 
       return null;
    }
-   
+
 
    /**
-    * Test if the parameter denotes a page. 
-    * 
+    * Test if the parameter denotes a page.
+    *
     * @return true if the parameter is a page.
     */
    public boolean isPage()
@@ -149,41 +149,41 @@ public class ParamData
    }
 
    /**
-    * Add a dependent parameter-data. This is a parameter-data object whose
+    * Add a child parameter-data. This is a parameter-data object whose
     * {@link Parameter} has its parent-parameter set to the parameter of this
     * object.
     */
-   public void addDependent(ParamData dependent)
+   public void addChild(ParamData child)
    {
-      dependent.parentData = this;
-      dependents.add(dependent);
+      child.parentData = this;
+      childs.add(child);
    }
 
    /**
-    * Returns the dependent parameter-data objects.
+    * Returns the child parameter-data objects.
     */
-   public Set<ParamData> getDependents()
+   public Set<ParamData> getChildren()
    {
-      return dependents;
+      return childs;
    }
 
    /**
-    * Clear the dependent parameter-data objects.
+    * Clear the child parameter-data objects.
     */
-   public void removeAllDependents()
+   public void removeAllChildren()
    {
-      for (final ParamData dependent : dependents)
+      for (final ParamData dependent : childs)
          dependent.parentData = null;
 
-      dependents.clear();
+      childs.clear();
    }
 
    /**
-    * @return if the object has dependent objects.
+    * @return if the object has child parameter-data objects.
     */
-   public boolean hasDependents()
+   public boolean hasChildren()
    {
-      return !dependents.isEmpty();
+      return !childs.isEmpty();
    }
 
    /**

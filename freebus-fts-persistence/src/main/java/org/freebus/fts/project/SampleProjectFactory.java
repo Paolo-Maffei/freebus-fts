@@ -20,13 +20,17 @@ import org.freebus.fts.project.internal.I18n;
  */
 public final class SampleProjectFactory
 {
-   private static final int sampleVirtualDeviceId = 23652;
+   /**
+    * The device-id of the example virtual device.
+    */
+   public static final int sampleVirtualDeviceId = 23652;
+
    private static String sampleImportFileName = "sample-products.vd_";
 
    /**
-    * Import the example org.freebus.fts.products.
+    * Import the example products. Called by {@link #newProject} if required.
     */
-   private synchronized static void importSampleDevices(final String persistenceUnitName)
+   public synchronized static void importSampleDevices(final String persistenceUnitName)
    {
       Logger.getLogger(SampleProjectFactory.class).info("Importing sample org.freebus.fts.products");
 
@@ -97,7 +101,8 @@ public final class SampleProjectFactory
    }
 
    /**
-    * Creates a project that gets initialized with example values.
+    * Creates a project that gets initialized with example values. Calls {@link #importSampleDevices}
+    * if required.
     *
     * @param persistenceUnitName - the name of the persistence unit that is used for the import.
     */
