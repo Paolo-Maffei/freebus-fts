@@ -1,5 +1,6 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -12,9 +13,9 @@ public class GenericApplication implements Application
 
    /**
     * Create an instance for a specific application type.
-    *
+    * 
     * @param type - the application type.
-    *
+    * 
     * @throws IllegalArgumentException if the type is null
     */
    public GenericApplication(ApplicationType type)
@@ -84,5 +85,35 @@ public class GenericApplication implements Application
    public String toString()
    {
       return type.toString() + " no data";
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isDeviceDescriptorRequiered()
+   {
+      // TODO Auto-generated method stub
+      return true;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ApplicationTypeResponse getApplicationResponses()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

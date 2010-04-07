@@ -1,11 +1,12 @@
 package org.freebus.knxcomm.application;
 
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
- * Set the physical address of all devices that are in programming mode.
- * To be sent as a broadcast to {@link PhysicalAddress#NULL 0.0.0}
+ * Set the physical address of all devices that are in programming mode. To be
+ * sent as a broadcast to {@link PhysicalAddress#NULL 0.0.0}
  */
 public class IndividualAddressWrite implements Application
 {
@@ -27,7 +28,8 @@ public class IndividualAddressWrite implements Application
    }
 
    /**
-    * @return The type of the application: {@link ApplicationType#IndividualAddress_Write}.
+    * @return The type of the application:
+    *         {@link ApplicationType#IndividualAddress_Write}.
     */
    @Override
    public ApplicationType getType()
@@ -73,5 +75,35 @@ public class IndividualAddressWrite implements Application
       rawData[start++] = addrData[1];
 
       return 3;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isDeviceDescriptorRequiered()
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ApplicationTypeResponse getApplicationResponses()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

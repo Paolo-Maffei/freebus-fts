@@ -1,13 +1,11 @@
 package org.freebus.knxcomm.application;
 
-
-
 /**
  * Write up to 63 bytes into device memory.
  */
 public class MemoryWrite extends MemoryData
 {
-  /**
+   /**
     * Create a memory write object with address 0 and no data.
     */
    public MemoryWrite()
@@ -17,10 +15,10 @@ public class MemoryWrite extends MemoryData
 
    /**
     * Create a memory response object.
-    *
+    * 
     * @param address - the 16 bit memory address.
     * @param data - the data. Up to 63 bytes.
-    *
+    * 
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
@@ -36,5 +34,15 @@ public class MemoryWrite extends MemoryData
    public ApplicationType getType()
    {
       return ApplicationType.Memory_Write;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ApplicationTypeResponse getApplicationResponses()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

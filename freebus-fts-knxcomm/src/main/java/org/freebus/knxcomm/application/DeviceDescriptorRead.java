@@ -1,5 +1,6 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -29,7 +30,7 @@ public class DeviceDescriptorRead implements Application
 
    /**
     * Create a device descriptor object.
-    *
+    * 
     * @param descriptorType - the device descriptor type.
     */
    public DeviceDescriptorRead(int descriptorType)
@@ -47,7 +48,7 @@ public class DeviceDescriptorRead implements Application
 
    /**
     * Set the device descriptor type.
-    *
+    * 
     * @param descriptorType - the descriptor type to set
     */
    public void setDescriptorType(int descriptorType)
@@ -117,5 +118,34 @@ public class DeviceDescriptorRead implements Application
    public String toString()
    {
       return getType().toString() + " descriptor #" + descriptorType;
+   }
+
+   @Override
+   public boolean isDeviceDescriptorRequiered()
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ApplicationTypeResponse getApplicationResponses()
+   {
+      ApplicationTypeResponse appr = new ApplicationTypeResponse();
+      appr.add(ApplicationType.DeviceDescriptor_Read);
+      appr.add(ApplicationType.DeviceDescriptor_Response);
+      return appr;
    }
 }

@@ -13,10 +13,10 @@ public abstract class MemoryData extends Memory
 
    /**
     * Create a memory data object.
-    *
+    * 
     * @param address - the 16 bit memory address.
     * @param data - the data. Up to 63 bytes.
-    *
+    * 
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
@@ -36,9 +36,9 @@ public abstract class MemoryData extends Memory
 
    /**
     * Set the data. Up to 63 bytes are allowed. The supplied data is copied.
-    *
+    * 
     * @param data the data to set.
-    *
+    * 
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
@@ -63,7 +63,7 @@ public abstract class MemoryData extends Memory
    @Override
    public int getCount()
    {
-      return data == null ? 0 : data.length;
+      return data == null ? super.getCount() : data.length;
    }
 
    /**

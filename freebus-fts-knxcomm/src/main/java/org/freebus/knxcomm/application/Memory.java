@@ -1,20 +1,38 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.aplicationData.MemoryAddress;
+import org.freebus.knxcomm.aplicationData.MemoryAddressMapper;
+import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
+
 /**
  * Abstract base class for device memory access.
  */
 public abstract class Memory implements Application
 {
    private int address;
+   private int count;
+   private MemoryAddressTypes memoryAddressTypes;
+   private DeviceDescriptorProperties deviceDescriptorProperties;
 
    /**
     * Create a memory object.
-    *
+    * 
     * @param address - the 16 bit memory address.
     */
    protected Memory(int address)
    {
       this.address = address;
+   }
+
+   /**
+    * Create a memory object.
+    * 
+    * @param address - the 16 bit memory address.
+    */
+   protected Memory(MemoryAddressTypes memoryAddressTypes)
+   {
+      this.memoryAddressTypes = memoryAddressTypes;
    }
 
    /**
@@ -27,7 +45,7 @@ public abstract class Memory implements Application
 
    /**
     * Set the 16-bit memory address.
-    *
+    * 
     * @param address the address to set
     */
    public void setAddress(int address)
@@ -38,7 +56,10 @@ public abstract class Memory implements Application
    /**
     * @return the number of bytes to read from the memory / write to the memory.
     */
-   public abstract int getCount();
+   public int getCount()
+   {
+      return count;
+   }
 
    /**
     * {@inheritDoc}
@@ -47,5 +68,45 @@ public abstract class Memory implements Application
    public String toString()
    {
       return getType().name() + String.format(" address 0x%04x, %d bytes", address, getCount());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      this.deviceDescriptorProperties = deviceDescriptorProperties;
+      updateAdresseFromAddressType();
+
+   }
+
+   /**
+    * @param count the number of bytes to read from the memory / write to the
+    *           memory.
+    */
+   public void setCount(int count)
+   {
+      this.count = count;
+   }
+
+   private void updateAdresseFromAddressType()
+   {
+      MemoryAddress memoryAddress = deviceDescriptorProperties.getMemoryAddressMapper().getMemoryAddress(
+            memoryAddressTypes);
+      address = memoryAddress.getAdress();
+      if (count == 0)
+      {
+         count = memoryAddress.getLength();
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isDeviceDescriptorRequiered()
+   {
+      // TODO Auto-generated method stub
+      return true;
    }
 }

@@ -2,6 +2,7 @@ package org.freebus.knxcomm.application;
 
 import java.util.Arrays;
 
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -15,9 +16,9 @@ public class GenericDataApplication implements Application
 
    /**
     * Create an instance for a specific application type.
-    *
+    * 
     * @param type - the application type.
-    *
+    * 
     * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type)
@@ -27,10 +28,10 @@ public class GenericDataApplication implements Application
 
    /**
     * Create an instance for a specific application type. The data is cloned.
-    *
+    * 
     * @param type - the application type.
     * @param data - the application's data.
-    *
+    * 
     * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type, int[] data)
@@ -53,7 +54,7 @@ public class GenericDataApplication implements Application
 
    /**
     * Set the application data. The data is cloned.
-    *
+    * 
     * @param data - the data to set
     */
    public void setData(int[] data)
@@ -165,5 +166,35 @@ public class GenericDataApplication implements Application
       }
 
       return sb.toString();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isDeviceDescriptorRequiered()
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      // TODO Auto-generated method stub
+
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ApplicationTypeResponse getApplicationResponses()
+   {
+      // TODO Auto-generated method stub
+      return null;
    }
 }

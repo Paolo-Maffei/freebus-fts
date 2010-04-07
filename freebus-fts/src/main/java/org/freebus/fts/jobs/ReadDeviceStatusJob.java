@@ -1,31 +1,62 @@
 package org.freebus.fts.jobs;
 
-import java.io.IOException;
-
 import org.freebus.fts.common.address.Address;
-import org.freebus.knxcomm.BusInterface;
 
-public class ReadDeviceStatusJob extends SingleDeviceJob
+import org.freebus.fts.common.address.PhysicalAddress;
+
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.aplicationData.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.application.ADCRead;
+import org.freebus.knxcomm.application.DeviceDescriptorRead;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.application.MemoryRead;
+import org.freebus.knxcomm.telegram.Priority;
+
+
+public class ReadDeviceStatusJob extends JobSteps
 {
+   /**
+    * 
+    */
+   private static final long serialVersionUID = -1955762658391790946L;
 
-   ReadDeviceStatusJob(Address targetAddress)
+   public ReadDeviceStatusJob(PhysicalAddress physicalAddress)
    {
-      super(targetAddress);
-      // TODO Auto-generated constructor stub
+      super();
    }
 
-   @Override
-   public void main(BusInterface bus) throws IOException
+   public void ReadStatus(Address address) throws Exception
    {
-      // TODO Auto-generated method stub
+
+      DeviceDescriptorResponse deviceDescriptorResponse = new DeviceDescriptorResponse();
+      int[] data = { 0x40, 0x00, 0x12 };
+
+      deviceDescriptorResponse.fromRawData(data, 0, 3);
+      DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
+
+      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory
+            .getDeviceDescriptor(deviceDescriptorResponse);
+
+      setFrom(new PhysicalAddress(0, 0, 0));
+      setDest(address);
+      setRepeated(true);
+      setPriority(Priority.SYSTEM);
+      add(new DeviceDescriptorRead(0));
+      add(new MemoryRead(MemoryAddressTypes.ApplicationID, 1, 1));
+      add(new ADCRead(1, 8));
+      add(new MemoryRead(MemoryAddressTypes.SystemState));
+      add(new MemoryRead(MemoryAddressTypes.RunError));
+      add(new ADCRead(4, 8));
+      add(new MemoryRead(MemoryAddressTypes.ApplicationID, 1, 4));
+      add(new MemoryRead(MemoryAddressTypes.SystemState));
+      add(new MemoryRead(MemoryAddressTypes.PEI_Type));
+      JobStepsQueue jobStepsQueue;
+      jobStepsQueue = new JobStepsQueue(this);
+      jobStepsQueue.setDeviceDescriptorProperties(deviceDescriptorProperties);
+      JobQueue.getDefaultJobQueue().add(jobStepsQueue);
 
    }
 
-   @Override
-   public String getLabel()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
+   
 }

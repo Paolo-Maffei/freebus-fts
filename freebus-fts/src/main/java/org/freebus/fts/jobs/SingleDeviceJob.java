@@ -47,7 +47,7 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, Tele
       {
          main(bus);
       }
-      catch (InterruptedException e)
+      catch (Exception e)
       {
          throw new IOException(e);
       }
@@ -64,8 +64,9 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, Tele
     * Do the work. Called by {@link #run}. Must be overridden in subclasses.
     * 
     * @throws IOException
+    * @throws Exception 
     */
-   public abstract void main(BusInterface bus) throws IOException, InterruptedException;
+   public abstract void main(BusInterface bus) throws IOException, InterruptedException, Exception;
 
    /**
     * Initialization. Called by {@link #run}.
