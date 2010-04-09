@@ -1,4 +1,4 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 /**
  * Interface for listeners that get informed when a job is processed.

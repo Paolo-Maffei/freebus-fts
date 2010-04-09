@@ -1,14 +1,14 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.application.Restart;
+import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 
 public class JobStepTest
 {

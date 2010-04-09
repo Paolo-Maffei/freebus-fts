@@ -1,4 +1,4 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 
 /**
@@ -13,4 +13,12 @@ public interface JobQueueListener
     * @param event - details about the event.
     */
    public void jobQueueEvent(JobQueueEvent event);
+   
+   
+   /**
+    * A job-queue error event happened.
+    * 
+    * @param event - details about the Error.
+    */
+   public void jobQueueErrorEvent(JobQueueErrorEvent event);
 }

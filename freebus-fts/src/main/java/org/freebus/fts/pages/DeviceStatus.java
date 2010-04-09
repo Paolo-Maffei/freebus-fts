@@ -11,11 +11,11 @@ import javax.swing.JTextField;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.jobs.JobStep;
-import org.freebus.fts.jobs.JobStepStatusEvent;
-import org.freebus.fts.jobs.JobStepStatusListner;
-import org.freebus.fts.jobs.JobSteps;
 import org.freebus.fts.jobs.ReadDeviceStatusJob;
+import org.freebus.knxcomm.jobs.JobStep;
+import org.freebus.knxcomm.jobs.JobStepStatusEvent;
+import org.freebus.knxcomm.jobs.JobStepStatusListner;
+import org.freebus.knxcomm.jobs.JobSteps;
 
 public class DeviceStatus extends AbstractPage
 {

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 /**
  * 
@@ -9,7 +9,7 @@ package org.freebus.fts.jobs;
  */
 public enum JobStepStatus
 {
-   Sussefull,
+   Successfull,
    Error,
    finishedWithError,
    finished,

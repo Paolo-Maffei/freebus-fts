@@ -1,7 +1,7 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.aplicationData.MemoryAddress;
-import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.applicationData.MemoryAddress;
+import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**

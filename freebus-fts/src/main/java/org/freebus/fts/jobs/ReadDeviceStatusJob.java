@@ -3,14 +3,19 @@ package org.freebus.fts.jobs;
 import org.freebus.fts.common.address.Address;
 
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.fts.utils.BusInterfaceService;
 
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorPropertiesFactory;
-import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.MemoryRead;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.jobs.JobQueue;
+import org.freebus.knxcomm.jobs.JobSteps;
+import org.freebus.knxcomm.jobs.JobStepsQueue;
 import org.freebus.knxcomm.telegram.Priority;
 
 
@@ -54,8 +59,10 @@ public class ReadDeviceStatusJob extends JobSteps
       JobStepsQueue jobStepsQueue;
       jobStepsQueue = new JobStepsQueue(this);
       jobStepsQueue.setDeviceDescriptorProperties(deviceDescriptorProperties);
-      JobQueue.getDefaultJobQueue().add(jobStepsQueue);
 
+      JobQueue jobQueue = JobQueue.getDefaultJobQueue();
+      jobQueue.setBusInterface(BusInterfaceService.getBusInterface());
+      jobQueue.add(jobStepsQueue);
    }
 
    

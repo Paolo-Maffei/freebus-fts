@@ -15,6 +15,8 @@ import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.freebus.knxcomm.application.Restart;
+import org.freebus.knxcomm.jobs.JobFailedException;
+import org.freebus.knxcomm.jobs.SingleDeviceJob;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;

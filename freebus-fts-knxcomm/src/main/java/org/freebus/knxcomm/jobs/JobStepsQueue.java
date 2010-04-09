@@ -1,4 +1,4 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 import java.io.IOException;
 import java.util.LinkedList;
@@ -7,12 +7,11 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.ApplicationTypeResponse;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
@@ -31,7 +30,7 @@ public class JobStepsQueue extends SingleDeviceJob
 
    JobSteps jobSteps;
 
-   JobStepsQueue(JobSteps jobSteps)
+   public JobStepsQueue(JobSteps jobSteps)
    {
       super(jobSteps.getDest());
       this.jobSteps = jobSteps;
@@ -47,7 +46,7 @@ public class JobStepsQueue extends SingleDeviceJob
       try
       {
          waitforTelegram(jobSteps.getConecet(), Transport.ConnectedAck);
-         jobSteps.setConnectStatus(JobStepStatus.Sussefull);
+         jobSteps.setConnectStatus(JobStepStatus.Successfull);
       }
       catch (JobFailedException e)
       {
@@ -75,7 +74,7 @@ public class JobStepsQueue extends SingleDeviceJob
             {
                Telegram t = waitforTelegram(jobSteps.getConecet(), Transport.Connected, i, at);
                jobStep.setResivedApplication(t.getApplication());
-               jobStep.setJobStepStatus(JobStepStatus.Sussefull);
+               jobStep.setJobStepStatus(JobStepStatus.Successfull);
                
             }
             catch (JobFailedException e)
@@ -174,31 +173,8 @@ public class JobStepsQueue extends SingleDeviceJob
 
    }
 
-   /**
-    * Wait for a telegram of the given type to arrive. Throws an
-    * {@link IOException} if the telegram does not arrive within the timeout (3
-    * seconds).
-    * 
-    * @param appExpected - the type of the telegram application that is waited
-    *           for.
-    * @throws IOException - if the answer telegram does not arrive within the
-    *            timeout.
-    */
-   public void waitForAnswer(ApplicationType appExpected) throws IOException
-   {
-      applicationExpected = appExpected;
-
-      try
-      {
-         if (!semaphore.tryAcquire(3000, TimeUnit.MILLISECONDS))
-            throw new IOException(I18n.getMessage("SetPhysicalAddressJob.ErrTimeout"));
-      }
-      catch (InterruptedException e)
-      {
-         e.printStackTrace();
-      }
-   }
-
+  
+ 
    /**
     * Sleep some milliseconds.
     */

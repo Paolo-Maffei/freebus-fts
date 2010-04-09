@@ -10,9 +10,10 @@ import javax.swing.JProgressBar;
 import javax.swing.border.EtchedBorder;
 
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.jobs.JobQueue;
-import org.freebus.fts.jobs.JobQueueEvent;
-import org.freebus.fts.jobs.JobQueueListener;
+import org.freebus.knxcomm.jobs.JobQueue;
+import org.freebus.knxcomm.jobs.JobQueueErrorEvent;
+import org.freebus.knxcomm.jobs.JobQueueEvent;
+import org.freebus.knxcomm.jobs.JobQueueListener;
 
 /**
  * A widget that displays the state of the {@link JobQueue}.
@@ -63,4 +64,11 @@ public class JobQueueView extends JPanel implements JobQueueListener
       prbDone.setValue(event.progress);
       lblMessage.setText(event.message == null ? " " : event.message);
    }
+
+@Override
+public void jobQueueErrorEvent(final JobQueueErrorEvent event) {
+
+	
+	
+}
 }

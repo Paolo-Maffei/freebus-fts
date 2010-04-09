@@ -1,7 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**

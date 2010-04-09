@@ -8,8 +8,8 @@ import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.SetPhysicalAddress;
-import org.freebus.fts.jobs.JobQueue;
 import org.freebus.fts.jobs.SetPhysicalAddressJob;
+import org.freebus.knxcomm.jobs.JobQueue;
 
 /**
  * Set the physical address of a device on the bus that is in programming mode.

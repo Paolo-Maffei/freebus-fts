@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.aplicationData;
+package org.freebus.knxcomm.applicationData;
 
 public class MemoryAddress {
 	int adress;

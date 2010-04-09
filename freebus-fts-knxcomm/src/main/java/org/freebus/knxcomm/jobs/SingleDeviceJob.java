@@ -1,4 +1,4 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 import java.io.IOException;
 
@@ -18,7 +18,7 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, Tele
    /**
     * Create a job object that will work with the device with the given address.
     */
-   SingleDeviceJob(Address targetAddress)
+   protected SingleDeviceJob(Address targetAddress)
    {
       this.targetAddress = targetAddress;
    }

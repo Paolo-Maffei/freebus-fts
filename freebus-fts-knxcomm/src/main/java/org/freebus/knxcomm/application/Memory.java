@@ -1,9 +1,9 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
-import org.freebus.knxcomm.aplicationData.MemoryAddress;
-import org.freebus.knxcomm.aplicationData.MemoryAddressMapper;
-import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.applicationData.MemoryAddress;
+import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
+import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 
 /**
  * Abstract base class for device memory access.

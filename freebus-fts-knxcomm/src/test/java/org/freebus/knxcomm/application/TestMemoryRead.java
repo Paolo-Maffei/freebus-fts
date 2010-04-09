@@ -2,10 +2,10 @@ package org.freebus.knxcomm.application;
 
 import static org.junit.Assert.*;
 
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorPropertiesFactory;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorPropertiesType0;
-import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesType0;
+import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 

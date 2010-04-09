@@ -2,7 +2,7 @@ package org.freebus.knxcomm.application;
 
 import java.util.Arrays;
 
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
