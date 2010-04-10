@@ -45,7 +45,7 @@ public class JobStepsQueue extends SingleDeviceJob
 
       try
       {
-         waitforTelegram(jobSteps.getConecet(), Transport.ConnectedAck);
+         waitforTelegram(jobSteps.getConecet(), Transport.ConnectedAck,0);
          jobSteps.setConnectStatus(JobStepStatus.Successfull);
       }
       catch (JobFailedException e)
@@ -72,9 +72,12 @@ public class JobStepsQueue extends SingleDeviceJob
          {
             try
             {
-               Telegram t = waitforTelegram(jobSteps.getConecet(), Transport.Connected, i, at);
+            	int index =0;
+               Telegram t = waitforTelegram(jobSteps.getConecet(), Transport.Connected, i, at,index);
+               
                jobStep.setResivedApplication(t.getApplication());
                jobStep.setJobStepStatus(JobStepStatus.Successfull);
+               telegrams.remove(index);
                
             }
             catch (JobFailedException e)
@@ -95,14 +98,14 @@ public class JobStepsQueue extends SingleDeviceJob
       jobSteps.notifyJobStepStatus();
    }
 
-   public Telegram waitforTelegram(Telegram send, Transport transport, int sequnece, ApplicationType app)
+   public Telegram waitforTelegram(Telegram send, Transport transport, int sequnece, ApplicationType app,int index)
          throws JobFailedException
    {
       Telegram t;
       for (int i = 0; i < 50; i++)
       {
          msleep(10);
-         t = searchReceivedByTransport(send, transport);
+         t = searchReceivedByTransport(send, transport,index);
          if (t != null){
          if (t.getApplicationType() == app && t.getSequence() == sequnece)
             return t;
@@ -110,13 +113,13 @@ public class JobStepsQueue extends SingleDeviceJob
       throw new JobFailedException("NoAnwser");
    }
 
-   public Telegram waitforTelegram(Telegram send, Transport transport) throws JobFailedException
+   public Telegram waitforTelegram(Telegram send, Transport transport,int index) throws JobFailedException
    {
       Telegram t;
       for (int i = 0; i < 50; i++)
       {
          msleep(10);
-         t = searchReceivedByTransport(send, transport);
+         t = searchReceivedByTransport(send, transport,index);
          if (t != null)
             return t;
       }
@@ -130,14 +133,16 @@ public class JobStepsQueue extends SingleDeviceJob
     * @param transport
     * @return
     */
-   public Telegram searchReceivedByTransport(Telegram send, Transport transport)
+   public Telegram searchReceivedByTransport(Telegram send, Transport transport,int index)
    {
       boolean transportfild;
 
       boolean fromAddr;
       boolean destaddr;
+      index =-1;
       for (Telegram t : telegrams)
       {
+    	  index++;
          transportfild = false;
 
          fromAddr = false;
@@ -151,6 +156,7 @@ public class JobStepsQueue extends SingleDeviceJob
             fromAddr = true;
          if (transportfild == true && fromAddr == true && destaddr == true)
             return t;
+        
       }
       return null;
 

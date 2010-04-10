@@ -4,8 +4,6 @@ import org.freebus.fts.common.address.Address;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.utils.BusInterfaceService;
-
-import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
