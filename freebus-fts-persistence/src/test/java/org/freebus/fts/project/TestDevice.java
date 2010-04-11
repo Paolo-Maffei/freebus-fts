@@ -8,6 +8,9 @@ import static org.junit.Assert.assertTrue;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
+import org.freebus.fts.products.ParameterType;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.junit.Test;
@@ -111,6 +114,30 @@ public class TestDevice
 
       device.setRoom(null);
       assertNull(device.getRoom());
+   }
+
+   @Test
+   public final void testGetSetParameterValue()
+   {
+      final Program program = new Program();
+
+      final ParameterType paramType = new ParameterType(ParameterAtomicType.UNSIGNED);
+      paramType.setProgram(program);
+
+      final Parameter param = new Parameter(paramType);
+      program.addParameter(param);
+      param.setParameterType(paramType);
+      param.setDefaultLong(123);
+      param.setDefaultDouble(3.141);
+      param.setDefaultString("anything");
+
+      final Device device = new Device();
+      device.setProgram(program);
+
+      assertEquals(123, device.getParameterIntValue(param));
+
+      device.setParameterValue(param, 17);
+      assertEquals(17, device.getParameterIntValue(param));
    }
 
    @Test

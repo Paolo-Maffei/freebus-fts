@@ -14,7 +14,7 @@ public class ParamData
 {
    private final Parameter param;
    private final Set<ParamData> childs = new HashSet<ParamData>();
-   private ParamData parentData;
+   private ParamData parent;
    private Object value;
 
    /**
@@ -28,12 +28,12 @@ public class ParamData
    }
 
    /**
-    * @return the parent parameter-data. This is the parameter on which the
-    *         visibility of this parameter depends.
+    * @return the parent parameter-data object. This is the parameter on which
+    *         the visibility of this parameter depends.
     */
-   public ParamData getParentData()
+   public ParamData getParent()
    {
-      return parentData;
+      return parent;
    }
 
    /**
@@ -69,23 +69,23 @@ public class ParamData
     */
    public boolean isVisible()
    {
-//      if (param.getId() == 23315)
-//      {
-//         // Debug hook
-//         Logger.getLogger(getClass()).debug("Param: " + param);
-//      }
+      // if (param.getId() == 23315)
+      // {
+      // // Debug hook
+      // Logger.getLogger(getClass()).debug("Param: " + param);
+      // }
 
-      if (parentData == null)
+      if (parent == null)
          return true;
 
-      if (!parentData.isVisible())
+      if (!parent.isVisible())
          return false;
 
       final Integer expectedParentValue = param.getParentValue();
       if (expectedParentValue == null)
-         return parentData.isVisible();
+         return parent.isVisible();
 
-      return expectedParentValue.equals(parentData.getValue());
+      return expectedParentValue.equals(parent.getValue());
    }
 
    /**
@@ -97,7 +97,7 @@ public class ParamData
     */
    public Integer getExpectedValue()
    {
-      for (ParamData data = this; data != null; data = data.getParentData())
+      for (ParamData data = this; data != null; data = data.getParent())
       {
          Integer val = data.getParameter().getParentValue();
          if (val != null)
@@ -108,27 +108,26 @@ public class ParamData
    }
 
    /**
-    * Get the current value of any parent parameter.
+    * Get the current value of any parent parameter. The first non-null value
+    * that is found is returned. If no value is found, null is returned.
     *
-    * @return the current value of the parent parameter, or of the parent's
-    *         parents. The first non-null value that is found is returned. If no
-    *         value is found, null is returned.
+    * @return the current value of the any parent parameter.
     */
    public Integer getParentValue()
    {
-      for (ParamData data = getParentData(); data != null; data = data.getParentData())
+      for (ParamData data = getParent(); data != null; data = data.getParent())
       {
          final Object obj = data.getValue();
          if (obj != null)
          {
-            if (obj instanceof Integer) return (Integer) obj;
+            if (obj instanceof Integer)
+               return (Integer) obj;
             return null;
          }
       }
 
       return null;
    }
-
 
    /**
     * Test if the parameter denotes a page.
@@ -151,12 +150,29 @@ public class ParamData
    /**
     * Add a child parameter-data. This is a parameter-data object whose
     * {@link Parameter} has its parent-parameter set to the parameter of this
-    * object.
+    * object. Sets the {@link #getParent() parent} of the child.
+    *
+    * @param child - the child to add
     */
    public void addChild(ParamData child)
    {
-      child.parentData = this;
+      if (child.parent != null)
+         child.parent.removeChild(child);
+
+      child.parent = this;
       childs.add(child);
+   }
+
+   /**
+    * Remove a child parameter-data. Clears the {@link #getParent() parent} of
+    * the child.
+    *
+    * @param child - the child to remove.
+    */
+   public void removeChild(ParamData child)
+   {
+      child.parent = null;
+      childs.remove(child);
    }
 
    /**
@@ -173,7 +189,7 @@ public class ParamData
    public void removeAllChildren()
    {
       for (final ParamData dependent : childs)
-         dependent.parentData = null;
+         dependent.parent = null;
 
       childs.clear();
    }

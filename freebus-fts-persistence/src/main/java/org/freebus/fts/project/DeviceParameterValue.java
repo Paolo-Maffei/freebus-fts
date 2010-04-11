@@ -35,6 +35,7 @@ public class DeviceParameterValue
    @Transient
    private Object value;
 
+   // The string value is only used for persistence
    @Column(name = "parameter_value")
    private String stringValue;
 
@@ -57,6 +58,14 @@ public class DeviceParameterValue
       this.device = device;
       this.parameter = parameter;
       this.value = value;
+   }
+
+   /**
+    * An internal constructor, mainly for unit tests
+    */
+   DeviceParameterValue(String stringValue)
+   {
+      this.stringValue = stringValue;
    }
 
    /**
@@ -88,18 +97,32 @@ public class DeviceParameterValue
     */
    public String getValue()
    {
-      if (stringValue == null) return "";
-      if (value == null) value = stringValue;
+      if (value == null)
+      {
+         if (stringValue == null)
+            return null;
+
+         value = stringValue;
+      }
+
       return value.toString();
    }
 
    /**
     * @return the value as integer. Returns zero if the value is not set.
+    *
+    * @throws ClassCastException if the value cannot be cast to an
+    *            {@link Integer}.
     */
    public Integer getIntValue()
    {
-      if (stringValue == null || stringValue.isEmpty()) return 0;
-      if (value == null) value = Integer.parseInt(stringValue);
+      if (value != null)
+         return (Integer) value;
+
+      if (stringValue == null)
+         return null;
+
+      value = stringValue.isEmpty() ? 0 : Integer.parseInt(stringValue);
       return (Integer) value;
    }
 
@@ -109,6 +132,7 @@ public class DeviceParameterValue
    public void setValue(Object o)
    {
       value = o;
+      stringValue = null;
    }
 
    /**
@@ -133,7 +157,11 @@ public class DeviceParameterValue
    @PrePersist
    protected void prePersist()
    {
-      if (value == null) stringValue = "";
-      else stringValue = value.toString();
+      if (stringValue == null)
+      {
+         if (value == null)
+            stringValue = "";
+         else stringValue = value.toString();
+      }
    }
 }

@@ -36,6 +36,11 @@ public abstract class PersistenceTestCase
    protected final String databaseName = getClass().getSimpleName();
 
    /**
+    * Shall a rollback-only transaction be started in setUp and rollbacked in tearDown?
+    */
+   protected boolean handleTransaction = true;
+
+   /**
     * Create a persistence test case.
     *
     * @param persistenceUnitName - the name of the persistence unit to use.
@@ -55,9 +60,12 @@ public abstract class PersistenceTestCase
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName, conDetails);
       DatabaseResources.setEntityManagerFactory(emf);
 
-      final EntityTransaction trans = DatabaseResources.getEntityManager().getTransaction();
-      trans.begin();
-      trans.setRollbackOnly();
+      if (handleTransaction)
+      {
+         final EntityTransaction trans = DatabaseResources.getEntityManager().getTransaction();
+         trans.begin();
+         trans.setRollbackOnly();
+      }
    }
 
    /**
@@ -66,7 +74,9 @@ public abstract class PersistenceTestCase
    @After
    public final void tearDownPersistenceTestCase()
    {
-      DatabaseResources.getEntityManager().getTransaction().rollback();
+      if (handleTransaction)
+         DatabaseResources.getEntityManager().getTransaction().rollback();
+
       DatabaseResources.close();
    }
 }

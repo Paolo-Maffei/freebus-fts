@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
 
 /**
  * An application program.
@@ -104,9 +103,6 @@ public class Program
 
    @Column(name = "number_of_polling_groups")
    private int numPollingGroups;
-
-   @Transient
-   private Set<Parameter> topLevelParameters;
 
    /**
     * Create an empty program object.
@@ -446,22 +442,6 @@ public class Program
    }
 
    /**
-    * Returns all parameters that have no parent parameter set. If you
-    * manipulate the parameters it might be required that you call
-    * {@link #updateChildParameters()} manually in order to get correct results
-    * from this method.
-    *
-    * @return the top level parameters.
-    */
-   public Set<Parameter> getTopLevelParameters()
-   {
-      if (topLevelParameters == null)
-         updateChildParameters();
-
-      return topLevelParameters;
-   }
-
-   /**
     * @return the eepromData
     */
    public byte[] getEepromData()
@@ -587,27 +567,6 @@ public class Program
    public Set<ParameterType> getParameterTypes()
    {
       return parameterTypes;
-   }
-
-   /**
-    * Update the child parameter sets of all parameters. Automatically called on
-    * demand by {@link Parameter#getChildren()}.
-    */
-   public void updateChildParameters()
-   {
-      topLevelParameters = new HashSet<Parameter>();
-
-      for (final Parameter param : parameters)
-         param.setChildren(new HashSet<Parameter>());
-
-      for (final Parameter param : parameters)
-      {
-         final Parameter parentParam = param.getParent();
-
-         if (parentParam == null)
-            topLevelParameters.add(param);
-         else parentParam.getChildren().add(param);
-      }
    }
 
    /**

@@ -86,6 +86,16 @@ public class ParameterType
    }
 
    /**
+    * Create a parameter type.
+    *
+    * @param atomicType - the parameter's atomic type.
+    */
+   public ParameterType(ParameterAtomicType atomicType)
+   {
+      this.atomicType = atomicType;
+   }
+
+   /**
     * @return the id
     */
    public int getId()

@@ -1,7 +1,5 @@
 package org.freebus.fts.products;
 
-import java.util.Set;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -13,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
 
 /**
  * A parameter of a program.
@@ -43,7 +40,7 @@ public class Parameter
 
    @ManyToOne(optional = false, fetch = FetchType.EAGER, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    @JoinColumn(name = "parameter_type_id", nullable = false)
-   private ParameterType parameterType;
+   private ParameterType paramType;
 
    @Column(name = "parameter_number")
    private int number;
@@ -83,7 +80,7 @@ public class Parameter
    private String defaultString;
 
    @Column(name = "parameter_default_double", columnDefinition = "DOUBLE")
-   private int defaultDouble;
+   private double defaultDouble;
 
    @Column(name = "patch_always", columnDefinition = "SMALLINT")
    private int patchAlways;
@@ -91,8 +88,22 @@ public class Parameter
    @Column(name = "address_space", columnDefinition = "SMALLINT")
    private int addressSpace;
 
-   @Transient
-   private Set<Parameter> childs;
+   /**
+    * Create an empty parameter object.
+    */
+   public Parameter()
+   {
+   }
+
+   /**
+    * Create a parameter object with a parameter type.
+    *
+    * @param paramType - the parameter type of the parameter.
+    */
+   public Parameter(final ParameterType paramType)
+   {
+      this.paramType = paramType;
+   }
 
    /**
     * @return the id
@@ -179,15 +190,15 @@ public class Parameter
     */
    public ParameterType getParameterType()
    {
-      return parameterType;
+      return paramType;
    }
 
    /**
     * Set the parameter type.
     */
-   public void setParameterType(ParameterType parameterType)
+   public void setParameterType(ParameterType paramType)
    {
-      this.parameterType = parameterType;
+      this.paramType = paramType;
    }
 
    /**
@@ -252,40 +263,6 @@ public class Parameter
    public void setParent(Parameter parent)
    {
       this.parent = parent;
-   }
-
-   /**
-    * Lazily acquire all child parameters. Requires that the owning program is
-    * set. Calls {@link Program#updateChildParameters()} to update the child
-    * parameters, if required.
-    *
-    * @return The set of child parameters.
-    *
-    * @see {@link #getProgram()}, {@link #setProgram(Program)}.
-    */
-   public Set<Parameter> getChildren()
-   {
-      if (childs == null && program != null)
-         program.updateChildParameters();
-
-      return childs;
-   }
-
-   /**
-    * Set the child parameters. This method is intended to be used by
-    * {@link Program#updateChildParameters()} only.
-    */
-   public void setChildren(Set<Parameter> childs)
-   {
-      this.childs = childs;
-   }
-
-   /**
-    * Test if the parameter has children.
-    */
-   public boolean hasChildren()
-   {
-      return !getChildren().isEmpty();
    }
 
    /**
@@ -393,10 +370,10 @@ public class Parameter
     */
    public Object getDefault()
    {
-      if (parameterType == null)
+      if (paramType == null)
          return null;
 
-      final ParameterAtomicType atomicType = parameterType.getAtomicType();
+      final ParameterAtomicType atomicType = paramType.getAtomicType();
 
       if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED ||
             atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
@@ -442,7 +419,7 @@ public class Parameter
    /**
     * @return the defaultDouble
     */
-   public int getDefaultDouble()
+   public double getDefaultDouble()
    {
       return defaultDouble;
    }
@@ -450,7 +427,7 @@ public class Parameter
    /**
     * @param defaultDouble the defaultDouble to set
     */
-   public void setDefaultDouble(int defaultDouble)
+   public void setDefaultDouble(double defaultDouble)
    {
       this.defaultDouble = defaultDouble;
    }

@@ -213,6 +213,28 @@ public final class Device
    }
 
    /**
+    * Set the visibility of a parameter. A parameter-value with value null
+    * is created for the parameter, if the parameter has no value.
+    *
+    * @param param - the parameter for which the visibility is set.
+    * @param visible - the visibility indicator.
+    */
+   public void setParameterVisible(final Parameter param, boolean visible)
+   {
+      if (parameterValues == null)
+         parameterValues = new HashMap<Parameter,DeviceParameterValue>();
+
+      DeviceParameterValue val = parameterValues.get(param);
+      if (val == null)
+      {
+         val = new DeviceParameterValue(this, param, null);
+         parameterValues.put(param, val);
+      }
+
+      val.setVisible(visible);
+   }
+
+   /**
     * Set the value of a parameter.
     *
     * @param param - the parameter for which a value will be set.
@@ -251,27 +273,6 @@ public final class Device
    }
 
    /**
-    * Set the visibility of a parameter. A parameter-value with value null
-    * is created for the parameter, if the parameter has no value.
-    *
-    * @param param - the parameter for which the visibility is set.
-    * @param visible - the visibility indicator.
-    */
-   public void setParameterVisible(final Parameter param, boolean visible)
-   {
-      if (parameterValues == null)
-         parameterValues = new HashMap<Parameter,DeviceParameterValue>();
-
-      DeviceParameterValue val = parameterValues.get(param);
-      if (val == null)
-      {
-         val = new DeviceParameterValue(this, param, null);
-         parameterValues.put(param, val);
-      }
-      val.setVisible(visible);
-   }
-
-   /**
     * Returns the string value for the parameter <code>param</code>. If no value
     * is yet set, the parameter's default value is returned.
     *
@@ -284,7 +285,7 @@ public final class Device
          return param.getDefaultString();
 
       final DeviceParameterValue val = parameterValues.get(param);
-      if (val == null) return "";
+      if (val == null) return param.getDefaultString();
 
       return val.getValue();
    }
@@ -304,7 +305,8 @@ public final class Device
       final DeviceParameterValue val = parameterValues.get(param);
       if (val == null) return 0;
 
-      return val.getIntValue();
+      final Integer ival = val.getIntValue();
+      return ival == null ? 0 : ival;
    }
 
    /**

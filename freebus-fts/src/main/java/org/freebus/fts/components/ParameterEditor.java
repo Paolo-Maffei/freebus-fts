@@ -5,7 +5,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -21,11 +20,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.components.parametereditor.DeviceParamData;
 import org.freebus.fts.components.parametereditor.Page;
 import org.freebus.fts.components.parametereditor.ParamData;
 import org.freebus.fts.products.Parameter;
-import org.freebus.fts.products.ParameterAtomicType;
-import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 
 /**
@@ -40,8 +38,8 @@ public class ParameterEditor extends JPanel
    private int tabHeight;
 
    private Device device;
+   private Map<Parameter, ParamData> paramDatas;
    private final List<Page> paramPages = new Vector<Page>();
-   private final Map<Parameter, ParamData> paramDatas = new HashMap<Parameter, ParamData>();
    private final EventListenerList listenerList = new EventListenerList();
    private transient ChangeEvent changeEvent = null;
    private boolean updateContentsEnabled;
@@ -145,27 +143,13 @@ public class ParameterEditor extends JPanel
       updateContentsEnabled = false;
 
       paramPages.clear();
-      paramDatas.clear();
       paramTabs.removeAll();
+      paramDatas = DeviceParamData.createParamData(device);
 
-      // Create a parameter-data object for every parameter
-      final Program program = device.getProgram();
-      final Set<Parameter> paramsSet = program.getParameters();
-      final ParamData[] paramDataArr = new ParamData[paramsSet.size()];
-      int i = -1;
-      for (final Parameter param : paramsSet)
-      {
-         final ParamData data = new ParamData(param);
-
-         if (param.getParameterType().getAtomicType() == ParameterAtomicType.STRING)
-            data.setValue(device.getParameterValue(param));
-         else data.setValue(device.getParameterIntValue(param));
-
-         paramDataArr[++i] = data;
-         paramDatas.put(param, data);
-      }
 
       // Sort the parameter-data objects by display-order
+      final ParamData[] paramDataArr = new ParamData[paramDatas.size()];
+      paramDatas.values().toArray(paramDataArr);
       Arrays.sort(paramDataArr, new Comparator<ParamData>()
       {
          @Override
@@ -306,29 +290,8 @@ public class ParameterEditor extends JPanel
     */
    public void apply()
    {
-      if (device == null)
-         return;
-
-      device.clearParameterValues();
-
-      for (final ParamData data : paramDatas.values())
-      {
-         final Parameter param = data.getParameter();
-         final Object value = data.getValue();
-         Object defaultValue;
-
-         if (param.getParameterType().getAtomicType() == ParameterAtomicType.STRING)
-            defaultValue = device.getParameterValue(param);
-         else defaultValue = device.getParameterIntValue(param);
-
-         final boolean isDefaultValue = (value == null ? defaultValue == null : value.equals(defaultValue));
-         if (isDefaultValue)
-            continue;
-
-         device.setParameterValue(data.getParameter(), value);
-         if (!data.isVisible())
-            device.setParameterVisible(data.getParameter(), false);
-      }
+      if (device != null)
+         DeviceParamData.applyParamData(device, paramDatas);
    }
 
    /**
