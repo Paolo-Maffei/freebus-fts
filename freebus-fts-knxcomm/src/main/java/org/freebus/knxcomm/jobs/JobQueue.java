@@ -167,7 +167,7 @@ public class JobQueue implements JobListener
       }
       catch (Exception e)
       {
-         notifyListeners(new JobQueueErrorEvent(job, I18n.getMessage("JobQueue.JobFailed")));
+         notifyListeners(new JobQueueErrorEvent(job, I18n.getMessage("JobQueue.JobFailed"), e));
 
       }
       finally

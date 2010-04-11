@@ -24,6 +24,10 @@ public final class JobQueueEvent
 
    /**
     * Create an event object.
+    *
+    * @param job - the job that the event is about
+    * @param progress - how far the job is completed, in percent
+    * @param message - a message
     */
    public JobQueueEvent(Job job, int progress, String message)
    {
@@ -34,6 +38,9 @@ public final class JobQueueEvent
 
    /**
     * Create an event object without a message.
+    *
+    * @param job - the job that the event is about
+    * @param progress - how far the job is completed, in percent
     */
    public JobQueueEvent(Job job, int progress)
    {
@@ -42,6 +49,8 @@ public final class JobQueueEvent
 
    /**
     * Create an event object without a message and progress 0%
+    *
+    * @param job - the job that the event is about
     */
    public JobQueueEvent(Job job)
    {

@@ -13,7 +13,7 @@ public class JobStep extends Telegram
    /**
     * @return the deviceDescriptorRequiered
     */
-   public boolean isDeviceDescriptorRequiered()
+   public boolean isDeviceDescriptorRequired()
    {
       return DeviceDescriptorRequired;
    }

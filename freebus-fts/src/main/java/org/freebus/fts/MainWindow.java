@@ -214,6 +214,24 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    }
 
    /**
+    * Callback: A job-queue error occurred.
+    */
+   @Override
+   public void jobQueueErrorEvent(final JobQueueErrorEvent event)
+   {
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            if (event.exception == null)
+               Dialogs.showErrorDialog(event.message);
+            else Dialogs.showExceptionDialog(event.exception, event.message);
+         }
+      });
+   }
+
+   /**
     * Callback: The active project was changed.
     */
    @Override
@@ -241,19 +259,5 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
          return;
 
       topologyView.addDevice(device);
-   }
-
-   @Override
-   public void jobQueueErrorEvent(final JobQueueErrorEvent event)
-   {
-      SwingUtilities.invokeLater(new Runnable()
-      {
-         @Override
-         public void run()
-         {
-            Dialogs.showErrorDialog(event.errormessage);
-         }
-      });
-
    }
 }

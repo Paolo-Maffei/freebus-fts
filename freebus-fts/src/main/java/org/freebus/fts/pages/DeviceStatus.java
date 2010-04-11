@@ -68,8 +68,9 @@ public class DeviceStatus extends AbstractPage {
 			jButton.setBounds(new Rectangle(56, 44, 82, 21));
 			jButton.setText("Read");
 			jButton.addMouseListener(new MouseAdapter() {
-				public void mouseClicked(java.awt.event.MouseEvent e) {
-					
+				@Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+
 					startjob(PhysicalAddress.valueOf( jTextField.getText()));
 				}
 			});
@@ -101,7 +102,7 @@ public class DeviceStatus extends AbstractPage {
 		return jPanel;
 	}
 
-		
+
 	private JPanel getJPanelOutput() {
 		if (JPanelOutput == null) {
 			JPanelOutput = new JPanel();
@@ -111,13 +112,13 @@ public class DeviceStatus extends AbstractPage {
 	}
 
 	private void startjob(PhysicalAddress physicalAddress) {
-		
+
 
 		ReadDeviceStatusJob readDeviceStatusJob = new ReadDeviceStatusJob(
 				physicalAddress);
 		readDeviceStatusJob.addMyListener(new JobStepStatusListner() {
 
-			
+
 
 			@Override
 			public void JobStepStatus(JobStepStatusEvent e) {
@@ -142,7 +143,7 @@ public class DeviceStatus extends AbstractPage {
 						s = (new Integer(x)).toString();
 					}
 
-					msg = "PageMsg data resived: "
+					msg = "PageMsg data received: "
 							+ a.getJobStepStatus().toString()
 							+ " for request :" + a.toString() + " : Data " + s;
 					//System.out.println(msg);
@@ -161,12 +162,12 @@ public class DeviceStatus extends AbstractPage {
 		}
 
 	}
-	
+
 	private TextArea getTextArea(String text){
 		TextArea textArea = new TextArea();
 		textArea.setText(text);
 		return textArea;
 	}
-	
+
 
 }
