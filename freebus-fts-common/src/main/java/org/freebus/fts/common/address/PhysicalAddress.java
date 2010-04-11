@@ -27,7 +27,7 @@ public final class PhysicalAddress implements Address
 
    /**
     * Create an address object.
-    * 
+    *
     * @param zone - the zone address (0..15)
     * @param line - the line address (0..15)
     * @param node - the node address (0..255)
@@ -39,7 +39,7 @@ public final class PhysicalAddress implements Address
 
    /**
     * Create an address object from high-byte and low-byte.
-    * 
+    *
     * @param high - the high-byte of the address.
     * @param low - the low-byte of the address.
     */
@@ -50,7 +50,7 @@ public final class PhysicalAddress implements Address
 
    /**
     * Create an address object.
-    * 
+    *
     * @param addr - the address as 16-bit number.
     */
    public PhysicalAddress(int addr)
@@ -102,7 +102,7 @@ public final class PhysicalAddress implements Address
 
    /**
     * Create a 16-bit physical address from the address components.
-    * 
+    *
     * @param zone - the zone address (0..15)
     * @param line - the line address (0..15)
     * @param node - the node address (0..255)
@@ -114,7 +114,7 @@ public final class PhysicalAddress implements Address
 
    /**
     * Test if the address components are within their allowed range.
-    * 
+    *
     * @return true if all components are valid.
     * @param zone - the zone address (0..15)
     * @param line - the line address (0..15)
@@ -122,7 +122,7 @@ public final class PhysicalAddress implements Address
     */
    public static boolean isValid(int zone, int line, int node)
    {
-      return zone>=0 && zone<=15 && line>=0 && line<=15 && node>=0 && node<=255;
+      return zone >= 0 && zone <= 15 && line >= 0 && line <= 15 && node >= 0 && node <= 255;
    }
 
    /**
@@ -140,8 +140,10 @@ public final class PhysicalAddress implements Address
    @Override
    public boolean equals(Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof PhysicalAddress)) return false;
+      if (o == this)
+         return true;
+      if (!(o instanceof PhysicalAddress))
+         return false;
       final PhysicalAddress oo = (PhysicalAddress) o;
       return oo.addr == addr;
    }
@@ -159,17 +161,28 @@ public final class PhysicalAddress implements Address
     * Parse the given string and return a physical-address.
     *
     * @param string - the string in the format "zone.line.node".
-    * @return the group address, or null if the given string has an invalid format. 
+    *
+    * @return the group address, or null if the given string has an invalid
+    *         format.
     */
    public static PhysicalAddress valueOf(String str)
    {
-      final int pos1 = str.indexOf('.');
-      if (pos1 <= 0) return null;
+      try
+      {
+         final int pos1 = str.indexOf('.');
+         if (pos1 <= 0)
+            return null;
 
-      final int pos2 = str.indexOf('.', pos1 + 1);
-      if (pos2 < 0) return null;
+         final int pos2 = str.indexOf('.', pos1 + 1);
+         if (pos2 < pos1 + 1)
+            return null;
 
-      return new PhysicalAddress(Integer.parseInt(str.substring(0, pos1)),
-            Integer.parseInt(str.substring(pos1 + 1, pos2)), Integer.parseInt(str.substring(pos2 + 1)));
+         return new PhysicalAddress(Integer.parseInt(str.substring(0, pos1)), Integer.parseInt(str.substring(pos1 + 1,
+               pos2)), Integer.parseInt(str.substring(pos2 + 1)));
+      }
+      catch (NumberFormatException e)
+      {
+         return null;
+      }
    }
 }

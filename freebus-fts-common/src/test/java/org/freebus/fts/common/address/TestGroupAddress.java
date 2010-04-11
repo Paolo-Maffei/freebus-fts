@@ -107,6 +107,8 @@ public class TestGroupAddress extends TestCase
       assertEquals(null, GroupAddress.valueOf("1/2-34"));
       assertEquals(null, GroupAddress.valueOf("1-2-34"));
       assertEquals(null, GroupAddress.valueOf(""));
+      assertEquals(null, GroupAddress.valueOf("//"));
+      assertEquals(null, GroupAddress.valueOf("a/b/c"));
    }
 
    public void testEquals()

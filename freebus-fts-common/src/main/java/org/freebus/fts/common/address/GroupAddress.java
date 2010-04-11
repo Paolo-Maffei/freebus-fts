@@ -22,7 +22,7 @@ public final class GroupAddress implements Address
 
    /**
     * Create a group address object.
-    * 
+    *
     * @param main - the main-group address (0..15)
     * @param middle - the middle-group address (0..7)
     * @param sub - the sub-group address (0..255)
@@ -34,7 +34,7 @@ public final class GroupAddress implements Address
 
    /**
     * Create a group address object from high-byte and low-byte.
-    * 
+    *
     * @param high - the high-byte of the address.
     * @param low - the low-byte of the address.
     */
@@ -45,7 +45,7 @@ public final class GroupAddress implements Address
 
    /**
     * Create an address object.
-    * 
+    *
     * @param addr - the address as 16-bit number.
     */
    public GroupAddress(int addr)
@@ -97,7 +97,7 @@ public final class GroupAddress implements Address
 
    /**
     * Create a 16-bit group address from the address components.
-    * 
+    *
     * @param main - the main-group address (0..15)
     * @param middle - the middle-group address (0..7)
     * @param sub - the sub-group address (0..255)
@@ -109,7 +109,7 @@ public final class GroupAddress implements Address
 
    /**
     * Test if the address components are within their allowed range.
-    * 
+    *
     * @return true if all components are valid.
     * @param main - the main-group address (0..15)
     * @param middle - the middle-group address (0..7)
@@ -117,7 +117,7 @@ public final class GroupAddress implements Address
     */
    public static boolean isValid(int main, int middle, int sub)
    {
-      return main>=0 && main<=15 && middle>=0 && middle<=7 && sub>=0 && sub<=255;
+      return main >= 0 && main <= 15 && middle >= 0 && middle <= 7 && sub >= 0 && sub <= 255;
    }
 
    /**
@@ -128,15 +128,17 @@ public final class GroupAddress implements Address
    {
       return addr;
    }
-   
+
    /**
     * Compare two addresses.
     */
    @Override
    public boolean equals(Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof GroupAddress)) return false;
+      if (o == this)
+         return true;
+      if (!(o instanceof GroupAddress))
+         return false;
       final GroupAddress oo = (GroupAddress) o;
       return oo.addr == addr;
    }
@@ -154,17 +156,27 @@ public final class GroupAddress implements Address
     * Parse the given string and return a group-address.
     *
     * @param string - the string in the format "main/middle/sub".
-    * @return the group address, or null if the given string has an invalid format. 
+    * @return the group address, or null if the given string has an invalid
+    *         format.
     */
    public static GroupAddress valueOf(String str)
    {
-      final int pos1 = str.indexOf('/');
-      if (pos1 <= 0) return null;
+      try
+      {
+         final int pos1 = str.indexOf('/');
+         if (pos1 <= 0)
+            return null;
 
-      final int pos2 = str.indexOf('/', pos1 + 1);
-      if (pos2 < 0) return null;
+         final int pos2 = str.indexOf('/', pos1 + 1);
+         if (pos2 < 0)
+            return null;
 
-      return new GroupAddress(Integer.parseInt(str.substring(0, pos1)),
-            Integer.parseInt(str.substring(pos1 + 1, pos2)), Integer.parseInt(str.substring(pos2 + 1)));
+         return new GroupAddress(Integer.parseInt(str.substring(0, pos1)), Integer.parseInt(str.substring(pos1 + 1,
+               pos2)), Integer.parseInt(str.substring(pos2 + 1)));
+      }
+      catch (NumberFormatException e)
+      {
+         return null;
+      }
    }
 }
