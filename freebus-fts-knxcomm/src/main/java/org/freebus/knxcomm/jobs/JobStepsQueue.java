@@ -41,7 +41,9 @@ public class JobStepsQueue extends SingleDeviceJob
    public void main(BusInterface bus) throws Exception
    {
       // TODO: not finished
+      jobSteps.setFrom(bus.getPhysicalAddress());
       bus.send(jobSteps.getConecet());
+      
 
       try
       {
