@@ -6,15 +6,17 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
+import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.application.MemoryRead;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.applicationData.MemoryAddress;
+import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
+import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorProperties;
-import org.freebus.knxcomm.aplicationData.DeviceDescriptorPropertiesFactory;
-import org.freebus.knxcomm.aplicationData.MemoryAddress;
-import org.freebus.knxcomm.aplicationData.MemoryAddressMapper;
-import org.freebus.knxcomm.aplicationData.MemoryAddressTypes;
-import org.freebus.knxcomm.application.*;
 
 
 	class Transmit implements TelegramListener {
@@ -52,9 +54,9 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 			telegram.setSequence(0);
 			telegram.setApplication(ApplicationType.DeviceDescriptor_Read);
 			busInterface.send(telegram);
-	
+
 		}
-		public void readmanData() throws IOException{	
+		public void readmanData() throws IOException{
 			telegram.setFrom(new PhysicalAddress(0, 0, 0));
 			telegram.setDest(new PhysicalAddress(3, 3, 7));
 			telegram.setPriority(Priority.SYSTEM);
@@ -72,27 +74,27 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 			if (telegram.getApplicationType() == ApplicationType.DeviceDescriptor_Response){
 
 				 deviceDescriptorResponse = (DeviceDescriptorResponse) telegram.getApplication();
-			
+
 			DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
-			
+
 			deviceDescriptorProperties=	deviceDescriptorPropertiesFactory.getDeviceDescriptor(deviceDescriptorResponse);
-			
-			
-			
+
+
+
 			memoryAddressMapper = deviceDescriptorProperties.getMemoryAddressMapper();
 			readmanData();
 			}
-			
+
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
+
 		}
 
 		@Override
 		public void telegramSent(Telegram telegram) {
 			// TODO Auto-generated method stub
-			
+
 		}
 }
