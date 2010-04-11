@@ -13,9 +13,9 @@ import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.pages.busmonitor.BusMonitorCellRenderer;
 import org.freebus.fts.pages.busmonitor.BusMonitorItem;
-import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.fts.utils.TreeUtils;
 import org.freebus.knxcomm.BusInterface;
+import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -60,7 +60,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    public void setObject(Object o)
    {
       if (bus == null)
-         bus = BusInterfaceService.getBusInterface();
+         bus = BusInterfaceFactory.getBusInterface();
 
       if (bus != null)
          bus.addListener(this);

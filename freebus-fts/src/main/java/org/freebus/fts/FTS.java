@@ -34,7 +34,7 @@ import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
-import org.freebus.fts.utils.BusInterfaceService;
+import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.jdesktop.application.Application;
@@ -482,8 +482,8 @@ public final class FTS extends Application
       //
       // Close the bus interface
       //
-      if (BusInterfaceService.busInterfaceOpened())
-         BusInterfaceService.closeBusInterface();
+      if (BusInterfaceFactory.busInterfaceOpened())
+         BusInterfaceFactory.closeBusInterface();
 
       DatabaseResources.close();
       config.save();

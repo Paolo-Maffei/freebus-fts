@@ -7,8 +7,8 @@ import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.pages.BusMonitor;
-import org.freebus.fts.utils.BusInterfaceService;
 import org.freebus.knxcomm.BusInterface;
+import org.freebus.knxcomm.BusInterfaceFactory;
 
 /**
  * Open the bus monitor.
@@ -37,7 +37,7 @@ public final class BusMonitorAction extends BasicAction
       try
       {
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-         bus = BusInterfaceService.getBusInterface();
+         bus = BusInterfaceFactory.getBusInterface();
       }
       finally
       {
