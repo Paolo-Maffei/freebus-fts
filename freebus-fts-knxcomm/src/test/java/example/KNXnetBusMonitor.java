@@ -1,10 +1,15 @@
 package example;
 
 import org.freebus.fts.common.Environment;
+import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.TelegramListener;
+import org.freebus.knxcomm.application.IndividualAddressRead;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.Transport;
 
 /**
  * A simple bus monitor that opens a bus interface using the KNXnet/IP server on
@@ -21,9 +26,17 @@ public class KNXnetBusMonitor implements TelegramListener
     */
    public KNXnetBusMonitor() throws Exception
    {
-      iface = BusInterfaceFactory.newKNXnetInterface("192.168.1.120", 3671);
+      iface = BusInterfaceFactory.newKNXnetInterface("taferner.dyndns.org", 3671);
       iface.addListener(this);
       iface.open();
+
+      final Telegram telegram = new Telegram();
+      telegram.setFrom(PhysicalAddress.NULL);
+      telegram.setPriority(Priority.SYSTEM);
+      telegram.setTransport(Transport.Individual);
+      telegram.setDest(GroupAddress.BROADCAST);
+      telegram.setApplication(new IndividualAddressRead());
+      iface.send(telegram);
    }
 
    /**
@@ -41,7 +54,7 @@ public class KNXnetBusMonitor implements TelegramListener
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      System.out.println(telegram.toString());
+      System.out.println("Telegram received: " + telegram.toString());
    }
 
    /**
@@ -50,6 +63,7 @@ public class KNXnetBusMonitor implements TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
+      System.out.println("Telegram sent: " + telegram.toString());
    }
 
    /**
@@ -58,6 +72,7 @@ public class KNXnetBusMonitor implements TelegramListener
    @Override
    public void telegramSendConfirmed(Telegram telegram)
    {
+      System.out.println("Telegram confirmed: " + telegram.toString());
    }
 
    /**

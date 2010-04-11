@@ -12,6 +12,7 @@ import org.apache.log4j.Logger;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.internal.ListenableConnection;
+import org.freebus.knxcomm.netip.frames.ConnectRequest;
 import org.freebus.knxcomm.netip.frames.DescriptionRequest;
 import org.freebus.knxcomm.netip.frames.Frame;
 import org.freebus.knxcomm.netip.frames.FrameFactory;
@@ -41,7 +42,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
 
    /**
     * Create a new connection to a KNXnet/IP server listening on a custom port.
-    * 
+    *
     * @param host - the name or IP address of the host that is running the
     *           KNXnet/IP server.
     * @param port - the UDP port of the KNXnet/IP server on the host. Usually
@@ -69,14 +70,14 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
 
    /**
     * Create a new connection to a KNXnet/IP server listening on the default
-    * port (6720).
-    * 
+    * UDP port (3671).
+    *
     * @param host - the name or IP address of the host that is running the
     *           KNXnet/IP server.
     */
    public KNXnetConnection(String host)
    {
-      this(host, 6720);
+      this(host, 3671);
    }
 
    /**
@@ -120,9 +121,17 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    {
       receiveSemaphore.drainPermits();
 
-      send(new SearchRequest(ProtocolType.IPv4_UDP, socket.getLocalAddress(), socket.getLocalPort()));
       try
       {
+         send(new SearchRequest(ProtocolType.IPv4_UDP, socket.getLocalAddress(), socket.getLocalPort()));
+         Thread.sleep(500);
+
+         send(new DescriptionRequest(ProtocolType.IPv4_UDP, socket.getLocalAddress(), socket.getLocalPort()));
+         Thread.sleep(500);
+
+         // send ConnectRequest
+         send(new ConnectRequest(ProtocolType.IPv4_UDP, socket.getLocalAddress(), socket.getLocalPort(),
+                                 ProtocolType.IPv4_UDP, socket.getLocalAddress(), socket.getLocalPort()));
          Thread.sleep(500);
       }
       catch (InterruptedException e)
@@ -130,13 +139,13 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
          // TODO Auto-generated catch block
          e.printStackTrace();
       }
-      send(new DescriptionRequest(ProtocolType.IPv4_UDP, socket.getLocalAddress(), socket.getLocalPort()));
+
    }
 
    /**
     * Receive a frame. Up to <code>timeout</code> milliseconds is waited for
     * a frame to arrive.
-    * 
+    *
     * @param timeout - wait up to timeout milliseconds, -1 waits infinitely.
     * @return the received KNXnet/IP frame, or null of no frame was received
     *         within the timeout.
@@ -188,7 +197,10 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
 
    /**
     * Process the received data
-    * 
+    *
+    * @param data - the received data.
+    * @param len - number of bytes in data that are valid.
+    *
     * @throws IOException
     */
    public synchronized void processData(final byte[] data, int len) throws IOException
@@ -197,7 +209,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
          return;
 
       for (int i = 0; i < len; ++i)
-         recvBuffer[i] = ((int) data[i]) & 0xff;
+         recvBuffer[i] = (data[i]) & 0xff;
 
       final Frame frame = FrameFactory.createFrame(recvBuffer);
       if (frame == null)
@@ -228,7 +240,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
          @Override
          public void run()
          {
-            logger.debug("starting listener thread");
+            logger.debug("Starting listener thread");
 
             final byte[] data = new byte[recvBufferSize];
             final DatagramPacket p = new DatagramPacket(data, data.length);
