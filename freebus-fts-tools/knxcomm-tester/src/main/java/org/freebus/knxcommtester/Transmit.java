@@ -97,4 +97,10 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 			// TODO Auto-generated method stub
 
 		}
+
+                @Override
+                public void telegramSendConfirmed(Telegram telegram) {
+                        // TODO Auto-generated method stub
+
+                }
 }

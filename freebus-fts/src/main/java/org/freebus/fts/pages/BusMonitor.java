@@ -120,4 +120,12 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    {
       addBusMonitorItem(telegram, false);
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void telegramSendConfirmed(Telegram telegram)
+   {
+   }
 }

@@ -69,6 +69,14 @@ public class BusMonitor implements TelegramListener
    }
 
    /**
+    * The sending of the telegram was confirmed by the bus coupling unit (BCU).
+    */
+   @Override
+   public void telegramSendConfirmed(Telegram telegram)
+   {
+   }
+
+   /**
     * Start the application.
     *
     * @throws Exception

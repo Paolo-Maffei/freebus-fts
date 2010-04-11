@@ -88,10 +88,13 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
       }
 // TODO check Second condition
       //if (frame instanceof EmiTelegramFrame && !frame.getType().isConfirmation())
-      if (frame instanceof EmiTelegramFrame )
+      if (frame instanceof EmiTelegramFrame)
       {
          final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
-         notifyListenersReceived(telegram);
+
+         if (frame.getType().isConfirmation())
+            notifyListenersSendConfirmed(telegram);
+         else notifyListenersReceived(telegram);
       }
    }
 
@@ -154,6 +157,17 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    }
 
    /**
+    * Notify all listeners that the given telegram was received as
+    * a confirmation to a sent telegram. This is a telegram that was
+    * received with {@link EmiFrame#getType()}.isConfirmation()
+    */
+   protected void notifyListenersSendConfirmed(final Telegram telegram)
+   {
+      for (TelegramListener listener : listeners)
+         listener.telegramSendConfirmed(telegram);
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
@@ -191,6 +205,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    public void send(Telegram telegram) throws IOException
    {
       if (con == null) throw new IOException("Not open");
+
 //	TODO check if null address is not allowed
 //      if (PhysicalAddress.NULL.equals(telegram.getFrom()))
 //         telegram.setFrom(physicalAddr);

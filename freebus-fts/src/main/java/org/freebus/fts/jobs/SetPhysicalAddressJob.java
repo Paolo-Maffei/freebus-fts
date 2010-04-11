@@ -181,4 +181,12 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
          semaphore.release();
       }
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void telegramSendConfirmed(Telegram telegram)
+   {
+   }
 }

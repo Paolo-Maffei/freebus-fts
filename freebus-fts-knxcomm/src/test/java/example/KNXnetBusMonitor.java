@@ -53,6 +53,14 @@ public class KNXnetBusMonitor implements TelegramListener
    }
 
    /**
+    * The sending of a telegram was confirmed by the bus coupling unit.
+    */
+   @Override
+   public void telegramSendConfirmed(Telegram telegram)
+   {
+   }
+
+   /**
     * Start the application.
     *
     * @throws Exception

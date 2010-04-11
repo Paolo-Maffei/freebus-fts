@@ -43,7 +43,7 @@ public class JobStepsQueue extends SingleDeviceJob
       // TODO: not finished
       jobSteps.setFrom(bus.getPhysicalAddress());
       bus.send(jobSteps.getConecet());
-      
+
 
       try
       {
@@ -66,7 +66,7 @@ public class JobStepsQueue extends SingleDeviceJob
             jobStep.getApplication().setDeviceDescriptorProperties(deviceDescriptorProperties);
          }
          jobStep.setSequence(i);
-         
+
          bus.send(jobStep);
 
          ApplicationTypeResponse appres = jobStep.getApplication().getApplicationResponses();
@@ -76,11 +76,11 @@ public class JobStepsQueue extends SingleDeviceJob
             {
             	int index =0;
                Telegram t = waitforTelegram(jobSteps.getConecet(), Transport.Connected, i, at,index);
-               
+
                jobStep.setResivedApplication(t.getApplication());
                jobStep.setJobStepStatus(JobStepStatus.Successfull);
                telegrams.remove(index);
-               
+
             }
             catch (JobFailedException e)
             {
@@ -130,7 +130,7 @@ public class JobStepsQueue extends SingleDeviceJob
 
    /**
     * Search in the received Telegram list to accord with send Telegram
-    * 
+    *
     * @param send
     * @param transport
     * @return
@@ -158,7 +158,7 @@ public class JobStepsQueue extends SingleDeviceJob
             fromAddr = true;
          if (transportfild == true && fromAddr == true && destaddr == true)
             return t;
-        
+
       }
       return null;
 
@@ -181,8 +181,8 @@ public class JobStepsQueue extends SingleDeviceJob
 
    }
 
-  
- 
+
+
    /**
     * Sleep some milliseconds.
     */
@@ -209,5 +209,14 @@ public class JobStepsQueue extends SingleDeviceJob
       Logger.getLogger(getClass()).debug("Received answer: " + telegram);
       semaphore.release();
 
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void telegramSendConfirmed(Telegram telegram)
+   {
+      // TODO Auto-generated method stub
    }
 }

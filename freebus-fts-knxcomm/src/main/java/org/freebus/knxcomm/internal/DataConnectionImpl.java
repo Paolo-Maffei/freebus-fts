@@ -201,4 +201,12 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public void telegramSent(Telegram telegram)
    {
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void telegramSendConfirmed(Telegram telegram)
+   {
+   }
 }
