@@ -6,29 +6,35 @@ import org.freebus.knxcomm.application.DeviceDescriptorResponse;
  *Factory Class for DeviceDescriptors
  * 
  */
-public class DeviceDescriptorPropertiesFactory {
+public class DeviceDescriptorPropertiesFactory
+{
 
-	/**
-	 * Creates the DeviceDescriptor class in depends of the DeviceDescriptortype
-	 * bits in a DeviceDescriptor request
-	 * 
-	 * @throws Exception
-	 * 
-	 */
+   /**
+    * Creates the DeviceDescriptor class in depends of the DeviceDescriptortype
+    * bits in a DeviceDescriptor response
+    * @throws AppilcationDataException 
+    * 
+    * 
+    */
+   public DeviceDescriptorProperties getDeviceDescriptor(DeviceDescriptorResponse deviceDescriptorResponse) throws AppilcationDataException
+        
+   {
+      // TODO create own exception class
+      DeviceDescriptorProperties deviceDescriptorProperties = null;
 
-	public  DeviceDescriptorProperties getDeviceDescriptor(DeviceDescriptorResponse deviceDescriptorResponse) throws Exception {
-		DeviceDescriptorProperties deviceDescriptorProperties = null;
+      if (deviceDescriptorResponse.getDescriptorType() == 0)
+      {
+         DeviceDescriptorPropertiesType0 DeviceDescriptorPropertiesType0 = new DeviceDescriptorPropertiesType0();
+         DeviceDescriptorPropertiesType0.loadProperties(deviceDescriptorResponse);
+         deviceDescriptorProperties = (DeviceDescriptorProperties)DeviceDescriptorPropertiesType0;
+      }
+      if (deviceDescriptorResponse.getDescriptorType() == 3)
+      {
+         deviceDescriptorProperties = new DeviceDescriptorPropertiesType3();
 
-		if (deviceDescriptorResponse.getDescriptorType() == 0) {
-			deviceDescriptorProperties = new DeviceDescriptorPropertiesType0();
-			deviceDescriptorProperties.loadProperties(deviceDescriptorResponse);
-		}
-		if (deviceDescriptorResponse.getDescriptorType() == 3) {
-			deviceDescriptorProperties = new DeviceDescriptorPropertiesType3();
-			
-		}
-		return deviceDescriptorProperties;
+      }
+      return deviceDescriptorProperties;
 
-	}
+   }
 
 }

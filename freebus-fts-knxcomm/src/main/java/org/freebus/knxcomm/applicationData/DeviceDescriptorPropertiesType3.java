@@ -5,21 +5,21 @@ import java.io.IOException;
 
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 
-public class DeviceDescriptorPropertiesType3 implements DeviceDescriptorProperties {
+public class DeviceDescriptorPropertiesType3 implements DeviceDescriptorProperties
+{
+
+   @Override
+   public MemoryAddressMapper getMemoryAddressMapper()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
 
 
+   protected void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws AppilcationDataException
+   {
+      // TODO Auto-generated method stub
 
-	@Override
-	public MemoryAddressMapper getMemoryAddressMapper() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse)
-			throws FileNotFoundException, IOException {
-		// TODO Auto-generated method stub
-		
-	}
+   }
 
 }

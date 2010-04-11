@@ -1,41 +1,48 @@
 package org.freebus.knxcomm.applicationData;
 
-public class MemoryAddress {
-	int adress;
-	int length;
+public class MemoryAddress
+{
+   private int adress;
+   private int length;
+   private MemoryAddressTypes memoryAddressTypes;
 
-	private MemoryAddressTypes MemoryAddressTypes;
+   /**
+    * Create a new MemoryAddress Object
+    * 
+    * @param adress - The MemoryAdress
+    * @param length - The length of the memory block
+    * @param memoryAddressType - The MemoryAddressTypes
+    */
+   protected MemoryAddress(int adress, int length, MemoryAddressTypes memoryAddressType)
+   {
+      this.memoryAddressTypes = memoryAddressType;
+      this.adress = adress;
+      this.length = length;
+   }
 
-	int offset;
+   /**
+    * 
+    * @return the MemoryAddress as Integer
+    */
+   public int getAdress()
+   {
+      return adress;
+   }
 
-	protected MemoryAddress(int adress, int length,
-			MemoryAddressTypes memoryAddressType) {
-		this.MemoryAddressTypes = memoryAddressType;
-		this.adress = adress;
-		this.length = length;
-	}
+   /**
+    * @return the length of the memory address block
+    */
+   public int getLength()
+   {
+      return length;
+   }
 
-	public int getAdress() {
-		return adress;
-	}
+   /**
+    * @return the MemoryAddressType
+    */
+   public MemoryAddressTypes getMemoryAddressType()
+   {
+      return memoryAddressTypes;
+   }
 
-	public int getLength() {
-		return length;
-	}
-
-	public MemoryAddressTypes getMemoryAddressType() {
-		return MemoryAddressTypes;
-	}
-
-	public int getOffset() {
-		return offset;
-	}
-
-	protected void setMemoryAddress(MemoryAddressTypes memoryAddress) {
-		this.MemoryAddressTypes = memoryAddress;
-	}
-
-	public void setOffset(int offset) {
-		this.offset = offset;
-	}
 }
