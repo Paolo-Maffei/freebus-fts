@@ -237,21 +237,23 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       final Device device = new Device(0, virtualDevice);
 
       final TopologyView topologyView = (TopologyView) getUniquePage(TopologyView.class);
-      if (topologyView == null) return;
+      if (topologyView == null)
+         return;
 
       topologyView.addDevice(device);
    }
 
-@Override
-public void jobQueueErrorEvent(final JobQueueErrorEvent event) {
-	 SwingUtilities.invokeLater(new Runnable()
-     {
-        @Override
-        public void run()
-        {
-           Dialogs.showErrorDialog(event.errormessage);
-        }
-     });
-	
-}
+   @Override
+   public void jobQueueErrorEvent(final JobQueueErrorEvent event)
+   {
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            Dialogs.showErrorDialog(event.errormessage);
+         }
+      });
+
+   }
 }

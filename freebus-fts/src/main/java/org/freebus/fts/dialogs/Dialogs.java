@@ -6,6 +6,7 @@ import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
+import org.freebus.fts.core.AudioClip;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 
@@ -45,6 +46,9 @@ public final class Dialogs
 
       if (!message.startsWith("<html>"))
          message = "<html><body width=\"400px\">" + message.replace("\n", "<br>") + "</body></html>";
+
+      final AudioClip clip = new AudioClip("fake_monkey_chatter_short");
+      clip.play();
 
       JOptionPane.showMessageDialog(mainWin, message, title, JOptionPane.ERROR_MESSAGE, ImageCache
             .getIcon("icons-large/error-dialog"));
