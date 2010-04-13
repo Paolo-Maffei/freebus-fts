@@ -63,6 +63,8 @@ public final class BusInterfaceFactory
     * {@link #getBusInterface}.
     *
     * @throws Exception
+    *
+    * @see #getBusInterface()
     */
    private static void createBusInterface() throws Exception
    {
@@ -80,7 +82,7 @@ public final class BusInterfaceFactory
 
    /**
     * Close the default bus-interface. The bus-interface will be re-created upon
-    * the next {@link getBusInterface} call.
+    * the next {@link #getBusInterface()} call.
     */
    public synchronized static void closeBusInterface()
    {

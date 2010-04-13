@@ -27,9 +27,11 @@ public final class I18n
 
    /**
     * Returns the message string for the given message-id for the active
-    * language. The variables {0}, {1}, ... are replaced with the arguments given in args.
+    * language. The variables {0}, {1}, ... are replaced with the arguments
+    * given in <code>args</code>.
     *
-    * @see {@link MessageFormat} for more information on formatting the arguments.
+    * The class {@link MessageFormat} contains more further information on
+    * formatting the arguments.
     *
     * @param msgid - the message id
     * @param args - an array of arguments.

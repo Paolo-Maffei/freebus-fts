@@ -1,29 +1,23 @@
 package org.freebus.knxcomm.netip.frames;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.netip.blocks.DeviceInfoBlock;
-import org.freebus.knxcomm.netip.blocks.HostProtAddrInfo;
 import org.freebus.knxcomm.netip.blocks.SupportedServiceFamilies;
 import org.freebus.knxcomm.netip.types.ServiceType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * The response to a search request.
- * 
- * @see {@link SearchRequest}.
+ *
+ * @see SearchRequest
  */
-public class SearchResponse extends AbstractFrame
+public class SearchResponse extends AbstractEndPointFrame
 {
-   private final HostProtAddrInfo hostProtAddrInfo = new HostProtAddrInfo();
    private final DeviceInfoBlock hardwareInfo = new DeviceInfoBlock();
    private final SupportedServiceFamilies servicesInfo = new SupportedServiceFamilies();
-
-   /**
-    * @return the host protocol address info object.
-    */
-   public HostProtAddrInfo getHostProtAddrInfo()
-   {
-      return hostProtAddrInfo;
-   }
 
    /**
     * @return the information block describing the KNXnet/IP server hardware.
@@ -51,30 +45,32 @@ public class SearchResponse extends AbstractFrame
    }
 
    /**
-    * {@inheritDoc}
+    * Initialize the object from the given {@link DataInput data input stream}.
+    *
+    * @param in - the input stream to read
+    *
+    * @throws InvalidDataException
     */
    @Override
-   public int bodyFromData(int[] rawData, int start) throws InvalidDataException
+   public void readData(DataInput in) throws IOException
    {
-      int pos = start;
-      pos += hostProtAddrInfo.fromData(rawData, pos);
-      pos += hardwareInfo.fromData(rawData, pos);
-      pos += servicesInfo.fromData(rawData, pos);
-
-      return pos - start;
+      super.readData(in);
+      hardwareInfo.readData(in);
+      servicesInfo.readData(in);
    }
 
    /**
-    * {@inheritDoc}
+    * Write the object to a {@link DataOutput data output stream}.
+    *
+    * @param out - the output stream to write the object to
+    *
+    * @throws IOException
     */
    @Override
-   public int bodyToData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-      pos += hostProtAddrInfo.toData(rawData, pos);
-      pos += hardwareInfo.toData(rawData, pos);
-      pos += servicesInfo.toData(rawData, pos);
-
-      return pos - start;
+      super.writeData(out);
+      hardwareInfo.writeData(out);
+      servicesInfo.writeData(out);
    }
 }

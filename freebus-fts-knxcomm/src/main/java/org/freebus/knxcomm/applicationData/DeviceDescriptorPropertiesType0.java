@@ -1,7 +1,6 @@
 package org.freebus.knxcomm.applicationData;
 
 import java.io.FileInputStream;
-
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
@@ -19,9 +18,9 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 
    /**
     * Internal converter for int[] to String
-    * 
+    *
     * @param data Application data Array
-    * 
+    *
     * @return Mask String
     */
    private String Type2MaskString(int[] data)
@@ -41,7 +40,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
    /**
     * Load the PropertiesFile for the DeviceDescriptor properties from the
     * resource folder
-    * 
+    *
     * @param deviceDescriptorResponse
     * @throws AppilcationDataException
     */
@@ -56,7 +55,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
       ClassLoader cl = this.getClass().getClassLoader();
 
       in = cl.getResourceAsStream("DeviceDescriptorType0_" + mask + ".properties");
-      logger.debug("Load device descriptor type 0 properties für mask " + mask);
+      logger.debug("Load device descriptor type 0 properties for mask " + mask);
       for (String s : kownPropertiesFiles)
       {
          if (s.equals(mask))
@@ -65,16 +64,16 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
       if (!PropertieFileExist){
          logger.error("The device descriptor mask " + mask+" is not supported");
          throw new AppilcationDataException("The device descriptor mask " + mask+" is not supported");
-         
+
       }
-         
+
       if (in == null)
       {
          try
          {
             in = new FileInputStream("../freebus-fts-knxcomm/src/main/resources/DeviceDescriptorType0_" + mask
                   + ".properties");
-            
+
          }
          catch (FileNotFoundException e)
          {
@@ -92,6 +91,6 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
          logger.error("Fie DeviceDescriptorType0_" + mask + ".properties cannot loaded", e);
          throw new AppilcationDataException("Fie DeviceDescriptorType0_" + mask + ".properties cannot loaded");
       }
-     
+
    }
 }

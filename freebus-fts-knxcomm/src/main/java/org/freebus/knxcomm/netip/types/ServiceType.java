@@ -1,10 +1,15 @@
 package org.freebus.knxcomm.netip.types;
 
+import org.freebus.knxcomm.netip.frames.ConnectRequest;
+import org.freebus.knxcomm.netip.frames.ConnectResponse;
 import org.freebus.knxcomm.netip.frames.DescriptionRequest;
 import org.freebus.knxcomm.netip.frames.DescriptionResponse;
+import org.freebus.knxcomm.netip.frames.AbstractFrame;
 import org.freebus.knxcomm.netip.frames.Frame;
 import org.freebus.knxcomm.netip.frames.SearchRequest;
 import org.freebus.knxcomm.netip.frames.SearchResponse;
+import org.freebus.knxcomm.netip.frames.TunnelingAck;
+import org.freebus.knxcomm.netip.frames.TunnelingRequest;
 
 
 /**
@@ -39,13 +44,13 @@ public enum ServiceType
     * The KNXnet/IP client wants to connect to a server. The server answers with
     * a {@link #CONNECT_RESPONSE}.
     */
-   CONNECT_REQUEST(0x205, null),
+   CONNECT_REQUEST(0x205, ConnectRequest.class),
 
    /**
     * The KNXnet/IP server's reply to a connection request
     * {@link #CONNECT_REQUEST}.
     */
-   CONNECT_RESPONSE(0x206, null),
+   CONNECT_RESPONSE(0x206, ConnectResponse.class),
 
    /**
     * The KNXnet/IP client to server: request information about an established
@@ -70,7 +75,19 @@ public enum ServiceType
     * KNXnet/IP server to client: the answer to the client's
     * {@link #DISCONNECT_REQUEST}.
     */
-   DISCONNECT_RESPONSE(0x20a, null);
+   DISCONNECT_RESPONSE(0x20a, null),
+
+   /**
+    * KNXnet/IP server to client and client to server: tunneling
+    * of a frame.
+    */
+   TUNNELING_REQUEST(0x420, TunnelingRequest.class),
+
+   /**
+    * KNXnet/IP server to client and client to server: acknowledge to a
+    * received tunneling request, {@link #TUNNELING_REQUEST}.
+    */
+   TUNNELING_ACK(0x421, TunnelingAck.class);
 
    /**
     * The service type code as used in the data frames.
@@ -80,14 +97,14 @@ public enum ServiceType
    /**
     * Default class of the frame body of this type.
     */
-   public final Class<? extends Frame> frameBodyClass;
+   public final Class<? extends AbstractFrame> frameBodyClass;
 
    /**
     * Create an instance of the default frame body class of this type.
-    * 
+    *
     * @return the created object, or null if no default class is set.
     */
-   public Frame newFrameBodyInstance()
+   public Frame newFrameInstance()
    {
       if (frameBodyClass == null)
          return null;
@@ -125,7 +142,7 @@ public enum ServiceType
    /*
     * Internal constructor.
     */
-   private ServiceType(int code, Class<? extends Frame> frameBodyClass)
+   private ServiceType(int code, Class<? extends AbstractFrame> frameBodyClass)
    {
       this.code = code;
       this.frameBodyClass = frameBodyClass;

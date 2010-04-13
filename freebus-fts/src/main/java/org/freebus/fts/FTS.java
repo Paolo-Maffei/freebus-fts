@@ -35,7 +35,6 @@ import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SessionStorage;
@@ -57,7 +56,7 @@ public final class FTS extends Application
    private int exitCode = 0;
 
    /**
-    * {@inheritDoc}
+    * @return the instance of the FTS application.
     */
    public static FTS getInstance()
    {
@@ -494,7 +493,7 @@ public final class FTS extends Application
     * 120. The restart has to be handled by the script that started the
     * application.
     *
-    * @see {@link ApplicationType#exit()}.
+    * @see Application#exit()
     */
    public void restart()
    {

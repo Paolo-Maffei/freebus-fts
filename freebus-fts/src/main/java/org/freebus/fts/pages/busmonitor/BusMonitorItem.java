@@ -21,8 +21,8 @@ public final class BusMonitorItem
     * @param when - The time when the telegram was received.
     * @param telegram - The telegram that the item represents.
     * @param received - True if the telegram was received, false if it was sent.
-    * 
-    * @see {@link Calendar#getTimeInMillis()}.
+    *
+    * @see Calendar#getTimeInMillis()
     */
    public BusMonitorItem(Date when, Telegram telegram, boolean received)
    {

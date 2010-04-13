@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 
 /**
  * Describes a table / entity in a VD_ file. If not present, the
- * name of the {@link @Entity} annotation is taken.
+ * name of the @Entity annotation is taken.
  */
 @Documented
 @Target(TYPE)

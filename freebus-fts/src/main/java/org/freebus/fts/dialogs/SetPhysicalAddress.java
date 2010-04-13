@@ -22,7 +22,7 @@ import org.freebus.fts.core.I18n;
 
 /**
  * A small dialog that allows to enter a physical address.
- * 
+ *
  * The corresponding action {@link SetPhysicalAddressAction} starts the
  * programming job that programs a device on the bus with the entered address
  * when the user clicks the "Program" button of this dialog.
@@ -36,7 +36,7 @@ public class SetPhysicalAddress extends Dialog
 
    /**
     * Create a set-physical-address dialog
-    * 
+    *
     * @param owner the <code>Window</code> from which the dialog is displayed or
     *           <code>null</code> if this dialog has no owner
     */
@@ -92,8 +92,8 @@ public class SetPhysicalAddress extends Dialog
     * @return the physical address that the physical-address input field
     *         contains, or null if the input field contains no valid physical
     *         address.
-    * 
-    * @see {@link PhysicalAddress#valueOf(String)}.
+    *
+    * @see PhysicalAddress#valueOf(String)
     */
    public PhysicalAddress getPhysicalAddress()
    {
@@ -102,7 +102,7 @@ public class SetPhysicalAddress extends Dialog
 
    /**
     * Set the contents of the physical-address input field.
-    * 
+    *
     * @param addr - the physical address to set.
     */
    public void setPhysicalAddress(final PhysicalAddress addr)

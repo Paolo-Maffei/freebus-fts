@@ -10,16 +10,39 @@ public enum EmiFrameType
 {
    L_BUSMON_IND(0x2b, L_Busmon_ind.class),
    L_PLAIN_DATA_REQ(0x10),
-   
+
    /**
-    * Link data. Classes {@link L_Data.req}
+    * Link data send request. Classes {@link L_Data.req}
     */
    L_DATA_REQ(0x11, L_Data_req.class),
+
+   /**
+    * Link data send confirmation. Classes {@link L_Data.req}
+    */
    L_DATA_CON(0x2e, L_Data_con.class, L_DATA_REQ),
+
+   /**
+    * Link data receive indication. Classes {@link L_Data.req}
+    */
    L_DATA_IND(0x29, L_Data_ind.class),
 
    L_POLL_DATA_REQ(0x13, L_Poll_Data_req.class),
    L_POLL_DATA_CON(0x25, null, L_POLL_DATA_REQ),
+
+   /**
+    * Raw data send request. cEMI frames only.
+    */
+   L_RAW_REQ(0x10),
+
+   /**
+    * Raw data receive indication. cEMI frames only.
+    */
+   L_RAW_IND(0x2d),
+
+   /**
+    * Raw data send confirmation. cEMI frames only.
+    */
+   L_RAW_CON(0x2f),
 
    N_DATA_INDIVIDUAL_REQ(0x21),
    N_DATA_INDIVIDUAL_CON(0x4e, null, N_DATA_INDIVIDUAL_REQ),
@@ -71,9 +94,9 @@ public enum EmiFrameType
    UNKNOWN(0x00);
 
    /**
-    * The message-type id.
+    * The message-type code.
     */
-   public final int id;
+   public final int code;
 
    /**
     * The message-type for which this message-type is
@@ -96,23 +119,31 @@ public enum EmiFrameType
    }
 
    /**
+    * Lookup the EMI frame type for a frame type code.
+    *
+    * @param code - the frame type code
     * @return the message-code for the given id.
+    *
+    * @throws IllegalArgumentException if the frame type code is invalid
     */
-   static public EmiFrameType valueOf(int id)
+   static public EmiFrameType valueOf(int code)
    {
       for (EmiFrameType e: values())
-         if (e.id == id) return e;
+         if (e.code == code) return e;
 
-      throw new IllegalArgumentException("Unknown message-code 0x" + Integer.toHexString(id));
+      throw new IllegalArgumentException("Unknown EMI frame type code 0x" + Integer.toHexString(code));
    }
 
    /**
-    * @return if the given transport control field contents is valid.
+    * Test if the frame type code is valid.
+    *
+    * @param code - the frame type code to test.
+    * @return true if the given code is valid.
     */
-   static public boolean isValid(int id)
+   static public boolean isValid(int code)
    {
       for (EmiFrameType e: values())
-         if (e.id == id) return true;
+         if (e.code == code) return true;
 
       return false;
    }
@@ -144,9 +175,9 @@ public enum EmiFrameType
    /*
     * Internal constructor
     */
-   private EmiFrameType(int id, Class<? extends EmiFrame> clazz, EmiFrameType confirmationForType)
+   private EmiFrameType(int code, Class<? extends EmiFrame> clazz, EmiFrameType confirmationForType)
    {
-      this.id = id;
+      this.code = code;
       this.clazz = clazz;
       this.confirmationForType = confirmationForType;
    }
@@ -154,16 +185,16 @@ public enum EmiFrameType
    /*
     * Internal constructor
     */
-   private EmiFrameType(int id, Class<? extends EmiFrame> clazz)
+   private EmiFrameType(int code, Class<? extends EmiFrame> clazz)
    {
-      this(id, clazz, null);
+      this(code, clazz, null);
    }
 
    /*
     * Internal constructor
     */
-   private EmiFrameType(int id)
+   private EmiFrameType(int code)
    {
-      this(id, null, null);
+      this(code, null, null);
    }
 }

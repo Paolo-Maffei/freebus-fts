@@ -21,11 +21,9 @@ import javax.persistence.TemporalType;
 /**
  * Main class for a FTS project.
  *
- * @See {@link ProjectManager#getProject} - to access the global project
- *      instance.
- * @See {@link ProjectManager#openProject} - to open an existing project.
- * @See {@link ProjectManager#newProject} - to create a new project.
- * @See {@link SampleProjectFactory#newProject} - to create a sample project.
+ * @see ProjectManager#getProject()
+ * @see ProjectManager#setProject(Project)
+ * @see SampleProjectFactory#newProject()
  */
 @Entity
 @Table(name = "project")
@@ -62,8 +60,6 @@ public class Project
 
    /**
     * Create a new project.
-    *
-    * @see {@link ProjectManager#newProject}.
     */
    public Project()
    {

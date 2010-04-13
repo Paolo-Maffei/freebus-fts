@@ -118,7 +118,7 @@ public class PEI_Switch_req extends EmiMessageBase
       int pos = start;
       targets[9] = LayerType._RESERVED;
 
-      rawData[pos++] = this.getType().id & 0xff;
+      rawData[pos++] = this.getType().code & 0xff;
       rawData[pos++] = systemStatus & 0xff;
       for (int i = 0; i < 9; i += 2)
          rawData[pos++] = (targets[i].id << 4) | targets[i + 1].id;

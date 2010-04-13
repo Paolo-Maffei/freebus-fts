@@ -54,8 +54,11 @@ public class L_Busmon_ind extends EmiTelegramFrame
    }
 
    /**
-    * Set the time-stamp.
-    * @see {@link #getTimestamp()}.
+    * Set the time-stamp, in seconds since 1970-01-01 00:00:00.
+    *
+    * @param timestamp - the timestamp to set
+    *
+    * @see #getTimestamp()
     */
    public void setTimestamp(int timestamp)
    {
@@ -78,8 +81,8 @@ public class L_Busmon_ind extends EmiTelegramFrame
    /**
     * Initialize the message from the given raw data, beginning at start. The
     * first byte is expected to be the EMI message type.
-    * 
-    * @throws InvalidDataException 
+    *
+    * @throws InvalidDataException
     */
    @Override
    public void fromRawData(int[] rawData, int start) throws InvalidDataException
@@ -96,7 +99,7 @@ public class L_Busmon_ind extends EmiTelegramFrame
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      rawData[start++] = type.id;
+      rawData[start++] = type.code;
       rawData[start++] = status & 0xff;
       rawData[start++] = (timestamp >> 8) & 0xff;
       rawData[start++] = timestamp & 0xff;

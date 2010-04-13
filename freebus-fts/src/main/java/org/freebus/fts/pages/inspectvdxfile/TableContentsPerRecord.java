@@ -1,7 +1,5 @@
 package org.freebus.fts.pages.inspectvdxfile;
 
-import java.io.IOException;
-
 import javax.swing.DefaultListModel;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
@@ -147,8 +145,6 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
 
    /**
     * Update the list of record fields of the currently selected record.
-    *
-    * @throws IOException if there is an error reading the VD_ file.
     */
    public void updateFields()
    {

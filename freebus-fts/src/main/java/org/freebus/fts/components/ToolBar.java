@@ -12,7 +12,7 @@ public class ToolBar extends JToolBar
    private static final long serialVersionUID = -7200515392906890824L;
 
    /**
-    * {@inheritDoc}
+    * Create an unnamed horizontal tool bar.
     */
    public ToolBar()
    {
@@ -20,7 +20,9 @@ public class ToolBar extends JToolBar
    }
 
    /**
-    * {@inheritDoc}
+    * Create an unnamed tool bar.
+    *
+    * @param orientation - the orientation of the tool bar.
     */
    public ToolBar(int orientation)
    {
@@ -28,7 +30,9 @@ public class ToolBar extends JToolBar
    }
 
    /**
-    * {@inheritDoc}
+    * Create a named horizontal tool bar.
+    *
+    * @param name - the name of the tool bar.
     */
    public ToolBar(String name)
    {
@@ -36,7 +40,10 @@ public class ToolBar extends JToolBar
    }
 
    /**
-    * {@inheritDoc}
+    * Create a named tool bar.
+    *
+    * @param name - the name of the tool bar.
+    * @param orientation - the orientation of the tool bar.
     */
    public ToolBar(String name, int orientation)
    {

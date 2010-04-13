@@ -2,34 +2,34 @@ package org.freebus.knxcomm.netip.frames;
 
 import java.net.InetAddress;
 
-import org.freebus.knxcomm.netip.types.ProtocolType;
 import org.freebus.knxcomm.netip.types.ServiceType;
+import org.freebus.knxcomm.netip.types.TransportType;
 
 /**
  * A request for searching KNXnet/IP servers.
  */
-public class SearchRequest extends AbstractRequest
+public class SearchRequest extends AbstractEndPointFrame
 {
    /**
     * Create a search request object.
-    * 
-    * @param protocol - the protocol type.
+    *
+    * @param type - the transport type of the sender.
     * @param addr - the address of the sender.
-    * @param port - the port of the sender
+    * @param port - the port of the sender.
     */
-   public SearchRequest(ProtocolType protocol, InetAddress addr, int port)
+   public SearchRequest(TransportType type, InetAddress addr, int port)
    {
-      super(protocol, addr, port);
+      super(type, addr, port);
    }
 
    /**
-    * Create a description request object.
+    * Create an empty search request object.
     */
    public SearchRequest()
    {
       super();
    }
- 
+
    /**
     * @return {@link ServiceType#SEARCH_REQUEST}.
     */

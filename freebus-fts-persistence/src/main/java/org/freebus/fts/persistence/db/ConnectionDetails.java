@@ -159,8 +159,7 @@ public final class ConnectionDetails
    /**
     * Store the object's contents in the configuration <code>config</code>.
     *
-    * @see {@link #fromConfig(SimpleConfig)} for details about the used
-    *      configuration options.
+    * @see #fromConfig(SimpleConfig)
     */
    public void toConfig(final SimpleConfig config)
    {
@@ -260,7 +259,7 @@ public final class ConnectionDetails
    /**
     * @return the connect URL for a database connection.
     *
-    * @see {@link DriverType#getConnectURL(String)}
+    * @see DriverType#getConnectURL(String)
     */
    public String getConnectURL()
    {

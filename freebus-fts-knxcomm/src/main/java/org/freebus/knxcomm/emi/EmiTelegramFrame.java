@@ -1,5 +1,8 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -18,7 +21,7 @@ public abstract class EmiTelegramFrame extends EmiMessageBase
    protected EmiTelegramFrame(EmiFrameType type, Telegram telegram)
    {
       super(type);
-      this.telegram = telegram; 
+      this.telegram = telegram;
    }
 
    /**
@@ -40,9 +43,10 @@ public abstract class EmiTelegramFrame extends EmiMessageBase
    /**
     * Initialize the message from the given raw data, beginning at start. The
     * first byte is expected to be the EMI message type.
-    * 
-    * @throws InvalidDataException 
+    *
+    * @throws InvalidDataException
     */
+   @Override
    public void fromRawData(int[] rawData, int start) throws InvalidDataException
    {
       telegram.fromRawData(rawData, start + 1);
@@ -54,7 +58,7 @@ public abstract class EmiTelegramFrame extends EmiMessageBase
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      rawData[start] = type.id;
+      rawData[start] = type.code;
       final int length = telegram.toRawData(rawData, start + 1);
       return length + 1;
    }

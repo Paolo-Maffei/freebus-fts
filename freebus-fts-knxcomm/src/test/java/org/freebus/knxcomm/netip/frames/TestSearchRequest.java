@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 import java.net.Inet4Address;
 
-import org.freebus.knxcomm.netip.types.ProtocolType;
+import org.freebus.knxcomm.netip.types.TransportType;
 import org.junit.Test;
 
 public class TestSearchRequest
@@ -17,7 +17,7 @@ public class TestSearchRequest
    public final void testSearchRequest()
    {
       final SearchRequest req = new SearchRequest();
-      assertNotNull(req.getHostProtAddrInfo());
+      assertNotNull(req.getEndPoint());
 
       assertFalse(req.equals(null));
       assertFalse(req.equals(new Object()));
@@ -27,17 +27,16 @@ public class TestSearchRequest
    @Test
    public final void testToFromRawData() throws IOException
    {
-      final int[] data = new int[256];
-      final SearchRequest req = new SearchRequest(ProtocolType.IPv4_UDP, Inet4Address.getLocalHost(), 1234);
+      final SearchRequest req = new SearchRequest(TransportType.UDP, Inet4Address.getLocalHost(), 1234);
 
-      final int wlen = req.toData(data);
-      assertEquals(14, wlen);
+      final byte[] data = req.toByteArray();
+      assertEquals(14, data.length);
 
       assertEquals(0x06, data[0]); // header size
 
       final SearchRequest reqParsed = (SearchRequest) FrameFactory.createFrame(data);
       assertNotNull(reqParsed);
 
-      assertEquals(req.getHostProtAddrInfo(), reqParsed.getHostProtAddrInfo());
+      assertEquals(req.getEndPoint(), reqParsed.getEndPoint());
    }
 }

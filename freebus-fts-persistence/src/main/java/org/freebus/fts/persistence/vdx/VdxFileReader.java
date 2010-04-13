@@ -37,9 +37,9 @@ public final class VdxFileReader
    /**
     * Create a new VDX-file reader object. The file <code>fileName</code> is
     * read upon creation.
-    * 
+    *
     * @param file is the file that shall be read.
-    * 
+    *
     * @throws IOException if the file cannot be read.
     */
    public VdxFileReader(File file) throws IOException
@@ -76,9 +76,9 @@ public final class VdxFileReader
    /**
     * Create a new VDX-file reader object. The file <code>fileName</code> is
     * read upon creation.
-    * 
+    *
     * @param fileName - the name of the file that shall be read.
-    * 
+    *
     * @throws IOException if the file cannot be read.
     */
    public VdxFileReader(String fileName) throws IOException
@@ -88,7 +88,7 @@ public final class VdxFileReader
 
    /**
     * Destructor.
-    * 
+    *
     * @throws RuntimeException if the file was not closed.
     */
    @Override
@@ -155,7 +155,7 @@ public final class VdxFileReader
 
    /**
     * Get a specific section of the file. The section is read, if required.
-    * 
+    *
     * @return the section with the given name or null if no such section exists
     *         or if the section contains no records.
     * @throws IOException
@@ -221,7 +221,7 @@ public final class VdxFileReader
    /**
     * Loads the VDX section sectionName. For each record, creates an object of
     * the type entryClass.
-    * 
+    *
     * @param sectionName - the name of the VDX section to process.
     * @param entryClass - the class for the entries.
     * @return the list of created entries.
@@ -389,7 +389,7 @@ public final class VdxFileReader
    /**
     * Remove a specific section contents from the reader. Only the contents of
     * the section is removed, the section header stays loaded.
-    * 
+    *
     * You can call this method free some memory, which is recommended when
     * working with large files.
     */
@@ -401,7 +401,7 @@ public final class VdxFileReader
    /**
     * Read the vdx file header. The read-pointer stands on the T line of the
     * first section afterwards.
-    * 
+    *
     * @throws IOException
     */
    private void scanHeader() throws IOException
@@ -440,7 +440,7 @@ public final class VdxFileReader
 
    /**
     * Find the sections and their offsets within the file.
-    * 
+    *
     * @throws IOException
     */
    private void scanFile() throws IOException
@@ -478,7 +478,7 @@ public final class VdxFileReader
             // A field definition line looks like this:
             // C1 T3 1 4 N MANUFACTURER_ID
             reader.readWord(); // Skip the field-id "1" (we already read the
-                               // 'C')
+            // 'C')
             reader.readWord(); // Skip the section name "T3"
 
             // the field data type
@@ -493,7 +493,7 @@ public final class VdxFileReader
             }
 
             reader.readWord(); // Skip the size of the field in bytes (int:4,
-                               // short:2, string:length, ...)
+            // short:2, string:length, ...)
             reader.readWord(); // Skip the null-allowed Y|N switch
 
             // the field name
@@ -543,7 +543,7 @@ public final class VdxFileReader
 
    /**
     * Set the language that shall be used for multi-lingual texts. Use
-    * {@link getLanguages} to obtain the list of available languages in a VD_
+    * {@link #getLanguages()} to obtain the list of available languages in a VD_
     * file.
     */
    public synchronized void setLanguage(String language)
@@ -559,8 +559,8 @@ public final class VdxFileReader
    /**
     * Set the language-id of the language that shall be used for multi-lingual
     * texts.
-    * 
-    * @see setLanguage
+    *
+    * @see #setLanguage(String)
     */
    public synchronized void setLanguageId(int languageId)
    {

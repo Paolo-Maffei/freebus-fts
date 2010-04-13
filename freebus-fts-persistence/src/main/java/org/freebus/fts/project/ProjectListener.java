@@ -3,8 +3,8 @@ package org.freebus.fts.project;
 /**
  * Interface for classes that want to be informed when the global project
  * changes.
- * 
- * @see {@link ProjectManager#addListener}.
+ *
+ * @see ProjectManager#addListener(ProjectListener)
  */
 public interface ProjectListener
 {

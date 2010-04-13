@@ -81,7 +81,7 @@ public final class PEI_Identify_con extends EmiMessageBase
    {
       int pos = start;
 
-      rawData[pos++] = type.id;
+      rawData[pos++] = type.code;
       rawData[pos++] = addr >> 8;
       rawData[pos++] = addr & 0xff;
       rawData[pos++] = serialHigh >> 8;

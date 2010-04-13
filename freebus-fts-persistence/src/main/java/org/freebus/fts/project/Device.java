@@ -205,7 +205,7 @@ public final class Device
 
    /**
     * Set the program of the device. You should consider calling
-    * {@link #clearDeviceParameterValues()} when changing the program.
+    * {@link #clearParameterValues()} when changing the program.
     */
    public void setProgram(Program program)
    {

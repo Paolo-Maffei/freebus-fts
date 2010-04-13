@@ -13,8 +13,8 @@ public interface ProgramService
 {
    /**
     * Get a program by id.
-    * 
-    * @throws DAONotFoundException if the object does not exist
+    *
+    * @throws PersistenceException if the object does not exist
     */
    public Program getProgram(int id) throws PersistenceException;
 

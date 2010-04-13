@@ -27,7 +27,7 @@ public final class PEI_Identify_req extends EmiMessageBase
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      rawData[start] = type.id;
+      rawData[start] = type.code;
       return 1;
    }
 }

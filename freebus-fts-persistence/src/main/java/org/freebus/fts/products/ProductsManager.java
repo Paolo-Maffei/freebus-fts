@@ -2,7 +2,6 @@ package org.freebus.fts.products;
 
 import java.io.File;
 
-import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.jpa.JpaProductsFactory;
 import org.freebus.fts.products.services.vdx.VdxProductsFactory;
@@ -29,11 +28,10 @@ public final class ProductsManager
    /**
     * Get a org.freebus.fts.products factory for the org.freebus.fts.products
     * stored in the given VDX file. The persistence unit is set to "default".
-    * 
+    *
     * @param file - the VDX file.
-    * 
+    *
     * @return the DAO factory for accessing the data in the file.
-    * @throws DAOException if the VDX file is not readable.
     */
    public static ProductsFactory getFactory(File file)
    {
@@ -43,12 +41,11 @@ public final class ProductsManager
    /**
     * Get a org.freebus.fts.products factory for the org.freebus.fts.products
     * stored in the given VDX file.
-    * 
+    *
     * @param file - the VDX file.
     * @param persistenceUnit - the persistence unit to use.
-    * 
+    *
     * @return the DAO factory for accessing the data in the file.
-    * @throws DAOException if the VDX file is not readable.
     */
    public static ProductsFactory getFactory(File file, String persistenceUnit)
    {

@@ -256,7 +256,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       buffer[4] = controlByte;
 
       final int len = message.toRawData(buffer, 5);
-      assert (buffer[5] == message.getType().id);
+      assert (buffer[5] == message.getType().code);
       assert (len >= 1 && len <= 16);
 
       buffer[1] = len + 1;

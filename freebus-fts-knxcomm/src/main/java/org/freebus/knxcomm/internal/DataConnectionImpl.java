@@ -55,7 +55,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * Create a connection to the device with the given physical address.
     * Use {@link BusInterface#connect} to get a connection.
     *
-    * @param address - the physical address to which the connection will happen.
+    * @param addr - the physical address to which the connection will happen.
+    * @param busInterface - the bus interface to use.
     */
    public DataConnectionImpl(PhysicalAddress addr, BusInterface busInterface)
    {

@@ -1,10 +1,13 @@
 package org.freebus.knxcomm.application;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesFactory;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesType0;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
@@ -130,7 +133,7 @@ public class TestMemoryRead
       int[] data = {0x40,0x00,0x12};
       deviceDescriptorResponse.fromRawData(data, 0, 3);
       DeviceDescriptorPropertiesFactory  deviceDescriptorPropertiesFactory = new  DeviceDescriptorPropertiesFactory();
-      
+
       DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(deviceDescriptorResponse);
       app.setDeviceDescriptorProperties(deviceDescriptorProperties);
 

@@ -34,7 +34,7 @@ public class SimulatedFt12Connection extends Ft12Connection
 
    /**
     * @return the data that has been written by the last call to
-    *         {@link Ft12Connection#write(int[], int)}.
+    *         Ft12Connection.write(int[], int).
     */
    public int[] getWrittenData()
    {

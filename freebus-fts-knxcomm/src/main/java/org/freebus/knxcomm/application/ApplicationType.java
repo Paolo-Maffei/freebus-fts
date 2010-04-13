@@ -53,7 +53,7 @@ public enum ApplicationType
    IndividualAddress_Read(0x100, 10, 0, 0, IndividualAddressRead.class),
 
    /**
-    * The response to {@link #IndividualAddressRead}.
+    * The response to {@link #IndividualAddress_Read}.
     * <p>
     * Broadcast. No data bytes.
     */
@@ -459,8 +459,8 @@ public enum ApplicationType
     *
     * @return The contents of the APCI field.
     *
-    * @see {@link #getBits()} - to get the number of bits that the field uses.
-    * @see {@link #getMask()} - to get a bit mask for the APCI field.
+    * @see #getBits()
+    * @see #getMask()
     */
    public int getApci()
    {
@@ -486,8 +486,8 @@ public enum ApplicationType
    }
 
    /**
-    * @return The number of bits that the {@link #getAcpi APCI type id} requires
-    *         (1..10).
+    * @return The number of bits that the {@link #getApci() APCI type id}
+    *         requires (1..10).
     */
    public int getBits()
    {

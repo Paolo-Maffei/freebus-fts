@@ -1,8 +1,9 @@
 package org.freebus.knxcomm.application;
 
 /**
- * Datapoint types for data exchange, e.g. with {@link GroupValueRead} and
- * {@link GroupValueWrite} telegrams.
+ * Datapoint types for data exchange, e.g. with
+ * {@link ApplicationType#GroupValue_Read} or
+ * {@link ApplicationType#GroupValue_Write} telegrams.
  *
  * TODO Not complete!
  */

@@ -49,8 +49,8 @@ public class DatabaseResources
     *
     * @return The created entity-manager factory.
     *
-    * @see {@link #setEntityManagerFactory}
-    * @see {@link ConnectionDetails#fromConfig(SimpleConfig)}
+    * @see #setEntityManagerFactory(EntityManagerFactory)
+    * @see ConnectionDetails#fromConfig(SimpleConfig)
     */
    static public EntityManagerFactory createDefaultEntityManagerFactory()
    {
@@ -71,7 +71,7 @@ public class DatabaseResources
     *
     * @return The created entity-manager factory.
     *
-    * @see {@link #setEntityManagerFactory}
+    * @see #setEntityManagerFactory(EntityManagerFactory)
     */
    static public EntityManagerFactory createEntityManagerFactory(String persistenceUnitName,
          ConnectionDetails conDetails)
@@ -96,7 +96,7 @@ public class DatabaseResources
     * Set the default entity manager factory. Must be called before
     * {@link #getEntityManager} can be used.
     *
-    * @see {@link #createEntityManagerFactory}.
+    * @see #createEntityManagerFactory(String, ConnectionDetails)
     */
    public static void setEntityManagerFactory(EntityManagerFactory entityManagerFactory)
    {
@@ -106,7 +106,7 @@ public class DatabaseResources
 
    /**
     * @return the default entity manager factory.
-    * @see {@link #setEntityManagerFactory}.
+    * @see #setEntityManagerFactory(EntityManagerFactory)
     */
    public static EntityManagerFactory getEntityManagerFactory()
    {
@@ -142,7 +142,7 @@ public class DatabaseResources
     *
     * @return The created {@link Liquibase} object.
     *
-    * @see {@link #createConnection(ConnectionDetails)}
+    * @see #createConnection(ConnectionDetails)
     */
    public static Liquibase createMigrator(String changeLogFile, Connection con) throws Exception
    {

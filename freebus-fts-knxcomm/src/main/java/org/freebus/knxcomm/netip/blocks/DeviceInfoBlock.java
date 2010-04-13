@@ -1,5 +1,13 @@
 package org.freebus.knxcomm.netip.blocks;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+import java.net.Inet4Address;
+import java.net.InetAddress;
+import java.util.Arrays;
+
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.MediumType;
 import org.freebus.knxcomm.netip.types.DescriptionInfoType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
@@ -9,13 +17,13 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
  */
 public final class DeviceInfoBlock implements DescriptionInfoBlock
 {
-   private MediumType medium;
+   private MediumType medium = MediumType.TWISTED_PAIR;
    private int status;
-   private int busAddress;
+   private PhysicalAddress busAddress = PhysicalAddress.NULL;
    private int projectId;
-   private final int[] serial = new int[6];
-   private byte[] routingAddr = new byte[4];
-   private final int[] macAddr = new int[6];
+   private final byte[] serial = new byte[6];
+   private InetAddress routingAddr;
+   private final byte[] macAddr = new byte[6];
    private String name;
 
    /**
@@ -53,7 +61,7 @@ public final class DeviceInfoBlock implements DescriptionInfoBlock
    /**
     * Returns the device status. bits 7..1 are reserved, bit 0: programming
     * mode.
-    * 
+    *
     * @return the device status.
     */
    public int getStatus()
@@ -62,7 +70,11 @@ public final class DeviceInfoBlock implements DescriptionInfoBlock
    }
 
    /**
-    * Set the device status. See {@link #getDeviceStatus()}.
+    * Set the device status.
+    *
+    * @param status - the status to set.
+    *
+    * @see #getStatus()
     */
    public void setStatus(int status)
    {
@@ -70,17 +82,19 @@ public final class DeviceInfoBlock implements DescriptionInfoBlock
    }
 
    /**
-    * @return the 2-byte KNX/EIB bus address.
+    * @return the KNX/EIB physical address.
     */
-   public int getBusAddress()
+   public PhysicalAddress getBusAddress()
    {
       return busAddress;
    }
 
    /**
-    * Set the 2-byte KNX/EIB bus address.
+    * Set the KNX/EIB physical address.
+    *
+    * @param busAddress - the bus address
     */
-   public void setBusAddress(int busAddress)
+   public void setBusAddress(PhysicalAddress busAddress)
    {
       this.busAddress = busAddress;
    }
@@ -123,112 +137,111 @@ public final class DeviceInfoBlock implements DescriptionInfoBlock
    /**
     * @return the 6-byte KNX serial number of the device.
     */
-   public int[] getSerial()
+   public byte[] getSerial()
    {
       return serial;
    }
 
    /**
-    * @return the 4-byte KNXnet/IP routing multicast address. Devices that do
-    *         not implement KNXnet/IP routing shall set this value to 0.0.0.0
+    * @return the KNXnet/IP routing multicast {@link Inet4Address IPv4 address}.
+    *         Devices that do not implement KNXnet/IP routing shall set this
+    *         value to null.
     */
-   public byte[] getRoutingAddr()
+   public InetAddress getRoutingAddr()
    {
       return routingAddr;
    }
 
    /**
-    * Set the 4-byte KNXnet/IP routing multicast address. Devices that do not
-    * implement KNXnet/IP routing shall set this value to 0.0.0.0
+    * Set the KNXnet/IP routing multicast {@link Inet4Address IPv4 address}.
+    * Devices that do not implement KNXnet/IP routing shall set this value to
+    * null
     */
-   public void setRoutingAddr(byte[] routingAddr)
+   public void setRoutingAddr(InetAddress addr)
    {
-      this.routingAddr = routingAddr;
+      this.routingAddr = addr;
    }
 
    /**
     * Return the 6-byte MAC address of the device.
     */
-   public int[] getMacAddr()
+   public byte[] getMacAddr()
    {
       return macAddr;
    }
 
    /**
-    * {@inheritDoc}
+    * Initialize the object from the given {@link DataInput data input stream}.
+    *
+    * @param in - the input stream to read
+    *
+    * @throws InvalidDataException
     */
-   @Override
-   public int fromData(int[] data, int start) throws InvalidDataException
+   public void readData(DataInput in) throws IOException
    {
-      int pos = start;
+      in.skipBytes(1); // structure length
 
-      final int blockLength = data[pos++];
-
-      final int typeCode = data[pos++];
+      final int typeCode = in.readUnsignedByte();
       final DescriptionInfoType type = DescriptionInfoType.valueOf(typeCode);
       if (type != DescriptionInfoType.DEVICE_INFO)
-         throw new InvalidDataException("Invalid type " + type + ", expected " + DescriptionInfoType.DEVICE_INFO, typeCode);
-      
-      medium = MediumType.valueOf(data[pos++]);
-      status = data[pos++];
-      busAddress = (data[pos++] << 8) | data[pos++];
-      projectId = (data[pos++] << 8) | data[pos++];
+         throw new InvalidDataException("Invalid type " + type + ", expected " + DescriptionInfoType.DEVICE_INFO,
+               typeCode);
 
-      for (int i = 0; i < 6; ++i)
-         serial[i] = data[pos++];
+      medium = MediumType.valueOf(in.readUnsignedByte());
+      status = in.readUnsignedByte();
+      busAddress = new PhysicalAddress(in.readUnsignedShort());
+      projectId = in.readUnsignedShort();
+      in.readFully(serial);
 
-      for (int i = 0; i < 4; ++i)
-         routingAddr[i] = (byte) data[pos++];
+      final byte[] addrData = new byte[4];
+      in.readFully(addrData);
+      if (Arrays.equals(new byte[] { 0, 0, 0, 0 }, addrData))
+         routingAddr = null;
+      else routingAddr = InetAddress.getByAddress(addrData);
 
-      for (int i = 0; i < 6; ++i)
-         macAddr[i] = data[pos++];
+      in.readFully(macAddr);
 
-      final StringBuffer sb = new StringBuffer();
-      for (int i = 0; i < 30; ++i)
-      {
-         char ch = (char) data[pos + i];
-         if (ch == 0) break;
-         sb.append(ch);
-      }
-      pos += 30;
-      name = sb.toString();
+      final byte[] nameBytes = new byte[30];
+      final char[] nameChars = new char[30];
+      in.readFully(nameBytes);
+      int i = 0;
+      for (; i < 30 && nameBytes[i] != 0; ++i)
+         nameChars[i] = (char) nameBytes[i];
 
-      if (pos - start != blockLength)
-         throw new InvalidDataException("Invalid block length: expected " + blockLength + " read " + (pos - start), blockLength);
-
-      return pos - start;
+      name = String.valueOf(nameChars, 0, i);
    }
 
    /**
-    * {@inheritDoc}
+    * Write the object to a {@link DataOutput data output stream}.
+    *
+    * @param out - the output stream to write the object to
+    *
+    * @throws IOException
     */
-   @Override
-   public int toData(int[] data, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
+      out.writeByte(54); // length of this block
+      out.writeByte(DescriptionInfoType.DEVICE_INFO.code);
+      out.writeByte(medium.code);
+      out.writeByte(status);
+      out.writeShort(busAddress.getAddr());
+      out.writeShort(projectId);
+      out.write(serial);
 
-      ++pos; // length is written at end
+      if (routingAddr == null)
+         out.write(new byte[] { 0, 0, 0, 0 });
+      else out.write(routingAddr.getAddress());
 
-      data[pos++] = DescriptionInfoType.DEVICE_INFO.code;
-      data[pos++] = medium.code;
-      data[pos++] = status;
-      data[pos++] = (busAddress >> 8) & 0xff;
-      data[pos++] = busAddress & 0xff;
-      data[pos++] = (projectId >> 8) & 0xff;
-      data[pos++] = projectId & 0xff;
+      out.write(macAddr);
 
-      for (int i = 0; i < 6; ++i)
-         data[pos++] = serial[i];
+      int nameLen = name == null ? 0 : name.length();
+      if (nameLen > 30)
+         nameLen = 30;
 
-      for (int i = 0; i < 4; ++i)
-         data[pos++] = routingAddr[i];
+      for (int i = 0; i < nameLen; ++i)
+         out.write((byte) name.charAt(i));
 
-      for (int i = 0; i < 6; ++i)
-         data[pos++] = macAddr[i];
-
-      for (int i = 0; i < 30; ++i)
-         data[pos++] = name.length() <= i ? 0 : name.charAt(i);
-
-      return pos - start;
+      for (; nameLen < 30; ++nameLen)
+         out.write(0);
    }
 }

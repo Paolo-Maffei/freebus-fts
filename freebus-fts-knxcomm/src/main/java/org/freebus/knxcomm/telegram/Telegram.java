@@ -229,8 +229,6 @@ public class Telegram implements Cloneable
     * type}.
     *
     * @param type - the application type.
-    *
-    * @throws InvalidDataException if the raw data is invalid.
     */
    public void setApplication(ApplicationType type)
    {

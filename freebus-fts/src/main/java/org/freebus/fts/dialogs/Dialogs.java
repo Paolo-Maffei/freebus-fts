@@ -60,7 +60,7 @@ public final class Dialogs
     * @param message - Some human readable message (not
     *           {@link Exception#getMessage()}!)
     *
-    * @see {@link #showExceptionDialog(Exception, String)}
+    * @see #showExceptionDialog(Exception, String)
     */
    public static void showErrorDialog(String message)
    {

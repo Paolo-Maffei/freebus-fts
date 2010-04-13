@@ -45,7 +45,7 @@ public final class L_Poll_Data_con extends EmiMessageBase
    {
       int pos = start;
 
-      rawData[pos++] = type.id;
+      rawData[pos++] = type.code;
       rawData[pos++] = 0; // control field
       rawData[pos++] = 0;
       rawData[pos++] = 0;

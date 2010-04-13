@@ -28,7 +28,7 @@ public final class Config extends SimpleConfig
     * Create a configuration object. Automatically loads the application's
     * default configuration.
     *
-    * @see {@link #getConfig} - To access the global configuration object.
+    * @see #getInstance()
     */
    public Config()
    {

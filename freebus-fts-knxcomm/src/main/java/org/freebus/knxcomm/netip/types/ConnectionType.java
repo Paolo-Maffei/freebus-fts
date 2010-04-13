@@ -20,19 +20,19 @@ public enum ConnectionType
     * Connection for configuration and data transfer
     * with a remote logging server.
     */
-   REMLOG(6),
+   REMOTE_LOGGING(6),
 
    /**
     * Connection for configuration and data transfer
     * with a remote configuration server.
     */
-   REMCONF(7),
+   REMOTE_CONFIG(7),
 
    /**
     * Connection for configuration and data transfer
     * with an object server in a KNXnet/IP device.
     */
-   OBJSRV(8);
+   OBJECT_SERVER(8);
 
    /**
     * The code byte.

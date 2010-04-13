@@ -7,8 +7,6 @@ public enum Ft12FrameFormat
 {
    /**
     * Fixed length (short) message
-    * 
-    * @see {@link Ft12ShortMessage} for short message types.
     */
    FIXED(0x10),
 
@@ -29,7 +27,7 @@ public enum Ft12FrameFormat
 
    /**
     * Lookup the message type
-    * 
+    *
     * @param code the message code byte
     * @return the FT1.2 message type, or null if no matching type is found.
     */

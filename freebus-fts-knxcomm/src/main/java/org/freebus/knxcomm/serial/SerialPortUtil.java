@@ -48,7 +48,6 @@ public final class SerialPortUtil
 
    /**
     * Ensure that the native serial port library is loaded.
-    * @return 
     */
    public static void loadSerialPortLib()
    {

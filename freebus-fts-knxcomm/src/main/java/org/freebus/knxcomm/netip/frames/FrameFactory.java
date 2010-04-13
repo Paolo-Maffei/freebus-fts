@@ -1,36 +1,68 @@
 package org.freebus.knxcomm.netip.frames;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInput;
+import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.freebus.knxcomm.netip.types.ServiceType;
+import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
- * Factory class that creates frame objects from raw data.
+ * Factory class that creates {@link AbstractFrame frame} objects from raw data.
  */
 public final class FrameFactory
 {
    /**
-    * Create a frame object from the data. It is expected that the data contains
-    * a full frame, including the frame header.
-    * 
-    * @param data - the data that is used to materialize the frame.
-    * 
-    * @return the created frame-body, or null if the frame type is valid, but
-    *         there exists no frame-body class for this frame-body type.
-    * 
+    * Create a frame object from the input stream. It is expected that the data input
+    * stream contains a full frame, including the frame header.
+    *
+    * @param in - the frame is read from this stream.
+    *
+    * @return the created frame (body), or null if the frame type is valid, but
+    *         there exists no frame class for the frame type.
+    *
     * @throws IOException
+    * @throws InvalidDataException
     */
-   static public Frame createFrame(final int[] data) throws IOException
+   static public Frame createFrame(final DataInput in) throws IOException
    {
-      final int serviceTypeCode = (data[2] << 8) | data[3];
+      in.skipBytes(1); // header size
+      final int version = in.readUnsignedByte();
+
+      if (version != Frame.protocolVersion)
+         throw new InvalidDataException("unsupported protocol version", version);
+
+      final int serviceTypeCode = in.readShort();
       final ServiceType serviceType = ServiceType.valueOf(serviceTypeCode);
 
-      final Frame frame = serviceType.newFrameBodyInstance();
-      if (frame == null)
-         return null; // not implemented frame body type
+      @SuppressWarnings("unused")
+      final int frameSize = in.readUnsignedShort();
 
-      frame.fromData(data);
+      final Frame frame = serviceType.newFrameInstance();
+      if (frame == null)
+         return null; // frame body type is not implemented, just return
+
+      frame.readData(in);
+
       return frame;
+   }
+
+   /**
+    * Create a frame object from the data. It is expected that the data input
+    * stream contains a full frame, including the frame header.
+    *
+    * @param data - the raw data of the frame.
+    *
+    * @return the created frame (body), or null if the frame type is valid, but
+    *         there exists no frame class for the frame type.
+    *
+    * @throws IOException
+    * @throws InvalidDataException
+    */
+   static public Frame createFrame(final byte[] data) throws IOException
+   {
+      return createFrame(new DataInputStream(new ByteArrayInputStream(data)));
    }
 
    /*

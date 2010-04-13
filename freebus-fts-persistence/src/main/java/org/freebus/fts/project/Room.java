@@ -16,16 +16,16 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 /**
- * A room in a {@link Building}. A room is the mid-level group for the physical
- * structure of a project. Every room belongs to a {@link Building}, and can
- * contain {@link Devices}.
+ * A room in a {@link Building building}. A room is the mid-level group for the
+ * physical structure of a {@link Project project}. Every room belongs to a
+ * {@link Building building}, and can contain {@link Device devices}.
  */
 @Entity
 @Table(name = "room")
 public class Room
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenRoomId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenRoomId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "room_id", nullable = false)
    private int id;
@@ -138,7 +138,8 @@ public class Room
     *
     * @param device - the device to add.
     *
-    * @throws IllegalArgumentException - If the device was already added to the room.
+    * @throws IllegalArgumentException - If the device was already added to the
+    *            room.
     */
    public void add(Device device)
    {

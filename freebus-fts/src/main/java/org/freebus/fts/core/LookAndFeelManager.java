@@ -60,8 +60,7 @@ public final class LookAndFeelManager
 
    /**
     * Install all look&feel classes that were previously added with
-    * {@link #addLookAndFeel(String)}. Must be called from within Swing's UI
-    * thread.
+    * {@link #add(String)}. Must be called from within Swing's UI thread.
     */
    public void install()
    {

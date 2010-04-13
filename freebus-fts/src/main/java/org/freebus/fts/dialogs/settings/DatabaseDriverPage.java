@@ -83,7 +83,7 @@ abstract class DatabaseDriverPage extends JPanel
    public abstract void apply();
 
    /**
-    * Test the database connection. Calls {@link connectNow}.
+    * Test the database connection.
     */
    public final void connectTest()
    {
@@ -118,7 +118,7 @@ abstract class DatabaseDriverPage extends JPanel
    }
 
    /**
-    * Does the actual connecting. Called by {@link connectTest}.
+    * Does the actual connecting. Called by {@link #connectTest()}.
     */
    protected abstract void connectNow() throws Exception;
 }

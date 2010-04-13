@@ -3,8 +3,7 @@ package org.freebus.fts.products;
 import java.util.Arrays;
 
 /**
- * A set of filter criteria, used for querying a {@link ProductDb} product
- * database.
+ * A set of filter criteria, used for querying a products database.
  */
 public final class ProductFilter
 {
@@ -19,27 +18,30 @@ public final class ProductFilter
    public int[] functionalEntities = null;
 
    /**
-    * Optimize the contents of the object. The arrays are sorted afterwards,
-    * so that binary search, like {@link Arrays#binarySearch(int[], int)},
-    * can be used on them.
+    * Optimize the contents of the object. The arrays are sorted afterwards, so
+    * that binary search, like {@link Arrays#binarySearch(int[], int)}, can be
+    * used on them.
     */
    public void optimize()
    {
-      if (functionalEntities != null) Arrays.sort(functionalEntities);
+      if (functionalEntities != null)
+         Arrays.sort(functionalEntities);
    }
 
    /**
     * @return the functional entities as comma separated string, or null if no
-    * functional entities are set.
+    *         functional entities are set.
     */
    public String getFunctionalEntitiesString()
    {
-      if (functionalEntities == null || functionalEntities.length < 1) return null;
+      if (functionalEntities == null || functionalEntities.length < 1)
+         return null;
 
       final StringBuilder sb = new StringBuilder();
       for (int i = 0; i < functionalEntities.length; ++i)
       {
-         if (i > 0) sb.append(',');
+         if (i > 0)
+            sb.append(',');
          sb.append(functionalEntities[i]);
       }
 

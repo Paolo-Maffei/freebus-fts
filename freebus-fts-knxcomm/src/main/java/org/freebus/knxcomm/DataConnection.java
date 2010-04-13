@@ -38,7 +38,7 @@ public interface DataConnection
     * Send a telegram to the device.
     * <p>
     * The telegram is corrected to match the requirements of the connected data
-    * transfer: the {@link Telegram#setFrom(Address) sender}, the
+    * transfer: the {@link Telegram#setFrom(PhysicalAddress) sender}, the
     * {@link Telegram#setDest(Address) receiver}, the
     * {@link Telegram#setTransport(Transport) transport type}, and the
     * {@link Telegram#setSequence(int) sequence number} are set.

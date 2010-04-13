@@ -1,35 +1,50 @@
 package org.freebus.knxcomm.netip.frames;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.netip.types.ServiceType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
- * Interface for KNXnet/IP frames for requests and answers.
+ * Interface for KNXnet/IP frame bodies.
  */
 public interface Frame
 {
+   /**
+    * The KNXnet/IP protocol version
+    */
+   public static final int protocolVersion = 0x10;
+
    /**
     * @return the frame service type.
     */
    public ServiceType getServiceType();
 
    /**
-    * Initialize the object from the given data.
-    * 
-    * @param data - the data to process.
-    * 
-    * @return the number of bytes that were read.
-    * 
-    * @throws InvalidDataException
+    * Write the frame into a byte array. The whole frame is written, including a
+    * frame header.
+    *
+    * @return the frame serialized into a byte array
     */
-   public int fromData(int[] data) throws InvalidDataException;
+   public byte[] toByteArray();
 
    /**
-    * Fill the data of the object into the array rawData.
-    * 
-    * @param data - the data buffer to fill.
-    * 
-    * @return number of bytes that were written.
+    * Initialize the object from a {@link DataInput data input stream}.
+    *
+    * @param in - the input stream to read.
+    *
+    * @throws InvalidDataException
     */
-   public int toData(int[] data);
+   public void readData(DataInput in) throws IOException;
+
+   /**
+    * Write the object to a {@link DataOutput data output stream}.
+    *
+    * @param out - the output stream to write the object to.
+    *
+    * @throws IOException
+    */
+   public void writeData(DataOutput out) throws IOException;
 }

@@ -1,5 +1,8 @@
 package org.freebus.knxcomm.netip.blocks;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -42,45 +45,42 @@ public class SupportedServiceFamilies implements DescriptionInfoBlock
    }
 
    /**
-    * {@inheritDoc}
+    * Initialize the object from the given {@link DataInput data input stream}.
+    *
+    * @param in - the input stream to read
+    *
+    * @throws InvalidDataException
     */
-   @Override
-   public int fromData(int[] data, int start) throws InvalidDataException
+   public void readData(DataInput in) throws IOException
    {
-      int pos = start;
+      final int numServices = (in.readUnsignedByte() - 2) >> 1;
 
-      final int numServices = (data[pos++] - 2) >> 1;
-
-      final int typeCode = data[pos++];
+      final int typeCode = in.readUnsignedByte();
       final DescriptionInfoType type = DescriptionInfoType.valueOf(typeCode);
       if (type != DescriptionInfoType.SERVICE_FAMILIES)
          throw new InvalidDataException("Invalid type " + type + ", expected " + DescriptionInfoType.SERVICE_FAMILIES, typeCode);
 
       families.clear();
       for (int i = 0; i < numServices; ++i)
-         families.put(ServiceFamily.valueOf(data[pos++]), data[pos++]);
-
-      return pos - start;
+         families.put(ServiceFamily.valueOf(in.readUnsignedByte()), in.readUnsignedByte());
    }
 
    /**
-    * {@inheritDoc}
+    * Write the object to a {@link DataOutput data output stream}.
+    *
+    * @param out - the output stream to write the object to
+    *
+    * @throws IOException
     */
-   @Override
-   public int toData(int[] data, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      data[pos++] = (families.size() << 1) + 2;
-      data[pos++] = DescriptionInfoType.SERVICE_FAMILIES.code;
+      out.write((families.size() << 1) + 2);
+      out.write(DescriptionInfoType.SERVICE_FAMILIES.code);
 
       for (ServiceFamily sf: families.keySet())
       {
-         data[pos++] = sf.code;
-         data[pos++] = families.get(sf);
+         out.write(sf.code);
+         out.write(families.get(sf));
       }
-
-      return pos - start;
    }
-
 }

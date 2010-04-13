@@ -2,7 +2,6 @@ package org.freebus.knxcomm.application;
 
 import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.applicationData.MemoryAddress;
-import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 
 /**
@@ -17,7 +16,7 @@ public abstract class Memory implements Application
 
    /**
     * Create a memory object.
-    * 
+    *
     * @param address - the 16 bit memory address.
     */
    protected Memory(int address)
@@ -27,7 +26,7 @@ public abstract class Memory implements Application
 
    /**
     * Create a memory object.
-    * 
+    *
     * @param address - the 16 bit memory address.
     */
    protected Memory(MemoryAddressTypes memoryAddressTypes)
@@ -45,7 +44,7 @@ public abstract class Memory implements Application
 
    /**
     * Set the 16-bit memory address.
-    * 
+    *
     * @param address the address to set
     */
    public void setAddress(int address)

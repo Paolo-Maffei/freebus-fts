@@ -25,7 +25,7 @@ public final class BusInterfacePage extends SettingsPage
    private static final long serialVersionUID = 88245350928577623L;
    private final JComboBox cboConnectionType;
    private final SerialBusInterface cfgSerial;
-   private final EibdBusInterface cfgEibd;
+   private final KNXnetBusInterface cfgKNXnet;
    private final JPanel cfgNone;
 
    /**
@@ -74,7 +74,7 @@ public final class BusInterfacePage extends SettingsPage
       c.gridwidth = 1;
 
       cfgSerial = new SerialBusInterface();
-      cfgEibd = new EibdBusInterface();
+      cfgKNXnet = new KNXnetBusInterface();
       cfgNone = new JPanel();
 
       c.fill = GridBagConstraints.BOTH;
@@ -86,7 +86,7 @@ public final class BusInterfacePage extends SettingsPage
       c.insets = new Insets(0, 4, 0, 4);
       add(cfgNone, c);
       add(cfgSerial, c);
-      add(cfgEibd, c);
+      add(cfgKNXnet, c);
 
       cboConnectionType.addActionListener(new ActionListener()
       {
@@ -123,7 +123,7 @@ public final class BusInterfacePage extends SettingsPage
       
       cfgNone.setVisible(type == KNXConnectionType.NONE);
       cfgSerial.setVisible(type == KNXConnectionType.SERIAL_FT12);
-      cfgEibd.setVisible(type == KNXConnectionType.EIBD);
+      cfgKNXnet.setVisible(type == KNXConnectionType.EIBD);
    }
 
    /**
@@ -144,7 +144,7 @@ public final class BusInterfacePage extends SettingsPage
       cfg.put("knxConnectionType", getSelectedConnectionType().toString());
 
       cfgSerial.apply();
-      cfgEibd.apply();
+      cfgKNXnet.apply();
    }
 
    /**

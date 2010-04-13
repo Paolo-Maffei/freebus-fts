@@ -47,7 +47,7 @@ public class FunctionalEntity
     * Create a new functional entity.
     *
     * @param id - the identifier of the functional entity.
-    * @param manufacturerId - the id of the owning manufacturer.
+    * @param manufacturer - the owning manufacturer.
     * @param name - the name of the functional entity.
     * @param description - the description of the functional entity.
     */

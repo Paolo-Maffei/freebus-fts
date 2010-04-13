@@ -19,19 +19,17 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-
 /**
- * An area in an {@link Area}. A line is the mid-level
- * group for the topological structure of an EIB bus.
- * Every line belongs to an {@link Area}, and can contain
- * {@link Devices}.
+ * A line in an {@link Area}. A line is the mid-level group for the topological
+ * structure of an EIB bus. Every line belongs to an {@link Area area}, and can
+ * contain {@link Device devices}.
  */
 @Entity
 @Table(name = "line")
 public class Line
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenLineId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenLineId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "line_id", nullable = false)
    private int id;
@@ -124,9 +122,10 @@ public class Line
    /**
     * Add a device to the line.
     *
-    * @throws IllegalArgumentException - If the device was already added to the room.
+    * @throws IllegalArgumentException - If the device was already added to the
+    *            room.
     *
-    * @see {@link #getFreeAddress} to obtain a free address for the device.
+    * @see #getFreeAddress()
     */
    public void add(Device device)
    {
@@ -146,14 +145,16 @@ public class Line
    {
       final Set<Integer> usedAddr = new HashSet<Integer>(256);
 
-      for (Device device: devices)
+      for (Device device : devices)
          usedAddr.add(device.getAddress());
 
       int addr;
       for (addr = 0; addr <= 255; ++addr)
-         if (!usedAddr.contains(addr)) break;
+         if (!usedAddr.contains(addr))
+            break;
 
-      if (addr > 255) throw new RuntimeException("Line is full, no free address found");
+      if (addr > 255)
+         throw new RuntimeException("Line is full, no free address found");
 
       return addr;
    }
@@ -206,7 +207,8 @@ public class Line
    public String toString()
    {
       String areaAddr;
-      if (area == null) areaAddr = "?";
+      if (area == null)
+         areaAddr = "?";
       else areaAddr = Integer.toString(area.getAddress());
 
       return String.format("%s.%d. %s", areaAddr, getAddress(), getName());

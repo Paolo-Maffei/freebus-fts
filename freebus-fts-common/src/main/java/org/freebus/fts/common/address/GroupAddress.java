@@ -153,9 +153,11 @@ public final class GroupAddress implements Address
    }
 
    /**
-    * Parse the given string and return a group-address.
+    * Parse the given string and return a group-address. The string is expected
+    * to have the format "main/middle/sub".
     *
-    * @param string - the string in the format "main/middle/sub".
+    * @param str - the string to parse.
+    *
     * @return the group address, or null if the given string has an invalid
     *         format.
     */

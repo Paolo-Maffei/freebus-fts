@@ -14,8 +14,8 @@ public interface VirtualDeviceService
 {
    /**
     * Get a virtual device by id.
-    * 
-    * @throws DAONotFoundException if the object does not exist
+    *
+    * @throws PersistenceException if the object does not exist
     */
    public VirtualDevice getVirtualDevice(int id) throws PersistenceException;
 

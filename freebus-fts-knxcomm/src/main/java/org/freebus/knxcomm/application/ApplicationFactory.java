@@ -5,8 +5,8 @@ import org.freebus.knxcomm.telegram.Telegram;
 /**
  * Factory class for {@link Application} application instances.
  *
- * @see {@link Application}
- * @see {@link Telegram}
+ * @see Application
+ * @see Telegram
  */
 public final class ApplicationFactory
 {

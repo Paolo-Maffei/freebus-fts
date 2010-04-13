@@ -158,9 +158,10 @@ public final class PhysicalAddress implements Address
    }
 
    /**
-    * Parse the given string and return a physical-address.
+    * Parse the given string and return a physical-address. The string is expected
+    * to have the format "zone.line.node".
     *
-    * @param string - the string in the format "zone.line.node".
+    * @param str - the string to parse.
     *
     * @return the group address, or null if the given string has an invalid
     *         format.

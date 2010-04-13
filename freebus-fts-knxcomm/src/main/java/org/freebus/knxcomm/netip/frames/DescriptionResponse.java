@@ -1,5 +1,9 @@
 package org.freebus.knxcomm.netip.frames;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.netip.blocks.DeviceInfoBlock;
 import org.freebus.knxcomm.netip.blocks.SupportedServiceFamilies;
 import org.freebus.knxcomm.netip.types.ServiceType;
@@ -7,8 +11,8 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * The response to a description request.
- * 
- * @see {@link DescriptionRequest}.
+ *
+ * @see DescriptionRequest
  */
 public class DescriptionResponse extends AbstractFrame
 {
@@ -41,28 +45,30 @@ public class DescriptionResponse extends AbstractFrame
    }
 
    /**
-    * {@inheritDoc}
+    * Initialize the object from the given {@link DataInput data input stream}.
+    *
+    * @param in - the input stream to read
+    *
+    * @throws InvalidDataException
     */
    @Override
-   public int bodyFromData(int[] data, int start) throws InvalidDataException
+   public void readData(DataInput in) throws IOException
    {
-      int pos = start;
-      pos += hardwareInfo.fromData(data, pos);
-      pos += servicesInfo.fromData(data, pos);
-
-      return pos - start;
+      hardwareInfo.readData(in);
+      servicesInfo.readData(in);
    }
 
    /**
-    * {@inheritDoc}
+    * Write the object to a {@link DataOutput data output stream}.
+    *
+    * @param out - the output stream to write to
+    *
+    * @throws IOException
     */
    @Override
-   public int bodyToData(int[] data, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-      pos += hardwareInfo.toData(data, pos);
-      pos += servicesInfo.toData(data, pos);
-
-      return pos - start;
+      hardwareInfo.writeData(out);
+      servicesInfo.writeData(out);
    }
 }

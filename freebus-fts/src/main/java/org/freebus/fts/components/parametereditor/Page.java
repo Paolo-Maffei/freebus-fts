@@ -43,7 +43,7 @@ import org.freebus.fts.products.ParameterValue;
 /**
  * A tab page of the parameter editor.
  *
- * @see {@link ParameterEditor}.
+ * @see ParameterEditor
  */
 public class Page extends JPanel
 {
@@ -229,7 +229,7 @@ public class Page extends JPanel
 
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
-    * {@link ParameterAtomicType.ENUM}.
+    * {@link ParameterAtomicType#ENUM}.
     *
     * @param data the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
@@ -307,12 +307,12 @@ public class Page extends JPanel
 
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
-    * {@link ParameterAtomicType.SIGNED} or {@link ParameterAtomicType.UNSIGNED}
+    * {@link ParameterAtomicType#SIGNED} or {@link ParameterAtomicType#UNSIGNED}
     * .
     *
-    * @param data the parameter-data to process.
-    * @param gridRow the row of the contents grid in which the component(s) are
-    *           to be added.
+    * @param data - the parameter-data to process.
+    * @param gridRow - the row of the contents grid in which the component(s)
+    *           are to be added.
     */
    public void createParamNumberComponent(final ParamData data, int gridRow)
    {
@@ -348,11 +348,11 @@ public class Page extends JPanel
 
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
-    * {@link ParameterAtomicType.STRING}.
+    * {@link ParameterAtomicType#STRING}.
     *
-    * @param param the parameter to process.
-    * @param gridRow the row of the contents grid in which the component(s) are
-    *           to be added.
+    * @param data - the parameter-data to process.
+    * @param gridRow - the row of the contents grid in which the component(s)
+    *           are to be added.
     */
    public void createParamStringComponent(final ParamData data, int gridRow)
    {
@@ -390,11 +390,11 @@ public class Page extends JPanel
 
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
-    * {@link ParameterAtomicType.NONE}.
+    * {@link ParameterAtomicType#NONE}.
     *
-    * @param data the parameter-data to process.
-    * @param gridRow the row of the contents grid in which the component(s) are
-    *           to be added.
+    * @param data - the parameter-data to process.
+    * @param gridRow - the row of the contents grid in which the component(s)
+    *           are to be added.
     */
    public void createParamNoneComponent(final ParamData data, int gridRow)
    {
@@ -407,10 +407,11 @@ public class Page extends JPanel
     * Create a label for the parameter. The label is added to the contents grid
     * in column zero, spanning one or more columns.
     *
-    * @param param the parameter whose label shall be used.
-    * @param gridRow the row of the contents grid in which the label is placed.
-    * @param gridWidth the number of grid columns the label shall use (usually 1
-    *           or 2).
+    * @param param - the parameter whose label shall be used.
+    * @param gridRow - the row of the contents grid in which the label is
+    *           placed.
+    * @param gridWidth - the number of grid columns the label shall use (usually
+    *           1 or 2).
     *
     * @return The created label.
     */
@@ -431,8 +432,8 @@ public class Page extends JPanel
     * Add the component to the grid in column zero, row <code>gridRow</code>,
     * using suitable grid bag constraints.
     *
-    * @param comp the component to be added.
-    * @param gridRow the row of the contents grid in which the component is
+    * @param comp - the component to be added.
+    * @param gridRow - the row of the contents grid in which the component is
     *           added.
     */
    public void contentAddComponent(final JComponent comp, int gridRow)
@@ -444,7 +445,7 @@ public class Page extends JPanel
    /**
     * Inform all change listeners that a parameter was changed.
     *
-    * @param param the parameter that was changed.
+    * @param data - the parameter-data that was changed.
     */
    public void fireStateChanged(final ParamData data)
    {
@@ -465,7 +466,7 @@ public class Page extends JPanel
     * Sort the parameter-data by display order
     * {@link Parameter#getDisplayOrder()}.
     *
-    * @param params the parameters to be sorted.
+    * @param paramsData - the parameter-datas to be sorted.
     *
     * @return a sorted array of parameters.
     */

@@ -14,7 +14,7 @@ public interface ManufacturerService
    /**
     * Get a manufacturer by id.
     *
-    * @throws DAONotFoundException if the object does not exist
+    * @throws PersistenceException if the object does not exist
     */
    public Manufacturer getManufacturer(int manufacturerId) throws PersistenceException;
 

@@ -11,8 +11,8 @@ import org.freebus.knxcomm.emi.EmiFrameListener;
  * {@link KNXConnection} which it uses to do the actual communication with the
  * bus. But you most definitely want to use {@link BusInterface} and this
  * class for doing the bus communication.
- * 
- * @see {@link BusInterface} - An interface for talking with the KNX/EIB bus.
+ *
+ * @see BusInterface An interface for talking with the KNX/EIB bus.
  */
 public interface KNXConnection
 {
@@ -33,7 +33,7 @@ public interface KNXConnection
 
    /**
     * Send an EMI frame to the bus.
-    * 
+    *
     * @throws IOException
     */
    public void send(EmiFrame message) throws IOException;

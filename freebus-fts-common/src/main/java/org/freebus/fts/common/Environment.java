@@ -46,8 +46,7 @@ public final class Environment
 
       if (envHomeDir != null && !envHomeDir.isEmpty())
          homeDir = envHomeDir;
-      else
-         homeDir = tempDir;
+      else homeDir = tempDir;
 
       Logging.setup();
    }
@@ -89,12 +88,13 @@ public final class Environment
 
    /**
     * Returns the application's user-data directory. The name of the directory
-    * depends on the platform and uses the application name (see
-    * {@link setAppName}).
+    * depends on the platform and uses the {@link #setAppName application name}.
     *
     * The user-data directory is created if it does not exist.
     *
     * @return the directory for application specific user data.
+    *
+    * @see #setAppName
     */
    public static String getAppDir()
    {
@@ -110,8 +110,8 @@ public final class Environment
    }
 
    /**
-    * Returns the application's user-data directory for the given home
-    * directory and application name.
+    * Returns the application's user-data directory for the given home directory
+    * and application name.
     *
     * @param homeDir - the home directory to use.
     * @param appName - the name of the application.
@@ -132,7 +132,7 @@ public final class Environment
     *
     * Creates the user-data directory if it does not exist.
     *
-    * @see {@link #getAppDir()}
+    * @see #getAppDir()
     */
    public static void setAppName(String appName)
    {

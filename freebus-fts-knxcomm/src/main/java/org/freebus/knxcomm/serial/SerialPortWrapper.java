@@ -65,17 +65,16 @@ public class SerialPortWrapper
 
    /**
     * Connect to the serial port.
-    * 
+    *
     * @param portName - the name of the port.
     * @param baudRate - the baud rate, e.g. 19200
     * @param dataBits - the number of data bits, e.g. 8
     * @param stopBits - the number of stop bits, e.g. 1
     * @param parity - the parity, e.g. {@link SerialPortWrapper#PARITY_EVEN}.
-    * 
+    *
     * @throws IOException if the port could not be opened or is already open.
-    * 
-    * @see {@link SerialPortUtil#getPortNames()} to get the available serial
-    *      port names.
+    *
+    * @see SerialPortUtil#getPortNames() obtaining the names of the available serial ports.
     */
    public void open(String portName, int baudRate, int dataBits, int stopBits, int parity) throws IOException
    {
@@ -173,7 +172,7 @@ public class SerialPortWrapper
    /**
     * Add a port listener to the serial port. Only one listener is allowed at
     * the same time. The port must be opened before a listener can be added.
-    * 
+    *
     * @param listener is the listener to add.
     * @throws TooManyListenersException is thrown if another listener was
     *            previously added.
@@ -193,7 +192,7 @@ public class SerialPortWrapper
 
    /**
     * Notify the listeners when data is available on the serial port.
-    * 
+    *
     * @param enable
     */
    public void notifyOnDataAvailable(boolean enable)

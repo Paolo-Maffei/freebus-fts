@@ -7,7 +7,6 @@ import javax.persistence.PersistenceException;
 
 import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.services.CatalogEntryService;
-import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductDescriptionService;
@@ -35,11 +34,11 @@ public final class VdxProductsFactory implements ProductsFactory
 
    /**
     * Create a factory for the file fileName.
-    * 
+    *
     * @param file - the vd_ file that is processed.
     * @param persistenceUnitName - the name of the persistence unit.
     *
-    * @throws DAOException
+    * @throws PersistenceException
     */
    public VdxProductsFactory(File file, String persistenceUnitName) throws PersistenceException
    {
