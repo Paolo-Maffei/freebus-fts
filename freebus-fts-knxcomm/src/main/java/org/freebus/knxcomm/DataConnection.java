@@ -52,9 +52,11 @@ public interface DataConnection
    /**
     * Receive a telegram from the device. Waits until a telegram is received.
     *
+    * @param timeout - how long to wait, in milliseconds, -1 waits infinitely.
+    *
     * @return the received telegram
     *
     * @throws IOException
     */
-   public Telegram receive() throws IOException;
+   public Telegram receive(int timeout) throws IOException;
 }

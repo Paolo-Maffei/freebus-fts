@@ -90,7 +90,14 @@ public final class ConnectedDataTransfer
       telegram.setApplication(new MemoryRead(1, 10));
       con.send(telegram);
 
-      logger.info("*** done, waiting some seconds before terminating");
+      logger.info("*** Waiting for reply");
+      Telegram reply = con.receive(2000);
+      logger.debug("*** Reply: " + reply);
+
+      logger.info("*** Closing data-connection");
+      con.close();
+
+      logger.info("*** Done, waiting some seconds before terminating");
    }
 
    /**

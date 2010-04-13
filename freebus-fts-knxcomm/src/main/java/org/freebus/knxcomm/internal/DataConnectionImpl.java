@@ -1,7 +1,10 @@
 package org.freebus.knxcomm.internal;
 
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
@@ -47,9 +50,10 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private State state = State.CLOSED;
    private final PhysicalAddress addr;
    private final BusInterface busInterface;
-   private final Telegram telegram;
-   private final Semaphore waitDataSemaphore = new Semaphore(0);
-   private int sendSequence, recvSequence;
+   private final Telegram telegram = new Telegram();
+   private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
+   private Semaphore recvSemaphore = new Semaphore(0);
+   private int sequence = -1;
 
    /**
     * Create a connection to the device with the given physical address.
@@ -63,7 +67,6 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       this.addr = addr;
       this.busInterface = busInterface;
 
-      telegram = new Telegram();
       telegram.setDest(addr);
    }
 
@@ -75,8 +78,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    {
       busInterface.removeListener(this);
 
-      incSequence();
       telegram.setTransport(Transport.Disconnect);
+      telegram.setSequence(++sequence);
 
       state = State.CLOSED;
       try
@@ -114,14 +117,6 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    }
 
    /**
-    * Increase the sequence number of the internal telegram.
-    */
-   private void incSequence()
-   {
-      telegram.setSequence(telegram.getSequence() + 1);
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override
@@ -140,12 +135,12 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
       busInterface.addListener(this);
 
-      sendSequence = 0;
-      recvSequence = 0;
+      sequence = -1;
+      recvSemaphore.drainPermits();
 
       telegram.setApplication(ApplicationType.GroupValue_Read);
       telegram.setTransport(Transport.Connect);
-      telegram.setSequence(++sendSequence);
+      telegram.setSequence(++sequence);
 
       state = State.CONNECTING;
 
@@ -164,10 +159,25 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * {@inheritDoc}
     */
    @Override
-   public Telegram receive() throws IOException
+   public Telegram receive(int timeout) throws IOException
    {
-      // TODO Auto-generated method stub
-      return null;
+      try
+      {
+         if (timeout < 0)
+            recvSemaphore.acquire();
+         else if (!recvSemaphore.tryAcquire(timeout, TimeUnit.MILLISECONDS))
+            return null;
+      }
+      catch (InterruptedException e)
+      {
+         e.printStackTrace();
+         return null;
+      }
+
+      synchronized (recvQueue)
+      {
+         return recvQueue.poll();
+      }
    }
 
    /**
@@ -178,7 +188,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    {
       telegram.setDest(addr);
       telegram.setTransport(Transport.Connected);
-      telegram.setSequence(++sendSequence);
+      telegram.setSequence(++sequence);
 
       busInterface.send(telegram);
    }
@@ -193,6 +203,12 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          return;
 
       Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
+
+      synchronized (recvQueue)
+      {
+         recvQueue.push(telegram);
+      }
+      recvSemaphore.release();
    }
 
    /**
