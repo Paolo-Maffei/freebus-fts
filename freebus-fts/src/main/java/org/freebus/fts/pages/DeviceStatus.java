@@ -70,8 +70,8 @@ public class DeviceStatus extends AbstractPage {
 			jButton.addMouseListener(new MouseAdapter() {
 				@Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-
-					startjob(PhysicalAddress.valueOf( jTextField.getText()));
+				   PhysicalAddress a = PhysicalAddress.valueOf( jTextField.getText());
+					startjob(a);
 				}
 			});
 		}
@@ -146,7 +146,6 @@ public class DeviceStatus extends AbstractPage {
 					msg = "PageMsg data received: "
 							+ a.getJobStepStatus().toString()
 							+ " for request :" + a.toString() + " : Data " + s;
-					//System.out.println(msg);
 					allmsg = allmsg + msg + "\n";
 				}
 				JPanelOutput.add(getTextArea(allmsg));

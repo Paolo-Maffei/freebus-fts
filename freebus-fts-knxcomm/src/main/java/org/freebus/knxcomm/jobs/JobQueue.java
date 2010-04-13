@@ -66,7 +66,7 @@ public class JobQueue implements JobListener
             }
          }
       });
-
+      thread.setName("Job-Queue");
       thread.start();
    }
 

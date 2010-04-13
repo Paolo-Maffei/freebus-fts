@@ -19,8 +19,9 @@ public class JobStepsQueue extends SingleDeviceJob
 {
 
    private ApplicationType applicationExpected;
-   private final Semaphore semaphore = new Semaphore(0);
-   final List<Telegram> telegrams = new LinkedList<Telegram>();
+
+   final Telegrams telegrams = new Telegrams();
+
    DeviceDescriptorProperties deviceDescriptorProperties;
 
    class recvieTelegram extends Telegram
@@ -41,14 +42,19 @@ public class JobStepsQueue extends SingleDeviceJob
    public void main(BusInterface bus) throws Exception
    {
       // TODO: not finished
-      jobSteps.setFrom(bus.getPhysicalAddress());
+     // jobSteps.setFrom(bus.getPhysicalAddress());
+      Logger.getLogger(getClass()).debug("Send Connect ");
       bus.send(jobSteps.getConecet());
 
 
       try
       {
-         waitforTelegram(jobSteps.getConecet(), Transport.ConnectedAck,0);
-         jobSteps.setConnectStatus(JobStepStatus.Successfull);
+         
+         TelegramSearchConditions tsc = new TelegramSearchConditions();
+         tsc.setTransport(Transport.ConnectedAck);
+        Telegrams t = waitforTelegram(tsc);
+        if (t.size() == 1)  Logger.getLogger(getClass()).debug("Resived ACK");
+       
       }
       catch (JobFailedException e)
       {
@@ -66,7 +72,7 @@ public class JobStepsQueue extends SingleDeviceJob
             jobStep.getApplication().setDeviceDescriptorProperties(deviceDescriptorProperties);
          }
          jobStep.setSequence(i);
-
+         Logger.getLogger(getClass()).debug("Send Telegram: "+jobStep.toString());
          bus.send(jobStep);
 
          ApplicationTypeResponse appres = jobStep.getApplication().getApplicationResponses();
@@ -74,12 +80,15 @@ public class JobStepsQueue extends SingleDeviceJob
          {
             try
             {
-            	int index =0;
-               Telegram t = waitforTelegram(jobSteps.getConecet(), Transport.Connected, i, at,index);
-
-               jobStep.setResivedApplication(t.getApplication());
+            	
+            	TelegramSearchConditions tsc = new TelegramSearchConditions();
+            	tsc.setTransport(Transport.Connected);
+            	tsc.setApplicationType(at);
+               Telegrams t = waitforTelegram(tsc);
+               Logger.getLogger(getClass()).debug("Found resived telegram: "+t.get(0).toString());
+               jobStep.setResivedApplication(t.get(0).getApplication());
                jobStep.setJobStepStatus(JobStepStatus.Successfull);
-               telegrams.remove(index);
+
 
             }
             catch (JobFailedException e)
@@ -100,69 +109,24 @@ public class JobStepsQueue extends SingleDeviceJob
       jobSteps.notifyJobStepStatus();
    }
 
-   public Telegram waitforTelegram(Telegram send, Transport transport, int sequnece, ApplicationType app,int index)
+   public Telegrams waitforTelegram(TelegramSearchConditions telegramSearchConditions)
          throws JobFailedException
    {
-      Telegram t;
-      for (int i = 0; i < 50; i++)
-      {
-         msleep(10);
-         t = searchReceivedByTransport(send, transport,index);
-         if (t != null){
-         if (t.getApplicationType() == app && t.getSequence() == sequnece)
-            return t;
-      }}
-      throw new JobFailedException("NoAnwser");
-   }
+      
+    
 
-   public Telegram waitforTelegram(Telegram send, Transport transport,int index) throws JobFailedException
-   {
-      Telegram t;
+      Telegrams ts;
       for (int i = 0; i < 50; i++)
       {
          msleep(10);
-         t = searchReceivedByTransport(send, transport,index);
-         if (t != null)
-            return t;
+        ts = telegrams.searchTelegram(telegramSearchConditions);
+        if (ts.size()>0)return ts;
+
       }
       throw new JobFailedException("NoAnwser");
    }
 
-   /**
-    * Search in the received Telegram list to accord with send Telegram
-    *
-    * @param send
-    * @param transport
-    * @return
-    */
-   public Telegram searchReceivedByTransport(Telegram send, Transport transport,int index)
-   {
-      boolean transportfild;
-
-      boolean fromAddr;
-      boolean destaddr;
-      index =-1;
-      for (Telegram t : telegrams)
-      {
-    	  index++;
-         transportfild = false;
-
-         fromAddr = false;
-         destaddr = false;
-
-         if (t.getTransport() == transport)
-            transportfild = true;
-         if (t.getDest().getAddr() == send.getFrom().getAddr())
-            destaddr = true;
-         if (t.getFrom().getAddr() == send.getDest().getAddr())
-            fromAddr = true;
-         if (transportfild == true && fromAddr == true && destaddr == true)
-            return t;
-
-      }
-      return null;
-
-   }
+  
 
    @Override
    public String getLabel()
@@ -204,11 +168,8 @@ public class JobStepsQueue extends SingleDeviceJob
    @Override
    public void telegramReceived(Telegram telegram)
    {
-
       telegrams.add(telegram);
       Logger.getLogger(getClass()).debug("Received answer: " + telegram);
-      semaphore.release();
-
    }
 
    /**
@@ -217,6 +178,7 @@ public class JobStepsQueue extends SingleDeviceJob
    @Override
    public void telegramSendConfirmed(Telegram telegram)
    {
-      // TODO Auto-generated method stub
+      telegrams.add(telegram);
+      Logger.getLogger(getClass()).debug("Confirm answer: " + telegram);
    }
 }
