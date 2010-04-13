@@ -1,8 +1,5 @@
 package org.freebus.knxcomm.emi;
 
-import java.io.DataInput;
-import java.io.IOException;
-
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.freebus.knxcomm.telegram.Telegram;
 

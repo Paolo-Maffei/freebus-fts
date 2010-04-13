@@ -16,9 +16,9 @@ public enum KNXConnectionType
    SERIAL_FT12("Serial Port FT1.2"),
 
    /**
-    * TCP/IP connection to eibd. 
+    * KNXnet/IP network connection
     */
-   EIBD("TCP/IP via eibd");
+   KNXNET_IP("KNXnet/IP");
 
    /**
     * A human readable, English label.

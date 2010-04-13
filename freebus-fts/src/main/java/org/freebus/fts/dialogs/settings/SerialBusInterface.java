@@ -70,6 +70,8 @@ final class SerialBusInterface extends JPanel
    protected void apply()
    {
       final SimpleConfig cfg = Config.getInstance();
-      cfg.put(configKey + ".port", (String) cboPort.getSelectedItem());
+
+      final Object sel = cboPort.getSelectedItem();
+      cfg.put(configKey + ".port", sel == null ? "" : sel.toString());
    }
 }

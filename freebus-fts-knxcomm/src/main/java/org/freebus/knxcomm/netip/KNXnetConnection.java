@@ -47,7 +47,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    private Frame receivedFrame;
 
    private int channelId;
-   private int sequence;
+   private int sequence = -1;
 
    private final DatagramSocket socket;
    private final Thread listenerThread;
@@ -164,7 +164,9 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       final ConnectResponse conResp = (ConnectResponse) frame;
       if (conResp.getStatus() != StatusCode.OK)
          throw new ConnectException("KNXnet/IP connect to " + addr + " failed: " + conResp.getStatus());
+
       logger.info("Connection to KNXnet/IP server established");
+      channelId = conResp.getChannelId();
    }
 
    /**
@@ -199,9 +201,13 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
     * {@inheritDoc}
     */
    @Override
-   public void send(EmiFrame message) throws IOException
+   public void send(EmiFrame emiFrame) throws IOException
    {
-      send(new TunnelingRequest(channelId, ++sequence));
+      final TunnelingRequest frame = new TunnelingRequest(channelId, ++sequence);
+      frame.setFrame(emiFrame);
+
+      send(frame);
+      notifyListenersSent(emiFrame);
    }
 
    /**
@@ -210,7 +216,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    public void send(Frame frame) throws IOException
    {
       final ServiceType serviceType = frame.getServiceType();
-      logger.debug("Send: " + serviceType);
+      logger.debug("Send: " + serviceType + " (seq " + sequence + ")");
 
       final byte[] data = frame.toByteArray();
       final DatagramPacket dp = new DatagramPacket(data, data.length);
@@ -250,9 +256,11 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       else if (frame.getServiceType() == ServiceType.TUNNELING_REQUEST)
       {
          final TunnelingRequest tunnelFrame = (TunnelingRequest) frame;
-         logger.debug("Recv: " + tunnelFrame.getFrame());
+         sequence = tunnelFrame.getSequence();
 
-         send(new TunnelingAck(channelId, tunnelFrame.getSequence(), StatusCode.OK));
+         logger.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + sequence + ")");
+
+         send(new TunnelingAck(channelId, sequence, StatusCode.OK));
 
          notifyListenersReceived(tunnelFrame.getFrame());
       }

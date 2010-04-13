@@ -19,7 +19,7 @@ import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.netip.KNXnetConnection;
 
 /**
- * A widget for configuring an eibd bus interface connection.
+ * A widget for configuring a KNXnet/IP bus interface connection.
  */
 final class KNXnetBusInterface extends JPanel
 {
@@ -29,7 +29,7 @@ final class KNXnetBusInterface extends JPanel
    private final JLabel lblTestOutput;
 
    /**
-    * Create a new eibd bus-interface configuration widget.
+    * Create a new KNXnet/IP bus-interface configuration widget.
     */
    public KNXnetBusInterface()
    {

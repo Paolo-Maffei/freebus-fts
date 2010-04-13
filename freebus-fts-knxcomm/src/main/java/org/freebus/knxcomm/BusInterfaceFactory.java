@@ -69,9 +69,14 @@ public final class BusInterfaceFactory
    private static void createBusInterface() throws Exception
    {
       final SimpleConfig cfg = SimpleConfig.getInstance();
+      BusInterface newBusInterface = null;
 
-      // TODO use the configured bus interface type here
-      final BusInterface newBusInterface = BusInterfaceFactory.newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
+      final KNXConnectionType type = KNXConnectionType.valueOf(cfg.getStringValue("knxConnectionType"));
+      if (type == KNXConnectionType.KNXNET_IP)
+         newBusInterface = newKNXnetInterface(cfg.getStringValue("knxConnectionKNXnet.host"), cfg.getIntValue("knxConnectionKNXnet.port"));
+      else if (type == KNXConnectionType.SERIAL_FT12)
+         newBusInterface = newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
+      else throw new Exception("No bus interface configured");
 
       newBusInterface.open();
 

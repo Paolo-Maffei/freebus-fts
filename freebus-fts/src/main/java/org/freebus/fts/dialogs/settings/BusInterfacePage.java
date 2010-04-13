@@ -120,10 +120,10 @@ public final class BusInterfacePage extends SettingsPage
    private void showConnectionDetails()
    {
       final KNXConnectionType type = getSelectedConnectionType();
-      
+
       cfgNone.setVisible(type == KNXConnectionType.NONE);
       cfgSerial.setVisible(type == KNXConnectionType.SERIAL_FT12);
-      cfgKNXnet.setVisible(type == KNXConnectionType.EIBD);
+      cfgKNXnet.setVisible(type == KNXConnectionType.KNXNET_IP);
    }
 
    /**
