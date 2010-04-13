@@ -37,7 +37,7 @@ public interface Application
    /**
     * @return True if the Application needs a DeviceDescriptorProperties
     */
-   public boolean isDeviceDescriptorRequiered();
+   public boolean isDeviceDescriptorRequired();
 
    /**
     * Set the DeviceDescriptorProperties for the Application. The

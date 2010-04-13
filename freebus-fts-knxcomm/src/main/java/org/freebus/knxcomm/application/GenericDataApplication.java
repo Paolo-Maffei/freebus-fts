@@ -172,7 +172,7 @@ public class GenericDataApplication implements Application
     * {@inheritDoc}
     */
    @Override
-   public boolean isDeviceDescriptorRequiered()
+   public boolean isDeviceDescriptorRequired()
    {
       // TODO Auto-generated method stub
       return false;

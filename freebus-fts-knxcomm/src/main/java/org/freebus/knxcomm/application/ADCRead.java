@@ -145,7 +145,7 @@ public class ADCRead implements Application
     * {@inheritDoc}
     */
    @Override
-   public boolean isDeviceDescriptorRequiered()
+   public boolean isDeviceDescriptorRequired()
    {
 
       return true;

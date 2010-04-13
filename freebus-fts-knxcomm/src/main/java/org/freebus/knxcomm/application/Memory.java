@@ -103,7 +103,7 @@ public abstract class Memory implements Application
     * {@inheritDoc}
     */
    @Override
-   public boolean isDeviceDescriptorRequiered()
+   public boolean isDeviceDescriptorRequired()
    {
       // TODO Auto-generated method stub
       return true;
