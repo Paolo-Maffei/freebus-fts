@@ -49,12 +49,12 @@ public class JobStepsQueue extends SingleDeviceJob
 
       try
       {
-         
+
          TelegramSearchConditions tsc = new TelegramSearchConditions();
          tsc.setTransport(Transport.ConnectedAck);
         Telegrams t = waitforTelegram(tsc);
         if (t.size() == 1)  Logger.getLogger(getClass()).debug("Resived ACK");
-       
+
       }
       catch (JobFailedException e)
       {
@@ -67,7 +67,7 @@ public class JobStepsQueue extends SingleDeviceJob
       for (JobStep jobStep : jobSteps)
       {
 
-         if (jobStep.getApplication().isDeviceDescriptorRequiered())
+         if (jobStep.getApplication().isDeviceDescriptorRequired())
          {
             jobStep.getApplication().setDeviceDescriptorProperties(deviceDescriptorProperties);
          }
@@ -80,7 +80,7 @@ public class JobStepsQueue extends SingleDeviceJob
          {
             try
             {
-            	
+
             	TelegramSearchConditions tsc = new TelegramSearchConditions();
             	tsc.setTransport(Transport.Connected);
             	tsc.setApplicationType(at);
@@ -112,8 +112,8 @@ public class JobStepsQueue extends SingleDeviceJob
    public Telegrams waitforTelegram(TelegramSearchConditions telegramSearchConditions)
          throws JobFailedException
    {
-      
-    
+
+
 
       Telegrams ts;
       for (int i = 0; i < 50; i++)
@@ -126,7 +126,7 @@ public class JobStepsQueue extends SingleDeviceJob
       throw new JobFailedException("NoAnwser");
    }
 
-  
+
 
    @Override
    public String getLabel()
