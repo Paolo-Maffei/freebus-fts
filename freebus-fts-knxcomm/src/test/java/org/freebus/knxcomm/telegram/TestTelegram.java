@@ -7,8 +7,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.Arrays;
+import java.io.IOException;
 
+import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
@@ -17,7 +18,6 @@ import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.GenericApplication;
 import org.freebus.knxcomm.application.GenericDataApplication;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
-import org.junit.Ignore;
 import org.junit.Test;
 
 public class TestTelegram
@@ -151,13 +151,11 @@ public class TestTelegram
    }
 
    @Test
-   public void testFromRawData() throws InvalidDataException
+   public void testFromRawData() throws IOException
    {
-      final Telegram telegram = new Telegram();
+      final byte[] data = HexString.valueOf("bc 11 01 0a 05 e0 01 00");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
 
-      final int[] data1 = new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xe0, 0x01, 0x00 };
-
-      telegram.fromRawData(data1, 0);
       assertFalse(telegram.isRepeated());
       assertEquals(Priority.LOW, telegram.getPriority());
       assertEquals(6, telegram.getRoutingCounter());
@@ -166,21 +164,17 @@ public class TestTelegram
       assertEquals(ApplicationType.IndividualAddress_Read, telegram.getApplicationType());
    }
 
-   @Test(expected = InvalidDataException.class)
-   public void testFromRawDataWrongLen() throws InvalidDataException
+   @Test(expected = IOException.class)
+   public void testFromRawDataWrongLen() throws IOException
    {
-      final Telegram telegram = new Telegram();
-      final int[] data1 = new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x64, 0x43, 0x40, 0x00, 0x12 };
-      telegram.fromRawData(data1, 0);
+      TelegramFactory.createTelegram(HexString.valueOf("90 33 07 00 00 64 43 40 00 12"));
    }
 
    @Test
-   public final void testFromRawData3() throws InvalidDataException
+   public final void testFromRawData3() throws IOException
    {
-      final Telegram telegram = new Telegram();
-      final int[] rawData = new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x63, 0x43, 0x40, 0x00, 0x12 };
-
-      telegram.fromRawData(rawData, 0);
+      final byte[] data = HexString.valueOf("90 33 07 00 00 63  43 40 00 12");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, telegram.getApplicationType());
       final DeviceDescriptorResponse app = (DeviceDescriptorResponse) telegram.getApplication();
@@ -190,96 +184,79 @@ public class TestTelegram
       assertArrayEquals(new int[] { 0, 18 }, app.getDescriptor());
    }
 
-   /**
-    * A negative reply from a Merten switch.
-    */
    @Test
-   public void testFromRawDataConnectedNack() throws InvalidDataException
+   public void testFromRawDataDisconnect() throws IOException
    {
-      final Telegram telegram = new Telegram();
-      final int[] data = new int[] { 0x90, 0x11, 0x06, 0x11, 0xff, 0x60, 0x81, 0x77 };
-      telegram.fromRawData(data, 0);
-   }
+      final byte[] data = HexString.valueOf("90 11 06 11 ff 60 81");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
 
-   /**
-    * A negative reply (T_NAK-PDU) from a real switch.
-    *
-    * TODO this test currently fails. The test might as well be simply wrong ...
-    * seems to be a T_Disconnect anyways ...
-    */
-   @Ignore
-   @Test
-   public void testFromToRawDataConnectedNack() throws InvalidDataException
-   {
-      final int[] data = new int[] { 0x90, 0x11, 0x06, 0x11, 0xff, 0x60, 0x81, 0x77 };
-      final Telegram telegram = new Telegram();
-
-      telegram.fromRawData(data, 0);
       assertEquals(Transport.Disconnect, telegram.getTransport());
 
-      final int[] dataOut = new int[data.length];
-      telegram.toRawData(dataOut, 0);
-
+      final byte[] dataOut = telegram.toByteArray();
       assertArrayEquals(data, dataOut);
    }
 
    @Test
-   public void testFromRawDataDeviceDescriptorResponse() throws InvalidDataException
+   public void testFromRawDataDeviceDescriptorResponse() throws IOException
    {
-      final Telegram telegram = new Telegram();
+      final byte[] data = HexString.valueOf("90 33 07 00 00 61 43 00");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
 
-      telegram.fromRawData(new int[] { 0x90, 0x33, 0x07, 0x00, 0x00, 0x61, 0x43, 0x00 }, 0);
+      assertEquals(Transport.Connected, telegram.getTransport());
+   }
+
+   @Test
+   public void testFromRawDataGroupValueWrite() throws IOException
+   {
+      final byte[] data = HexString.valueOf("9c 11 06 08 0a e1 00 81");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
+
+      assertEquals(Transport.Group, telegram.getTransport());
+      assertEquals(ApplicationType.GroupValue_Write, telegram.getApplicationType());
+
+      final GenericDataApplication app = (GenericDataApplication) telegram.getApplication();
+      assertArrayEquals(new int[] { 1 }, app.getData());
    }
 
    @Test
    public void testToRawData()
    {
-      final int[] data = new int[256];
-      int len;
-
       final Telegram telegram = new Telegram();
       telegram.setFrom(new PhysicalAddress(1, 1, 1));
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
       telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new int[] { 0, 1 }));
 
-      len = telegram.toRawData(data, 0);
-      assertArrayEquals(new int[] { 0xbc, 0x11, 0x01, 0x0a, 0x05, 0xb2, 0x00, 0x80, 0x01 }, Arrays.copyOf(data, len));
+      final byte[] dataOut = telegram.toByteArray();
+      assertArrayEquals(HexString.valueOf("bc 11 01 0a 05 b2 00 80 01"), dataOut);
    }
 
    @Test
    public void testToRawData2()
    {
-      final int[] data = new int[256];
-      int len;
-
       // Telegram without application data
-      final Telegram telegramNullData = new Telegram();
-      telegramNullData.setFrom(new PhysicalAddress(1, 1, 1));
-      telegramNullData.setDest(new PhysicalAddress(3, 3, 7));
-      telegramNullData.setPriority(Priority.SYSTEM);
-      telegramNullData.setRepeated(true);
-      telegramNullData.setTransport(Transport.Connected);
-      telegramNullData.setSequence(0);
-      telegramNullData.setApplication(ApplicationType.IndividualAddress_Read);
+      final Telegram telegram = new Telegram();
+      telegram.setFrom(new PhysicalAddress(1, 1, 1));
+      telegram.setDest(new PhysicalAddress(3, 3, 7));
+      telegram.setPriority(Priority.SYSTEM);
+      telegram.setRepeated(true);
+      telegram.setTransport(Transport.Connected);
+      telegram.setSequence(0);
+      telegram.setApplication(ApplicationType.IndividualAddress_Read);
 
-      len = telegramNullData.toRawData(data, 0);
-      assertArrayEquals(new int[] { 0x90, 0x11, 0x01, 0x33, 0x07, 0x61, 0x41, 0x00 }, Arrays.copyOf(data, len));
+      assertArrayEquals(HexString.valueOf("90 11 01 33 07 61 41 00"), telegram.toByteArray());
    }
 
    @Test
    public void testToRawData3()
    {
-      final int[] rawData = new int[256];
-
       final Telegram telegram = new Telegram();
       telegram.setFrom(new PhysicalAddress(1, 1, 255));
       telegram.setDest(new PhysicalAddress(1, 1, 6));
       telegram.setPriority(Priority.SYSTEM);
       telegram.setTransport(Transport.Connect);
 
-      final int len = telegram.toRawData(rawData, 0);
-      assertArrayEquals(new int[] { 0xb0, 0x11, 0xff, 0x11, 0x06, 0x60, 0x80 }, Arrays.copyOf(rawData, len));
+      assertArrayEquals(HexString.valueOf("b0 11 ff 11 06 60 80"), telegram.toByteArray());
    }
 
    @Test

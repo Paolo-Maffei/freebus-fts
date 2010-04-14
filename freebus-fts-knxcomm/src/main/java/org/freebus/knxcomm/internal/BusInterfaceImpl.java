@@ -16,10 +16,10 @@ import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.L_Data_req;
-import org.freebus.knxcomm.emi.PEISwitchMode;
 import org.freebus.knxcomm.emi.PEI_Identify_con;
 import org.freebus.knxcomm.emi.PEI_Identify_req;
 import org.freebus.knxcomm.emi.PEI_Switch_req;
+import org.freebus.knxcomm.emi.types.PEISwitchMode;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**

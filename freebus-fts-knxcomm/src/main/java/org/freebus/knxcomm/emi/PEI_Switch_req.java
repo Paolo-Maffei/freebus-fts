@@ -1,10 +1,18 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+import org.freebus.knxcomm.emi.types.LayerType;
+import org.freebus.knxcomm.emi.types.PEISwitchMode;
+
 /**
  * PEI_Switch.req message. Used to control which message types are sent
  * where.
  */
-public class PEI_Switch_req extends EmiMessageBase
+public class PEI_Switch_req extends AbstractEmiFrame
 {
    private int systemStatus = 0;
    private final LayerType targets[] = new LayerType[10];
@@ -94,17 +102,18 @@ public class PEI_Switch_req extends EmiMessageBase
    }
 
    /**
-    * Initialize the message from the given raw data, beginning at start. The
-    * first byte is expected to be the message type.
+    * {@inheritDoc}
     */
-   public void fromRawData(int[] rawData, int start)
+   @Override
+   public void readData(DataInput in) throws IOException
    {
-      systemStatus = rawData[++start];
+      systemStatus = in.readUnsignedByte();
 
       for (int i = 0; i < 9; i += 2)
       {
-         targets[i] = LayerType.valueOf(rawData[++start] >> 4);
-         targets[i + 1] = LayerType.valueOf(rawData[start] & 0x0f);
+         final int b = in.readUnsignedByte();
+         targets[i] = LayerType.valueOf(b >> 4);
+         targets[i + 1] = LayerType.valueOf(b & 0x0f);
       }
       targets[9] = LayerType._RESERVED;
    }
@@ -113,16 +122,13 @@ public class PEI_Switch_req extends EmiMessageBase
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
+      out.write(systemStatus);
+
       targets[9] = LayerType._RESERVED;
 
-      rawData[pos++] = this.getType().code & 0xff;
-      rawData[pos++] = systemStatus & 0xff;
       for (int i = 0; i < 9; i += 2)
-         rawData[pos++] = (targets[i].id << 4) | targets[i + 1].id;
-
-      return pos - start;
+         out.write((targets[i].id << 4) | targets[i + 1].id);
    }
 }

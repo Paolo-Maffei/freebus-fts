@@ -1,11 +1,17 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * L_Poll_Data.L_Poll_Data_con - data polling confirmation
- * 
+ *
  * TODO not implemented
  */
-public final class L_Poll_Data_con extends EmiMessageBase
+public final class L_Poll_Data_con extends AbstractEmiFrame
 {
    protected int dest = 0;
    protected int status = 0;
@@ -34,24 +40,26 @@ public final class L_Poll_Data_con extends EmiMessageBase
       return status;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public void fromRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
-      status = rawData[start + 6];
+      in.skipBytes(4);
+      status = in.readUnsignedByte();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      rawData[pos++] = type.code;
-      rawData[pos++] = 0; // control field
-      rawData[pos++] = 0;
-      rawData[pos++] = 0;
-      rawData[pos++] = 0;
-      rawData[pos++] = status;
-
-      return pos - start;
+      out.write(0); // control field
+      out.write(0);
+      out.write(0);
+      out.write(0);
+      out.write(status);
    }
 }

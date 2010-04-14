@@ -1,6 +1,10 @@
 package org.freebus.knxcomm.emi;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
@@ -14,7 +18,8 @@ public class L_Busmon_ind extends EmiTelegramFrame
    // 6: bit error (invalid bit in the frame characters)
    // 5: parity error (in the frame bits)
    // 4: overflow
-   // 3: lost flag (at least one frame or frame piece is lost by the bus monitor)
+   // 3: lost flag (at least one frame or frame piece is lost by the bus
+   // monitor)
    // 2..0: sequence number
    private int status;
 
@@ -39,6 +44,8 @@ public class L_Busmon_ind extends EmiTelegramFrame
 
    /**
     * Set the message status byte.
+    *
+    * @see #getStatus()
     */
    public void setStatus(int status)
    {
@@ -46,6 +53,17 @@ public class L_Busmon_ind extends EmiTelegramFrame
    }
 
    /**
+    * Returns the status. The status bit indicate various error conditions:
+    *
+    * <ul>
+    * <li>bit 7: frame error (in the frame bits)
+    * <li>bit 6: bit error (invalid bit in the frame characters)
+    * <li>bit 5: parity error (in the frame bits)
+    * <li>bit 4: overflow
+    * <li>bit 3: lost flag (at least one frame or frame piece is lost by the bus monitor)
+    * <li>bits 2..0: sequence number
+    * </ul>
+    *
     * @return the message status byte.
     */
    public int getStatus()
@@ -54,9 +72,9 @@ public class L_Busmon_ind extends EmiTelegramFrame
    }
 
    /**
-    * Set the time-stamp, in seconds since 1970-01-01 00:00:00.
+    * Set the time stamp, in seconds since 1970-01-01 00:00:00.
     *
-    * @param timestamp - the timestamp to set
+    * @param timestamp - the time stamp to set
     *
     * @see #getTimestamp()
     */
@@ -66,10 +84,10 @@ public class L_Busmon_ind extends EmiTelegramFrame
    }
 
    /**
-    * Returns the time-stamp. This is a 16bit value that contains the time taken
-    * when the frame's control field is completely received. The timer is an
-    * internal counter of the BAU - the time unit depends on the clock rate of the
-    * BAU micro controller.
+    * Returns the time stamp. This is a 16-bit value that contains the time
+    * taken when the frame's control field is completely received. The timer is
+    * an internal counter of the BAU - the time unit depends on the clock rate
+    * of the BAU micro controller.
     *
     * @return the time-stamp.
     */
@@ -79,31 +97,25 @@ public class L_Busmon_ind extends EmiTelegramFrame
    }
 
    /**
-    * Initialize the message from the given raw data, beginning at start. The
-    * first byte is expected to be the EMI message type.
-    *
-    * @throws InvalidDataException
+    * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start) throws InvalidDataException
+   public void readData(DataInput in) throws IOException
    {
-      ++start; // skip the message type
-      setStatus(rawData[start++]);
-      setTimestamp((rawData[start++] << 8) | rawData[start++]);
-      telegram.fromRawData(rawData, start);
+      setStatus(in.readUnsignedByte());
+      setTimestamp(in.readUnsignedShort());
+      super.readData(in);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      rawData[start++] = type.code;
-      rawData[start++] = status & 0xff;
-      rawData[start++] = (timestamp >> 8) & 0xff;
-      rawData[start++] = timestamp & 0xff;
-      return telegram.toRawData(rawData, start) + 4;
+      out.write(getStatus());
+      out.writeShort(getTimestamp());
+      super.writeData(out);
    }
 
    /**

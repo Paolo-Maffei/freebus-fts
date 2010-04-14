@@ -2,7 +2,6 @@ package org.freebus.knxcomm.internal;
 
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -11,7 +10,6 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.TelegramListener;
-import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
@@ -138,7 +136,6 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       sequence = -1;
       recvSemaphore.drainPermits();
 
-      telegram.setApplication(ApplicationType.GroupValue_Read);
       telegram.setTransport(Transport.Connect);
       telegram.setSequence(++sequence);
 

@@ -8,7 +8,8 @@ import org.apache.log4j.Logger;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
-import org.freebus.knxcomm.emi.EmiFrameType;
+import org.freebus.knxcomm.emi.EmiFrameFactory;
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.internal.ListenableConnection;
 
 /**
@@ -194,14 +195,11 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    {
       final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);
 
-      final EmiFrame msg = msgType.newInstance();
-      if (msg == null)
-      {
-         throw new IllegalArgumentException("Unknown EMI message: " + msgType);
-      }
+      final EmiFrame frame = EmiFrameFactory.createFrame(data);
+      if (frame == null)
+         throw new IllegalArgumentException("Unknown EMI frame: " + msgType);
 
-      msg.fromRawData(data, 0);
-      notifyListenersReceived(msg);
+      notifyListenersReceived(frame);
    }
 
    /**
@@ -255,9 +253,11 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          controlByte |= 0x20;
       buffer[4] = controlByte;
 
-      final int len = message.toRawData(buffer, 5);
-      assert (buffer[5] == message.getType().code);
-      assert (len >= 1 && len <= 16);
+      final byte[] data = message.toByteArray();
+      final int len = data.length;
+
+      for (int i = 0; i < len; ++i)
+         buffer[i + 5] = data[i];
 
       buffer[1] = len + 1;
       buffer[2] = buffer[1];

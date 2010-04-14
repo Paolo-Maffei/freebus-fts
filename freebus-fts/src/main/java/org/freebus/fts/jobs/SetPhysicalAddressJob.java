@@ -11,6 +11,7 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
+import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
@@ -115,20 +116,16 @@ public final class SetPhysicalAddressJob extends SingleDeviceJob
       // Step 4: restart the device to clear the programming mode
       //
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
+
       dataTelegram.setApplication(new Restart());
-      dataTelegram.setTransport(Transport.Connect);
-      dataTelegram.setSequence(1);
-      dataTelegram.setDest(newAddress);
       bus.send(dataTelegram);
       msleep(500);
 
-      dataTelegram.setApplication(new Restart());
-      dataTelegram.setTransport(Transport.Connected);
-      // TODO: is the data byte required?
-//      dataTelegram.setData(new int[] { 1 });
-      dataTelegram.setSequence(2);
-      bus.send(dataTelegram);
-      msleep(500);
+      final DataConnection con = bus.connect(newAddress);
+      con.send(new Telegram(new Restart()));
+      con.receive(500);
+
+      con.close();
    }
 
    /**

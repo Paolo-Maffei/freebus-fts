@@ -7,7 +7,7 @@ import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 /**
  * Abstract base class for device memory access.
  */
-public abstract class Memory implements Application
+public abstract class Memory extends AbstractApplication
 {
    private int address;
    private int count;

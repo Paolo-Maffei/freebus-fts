@@ -9,16 +9,16 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
  * A generic application with data bytes. For application types where no
  * application class exists.
  */
-public class GenericDataApplication implements Application
+public class GenericDataApplication extends AbstractApplication
 {
    private final ApplicationType type;
    private int[] data;
 
    /**
     * Create an instance for a specific application type.
-    * 
+    *
     * @param type - the application type.
-    * 
+    *
     * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type)
@@ -28,10 +28,10 @@ public class GenericDataApplication implements Application
 
    /**
     * Create an instance for a specific application type. The data is cloned.
-    * 
+    *
     * @param type - the application type.
     * @param data - the application's data.
-    * 
+    *
     * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type, int[] data)
@@ -54,7 +54,7 @@ public class GenericDataApplication implements Application
 
    /**
     * Set the application data. The data is cloned.
-    * 
+    *
     * @param data - the data to set
     */
    public void setData(int[] data)

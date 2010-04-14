@@ -1,5 +1,7 @@
 package org.freebus.knxcomm.emi;
 
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * Link data indicator. This message contains a telegram that
  * was received from the EIB bus by the bus-interface.

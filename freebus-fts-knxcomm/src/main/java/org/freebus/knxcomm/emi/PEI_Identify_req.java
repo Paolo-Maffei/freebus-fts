@@ -1,9 +1,15 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * Physical external interface (PEI) identify request.
  */
-public final class PEI_Identify_req extends EmiMessageBase
+public final class PEI_Identify_req extends AbstractEmiFrame
 {
    /**
     * Create a PEI-identify request.
@@ -14,20 +20,18 @@ public final class PEI_Identify_req extends EmiMessageBase
    }
 
    /**
-    * Initialize the message from the given raw data, beginning at start.
+    * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
    }
 
    /**
-    * Fill the raw data of the message into the array rawData.
+    * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      rawData[start] = type.code;
-      return 1;
    }
 }

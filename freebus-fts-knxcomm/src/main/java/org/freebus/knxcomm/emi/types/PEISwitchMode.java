@@ -1,4 +1,6 @@
-package org.freebus.knxcomm.emi;
+package org.freebus.knxcomm.emi.types;
+
+import org.freebus.knxcomm.emi.PEI_Switch_req;
 
 /**
  * Modes that can be switched to with a {@link PEI_Switch_req} frame.

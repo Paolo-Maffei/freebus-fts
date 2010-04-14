@@ -7,6 +7,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -79,22 +80,12 @@ public class CEmiFrame
       }
       else info = null;
 
-      frame = type.newInstance();
+      frame = EmiFrameFactory.createFrame(type);
 
-      final int data[] = new int[1024];
-      int pos = 0;
+      if (frame instanceof EmiTelegramFrame)
+         ((EmiTelegramFrame) frame).setForceExtTelegram(true);
 
-      try
-      {
-         // A hack, required until EmiFrame implements readData(DataInput)
-         while (pos < data.length)
-            data[pos++] = in.readUnsignedByte();
-      }
-      catch (IOException e)
-      {
-      }
-
-      frame.fromRawData(data, 0);
+      frame.readData(in);
    }
 
    /**
@@ -106,6 +97,9 @@ public class CEmiFrame
     */
    public void writeData(DataOutput out) throws IOException
    {
+      if (frame instanceof EmiTelegramFrame)
+         ((EmiTelegramFrame) frame).setForceExtTelegram(true);
+
       out.write(frame.getType().code);
 
       if (info == null)
@@ -118,10 +112,6 @@ public class CEmiFrame
          out.write(info);
       }
 
-      // A hack, required until EmiFrame implements writeData(DataOutput)
-      final int[] data = new int[1024];
-      final int wlen = frame.toRawData(data, 0);
-      for (int i = 1; i < wlen; ++i)
-         out.write(data[i]);
+      frame.writeData(out);
    }
 }

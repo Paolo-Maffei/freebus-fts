@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.emi;
+package org.freebus.knxcomm.emi.types;
 
 /**
  * PEI Layer types

@@ -1,16 +1,20 @@
 package org.freebus.knxcomm.emi;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
  *  Base class for EMI frames that contain a {@link Telegram} telegram.
  *  Used for e.g. {@link L_Data_ind},  {@link L_Busmon_ind}.
  */
-public abstract class EmiTelegramFrame extends EmiMessageBase
+public abstract class EmiTelegramFrame extends AbstractEmiFrame
 {
-   // The encapsulated telegram
    protected final Telegram telegram;
+   protected boolean forceExtTelegram;
 
    /**
     * Create a frame object with the given telegram.
@@ -38,26 +42,43 @@ public abstract class EmiTelegramFrame extends EmiMessageBase
    }
 
    /**
-    * Initialize the message from the given raw data, beginning at start. The
-    * first byte is expected to be the EMI message type.
-    *
-    * @throws InvalidDataException
+    * @return true if enforcing long telegrams is enabled.
     */
-   @Override
-   public void fromRawData(int[] rawData, int start) throws InvalidDataException
+   public boolean isForceExtTelegram()
    {
-      telegram.fromRawData(rawData, start + 1);
+      return forceExtTelegram;
+   }
+
+   /**
+    * Set if extended telegrams shall be enforced. If enabled, telegrams
+    * read are always expected to be extended frame format, and telegrams
+    * written will always be in extended frame format. Default is to
+    * depend on the telegram's frame format bit.
+    *
+    * @param enable - enforce long telegram format
+    */
+   public void setForceExtTelegram(boolean enable)
+   {
+      this.forceExtTelegram = enable;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
-      rawData[start] = type.code;
-      final int length = telegram.toRawData(rawData, start + 1);
-      return length + 1;
+      telegram.readData(in, forceExtTelegram);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void writeData(DataOutput out) throws IOException
+   {
+      telegram.setExtFormat(forceExtTelegram);
+      telegram.writeData(out);
    }
 
    /**
@@ -66,6 +87,6 @@ public abstract class EmiTelegramFrame extends EmiMessageBase
    @Override
    public String toString()
    {
-      return getTypeString() + telegram.toString();
+      return getTypeString() + " " + telegram;
    }
 }

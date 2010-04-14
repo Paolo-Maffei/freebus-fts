@@ -7,15 +7,15 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
  * A generic application without data bytes. For application types where no
  * application class exists.
  */
-public class GenericApplication implements Application
+public class GenericApplication extends AbstractApplication
 {
    private final ApplicationType type;
 
    /**
     * Create an instance for a specific application type.
-    * 
+    *
     * @param type - the application type.
-    * 
+    *
     * @throws IllegalArgumentException if the type is null
     */
    public GenericApplication(ApplicationType type)

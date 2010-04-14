@@ -1,9 +1,15 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * T_Connect.req - transport layer connect request
  */
-public final class T_Connect_req extends EmiMessageBase
+public final class T_Connect_req extends AbstractEmiFrame
 {
    protected int dest = 0;
 
@@ -41,29 +47,23 @@ public final class T_Connect_req extends EmiMessageBase
    }
 
    /**
-    * Initialize the message from the given raw data, beginning at start.
+    * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
-      dest = (rawData[start + 4] << 8) | rawData[start + 5];
+      in.skipBytes(3);
+      dest = in.readUnsignedShort();
    }
 
    /**
-    * Fill the raw data of the message into the array rawData.
+    * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      rawData[pos++] = type.code;
-      rawData[pos++] = 0; // control field
-      rawData[pos++] = 0;
-      rawData[pos++] = 0;
-      rawData[pos++] = dest >> 8;
-      rawData[pos++] = dest & 0xff;
-
-      return pos - start;
+      out.write(0);
+      out.writeShort(0);
+      out.writeShort(dest);
    }
 }

@@ -1,11 +1,17 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * T_Connect.con - transport layer connect confirmation
  */
-public final class T_Connect_con extends EmiMessageBase
+public final class T_Connect_con extends AbstractEmiFrame
 {
-   protected int status = 0;
+   protected int dest;
 
    /**
     * Create an empty object.
@@ -16,39 +22,42 @@ public final class T_Connect_con extends EmiMessageBase
    }
 
    /**
-    * Set the confirmation status: 0=ok
+    * Set the destination address
+    *
+    * @param dest - the address to set
     */
-   public void setStatus(int status)
+   public void setDest(int dest)
    {
-      this.status = status;
+      this.dest = dest;
    }
 
    /**
-    * @return the confirmation status: 0=ok
+    * @return the destination address
     */
-   public int getStatus()
+   public int getDest()
    {
-      return status;
+      return dest;
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public void fromRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
-      status = rawData[start + 6];
+      in.skipBytes(1); // control
+      dest = in.readUnsignedShort();
+      in.skipBytes(2);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      rawData[pos++] = type.code;
-      rawData[pos++] = 0; // control field
-      rawData[pos++] = 0;
-      rawData[pos++] = 0;
-      rawData[pos++] = 0;
-      rawData[pos++] = status;
-
-      return pos - start;
+      out.write(0);
+      out.writeShort(dest);
+      out.writeShort(0);
    }
 }

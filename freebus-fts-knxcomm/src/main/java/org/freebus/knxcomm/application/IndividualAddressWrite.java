@@ -8,7 +8,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
  * Set the physical address of all devices that are in programming mode. To be
  * sent as a broadcast to {@link PhysicalAddress#NULL 0.0.0}
  */
-public class IndividualAddressWrite implements Application
+public class IndividualAddressWrite extends AbstractApplication
 {
    private PhysicalAddress address = null;
 

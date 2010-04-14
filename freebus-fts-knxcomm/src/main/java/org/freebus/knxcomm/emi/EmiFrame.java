@@ -1,5 +1,10 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -13,31 +18,32 @@ public interface EmiFrame
    public EmiFrameType getType();
 
    /**
-    * Initialize the message from the given raw data, beginning at start. The
-    * first byte is expected to be the message type.
-    *
-    * Must be overridden in subclasses.
-    *
-    * @throws InvalidDataException
-    */
-   public void fromRawData(int[] rawData, int start) throws InvalidDataException;
-
-   /**
-    * Fill the raw data of the message into the array rawData, starting at index
-    * start. The bytes in rawData are in the range 0..255.
-    *
-    * @return number of bytes that were used.
-    */
-   public int toRawData(int[] rawData, int start);
-
-   /**
     * Initialize the object from a {@link DataInput data input stream}. The
-    * first byte of the stream is expected to be the first byte after the frame
-    * type.
+    * first byte of the stream is expected to be the first byte of the frame
+    * body, excluding the frame type.
     *
     * @param in - the input stream to read.
     *
     * @throws InvalidDataException
     */
-//   public void readData(DataInput in) throws IOException;
+   public void readData(DataInput in) throws IOException;
+
+   /**
+    * Write the object to a {@link DataOutput data output stream}. The first
+    * byte of the stream is expected to be the first byte of the frame body,
+    * excluding the frame type.
+    *
+    * @param out - the output stream to write the object to.
+    *
+    * @throws IOException
+    */
+   public void writeData(DataOutput out) throws IOException;
+
+   /**
+    * Write the frame into a byte array. The whole frame is written, including the
+    * {@link EmiFrameType EMI frame type}.
+    *
+    * @return the frame serialized into a byte array
+    */
+   public byte[] toByteArray();
 }

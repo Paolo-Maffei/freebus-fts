@@ -1,9 +1,15 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * L_Poll_Data.req - data polling request
  */
-public final class L_Poll_Data_req extends EmiMessageBase
+public final class L_Poll_Data_req extends AbstractEmiFrame
 {
    protected int dest = 0;
    protected int numSlots = 15;
@@ -45,31 +51,26 @@ public final class L_Poll_Data_req extends EmiMessageBase
    }
 
    /**
-    * Initialize the message from the given raw data, beginning at start.
+    * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
-      dest = (rawData[start + 4] << 8) | rawData[start + 5];
-      numSlots = rawData[start + 6] & 0x0f;
+      in.skipBytes(3);
+      dest = in.readUnsignedShort();
+      numSlots = in.readUnsignedByte() & 0x0f;
    }
 
    /**
-    * Fill the raw data of the message into the array rawData.
+    * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      rawData[pos++] = type.code;
-      rawData[pos++] = 0xf0; // control field
-      rawData[pos++] = 0;
-      rawData[pos++] = 0;
-      rawData[pos++] = dest >> 8;
-      rawData[pos++] = dest & 0xff;
-      rawData[pos++] = numSlots & 0x0f;
-
-      return pos - start;
+      out.write(0xf0); // control field
+      out.write(0);
+      out.write(0);
+      out.writeShort(dest);
+      out.write(numSlots & 0x0f);
    }
 }

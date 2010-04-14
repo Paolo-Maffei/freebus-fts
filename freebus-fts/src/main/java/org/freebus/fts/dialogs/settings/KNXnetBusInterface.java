@@ -142,6 +142,8 @@ final class KNXnetBusInterface extends JPanel
          sb.append("</body></html>");
 
          lblTestOutput.setText(sb.toString());
+
+         con.close();
       }
       catch (Exception e)
       {

@@ -1,5 +1,7 @@
 package org.freebus.knxcomm.emi;
 
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * Link data request confirmation.
  */

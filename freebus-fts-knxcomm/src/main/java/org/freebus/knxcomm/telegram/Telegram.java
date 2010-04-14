@@ -1,5 +1,11 @@
 package org.freebus.knxcomm.telegram;
 
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
@@ -8,7 +14,7 @@ import org.freebus.knxcomm.application.ApplicationFactory;
 import org.freebus.knxcomm.application.ApplicationType;
 
 /**
- * A communication data packet as it is sent on the EIB bus.
+ * A communication data packet as it is sent on the KNX/EIB bus.
  *
  * It is mandatory for subclasses to override {@link #clone()} to avoid
  * problems.
@@ -19,16 +25,27 @@ public class Telegram implements Cloneable
    private Address dest = GroupAddress.BROADCAST;
    private int routingCounter = 6;
    private Priority priority = Priority.LOW;
-   private boolean repeated = false;
+   private boolean repeated;
    private Transport transport = Transport.Individual;
-   private int sequence = 0;
-   private Application application = null;
+   private boolean extFormat;
+   private int sequence;
+   private Application application;
 
    /**
     * Create an empty telegram object.
     */
    public Telegram()
    {
+   }
+
+   /**
+    * Create a telegram object with an application.
+    *
+    * @param application - the application to set
+    */
+   public Telegram(Application application)
+   {
+      this.application = application;
    }
 
    /**
@@ -44,93 +61,6 @@ public class Telegram implements Cloneable
       catch (CloneNotSupportedException e)
       {
          throw new RuntimeException(e);
-      }
-   }
-
-   /**
-    * Initialize the message from the given raw data, beginning at start.
-    *
-    * @throws InvalidDataException
-    */
-   public void fromRawData(int[] rawData, int start) throws InvalidDataException
-   {
-      int pos = start;
-
-      /*
-       * The control byte. bit 7: frame length-type: 0=extended frame,
-       * 1=standard frame. bit 6: frame type 1: 0=data telegram, 1=poll-data
-       * telegram. bit 5: repeated flag: 0=if the telegram is repeated, 1=not
-       * repeated. bit 4: frame type 2: 0=acknowledge frame, 1=normal frame. bit
-       * 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority. bit 1: 0
-       * bit 0: 0
-       */
-      final int ctrl = rawData[pos++];
-
-      priority = Priority.valueOf((ctrl >> 2) & 3);
-      repeated = (ctrl & 0x20) == 0;
-
-      // 16-bit sender address
-      from = new PhysicalAddress(rawData[pos++], rawData[pos++]);
-
-      // 16-bit destination address
-      final int destAddr = (rawData[pos++] << 8) | rawData[pos++];
-
-      /*
-       * DRL byte (DRL means: destination address, routing, length). bit 7:
-       * destination is 0=physical address, 1=group address bit 6..4: routing
-       * hop count: 0=never route, 1..6=number of routings, 7=always route bit
-       * 3..0: data length minus 2: 0 means 2 bytes, 15 means 17 bytes
-       */
-      final int drl = rawData[pos++];
-
-      final boolean isGroup = (drl & 0x80) != 0;
-      if (isGroup)
-         dest = new GroupAddress(destAddr);
-      else dest = new PhysicalAddress(destAddr);
-
-      routingCounter = (drl >> 4) & 7;
-
-      int dataLen = drl & 15;
-      if (dataLen + pos >= rawData.length)
-         throw new InvalidDataException("Invalid data length", dataLen);
-
-      // TPCI - transport control field
-      int tpci = rawData[pos++];
-      transport = Transport.valueOf(isGroup, tpci);
-
-      if (transport.hasSequence)
-         sequence = (tpci >> 2) & 15;
-      else sequence = 0;
-
-      if (rawData.length > pos && (transport.mask & 3) == 0)
-      {
-         // APCI - application type & data bits
-         final int apciByte = rawData[pos++];
-         final int apci = ((tpci & 3) << 8) | apciByte;
-         final ApplicationType type = ApplicationType.valueOf(apci);
-         application = ApplicationFactory.createApplication(type);
-
-         final int dataMask = type.getDataMask();
-         if (dataMask != 0 && dataLen <= 1)
-         {
-            // ACPI byte contains data bits
-            application.fromRawData(new int[] { apciByte }, 0, 1);
-         }
-         else if (dataLen > 1)
-         {
-            // telegram contains extra data
-            --pos;
-            application.fromRawData(rawData, pos, dataLen);
-            pos += dataLen;
-         }
-         else
-         {
-            // telegram contains no extra data
-         }
-      }
-      else
-      {
-         application = null;
       }
    }
 
@@ -310,6 +240,322 @@ public class Telegram implements Cloneable
    public void setTransport(Transport transport)
    {
       this.transport = transport;
+   }
+
+   /**
+    * @return true if the telegram is written in extended frame format.
+    */
+   public boolean isExtFormat()
+   {
+      return extFormat;
+   }
+
+   /**
+    * Switch the telegram to extended frame format for
+    * {@link #writeData(DataOutput)}.
+    *
+    * @param extFormat - enable extended frame format
+    */
+   public void setExtFormat(boolean extFormat)
+   {
+      this.extFormat = extFormat;
+   }
+
+   /**
+    * Initialize the object from a {@link DataInput data input stream}. The
+    * first byte of the stream is expected to be the first byte of the frame
+    * body, excluding the frame type.
+    *
+    * @param in - the input stream to read.
+    *
+    * @throws InvalidDataException
+    */
+   public void readData(DataInput in) throws IOException
+   {
+      readData(in, false);
+   }
+
+   /**
+    * Initialize the object from a {@link DataInput data input stream}. The
+    * first byte of the stream is expected to be the first byte of the frame
+    * body, excluding the frame type.
+    *
+    * @param in - the input stream to read.
+    * @param forceExtFormat - enforce extended frame format.
+    *
+    * @throws InvalidDataException
+    */
+   public void readData(DataInput in, boolean forceExtFormat) throws IOException
+   {
+      final int ctrl = in.readUnsignedByte();
+      int dataLen;
+
+      extFormat = forceExtFormat || (ctrl & 0x80) == 0;
+      if (extFormat)
+         dataLen = readDataExtendedHeader(in, ctrl);
+      else dataLen = readDataShortHeader(in, ctrl);
+
+      // TPCI - transport control field
+      int tpci = in.readUnsignedByte();
+      transport = Transport.valueOf(dest instanceof GroupAddress, tpci);
+
+      if (transport.hasSequence)
+         sequence = (tpci >> 2) & 15;
+      else sequence = 0;
+
+      if ((transport.mask & 3) == 0)
+      {
+         // APCI - application type & data bits
+         final int apciByte = in.readUnsignedByte();
+         final int apci = ((tpci & 3) << 8) | apciByte;
+         final ApplicationType type = ApplicationType.valueOf(apci);
+         application = ApplicationFactory.createApplication(type);
+
+         final int dataMask = type.getDataMask();
+         if (dataMask != 0)
+         {
+            application.setApciValue(apciByte & dataMask);
+            --dataLen;
+         }
+
+         // TODO remove "dataMask != 0" when application.readData() is properly
+         // using DataInput
+         if (dataLen > 0 || dataMask != 0)
+            application.readData(in, dataLen);
+      }
+      else
+      {
+         application = null;
+      }
+   }
+
+   /**
+    * Initialize the object from a {@link DataInput data input stream}, short
+    * telegram frame format. This method is usually called by
+    * {@link #readData(DataInput, boolean)}.
+    *
+    * @param in - the input stream to read.
+    * @param ctrl - the control byte.
+    *
+    * @return the number of APCI data bytes
+    *
+    * @throws IOException
+    */
+   int readDataShortHeader(DataInput in, int ctrl) throws IOException
+   {
+      /*
+       * Control byte: bit 7: frame length-type: 0=extended frame, 1=standard
+       * frame; bit 6: frame type 1: 0=data telegram, 1=poll-data telegram; bit
+       * 5: repeated flag: 0=repeated, 1=not repeated; bit 4: frame type 2:
+       * 0=acknowledge frame, 1=normal frame. bit 3+2: Priority: 0=system,
+       * 1=urgent, 2=normal, 3=low priority. bit 1: 0 bit 0: confirmation: 0=ok,
+       * 1=error.
+       */
+      priority = Priority.valueOf((ctrl >> 2) & 3);
+      repeated = (ctrl & 0x20) == 0;
+
+      // 16-bit sender address
+      from = new PhysicalAddress(in.readUnsignedShort());
+
+      // 16-bit destination address
+      final int destAddr = in.readUnsignedShort();
+
+      /*
+       * DRL byte (DRL means: destination address, routing, length). bit 7:
+       * destination is 0=physical address, 1=group address bit 6..4: routing
+       * hop count: 0=never route, 1..6=number of routings, 7=always route bit
+       * 3..0: data length minus 2: 0 means 2 bytes, 15 means 17 bytes
+       */
+      final int drl = in.readUnsignedByte();
+
+      routingCounter = (drl >> 4) & 7;
+
+      final boolean isGroup = (drl & 0x80) != 0;
+      if (isGroup)
+         dest = new GroupAddress(destAddr);
+      else dest = new PhysicalAddress(destAddr);
+
+      // data length
+      return drl & 15;
+   }
+
+   /**
+    * Initialize the object from a {@link DataInput data input stream}, extended
+    * telegram frame format. This method is usually called by
+    * {@link #readData(DataInput, boolean)}.
+    *
+    * @param in - the input stream to read.
+    * @param ctrl - the control byte.
+    *
+    * @return the number of APCI data bytes
+    *
+    * @throws IOException
+    */
+   int readDataExtendedHeader(DataInput in, int ctrl) throws IOException
+   {
+      /*
+       * 1st control byte: bit 7: frame length-type: 0=extended frame,
+       * 1=standard frame; bit 6: 0; bit 5: repeated flag: 0=repeated, 1=not
+       * repeated; bit 4: system broadcast flag: 0=system broadcast,
+       * 1=broadcast; bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low
+       * priority; bit 1: acknowledge request flag: 0=no ack, 1=ack requested;
+       * bit 0: confirmation: 0=ok, 1=error.
+       */
+      priority = Priority.valueOf((ctrl >> 2) & 3);
+      repeated = (ctrl & 0x20) == 0;
+
+      /*
+       * 2nd control byte: bit 7: destination address type: 0=individual,
+       * 1=group bit 6..4: routing counter bit 3..0: encoding: 0=standard long
+       * frame, 01xxb=LTE frame
+       */
+      final int ctrl2 = in.readUnsignedByte();
+      final boolean isGroup = (ctrl2 & 0x80) != 0;
+      routingCounter = (ctrl2 >> 4) & 7;
+
+      from = new PhysicalAddress(in.readUnsignedShort());
+      if (isGroup)
+         dest = new GroupAddress(in.readUnsignedShort());
+      else dest = new PhysicalAddress(in.readUnsignedShort());
+
+      // 8-bit data length
+      return in.readUnsignedByte();
+   }
+
+   /**
+    * Write the telegram to a {@link DataOutput data output stream}.
+    *
+    * @param out - the output stream to write the telegram to.
+    *
+    * @throws IOException
+    */
+   public void writeData(DataOutput out) throws IOException
+   {
+      byte[] appData = null;
+      int appDataLen = 0;
+      int apci = 0;
+
+      if (transport.mask != 255 && application != null)
+      {
+         appData = application.toByteArray();
+         appDataLen = appData.length - 1;
+
+         if (appDataLen > 15)
+            extFormat = true;
+
+         apci = application.getType().getApci();
+      }
+
+      if (extFormat)
+         writeDataExtendedHeader(out, appDataLen);
+      else writeDataShortHeader(out, appDataLen);
+
+      int tpci = transport.value;
+      tpci |= (apci >> 8) & ~transport.mask;
+      if (transport.hasSequence)
+         tpci |= (sequence & 15) << 2;
+      out.write(tpci);
+
+      if (appData != null)
+         out.write(appData, 1, appData.length - 1);
+   }
+
+   /**
+    * Write the telegram header to a {@link DataOutput data output stream} with
+    * short telegram frame format.
+    *
+    * @param out - the output stream to write the telegram to.
+    * @param appDataLen - the length of the application data.
+    *
+    * @throws IOException
+    */
+   void writeDataShortHeader(DataOutput out, int appDataLen) throws IOException
+   {
+      /*
+       * Control byte: bit 7: frame length-type: 0=extended frame, 1=standard
+       * frame; bit 6: frame type 1: 0=data telegram, 1=poll-data telegram; bit
+       * 5: repeated flag: 0=repeated, 1=not repeated; bit 4: frame type 2:
+       * 0=acknowledge frame, 1=normal frame. bit 3+2: Priority: 0=system,
+       * 1=urgent, 2=normal, 3=low priority. bit 1: 0 bit 0: confirmation: 0=ok,
+       * 1=error.
+       */
+      int ctrl = (1 << 7) | (1 << 4);
+      if (!repeated)
+         ctrl |= 1 << 5;
+      ctrl |= priority.id << 2;
+      out.write(ctrl);
+
+      out.writeShort(from.getAddr());
+      out.writeShort(dest.getAddr());
+
+      int drl = ((routingCounter & 7) << 4) | (appDataLen & 15);
+      if (dest instanceof GroupAddress)
+         drl |= 0x80;
+
+      out.write(drl);
+   }
+
+   /**
+    * Write the telegram header to a {@link DataOutput data output stream} with
+    * extended telegram frame format.
+    *
+    * @param out - the output stream to write the telegram to.
+    * @param appDataLen - the length of the application data.
+    *
+    * @throws IOException
+    */
+   void writeDataExtendedHeader(DataOutput out, int appDataLen) throws IOException
+   {
+      /*
+       * 1st control byte: bit 7: frame length-type: 0=extended frame,
+       * 1=standard frame; bit 6: 0; bit 5: repeated flag: 0=repeated, 1=not
+       * repeated; bit 4: system broadcast flag: 0=system broadcast,
+       * 1=broadcast; bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low
+       * priority; bit 1: acknowledge request flag: 0=no ack, 1=ack requested;
+       * bit 0: confirmation: 0=ok, 1=error.
+       */
+      int ctrl = (1 << 4);
+      if (!repeated)
+         ctrl |= 1 << 5;
+      ctrl |= priority.id << 2;
+      out.write(ctrl);
+
+      /*
+       * 2nd control byte: bit 7: destination address type: 0=individual,
+       * 1=group bit 6..4: routing counter bit 3..0: encoding: 0=standard long
+       * frame, 01xxb=LTE frame
+       */
+      int ctrl2 = routingCounter << 4;
+      if (dest instanceof GroupAddress)
+         ctrl2 |= 0x80;
+      out.write(ctrl2);
+
+      out.writeShort(from.getAddr());
+      out.writeShort(dest.getAddr());
+
+      out.write(appDataLen);
+   }
+
+   /**
+    * Write the telegram into a byte array.
+    *
+    * @return the telegram serialized into a byte array
+    */
+   public byte[] toByteArray()
+   {
+      try
+      {
+         final ByteArrayOutputStream outByteStream = new ByteArrayOutputStream(1024);
+         final DataOutputStream out = new DataOutputStream(outByteStream);
+
+         writeData(out);
+
+         return outByteStream.toByteArray();
+      }
+      catch (IOException e)
+      {
+         throw new RuntimeException();
+      }
    }
 
    /**

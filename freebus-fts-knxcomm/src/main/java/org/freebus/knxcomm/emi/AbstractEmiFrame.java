@@ -1,19 +1,25 @@
 package org.freebus.knxcomm.emi;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.DataOutputStream;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 
 
 /**
- * Base class for "External Message Interface" (EMI) messages.
+ * Base class for "External Message Interface" (EMI) frames.
  */
-public abstract class EmiMessageBase implements EmiFrame
+public abstract class AbstractEmiFrame implements EmiFrame
 {
-   protected final EmiFrameType type;
+   private final EmiFrameType type;
 
    /**
     * Internal constructor that sets the message type to {@link EmiFrameType#UNKNOWN}.
     */
-   protected EmiMessageBase()
+   protected AbstractEmiFrame()
    {
       this.type = EmiFrameType.UNKNOWN;
    }
@@ -22,7 +28,7 @@ public abstract class EmiMessageBase implements EmiFrame
     * Create a new message and set the message type.
     * Internal constructor for subclasses.
     */
-   protected EmiMessageBase(EmiFrameType type)
+   protected AbstractEmiFrame(EmiFrameType type)
    {
       this.type = type;
    }
@@ -47,15 +53,36 @@ public abstract class EmiMessageBase implements EmiFrame
       return enclosingClazz.getSimpleName() + '.' + clazz.getSimpleName();
    }
 
-   /* (non-Javadoc)
-    * @see org.freebus.fts.eib.EmiMessageInterface#fromRawData(int[], int)
+   /**
+    * {@inheritDoc}
     */
-   public abstract void fromRawData(int[] rawData, int start) throws InvalidDataException;
+   public abstract void readData(DataInput in) throws IOException;
 
-   /* (non-Javadoc)
-    * @see org.freebus.fts.eib.EmiMessageInterface#toRawData(int[], int)
+   /**
+    * {@inheritDoc}
     */
-   public abstract int toRawData(int[] rawData, int start);
+   public abstract void writeData(DataOutput out) throws IOException;
+
+   /**
+    * {@inheritDoc}
+    */
+   final public byte[] toByteArray()
+   {
+      final ByteArrayOutputStream outByteStream = new ByteArrayOutputStream(1024);
+      final DataOutputStream out = new DataOutputStream(outByteStream);
+
+      try
+      {
+         out.write(getType().code);
+         writeData(out);
+
+         return outByteStream.toByteArray();
+      }
+      catch (IOException e)
+      {
+         throw new RuntimeException();
+      }
+   }
 
    /**
     * @return the address as a string: "xx.xx.xx" for a physical address,

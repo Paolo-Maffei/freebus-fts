@@ -6,7 +6,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 /**
  * Read values from an A/D converter channel.
  */
-public class ADCRead implements Application
+public class ADCRead extends AbstractApplication
 {
    private int channel = 0;
    private int count = 1;
@@ -20,10 +20,10 @@ public class ADCRead implements Application
 
    /**
     * Create an A/D converter read object.
-    * 
+    *
     * @param channel - A/D converter channel (0..63).
     * @param count - the number of samples to read.
-    * 
+    *
     * @throws IllegalArgumentException if the channel is out of range.
     */
    public ADCRead(int channel, int count)
@@ -42,9 +42,9 @@ public class ADCRead implements Application
 
    /**
     * Set the A/D converter channel (0..63).
-    * 
+    *
     * @param channel the channel to set
-    * 
+    *
     * @throws IllegalArgumentException if the channel is out of range.
     */
    public void setChannel(int channel)
@@ -65,7 +65,7 @@ public class ADCRead implements Application
 
    /**
     * Set the number of samples to read.
-    * 
+    *
     * @param count - the number of samples.
     */
    public void setCount(int count)

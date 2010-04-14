@@ -1,12 +1,18 @@
 package org.freebus.knxcomm.emi;
 
+import java.io.DataInput;
+import java.io.DataOutput;
+import java.io.IOException;
+
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+
 /**
  * Physical external interface (PEI) identify confirmation.
  */
-public final class PEI_Identify_con extends EmiMessageBase
+public final class PEI_Identify_con extends AbstractEmiFrame
 {
-   protected int addr = 0;
-   protected int serialHigh = 0, serialMid = 0, serialLow = 0;
+   protected int addr;
+   protected long serial;
 
    /**
     * Create an empty object.
@@ -33,65 +39,46 @@ public final class PEI_Identify_con extends EmiMessageBase
    }
 
    /**
-    * Set the serial number. High, mid and low are all 16-bit numbers.
+    * Set the 6-byte serial number.
+    *
+    * @param serial - the serial number to set
     */
-   public void setSerial(int high, int mid, int low)
+   public void setSerial(long serial)
    {
-      serialHigh = high;
-      serialMid = mid;
-      serialLow = low;
+      this.serial = serial;
    }
 
    /**
-    * @return the high number of the serial.
+    * @return the 6-byte serial number.
     */
-   public int getSerialHigh()
+   public long getSerial()
    {
-      return serialHigh;
+      return serial;
    }
 
    /**
-    * @return the mid number of the serial.
+    * {@inheritDoc}
     */
-   public int getSerialMid()
-   {
-      return serialMid;
-   }
-
-   /**
-    * @return the low number of the serial.
-    */
-   public int getSerialLow()
-   {
-      return serialLow;
-   }
-
    @Override
-   public void fromRawData(int[] rawData, int start)
+   public void readData(DataInput in) throws IOException
    {
-      ++start;
-      addr = (rawData[start++] << 8) | rawData[start++];
-      serialHigh = (rawData[start++] << 8) | rawData[start++];
-      serialMid = (rawData[start++] << 8) | rawData[start++];
-      serialLow = (rawData[start++] << 8) | rawData[start++];
+      addr = in.readUnsignedShort();
+
+      serial = in.readUnsignedShort() << 32L;
+      serial |= in.readUnsignedShort() << 16L;
+      serial |= in.readUnsignedShort();
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      rawData[pos++] = type.code;
-      rawData[pos++] = addr >> 8;
-      rawData[pos++] = addr & 0xff;
-      rawData[pos++] = serialHigh >> 8;
-      rawData[pos++] = serialHigh & 0xff;
-      rawData[pos++] = serialMid >> 8;
-      rawData[pos++] = serialMid & 0xff;
-      rawData[pos++] = serialLow >> 8;
-      rawData[pos++] = serialLow & 0xff;
-
-      return pos - start;
+      out.writeShort(addr);
+      out.writeShort((int) (serial >> 32));
+      out.writeShort((int) (serial >> 16));
+      out.writeShort((int) serial);
    }
 
    /**
@@ -100,6 +87,10 @@ public final class PEI_Identify_con extends EmiMessageBase
    @Override
    public String toString()
    {
+      final int serialHigh = (int) (serial >> 32) & 0xffff;
+      final int serialMid = (int) (serial >> 16) & 0xffff;
+      final int serialLow = (int) serial & 0xffff;
+
       return getTypeString() + ' ' + addrToString(addr, false) + String.format(" version %d.%d.%d", serialHigh, serialMid, serialLow);
    }
 }

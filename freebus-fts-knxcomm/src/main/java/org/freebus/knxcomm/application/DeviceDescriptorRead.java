@@ -6,7 +6,7 @@ import org.freebus.knxcomm.telegram.InvalidDataException;
 /**
  * Read a device descriptor.
  */
-public class DeviceDescriptorRead implements Application
+public class DeviceDescriptorRead extends AbstractApplication implements Application
 {
    /**
     * An invalid device descriptor type.
@@ -30,7 +30,7 @@ public class DeviceDescriptorRead implements Application
 
    /**
     * Create a device descriptor object.
-    * 
+    *
     * @param descriptorType - the device descriptor type.
     */
    public DeviceDescriptorRead(int descriptorType)
@@ -48,7 +48,7 @@ public class DeviceDescriptorRead implements Application
 
    /**
     * Set the device descriptor type.
-    * 
+    *
     * @param descriptorType - the descriptor type to set
     */
    public void setDescriptorType(int descriptorType)
