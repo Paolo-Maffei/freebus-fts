@@ -35,14 +35,18 @@ public interface BusInterface
    public void send(Telegram telegram) throws IOException;
 
    /**
-    * Open a data connection to the device with the given physical address. Also
-    * calls {@link DataConnection#open()}.
+    * Returns an {@link DataConnection#open() opened} data connection to a
+    * specific device on the KNX/EIB bus. The connection can be used for
+    * "connected" data transfer between the device.
     * <p>
     * Always close the connection with {@link DataConnection#close()} after
     * using it.
     *
     * @param addr - the physical address of the target device.
-    * @return The connection.
+    *
+    * @return The new, {@link DataConnection#open() opened} connection.
+    *
+    * @throws IOException
     */
    public DataConnection connect(PhysicalAddress addr) throws IOException;
 

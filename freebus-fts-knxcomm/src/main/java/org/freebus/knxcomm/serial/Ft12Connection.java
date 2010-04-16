@@ -5,12 +5,14 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.HexString;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.internal.ListenableConnection;
+import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * An EIB/KNX bus connection to a device that speaks the FT1.2 protocol.
@@ -31,7 +33,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    protected int writeFcbCount = 0;
 
    // FT1.2 acknowledgment message
-   protected static final int[] ackMsg = { 0xe5 };
+   protected static final byte[] ackMsg = { (byte) Ft12FrameFormat.ACK.code };
 
    /**
     * Called by the data transport methods when data is ready to be received.
@@ -41,6 +43,10 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    protected void dataAvailable() throws IOException
    {
       final int formatByte = read();
+
+      if (formatByte == -1)
+         return; // EOF encountered
+
       final Ft12FrameFormat format = Ft12FrameFormat.valueOf(formatByte);
 
       if (format == Ft12FrameFormat.ACK)
@@ -69,10 +75,10 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       final int controlByte = read();
 
       int checksumCalc = controlByte;
-      final int[] data = dataLen > 0 ? new int[dataLen] : null;
+      final byte[] data = dataLen > 0 ? new byte[dataLen] : null;
       for (int i = 0; i < dataLen; ++i)
       {
-         data[i] = read();
+         data[i] = (byte) read();
          checksumCalc += data[i];
       }
 
@@ -80,43 +86,30 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       final int checksum = read();
 
       final int eofByte = read();
-      String errMsg = null;
 
       if (format == null)
-      {
-         errMsg = String.format("invalid FT1.2 frame-format 0x%02x", formatByte);
-      }
-      else if (formatByte != formatByteRepeat)
-      {
-         errMsg = String.format("invalid FT1.2 repeated frame-format 0x%02x, expected 0x%02x", formatByteRepeat,
-               formatByte);
-      }
-      else if (checksum != checksumCalc)
-      {
-         errMsg = String.format("wrong FT1.2 frame checksum 0x%02x, expected 0x%02x", checksum, checksumCalc);
-      }
-      else if (eofByte != eofMarker)
-      {
-         errMsg = String.format("wrong FT1.2 frame end-marker 0x%02x, expected 0x%02x", eofMarker, eofByte);
-      }
+         throw new InvalidDataException("invalid FT1.2 frame-format", formatByte);
+
+      if (formatByte != formatByteRepeat)
+         throw new InvalidDataException("invalid FT1.2 repeated frame-format", formatByteRepeat);
+
+      if (checksum != checksumCalc)
+         throw new InvalidDataException("wrong FT1.2 frame checksum", checksum & 255);
+
+      if (eofByte != eofMarker)
+         throw new InvalidDataException("wrong FT1.2 frame end-marker", eofByte);
 
       final Ft12Function func = Ft12Function.valueOf(controlByte & 0x0f);
 
-      if (logger.isDebugEnabled() || errMsg != null)
+      if (logger.isDebugEnabled())
       {
          final StringBuffer sb = new StringBuffer();
-         sb.append("READ: ");
+         sb.append("READ: ").append(func);
 
-         if (errMsg != null)
-            sb.append(errMsg).append(": ");
+         if (data != null)
+            sb.append(' ').append(HexString.toString(data)).append(String.format(" (checksum %02x)", checksum));
 
-         sb.append(format).append(' ').append(func);
-         for (int i = 0; i < dataLen; ++i)
-            sb.append(String.format(" %02x", data[i]));
-
-         if (errMsg == null)
-            logger.debug(sb);
-         else logger.error(errMsg);
+         logger.debug(sb);
       }
 
       // Send acknowledgment
@@ -144,7 +137,8 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     *
     * @throws IOException
     */
-   public void processFrame(final Ft12FrameFormat format, final Ft12Function func, final int[] data) throws IOException
+   public void processFrame(final Ft12FrameFormat format, final Ft12Function func, final byte[] data)
+         throws IOException
    {
       if (format == Ft12FrameFormat.FIXED)
          processFixedFrame(func);
@@ -191,15 +185,20 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     *
     * @throws IOException
     */
-   protected void processVariableFrame(final Ft12Function func, final int[] data) throws IOException
+   protected void processVariableFrame(final Ft12Function func, final byte[] data) throws IOException
    {
-      final EmiFrameType msgType = EmiFrameType.valueOf(data[0]);
+      if (func == Ft12Function.DATA)
+      {
+         final EmiFrame frame = EmiFrameFactory.createFrame(data);
+         if (frame == null)
+            throw new IllegalArgumentException("Unknown EMI frame: " + EmiFrameType.valueOf(data[0] & 255));
 
-      final EmiFrame frame = EmiFrameFactory.createFrame(data);
-      if (frame == null)
-         throw new IllegalArgumentException("Unknown EMI frame: " + msgType);
-
-      notifyListenersReceived(frame);
+         notifyListenersReceived(frame);
+      }
+      else
+      {
+         throw new InvalidDataException("invalid FT1.2 variable-width function", func == null ? 0 : func.code);
+      }
    }
 
    /**
@@ -242,16 +241,16 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    @Override
    public void send(EmiFrame message) throws IOException
    {
-      final int[] buffer = new int[32];
+      final byte[] buffer = new byte[280];
       StringBuffer sb = new StringBuffer();
-      buffer[0] = Ft12FrameFormat.VARIABLE.code;
+      buffer[0] = (byte) Ft12FrameFormat.VARIABLE.code;
       // bytes 1+2 contain the data length
       buffer[3] = buffer[0];
 
       int controlByte = 0x50 | Ft12Function.DATA.code;
       if ((writeFcbCount++ & 1) == 1)
          controlByte |= 0x20;
-      buffer[4] = controlByte;
+      buffer[4] = (byte) controlByte;
 
       final byte[] data = message.toByteArray();
       final int len = data.length;
@@ -259,7 +258,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       for (int i = 0; i < len; ++i)
          buffer[i + 5] = data[i];
 
-      buffer[1] = len + 1;
+      buffer[1] = (byte) (len + 1);
       buffer[2] = buffer[1];
 
       int checksum = controlByte;
@@ -267,7 +266,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          checksum += buffer[i + 5];
       checksum &= 0xff;
 
-      buffer[len + 5] = checksum;
+      buffer[len + 5] = (byte) checksum;
       buffer[len + 6] = eofMarker;
 
       if (logger.isDebugEnabled())
@@ -313,11 +312,11 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     */
    public void send(final Ft12Function func, int tries) throws IOException
    {
-      final int[] data = new int[4];
-      data[0] = Ft12FrameFormat.FIXED.code;
-      data[1] = func.code;
+      final byte[] data = new byte[4];
+      data[0] = (byte) Ft12FrameFormat.FIXED.code;
+      data[1] = (byte) func.code;
       data[2] = data[1];
-      data[3] = eofMarker;
+      data[3] = (byte) eofMarker;
 
       logger.debug("WRITE: " + func.toString());
       writeConfirmed(data, data.length, tries);
@@ -326,7 +325,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    /**
     * Send length bytes of the given data to the BAU.
     */
-   protected abstract void write(int[] data, int length) throws IOException;
+   protected abstract void write(byte[] data, int length) throws IOException;
 
    /**
     * Send length bytes of the given data to the BAU and wait for an acknowledge
@@ -340,7 +339,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     *
     * @throw IOException if no acknowledge is received at all or the write fails
     */
-   private synchronized final void writeConfirmed(final int[] data, int len, int tries) throws IOException
+   private synchronized final void writeConfirmed(final byte[] data, int len, int tries) throws IOException
    {
       for (int turn = 0; turn < tries; ++turn)
       {
@@ -348,7 +347,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
          try
          {
-            if (waitAckSemaphore.tryAcquire(100, TimeUnit.MILLISECONDS))
+            if (waitAckSemaphore.tryAcquire(250, TimeUnit.MILLISECONDS))
                return;
          }
          catch (InterruptedException e)

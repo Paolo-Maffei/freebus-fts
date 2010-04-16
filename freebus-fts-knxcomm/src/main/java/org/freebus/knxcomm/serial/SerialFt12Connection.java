@@ -31,7 +31,7 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
 
    /**
     * Connect to the serial port.
-    * 
+    *
     * @throws IOException
     */
    @Override
@@ -84,13 +84,30 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
 
    /**
     * Receive one byte from the serial port.
-    * 
+    *
     * @throws IOException
     */
    @Override
    protected int read() throws IOException
    {
-      return inputStream.read();
+      int b = inputStream.read();
+
+      if (b < 0)
+      {
+         try
+         {
+            inputStream.wait(50);
+         }
+         catch (InterruptedException e)
+         {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+         }
+
+         b = inputStream.read();
+      }
+
+      return b;
    }
 
    /**
@@ -106,15 +123,13 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
 
    /**
     * Send length bytes of data to the serial port.
-    * 
+    *
     * @throws IOException
     */
    @Override
-   protected void write(int[] data, int length) throws IOException
+   protected void write(byte[] data, int length) throws IOException
    {
-      for (int i = 0; i < length; ++i)
-         outputStream.write(data[i]);
-
+      outputStream.write(data, 0, length);
       outputStream.flush();
    }
 

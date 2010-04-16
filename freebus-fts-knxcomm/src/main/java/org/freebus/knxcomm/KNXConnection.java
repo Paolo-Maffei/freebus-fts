@@ -36,7 +36,7 @@ public interface KNXConnection
     *
     * @throws IOException
     */
-   public void send(EmiFrame message) throws IOException;
+   public void send(EmiFrame frame) throws IOException;
 
    /**
     * Add a frame listener. Frame listeners get called when {@link EmiFrame}s

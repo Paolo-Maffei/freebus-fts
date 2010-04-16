@@ -528,7 +528,7 @@ public enum ApplicationType
    @Override
    public String toString()
    {
-      return name() + String.format(" [%03X]", apci);
+      return name();
    }
 
    /**

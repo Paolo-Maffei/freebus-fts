@@ -114,9 +114,9 @@ public interface Application
    /**
     * Set the APCI data value.
     * <p>
-    * The caller might not call {@link #readData(DataInput)}, so the
+    * The caller might not call {@link #readData(DataInput, int)}, so the
     * implementation of this method shall not depend on
-    * {@link #readData(DataInput)} being called.
+    * {@link #readData(DataInput, int)} being called.
     *
     * @param value - the data value
     *

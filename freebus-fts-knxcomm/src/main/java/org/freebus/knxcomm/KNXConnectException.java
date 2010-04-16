@@ -25,4 +25,12 @@ public final class KNXConnectException extends IOException
    {
       super(message, cause);
    }
+
+   /**
+    * Create a EIB bus-interface connect-failed exception.
+    */
+   public KNXConnectException(Throwable cause)
+   {
+      super(cause);
+   }
 }

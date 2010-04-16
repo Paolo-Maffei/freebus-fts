@@ -86,9 +86,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
          Logger.getLogger(getClass()).info(frame);
          physicalAddr = new PhysicalAddress(((PEI_Identify_con) frame).getAddr());
       }
-// TODO check Second condition
-      //if (frame instanceof EmiTelegramFrame && !frame.getType().isConfirmation())
-      if (frame instanceof EmiTelegramFrame)
+      else if (frame instanceof EmiTelegramFrame)
       {
          final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
 
@@ -206,9 +204,8 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       if (con == null) throw new IOException("Not open");
 
-//	TODO check if null address is not allowed
-//      if (PhysicalAddress.NULL.equals(telegram.getFrom()))
-//         telegram.setFrom(physicalAddr);
+      if (PhysicalAddress.NULL.equals(telegram.getFrom()))
+         telegram.setFrom(physicalAddr);
 
       con.send(new L_Data_req(telegram));
    }

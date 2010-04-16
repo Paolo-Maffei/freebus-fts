@@ -10,8 +10,17 @@ import org.freebus.knxcomm.serial.Ft12Connection;
  */
 public class SimulatedFt12Connection extends Ft12Connection
 {
-   private int[] dataToRead, writtenData;
+   private byte[] dataToRead, writtenData;
    public int readIndex;
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void open()
+   {
+      writtenData = null;
+   }
 
    /**
     * Reset read and write buffers.
@@ -26,7 +35,7 @@ public class SimulatedFt12Connection extends Ft12Connection
    /**
     * Set the data that can be read.
     */
-   public void setReadableData(int[] data)
+   public void setReadableData(byte[] data)
    {
       dataToRead = data;
       readIndex = 0;
@@ -34,9 +43,9 @@ public class SimulatedFt12Connection extends Ft12Connection
 
    /**
     * @return the data that has been written by the last call to
-    *         Ft12Connection.write(int[], int).
+    *         Ft12Connection.write(byte[], int).
     */
-   public int[] getWrittenData()
+   public byte[] getWrittenData()
    {
       return writtenData;
    }
@@ -53,11 +62,11 @@ public class SimulatedFt12Connection extends Ft12Connection
       if (dataToRead == null || readIndex >= dataToRead.length)
          return -1;
 
-      return dataToRead[readIndex++];
+      return dataToRead[readIndex++] & 255;
    }
 
    @Override
-   protected void write(int[] data, int length) throws IOException
+   protected void write(byte[] data, int length) throws IOException
    {
       writtenData = Arrays.copyOf(data, length);
 

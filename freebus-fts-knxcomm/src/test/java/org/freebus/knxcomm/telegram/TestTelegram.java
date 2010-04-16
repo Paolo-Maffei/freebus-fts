@@ -206,6 +206,14 @@ public class TestTelegram
    }
 
    @Test
+   public void testFromRawDataPhysAddrResp() throws IOException
+   {
+      final byte[] data = HexString.valueOf("b0 11 ff 00 00 e1 01 00");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
+      assertNotNull(telegram);
+   }
+
+   @Test
    public void testFromRawDataGroupValueWrite() throws IOException
    {
       final byte[] data = HexString.valueOf("9c 11 06 08 0a e1 00 81");
@@ -215,7 +223,8 @@ public class TestTelegram
       assertEquals(ApplicationType.GroupValue_Write, telegram.getApplicationType());
 
       final GenericDataApplication app = (GenericDataApplication) telegram.getApplication();
-      assertArrayEquals(new int[] { 1 }, app.getData());
+      assertEquals(1, app.getApciValue());
+      assertNull(app.getData());
    }
 
    @Test
