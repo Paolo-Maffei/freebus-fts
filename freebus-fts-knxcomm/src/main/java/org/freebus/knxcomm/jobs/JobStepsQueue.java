@@ -1,14 +1,9 @@
 package org.freebus.knxcomm.jobs;
 
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.concurrent.Semaphore;
-import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.ApplicationTypeResponse;
 import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
@@ -17,9 +12,6 @@ import org.freebus.knxcomm.telegram.Transport;
 
 public class JobStepsQueue extends SingleDeviceJob
 {
-
-   private ApplicationType applicationExpected;
-
    final Telegrams telegrams = new Telegrams();
 
    DeviceDescriptorProperties deviceDescriptorProperties;
@@ -39,7 +31,7 @@ public class JobStepsQueue extends SingleDeviceJob
    }
 
    @Override
-   public void main(BusInterface bus) throws Exception
+   public void main(BusInterface bus) throws IOException
    {
       // TODO: not finished
      // jobSteps.setFrom(bus.getPhysicalAddress());

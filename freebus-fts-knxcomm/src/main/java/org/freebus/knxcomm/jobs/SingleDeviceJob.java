@@ -1,7 +1,5 @@
 package org.freebus.knxcomm.jobs;
 
-import java.io.IOException;
-
 import org.freebus.fts.common.address.Address;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.TelegramListener;
@@ -12,7 +10,6 @@ import org.freebus.knxcomm.telegram.Telegram;
  */
 public abstract class SingleDeviceJob extends ListenableJob implements Job, TelegramListener
 {
-   protected BusInterface bus;
    private final Address targetAddress;
 
    /**
@@ -33,53 +30,20 @@ public abstract class SingleDeviceJob extends ListenableJob implements Job, Tele
 
    /**
     * {@inheritDoc}
-    * 
-    * @throws IOException
     */
    @Override
-   public final void run(BusInterface bus) throws IOException
+   public void init(BusInterface bus)
    {
-      this.bus = bus;
       bus.addListener(this);
+   }
 
-      init();
-      try
-      {
-         main(bus);
-      }
-      catch (Exception e)
-      {
-         throw new IOException(e);
-      }
-      finally
-      {
-         cleanup();
-      }
-
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void cleanup(BusInterface bus)
+   {
       bus.removeListener(this);
-      this.bus = null;
-   }
-
-   /**
-    * Do the work. Called by {@link #run}. Must be overridden in subclasses.
-    * 
-    * @throws IOException
-    * @throws Exception 
-    */
-   public abstract void main(BusInterface bus) throws IOException, InterruptedException, Exception;
-
-   /**
-    * Initialization. Called by {@link #run}.
-    */
-   protected void init()
-   {
-   }
-
-   /**
-    * Cleanup. Called by {@link #run}.
-    */
-   protected void cleanup()
-   {
    }
 
    /**
