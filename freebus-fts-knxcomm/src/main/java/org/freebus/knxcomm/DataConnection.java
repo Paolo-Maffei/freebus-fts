@@ -12,8 +12,6 @@ import org.freebus.knxcomm.telegram.Transport;
  * {@link BusInterface#connect(PhysicalAddress)} to open a data connection.
  *
  * Always close the connection with {@link #close} when done.
- *
- * TODO not yet implemented!
  */
 public interface DataConnection
 {

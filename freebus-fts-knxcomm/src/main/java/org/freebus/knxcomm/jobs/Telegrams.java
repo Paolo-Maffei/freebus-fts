@@ -3,17 +3,14 @@ package org.freebus.knxcomm.jobs;
 import java.util.ArrayList;
 
 
-import org.freebus.fts.common.address.Address;
-import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.telegram.Telegram;
-import org.freebus.knxcomm.telegram.Transport;
 
 public class Telegrams extends ArrayList<Telegram>
 {
 
    TelegramSearchConditions telegramSearchConditions;
    private static final long serialVersionUID = 4781083680657979456L;
-   
+
    /**
     * search all telegrams in the telegram list by the TelegramSearchConditions
     * @param telegramSearchConditions - the TelegramSearchConditions for the search
@@ -24,8 +21,8 @@ public class Telegrams extends ArrayList<Telegram>
       return searchApplicationType();
 
    }
-   
-  
+
+
    private Telegrams searchFromAddress(){
       Telegrams ts = new Telegrams();
       if (telegramSearchConditions.getFromAddress() ==null)return this;
@@ -34,7 +31,7 @@ public class Telegrams extends ArrayList<Telegram>
       }
       return ts;
    }
-   
+
    private Telegrams searchDestAddress(){
       Telegrams ts = new Telegrams();
       if (telegramSearchConditions.getDestAddress() ==null)return searchFromAddress();
@@ -43,7 +40,7 @@ public class Telegrams extends ArrayList<Telegram>
       }
       return ts;
    }
-   
+
    private Telegrams searchRoutingCounter(){
       Telegrams ts = new Telegrams();
       if (telegramSearchConditions.getRoutingCounter() ==null)return searchDestAddress();
@@ -52,7 +49,7 @@ public class Telegrams extends ArrayList<Telegram>
       }
       return ts;
    }
-   
+
    private Telegrams searchSequneceNumber(){
       Telegrams ts = new Telegrams();
       if (telegramSearchConditions.getSequenceNumber() ==null)return searchRoutingCounter();
@@ -61,7 +58,7 @@ public class Telegrams extends ArrayList<Telegram>
       }
       return ts;
    }
-   
+
    private Telegrams searchTransport(){
       Telegrams ts = new Telegrams();
       if (telegramSearchConditions.getTransport() ==null)return searchSequneceNumber();
@@ -70,7 +67,7 @@ public class Telegrams extends ArrayList<Telegram>
       }
       return ts;
    }
-   
+
    private Telegrams searchApplicationType(){
       Telegrams ts = new Telegrams();
       if (telegramSearchConditions.getApplicationType() ==null)return searchTransport();
@@ -79,6 +76,6 @@ public class Telegrams extends ArrayList<Telegram>
       }
       return ts;
    }
-   
+
 
 }

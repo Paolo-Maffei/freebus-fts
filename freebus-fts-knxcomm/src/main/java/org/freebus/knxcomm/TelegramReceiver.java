@@ -6,8 +6,8 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.Address;
-import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -17,8 +17,7 @@ import org.freebus.knxcomm.telegram.Telegram;
  * telegrams that shall be received.
  * <p>
  * Per default, telegrams are filtered to only contain those that have the
- * physical address of the bus interface as destination, and those that are
- * system broadcasts (having {@link PhysicalAddress#NULL} as destination).
+ * physical address of the bus interface as destination.
  * <p>
  * You can override the {@link #filter(Telegram, boolean)} method in subclasses
  * to do your own telegram filtering.
@@ -31,7 +30,6 @@ public class TelegramReceiver extends TelegramAdapter
    private final Semaphore waitSem = new Semaphore(0);
    private final WeakReference<BusInterface> busInterface;
 
-   private boolean systemBroadcasts = true;
    private Address destAddr;
    private ApplicationType applicationType;
    private boolean confirmations = false;
@@ -166,8 +164,6 @@ public class TelegramReceiver extends TelegramAdapter
     */
    public List<Telegram> receiveMultiple(int timeout)
    {
-      final List<Telegram> telegrams = new LinkedList<Telegram>();
-
       if (timeout > 0)
       {
          try
@@ -184,31 +180,16 @@ public class TelegramReceiver extends TelegramAdapter
 
       synchronized (telegrams)
       {
+         Logger.getLogger(getClass()).debug("receiveMultiple: " + telegrams.size() + " telegrams received");
+
+         if (!waitSem.tryAcquire(telegrams.size()))
+            throw new RuntimeException("internal error");
+
          result.addAll(telegrams);
          telegrams.clear();
       }
 
       return result;
-   }
-
-   /**
-    * @return true if system broadcasts (having {@link PhysicalAddress#NULL})
-    *         are received.
-    */
-   public boolean isSystemBroadcasts()
-   {
-      return systemBroadcasts;
-   }
-
-   /**
-    * Set if system broadcasts (having {@link PhysicalAddress#NULL}) are to be
-    * received.
-    *
-    * @param enable - set true to receive system broadcasts.
-    */
-   public void setSystemBroadcasts(boolean enable)
-   {
-      this.systemBroadcasts = enable;
    }
 
    /**
@@ -289,9 +270,6 @@ public class TelegramReceiver extends TelegramAdapter
       if (!confirmations && isConfirmation)
          return false;
 
-      if (!systemBroadcasts && PhysicalAddress.NULL.equals(dest))
-         return false;
-
       if (destAddr != null && !destAddr.equals(dest))
          return false;
 
@@ -313,10 +291,12 @@ public class TelegramReceiver extends TelegramAdapter
       if (!filter(telegram, isConfirmation))
          return;
 
+      Logger.getLogger(getClass()).debug("RECV filtered: " + telegram);
       synchronized (telegrams)
       {
          telegrams.add(telegram);
       }
+
       waitSem.release();
    }
 

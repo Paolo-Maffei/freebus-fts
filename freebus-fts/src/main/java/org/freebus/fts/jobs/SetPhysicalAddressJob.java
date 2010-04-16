@@ -68,21 +68,24 @@ public final class SetPhysicalAddressJob extends ListenableJob
       dataTelegram.setApplication(new IndividualAddressRead());
 
       receiver.setApplicationType(ApplicationType.IndividualAddress_Response);
+      receiver.setDest(GroupAddress.BROADCAST);
       receiver.clear();
 
       bus.send(dataTelegram);
 
       // Wait 3 seconds for devices that answer our telegram
       int found = 0;
-      for (int i = 1; i < 30 && found < 2; ++i)
+      for (int i = 1; i <= 6 && found < 2; ++i)
       {
-         found += receiver.receiveMultiple(100).size();
-         notifyListener(i, null);
+         found += receiver.receiveMultiple(500).size();
+         notifyListener(i * 10, null);
       }
 
       // Verify that exactly one device answered
-      if (found < 1) throw new JobFailedException(I18n.getMessage("SetPhysicalAddressJob.NoDevice"));
-      if (found > 1) throw new JobFailedException(I18n.getMessage("SetPhysicalAddressJob.MultipleDevices"));
+      if (found < 1)
+         throw new JobFailedException(I18n.getMessage("SetPhysicalAddressJob.NoDevice"));
+      if (found > 1)
+         throw new JobFailedException(I18n.getMessage("SetPhysicalAddressJob.MultipleDevices"));
 
       //
       // Step 2: set the physical address
@@ -108,10 +111,25 @@ public final class SetPhysicalAddressJob extends ListenableJob
       receiver.receive(500);
 
       final DataConnection con = bus.connect(newAddress);
-      con.send(new Telegram(new Restart()));
-      con.receive(500);
+      try
+      {
+         con.send(new Telegram(new Restart()));
+         con.receive(500);
+      }
+      finally
+      {
+         con.close();
+      }
+   }
 
-      con.close();
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void cleanup(BusInterface bus)
+   {
+      if (receiver != null)
+         receiver.close();
    }
 
    /**
