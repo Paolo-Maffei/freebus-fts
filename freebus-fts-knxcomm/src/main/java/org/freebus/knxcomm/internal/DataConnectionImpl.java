@@ -2,6 +2,7 @@ package org.freebus.knxcomm.internal;
 
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -39,8 +40,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       OPEN_WAIT,
 
       /**
-       * The connection is being established, a connection request was sent,
-       * an IACK is awaited.
+       * The connection is being established, a connection request was sent, an
+       * IACK is awaited.
        */
       CONNECTING;
    }
@@ -52,10 +53,11 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
    private Semaphore recvSemaphore = new Semaphore(0);
    private int sequence = -1;
+   private boolean recvConfirmations = false;
 
    /**
-    * Create a connection to the device with the given physical address.
-    * Use {@link BusInterface#connect} to get a connection.
+    * Create a connection to the device with the given physical address. Use
+    * {@link BusInterface#connect} to get a connection.
     *
     * @param addr - the physical address to which the connection will happen.
     * @param busInterface - the bus interface to use.
@@ -104,6 +106,14 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public BusInterface getBusInterface()
    {
       return busInterface;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setReceiveConfirmations(boolean enable)
+   {
+      recvConfirmations = enable;
    }
 
    /**
@@ -180,6 +190,37 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    /**
     * {@inheritDoc}
     */
+   public List<Telegram> receiveMultiple(int timeout) throws IOException
+   {
+      if (timeout > 0)
+      {
+         try
+         {
+            Thread.sleep(timeout);
+         }
+         catch (InterruptedException e)
+         {
+            e.printStackTrace();
+         }
+      }
+
+      final List<Telegram> result = new LinkedList<Telegram>();
+
+      synchronized (recvQueue)
+      {
+         if (!recvSemaphore.tryAcquire(recvQueue.size()))
+            throw new RuntimeException("internal error");
+
+         result.addAll(recvQueue);
+         recvQueue.clear();
+      }
+
+      return result;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public void send(Telegram telegram) throws IOException
    {
@@ -212,15 +253,17 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * {@inheritDoc}
     */
    @Override
-   public void telegramSent(Telegram telegram)
+   public void telegramSendConfirmed(Telegram telegram)
    {
+      if (recvConfirmations)
+         telegramReceived(telegram);
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void telegramSendConfirmed(Telegram telegram)
+   public void telegramSent(Telegram telegram)
    {
    }
 }

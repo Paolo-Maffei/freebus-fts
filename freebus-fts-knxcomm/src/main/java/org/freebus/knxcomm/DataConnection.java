@@ -1,6 +1,7 @@
 package org.freebus.knxcomm;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.PhysicalAddress;
@@ -57,4 +58,25 @@ public interface DataConnection
     * @throws IOException
     */
    public Telegram receive(int timeout) throws IOException;
+
+   /**
+    * Receive multiple telegrams from the device. Waits until the timeout
+    * is over and returns all telegrams that arrived within the time,
+    * and that were in the receive queue.
+    *
+    * @param timeout - how long to wait, in milliseconds, 0 to not wait at all.
+    *
+    * @return a list with the received telegrams.
+    *
+    * @throws IOException
+    */
+   public List<Telegram> receiveMultiple(int timeout) throws IOException;
+
+   /**
+    * Select if confirmation telegrams shall be received by the connection.
+    * Default is that confirmations are discarded.
+    *
+    * @param enable - to enable receiving of confirmations
+    */
+   public void setReceiveConfirmations(boolean enable);
 }
