@@ -653,6 +653,10 @@ public class Telegram implements Cloneable
 
       sb.append(getTransport()).append(' ');
       sb.append("from ").append(getFrom()).append(" to ").append(getDest()).append(", ");
+
+      if (getTransport().hasSequence)
+         sb.append("sequence ").append(getSequence()).append(", ");
+
       sb.append(application == null ? "no application" : application.toString());
 
       return sb.toString();

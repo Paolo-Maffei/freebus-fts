@@ -19,7 +19,7 @@ public final class ConnectedDataTransfer
 {
    private static final Logger logger = Logger.getLogger(ConnectedDataTransfer.class);
 
-   private final BusInterface iface;
+   private final BusInterface bus;
 
    /**
     * The physical address of the device to which this test program connects.
@@ -35,8 +35,8 @@ public final class ConnectedDataTransfer
    {
       // Create the bus interface
       logger.info("*** Opening bus connection");
-      iface = createBusInterface();
-      iface.open();
+      bus = createBusInterface();
+      bus.open();
    }
 
    /**
@@ -44,10 +44,10 @@ public final class ConnectedDataTransfer
     */
    public void dispose()
    {
-      if (iface != null && iface.isConnected())
+      if (bus != null && bus.isConnected())
       {
          logger.info("*** Closing bus connection");
-         iface.close();
+         bus.close();
       }
    }
 
@@ -78,13 +78,14 @@ public final class ConnectedDataTransfer
 
    /**
     * Do the real (example) work.
+    * @throws InterruptedException
     */
-   public void run() throws IOException
+   public void run() throws IOException, InterruptedException
    {
-      // Create a data connection to the device
       logger.info("*** Opening data-connection to " + deviceAddress);
-      final DataConnection con = iface.connect(deviceAddress);
+      final DataConnection con = bus.connect(deviceAddress);
       logger.debug("Data-connection to " + deviceAddress + " established");
+      con.receiveMultiple(1000);
 
       logger.info("*** Sending memory-read telegram");
       final Telegram telegram = new Telegram();

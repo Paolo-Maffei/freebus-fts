@@ -82,9 +82,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       synchronized (sendTelegram)
       {
          sendTelegram.setTransport(Transport.Disconnect);
-         sendTelegram.setSequence(++sequence);
-
          state = State.CLOSED;
+
          try
          {
             busInterface.send(sendTelegram);
@@ -153,8 +152,6 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       synchronized (sendTelegram)
       {
          sendTelegram.setTransport(Transport.Connect);
-         sendTelegram.setSequence(++sequence);
-
          state = State.CONNECTING;
 
          try
@@ -276,6 +273,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramReceived(Telegram telegram)
    {
+      Logger.getLogger(getClass()).debug("recv: " + telegram);
       processTelegram(telegram, false);
    }
 
@@ -285,6 +283,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramSendConfirmed(Telegram telegram)
    {
+      Logger.getLogger(getClass()).debug("con: " + telegram);
+
       if (recvConfirmations)
          processTelegram(telegram, true);
    }
@@ -295,5 +295,6 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
+      Logger.getLogger(getClass()).debug("send: " + telegram);
    }
 }

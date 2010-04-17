@@ -183,8 +183,8 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
       con.send(new PEI_Switch_req(PEISwitchMode.INIT));
 
       // Switch to bus monitor mode
-      con.send(new PEI_Switch_req(PEISwitchMode.BUSMON));
-      //con.send(new PEI_Switch_req(PEISwitchMode.LINK));
+      //con.send(new PEI_Switch_req(PEISwitchMode.BUSMON));
+      con.send(new PEI_Switch_req(PEISwitchMode.LINK));
    }
 
    /**
