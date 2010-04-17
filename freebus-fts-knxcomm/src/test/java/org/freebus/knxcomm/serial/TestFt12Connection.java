@@ -80,7 +80,7 @@ public class TestFt12Connection
    @Test(expected = InvalidDataException.class)
    public final void testReadVariableFrameInvalidFunction() throws IOException
    {
-      con.processVariableFrame(Ft12Function.RESET, new byte[0]);
+      con.processVariableFrame(HexString.valueOf("68 02 02 68 51 a7 fa 16"));
    }
 
    @Test(expected = InvalidDataException.class)

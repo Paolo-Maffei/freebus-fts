@@ -47,6 +47,10 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
       inputStream = port.getInputStream();
       outputStream = port.getOutputStream();
 
+      // Skip all pending data
+      while (inputStream.available() > 0)
+         inputStream.read();
+
       try
       {
          port.addEventListener(this);

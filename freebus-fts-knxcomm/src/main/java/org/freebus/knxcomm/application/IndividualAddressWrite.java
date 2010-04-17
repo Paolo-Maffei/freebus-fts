@@ -106,4 +106,13 @@ public class IndividualAddressWrite extends AbstractApplication
       // TODO Auto-generated method stub
       return null;
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return getType().toString() + ": " + address;
+   }
 }

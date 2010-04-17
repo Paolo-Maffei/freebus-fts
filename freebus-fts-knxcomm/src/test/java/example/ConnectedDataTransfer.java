@@ -1,6 +1,7 @@
 package example;
 
 import java.io.IOException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
@@ -88,11 +89,14 @@ public final class ConnectedDataTransfer
       logger.info("*** Sending memory-read telegram");
       final Telegram telegram = new Telegram();
       telegram.setApplication(new MemoryRead(1, 10));
+
+      con.receiveMultiple(0);
       con.send(telegram);
 
       logger.info("*** Waiting for reply");
-      Telegram reply = con.receive(2000);
-      logger.debug("*** Reply: " + reply);
+      List<Telegram> replies = con.receiveMultiple(2000);
+      for (Telegram reply: replies)
+         logger.debug("*** Reply: " + reply);
 
       logger.info("*** Closing data-connection");
       con.close();

@@ -85,4 +85,13 @@ public abstract class AbstractApplication implements Application
       for (int i = 1; i < wlen; ++i)
          out.write((byte) data[i]);
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return getType().toString();
+   }
 }

@@ -7,9 +7,9 @@ package org.freebus.fts.common;
 public final class HexString
 {
    /**
-    * Convert a hex string to a byte array. The hex string is expected
-    * to have the format "12 a0 01 00 7c". The hex numbers may be one
-    * or two hex digits in size.
+    * Convert a hex string to a byte array. The hex string is expected to have
+    * the format "12 a0 01 00 7c". The hex numbers may be one or two hex digits
+    * in size.
     *
     * @param str - the string to process
     *
@@ -38,11 +38,26 @@ public final class HexString
     */
    public static String toString(byte[] data)
    {
+      return toString(data, 0, data.length);
+   }
+
+   /**
+    * Convert a part of the byte array into a hex string in the format
+    * "12 a0 01 00 7c".
+    *
+    * @param data - the byte array to process.
+    * @param start - the index of the first byte to process.
+    * @param length - the number of bytes to process.
+    *
+    * @return the hex string
+    */
+   public static String toString(byte[] data, int start, int length)
+   {
       final StringBuffer sb = new StringBuffer(data.length * 3);
 
-      for (int i = 0; i < data.length; ++i)
+      for (int i = start; length > 0; ++i, --length)
       {
-         if (i > 0)
+         if (i > start)
             sb.append(String.format(" %02x", data[i] & 255, 16));
          else sb.append(String.format("%02x", data[i] & 255, 16));
       }

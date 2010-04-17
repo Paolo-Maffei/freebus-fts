@@ -82,15 +82,6 @@ public class GenericApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public String toString()
-   {
-      return type.toString() + " no data";
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public boolean isDeviceDescriptorRequired()
    {
       // TODO Auto-generated method stub
