@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
@@ -32,6 +33,14 @@ public interface DataConnection
     * Close the connection.
     */
    public void close();
+
+   /**
+    * Send a telegram to the device. The given application is wrapped
+    * into a proper telegram and sent to the device.
+    *
+    * @param application - the application to send
+    */
+   public void send(Application application) throws IOException;
 
    /**
     * Send a telegram to the device.

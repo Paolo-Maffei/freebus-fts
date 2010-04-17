@@ -11,6 +11,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.TelegramListener;
+import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
@@ -49,7 +50,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private State state = State.CLOSED;
    private final PhysicalAddress addr;
    private final BusInterface busInterface;
-   private final Telegram telegram = new Telegram();
+   private final Telegram sendTelegram = new Telegram();
    private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
    private Semaphore recvSemaphore = new Semaphore(0);
    private int sequence = -1;
@@ -67,7 +68,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       this.addr = addr;
       this.busInterface = busInterface;
 
-      telegram.setDest(addr);
+      sendTelegram.setDest(addr);
    }
 
    /**
@@ -78,17 +79,20 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    {
       busInterface.removeListener(this);
 
-      telegram.setTransport(Transport.Disconnect);
-      telegram.setSequence(++sequence);
+      synchronized (sendTelegram)
+      {
+         sendTelegram.setTransport(Transport.Disconnect);
+         sendTelegram.setSequence(++sequence);
 
-      state = State.CLOSED;
-      try
-      {
-         busInterface.send(telegram);
-      }
-      catch (IOException e)
-      {
-         e.printStackTrace();
+         state = State.CLOSED;
+         try
+         {
+            busInterface.send(sendTelegram);
+         }
+         catch (IOException e)
+         {
+            e.printStackTrace();
+         }
       }
    }
 
@@ -146,19 +150,22 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       sequence = -1;
       recvSemaphore.drainPermits();
 
-      telegram.setTransport(Transport.Connect);
-      telegram.setSequence(++sequence);
-
-      state = State.CONNECTING;
-
-      try
+      synchronized (sendTelegram)
       {
-         busInterface.send(telegram);
-      }
-      catch (Exception e)
-      {
-         state = State.CLOSED;
-         throw new IOException(e);
+         sendTelegram.setTransport(Transport.Connect);
+         sendTelegram.setSequence(++sequence);
+
+         state = State.CONNECTING;
+
+         try
+         {
+            busInterface.send(sendTelegram);
+         }
+         catch (Exception e)
+         {
+            state = State.CLOSED;
+            throw new IOException(e);
+         }
       }
    }
 
@@ -222,6 +229,19 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * {@inheritDoc}
     */
    @Override
+   public void send(Application application) throws IOException
+   {
+      synchronized (sendTelegram)
+      {
+         sendTelegram.setApplication(application);
+         send(sendTelegram);
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void send(Telegram telegram) throws IOException
    {
       telegram.setDest(addr);
@@ -232,15 +252,16 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    }
 
    /**
-    * {@inheritDoc}
+    * Process a received telegram
     */
-   @Override
-   public void telegramReceived(Telegram telegram)
+   public void processTelegram(Telegram telegram, boolean isConfirmation)
    {
       if (!telegram.getFrom().equals(addr))
          return;
 
-      Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
+      if (isConfirmation)
+         Logger.getLogger(getClass()).debug("Telegram confirmed: " + telegram);
+      else Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
 
       synchronized (recvQueue)
       {
@@ -253,10 +274,19 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * {@inheritDoc}
     */
    @Override
+   public void telegramReceived(Telegram telegram)
+   {
+      processTelegram(telegram, false);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void telegramSendConfirmed(Telegram telegram)
    {
       if (recvConfirmations)
-         telegramReceived(telegram);
+         processTelegram(telegram, true);
    }
 
    /**
