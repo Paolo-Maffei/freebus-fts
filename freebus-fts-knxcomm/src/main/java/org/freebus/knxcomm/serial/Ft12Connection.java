@@ -63,17 +63,24 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          busAddr = PhysicalAddress.NULL;
 
          send(Ft12Function.RESET, 30);
+         Thread.sleep(100);
 
          // Identify the BCU
          send(new PEI_Identify_req());
+         Thread.sleep(100);
 
          // Switch to bus monitor mode
          // send(new PEI_Switch_req(PEISwitchMode.BUSMON));
          send(new PEI_Switch_req(PEISwitchMode.LINK));
+         Thread.sleep(100);
       }
       catch (IOException e)
       {
          throw new KNXConnectException("Failed to open a connection to the BAU", e);
+      }
+      catch (InterruptedException e)
+      {
+         e.printStackTrace();
       }
    }
 
