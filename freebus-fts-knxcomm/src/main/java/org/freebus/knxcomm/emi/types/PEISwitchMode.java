@@ -10,37 +10,27 @@ public enum PEISwitchMode
    /**
     * Normal mode.
     */
-   NORMAL(0x00, new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 9 }),
-   
+   NORMAL(0x00, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 }),
+
    /**
     * Application layer.
     */
-   APP_LAYER(0x00, new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 8 }),
-   
+   APP_LAYER(0x00, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 8 }),
+
    /**
     * Remote transport layer
     */
-  TRANS_REMOTE(0x00, new int[]{ 1, 2, 3, 4, 4, 8, 8, 8, 0 }),
-   
-   /**
-    * Local transport layer.
-    */
-   TRANS_LOCAL(0x00, new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 0 }),
-   
+   TRANS_REMOTE(0x00, new int[] { 1, 2, 3, 4, 4, 8, 8, 8, 0 }),
+
    /**
     * Data link layer.
     */
-   LINK(0x00, new int[]{ 1, 8, 3, 4, 5, 6, 7, 8, 0 }),
-   
+   LINK(0x00, new int[] { 1, 8, 3, 4, 5, 6, 7, 8, 0 }),
+
    /**
-    * Data link layer "Bus monitor" mode.
+    * Data link layer in bus monitor mode.
     */
-   BUSMON(0x90, new int[]{ 1, 8, 3, 4, 5, 6, 7, 8, 0 }),
-   
-   /**
-    * Initialization that eibd sends.
-    */
-   INIT(0x1e, new int[]{ 1, 2, 3, 4, 5, 6, 7, 8, 0 });
+   BUSMON(0x90, new int[] { 1, 8, 3, 4, 5, 6, 7, 8, 0 });
 
    public final int systemStatus;
    public final int[] targets;

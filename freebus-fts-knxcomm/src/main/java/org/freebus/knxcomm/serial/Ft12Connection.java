@@ -8,10 +8,16 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
+import org.freebus.knxcomm.emi.PEI_Identify_con;
+import org.freebus.knxcomm.emi.PEI_Identify_req;
+import org.freebus.knxcomm.emi.PEI_Switch_req;
+import org.freebus.knxcomm.emi.types.EmiFrameType;
+import org.freebus.knxcomm.emi.types.PEISwitchMode;
 import org.freebus.knxcomm.internal.ListenableConnection;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
@@ -23,11 +29,15 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    private Logger logger = Logger.getLogger(Ft12Connection.class);
 
    protected final Semaphore waitAckSemaphore = new Semaphore(0);
+   private PhysicalAddress busAddr = PhysicalAddress.NULL;
    protected boolean connected = false;
    protected int resetPending = 0;
 
-   // Enable to get FT1.2 frame data debug output
-   private boolean debugFT12 = false;
+   // Enable to get FT1.2 frame data and ACK debug output
+   private boolean debugFT12 = true;
+
+   // Enable debug output for FT1.2 acknowledges
+   private boolean debugFT12ack = true;
 
    // FT1.2 end-of-message byte.
    protected final int eofMarker = 0x16;
@@ -38,6 +48,34 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    // FT1.2 acknowledgment message
    protected static final byte[] ackMsg = { (byte) Ft12FrameFormat.ACK.code };
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void open() throws IOException
+   {
+      try
+      {
+         readFcbCount = 0;
+         writeFcbCount = 0;
+         resetPending = 0;
+         busAddr = PhysicalAddress.NULL;
+
+         send(Ft12Function.RESET, 30);
+
+         // Identify the BCU
+         send(new PEI_Identify_req());
+
+         // Switch to bus monitor mode
+         // send(new PEI_Switch_req(PEISwitchMode.BUSMON));
+         send(new PEI_Switch_req(PEISwitchMode.LINK));
+      }
+      catch (IOException e)
+      {
+         throw new KNXConnectException("Failed to open a connection to the BAU", e);
+      }
+   }
 
    /**
     * Called by the data transport methods when data is ready to be received.
@@ -53,7 +91,8 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       final Ft12FrameFormat format = Ft12FrameFormat.valueOf(formatCode);
       if (format == Ft12FrameFormat.ACK)
       {
-         logger.debug("READ:  ACK");
+         if (debugFT12ack)
+            logger.debug("READ: ACK");
          waitAckSemaphore.release();
       }
       else if (format == Ft12FrameFormat.FIXED)
@@ -82,7 +121,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          {
             processVariableFrame(data);
          }
-         catch (InvalidDataException e)
+         catch (IOException e)
          {
             if (!debugFT12 && logger.isDebugEnabled())
                logger.debug("READ FT1.2: " + HexString.toString(data));
@@ -171,13 +210,13 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
       final byte[] frameData = Arrays.copyOfRange(data, 5, dataLen + 4);
       if (logger.isDebugEnabled())
-         logger.debug("READ:  " + HexString.toString(frameData) + String.format(" (checksum %02x)", checksum));
+         logger.debug("READ: " + HexString.toString(frameData) + String.format(" (checksum %02x)", checksum));
 
       // Send acknowledgment
-      logger.debug("WRITE: ACK");
+      if (debugFT12ack)
+         logger.debug("SEND: ACK");
       write(ackMsg, ackMsg.length);
 
-      // Process the frame
       final Ft12Function func = Ft12Function.valueOf(controlByte & 15);
       if (func == Ft12Function.DATA)
       {
@@ -185,7 +224,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          if (frame == null)
             throw new InvalidDataException("Unknown EMI frame type", data[0] & 255);
 
-         notifyListenersReceived(frame);
+         processEmiFrame(frame);
       }
       else
       {
@@ -194,32 +233,26 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    }
 
    /**
+    * Process an {@link EmiFrame EMI frame}.
+    *
+    * @param frame - the frame to process
+    *
+    * @throws IOException
+    */
+   protected void processEmiFrame(final EmiFrame frame) throws IOException
+   {
+      final EmiFrameType type = frame.getType();
+      if (type == EmiFrameType.PEI_IDENTIFY_CON)
+         busAddr = ((PEI_Identify_con) frame).getAddr();
+
+      notifyListenersReceived(frame);
+   }
+
+   /**
     * @return true if at least one byte can be read.
     * @throws IOException
     */
    protected abstract boolean isDataAvailable() throws IOException;
-
-   /**
-    * Connect to the BAU.
-    *
-    * @throws IOException
-    */
-   @Override
-   public void open() throws IOException
-   {
-      try
-      {
-         readFcbCount = 0;
-         writeFcbCount = 0;
-         resetPending = 0;
-
-         send(Ft12Function.RESET, 30);
-      }
-      catch (IOException e)
-      {
-         throw new KNXConnectException("Failed to open a connection to the BAU", e);
-      }
-   }
 
    /**
     * Read the next byte from the BAU device. Bytes are in the range 0..255.
@@ -257,41 +290,46 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     * BAU confirms the send.
     */
    @Override
-   public void send(EmiFrame message) throws IOException
+   public void send(EmiFrame frame) throws IOException
    {
-      final byte[] buffer = new byte[280];
-      buffer[0] = (byte) Ft12FrameFormat.VARIABLE.code;
+      final byte[] data = new byte[280];
+      data[0] = (byte) Ft12FrameFormat.VARIABLE.code;
       // bytes 1+2 contain the data length
-      buffer[3] = buffer[0];
+      data[3] = data[0];
 
       int controlByte = 0x50 | Ft12Function.DATA.code;
       if ((writeFcbCount++ & 1) == 1)
          controlByte |= 0x20;
-      buffer[4] = (byte) controlByte;
+      data[4] = (byte) controlByte;
 
-      final byte[] data = message.toByteArray();
-      final int len = data.length;
+      final byte[] frameData = frame.toByteArray();
+      final int len = frameData.length;
 
       for (int i = 0; i < len; ++i)
-         buffer[i + 5] = data[i];
+         data[i + 5] = frameData[i];
 
-      buffer[1] = (byte) (len + 1);
-      buffer[2] = buffer[1];
+      data[1] = (byte) (len + 1);
+      data[2] = data[1];
 
       int checksum = controlByte;
       for (int i = 0; i < len; ++i)
-         checksum += buffer[i + 5];
+         checksum += data[i + 5];
       checksum &= 0xff;
 
-      buffer[len + 5] = (byte) checksum;
-      buffer[len + 6] = eofMarker;
+      data[len + 5] = (byte) checksum;
+      data[len + 6] = eofMarker;
 
       if (logger.isDebugEnabled())
-         logger.debug("WRITE: " + HexString.toString(buffer, 5, len) + String.format(" (checksum %02x)", checksum));
+      {
+         logger.debug("SEND: " + HexString.toString(data, 5, len) + String.format(" (checksum %02x)", checksum));
 
-      notifyListenersSent(message);
+         if (debugFT12)
+            logger.debug("SEND FT1.2: " + HexString.toString(data, 0, len + 7));
+      }
 
-      writeConfirmed(buffer, len + 7, 3);
+      notifyListenersSent(frame);
+
+      writeConfirmed(data, len + 7, 3);
    }
 
    /**
@@ -327,7 +365,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       data[2] = data[1];
       data[3] = (byte) eofMarker;
 
-      logger.debug("WRITE: " + func.toString());
+      logger.debug("SEND: " + func.toString());
       writeConfirmed(data, data.length, tries);
    }
 
@@ -366,5 +404,14 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       }
 
       throw new IOException("Failed to send data: no ACK from the BAU received (" + tries + " tries)");
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public PhysicalAddress getPhysicalAddress()
+   {
+      return busAddr;
    }
 }

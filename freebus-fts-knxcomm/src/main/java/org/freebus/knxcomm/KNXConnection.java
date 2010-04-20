@@ -2,6 +2,7 @@ package org.freebus.knxcomm;
 
 import java.io.IOException;
 
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 
@@ -48,4 +49,9 @@ public interface KNXConnection
     * Remove a frame listener.
     */
    public void removeListener(EmiFrameListener listener);
+
+   /**
+    * @return the physical address of the bus interface.
+    */
+   public PhysicalAddress getPhysicalAddress();
 }

@@ -26,7 +26,7 @@ public final class VdxFileFilter extends FileFilter
       if (file.isDirectory()) return true;
 
       final String ext = FileUtils.getExtension(file);
-      return (showVdx && "vd_".equals(ext)) || (showProjects && "pr_".equals(ext));
+      return (showVdx && "vd_".equalsIgnoreCase(ext)) || (showProjects && "pr_".equalsIgnoreCase(ext));
    }
 
    @Override

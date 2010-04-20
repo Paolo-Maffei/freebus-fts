@@ -33,7 +33,6 @@ public final class ConnectedDataTransfer
     */
    public ConnectedDataTransfer() throws Exception
    {
-      // Create the bus interface
       logger.info("*** Opening bus connection");
       bus = createBusInterface();
       bus.open();

@@ -4,6 +4,7 @@ import java.awt.event.ActionEvent;
 import java.io.File;
 
 import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileFilter;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.Config;
@@ -41,7 +42,10 @@ public final class InspectVdxFileAction extends BasicAction
 
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
-         dlg.addChoosableFileFilter(new VdxFileFilter(true, true));
+         final FileFilter fileFilter = new VdxFileFilter(true, false);
+         dlg.addChoosableFileFilter(fileFilter);
+         dlg.addChoosableFileFilter(dlg.getAcceptAllFileFilter());
+         dlg.setFileFilter(fileFilter);
          dlg.setDialogTitle(I18n.getMessage("InspectVdxFileAction.openFileTitle"));
 
          if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)

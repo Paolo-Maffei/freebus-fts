@@ -5,7 +5,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -16,25 +15,21 @@ import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.L_Data_req;
-import org.freebus.knxcomm.emi.PEI_Identify_con;
-import org.freebus.knxcomm.emi.PEI_Identify_req;
-import org.freebus.knxcomm.emi.PEI_Switch_req;
-import org.freebus.knxcomm.emi.types.PEISwitchMode;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
- * {@link BusInterface} implementation.
- * Use {@link BusInterfaceFactory} to get a bus interface object.
+ * {@link BusInterface} implementation. Use {@link BusInterfaceFactory} to get a
+ * bus interface object.
  */
 public class BusInterfaceImpl implements BusInterface, EmiFrameListener
 {
    protected final CopyOnWriteArraySet<TelegramListener> listeners = new CopyOnWriteArraySet<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
-   private PhysicalAddress physicalAddr;
    private final KNXConnection con;
 
    /**
-    * Create a bus-interface object that uses the given connection for the bus communication.
+    * Create a bus-interface object that uses the given connection for the bus
+    * communication.
     */
    public BusInterfaceImpl(KNXConnection con)
    {
@@ -66,7 +61,8 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public DataConnection connect(PhysicalAddress addr) throws IOException
    {
-      if (con == null) throw new IOException("Not open");
+      if (con == null)
+         throw new IOException("Not open");
 
       final DataConnection dataCon = new DataConnectionImpl(addr, this);
       dataCon.open();
@@ -81,12 +77,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void frameReceived(EmiFrame frame)
    {
-      if (frame instanceof PEI_Identify_con)
-      {
-         Logger.getLogger(getClass()).info(frame);
-         physicalAddr = new PhysicalAddress(((PEI_Identify_con) frame).getAddr());
-      }
-      else if (frame instanceof EmiTelegramFrame)
+      if (frame instanceof EmiTelegramFrame)
       {
          final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
 
@@ -124,7 +115,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public PhysicalAddress getPhysicalAddress()
    {
-      return physicalAddr;
+      return con.getPhysicalAddress();
    }
 
    /**
@@ -155,9 +146,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    }
 
    /**
-    * Notify all listeners that the given telegram was received as
-    * a confirmation to a sent telegram. This is a telegram that was
-    * received with {@link EmiFrame#getType()}.isConfirmation()
+    * Notify all listeners that the given telegram was received as a
+    * confirmation to a sent telegram. This is a telegram that was received with
+    * {@link EmiFrame#getType()}.isConfirmation()
     */
    protected void notifyListenersSendConfirmed(final Telegram telegram)
    {
@@ -171,20 +162,8 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void open() throws IOException
    {
-      physicalAddr = null;
-
       con.open();
       con.addListener(this);
-
-      // Identify the BCU
-      con.send(new PEI_Identify_req());
-
-      // A pei_switch that EIBD sends on startup, so we do it here too
-      con.send(new PEI_Switch_req(PEISwitchMode.INIT));
-
-      // Switch to bus monitor mode
-      //con.send(new PEI_Switch_req(PEISwitchMode.BUSMON));
-      con.send(new PEI_Switch_req(PEISwitchMode.LINK));
    }
 
    /**
@@ -202,10 +181,12 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void send(Telegram telegram) throws IOException
    {
-      if (con == null) throw new IOException("Not open");
+      if (con == null)
+         throw new IOException("Not open");
 
-      if (PhysicalAddress.NULL.equals(telegram.getFrom()))
-         telegram.setFrom(physicalAddr);
+      final PhysicalAddress from = telegram.getFrom();
+      if (from == null || PhysicalAddress.NULL.equals(from))
+         telegram.setFrom(getPhysicalAddress());
 
       con.send(new L_Data_req(telegram));
    }

@@ -186,4 +186,15 @@ public final class PhysicalAddress implements Address
          return null;
       }
    }
+
+   /**
+    * Create a {@link PhysicalAddress physical address} from the given 16-bit address
+    * number.
+    *
+    * @param addr - the 16-bit address number to process
+    */
+   public static PhysicalAddress valueOf(int addr)
+   {
+      return new PhysicalAddress(addr);
+   }
 }

@@ -10,11 +10,15 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.HexString;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.internal.ListenableConnection;
 import org.freebus.knxcomm.netip.frames.ConnectRequest;
 import org.freebus.knxcomm.netip.frames.ConnectResponse;
+import org.freebus.knxcomm.netip.frames.DescriptionRequest;
+import org.freebus.knxcomm.netip.frames.DescriptionResponse;
 import org.freebus.knxcomm.netip.frames.Frame;
 import org.freebus.knxcomm.netip.frames.FrameFactory;
 import org.freebus.knxcomm.netip.frames.SearchRequest;
@@ -43,6 +47,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    private final Logger logger = Logger.getLogger(getClass());
    private final InetSocketAddress addr;
    private InetSocketAddress dataAddr;
+   private PhysicalAddress busAddr = PhysicalAddress.NULL;
 
    private final Semaphore receiveSemaphore = new Semaphore(0);
    private Frame receivedFrame;
@@ -53,8 +58,8 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    private final DatagramSocket socket;
    private final Thread listenerThread;
 
-   private final int sendBufferSize = 4096;
-   private final int recvBufferSize = 4096;
+   private final int sendBufferSize = 8192;
+   private final int recvBufferSize = 8192;
 
    private final byte[] recvBuffer = new byte[recvBufferSize];
 
@@ -166,7 +171,16 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       if (conResp.getStatus() != StatusCode.OK)
          throw new ConnectException("KNXnet/IP connect to " + addr + " failed: " + conResp.getStatus());
 
-      logger.info("Connection to KNXnet/IP server established");
+      send(addr, new DescriptionRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort()));
+      frame = receive(3500);
+
+      if (!(frame instanceof DescriptionResponse))
+         throw new ConnectException("no response to KNXnet/IP describe request");
+
+      final DescriptionResponse descResp = (DescriptionResponse) frame;
+
+      busAddr = descResp.getHardwareInfo().getBusAddress();
+      logger.info("Connection to KNXnet/IP server " + busAddr + " established");
       channelId = conResp.getChannelId();
       dataAddr = new InetSocketAddress(conResp.getDataEndPoint().getAddress(), conResp.getDataEndPoint().getPort());
    }
@@ -224,6 +238,9 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       logger.debug("Send: " + serviceType + " (seq " + sequence + ")");
 
       final byte[] data = frame.toByteArray();
+      if (logger.isDebugEnabled())
+         logger.debug("SEND: " + HexString.toString(data));
+
       final DatagramPacket dp = new DatagramPacket(data, data.length);
       dp.setSocketAddress(address);
       socket.send(dp);
@@ -241,6 +258,9 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    {
       if (len < 6)
          return;
+
+      if (logger.isDebugEnabled())
+         logger.debug("RECV: " + HexString.toString(data, 0, len));
 
       final Frame frame = FrameFactory.createFrame(data);
       if (frame == null)
@@ -261,11 +281,11 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       else if (frame.getServiceType() == ServiceType.TUNNELING_REQUEST)
       {
          final TunnelingRequest tunnelFrame = (TunnelingRequest) frame;
-         sequence = tunnelFrame.getSequence();
+         final int recvSequence = tunnelFrame.getSequence();
 
-         logger.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + sequence + ")");
+         logger.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + recvSequence + ")");
 
-         send(dataAddr, new TunnelingAck(channelId, sequence, StatusCode.OK));
+         send(dataAddr, new TunnelingAck(channelId, recvSequence, StatusCode.OK));
 
          notifyListenersReceived(tunnelFrame.getFrame());
       }
@@ -302,5 +322,14 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
             }
          }
       });
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public PhysicalAddress getPhysicalAddress()
+   {
+      return busAddr;
    }
 }

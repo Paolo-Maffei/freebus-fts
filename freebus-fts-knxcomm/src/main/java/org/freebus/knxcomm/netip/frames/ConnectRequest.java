@@ -18,9 +18,27 @@ import org.freebus.knxcomm.netip.types.TransportType;
  */
 public class ConnectRequest extends AbstractEndPointFrame
 {
+   /**
+    * Establish a bus monitor tunnel. Valid for {@link ConnectionType#TUNNEL
+    * tunneling} connections. Server to client transfer only.
+    */
+   public static int BUSMON_TUNNEL = 0x80;
+
+   /**
+    * Establish a data link layer tunnel. Valid for
+    * {@link ConnectionType#TUNNEL tunneling} connections.
+    */
+   public static int LINK_TUNNEL = 2;
+
+   /**
+    * Establish a raw data tunnel. Valid for
+    * {@link ConnectionType#TUNNEL tunneling} connections.
+    */
+   public static int RAW_TUNNEL = 4;
+
    private final EndPoint dataEndPoint;
    private ConnectionType type = ConnectionType.TUNNEL;
-   private int layer = 2; // 2=link layer, see TunnelType for TUNNEL connections
+   private int layer = LINK_TUNNEL;
 
    /**
     * Create a connect request object.
@@ -33,8 +51,8 @@ public class ConnectRequest extends AbstractEndPointFrame
     * @param dataAddr - the address of the client's data endpoint.
     * @param dataPort - the port of the client's data endpoint.
     */
-   public ConnectRequest(TransportType ctrlType, InetAddress ctrlAddr, int ctrlPort,
-         TransportType dataType, InetAddress dataAddr, int dataPort)
+   public ConnectRequest(TransportType ctrlType, InetAddress ctrlAddr, int ctrlPort, TransportType dataType,
+         InetAddress dataAddr, int dataPort)
    {
       super(ctrlType, ctrlAddr, ctrlPort);
       dataEndPoint = new EndPoint(dataType, dataAddr, dataPort);

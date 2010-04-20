@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.emi;
 
 import org.freebus.knxcomm.emi.types.EmiFrameType;
+import org.freebus.knxcomm.telegram.Telegram;
 
 /**
  * Link data indicator. This message contains a telegram that
@@ -9,7 +10,15 @@ import org.freebus.knxcomm.emi.types.EmiFrameType;
 public class L_Data_ind extends EmiTelegramFrame
 {
    /**
-    * Create an empty link data confirmation message.
+    * Create a link data indicator with the given telegram.
+    */
+   public L_Data_ind(Telegram telegram)
+   {
+      super(EmiFrameType.L_DATA_IND, telegram);
+   }
+
+   /**
+    * Create an empty link data indicator message.
     */
    public L_Data_ind()
    {

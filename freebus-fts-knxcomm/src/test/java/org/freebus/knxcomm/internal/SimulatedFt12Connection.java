@@ -3,6 +3,7 @@ package org.freebus.knxcomm.internal;
 import java.io.IOException;
 import java.util.Arrays;
 
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.serial.Ft12Connection;
 
 /**
@@ -83,5 +84,11 @@ public class SimulatedFt12Connection extends Ft12Connection
    public boolean isConnected()
    {
       return true;
+   }
+
+   @Override
+   public PhysicalAddress getPhysicalAddress()
+   {
+      return new PhysicalAddress(0, 0, 255);
    }
 }

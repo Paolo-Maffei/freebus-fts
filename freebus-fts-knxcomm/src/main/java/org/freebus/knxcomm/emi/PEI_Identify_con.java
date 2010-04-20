@@ -4,6 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.types.EmiFrameType;
 
 /**
@@ -11,7 +12,7 @@ import org.freebus.knxcomm.emi.types.EmiFrameType;
  */
 public final class PEI_Identify_con extends AbstractEmiFrame
 {
-   protected int addr;
+   protected PhysicalAddress addr = PhysicalAddress.NULL;
    protected long serial;
 
    /**
@@ -24,8 +25,10 @@ public final class PEI_Identify_con extends AbstractEmiFrame
 
    /**
     * Set the physical address.
+    *
+    * @param addr - the physical address to set
     */
-   public void setAddr(int addr)
+   public void setAddr(PhysicalAddress addr)
    {
       this.addr = addr;
    }
@@ -33,7 +36,7 @@ public final class PEI_Identify_con extends AbstractEmiFrame
    /**
     * @return the physical address
     */
-   public int getAddr()
+   public PhysicalAddress getAddr()
    {
       return addr;
    }
@@ -62,7 +65,7 @@ public final class PEI_Identify_con extends AbstractEmiFrame
    @Override
    public void readData(DataInput in) throws IOException
    {
-      addr = in.readUnsignedShort();
+      addr = PhysicalAddress.valueOf(in.readUnsignedShort());
 
       serial = in.readUnsignedShort() << 32L;
       serial |= in.readUnsignedShort() << 16L;
@@ -75,7 +78,7 @@ public final class PEI_Identify_con extends AbstractEmiFrame
    @Override
    public void writeData(DataOutput out) throws IOException
    {
-      out.writeShort(addr);
+      out.writeShort(addr == null ? 0 : addr.getAddr());
       out.writeShort((int) (serial >> 32));
       out.writeShort((int) (serial >> 16));
       out.writeShort((int) serial);
@@ -91,6 +94,6 @@ public final class PEI_Identify_con extends AbstractEmiFrame
       final int serialMid = (int) (serial >> 16) & 0xffff;
       final int serialLow = (int) serial & 0xffff;
 
-      return getTypeString() + ' ' + addrToString(addr, false) + String.format(" version %d.%d.%d", serialHigh, serialMid, serialLow);
+      return getTypeString() + ' ' + addr + String.format(" version %d.%d.%d", serialHigh, serialMid, serialLow);
    }
 }

@@ -14,10 +14,13 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 import javax.swing.tree.TreeCellRenderer;
 
+import org.freebus.fts.common.HexString;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.knxcomm.application.Application;
-import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.emi.EmiFrame;
+import org.freebus.knxcomm.emi.EmiTelegramFrame;
+import org.freebus.knxcomm.emi.types.EmiFrameClass;
 import org.freebus.knxcomm.telegram.Telegram;
 
 public final class BusMonitorCellRenderer implements TreeCellRenderer
@@ -27,7 +30,7 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
    private static final SimpleDateFormat dateFormatter = new SimpleDateFormat("HH:mm:ss.SSS");
 
    private final JPanel renderer;
-   private final JLabel lblWhen, lblDirection, lblAppName, lblFrom, lblDest, lblAppData, lblRaw;
+   private final JLabel lblWhen, lblId, lblDirection, lblAppName, lblFrom, lblDest, lblAppData, lblRaw;
 
    private final DefaultTreeCellRenderer defaultRenderer = new DefaultTreeCellRenderer();
 
@@ -52,20 +55,36 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
       c.gridy = 0;
       renderer.add(lblWhen, c);
 
+      lblId = new JLabel();
+      lblId.setForeground(Color.gray);
+      c.gridx = col;
+      c.gridy = 1;
+      c.anchor = GridBagConstraints.EAST;
+      renderer.add(lblId, c);
+
       lblDirection = new JLabel();
       c.gridx = ++col;
+      c.gridy = 0;
+      c.gridheight = 2;
+      c.anchor = GridBagConstraints.NORTH;
       renderer.add(lblDirection, c);
+
+      c.gridheight = 1;
+      c.anchor = GridBagConstraints.WEST;
 
       lblAppName = new JLabel();
       c.gridx = ++col;
+      c.gridy = 0;
       renderer.add(lblAppName, c);
 
       lblFrom = new JLabel();
       c.gridx = ++col;
+      c.gridy = 0;
       renderer.add(lblFrom, c);
 
       lblDest = new JLabel();
       c.gridx = ++col;
+      c.gridy = 0;
       renderer.add(lblDest, c);
 
       lblAppData = new JLabel();
@@ -96,29 +115,41 @@ public final class BusMonitorCellRenderer implements TreeCellRenderer
          if (userObject instanceof BusMonitorItem)
          {
             final BusMonitorItem busMonitorItem = (BusMonitorItem) userObject;
-            final Telegram telegram = busMonitorItem.getTelegram();
+            final EmiFrame frame = busMonitorItem.getFrame();
+            final EmiFrameClass frameClass = frame.getType().frameClass;
 
             lblWhen.setText(dateFormatter.format(busMonitorItem.getWhen()));
-            lblDirection.setIcon(busMonitorItem.isReceived() ? recvIcon : sendIcon);
+            lblId.setText("#" + busMonitorItem.getId());
 
-            final ApplicationType type = telegram.getApplicationType();
-            if (type == ApplicationType.None) lblAppName.setText(telegram.getTransport().name());
-            else lblAppName.setText(type.name());
+            if (frameClass == EmiFrameClass.SEND || frameClass == EmiFrameClass.CONFIRM)
+               lblDirection.setIcon(sendIcon);
+            else if (frameClass == EmiFrameClass.RECEIVE)
+               lblDirection.setIcon(recvIcon);
+            else lblDirection.setIcon(null);
 
-            lblFrom.setText(I18n.formatMessage("BusMonitorCellRenderer.From", new Object[] { telegram.getFrom().toString() }));
-            lblDest.setText(I18n.formatMessage("BusMonitorCellRenderer.Dest", new Object[] { telegram.getDest().toString() }));
+            lblAppName.setText(frame.getType().getLabel());
+            lblRaw.setText(HexString.toString(frame.toByteArray()));
 
-            final int[] rawData = new int[256];
-            final StringBuilder rawDataSB = new StringBuilder(1024);
-            final int len = telegram.toRawData(rawData, 0);
+            if (frame instanceof EmiTelegramFrame)
+            {
+               final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
 
-            for (int i = 0; i < len; ++i)
-               rawDataSB.append(String.format("%02x ", rawData[i]));
+               lblFrom.setText(I18n.formatMessage("BusMonitorCellRenderer.From", new Object[] { telegram.getFrom()
+                     .toString() }));
+               lblDest.setText(I18n.formatMessage("BusMonitorCellRenderer.Dest", new Object[] { telegram.getDest()
+                     .toString() }));
 
-            lblRaw.setText(rawDataSB.toString());
-
-            final Application app = telegram.getApplication();
-            lblAppData.setText(app == null ? "" : app.toString());
+               final Application app = telegram.getApplication();
+               if (app == null)
+                  lblAppData.setText(telegram.getTransport().name());
+               else lblAppData.setText(app.toString());
+            }
+            else
+            {
+               lblFrom.setText("");
+               lblDest.setText("");
+               lblAppData.setText(frame.toString());
+            }
 
             renderer.setBackground(selected ? backgroundSelectionColor : backgroundNonSelectionColor);
             renderer.setEnabled(tree.isEnabled());

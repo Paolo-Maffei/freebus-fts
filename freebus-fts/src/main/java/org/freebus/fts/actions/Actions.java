@@ -23,6 +23,9 @@ public enum Actions
    /** Show the bus-monitor. */
    BUS_MONITOR(new BusMonitorAction()),
 
+   /** View a KNX/EIB bus trace file. */
+   BUS_TRACE_VIEWER(new BusTraceViewerAction()),
+
    /** Read the device status. */
    DEVICE_STATUS(new DeviceStatusAction()),
 

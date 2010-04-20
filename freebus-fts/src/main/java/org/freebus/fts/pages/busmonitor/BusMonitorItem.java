@@ -4,43 +4,43 @@ import java.util.Calendar;
 import java.util.Date;
 
 import org.freebus.fts.pages.BusMonitor;
-import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.emi.EmiFrame;
 
 /**
  * An item of the {@link BusMonitor} bus-monitor.
  */
 public final class BusMonitorItem
 {
-   private final Telegram telegram;
-   private final boolean received;
+   private final int id;
+   private final EmiFrame frame;
    private final Date when;
 
    /**
     * Create a bus-monitor item.
     *
-    * @param when - The time when the telegram was received.
-    * @param telegram - The telegram that the item represents.
-    * @param received - True if the telegram was received, false if it was sent.
+    * @param id - the numerical id of the frame.
+    * @param when - the time when the frame was received.
+    * @param frame - the EMI frame that the item represents.
     *
     * @see Calendar#getTimeInMillis()
     */
-   public BusMonitorItem(Date when, Telegram telegram, boolean received)
+   public BusMonitorItem(int id, Date when, EmiFrame frame)
    {
+      this.id = id;
       this.when = when;
-      this.telegram = telegram;
-      this.received = received;
+      this.frame = frame;
    }
 
    /**
-    * @return True the telegram was received, false if it was sent.
+    * @return the numerical id of the frame.
     */
-   public boolean isReceived()
+   public int getId()
    {
-      return received;
+      return id;
    }
 
    /**
-    * @return the date when the telegram was received.
+    * @return the date when the frame was received.
     */
    public Date getWhen()
    {
@@ -48,10 +48,10 @@ public final class BusMonitorItem
    }
 
    /**
-    * @return The telegram.
+    * @return The EMI frame.
     */
-   public Telegram getTelegram()
+   public EmiFrame getFrame()
    {
-      return telegram;
+      return frame;
    }
 }

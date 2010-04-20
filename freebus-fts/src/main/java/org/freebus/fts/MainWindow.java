@@ -159,6 +159,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       toolBar.addSeparator();
 
       Actions.BUS_MONITOR.addTo(toolBar);
+      Actions.BUS_TRACE_VIEWER.addTo(toolBar);
       Actions.ADD_DEVICES.addTo(toolBar);
       Actions.SETTINGS.addTo(toolBar);
 

@@ -60,6 +60,12 @@ public final class SetPhysicalAddressJob extends ListenableJob
       receiver = new TelegramReceiver(bus);
 
       //
+      // Step 0: test if the address is already in use
+      //
+
+      // TODO
+
+      //
       // Step 1: scan the bus for devices that are in programming mode
       //
       notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Scanning"));

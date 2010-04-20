@@ -15,78 +15,130 @@ import org.freebus.knxcomm.emi.PEI_Switch_req;
  */
 public enum EmiFrameType
 {
-   L_BUSMON_IND(0x2b, L_Busmon_ind.class), L_PLAIN_DATA_REQ(0x10),
+   /**
+    * A telegram in bus monitor mode was received.
+    */
+   L_BUSMON_IND(0x2b, EmiFrameClass.RECEIVE, L_Busmon_ind.class),
+
+   /**
+    * Request to send plain data.
+    */
+   L_PLAIN_DATA_REQ(0x10, EmiFrameClass.SEND),
 
    /**
     * Link data send request.
     */
-   L_DATA_REQ(0x11, L_Data_req.class),
+   L_DATA_REQ(0x11, EmiFrameClass.SEND, L_Data_req.class),
 
    /**
     * Link data send confirmation.
     */
-   L_DATA_CON(0x2e, L_Data_con.class, L_DATA_REQ),
+   L_DATA_CON(0x2e, EmiFrameClass.CONFIRM, L_Data_con.class, L_DATA_REQ),
 
    /**
     * Link data receive indication.
     */
-   L_DATA_IND(0x29, L_Data_ind.class),
+   L_DATA_IND(0x29, EmiFrameClass.RECEIVE, L_Data_ind.class),
 
-   L_POLL_DATA_REQ(0x13, L_Poll_Data_req.class), L_POLL_DATA_CON(0x25, null, L_POLL_DATA_REQ),
+   /**
+    * Poll data request.
+    */
+   L_POLL_DATA_REQ(0x13, EmiFrameClass.SEND, L_Poll_Data_req.class),
+
+   /**
+    * Poll data send confirmation.
+    */
+   L_POLL_DATA_CON(0x25, EmiFrameClass.CONFIRM, null, L_POLL_DATA_REQ),
 
    /**
     * Raw data send request. cEMI frames only.
     */
-   L_RAW_REQ(0x10),
+   L_RAW_REQ(0x10, EmiFrameClass.SEND),
 
    /**
     * Raw data receive indication. cEMI frames only.
     */
-   L_RAW_IND(0x2d),
+   L_RAW_IND(0x2d, EmiFrameClass.RECEIVE),
 
    /**
     * Raw data send confirmation. cEMI frames only.
     */
-   L_RAW_CON(0x2f),
+   L_RAW_CON(0x2f, EmiFrameClass.CONFIRM),
 
-   N_DATA_INDIVIDUAL_REQ(0x21), N_DATA_INDIVIDUAL_CON(0x4e, null, N_DATA_INDIVIDUAL_REQ), N_DATA_INDIVIDUAL_IND(0x49),
+   N_DATA_INDIVIDUAL_REQ(0x21, EmiFrameClass.SEND),
 
-   N_DATA_GROUP_REQ(0x22), N_DATA_GROUP_CON(0x3e, null, N_DATA_GROUP_REQ), N_DATA_GROUP_IND(0x3a),
+   N_DATA_INDIVIDUAL_CON(0x4e, EmiFrameClass.CONFIRM, null, N_DATA_INDIVIDUAL_REQ),
 
-   N_DATA_BROADCAST_REQ(0x2c), N_DATA_BROADCAST_CON(0x4f, null, N_DATA_BROADCAST_REQ), N_DATA_BROADCAST_IND(0x4d),
+   N_DATA_INDIVIDUAL_IND(0x49, EmiFrameClass.RECEIVE),
 
-   N_POLL_DATA_REQ(0x23), N_POLL_DATA_CON(0x35, null, N_POLL_DATA_REQ),
+   N_DATA_GROUP_REQ(0x22, EmiFrameClass.SEND),
 
-   T_CONNECT_REQ(0x43), T_CONNECT_CON(0x86, null, T_CONNECT_REQ), T_CONNECT_IND(0x85),
+   N_DATA_GROUP_CON(0x3e, EmiFrameClass.CONFIRM, null, N_DATA_GROUP_REQ),
 
-   T_DISCONNECT_REQ(0x44), T_DISCONNECT_CON(0x88, null, T_DISCONNECT_REQ), T_DISCONNECT_IND(0x87),
+   N_DATA_GROUP_IND(0x3a, EmiFrameClass.RECEIVE),
 
-   U_VALUE_READ_REQ(0x74), U_VALUE_READ_CON(0xe4),
+   N_DATA_BROADCAST_REQ(0x2c, EmiFrameClass.SEND),
 
-   U_FLAGS_READ_REQ(0x7c), U_FLAGS_READ_CON(0xec),
+   N_DATA_BROADCAST_CON(0x4f, EmiFrameClass.CONFIRM, null, N_DATA_BROADCAST_REQ),
 
-   U_EVENT_IND(0xe7), U_VALUE_WRITE_REQ(0x71),
+   N_DATA_BROADCAST_IND(0x4d, EmiFrameClass.RECEIVE),
+
+   N_POLL_DATA_REQ(0x23, EmiFrameClass.SEND),
+
+   N_POLL_DATA_CON(0x35, EmiFrameClass.CONFIRM, null, N_POLL_DATA_REQ),
+
+   T_CONNECT_REQ(0x43, EmiFrameClass.SEND),
+
+   T_CONNECT_CON(0x86, EmiFrameClass.CONFIRM, null, T_CONNECT_REQ),
+
+   T_CONNECT_IND(0x85, EmiFrameClass.RECEIVE),
+
+   T_DISCONNECT_REQ(0x44, EmiFrameClass.SEND),
+
+   T_DISCONNECT_CON(0x88, EmiFrameClass.CONFIRM, null, T_DISCONNECT_REQ),
+
+   T_DISCONNECT_IND(0x87, EmiFrameClass.RECEIVE),
+
+   U_VALUE_READ_REQ(0x74, EmiFrameClass.SEND),
+
+   U_VALUE_READ_CON(0xe4, EmiFrameClass.CONFIRM),
+
+   U_FLAGS_READ_REQ(0x7c, EmiFrameClass.SEND),
+
+   U_FLAGS_READ_CON(0xec, EmiFrameClass.CONFIRM),
+
+   U_EVENT_IND(0xe7, EmiFrameClass.RECEIVE),
+
+   U_VALUE_WRITE_REQ(0x71, EmiFrameClass.SEND),
 
    /**
     * Physical external interface
     */
-   PEI_IDENTIFY_REQ(0xa7, PEI_Identify_req.class), PEI_IDENTIFY_CON(0xa8, PEI_Identify_con.class, PEI_IDENTIFY_REQ), PEI_SWITCH_REQ(
-         0xa9, PEI_Switch_req.class),
+   PEI_IDENTIFY_REQ(0xa7, EmiFrameClass.SEND, PEI_Identify_req.class),
+
+   PEI_IDENTIFY_CON(0xa8, EmiFrameClass.CONFIRM, PEI_Identify_con.class, PEI_IDENTIFY_REQ),
+
+   PEI_SWITCH_REQ(0xa9, EmiFrameClass.SEND, PEI_Switch_req.class),
 
    /**
     * Timer
     */
-   TM_TIMER_IND(0xc1),
+   TM_TIMER_IND(0xc1, EmiFrameClass.RECEIVE),
 
    /**
     * An unknown message (this is an internal type)
     */
-   UNKNOWN(0x00);
+   UNKNOWN(0x00, null);
 
    /**
     * The message-type code.
     */
    public final int code;
+
+   /**
+    * The classification of the frame.
+    */
+   public final EmiFrameClass frameClass;
 
    /**
     * The message-type for which this message-type is a confirmation. E.g. for
@@ -106,7 +158,19 @@ public enum EmiFrameType
     */
    public boolean isConfirmation()
    {
-      return confirmationForType != null;
+      return frameClass == EmiFrameClass.CONFIRM;
+   }
+
+   /**
+    * @return a human readable label for the frame type.
+    */
+   public String getLabel()
+   {
+      int pos = name().lastIndexOf('_');
+      if (pos < 1)
+         return name();
+
+      return name().substring(0, pos) + '.' + name().substring(pos + 1).toLowerCase();
    }
 
    /**
@@ -144,9 +208,10 @@ public enum EmiFrameType
    /*
     * Internal constructor
     */
-   private EmiFrameType(int code, Class<? extends EmiFrame> clazz, EmiFrameType confirmationForType)
+   private EmiFrameType(int code, EmiFrameClass frameClass, Class<? extends EmiFrame> clazz, EmiFrameType confirmationForType)
    {
       this.code = code;
+      this.frameClass = frameClass;
       this.clazz = clazz;
       this.confirmationForType = confirmationForType;
    }
@@ -154,16 +219,16 @@ public enum EmiFrameType
    /*
     * Internal constructor
     */
-   private EmiFrameType(int code, Class<? extends EmiFrame> clazz)
+   private EmiFrameType(int code, EmiFrameClass frameClass, Class<? extends EmiFrame> clazz)
    {
-      this(code, clazz, null);
+      this(code, frameClass, clazz, null);
    }
 
    /*
     * Internal constructor
     */
-   private EmiFrameType(int code)
+   private EmiFrameType(int code, EmiFrameClass frameClass)
    {
-      this(code, null, null);
+      this(code, frameClass, null, null);
    }
 }

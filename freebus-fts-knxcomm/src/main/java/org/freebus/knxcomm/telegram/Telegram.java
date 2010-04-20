@@ -315,7 +315,7 @@ public class Telegram implements Cloneable
          if (dataMask != 0)
          {
             application.setApciValue(apciByte & dataMask);
-//            --dataLen;
+            // --dataLen;
          }
 
          // TODO remove "dataMask != 0" when application.readData() is properly
@@ -343,14 +343,15 @@ public class Telegram implements Cloneable
     */
    int readDataShortHeader(DataInput in, int ctrl) throws IOException
    {
-      /*
-       * Control byte: bit 7: frame length-type: 0=extended frame, 1=standard
-       * frame; bit 6: frame type 1: 0=data telegram, 1=poll-data telegram; bit
-       * 5: repeated flag: 0=repeated, 1=not repeated; bit 4: frame type 2:
-       * 0=acknowledge frame, 1=normal frame. bit 3+2: Priority: 0=system,
-       * 1=urgent, 2=normal, 3=low priority. bit 1: 0 bit 0: confirmation: 0=ok,
-       * 1=error.
-       */
+      // Control byte:
+      //
+      // bit 7: frame length-type: 0=extended frame, 1=standard frame;
+      // bit 6: frame type 1: 0=data telegram, 1=poll-data telegram;
+      // bit 5: repeated flag: 0=repeated, 1=not repeated;
+      // bit 4: frame type 2: 0=acknowledge frame, 1=normal frame;
+      // bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority;
+      // bit 1: 0 bit 0: confirmation: 0=ok, 1=error.
+      //
       priority = Priority.valueOf((ctrl >> 2) & 3);
       repeated = (ctrl & 0x20) == 0;
 
@@ -393,22 +394,25 @@ public class Telegram implements Cloneable
     */
    int readDataExtendedHeader(DataInput in, int ctrl) throws IOException
    {
-      /*
-       * 1st control byte: bit 7: frame length-type: 0=extended frame,
-       * 1=standard frame; bit 6: 0; bit 5: repeated flag: 0=repeated, 1=not
-       * repeated; bit 4: system broadcast flag: 0=system broadcast,
-       * 1=broadcast; bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low
-       * priority; bit 1: acknowledge request flag: 0=no ack, 1=ack requested;
-       * bit 0: confirmation: 0=ok, 1=error.
-       */
+      // Control byte #1:
+      //
+      // bit 7: frame length-type: 0=extended frame, 1=standard frame;
+      // bit 6: 0;
+      // bit 5: repeated flag: 0=repeated, 1=not repeated;
+      // bit 4: system broadcast flag: 0=system broadcast, 1=broadcast;
+      // bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority;
+      // bit 1: acknowledge request flag: 0=no ack, 1=ack requested;
+      // bit 0: confirmation: 0=ok, 1=error.
+      //
       priority = Priority.valueOf((ctrl >> 2) & 3);
       repeated = (ctrl & 0x20) == 0;
 
-      /*
-       * 2nd control byte: bit 7: destination address type: 0=individual,
-       * 1=group bit 6..4: routing counter bit 3..0: encoding: 0=standard long
-       * frame, 01xxb=LTE frame
-       */
+      // Control byte #2:
+      //
+      // bit 7: destination address type: 0=individual, 1=group;
+      // bit 6..4: routing counter;
+      // bit 3..0: encoding: 0=standard long frame, 01xxb=LTE frame.
+      //
       final int ctrl2 = in.readUnsignedByte();
       final boolean isGroup = (ctrl2 & 0x80) != 0;
       routingCounter = (ctrl2 >> 4) & 7;
@@ -471,14 +475,15 @@ public class Telegram implements Cloneable
     */
    void writeDataShortHeader(DataOutput out, int appDataLen) throws IOException
    {
-      /*
-       * Control byte: bit 7: frame length-type: 0=extended frame, 1=standard
-       * frame; bit 6: frame type 1: 0=data telegram, 1=poll-data telegram; bit
-       * 5: repeated flag: 0=repeated, 1=not repeated; bit 4: frame type 2:
-       * 0=acknowledge frame, 1=normal frame. bit 3+2: Priority: 0=system,
-       * 1=urgent, 2=normal, 3=low priority. bit 1: 0 bit 0: confirmation: 0=ok,
-       * 1=error.
-       */
+      // Control byte:
+      //
+      // bit 7: frame length-type: 0=extended frame, 1=standard frame;
+      // bit 6: frame type 1: 0=data telegram, 1=poll-data telegram;
+      // bit 5: repeated flag: 0=repeated, 1=not repeated;
+      // bit 4: frame type 2: 0=acknowledge frame, 1=normal frame;
+      // bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority;
+      // bit 1: 0 bit 0: confirmation: 0=ok, 1=error.
+      //
       int ctrl = (1 << 7) | (1 << 4);
       if (!repeated)
          ctrl |= 1 << 5;
@@ -506,25 +511,28 @@ public class Telegram implements Cloneable
     */
    void writeDataExtendedHeader(DataOutput out, int appDataLen) throws IOException
    {
-      /*
-       * 1st control byte: bit 7: frame length-type: 0=extended frame,
-       * 1=standard frame; bit 6: 0; bit 5: repeated flag: 0=repeated, 1=not
-       * repeated; bit 4: system broadcast flag: 0=system broadcast,
-       * 1=broadcast; bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low
-       * priority; bit 1: acknowledge request flag: 0=no ack, 1=ack requested;
-       * bit 0: confirmation: 0=ok, 1=error.
-       */
+      // Control byte #1:
+      //
+      // bit 7: frame length-type: 0=extended frame, 1=standard frame;
+      // bit 6: 0;
+      // bit 5: repeated flag: 0=repeated, 1=not repeated;
+      // bit 4: system broadcast flag: 0=system broadcast, 1=broadcast;
+      // bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority;
+      // bit 1: acknowledge request flag: 0=no ack, 1=ack requested;
+      // bit 0: confirmation: 0=ok, 1=error.
+      //
       int ctrl = (1 << 4);
       if (!repeated)
          ctrl |= 1 << 5;
       ctrl |= priority.id << 2;
       out.write(ctrl);
 
-      /*
-       * 2nd control byte: bit 7: destination address type: 0=individual,
-       * 1=group bit 6..4: routing counter bit 3..0: encoding: 0=standard long
-       * frame, 01xxb=LTE frame
-       */
+      // Control byte #2:
+      //
+      // bit 7: destination address type: 0=individual, 1=group;
+      // bit 6..4: routing counter;
+      // bit 3..0: encoding: 0=standard long frame, 01xxb=LTE frame.
+      //
       int ctrl2 = routingCounter << 4;
       if (dest instanceof GroupAddress)
          ctrl2 |= 0x80;
@@ -556,64 +564,6 @@ public class Telegram implements Cloneable
       {
          throw new RuntimeException();
       }
-   }
-
-   /**
-    * Fill the raw data of the message into the array rawData, starting at index
-    * start.
-    *
-    * @return number of bytes that were used.
-    */
-   public int toRawData(int[] rawData, int start)
-   {
-      int pos = start;
-
-      /*
-       * The control byte. bit 7: frame length-type: 0=extended frame,
-       * 1=standard frame. bit 6: frame type 1: 0=data telegram, 1=poll-data
-       * telegram. bit 5: repeated flag: 0=if the telegram is repeated, 1=not
-       * repeated. bit 4: frame type 2: 0=acknowledge frame, 1=normal frame. bit
-       * 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority. bit 1: 0
-       * bit 0: 0
-       */
-      int ctrl = (1 << 7) | (1 << 4);
-      if (!repeated)
-         ctrl |= 1 << 5;
-      ctrl |= priority.id << 2;
-      rawData[pos++] = ctrl;
-
-      int addr = from.getAddr();
-      rawData[pos++] = addr >> 8;
-      rawData[pos++] = addr & 255;
-
-      addr = dest.getAddr();
-      rawData[pos++] = addr >> 8;
-      rawData[pos++] = addr & 255;
-
-      int applicationLen = 0;
-      int apci = 0;
-
-      if (transport.mask != 255 && application != null)
-      {
-         applicationLen = application.toRawData(rawData, pos + 2);
-         apci = application.getType().getApci();
-      }
-
-      int drl = (routingCounter & 7) << 4;
-      drl |= applicationLen & 15;
-      if (dest instanceof GroupAddress)
-         drl |= 0x80;
-      rawData[pos++] = drl;
-
-      int tpci = transport.value;
-      tpci |= (apci >> 8) & ~transport.mask;
-      if (transport.hasSequence)
-         tpci |= (sequence & 15) << 2;
-      rawData[pos++] = tpci;
-
-      pos += applicationLen;
-
-      return pos - start;
    }
 
    /**
