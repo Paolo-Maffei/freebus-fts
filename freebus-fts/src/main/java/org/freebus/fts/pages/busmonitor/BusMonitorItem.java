@@ -7,7 +7,7 @@ import org.freebus.fts.pages.BusMonitor;
 import org.freebus.knxcomm.emi.EmiFrame;
 
 /**
- * An item of the {@link BusMonitor} bus-monitor.
+ * An item of the {@link SerialBusMonitor} bus-monitor.
  */
 public final class BusMonitorItem
 {

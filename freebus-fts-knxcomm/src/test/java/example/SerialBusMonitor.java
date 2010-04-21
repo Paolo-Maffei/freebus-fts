@@ -11,7 +11,7 @@ import org.freebus.knxcomm.telegram.Telegram;
  * A simple bus monitor that opens a bus interface, and prints the received
  * telegrams to the console.
  */
-public class BusMonitor implements TelegramListener
+public class SerialBusMonitor implements TelegramListener
 {
    private final BusInterface iface;
 
@@ -20,7 +20,7 @@ public class BusMonitor implements TelegramListener
     *
     * @throws Exception
     */
-   public BusMonitor() throws Exception
+   public SerialBusMonitor() throws Exception
    {
       String commPort;
 
@@ -86,10 +86,10 @@ public class BusMonitor implements TelegramListener
    {
       Environment.init();
 
-      BusMonitor mon = null;
+      SerialBusMonitor mon = null;
       try
       {
-         mon = new BusMonitor();
+         mon = new SerialBusMonitor();
 
          while (true)
             Thread.sleep(1000);

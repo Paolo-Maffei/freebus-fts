@@ -26,6 +26,11 @@ public enum StatusCode
    E_SEQUENCE_NUMBER(0x04),
 
    /**
+    * There is no active data connection with the specified ID.
+    */
+   E_CONNECTION_ID(0x21),
+
+   /**
     * The requested connection type is not supported by the KNXnet/IP server.
     * This code can occur in a response to a connect request.
     */
@@ -43,6 +48,17 @@ public enum StatusCode
     * request.
     */
    E_NO_MORE_CONNECTIONS(0x24),
+
+   /**
+    * There is an error concerning the data connection with the specified ID.
+    */
+   E_DATA_CONNECTION(0x26),
+
+   /**
+    * There is an error concerning the KNX subnetwork connection with the
+    * specified ID.
+    */
+   E_KNX_CONNECTION(0x27),
 
    /**
     * The requested tunneling layer is not supported by the KNXnet/IP server.

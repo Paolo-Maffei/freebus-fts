@@ -133,7 +133,7 @@ final class KNXnetBusInterface extends JPanel
          setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
          KNXnetConnection con = new KNXnetConnection(inpHost.getText(), Integer.valueOf(inpPort.getText()));
-         con.open(LinkMode.BusMonitor);
+         con.open(LinkMode.LinkLayer);
 
          final StringBuffer sb = new StringBuffer();
 

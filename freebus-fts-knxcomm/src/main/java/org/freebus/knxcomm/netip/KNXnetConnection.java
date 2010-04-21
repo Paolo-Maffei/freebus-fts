@@ -20,6 +20,8 @@ import org.freebus.knxcomm.netip.frames.ConnectRequest;
 import org.freebus.knxcomm.netip.frames.ConnectResponse;
 import org.freebus.knxcomm.netip.frames.DescriptionRequest;
 import org.freebus.knxcomm.netip.frames.DescriptionResponse;
+import org.freebus.knxcomm.netip.frames.DisconnectRequest;
+import org.freebus.knxcomm.netip.frames.DisconnectResponse;
 import org.freebus.knxcomm.netip.frames.Frame;
 import org.freebus.knxcomm.netip.frames.FrameFactory;
 import org.freebus.knxcomm.netip.frames.SearchRequest;
@@ -53,7 +55,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    private final Semaphore receiveSemaphore = new Semaphore(0);
    private Frame receivedFrame;
 
-   private int channelId;
+   private int channelId = -1;
    private int sequence = -1;
    private LinkMode mode;
 
@@ -139,23 +141,24 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       final SearchResponse searchResponse = (SearchResponse) frame;
       logger.info("Found KNXnet/IP server: " + searchResponse.getHardwareInfo().getName());
 
-      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), TransportType.UDP,
-            socket.getLocalAddress(), socket.getLocalPort());
-      conReq.setLayer(mode);
-
-      frame = null;
-      for (int tries = 3; tries > 0 && !(frame instanceof ConnectResponse); --tries)
+      StatusCode status = connectRequest(mode);
+      if (status != StatusCode.OK)
       {
-         send(addr, conReq);
-         frame = receive(3500);
+         if (status == StatusCode.E_CONNECTION_TYPE && mode == LinkMode.BusMonitor)
+         {
+            // Fall back to LinkLayer mode if BusMonitor mode is not supported
+            mode = LinkMode.LinkLayer;
+            status = connectRequest(mode);
+            if (status == StatusCode.OK)
+            {
+               Logger.getLogger(getClass()).warn(
+                     "KNXnet/IP server does not support bus monitor mode, falling back to link layer mode");
+            }
+         }
+
+         if (status != StatusCode.OK)
+            throw new ConnectException("KNXnet/IP connect to " + addr + " failed: " + status);
       }
-
-      if (!(frame instanceof ConnectResponse))
-         throw new ConnectException("no response to KNXnet/IP connect request");
-
-      final ConnectResponse conResp = (ConnectResponse) frame;
-      if (conResp.getStatus() != StatusCode.OK)
-         throw new ConnectException("KNXnet/IP connect to " + addr + " failed: " + conResp.getStatus());
 
       send(addr, new DescriptionRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort()));
       frame = receive(3500);
@@ -168,8 +171,47 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       this.mode = mode;
       busAddr = descResp.getHardwareInfo().getBusAddress();
       logger.info("Connection to KNXnet/IP server " + busAddr + " established");
-      channelId = conResp.getChannelId();
-      dataAddr = new InetSocketAddress(conResp.getDataEndPoint().getAddress(), conResp.getDataEndPoint().getPort());
+   }
+
+   /**
+    * Send a connection request and wait for the answer. On success, the channel
+    * ID and the data endpoint information is stored and {@link StatusCode#OK}
+    * is returned. On failure, the {@link StatusCode status code} of the
+    * response is returned.
+    *
+    * @param mode - the link mode to request
+    *
+    * @return the {@link StatusCode status} of the the connection response.
+    *
+    * @throws IOException
+    */
+   private StatusCode connectRequest(LinkMode mode) throws IOException
+   {
+
+      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, socket.getLocalAddress(), socket
+            .getLocalPort(), TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort());
+      conReq.setLayer(mode);
+
+      Frame frame = null;
+      for (int tries = 3; tries > 0 && !(frame instanceof ConnectResponse); --tries)
+      {
+         send(addr, conReq);
+         frame = receive(3500);
+      }
+
+      if (!(frame instanceof ConnectResponse))
+         throw new ConnectException("no response to KNXnet/IP connect request");
+
+      final ConnectResponse resp = (ConnectResponse) frame;
+      final StatusCode status = resp.getStatus();
+
+      if (status == StatusCode.OK)
+      {
+         channelId = resp.getChannelId();
+         dataAddr = new InetSocketAddress(resp.getDataEndPoint().getAddress(), resp.getDataEndPoint().getPort());
+      }
+
+      return status;
    }
 
    /**
@@ -178,8 +220,27 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    @Override
    public void close()
    {
-      // logger.info("Closing connection to KNXnet/IP server");
-      // TODO
+      try
+      {
+         send(addr,
+               new DisconnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), channelId));
+
+         final Frame frame = receive(500);
+         if (!(frame instanceof DisconnectRequest))
+            throw new ConnectException("no response to KNXnet/IP disconnect request");
+
+         final DisconnectResponse resp = (DisconnectResponse) frame;
+         if (resp.getStatus() != StatusCode.OK)
+            throw new ConnectException("Cannot disconnect: " + resp.getStatus());
+      }
+      catch (IOException e)
+      {
+         Logger.getLogger(getClass()).error("Failed to disconnect from KNXnet/IP server", e);
+      }
+      finally
+      {
+         channelId = -1;
+      }
    }
 
    /**
@@ -188,7 +249,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    @Override
    public boolean isConnected()
    {
-      return socket != null && socket.isConnected();
+      return socket != null && channelId >= 0;
    }
 
    /**

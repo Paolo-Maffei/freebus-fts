@@ -1,10 +1,14 @@
 package org.freebus.knxcomm.netip.types;
 
+import org.freebus.knxcomm.netip.frames.AbstractFrame;
 import org.freebus.knxcomm.netip.frames.ConnectRequest;
 import org.freebus.knxcomm.netip.frames.ConnectResponse;
+import org.freebus.knxcomm.netip.frames.ConnectionStateRequest;
+import org.freebus.knxcomm.netip.frames.ConnectionStateResponse;
 import org.freebus.knxcomm.netip.frames.DescriptionRequest;
 import org.freebus.knxcomm.netip.frames.DescriptionResponse;
-import org.freebus.knxcomm.netip.frames.AbstractFrame;
+import org.freebus.knxcomm.netip.frames.DisconnectRequest;
+import org.freebus.knxcomm.netip.frames.DisconnectResponse;
 import org.freebus.knxcomm.netip.frames.Frame;
 import org.freebus.knxcomm.netip.frames.SearchRequest;
 import org.freebus.knxcomm.netip.frames.SearchResponse;
@@ -56,26 +60,26 @@ public enum ServiceType
     * The KNXnet/IP client to server: request information about an established
     * connection. The server answers with a {@link #CONNECTIONSTATE_RESPONSE}.
     */
-   CONNECTIONSTATE_REQUEST(0x207, null),
+   CONNECTIONSTATE_REQUEST(0x207, ConnectionStateRequest.class),
 
    /**
     * KNXnet/IP server to client: the information about an established
     * connection that was requested by the client with a
     * {@link #CONNECTIONSTATE_REQUEST}.
     */
-   CONNECTIONSTATE_RESPONSE(0x208, null),
+   CONNECTIONSTATE_RESPONSE(0x208, ConnectionStateResponse.class),
 
    /**
     * The KNXnet/IP client to server: close an established connection. The
     * server answers with a {@link #DISCONNECT_RESPONSE}.
     */
-   DISCONNECT_REQUEST(0x209, null),
+   DISCONNECT_REQUEST(0x209, DisconnectRequest.class),
 
    /**
     * KNXnet/IP server to client: the answer to the client's
     * {@link #DISCONNECT_REQUEST}.
     */
-   DISCONNECT_RESPONSE(0x20a, null),
+   DISCONNECT_RESPONSE(0x20a, DisconnectResponse.class),
 
    /**
     * KNXnet/IP server to client and client to server: tunneling

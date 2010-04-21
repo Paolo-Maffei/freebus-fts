@@ -64,7 +64,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    public BusMonitor()
    {
       setLayout(new BorderLayout());
-      setName(I18n.getMessage("BusMonitor.Title"));
+      setName(I18n.getMessage("SerialBusMonitor.Title"));
 
       tree = new JTree(treeModel);
       tree.setRootVisible(false);
@@ -88,7 +88,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       add(toolBar, BorderLayout.NORTH);
 
       btnSave = new ToolBarButton(ImageCache.getIcon("icons/filesave"));
-      btnSave.setToolTipText(I18n.getMessage("BusMonitor.Save.ToolTip"));
+      btnSave.setToolTipText(I18n.getMessage("SerialBusMonitor.Save.ToolTip"));
       toolBar.add(btnSave);
       btnSave.addActionListener(new ActionListener()
       {
@@ -100,7 +100,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       });
 
       btnErase = new ToolBarButton(ImageCache.getIcon("icons/eraser"));
-      btnErase.setToolTipText(I18n.getMessage("BusMonitor.Clear.ToolTip"));
+      btnErase.setToolTipText(I18n.getMessage("SerialBusMonitor.Clear.ToolTip"));
       toolBar.add(btnErase);
       btnErase.addActionListener(new ActionListener()
       {
@@ -147,7 +147,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       dlg.addChoosableFileFilter(fileFilter);
       dlg.addChoosableFileFilter(dlg.getAcceptAllFileFilter());
       dlg.setFileFilter(fileFilter);
-      dlg.setDialogTitle(I18n.getMessage("BusMonitor.SaveTraceFileTitle"));
+      dlg.setDialogTitle(I18n.getMessage("SerialBusMonitor.SaveTraceFileTitle"));
       dlg.setDialogType(JFileChooser.SAVE_DIALOG);
 
       if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)
@@ -166,7 +166,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       }
       catch (IOException e)
       {
-         Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrSaveTraceFile"));
+         Dialogs.showExceptionDialog(e, I18n.getMessage("SerialBusMonitor.ErrSaveTraceFile"));
       }
    }
 
