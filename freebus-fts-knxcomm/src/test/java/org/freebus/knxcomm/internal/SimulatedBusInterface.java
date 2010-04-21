@@ -6,6 +6,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -17,28 +18,27 @@ public class SimulatedBusInterface implements BusInterface
    @Override
    public void addListener(TelegramListener listener)
    {
-      // TODO Auto-generated method stub
+   }
 
+   @Override
+   public void open(LinkMode mode) throws IOException
+   {
    }
 
    @Override
    public void close()
    {
-      // TODO Auto-generated method stub
-
    }
 
    @Override
    public DataConnection connect(PhysicalAddress addr) throws IOException
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
    @Override
    public KNXConnection getConnection()
    {
-      // TODO Auto-generated method stub
       return null;
    }
 
@@ -55,22 +55,24 @@ public class SimulatedBusInterface implements BusInterface
    }
 
    @Override
-   public void open() throws IOException
-   {
-   }
-
-   @Override
    public void removeListener(TelegramListener listener)
    {
-      // TODO Auto-generated method stub
-
    }
 
    @Override
    public void send(Telegram telegram) throws IOException
    {
-      // TODO Auto-generated method stub
+   }
 
+   @Override
+   public void setLinkMode(LinkMode mode) throws IOException
+   {
+   }
+
+   @Override
+   public LinkMode getLinkMode()
+   {
+      return null;
    }
 
 }

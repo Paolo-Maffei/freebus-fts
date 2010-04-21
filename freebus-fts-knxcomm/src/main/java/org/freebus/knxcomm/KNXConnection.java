@@ -19,8 +19,10 @@ public interface KNXConnection
 {
    /**
     * Open the connection to the bus.
+    *
+    * @param mode - the link mode to set for the connection.
     */
-   public void open() throws IOException;
+   public void open(LinkMode mode) throws IOException;
 
    /**
     * Close the bus connection.
@@ -31,6 +33,18 @@ public interface KNXConnection
     * @return true if the bus connection is opened.
     */
    public boolean isConnected();
+
+   /**
+    * Switch the link mode.
+    *
+    * @param mode - the link mode to switch to
+    */
+   public void setLinkMode(LinkMode mode) throws IOException;
+
+   /**
+    * @return the currently active link mode.
+    */
+   public LinkMode getLinkMode();
 
    /**
     * Send an EMI frame to the bus.

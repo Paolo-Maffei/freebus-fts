@@ -6,17 +6,17 @@ package org.freebus.knxcomm.serial;
 public enum Ft12FrameFormat
 {
    /**
-    * Fixed length FT1.2 frame
+    * Fixed length FT1.2 frame, with id 0x10.
     */
    FIXED(0x10),
 
    /**
-    * Variable length FT1.2 frame
+    * Variable length FT1.2 frame, with id 0x68.
     */
    VARIABLE(0x68),
 
    /**
-    * Acknowledge (in reply to a sent short or long FT1.2 frame)
+    * Acknowledge (in reply to a sent short or long FT1.2 frame), with id 0xe5.
     */
    ACK(0xe5);
 

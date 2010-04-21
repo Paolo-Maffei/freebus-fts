@@ -10,6 +10,7 @@ import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
 import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.LinkMode;
 
 /**
  * A FT1.2 speaking {@link KNXConnection} using the local serial port.
@@ -35,7 +36,7 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
     * @throws IOException
     */
    @Override
-   public void open() throws IOException
+   public void open(LinkMode mode) throws IOException
    {
       // Freebus RS-Interface: 115200, SerialPort.DATABITS_8,
       // SerialPort.STOPBITS_1, SerialPort.PARITY_NONE.
@@ -61,7 +62,7 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
       }
 
       port.notifyOnDataAvailable(true);
-      super.open();
+      super.open(mode);
    }
 
    /**
@@ -100,12 +101,10 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
       {
          try
          {
-            inputStream.wait(50);
+            inputStream.wait(100);
          }
          catch (InterruptedException e)
          {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
          }
 
          b = inputStream.read();

@@ -5,6 +5,7 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.net.InetAddress;
 
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.netip.blocks.EndPoint;
 import org.freebus.knxcomm.netip.types.ConnectionType;
 import org.freebus.knxcomm.netip.types.ServiceType;
@@ -31,8 +32,8 @@ public class ConnectRequest extends AbstractEndPointFrame
    public static int LINK_TUNNEL = 2;
 
    /**
-    * Establish a raw data tunnel. Valid for
-    * {@link ConnectionType#TUNNEL tunneling} connections.
+    * Establish a raw data tunnel. Valid for {@link ConnectionType#TUNNEL
+    * tunneling} connections.
     */
    public static int RAW_TUNNEL = 4;
 
@@ -113,13 +114,28 @@ public class ConnectRequest extends AbstractEndPointFrame
    }
 
    /**
-    * Set the KNX layer. E.g. 2 is the link layer.
+    * Set the KNX layer. Valid values: {@link #BUSMON_TUNNEL},
+    * {@link #LINK_TUNNEL}, {@link #RAW_TUNNEL}.
     *
     * @param layer - the layer to set
     */
    public void setLayer(int layer)
    {
       this.layer = layer;
+   }
+
+   /**
+    * Set the KNX layer. E.g. 2 is the link layer.
+    *
+    * @param mode - the link mode to set
+    */
+   public void setLayer(LinkMode mode)
+   {
+      if (mode == LinkMode.BusMonitor)
+         setLayer(BUSMON_TUNNEL);
+      else if (mode == LinkMode.LinkLayer)
+         setLayer(LINK_TUNNEL);
+      else throw new IllegalArgumentException("invalid link mode " + mode);
    }
 
    /**

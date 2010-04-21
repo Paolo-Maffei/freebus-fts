@@ -14,8 +14,10 @@ public interface BusInterface
    /**
     * Open the connection to the bus, using the preferred connection type and
     * settings, taken from the application's configuration.
+    *
+    * @param mode - the link mode to open the connection with.
     */
-   public void open() throws IOException;
+   public void open(LinkMode mode) throws IOException;
 
    /**
     * Close the bus connection.
@@ -28,7 +30,20 @@ public interface BusInterface
    public boolean isConnected();
 
    /**
-    * Send a telegram to the bus.
+    * Switch the link mode.
+    *
+    * @param mode - the link mode to switch to
+    */
+   public void setLinkMode(LinkMode mode) throws IOException;
+
+   /**
+    * @return the currently active link mode.
+    */
+   public LinkMode getLinkMode();
+
+   /**
+    * Send a telegram to the bus. Sending is not available in
+    * {@link LinkMode#BusMonitor bus monitor} link mode.
     *
     * @throws IOException
     */
@@ -39,8 +54,11 @@ public interface BusInterface
     * specific device on the KNX/EIB bus. The connection can be used for
     * "connected" data transfer between the device.
     * <p>
-    * Always close the connection with {@link DataConnection#close()} after
+    * Always {@link DataConnection#close() close the connection} after
     * using it.
+    * <p>
+    * Opening a connection is not available in {@link LinkMode#BusMonitor bus
+    * monitor} link mode.
     *
     * @param addr - the physical address of the target device.
     *

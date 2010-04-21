@@ -11,6 +11,7 @@ import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.PEI_Identify_con;
@@ -30,8 +31,9 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
    protected final Semaphore waitAckSemaphore = new Semaphore(0);
    private PhysicalAddress busAddr = PhysicalAddress.NULL;
-   protected boolean connected = false;
-   protected int resetPending = 0;
+   private LinkMode mode;
+   protected boolean connected;
+   protected int resetPending;
 
    // Enable to get FT1.2 frame data and ACK debug output
    private boolean debugFT12 = true;
@@ -43,8 +45,8 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    protected final int eofMarker = 0x16;
 
    // Message counters for frames with valid frame-count bit
-   protected int readFcbCount = 0;
-   protected int writeFcbCount = 0;
+   protected int readFcbCount;
+   protected int writeFcbCount;
 
    // FT1.2 acknowledgment message
    protected static final byte[] ackMsg = { (byte) Ft12FrameFormat.ACK.code };
@@ -53,13 +55,14 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     * {@inheritDoc}
     */
    @Override
-   public void open() throws IOException
+   public void open(LinkMode mode) throws IOException
    {
       try
       {
          readFcbCount = 0;
          writeFcbCount = 0;
          resetPending = 0;
+         connected = false;
          busAddr = PhysicalAddress.NULL;
 
          send(Ft12Function.RESET, 30);
@@ -69,10 +72,11 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          send(new PEI_Identify_req());
          Thread.sleep(100);
 
-         // Switch to bus monitor mode
-         // send(new PEI_Switch_req(PEISwitchMode.BUSMON));
-         send(new PEI_Switch_req(PEISwitchMode.LINK));
+         // Switch to the proper mode
+         setLinkMode(mode);
          Thread.sleep(100);
+
+         connected = true;
       }
       catch (IOException e)
       {
@@ -82,6 +86,32 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setLinkMode(LinkMode mode) throws IOException
+   {
+      PEISwitchMode switchMode;
+
+      if (mode == LinkMode.LinkLayer)
+         switchMode = PEISwitchMode.LINK;
+      else if (mode == LinkMode.BusMonitor)
+         switchMode = PEISwitchMode.BUSMON;
+      else throw new IllegalArgumentException("invalid link mode " + mode);
+
+      Logger.getLogger(getClass()).debug("Activating link mode " + mode);
+      this.mode = mode;
+      send(new PEI_Switch_req(switchMode));
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public LinkMode getLinkMode()
+   {
+      return mode;
    }
 
    /**
@@ -123,6 +153,9 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
          if (debugFT12 && logger.isDebugEnabled())
             logger.debug("READ FT1.2: " + HexString.toString(data));
+
+         if (!connected)
+            return;
 
          try
          {

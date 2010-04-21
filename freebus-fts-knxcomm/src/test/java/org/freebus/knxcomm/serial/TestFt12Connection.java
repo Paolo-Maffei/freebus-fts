@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.PEI_Identify_req;
 import org.freebus.knxcomm.emi.PEI_Switch_req;
@@ -40,14 +41,14 @@ public class TestFt12Connection
    public final void testOpen() throws IOException
    {
       con.setReadableData(ackData);
-      con.open();
+      con.open(LinkMode.LinkLayer);
    }
 
    @Test(expected = InvalidDataException.class)
    public final void testReadInvalidFrame() throws IOException
    {
       con.setReadableData(HexString.valueOf("01 01 01 16"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       con.dataAvailable();
    }
@@ -56,7 +57,7 @@ public class TestFt12Connection
    public final void testReadAck() throws IOException
    {
       con.setReadableData(HexString.valueOf("e5"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       con.dataAvailable();
    }
@@ -65,7 +66,7 @@ public class TestFt12Connection
    public final void testReadFixedFrame() throws IOException
    {
       con.setReadableData(HexString.valueOf("10 01 01 16"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
       con.dataAvailable();
    }
 
@@ -73,7 +74,7 @@ public class TestFt12Connection
    public final void testReadVariableFrame() throws IOException
    {
       con.setReadableData(HexString.valueOf("68 02 02 68 53 a7 fa 16"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
       con.dataAvailable();
    }
 
@@ -87,7 +88,7 @@ public class TestFt12Connection
    public final void testReadVariableFrameInvalidMark() throws IOException
    {
       con.setReadableData(HexString.valueOf("68 02 02 11 53 a7 fa 16"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
       con.dataAvailable();
    }
 
@@ -95,7 +96,7 @@ public class TestFt12Connection
    public final void testReadVariableFrameInvalidChecksum() throws IOException
    {
       con.setReadableData(HexString.valueOf("68 02 02 68 53 a7 00 16"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
       con.dataAvailable();
    }
 
@@ -103,7 +104,7 @@ public class TestFt12Connection
    public final void testReadVariableFrameInvalidEof() throws IOException
    {
       con.setReadableData(HexString.valueOf("68 02 02 68 53 a7 fa 00"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
       con.dataAvailable();
    }
 
@@ -111,7 +112,7 @@ public class TestFt12Connection
    public final void testReadFixedFrameInvalidFunc() throws IOException
    {
       con.setReadableData(HexString.valueOf("10 ff ff 16"));
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       con.dataAvailable();
    }
@@ -120,7 +121,7 @@ public class TestFt12Connection
    public final void testSendVariable() throws IOException
    {
       con.setReadableData(ackData);
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       final EmiFrame emiFrame = new PEI_Identify_req();
       con.setReadableData(ackData);
@@ -146,7 +147,7 @@ public class TestFt12Connection
    public final void testSendFixed() throws IOException
    {
       con.setReadableData(ackData);
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       con.setReadableData(ackData);
       con.send(Ft12Function.STATUS_REQ);
@@ -163,7 +164,7 @@ public class TestFt12Connection
    public final void testSendFixedNoAck() throws IOException
    {
       con.setReadableData(null);
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       con.send(Ft12Function.STATUS_RESP);
    }
@@ -172,7 +173,7 @@ public class TestFt12Connection
    public final void testSendVariableNoAck() throws IOException
    {
       con.setReadableData(null);
-      con.open();
+      con.open(LinkMode.LinkLayer);
 
       final EmiFrame emiFrame = new PEI_Switch_req();
       con.send(emiFrame);

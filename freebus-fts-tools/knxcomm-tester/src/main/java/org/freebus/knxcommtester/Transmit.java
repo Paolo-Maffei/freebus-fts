@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
@@ -36,7 +37,7 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 					.newSerialInterface(ftscomComport);
 
 			busInterface.addListener(this);
-			busInterface.open();
+			busInterface.open(LinkMode.LinkLayer);
 
 			 telegram = new Telegram();
 			telegram.setFrom(new PhysicalAddress(0, 0, 0));

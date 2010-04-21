@@ -35,6 +35,7 @@ import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SessionStorage;
@@ -118,6 +119,7 @@ public final class FTS extends Application
       Environment.setAppName("fts");
       Logger.getLogger(getClass()).debug("FTS initialize");
 
+      BusInterfaceFactory.setDefaultLinkMode(LinkMode.BusMonitor);
       getContext().getResourceManager().getResourceMap(getClass());
    }
 

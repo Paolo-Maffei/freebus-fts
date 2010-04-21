@@ -1,6 +1,5 @@
 package non_unit_tests;
 
-import java.awt.Color;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -14,6 +13,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+import javax.swing.border.EtchedBorder;
 
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.HexString;
@@ -56,6 +56,7 @@ public class TelegramDetailsViewer extends JFrame
       add(btnUpdate, new GridBagConstraints(2, 0, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, insets,
             0, 0));
 
+      detailsView.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       add(detailsView, new GridBagConstraints(0, 1, 3, 1, 1, 100, GridBagConstraints.NORTHWEST,
             GridBagConstraints.BOTH, insets, 0, 0));
 

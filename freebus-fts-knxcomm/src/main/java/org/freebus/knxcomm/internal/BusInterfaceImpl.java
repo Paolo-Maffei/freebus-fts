@@ -5,11 +5,13 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
@@ -49,10 +51,37 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     * {@inheritDoc}
     */
    @Override
+   public void open(LinkMode mode) throws IOException
+   {
+      con.open(mode);
+      con.addListener(this);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void close()
    {
       con.removeListener(this);
       con.close();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setLinkMode(LinkMode mode) throws IOException
+   {
+      Logger.getLogger(getClass()).debug("Switching to " + mode + " link mode");
+      con.setLinkMode(mode);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public LinkMode getLinkMode()
+   {
+      return con.getLinkMode();
    }
 
    /**
@@ -63,6 +92,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       if (con == null)
          throw new IOException("Not open");
+
+      if (getLinkMode() == LinkMode.BusMonitor)
+         throw new IllegalAccessError("bus monitor link mode is read only");
 
       final DataConnection dataCon = new DataConnectionImpl(addr, this);
       dataCon.open();
@@ -160,16 +192,6 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     * {@inheritDoc}
     */
    @Override
-   public void open() throws IOException
-   {
-      con.open();
-      con.addListener(this);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public void removeListener(TelegramListener listener)
    {
       listeners.remove(listener);
@@ -183,6 +205,9 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    {
       if (con == null)
          throw new IOException("Not open");
+
+      if (getLinkMode() == LinkMode.BusMonitor)
+         throw new IllegalAccessError("bus monitor link mode is read only");
 
       final PhysicalAddress from = telegram.getFrom();
       if (from == null || PhysicalAddress.NULL.equals(from))

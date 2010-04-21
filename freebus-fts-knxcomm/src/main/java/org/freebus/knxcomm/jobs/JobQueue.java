@@ -1,12 +1,15 @@
 package org.freebus.knxcomm.jobs;
 
+import java.io.IOException;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
+import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.internal.I18n;
 
 /**
@@ -19,6 +22,7 @@ public class JobQueue implements JobListener
    private final CopyOnWriteArrayList<JobQueueListener> listeners = new CopyOnWriteArrayList<JobQueueListener>();
    private final Semaphore semaphore = new Semaphore(0);
    private boolean running = true;
+   private boolean active;
    private Job currentJob;
    private Thread thread;
 
@@ -38,7 +42,6 @@ public class JobQueue implements JobListener
     */
    public JobQueue()
    {
-
       thread = new Thread(new Runnable()
       {
          @Override
@@ -46,23 +49,23 @@ public class JobQueue implements JobListener
          {
             while (running)
             {
-
                try
                {
                   semaphore.acquire();
                }
                catch (InterruptedException e)
                {
-                  // TODO Auto-generated catch block
-                  e.printStackTrace();
+                  Logger.getLogger(getClass()).warn(e);
                }
+
+               if (!active)
+                  active();
 
                Job job = jobs.poll();
                runJob(job);
 
                if (jobs.isEmpty())
-                  notifyListeners(new JobQueueEvent(null));
-
+                  idle();
             }
          }
       });
@@ -157,10 +160,10 @@ public class JobQueue implements JobListener
 
       try
       {
-         final BusInterface busInterface = BusInterfaceFactory.getBusInterface();
+         final BusInterface bus = BusInterfaceFactory.getBusInterface();
 
-         if (busInterface != null)
-            job.run(busInterface);
+         if (bus != null)
+            job.run(bus);
 
          masterEvent.progress = 100;
          notifyListeners(masterEvent);
@@ -174,6 +177,61 @@ public class JobQueue implements JobListener
       {
          job.removeListener(this);
          currentJob = null;
+      }
+   }
+
+   /**
+    * Called when the job queue becomes active.
+    */
+   private void active()
+   {
+      if (active)
+         return;
+
+      active = true;
+      setLinkMode(LinkMode.LinkLayer);
+   }
+
+   /**
+    * Called when the job queue becomes idle.
+    */
+   private void idle()
+   {
+      if (!active)
+         return;
+
+      try
+      {
+         Thread.sleep(500);
+      }
+      catch (InterruptedException e)
+      {
+      }
+
+      active = false;
+      notifyListeners(new JobQueueEvent(null));
+      setLinkMode(LinkMode.BusMonitor);
+   }
+
+   /**
+    * Switch the bus interface to a specific link mode.
+    * Does nothing if the bus interface is undefined.
+    *
+    * @param mode - the bus link mode to activate.
+    */
+   private void setLinkMode(LinkMode mode)
+   {
+      final BusInterface bus = BusInterfaceFactory.getBusInterface();
+      if (bus != null)
+      {
+         try
+         {
+            bus.setLinkMode(mode);
+         }
+         catch (IOException e)
+         {
+            Logger.getLogger(getClass()).error(e);
+         }
       }
    }
 

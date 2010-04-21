@@ -3,6 +3,7 @@ package org.freebus.knxcommtester;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.MemoryRead;
@@ -38,7 +39,7 @@ public class testcom {
 			busInterface = BusInterfaceFactory
 					.newSerialInterface(ftscomComport);
 //			logger.info("Start test com");
-			busInterface.open();
+			busInterface.open(LinkMode.LinkLayer);
 
 
 

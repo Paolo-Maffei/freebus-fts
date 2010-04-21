@@ -13,6 +13,7 @@ import org.freebus.knxcomm.serial.SerialPortUtil;
 public final class BusInterfaceFactory
 {
    private static BusInterface busInterface;
+   private static LinkMode defaultLinkMode = LinkMode.LinkLayer;
 
    /**
     * Returns the default bus-interface. If no default bus-interface exists, one
@@ -32,14 +33,15 @@ public final class BusInterfaceFactory
          }
          catch (final Exception e)
          {
-//            SwingUtilities.invokeLater(new Runnable()
-//            {
-//               @Override
-//               public void run()
-//               {
-//                  Dialogs.showExceptionDialog(e, I18n.getMessage("BusInterfaceService.ErrCreateBusInterface"));
-//               }
-//            });
+            // SwingUtilities.invokeLater(new Runnable()
+            // {
+            // @Override
+            // public void run()
+            // {
+            // Dialogs.showExceptionDialog(e,
+            // I18n.getMessage("BusInterfaceService.ErrCreateBusInterface"));
+            // }
+            // });
             Logger.getLogger(BusInterfaceFactory.class).error("Failed to create bus interface: " + e);
 
             return null;
@@ -73,12 +75,13 @@ public final class BusInterfaceFactory
 
       final KNXConnectionType type = KNXConnectionType.valueOf(cfg.getStringValue("knxConnectionType"));
       if (type == KNXConnectionType.KNXNET_IP)
-         newBusInterface = newKNXnetInterface(cfg.getStringValue("knxConnectionKNXnet.host"), cfg.getIntValue("knxConnectionKNXnet.port"));
+         newBusInterface = newKNXnetInterface(cfg.getStringValue("knxConnectionKNXnet.host"), cfg
+               .getIntValue("knxConnectionKNXnet.port"));
       else if (type == KNXConnectionType.SERIAL_FT12)
          newBusInterface = newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
       else throw new Exception("No bus interface configured");
 
-      newBusInterface.open();
+      newBusInterface.open(defaultLinkMode);
 
       // if open() fails an exception will be thrown.
       // if not, we keep the bus interface for later use.
@@ -123,5 +126,24 @@ public final class BusInterfaceFactory
    public static BusInterface newKNXnetInterface(String host, int port)
    {
       return new BusInterfaceImpl(new KNXnetConnection(host, port));
+   }
+
+   /**
+    * Set the default {@link LinkMode link mode} that is used when a bus
+    * interface is created by {@link #createBusInterface()}. Does not change
+    * existing bus interfaces.
+    */
+   public static void setDefaultLinkMode(LinkMode mode)
+   {
+      defaultLinkMode = mode;
+   }
+
+   /**
+    * @return the default {@link LinkMode link mode} that is used when a bus
+    *         interface is created by {@link #createBusInterface()}.
+    */
+   public static LinkMode getDefaultLinkMode()
+   {
+      return defaultLinkMode;
    }
 }

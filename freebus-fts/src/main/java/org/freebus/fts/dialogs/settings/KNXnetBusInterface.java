@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.netip.KNXnetConnection;
 
 /**
@@ -132,7 +133,7 @@ final class KNXnetBusInterface extends JPanel
          setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
          KNXnetConnection con = new KNXnetConnection(inpHost.getText(), Integer.valueOf(inpPort.getText()));
-         con.open();
+         con.open(LinkMode.BusMonitor);
 
          final StringBuffer sb = new StringBuffer();
 

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.serial.Ft12Connection;
 
 /**
@@ -18,7 +19,7 @@ public class SimulatedFt12Connection extends Ft12Connection
     * {@inheritDoc}
     */
    @Override
-   public void open()
+   public void open(LinkMode mode)
    {
       writtenData = null;
    }

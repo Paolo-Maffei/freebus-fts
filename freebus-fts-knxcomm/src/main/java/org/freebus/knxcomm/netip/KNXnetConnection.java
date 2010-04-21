@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.internal.ListenableConnection;
 import org.freebus.knxcomm.netip.frames.ConnectRequest;
@@ -54,6 +55,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
 
    private int channelId;
    private int sequence = -1;
+   private LinkMode mode;
 
    private final DatagramSocket socket;
    private final Thread listenerThread;
@@ -123,26 +125,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
     * {@inheritDoc}
     */
    @Override
-   public void close()
-   {
-      //logger.info("Closing connection to KNXnet/IP server");
-      // TODO
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isConnected()
-   {
-      return socket != null && socket.isConnected();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void open() throws IOException
+   public void open(LinkMode mode) throws IOException
    {
       final Logger logger = Logger.getLogger(getClass());
       receiveSemaphore.drainPermits();
@@ -156,11 +139,14 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       final SearchResponse searchResponse = (SearchResponse) frame;
       logger.info("Found KNXnet/IP server: " + searchResponse.getHardwareInfo().getName());
 
+      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), TransportType.UDP,
+            socket.getLocalAddress(), socket.getLocalPort());
+      conReq.setLayer(mode);
+
       frame = null;
       for (int tries = 3; tries > 0 && !(frame instanceof ConnectResponse); --tries)
       {
-         send(addr, new ConnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), TransportType.UDP,
-               socket.getLocalAddress(), socket.getLocalPort()));
+         send(addr, conReq);
          frame = receive(3500);
       }
 
@@ -179,10 +165,50 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
 
       final DescriptionResponse descResp = (DescriptionResponse) frame;
 
+      this.mode = mode;
       busAddr = descResp.getHardwareInfo().getBusAddress();
       logger.info("Connection to KNXnet/IP server " + busAddr + " established");
       channelId = conResp.getChannelId();
       dataAddr = new InetSocketAddress(conResp.getDataEndPoint().getAddress(), conResp.getDataEndPoint().getPort());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void close()
+   {
+      // logger.info("Closing connection to KNXnet/IP server");
+      // TODO
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean isConnected()
+   {
+      return socket != null && socket.isConnected();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void setLinkMode(LinkMode mode) throws IOException
+   {
+      if (this.mode == mode)
+         return;
+
+      close();
+      open(mode);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public LinkMode getLinkMode()
+   {
+      return mode;
    }
 
    /**

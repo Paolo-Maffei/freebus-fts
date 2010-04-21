@@ -5,6 +5,7 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.netip.KNXnetConnection;
@@ -29,7 +30,7 @@ public class KNXnetBusMonitor implements TelegramListener
    {
       iface = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
       iface.addListener(this);
-      iface.open();
+      iface.open(LinkMode.BusMonitor);
 
       final Telegram telegram = new Telegram();
       telegram.setFrom(PhysicalAddress.NULL);
