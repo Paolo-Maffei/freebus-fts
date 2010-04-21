@@ -1,8 +1,8 @@
 /*
  * SortedListModel.java
  *
- * Copyright 2006 Sun Microsystems, Inc. ALL RIGHTS RESERVED Use of 
- * this software is authorized pursuant to the terms of the license 
+ * Copyright 2006 Sun Microsystems, Inc. ALL RIGHTS RESERVED Use of
+ * this software is authorized pursuant to the terms of the license
  * found at http://developers.sun.com/berkeley_license.html .
  *
  */
@@ -25,7 +25,7 @@ import javax.swing.event.ListDataListener;
  * You can create a SortedListModel from models you already have. Place the
  * SortedListModel into a JList, for example, to provide a sorted view of your
  * underlying model.
- * 
+ *
  * @author John O'Conner
  */
 @SuppressWarnings("unchecked")
@@ -41,7 +41,7 @@ public class SortedListModel extends AbstractListModel
    /**
     * Create a SortedListModel from an existing model using a default text
     * comparator for the default Locale. Sort in ascending order.
-    * 
+    *
     * @param model the underlying, unsorted ListModel
     */
    public SortedListModel(ListModel model)
@@ -52,7 +52,7 @@ public class SortedListModel extends AbstractListModel
    /**
     * Create a SortedListModel from an existing model using a specific
     * comparator and sort order. Use a default text comparator.
-    * 
+    *
     *@param model the unsorted list model
     *@param sortOrder that should be used
     */
@@ -64,11 +64,11 @@ public class SortedListModel extends AbstractListModel
    /**
     * Create a SortedListModel from an existing model. Sort the model in the
     * specified sort order using the given comparator.
-    * 
+    *
     *@param model
     *@param sortOrder
     *@param comp
-    * 
+    *
     */
    public SortedListModel(ListModel model, SortOrder sortOrder, Comparator<?> comp)
    {
@@ -114,7 +114,7 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Retrieve the sorted entry from the original model
-    * 
+    *
     * @param index index of an entry in the sorted model
     * @return element in the original model to which our entry points
     */
@@ -127,7 +127,7 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Retrieve the size of the underlying model
-    * 
+    *
     * @return size of the model
     */
    public int getSize()
@@ -138,10 +138,10 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Convert sorted model index to an unsorted model index.
-    * 
+    *
     *@param index an index in the sorted model
     *@return modelIndex an index in the unsorted model
-    * 
+    *
     */
    public int toUnsortedModelIndex(int index) throws IndexOutOfBoundsException
    {
@@ -155,7 +155,7 @@ public class SortedListModel extends AbstractListModel
    /**
     * Convert an array of sorted model indices to their unsorted model indices.
     * Sort the resulting set of indices.
-    * 
+    *
     *@param sortedSelectedIndices indices of selected elements in the sorted
     *           model or sorted view
     *@return unsortedSelectedIndices selected indices in the unsorted model
@@ -176,7 +176,7 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Convert an unsorted model index to a sorted model index.
-    * 
+    *
     * @param unsortedIndex an element index in the unsorted model
     * @return sortedIndex an element index in the sorted model
     */
@@ -200,7 +200,7 @@ public class SortedListModel extends AbstractListModel
     * Convert an array of unsorted model selection indices to indices in the
     * sorted model. Sort the model indices from low to high to duplicate JList's
     * getSelectedIndices method
-    * 
+    *
     * @param unsortedModelIndices
     * @return an array of selected indices in the sorted model
     */
@@ -225,6 +225,7 @@ public class SortedListModel extends AbstractListModel
       }
    }
 
+   @SuppressWarnings("rawtypes")
    public void setComparator(Comparator comp)
    {
       if (comp == null)
@@ -243,7 +244,7 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Change the sort order of the model at runtime
-    * 
+    *
     * @param sortOrder
     */
    public void setSortOrder(SortOrder sortOrder)
@@ -266,7 +267,7 @@ public class SortedListModel extends AbstractListModel
    /**
     * Update the sorted model whenever new items are added to the
     * original/decorated model.
-    * 
+    *
     */
    private void unsortedIntervalAdded(ListDataEvent e)
    {
@@ -358,6 +359,7 @@ public class SortedListModel extends AbstractListModel
     * Internal helper method to find the insertion point for a new entry in the
     * sorted model.
     */
+   @SuppressWarnings("rawtypes")
    private int findInsertionPoint(SortedListEntry entry)
    {
       int insertionPoint = sortedModel.size();
@@ -372,9 +374,11 @@ public class SortedListModel extends AbstractListModel
       return insertionPoint;
    }
 
+   @SuppressWarnings("rawtypes")
+   private Comparator comparator;
+
    private List<SortedListEntry> sortedModel;
    private ListModel unsortedModel;
-   private Comparator comparator;
    private SortOrder sortOrder;
 
    public enum SortOrder
@@ -382,6 +386,7 @@ public class SortedListModel extends AbstractListModel
       UNORDERED, ASCENDING, DESCENDING;
    }
 
+   @SuppressWarnings("rawtypes")
    class SortedListEntry implements Comparable
    {
       private int index;
