@@ -30,6 +30,7 @@ import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.pages.busmonitor.BusMonitorCellRenderer;
 import org.freebus.fts.pages.busmonitor.BusMonitorItem;
+import org.freebus.fts.pages.busmonitor.Filter;
 import org.freebus.fts.utils.TreeUtils;
 import org.freebus.fts.utils.TrxFileFilter;
 import org.freebus.knxcomm.BusInterface;
@@ -52,6 +53,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    private final JScrollPane treeView;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
    private final transient BusMonitorCellRenderer cellRenderer;
+   private final Filter filter = new Filter();
    private JButton btnSave, btnErase;
    private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
    private int sequence;
@@ -64,7 +66,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    public BusMonitor()
    {
       setLayout(new BorderLayout());
-      setName(I18n.getMessage("SerialBusMonitor.Title"));
+      setName(I18n.getMessage("BusMonitor.Title"));
 
       tree = new JTree(treeModel);
       tree.setRootVisible(false);
@@ -88,7 +90,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       add(toolBar, BorderLayout.NORTH);
 
       btnSave = new ToolBarButton(ImageCache.getIcon("icons/filesave"));
-      btnSave.setToolTipText(I18n.getMessage("SerialBusMonitor.Save.ToolTip"));
+      btnSave.setToolTipText(I18n.getMessage("BusMonitor.Save.ToolTip"));
       toolBar.add(btnSave);
       btnSave.addActionListener(new ActionListener()
       {
@@ -100,7 +102,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       });
 
       btnErase = new ToolBarButton(ImageCache.getIcon("icons/eraser"));
-      btnErase.setToolTipText(I18n.getMessage("SerialBusMonitor.Clear.ToolTip"));
+      btnErase.setToolTipText(I18n.getMessage("BusMonitor.Clear.ToolTip"));
       toolBar.add(btnErase);
       btnErase.addActionListener(new ActionListener()
       {
@@ -114,6 +116,18 @@ public class BusMonitor extends AbstractPage implements TelegramListener
                treeModel.reload();
                updateButtons();
             }
+         }
+      });
+
+      JButton btnFilter = new ToolBarButton(ImageCache.getIcon("icons/filter"));
+      btnFilter.setToolTipText(I18n.getMessage("BusMonitor.Filter.ToolTip"));
+      toolBar.add(btnFilter);
+      btnFilter.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+
          }
       });
    }
@@ -147,7 +161,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       dlg.addChoosableFileFilter(fileFilter);
       dlg.addChoosableFileFilter(dlg.getAcceptAllFileFilter());
       dlg.setFileFilter(fileFilter);
-      dlg.setDialogTitle(I18n.getMessage("SerialBusMonitor.SaveTraceFileTitle"));
+      dlg.setDialogTitle(I18n.getMessage("BusMonitor.SaveTraceFileTitle"));
       dlg.setDialogType(JFileChooser.SAVE_DIALOG);
 
       if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)
@@ -166,7 +180,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       }
       catch (IOException e)
       {
-         Dialogs.showExceptionDialog(e, I18n.getMessage("SerialBusMonitor.ErrSaveTraceFile"));
+         Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrSaveTraceFile"));
       }
    }
 

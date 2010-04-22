@@ -1,4 +1,4 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.types;
 
 /**
  * The type of a KNX medium.

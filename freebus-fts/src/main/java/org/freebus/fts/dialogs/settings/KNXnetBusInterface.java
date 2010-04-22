@@ -16,8 +16,8 @@ import javax.swing.JTextField;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.netip.KNXnetConnection;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A widget for configuring a KNXnet/IP bus interface connection.

@@ -1,4 +1,4 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.types;
 
 /**
  * The mode for the bus connection.

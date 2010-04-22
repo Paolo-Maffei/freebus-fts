@@ -2,6 +2,7 @@ package org.freebus.knxcomm;
 
 import static org.junit.Assert.*;
 
+import org.freebus.knxcomm.types.MediumType;
 import org.junit.Test;
 
 public class TestMediumType

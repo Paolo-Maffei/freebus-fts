@@ -10,7 +10,7 @@ import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
 import org.freebus.knxcomm.KNXConnection;
-import org.freebus.knxcomm.LinkMode;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A FT1.2 speaking {@link KNXConnection} using the local serial port.

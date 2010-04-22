@@ -7,6 +7,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 
@@ -18,8 +21,7 @@ public class TestDeviceDescriptorResponse
       final DeviceDescriptorResponse app = new DeviceDescriptorResponse();
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
-      assertEquals(0, app.getDescriptorType());
-      assertNull(app.getDescriptor());
+      assertEquals(DeviceDescriptor0.NULL, app.getDescriptor());
       assertNotNull(app.hashCode());
       assertNotNull(app.toString());
    }
@@ -27,13 +29,11 @@ public class TestDeviceDescriptorResponse
    @Test
    public final void testDeviceDescriptorResponseIntIntArray()
    {
-      final int[] descr = new int[] { 4, 7, 12 };
-      final DeviceDescriptorResponse app = new DeviceDescriptorResponse(3, descr);
+      final DeviceDescriptor desc = new DeviceDescriptor2();
+      final DeviceDescriptorResponse app = new DeviceDescriptorResponse(desc);
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
-      assertEquals(3, app.getDescriptorType());
-      assertFalse(descr == app.getDescriptor());
-      assertArrayEquals(descr, app.getDescriptor());
+      assertEquals(desc, app.getDescriptor());
       assertNotNull(app.hashCode());
       assertNotNull(app.toString());
    }
@@ -42,36 +42,25 @@ public class TestDeviceDescriptorResponse
    public final void testGetSetDescriptor()
    {
       final DeviceDescriptorResponse app = new DeviceDescriptorResponse();
+      final DeviceDescriptor desc = new DeviceDescriptor2();
 
-      app.setDescriptor(new int[] { 7, 4, 1 });
-      assertArrayEquals(new int[] { 7, 4, 1 }, app.getDescriptor());
+      app.setDescriptor(desc);
+      assertEquals(desc, app.getDescriptor());
 
       app.setDescriptor(null);
       assertNull(app.getDescriptor());
    }
 
    @Test
-   public final void testGetSetDescriptorType()
-   {
-      final DeviceDescriptorResponse app = new DeviceDescriptorResponse();
-
-      app.setDescriptorType(63);
-      assertEquals(63, app.getDescriptorType());
-
-      app.setDescriptorType(0);
-      assertEquals(0, app.getDescriptorType());
-   }
-
-   @Test
    public final void testFromRawData() throws InvalidDataException
    {
       final DeviceDescriptorResponse app = new DeviceDescriptorResponse();
-      final int[] rawData = new int[] { 0x48, 1, 8, 17 };
+      final int[] rawData = new int[] { 0x40, 1, 8 };
 
-      app.fromRawData(rawData, 0, 4);
+      app.fromRawData(rawData, 0, 3);
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
-      assertEquals(8, app.getDescriptorType());
-      assertArrayEquals(new int[] { 1, 8, 17 }, app.getDescriptor());
+      assertEquals(0, app.getDescriptorType());
+      assertEquals(DeviceDescriptor0.class, app.getDescriptor().getClass());
    }
 
    @Test
@@ -95,25 +84,26 @@ public class TestDeviceDescriptorResponse
       app.fromRawData(rawData, 8, 3);
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
       assertEquals(0, app.getDescriptorType());
-      assertArrayEquals(new int[] { 0, 18 }, app.getDescriptor());
+      DeviceDescriptor0 desc = (DeviceDescriptor0) app.getDescriptor();
+      assertEquals(0x12, desc.getMaskVersion());
    }
 
    @Test
    public final void testToRawData()
    {
-      final DeviceDescriptorResponse app = new DeviceDescriptorResponse(8, new int[] { 1, 8, 17 });
-      final int[] rawData = new int[4];
+      final DeviceDescriptorResponse app = new DeviceDescriptorResponse(new DeviceDescriptor0(0x1234));
+      final int[] rawData = new int[3];
 
-      assertEquals(4, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x48, 1, 8, 17 }, rawData);
+      assertEquals(3, app.toRawData(rawData, 0));
+      assertArrayEquals(new int[] { 0x40, 0x12, 0x34 }, rawData);
    }
 
    @Test
    public final void testEqualsObject()
    {
-      final DeviceDescriptorResponse app1 = new DeviceDescriptorResponse(8, new int[] { 1, 8, 17 });
-      final DeviceDescriptorResponse app2 = new DeviceDescriptorResponse(8, new int[] { 1, 8, 17 });
-      final DeviceDescriptorResponse app3 = new DeviceDescriptorResponse(8, new int[] { 2, 6 });
+      final DeviceDescriptorResponse app1 = new DeviceDescriptorResponse(new DeviceDescriptor0(123));
+      final DeviceDescriptorResponse app2 = new DeviceDescriptorResponse(new DeviceDescriptor0(123));
+      final DeviceDescriptorResponse app3 = new DeviceDescriptorResponse(new DeviceDescriptor0(456));
 
       assertFalse(app1.equals(null));
       assertFalse(app1.equals(new Object()));
@@ -128,10 +118,10 @@ public class TestDeviceDescriptorResponse
       app1.setDescriptor(null);
       assertTrue(app1.equals(app2));
 
-      app1.setDescriptor(new int[] { 1, 3, 7 });
+      app1.setDescriptor(new DeviceDescriptor0(123));
       assertFalse(app1.equals(app2));
 
-      app2.setDescriptorType(12);
+      app2.setDescriptor(new DeviceDescriptor0(456));
       assertFalse(app1.equals(app2));
    }
 }

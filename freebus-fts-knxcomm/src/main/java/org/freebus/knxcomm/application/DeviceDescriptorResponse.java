@@ -1,15 +1,17 @@
 package org.freebus.knxcomm.application;
 
-import java.util.Arrays;
-
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
+import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * A response to a {@link DeviceDescriptorRead device descriptor read} request.
  */
-public class DeviceDescriptorResponse extends DeviceDescriptorRead
+public class DeviceDescriptorResponse extends AbstractApplication
 {
-   private int[] descriptor;
+   private DeviceDescriptor descriptor;
 
    /**
     * Create an object with device descriptor type 0 and no device descriptor
@@ -17,38 +19,46 @@ public class DeviceDescriptorResponse extends DeviceDescriptorRead
     */
    public DeviceDescriptorResponse()
    {
-      this(0, null);
+      this(DeviceDescriptor0.NULL);
    }
 
    /**
-    * Create a request object with a device descriptor type. The device
+    * Create a response object with a device descriptor type. The device
     * descriptor is cloned.
     *
-    * @param descriptorType - the device descriptor type.
     * @param descriptor - the device descriptor.
     */
-   public DeviceDescriptorResponse(int descriptorType, int[] descriptor)
+   public DeviceDescriptorResponse(DeviceDescriptor descriptor)
    {
-      super(descriptorType);
-      setDescriptor(descriptor);
+      this.descriptor = descriptor;
    }
 
    /**
-    * Set the device descriptor. The device descriptor is cloned.
+    * Set the device descriptor.
     *
     * @param descriptor - the device descriptor to set
     */
-   public void setDescriptor(int[] descriptor)
+   public void setDescriptor(DeviceDescriptor descriptor)
    {
-      this.descriptor = descriptor == null ? null : descriptor.clone();
+      this.descriptor = descriptor;
    }
 
    /**
     * @return the device descriptor.
     */
-   public int[] getDescriptor()
+   public DeviceDescriptor getDescriptor()
    {
       return descriptor;
+   }
+
+   /**
+    * @return the type of the device descriptor.
+    */
+   public int getDescriptorType()
+   {
+      if (descriptor == null)
+         return DeviceDescriptorRead.INVALID_DESCRIPTOR_TYPE;
+      return descriptor.getTypeCode();
    }
 
    /**
@@ -67,11 +77,24 @@ public class DeviceDescriptorResponse extends DeviceDescriptorRead
    @Override
    public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
    {
-      super.fromRawData(rawData, start++, length--);
+      int type = rawData[start] & DeviceDescriptorRead.DESCRIPTOR_TYPE_MASK;
 
-      if (length > 0)
-         descriptor = Arrays.copyOfRange(rawData, start, start + length);
-      else descriptor = null;
+      if (type == 0)
+      {
+         descriptor = new DeviceDescriptor0((rawData[start + 1] << 8) | rawData[start + 2]);
+      }
+      else if (type == 2)
+      {
+         final byte[] descriptorData = new byte[length - 1];
+         for (int i = 0; i < length - 1; ++i)
+            descriptorData[i] = (byte) rawData[i];
+
+         descriptor = DeviceDescriptor2.valueOf(descriptorData);
+      }
+      else
+      {
+         descriptor = null;
+      }
    }
 
    /**
@@ -80,13 +103,13 @@ public class DeviceDescriptorResponse extends DeviceDescriptorRead
    @Override
    public int toRawData(int[] rawData, int start)
    {
-      int pos = super.toRawData(rawData, start);
+      int pos = start;
 
-      if (descriptor != null)
-      {
-         for (int i = 0; i < descriptor.length; ++i)
-            rawData[pos++] = descriptor[i];
-      }
+      rawData[pos++] = (getType().getApci() | getDescriptorType()) & 255;
+
+      final byte[] descriptorData = descriptor.toByteArray();
+      for (int i = 0; i < descriptorData.length; ++i)
+         rawData[pos++] = descriptorData[i] & 255;
 
       return pos - start;
    }
@@ -97,7 +120,7 @@ public class DeviceDescriptorResponse extends DeviceDescriptorRead
    @Override
    public int hashCode()
    {
-      return (getType().getApci() << 8) | (descriptor == null ? 0 : descriptor[0]);
+      return (getType().getApci() << 8) | (descriptor == null ? 0 : descriptor.hashCode());
    }
 
    /**
@@ -109,16 +132,12 @@ public class DeviceDescriptorResponse extends DeviceDescriptorRead
       if (o == this)
          return true;
 
-      if (!(o instanceof DeviceDescriptorRead))
+      if (!(o instanceof DeviceDescriptorResponse))
          return false;
 
       final DeviceDescriptorResponse oo = (DeviceDescriptorResponse) o;
 
-      if (getDescriptorType() != oo.getDescriptorType())
-         return false;
-
-      return descriptor == null ? oo.descriptor == null : Arrays.equals(descriptor,
-            oo.descriptor);
+      return descriptor == null ? oo.descriptor == null : descriptor.equals(oo.descriptor);
    }
 
    /**
@@ -127,15 +146,27 @@ public class DeviceDescriptorResponse extends DeviceDescriptorRead
    @Override
    public String toString()
    {
-      final StringBuffer sb = new StringBuffer();
-      sb.append(super.toString()).append(" descriptor");
+      return super.toString() + ' ' + descriptor;
+   }
 
-      if (descriptor != null)
-      {
-         for (int i = 0; i < descriptor.length; ++i)
-            sb.append(String.format(" 0x%02x", descriptor[i]));
-      }
+   @Override
+   public ApplicationTypeResponse getApplicationResponses()
+   {
+      // TODO Auto-generated method stub
+      return null;
+   }
 
-      return sb.toString();
+   @Override
+   public boolean isDeviceDescriptorRequired()
+   {
+      // TODO Auto-generated method stub
+      return false;
+   }
+
+   @Override
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      // TODO Auto-generated method stub
+
    }
 }

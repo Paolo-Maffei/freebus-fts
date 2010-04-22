@@ -48,7 +48,7 @@ public final class BusTraceViewerAction extends BasicAction
          dlg.addChoosableFileFilter(fileFilter);
          dlg.addChoosableFileFilter(dlg.getAcceptAllFileFilter());
          dlg.setFileFilter(fileFilter);
-         dlg.setDialogTitle(I18n.getMessage("BusTraceViewerAction.openFileTitle"));
+         dlg.setDialogTitle(I18n.getMessage("BusTraceViewerAction.OpenFileTitle"));
 
          if (dlg.showOpenDialog(MainWindow.getInstance()) != JFileChooser.APPROVE_OPTION)
             return;

@@ -35,8 +35,8 @@ import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.internal.JarLoader;
+import org.freebus.knxcomm.types.LinkMode;
 import org.jdesktop.application.Application;
 import org.jdesktop.application.SessionStorage;
 

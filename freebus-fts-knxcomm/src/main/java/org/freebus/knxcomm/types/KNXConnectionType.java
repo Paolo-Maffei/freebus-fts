@@ -1,4 +1,4 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.types;
 
 /**
  * Types for KNX/EIB bus connections.

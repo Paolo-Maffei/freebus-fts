@@ -12,7 +12,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.MediumType;
+import org.freebus.knxcomm.types.MediumType;
 import org.junit.Test;
 
 public class TestDeviceInfoBlock

@@ -13,7 +13,6 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.KNXConnection;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.internal.ListenableConnection;
 import org.freebus.knxcomm.netip.frames.ConnectRequest;
@@ -31,6 +30,7 @@ import org.freebus.knxcomm.netip.frames.TunnelingRequest;
 import org.freebus.knxcomm.netip.types.ServiceType;
 import org.freebus.knxcomm.netip.types.StatusCode;
 import org.freebus.knxcomm.netip.types.TransportType;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A KNXnet/IP connection.
@@ -57,6 +57,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
 
    private int channelId = -1;
    private int sequence = -1;
+   private boolean busMonitorModeSupported = true;
    private LinkMode mode;
 
    private final DatagramSocket socket;
@@ -129,7 +130,6 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    @Override
    public void open(LinkMode mode) throws IOException
    {
-      final Logger logger = Logger.getLogger(getClass());
       receiveSemaphore.drainPermits();
 
       Frame frame;
@@ -151,8 +151,8 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
             status = connectRequest(mode);
             if (status == StatusCode.OK)
             {
-               Logger.getLogger(getClass()).warn(
-                     "KNXnet/IP server does not support bus monitor mode, falling back to link layer mode");
+               logger.warn("KNXnet/IP server does not support bus monitor mode, falling back to link layer mode");
+               busMonitorModeSupported = false;
             }
          }
 
@@ -171,6 +171,9 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       this.mode = mode;
       busAddr = descResp.getHardwareInfo().getBusAddress();
       logger.info("Connection to KNXnet/IP server " + busAddr + " established");
+
+      if (PhysicalAddress.NULL.equals(busAddr))
+         busAddr = new PhysicalAddress(0, 0, 254);
    }
 
    /**
@@ -235,7 +238,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       }
       catch (IOException e)
       {
-         Logger.getLogger(getClass()).error("Failed to disconnect from KNXnet/IP server", e);
+         logger.error("Failed to disconnect from KNXnet/IP server", e);
       }
       finally
       {
@@ -257,6 +260,9 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
     */
    public void setLinkMode(LinkMode mode) throws IOException
    {
+      if (!busMonitorModeSupported)
+         mode = LinkMode.LinkLayer;
+
       if (this.mode == mode)
          return;
 

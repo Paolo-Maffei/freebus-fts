@@ -9,9 +9,9 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * An example program that shows the connected data transfer methods.

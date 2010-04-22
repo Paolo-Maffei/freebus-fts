@@ -4,8 +4,8 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.serial.Ft12Connection;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * An implementation of the {@link Ft12Connection}, used for unit testing.

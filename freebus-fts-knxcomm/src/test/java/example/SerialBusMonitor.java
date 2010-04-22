@@ -3,9 +3,9 @@ package example;
 import org.freebus.fts.common.Environment;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A simple bus monitor that opens a bus interface, and prints the received

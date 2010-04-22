@@ -9,8 +9,8 @@ import java.util.concurrent.Semaphore;
 import org.apache.log4j.Logger;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.internal.I18n;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * The global job-queue executes the enqueued {@link Job}s one after another.

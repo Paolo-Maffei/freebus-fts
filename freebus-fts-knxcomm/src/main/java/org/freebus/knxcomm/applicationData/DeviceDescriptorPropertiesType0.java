@@ -8,6 +8,7 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.serial.Ft12Connection;
 
 public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperties
@@ -15,18 +16,6 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
 
    private Logger logger = Logger.getLogger(Ft12Connection.class);
    Properties deviceProperties;
-
-   /**
-    * Internal converter for int[] to String
-    *
-    * @param data Application data Array
-    *
-    * @return Mask String
-    */
-   private String Type2MaskString(int[] data)
-   {
-      return String.format("%02X%02X", data[0], data[1]);
-   }
 
    /**
     * {@inheritDoc}
@@ -50,7 +39,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
       String[] kownPropertiesFiles = { "0010", "0011", "0012" };
       boolean PropertieFileExist = false;
       deviceProperties = new Properties();
-      String mask = Type2MaskString(deviceDescriptorResponse.getDescriptor());
+      String mask = String.format("%04X", ((DeviceDescriptor0)deviceDescriptorResponse.getDescriptor()).getMaskVersion());
       InputStream in = null;
       ClassLoader cl = this.getClass().getClassLoader();
 

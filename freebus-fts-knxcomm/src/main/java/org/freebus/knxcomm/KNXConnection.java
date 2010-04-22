@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A KNX/EIB (low level) bus connection. For communication with the bus, the

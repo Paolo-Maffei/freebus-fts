@@ -3,13 +3,13 @@ package org.freebus.knxcommtester;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
+import org.freebus.knxcomm.types.LinkMode;
 
 public class testcom {
 //	private static int sequence = 0;

@@ -5,11 +5,11 @@ import java.io.DataOutput;
 import java.io.IOException;
 import java.net.InetAddress;
 
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.netip.blocks.EndPoint;
 import org.freebus.knxcomm.netip.types.ConnectionType;
 import org.freebus.knxcomm.netip.types.ServiceType;
 import org.freebus.knxcomm.netip.types.TransportType;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * Connect request to the KNXnet/IP server.

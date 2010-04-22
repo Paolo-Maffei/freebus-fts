@@ -8,9 +8,9 @@ import java.net.InetAddress;
 import java.util.Arrays;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.MediumType;
 import org.freebus.knxcomm.netip.types.DescriptionInfoType;
 import org.freebus.knxcomm.telegram.InvalidDataException;
+import org.freebus.knxcomm.types.MediumType;
 
 /**
  * Device information block. Contains description about the device.

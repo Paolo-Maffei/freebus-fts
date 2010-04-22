@@ -11,7 +11,6 @@ import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.KNXConnectException;
 import org.freebus.knxcomm.KNXConnection;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.PEI_Identify_con;
@@ -21,6 +20,7 @@ import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.emi.types.PEISwitchMode;
 import org.freebus.knxcomm.internal.ListenableConnection;
 import org.freebus.knxcomm.telegram.InvalidDataException;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * An EIB/KNX bus connection to a device that speaks the FT1.2 protocol.

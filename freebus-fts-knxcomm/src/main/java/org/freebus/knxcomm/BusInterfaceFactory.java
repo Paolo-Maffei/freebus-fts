@@ -6,6 +6,8 @@ import org.freebus.knxcomm.internal.BusInterfaceImpl;
 import org.freebus.knxcomm.netip.KNXnetConnection;
 import org.freebus.knxcomm.serial.SerialFt12Connection;
 import org.freebus.knxcomm.serial.SerialPortUtil;
+import org.freebus.knxcomm.types.KNXConnectionType;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * Factory class for KNX/EIB bus interfaces.

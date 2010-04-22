@@ -27,8 +27,9 @@ import org.apache.log4j.Logger;
 import org.apache.log4j.SimpleLayout;
 import org.apache.log4j.WriterAppender;
 import org.apache.log4j.spi.LoggingEvent;
+import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.project.internal.I18n;
+import org.freebus.fts.dialogs.Dialogs;
 
 /**
  * A component that displays the first line of the latest log event and has a
@@ -116,7 +117,8 @@ public class LogLine extends JPanel
    private void updateLogHistoryPos()
    {
       final Point pos = btnHistory.getLocationOnScreen();
-      pmnHistory.setLocation(pos.x + btnHistory.getWidth() + 2, pos.y + btnHistory.getHeight() - pmnHistory.getHeight() - 2);
+      pmnHistory.setLocation(pos.x + btnHistory.getWidth() + 2, pos.y + btnHistory.getHeight() - pmnHistory.getHeight()
+            - 2);
    }
 
    /**
@@ -220,13 +222,24 @@ public class LogLine extends JPanel
             public void run()
             {
                LogLine.this.append(level, message);
+
+               if (level.isGreaterOrEqual(Level.ERROR))
+               {
+                  final StringBuffer sb = new StringBuffer();
+
+                  sb.append("<html><body width=\"500px\"><h2>").append(I18n.getMessage("LogLine.ErrorCaption"));
+                  sb.append("</h2>").append(message.replace("\n", "<br />"));
+                  sb.append("</body></html>");
+
+                  Dialogs.showErrorDialog(sb.toString());
+               }
             }
          });
       }
    };
 
    /**
-    * Internal class of {@link LogLine} for keeping log events.
+    * Internal class of {@link LogLine}, holding a log event.
     */
    static private class LogEvent
    {

@@ -6,9 +6,9 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.KNXConnection;
-import org.freebus.knxcomm.LinkMode;
 import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A bus interface that is used for (unit) tests only.

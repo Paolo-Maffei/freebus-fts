@@ -12,7 +12,7 @@ public class MemoryAddressMapper
 
    /**
     * Creates the MemoryAddressList with Parameters from the Properties File
-    * 
+    *
     * @param deviceProperties
     */
    protected MemoryAddressMapper(Properties deviceProperties)
@@ -38,12 +38,15 @@ public class MemoryAddressMapper
    /**
     * Internal converter a 4 Digits long String of Hex chars to one integer
     * value
-    * 
+    *
     * @param adr - String with the memory address
     * @return integer value
     */
    public int AddressString2intAdr(String adr)
    {
+      // TODO replace with:
+      // return Integer.parseInt(adr, 16);
+
       char[] HEX_String_TABLE = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F' };
       int x = 0;
       int y;
@@ -104,7 +107,7 @@ public class MemoryAddressMapper
 
    /**
     * Internal converter for integer array to an integer value
-    * 
+    *
     * @param adr - the integer array
     * @return integer value
     */

@@ -18,6 +18,7 @@ import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.GenericApplication;
 import org.freebus.knxcomm.application.GenericDataApplication;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.junit.Test;
 
 public class TestTelegram
@@ -181,7 +182,7 @@ public class TestTelegram
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, app.getType());
       assertEquals(0, app.getDescriptorType());
-      assertArrayEquals(new int[] { 0, 18 }, app.getDescriptor());
+      assertEquals(new DeviceDescriptor0(0x0012), app.getDescriptor());
    }
 
    @Test

@@ -15,7 +15,7 @@ import javax.swing.JSeparator;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.knxcomm.KNXConnectionType;
+import org.freebus.knxcomm.types.KNXConnectionType;
 
 /**
  * Settings page for the bus-interface settings.
