@@ -10,8 +10,8 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.freebus.fts.components.SortedListModel;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.SortedListModel;
 import org.freebus.fts.pages.InspectVdxFile;
 import org.freebus.fts.persistence.vdx.VdxSection;
 import org.freebus.fts.persistence.vdx.VdxSectionHeader;

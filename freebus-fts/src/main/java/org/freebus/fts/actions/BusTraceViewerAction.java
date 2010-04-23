@@ -40,7 +40,7 @@ public final class BusTraceViewerAction extends BasicAction
       try
       {
          final Config cfg = Config.getInstance();
-         String lastDir = cfg.getStringValue("BusTraces.lastDir");
+         String lastDir = cfg.getStringValue("busTraces.lastDir");
 
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
@@ -56,7 +56,7 @@ public final class BusTraceViewerAction extends BasicAction
          final File file = dlg.getSelectedFile();
          if (file == null) return;
 
-         cfg.put("BusTraces.lastDir", file.getAbsolutePath());
+         cfg.put("busTraces.lastDir", file.getAbsolutePath());
          cfg.save();
 
          MainWindow.getInstance().addPage(new BusTraceViewer(), file);

@@ -1,6 +1,9 @@
 package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
@@ -9,19 +12,27 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.DefaultListModel;
+import javax.swing.JButton;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.MainWindow;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.components.AbstractPage;
+import org.freebus.fts.components.ToolBar;
+import org.freebus.fts.components.ToolBarButton;
+import org.freebus.fts.core.Config;
+import org.freebus.fts.core.FilteredListModel;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.pages.busmonitor.BusMonitorCellRenderer;
 import org.freebus.fts.pages.busmonitor.BusMonitorItem;
-import org.freebus.fts.utils.TreeUtils;
+import org.freebus.fts.pages.busmonitor.BusMonitorItemFilter;
+import org.freebus.fts.pages.busmonitor.BusMonitorListCellRenderer;
+import org.freebus.fts.pages.busmonitor.FilterDialog;
+import org.freebus.fts.pages.busmonitor.FrameFilter;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 
@@ -32,11 +43,12 @@ public class BusTraceViewer extends AbstractPage
 {
    private static final long serialVersionUID = -7001873554872571938L;
 
-   private final JTree tree;
+   private final JList list;
    private final JScrollPane treeView;
-   private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-   private final transient BusMonitorCellRenderer cellRenderer;
-   private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+
+   private final FrameFilter filter = new FrameFilter();
+   private final DefaultListModel model = new DefaultListModel();
+   private final FilteredListModel filteredModel = new  FilteredListModel(model, new BusMonitorItemFilter(filter));
 
    /**
     * Create a bus trace viewer.
@@ -46,14 +58,64 @@ public class BusTraceViewer extends AbstractPage
       setLayout(new BorderLayout());
       setName(I18n.getMessage("BusTraceViewer.Title"));
 
-      tree = new JTree(treeModel);
-      tree.setRootVisible(false);
+      try
+      {
+         filter.setEnabled(false);
+         filter.fromConfig(Config.getInstance(), "busTraceViewer.filter");
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrLoadFilter"));
+         filter.reset();
+      }
 
-      cellRenderer = new BusMonitorCellRenderer();
-      tree.setCellRenderer(cellRenderer);
+      list = new JList(filteredModel);
+      list.setCellRenderer(new BusMonitorListCellRenderer());
 
-      treeView = new JScrollPane(tree);
+      treeView = new JScrollPane(list);
       add(treeView, BorderLayout.CENTER);
+
+      initToolBar();
+   }
+
+   /**
+    * Create the tool-bar.
+    */
+   private void initToolBar()
+   {
+      final ToolBar toolBar = new ToolBar();
+      add(toolBar, BorderLayout.NORTH);
+
+      final JButton btnFilter = new ToolBarButton(ImageCache.getIcon("icons/filter"));
+      toolBar.add(btnFilter);
+      btnFilter.setToolTipText(I18n.getMessage("BusMonitor.Filter.ToolTip"));
+      btnFilter.setSelected(filter.isEnabled());
+      btnFilter.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent event)
+         {
+            final FilterDialog dlg = new FilterDialog(MainWindow.getInstance(), ModalityType.APPLICATION_MODAL);
+            dlg.setFilter(filter);
+            dlg.setVisible(true);
+
+            if (dlg.isAccepted())
+            {
+               btnFilter.setSelected(filter.isEnabled());
+               filteredModel.update();
+
+               try
+               {
+                  filter.toConfig(Config.getInstance(), "busTraceViewer.filter");
+                  Config.getInstance().save();
+               }
+               catch (Exception e)
+               {
+                  Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrSaveFilter"));
+               }
+            }
+          }
+      });
    }
 
    /**
@@ -75,15 +137,6 @@ public class BusTraceViewer extends AbstractPage
    }
 
    /**
-    * Clear the page
-    */
-   public void clear()
-   {
-      rootNode.removeAllChildren();
-      treeModel.reload();
-   }
-
-   /**
     * Read the file and display it's contents.
     *
     * @param file - the file to open
@@ -96,10 +149,9 @@ public class BusTraceViewer extends AbstractPage
       EmiFrame frame;
       Date when;
 
-      rootNode.removeAllChildren();
+      model.clear();
 
-      int id = 0;
-      while (true)
+      for (int id = 1; ; ++id)
       {
          final String line = in.readLine();
          if (line == null)
@@ -120,13 +172,9 @@ public class BusTraceViewer extends AbstractPage
          }
 
          frame = EmiFrameFactory.createFrame(HexString.valueOf(line.substring(pos + 1)));
-         DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(id + 1, when, frame));
-         treeModel.insertNodeInto(node, rootNode, id);
-
-         if (id <= 1)
-            TreeUtils.expandAll(tree);
-
-         ++id;
+         model.addElement(new BusMonitorItem(id, when, frame));
       }
+
+      filteredModel.update();
    }
 }

@@ -1,6 +1,7 @@
 package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
+import java.awt.Dialog.ModalityType;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -9,14 +10,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
+import javax.swing.JList;
 import javax.swing.JScrollPane;
-import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
@@ -25,13 +25,15 @@ import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.ToolBarButton;
 import org.freebus.fts.core.Config;
+import org.freebus.fts.core.FilteredListModel;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Dialogs;
-import org.freebus.fts.pages.busmonitor.BusMonitorCellRenderer;
 import org.freebus.fts.pages.busmonitor.BusMonitorItem;
-import org.freebus.fts.pages.busmonitor.Filter;
-import org.freebus.fts.utils.TreeUtils;
+import org.freebus.fts.pages.busmonitor.BusMonitorItemFilter;
+import org.freebus.fts.pages.busmonitor.BusMonitorListCellRenderer;
+import org.freebus.fts.pages.busmonitor.FilterDialog;
+import org.freebus.fts.pages.busmonitor.FrameFilter;
 import org.freebus.fts.utils.TrxFileFilter;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -39,7 +41,6 @@ import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.L_Data_con;
 import org.freebus.knxcomm.emi.L_Data_ind;
-import org.freebus.knxcomm.emi.L_Data_req;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
@@ -49,14 +50,15 @@ public class BusMonitor extends AbstractPage implements TelegramListener
 {
    private static final long serialVersionUID = -3243196694923284469L;
 
-   private final JTree tree;
-   private final JScrollPane treeView;
-   private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
-   private final transient BusMonitorCellRenderer cellRenderer;
-   private final Filter filter = new Filter();
-   private JButton btnSave, btnErase;
-   private DefaultTreeModel treeModel = new DefaultTreeModel(rootNode);
+   private JButton btnErase, btnFilter, btnSave;
    private int sequence;
+
+   private final JList list;
+   private final JScrollPane treeView;
+
+   private final FrameFilter filter = new FrameFilter();
+   private final DefaultListModel model = new DefaultListModel();
+   private final FilteredListModel filteredModel = new FilteredListModel(model, new BusMonitorItemFilter(filter));
 
    private BusInterface bus = null;
 
@@ -68,13 +70,21 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       setLayout(new BorderLayout());
       setName(I18n.getMessage("BusMonitor.Title"));
 
-      tree = new JTree(treeModel);
-      tree.setRootVisible(false);
+      try
+      {
+         filter.setEnabled(false);
+         filter.fromConfig(Config.getInstance(), "busMonitor.filter");
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrLoadFilter"));
+         filter.reset();
+      }
 
-      cellRenderer = new BusMonitorCellRenderer();
-      tree.setCellRenderer(cellRenderer);
+      list = new JList(filteredModel);
+      list.setCellRenderer(new BusMonitorListCellRenderer());
 
-      treeView = new JScrollPane(tree);
+      treeView = new JScrollPane(list);
       add(treeView, BorderLayout.CENTER);
 
       initToolBar();
@@ -107,27 +117,43 @@ public class BusMonitor extends AbstractPage implements TelegramListener
       btnErase.addActionListener(new ActionListener()
       {
          @Override
-         public void actionPerformed(ActionEvent e)
+         public void actionPerformed(ActionEvent event)
          {
-            synchronized (rootNode)
+            synchronized (model)
             {
                sequence = 0;
-               rootNode.removeAllChildren();
-               treeModel.reload();
+               model.clear();
                updateButtons();
             }
          }
       });
 
-      JButton btnFilter = new ToolBarButton(ImageCache.getIcon("icons/filter"));
+      btnFilter = new ToolBarButton(ImageCache.getIcon("icons/filter"));
       btnFilter.setToolTipText(I18n.getMessage("BusMonitor.Filter.ToolTip"));
       toolBar.add(btnFilter);
       btnFilter.addActionListener(new ActionListener()
       {
          @Override
-         public void actionPerformed(ActionEvent e)
+         public void actionPerformed(ActionEvent event)
          {
+            final FilterDialog dlg = new FilterDialog(MainWindow.getInstance(), ModalityType.APPLICATION_MODAL);
+            dlg.setFilter(filter);
+            dlg.setVisible(true);
 
+            if (dlg.isAccepted())
+            {
+               btnFilter.setSelected(filter.isEnabled());
+               filteredModel.update();
+               try
+               {
+                  filter.toConfig(Config.getInstance(), "busMonitor.filter");
+                  Config.getInstance().save();
+               }
+               catch (Exception e)
+               {
+                  Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrSaveFilter"));
+               }
+            }
          }
       });
    }
@@ -198,18 +224,13 @@ public class BusMonitor extends AbstractPage implements TelegramListener
 
       try
       {
-         synchronized (rootNode)
+         synchronized (model)
          {
             out = new FileWriter(file);
 
-            DefaultMutableTreeNode node;
-            for (node = (DefaultMutableTreeNode) rootNode.getFirstChild(); node != null; node = node.getNextLeaf())
+            for (Object obj: model.toArray())
             {
-               final Object userObject = node.getUserObject();
-               if (!(userObject instanceof BusMonitorItem))
-                  continue;
-
-               final BusMonitorItem item = (BusMonitorItem) userObject;
+               final BusMonitorItem item = (BusMonitorItem) obj;
 
                out.write(dateFormatter.format(item.getWhen()));
                out.write("\t");
@@ -248,18 +269,15 @@ public class BusMonitor extends AbstractPage implements TelegramListener
             @Override
             public void run()
             {
-               synchronized (rootNode)
+               synchronized (model)
                {
-                  final int numChilds = treeModel.getChildCount(rootNode);
+                  final boolean needUpdate = model.isEmpty();
 
-                  DefaultMutableTreeNode node = new DefaultMutableTreeNode(new BusMonitorItem(id, when, frame));
-                  treeModel.insertNodeInto(node, rootNode, numChilds);
+                  model.addElement(new BusMonitorItem(id, when, frame));
 
-                  if (numChilds <= 1)
-                     TreeUtils.expandAll(tree);
-
-                  tree.scrollRowToVisible(numChilds + 1);
-                  updateButtons();
+//                  list.scrollToVisible(numChilds + 1);
+                  if (needUpdate)
+                     updateButtons();
                }
             }
          });
@@ -275,7 +293,7 @@ public class BusMonitor extends AbstractPage implements TelegramListener
     */
    private void updateButtons()
    {
-      final boolean haveFrames = rootNode.getChildCount() > 0;
+      final boolean haveFrames = !model.isEmpty();
       btnSave.setEnabled(haveFrames);
       btnErase.setEnabled(haveFrames);
    }
@@ -295,7 +313,8 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
-      addBusMonitorItem(new L_Data_req(telegram));
+      // Do nothing, the confirmation will be reported in telegramSendConfirmed() below
+      // addBusMonitorItem(new L_Data_req(telegram));
    }
 
    /**

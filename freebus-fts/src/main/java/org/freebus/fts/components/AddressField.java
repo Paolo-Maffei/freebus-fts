@@ -32,6 +32,15 @@ public class AddressField extends JTextField
    private final int type;
 
    /**
+    * Create an address input field that allows group and physical
+    * addresses to be entered.
+    */
+   public AddressField()
+   {
+      this(ANY);
+   }
+
+   /**
     * Create an address input field.
     *
     * @param type - the type of the address that is allowed. Can be
@@ -50,7 +59,9 @@ public class AddressField extends JTextField
     */
    public void setAddress(Address addr)
    {
-      setText(addr.toString());
+      if (addr == null)
+         setText("");
+      else setText(addr.toString());
    }
 
    /**
@@ -58,7 +69,10 @@ public class AddressField extends JTextField
     */
    public Address getAddress()
    {
-      final String str = getText();
+      final String str = getText().trim();
+
+      if (str.isEmpty())
+         return null;
 
       int type = this.type;
       if (type == ANY)

@@ -6,7 +6,7 @@
  * found at http://developers.sun.com/berkeley_license.html .
  *
  */
-package org.freebus.fts.components;
+package org.freebus.fts.core;
 
 import java.text.Collator;
 import java.util.ArrayList;

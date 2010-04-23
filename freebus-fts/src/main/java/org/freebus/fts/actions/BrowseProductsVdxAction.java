@@ -37,7 +37,7 @@ public final class BrowseProductsVdxAction extends BasicAction
       try
       {
          final Config cfg = Config.getInstance();
-         String lastDir = cfg.getStringValue("VdxFile.lastDir");
+         String lastDir = cfg.getStringValue("vdxFile.lastDir");
 
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
@@ -50,7 +50,7 @@ public final class BrowseProductsVdxAction extends BasicAction
          final File file = dlg.getSelectedFile();
          if (file == null) return;
 
-         cfg.put("VdxFile.lastDir", file.getAbsolutePath());
+         cfg.put("vdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 
          MainWindow.getInstance().addPage(new ProductsBrowser(), file);
