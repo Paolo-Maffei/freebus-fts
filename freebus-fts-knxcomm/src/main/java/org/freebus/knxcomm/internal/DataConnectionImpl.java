@@ -10,9 +10,9 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.telegram.Transport;
 
 /**
@@ -170,7 +170,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * {@inheritDoc}
     */
    @Override
-   public Telegram receive(int timeout) throws IOException
+   public Application receive(int timeout) throws IOException
    {
       try
       {
@@ -187,14 +187,14 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
       synchronized (recvQueue)
       {
-         return recvQueue.poll();
+         return recvQueue.poll().getApplication();
       }
    }
 
    /**
     * {@inheritDoc}
     */
-   public List<Telegram> receiveMultiple(int timeout) throws IOException
+   public List<Application> receiveMultiple(int timeout) throws IOException
    {
       if (timeout > 0)
       {
@@ -208,14 +208,16 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          }
       }
 
-      final List<Telegram> result = new LinkedList<Telegram>();
+      final List<Application> result = new LinkedList<Application>();
 
       synchronized (recvQueue)
       {
          if (!recvSemaphore.tryAcquire(recvQueue.size()))
             throw new RuntimeException("internal error");
 
-         result.addAll(recvQueue);
+         while (!recvQueue.isEmpty())
+            result.add(recvQueue.poll().getApplication());
+
          recvQueue.clear();
       }
 
@@ -238,7 +240,6 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    /**
     * {@inheritDoc}
     */
-   @Override
    public void send(Telegram telegram) throws IOException
    {
       telegram.setDest(addr);

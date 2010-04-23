@@ -2,8 +2,8 @@ package org.freebus.knxcomm.jobs;
 
 import org.freebus.fts.common.address.Address;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.TelegramListener;
 
 /**
  * Abstract base class for EIB jobs that work with a single device.

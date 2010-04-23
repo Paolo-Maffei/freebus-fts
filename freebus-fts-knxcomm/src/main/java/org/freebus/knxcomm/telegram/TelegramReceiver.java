@@ -1,4 +1,4 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.telegram;
 
 import java.lang.ref.WeakReference;
 import java.util.LinkedList;
@@ -8,8 +8,9 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.Address;
+import org.freebus.knxcomm.BusInterface;
+import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.application.ApplicationType;
-import org.freebus.knxcomm.telegram.Telegram;
 
 /**
  * A telegram receiver is an object for receiving telegrams from the KNX/EIB

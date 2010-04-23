@@ -5,11 +5,11 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.netip.KNXnetConnection;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.telegram.Transport;
 import org.freebus.knxcomm.types.LinkMode;
 

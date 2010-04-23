@@ -1,8 +1,8 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.telegram;
 
 import java.util.EventListener;
 
-import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.BusInterface;
 
 /**
  * Interface for classes that want to be notified when a telegram is sent or received.

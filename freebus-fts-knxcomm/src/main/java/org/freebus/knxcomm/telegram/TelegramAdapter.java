@@ -1,6 +1,5 @@
-package org.freebus.knxcomm;
+package org.freebus.knxcomm.telegram;
 
-import org.freebus.knxcomm.telegram.Telegram;
 
 /**
  * Abstract implementation of a {@link TelegramListener telegram listener}.

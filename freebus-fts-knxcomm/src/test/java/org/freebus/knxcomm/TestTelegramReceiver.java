@@ -14,6 +14,7 @@ import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.internal.SimulatedBusInterface;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramFactory;
+import org.freebus.knxcomm.telegram.TelegramReceiver;
 import org.junit.Test;
 
 public class TestTelegramReceiver

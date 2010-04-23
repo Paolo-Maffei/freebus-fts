@@ -11,12 +11,12 @@ import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.KNXConnection;
-import org.freebus.knxcomm.TelegramListener;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.L_Data_req;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
