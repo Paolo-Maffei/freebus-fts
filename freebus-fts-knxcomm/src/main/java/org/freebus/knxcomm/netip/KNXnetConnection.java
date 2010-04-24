@@ -229,7 +229,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
                new DisconnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), channelId));
 
          final Frame frame = receive(500);
-         if (!(frame instanceof DisconnectRequest))
+         if (!(frame instanceof DisconnectResponse))
             throw new ConnectException("no response to KNXnet/IP disconnect request");
 
          final DisconnectResponse resp = (DisconnectResponse) frame;
@@ -238,7 +238,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       }
       catch (IOException e)
       {
-         logger.error("Failed to disconnect from KNXnet/IP server", e);
+         logger.error("Failed to disconnect from the KNXnet/IP server", e);
       }
       finally
       {
