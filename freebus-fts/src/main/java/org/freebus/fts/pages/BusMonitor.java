@@ -21,6 +21,7 @@ import javax.swing.filechooser.FileFilter;
 import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.common.HexString;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.ToolBarButton;
@@ -37,11 +38,14 @@ import org.freebus.fts.pages.busmonitor.FrameFilter;
 import org.freebus.fts.utils.TrxFileFilter;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.L_Data_con;
 import org.freebus.knxcomm.emi.L_Data_ind;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
+import org.freebus.knxcomm.telegram.Transport;
 
 /**
  * A KNX/ETS bus monitor.
@@ -153,6 +157,60 @@ public class BusMonitor extends AbstractPage implements TelegramListener
                {
                   Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrSaveFilter"));
                }
+            }
+         }
+      });
+
+      toolBar.addSeparator();
+
+      final JButton btnTestTele = new ToolBarButton(ImageCache.getIcon("icons/music_32ndnote"));
+      btnTestTele.setToolTipText(I18n.getMessage("BusMonitor.SendTestTelegram.ToolTip"));
+      toolBar.add(btnTestTele);
+      btnTestTele.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent event)
+         {
+            if (bus == null) return;
+
+            final Telegram telegram = new Telegram();
+            telegram.setDest(new PhysicalAddress(1, 1, 88));
+            telegram.setPriority(Priority.SYSTEM);
+            telegram.setTransport(Transport.Connect);
+
+            try
+            {
+               bus.send(telegram);
+            }
+            catch (Exception e)
+            {
+               Dialogs.showExceptionDialog(e, "Failed to send test telegram");
+            }
+         }
+      });
+
+      final JButton btnTestTele2 = new ToolBarButton(ImageCache.getIcon("icons/music_cross"));
+      btnTestTele2.setToolTipText(I18n.getMessage("BusMonitor.SendTestTelegram.ToolTip"));
+      toolBar.add(btnTestTele2);
+      btnTestTele2.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent event)
+         {
+            if (bus == null) return;
+
+            final Telegram telegram = new Telegram(new DeviceDescriptorRead(0));
+            telegram.setDest(new PhysicalAddress(1, 1, 88));
+            telegram.setPriority(Priority.SYSTEM);
+            telegram.setTransport(Transport.Connected);
+
+            try
+            {
+               bus.send(telegram);
+            }
+            catch (Exception e)
+            {
+               Dialogs.showExceptionDialog(e, "Failed to send test telegram");
             }
          }
       });

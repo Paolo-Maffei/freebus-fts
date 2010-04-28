@@ -131,6 +131,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       final JMenu toolsMenu = createJMenu(I18n.getMessage("MainWindow.ToolsMenu"));
       Actions.SET_PHYSICAL_ADDRESS.addTo(toolsMenu);
+      Actions.DEVICE_SCANNER.addTo(toolsMenu);
       Actions.DEVICE_STATUS.addTo(toolsMenu);
 
       final JMenu settingsMenu = createJMenu(I18n.getMessage("MainWindow.SettingsMenu"));
@@ -164,7 +165,6 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       Actions.SETTINGS.addTo(toolBar);
 
       toolBar.addSeparator();
-      Actions.SEND_TEST_TELEGRAM.addTo(toolBar);
       Actions.DEVICE_STATUS.addTo(toolBar);
    }
 

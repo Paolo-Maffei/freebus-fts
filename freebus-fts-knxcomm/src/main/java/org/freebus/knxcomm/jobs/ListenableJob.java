@@ -101,4 +101,12 @@ public abstract class ListenableJob implements Job
    {
       listeners.remove(listener);
    }
+
+   /**
+    * @return all listeners
+    */
+   protected CopyOnWriteArrayList<JobListener> getListeners()
+   {
+      return listeners;
+   }
 }

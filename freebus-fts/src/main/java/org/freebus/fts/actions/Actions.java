@@ -26,7 +26,10 @@ public enum Actions
    /** View a KNX/EIB bus trace file. */
    BUS_TRACE_VIEWER(new BusTraceViewerAction()),
 
-   /** Read the device status. */
+   /** Open the device scanner. */
+   DEVICE_SCANNER(new DeviceScannerAction()),
+
+   /** Read the status of a device. */
    DEVICE_STATUS(new DeviceStatusAction()),
 
    /** Exit the application. */

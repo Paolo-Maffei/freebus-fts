@@ -207,7 +207,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
          throw new IOException("Not open");
 
       if (getLinkMode() == LinkMode.BusMonitor)
-         throw new IllegalAccessError("bus monitor link mode is read only");
+         throw new IOException("bus monitor link mode is read only");
 
       final PhysicalAddress from = telegram.getFrom();
       if (from == null || PhysicalAddress.NULL.equals(from))
