@@ -23,7 +23,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    private static final long serialVersionUID = 5059567180513438199L;
 
    private DefaultTableModel tbmDevices = new DefaultTableModel();
-   private final JTable tblDevices = new JTable();
+   private final JTable tblDevices = new JTable(tbmDevices);
    private final JScrollPane scpDevices = new JScrollPane(tblDevices);
 
 
@@ -36,7 +36,6 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
       setName(I18n.getMessage("DeviceScanner.Title"));
 
       tbmDevices.setColumnIdentifiers(new String[] { I18n.getMessage("DeviceScanner.ColAddress") });
-
       tblDevices.setFillsViewportHeight(true);
 
       add(scpDevices, BorderLayout.CENTER);
@@ -48,7 +47,10 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    @Override
    public void setObject(Object o)
    {
-      JobQueue.getDefaultJobQueue().add(new DeviceScannerJob(1, 1));
+      final DeviceScannerJob job = new DeviceScannerJob(1, 1);
+      job.addListener(this);
+
+      JobQueue.getDefaultJobQueue().add(job);
    }
 
    /**
@@ -71,6 +73,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
          public void run()
          {
             tbmDevices.addRow(new Object[] { addr });
+            tblDevices.revalidate();
          }
       });
    }

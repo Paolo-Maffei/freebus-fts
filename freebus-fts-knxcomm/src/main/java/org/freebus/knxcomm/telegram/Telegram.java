@@ -350,7 +350,8 @@ public class Telegram implements Cloneable
       // bit 5: repeated flag: 0=repeated, 1=not repeated;
       // bit 4: frame type 2: 0=acknowledge frame, 1=normal frame;
       // bit 3+2: Priority: 0=system, 1=urgent, 2=normal, 3=low priority;
-      // bit 1: 0 bit 0: confirmation: 0=ok, 1=error.
+      // bit 1: 0 bit
+      // bit 0: confirmation: 0=ok, 1=error.
       //
       priority = Priority.valueOf((ctrl >> 2) & 3);
       repeated = (ctrl & 0x20) == 0;

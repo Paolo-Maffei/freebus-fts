@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
@@ -66,6 +65,7 @@ public final class DeviceScannerJob extends ListenableJob
    public void main(BusInterface bus) throws IOException
    {
       receiver = new TelegramReceiver(bus);
+      receiver.setDest(null);
 
       //
       // Step 1: scan the bus for devices
@@ -76,38 +76,64 @@ public final class DeviceScannerJob extends ListenableJob
 //      receiver.setApplicationType(ApplicationType.DeviceDescriptor_Response);
       //receiver.setDest(bus.getPhysicalAddress());
       receiver.clear();
-      dataTelegram.setApplication(new DeviceDescriptorRead(0));
 
-      for (int id = 0; id <= 255; ++id)
+      for (int deviceId = 0; deviceId <= 255; ++deviceId)
       {
-         Logger.getLogger(getClass()).info("Probing " + zone + "." + line + "." + id);
+         Logger.getLogger(getClass()).info("Probing " + zone + "." + line + "." + deviceId);
 
-         dataTelegram.setDest(new PhysicalAddress(zone, line, id));
+         dataTelegram.setDest(new PhysicalAddress(zone, line, deviceId));
+
+         dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
+         msleep(10);
 
-         if ((id & 7) == 7)
+         dataTelegram.setTransport(Transport.Connected);
+         dataTelegram.setSequence(0);
+         dataTelegram.setApplication(new DeviceDescriptorRead(0));
+         bus.send(dataTelegram);
+         msleep(10);
+
+         if ((deviceId & 3) == 3)
          {
-            msleep(10);
-
-            notifyListener((id * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
-            processAnswers();
+            notifyListener((deviceId * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
+            processAnswers(0);
          }
+      }
+
+      // Wait 6+ seconds for answers.
+      for (int wait = 0; wait < 120; wait += 5)
+      {
+         notifyListener(85 + wait/10, I18n.getMessage("DeviceScannerJob.WaitAnswers"));
+         if (!processAnswers(500) && wait > 60)
+            break;
       }
    }
 
    /**
     * Receive answer telegrams
+    *
+    * @param waitTime - how long to wait for telegrams, in milliseconds
+    *
+    * @return true if answers were processed, false if not
     */
-   public void processAnswers()
+   public boolean processAnswers(int waitTime)
    {
-      for (final Telegram telegram : receiver.receiveMultiple(0))
-      {
-         final Application app = telegram.getApplication();
-         if (app instanceof DeviceDescriptorResponse)
-         {
-            Logger.getLogger(getClass()).info("Found device: " + telegram.getFrom());
+      boolean gotAnswers = false;
 
-            final DeviceDescriptorResponse ddApp = (DeviceDescriptorResponse) app;
+      for (final Telegram telegram : receiver.receiveMultiple(waitTime))
+      {
+         if (telegram.getTransport() == Transport.Disconnect)
+         {
+            gotAnswers = true;
+         }
+         else if (telegram.getApplicationType() == ApplicationType.DeviceDescriptor_Response)
+         {
+            gotAnswers = true;
+
+            Logger.getLogger(getClass()).info("Found device: " + telegram.getFrom());
+            notifyListenerDeviceFound(telegram.getFrom());
+
+            final DeviceDescriptorResponse ddApp = (DeviceDescriptorResponse) telegram.getApplication();
             final int ddType = ddApp.getDescriptorType();
 
             if (ddType == 0)
@@ -116,6 +142,8 @@ public final class DeviceScannerJob extends ListenableJob
             }
          }
       }
+
+      return gotAnswers;
    }
 
    /**
