@@ -10,8 +10,8 @@ import javax.swing.table.DefaultTableModel;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.jobs.DeviceScannerJob;
-import org.freebus.fts.jobs.DeviceScannerJobListener;
+import org.freebus.knxcomm.jobs.DeviceScannerJob;
+import org.freebus.knxcomm.jobs.DeviceScannerJobListener;
 import org.freebus.knxcomm.jobs.JobQueue;
 
 /**

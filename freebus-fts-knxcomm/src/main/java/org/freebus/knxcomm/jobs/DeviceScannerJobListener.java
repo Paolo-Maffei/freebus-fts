@@ -1,7 +1,6 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.jobs.JobListener;
 
 /**
  * Interface for listeners that get informed about the progress of a

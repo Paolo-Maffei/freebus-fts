@@ -1,4 +1,4 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -6,14 +6,12 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
-import org.freebus.knxcomm.jobs.JobListener;
-import org.freebus.knxcomm.jobs.ListenableJob;
+import org.freebus.knxcomm.internal.I18n;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramReceiver;
@@ -87,11 +85,12 @@ public final class DeviceScannerJob extends ListenableJob
          bus.send(dataTelegram);
          msleep(10);
 
-         dataTelegram.setTransport(Transport.Connected);
-         dataTelegram.setSequence(0);
-         dataTelegram.setApplication(new DeviceDescriptorRead(0));
-         bus.send(dataTelegram);
-         msleep(10);
+         // Freebus Controller need this to be detected:
+//         dataTelegram.setTransport(Transport.Connected);
+//         dataTelegram.setSequence(0);
+//         dataTelegram.setApplication(new DeviceDescriptorRead(0));
+//         bus.send(dataTelegram);
+//         msleep(10);
 
          if ((deviceId & 3) == 3)
          {

@@ -87,6 +87,12 @@ public enum EmiFrameType
 
    N_POLL_DATA_CON(0x35, EmiFrameClass.CONFIRM, null, N_POLL_DATA_REQ),
 
+   T_DATA_CONNECTED_REQ(0x41, EmiFrameClass.SEND),
+
+   T_DATA_CONNECTED_CON(0x8e, EmiFrameClass.CONFIRM),
+
+   T_DATA_CONNECTED_IND(0x89, EmiFrameClass.RECEIVE),
+
    T_CONNECT_REQ(0x43, EmiFrameClass.SEND),
 
    T_CONNECT_CON(0x86, EmiFrameClass.CONFIRM, null, T_CONNECT_REQ),

@@ -1,4 +1,4 @@
-package org.freebus.fts.jobs;
+package org.freebus.knxcomm.jobs;
 
 import java.io.IOException;
 import java.util.HashSet;
@@ -6,15 +6,13 @@ import java.util.Set;
 
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.freebus.knxcomm.application.Restart;
-import org.freebus.knxcomm.jobs.JobFailedException;
-import org.freebus.knxcomm.jobs.ListenableJob;
+import org.freebus.knxcomm.internal.I18n;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramReceiver;
