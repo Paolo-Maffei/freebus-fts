@@ -83,20 +83,17 @@ public final class DeviceScannerJob extends ListenableJob
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
-         msleep(10);
+         msleep(20);
 
          // Freebus Controller need this to be detected:
-//         dataTelegram.setTransport(Transport.Connected);
-//         dataTelegram.setSequence(0);
-//         dataTelegram.setApplication(new DeviceDescriptorRead(0));
-//         bus.send(dataTelegram);
+         dataTelegram.setTransport(Transport.Connected);
+         dataTelegram.setSequence(0);
+         dataTelegram.setApplication(new DeviceDescriptorRead(0));
+         bus.send(dataTelegram);
 //         msleep(10);
 
-         if ((deviceId & 3) == 3)
-         {
-            notifyListener((deviceId * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
-            processAnswers(0);
-         }
+         notifyListener((deviceId * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
+         processAnswers(80);
       }
 
       // Wait 6+ seconds for answers.
