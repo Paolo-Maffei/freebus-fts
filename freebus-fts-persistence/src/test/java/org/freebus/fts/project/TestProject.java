@@ -127,7 +127,7 @@ public class TestProject
       assertTrue(project.getAreas().isEmpty());
 
       final Area area = new Area(1);
-      project.add(area);
+      project.addArea(area);
 
       assertNotNull(area.getProject());
       assertNotNull(project.getAreas());
@@ -136,7 +136,7 @@ public class TestProject
       assertEquals(area, project.getAreas().iterator().next());
 
       final Area area2 = new Area(2);
-      project.add(area2);
+      project.addArea(area2);
       assertEquals(2, project.getAreas().size());
 
       project.remove(area);
@@ -152,8 +152,8 @@ public class TestProject
    {
       final Project project = new Project();
       final Area area = new Area(1);
-      project.add(area);
-      project.add(area);
+      project.addArea(area);
+      project.addArea(area);
    }
 
    @Test
@@ -251,9 +251,9 @@ public class TestProject
       project2.add(new Building(1));
       assertTrue(project1.equals(project2));
 
-      project1.add(new Area(1));
+      project1.addArea(new Area(1));
       assertFalse(project1.equals(project2));
-      project2.add(new Area(1));
+      project2.addArea(new Area(1));
       assertTrue(project1.equals(project2));
 
       project1.setDescription("desc-1");

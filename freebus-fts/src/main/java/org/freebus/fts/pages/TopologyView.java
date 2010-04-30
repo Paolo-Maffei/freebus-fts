@@ -24,6 +24,9 @@ import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.ToolBarButton;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.dialogs.AreaProperties;
+import org.freebus.fts.dialogs.DeviceProperties;
+import org.freebus.fts.dialogs.LineProperties;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
@@ -42,7 +45,7 @@ public class TopologyView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
-   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEdit;
+   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEditProperties, btnEditDevice, btnDelete;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -74,22 +77,37 @@ public class TopologyView extends AbstractPage
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             final Object userObject = node != null ? node.getUserObject() : null;
 
-            btnEdit.setEnabled(userObject instanceof Device);
-
             if (userObject instanceof Area)
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(false);
+               btnEditProperties.setEnabled(true);
+               btnEditDevice.setEnabled(false);
+               btnDelete.setEnabled(true);
             }
-            else if (userObject instanceof Line || userObject instanceof Device)
+            else if (userObject instanceof Line)
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
+               btnEditProperties.setEnabled(true);
+               btnEditDevice.setEnabled(false);
+               btnDelete.setEnabled(true);
+            }
+            else if (userObject instanceof Device)
+            {
+               btnAddLine.setEnabled(true);
+               btnAddDevice.setEnabled(true);
+               btnEditProperties.setEnabled(true);
+               btnEditDevice.setEnabled(true);
+               btnDelete.setEnabled(true); // TODO not yet done
             }
             else
             {
                btnAddLine.setEnabled(false);
                btnAddDevice.setEnabled(false);
+               btnEditProperties.setEnabled(false);
+               btnEditDevice.setEnabled(false);
+               btnDelete.setEnabled(false);
             }
          }
       });
@@ -135,11 +153,30 @@ public class TopologyView extends AbstractPage
       btnAddDevice.setIcon(ImageCache.getIcon("icons/device-new"));
       btnAddDevice.setToolTipText(I18n.getMessage("TopologyView.AddDeviceTip"));
 
-      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
-      toolBar.add(btnEdit);
-      btnEdit.setEnabled(false);
-      btnEdit.setToolTipText(I18n.getMessage("TopologyView.EditDeviceTip"));
-      btnEdit.addActionListener(new ActionListener()
+      btnEditProperties = new ToolBarButton(ImageCache.getIcon("icons/edit-properties"));
+      toolBar.add(btnEditProperties);
+      btnEditProperties.setEnabled(false);
+      btnEditProperties.setToolTipText(I18n.getMessage("TopologyView.EditItemTip"));
+      btnEditProperties.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent arg0)
+         {
+            final Object obj = getSelectedUserObject();
+            if (obj instanceof Device)
+               editDeviceProperties((Device) obj);
+            else if (obj instanceof Area)
+               editAreaProperties((Area) obj);
+            else if (obj instanceof Line)
+               editLineProperties((Line) obj);
+         }
+      });
+      
+      btnEditDevice = new ToolBarButton(ImageCache.getIcon("icons/configure"));
+      toolBar.add(btnEditDevice);
+      btnEditDevice.setEnabled(false);
+      btnEditDevice.setToolTipText(I18n.getMessage("TopologyView.EditItemTip"));
+      btnEditDevice.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent arg0)
@@ -149,6 +186,28 @@ public class TopologyView extends AbstractPage
                editDevice((Device) obj);
          }
       });
+
+      btnDelete = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 5637927204922440539L;
+
+         @Override
+         public void actionPerformed(ActionEvent arg0)
+         {
+            final Object obj = getSelectedUserObject();
+            if (obj instanceof Area)
+               deleteArea((Area) obj);
+            else if (obj instanceof Line)
+               deleteLine((Line) obj);
+            else if (obj instanceof Device)
+               deleteDevice((Device) obj);
+
+         }
+      });
+      toolBar.add(btnDelete);
+      btnDelete.setEnabled(false);
+      btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
+      btnDelete.setToolTipText(I18n.getMessage("TopologyView.DeleteItemTip"));
    }
 
    /**
@@ -156,14 +215,69 @@ public class TopologyView extends AbstractPage
     */
    protected void addArea()
    {
-      final Area area = new Area();
-      area.setName("New area");
+      final Project project = ProjectManager.getProject();
+      if (project == null)
+         return;
+
+      // Request name first
+      final AreaProperties dlg = new AreaProperties(MainWindow.getInstance());
+      dlg.setVisible(true); // this dialog is modal
+      if (dlg.isAccepted() == false)
+      {
+         return;
+      }
+
+      final Area area = project.addArea(dlg.getAreaName());
+      area.setAddress(dlg.getAddress());
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
       final DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(area, true);
 
       treeModel.insertNodeInto(areaNode, rootNode, 0);
       tree.expandPath(new TreePath(rootNode));
+      
+      updateContents();
+   }
+
+   /**
+    * open the dialog to edit the properties of the area
+    * 
+    * @param area to edit
+    */
+   protected void editAreaProperties(Area area)
+   {
+      if (area == null)
+         return;
+
+      final AreaProperties dlg = new AreaProperties(MainWindow.getInstance(), area.getName(), area.getAddress());
+
+      dlg.setVisible(true); // this dialog is modal
+      if (dlg.isAccepted() == false)
+      {
+         return;
+      }
+      area.setName(dlg.getAreaName());
+      area.setAddress(dlg.getAddress());
+      
+      updateContents();
+   }
+
+   /**
+    * Delete the Area from the project
+    * 
+    * @param area to delete
+    */
+   protected void deleteArea(Area area)
+   {
+      if (area == null)
+         return;
+
+      final Project project = ProjectManager.getProject();
+      if (project == null)
+         return;
+
+      project.remove(area);
+      updateContents();
    }
 
    /**
@@ -171,8 +285,13 @@ public class TopologyView extends AbstractPage
     */
    protected void addLine()
    {
+      final Project project = ProjectManager.getProject();
+      if (project == null)
+         return;
+
       DefaultMutableTreeNode areaNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-      if (areaNode == null) return;
+      if (areaNode == null)
+         return;
 
       final Object selectedObject = areaNode.getUserObject();
       Area area = null;
@@ -187,10 +306,21 @@ public class TopologyView extends AbstractPage
          areaNode = (DefaultMutableTreeNode) areaNode.getParent();
       }
 
-      if (area == null) return;
+      if (area == null)
+         return;
+
+      // Request name first
+      final LineProperties dlg = new LineProperties(MainWindow.getInstance(), area);
+      dlg.setVisible(true); // this dialog is modal
+      if (dlg.isAccepted() == false)
+      {
+         return;
+      }
 
       final Line line = new Line();
-      line.setName("New line");
+      line.setName(dlg.getLineName());
+      line.setAddress(dlg.getAddress());
+      //line.setArea(area);     // wird in area.add erledigt.
       area.add(line);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
@@ -199,12 +329,96 @@ public class TopologyView extends AbstractPage
       treeModel.insertNodeInto(lineNode, areaNode, 0);
 
       tree.expandPath(new TreePath(areaNode));
+      
+      //updateContents();
+   }
+
+   /**
+    * open the dialog to edit the properties of the line
+    * 
+    * @param line to edit
+    */
+   protected void editLineProperties(Line line)
+   {
+      if (line == null)
+         return;
+
+      final LineProperties dlg = new LineProperties(MainWindow.getInstance(), line);
+
+      dlg.setVisible(true); // this dialog is modal
+      if (dlg.isAccepted() == false)
+      {
+         return;
+      }
+      line.setName(dlg.getLineName());
+      line.setAddress(dlg.getAddress());
+      
+      updateContents();
+   }
+
+   /**
+    * Delete the Line from the project
+    * 
+    * @param line to delete
+    */
+   protected void deleteLine(Line line)
+   {
+      if (line == null)
+         return;
+
+      Area parentArea = line.getArea();
+      
+      if (parentArea != null)
+         parentArea.remove(line);
+      
+      line = null;
+      
+      updateContents();
+   }
+
+   /**
+    * delete the device
+    * @param device to delete
+    */
+   protected void deleteDevice(Device device)
+   {
+      if (device == null)
+         return;
+      
+      Line line = device.getLine();
+      if (line != null)
+         line.remove(device);
+      
+      device = null;
+      
+      updateContents();
+   }
+   
+   /**
+    * Add a device to the selected line.
+    */
+   public void editDeviceProperties(Device device)
+   {
+      Line line = device.getLine();
+      if (line == null)
+         return;
+      
+      // Request name first
+      final DeviceProperties dlg = new DeviceProperties(MainWindow.getInstance(), device);
+      dlg.setVisible(true); // this dialog is modal
+      if (dlg.isAccepted() == false)
+      {
+         return;
+      }
+
+      //device.setName(dlg.getDeviceName());    //TODO do we allow to change the name ?
+      device.setAddress(dlg.getAddress());
    }
 
    /**
     * Add a device to the selected line.
     */
-   public void addDevice(final Device device)
+   public void addDevice(Device device)
    {
       DefaultMutableTreeNode lineNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
       final Object selectedObject = lineNode == null ? null : lineNode.getUserObject();
@@ -222,11 +436,23 @@ public class TopologyView extends AbstractPage
 
       if (line == null)
       {
-         JOptionPane.showMessageDialog(MainWindow.getInstance(), I18n.getMessage("TopologyView.ErrNoLineSelected"), I18n.getMessage("TopologyView.ErrTitle"), JOptionPane.ERROR_MESSAGE);
+         JOptionPane.showMessageDialog(MainWindow.getInstance(), I18n.getMessage("TopologyView.ErrNoLineSelected"),
+               I18n.getMessage("TopologyView.ErrTitle"), JOptionPane.ERROR_MESSAGE);
          return;
       }
 
-      device.setAddress(line.getFreeAddress());
+      int freeAddr = 0;
+      try
+      {
+         freeAddr = line.getFreeAddress();
+      }
+      catch(RuntimeException e)
+      {
+         //TODO Error dialog
+         return;
+      }
+      
+      device.setAddress(freeAddr);
       line.add(device);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
@@ -239,21 +465,23 @@ public class TopologyView extends AbstractPage
 
    /**
     * Edit the device.
-    *
+    * 
     * @param device - the device to edit.
     */
-   public void editDevice(final Device device)
+   protected void editDevice(final Device device)
    {
       MainWindow.getInstance().showUniquePage(DeviceEditor.class, device);
    }
 
    /**
-    * @return the user-object of the currently selected tree node, or null if nothing is selected.
+    * @return the user-object of the currently selected tree node, or null if
+    *         nothing is selected.
     */
    public Object getSelectedUserObject()
    {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-      if (node == null) return null;
+      if (node == null)
+         return null;
       return node.getUserObject();
    }
 

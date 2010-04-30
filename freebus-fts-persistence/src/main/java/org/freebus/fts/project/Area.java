@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
@@ -46,6 +47,9 @@ public class Area
    @OrderBy("address")
    private List<Line> lines = new Vector<Line>();
 
+   public final static int MAX_ADDR = 0x0F;        // The highest number valid for address 
+   public final static int MIN_NAME_LENGTH = 2;    //TODO Define minimum accepted length for an Area Name
+   
    /**
     * Create a new area.
     */
@@ -143,6 +147,25 @@ public class Area
    }
 
    /**
+    * Remove a line from the area.
+    *
+    * @param line - the line to remove
+    *
+    * @throws IllegalArgumentException - if the line is not part of the area
+    */
+   public void remove(Line line)
+   {
+      if (lines == null)
+         return;
+      
+      if (!lines.contains(line))
+         throw new IllegalArgumentException("Line is not part of area: " + line.getArea() + ", line: " + line);
+
+      line.setArea(null);
+      lines.remove(line);
+   }
+
+   /**
     * @return the lines
     */
    public List<Line> getLines()
@@ -156,6 +179,26 @@ public class Area
    public void setLines(List<Line> lines)
    {
       this.lines = lines;
+   }
+
+   /**
+    * request number of all used addresses of the physical addresses by Lines
+    * this could be used to find out free addresses
+    * @return array with all used addresses
+    */
+   public int[] getUsedLineAddresses()
+   {
+      int used[] = new int[lines.size()];
+      int cnt = 0;
+      for (Line line : getLines())
+      {
+         used[cnt] = line.getAddress();
+         cnt++;
+      }
+      
+      Arrays.sort(used);
+      
+      return used;
    }
 
    /**

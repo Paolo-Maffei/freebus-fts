@@ -65,9 +65,9 @@ public final class FTS extends Application
    }
 
    /**
-    * Returns the name of the application. May include version and/or
-    * revision information.
-    *
+    * Returns the name of the application. May include version and/or revision
+    * information.
+    * 
     * @return the name of the application.
     */
    public String getName()
@@ -183,7 +183,7 @@ public final class FTS extends Application
 
    /**
     * Load the configuration. Called from {@link #startup()}.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
     */
    private void startupConfig(int progress)
@@ -194,7 +194,7 @@ public final class FTS extends Application
 
    /**
     * Load the plugins. Called from {@link #startup()}.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
     */
    private void startupPlugins(int progress)
@@ -207,7 +207,7 @@ public final class FTS extends Application
 
    /**
     * Load the plugins. Called from {@link #startup()}.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
     */
    private void startupLookAndFeel(int progress)
@@ -237,9 +237,9 @@ public final class FTS extends Application
 
    /**
     * Upgrade the database, if required. Called from {@link #startup()}.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
-    *
+    * 
     * @throws Exception
     */
    private void startupUpgradeDatabase(int progress) throws Exception
@@ -386,7 +386,7 @@ public final class FTS extends Application
 
    /**
     * Connect to the database. Called from {@link #startup()}.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
     */
    private void startupConnectDatabase(int progress)
@@ -426,7 +426,7 @@ public final class FTS extends Application
 
    /**
     * Create the main window. Called from {@link #startup()}.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
     */
    private void startupMainWindow(int progress)
@@ -494,7 +494,7 @@ public final class FTS extends Application
     * Restart the application. This terminates the application with return-code
     * 120. The restart has to be handled by the script that started the
     * application.
-    *
+    * 
     * @see Application#exit()
     */
    public void restart()
@@ -567,7 +567,7 @@ public final class FTS extends Application
 
    /**
     * Start the FTS application
-    *
+    * 
     * @throws InterruptedException
     */
    public static void main(String[] args) throws InterruptedException

@@ -18,9 +18,9 @@ public final class DeviceParamData
    /**
     * Create {@link ParamData parameter data} objects for all parameters of the
     * given device.
-    *
+    * 
     * @param device - the device to process.
-    *
+    * 
     * @return a map of parameter-data objects, with the parameter as key and the
     *         parameter-data object as value.
     */
@@ -51,7 +51,13 @@ public final class DeviceParamData
 
          final ParamData data = paramDatas.get(param);
          final ParamData parentData = paramDatas.get(parentParam);
-         parentData.addChild(data);
+         if ((parentData != null) && (data != null))
+            parentData.addChild(data);
+         else
+         {
+            Logger.getLogger(DeviceParamData.class).debug("failed to get parentData");
+            continue;
+         }
       }
 
       return paramDatas;
@@ -60,7 +66,7 @@ public final class DeviceParamData
    /**
     * Apply the values and visibility of the {@link ParamData parameter-data}
     * objects of the map to the {@link Device device}.
-    *
+    * 
     * @param device - the device to apply the parameter-data values to.
     * @param paramDatas - the map of the parameter-data objects to apply to the
     *           device.
@@ -86,26 +92,28 @@ public final class DeviceParamData
       //
       // Old code from ParameterEditor:
       //
-//      device.clearParameterValues();
-//
-//      for (final ParamData data : paramDatas.values())
-//      {
-//         final Parameter param = data.getParameter();
-//         final Object value = data.getValue();
-//         Object defaultValue;
-//
-//         if (param.getParameterType().getAtomicType() == ParameterAtomicType.STRING)
-//            defaultValue = device.getParameterValue(param);
-//         else defaultValue = device.getParameterIntValue(param);
-//
-//         final boolean isDefaultValue = (value == null ? defaultValue == null : value.equals(defaultValue));
-//         if (isDefaultValue)
-//            continue;
-//
-//         device.setParameterValue(data.getParameter(), value);
-//         if (!data.isVisible())
-//            device.setParameterVisible(data.getParameter(), false);
-//      }
+      // device.clearParameterValues();
+      //
+      // for (final ParamData data : paramDatas.values())
+      // {
+      // final Parameter param = data.getParameter();
+      // final Object value = data.getValue();
+      // Object defaultValue;
+      //
+      // if (param.getParameterType().getAtomicType() ==
+      // ParameterAtomicType.STRING)
+      // defaultValue = device.getParameterValue(param);
+      // else defaultValue = device.getParameterIntValue(param);
+      //
+      // final boolean isDefaultValue = (value == null ? defaultValue == null :
+      // value.equals(defaultValue));
+      // if (isDefaultValue)
+      // continue;
+      //
+      // device.setParameterValue(data.getParameter(), value);
+      // if (!data.isVisible())
+      // device.setParameterVisible(data.getParameter(), false);
+      // }
 
    }
 

@@ -56,7 +56,7 @@ public class TestArea
       area.setProject(null);
       assertNull(area.getProject());
 
-      project.add(area);
+      project.addArea(area);
       assertEquals(project, area.getProject());
    }
 

@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +48,9 @@ public class Line
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "line")
    @OrderBy("address")
    private List<Device> devices = new Vector<Device>();
+
+   public final static int MAX_ADDR = 0x0F;        // The highest number valid for address 
+   public final static int MIN_NAME_LENGTH = 2;    //TODO Define minimum accepted length for an Area Name
 
    /**
     * Create a new line.
@@ -137,6 +141,19 @@ public class Line
    }
 
    /**
+    * Delete the Device from the line
+    * @param device to remove
+    */
+   public void remove(Device device)
+   {
+      if (!devices.contains(device))
+         throw new IllegalArgumentException("Device is not part of this line: " + this + ", Device: " + device);
+      
+      device.setLine(null);
+      devices.remove(device);
+   }
+   
+   /**
     * @return an address that is not used in the line.
     *
     * @throws RuntimeException if no free address can be found.
@@ -212,5 +229,25 @@ public class Line
       else areaAddr = Integer.toString(area.getAddress());
 
       return String.format("%s.%d. %s", areaAddr, getAddress(), getName());
+   }
+
+   /**
+    * request number of all used addresses of the physical addresses by Lines
+    * this could be used to find out free addresses
+    * @return array with all used addresses
+    */
+   public int[] getUsedDeviceAddresses()
+   {
+      int used[] = new int[devices.size()];
+      int cnt = 0;
+      for (Device device : getDevices())
+      {
+         used[cnt] = device.getAddress();
+         cnt++;
+      }
+      
+      Arrays.sort(used);
+      
+      return used;
    }
 }

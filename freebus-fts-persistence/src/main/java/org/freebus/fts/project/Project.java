@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -57,8 +58,8 @@ public class Project
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
    @OrderBy("address")
    private List<MainGroup> mainGroups = new Vector<MainGroup>();
-
-   /**
+   
+    /**
     * Create a new project.
     */
    public Project()
@@ -139,13 +140,31 @@ public class Project
     *
     * @throws IllegalArgumentException - if the project already contains the area.
     */
-   public void add(Area area)
+   public void addArea(Area area)
    {
       if (areas.contains(area))
          throw new IllegalArgumentException("Area was previously added: " + area);
 
       area.setProject(this);
       areas.add(area);
+   }
+
+   /**
+    * Add an area to the project.
+    *
+    * @param area - the area to add.
+    *
+    * @throws IllegalArgumentException - if the project already contains the area.
+    */
+   public Area addArea(String name)
+   {
+      final Area area = new Area();
+      area.setName(name);
+      
+      areas.add(area);
+      area.setProject(this);
+      
+      return area;
    }
 
    /**
@@ -297,6 +316,26 @@ public class Project
          return false;
 
       return true;
+   }
+   
+   /**
+    * request number of all used addresses of the physical addresses by areas
+    * this could be used to find out free addresses
+    * @return array with all used addresses
+    */
+   public int[] getUsedAreaAddresses()
+   {
+      int used[] = new int[areas.size()];
+      int cnt = 0;
+      for (Area area : getAreas())
+      {
+         used[cnt] = area.getAddress();
+         cnt++;
+      }
+      
+      Arrays.sort(used);
+      
+      return used;
    }
 
    /**

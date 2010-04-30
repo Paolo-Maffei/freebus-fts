@@ -60,6 +60,9 @@ public final class Device
    @MapKey(name = "parameter")
    private Map<Parameter,DeviceParameterValue> parameterValues;
 
+   public final static int MAX_ADDR = 0xFF;        // The highest number valid for address 
+   public final static int MIN_NAME_LENGTH = 3;    //TODO Define minimum accepted length for an Area Name
+
    /**
     * Create an empty device object.
     */
@@ -365,5 +368,11 @@ public final class Device
       final StringBuilder sb = new StringBuilder();
       sb.append(getPhysicalAddress().toString()).append(" ").append(catalogEntry).append(" ").append(program);
       return sb.toString();
+   }
+
+   public String getName()
+   {
+      // TODO Define if we want to allow a name for a device
+      return getCatalogEntry().getName();
    }
 }
