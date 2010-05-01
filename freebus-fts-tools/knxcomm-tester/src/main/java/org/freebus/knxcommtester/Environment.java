@@ -57,9 +57,11 @@ public final class Environment
 
    /**
     * Returns the application's user-data directory. The name of the directory depends
-    * on the platform and uses the application name (see {@link setAppName}).
-    * 
+    * on the platform and uses the {@link #setAppName(String) application name}.
+    *
     * @return the directory for application specific user data.
+    *
+    * @see #setAppName(String)
     */
    public String getAppDir()
    {

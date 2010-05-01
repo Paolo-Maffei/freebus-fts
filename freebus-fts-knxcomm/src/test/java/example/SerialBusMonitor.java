@@ -1,5 +1,6 @@
 package example;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -41,6 +42,7 @@ public class SerialBusMonitor implements TelegramListener
       iface = BusInterfaceFactory.newSerialInterface(commPort);
       iface.addListener(this);
       iface.open(LinkMode.BusMonitor);
+      Logger.getLogger(getClass()).debug("Bus connection opened");
    }
 
    /**

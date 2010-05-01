@@ -11,180 +11,192 @@ import java.util.Properties;
 /**
  * A simple configuration class.
  */
-public class SimpleConfig {
-	private static SimpleConfig instance;
-	private final Properties props = new Properties();
+public class SimpleConfig
+{
+   private static SimpleConfig instance;
+   private final Properties props = new Properties();
 
-	/**
-	 * Returns the global configuration object. A {@link SimpleConfig} object is
-	 * created if no global configuration object exists.
-	 * 
-	 * @return The global configuration object instance.
-	 */
-	public static SimpleConfig getInstance() {
-		if (instance == null)
-			return new SimpleConfig();
-		return instance;
-	}
+   /**
+    * Returns the global configuration object. A {@link SimpleConfig} object is
+    * created if no global configuration object exists.
+    *
+    * @return The global configuration object instance.
+    */
+   public static SimpleConfig getInstance()
+   {
+      if (instance == null)
+         return new SimpleConfig();
+      return instance;
+   }
 
-	/**
-	 * Dispose the global configuration object.
-	 */
-	public static void disposeInstance() {
-		instance = null;
-	}
+   /**
+    * Dispose the global configuration object.
+    */
+   public static void disposeInstance()
+   {
+      instance = null;
+   }
 
-	/**
-	 * Create an empty configuration object.
-	 * 
-	 * The global instance is set to the created configuration object, if the
-	 * global instance is null.
-	 * 
-	 * @see {@link #getInstance} - to access the global configuration object
-	 *      instance.
-	 */
-	public SimpleConfig() {
-		if (instance == null)
-			instance = this;
-	}
+   /**
+    * Create an empty configuration object.
+    *
+    * The global instance is set to the created configuration object, if the
+    * global instance is null.
+    *
+    * @see #getInstance
+    */
+   public SimpleConfig()
+   {
+      if (instance == null)
+         instance = this;
+   }
 
-	/**
-	 * Test if the configuration with the given key exists.
-	 */
-	public boolean containsKey(String key) {
-		return props.containsKey(key);
-	}
+   /**
+    * Test if the configuration with the given key exists.
+    */
+   public boolean containsKey(String key)
+   {
+      return props.containsKey(key);
+   }
 
-	/**
-	 * @return the configuration value for the given key as String. Returns an
-	 *         empty string if the key does not exist in the config object.
-	 */
-	public String getStringValue(String key) {
-		String val = props.getProperty(key);
-		if (val == null)
-			return "";
-		return val;
-	}
+   /**
+    * @return the configuration value for the given key as String. Returns an
+    *         empty string if the key does not exist in the config object.
+    */
+   public String getStringValue(String key)
+   {
+      String val = props.getProperty(key);
+      if (val == null)
+         return "";
+      return val;
+   }
 
-	/**
-	 * @return the configuration value for the given key as Integer. Returns
-	 *         zero if the key does not exist in the configuration object.
-	 */
-	public int getIntValue(String key) {
-		String val = props.getProperty(key);
-		if (val == null)
-			return 0;
-		return Integer.parseInt(val);
-	}
+   /**
+    * @return the configuration value for the given key as Integer. Returns zero
+    *         if the key does not exist in the configuration object.
+    */
+   public int getIntValue(String key)
+   {
+      String val = props.getProperty(key);
+      if (val == null)
+         return 0;
+      return Integer.parseInt(val);
+   }
 
-	/**
-	 * @return the configuration value for the given key. Returns null if the
-	 *         key does not exist in the configuration object.
-	 */
-	public String get(String key) {
-		return props.getProperty(key);
-	}
+   /**
+    * @return the configuration value for the given key. Returns null if the key
+    *         does not exist in the configuration object.
+    */
+   public String get(String key)
+   {
+      return props.getProperty(key);
+   }
 
-	/**
-	 * Set the configuration value for the given key.
-	 */
-	public void put(String key, String value) {
-		props.setProperty(key, value);
-	}
+   /**
+    * Set the configuration value for the given key.
+    */
+   public void put(String key, String value)
+   {
+      props.setProperty(key, value);
+   }
 
-	/**
-	 * Clear the configuration.
-	 * 
-	 * @see {@link #init}.
-	 */
-	public void clear() {
-		props.clear();
-	}
+   /**
+    * Clear the configuration.
+    *
+    * @see #init()
+    */
+   public void clear()
+   {
+      props.clear();
+   }
 
-	/**
-	 * Initialize the configuration with default values. This default
-	 * implementation does nothing.
-	 */
-	public void init() {
-	}
+   /**
+    * Initialize the configuration with default values. This default
+    * implementation does nothing.
+    */
+   public void init()
+   {
+   }
 
-	/**
-	 * Load the configuration from the file fileName. The configuration is
-	 * cleared before loading.
-	 * 
-	 * @throws FileNotFoundException
-	 *             if the file exists but is a directory rather than a regular
-	 *             file, does not exist but cannot be created, or cannot be
-	 *             opened for any other reason.
-	 * @throws IOException
-	 *             if an error occurred when reading from the input stream.
-	 * @throws IllegalArgumentException
-	 *             if the configuration file contains a malformed Unicode escape
-	 *             sequence.
-	 */
-	public void load(String fileName) throws IOException, FileNotFoundException {
-		InputStream in = null;
+   /**
+    * Load the configuration from the file fileName. The configuration is
+    * cleared before loading.
+    *
+    * @throws FileNotFoundException if the file exists but is a directory rather
+    *            than a regular file, does not exist but cannot be created, or
+    *            cannot be opened for any other reason.
+    * @throws IOException if an error occurred when reading from the input
+    *            stream.
+    * @throws IllegalArgumentException if the configuration file contains a
+    *            malformed Unicode escape sequence.
+    */
+   public void load(String fileName) throws IOException, FileNotFoundException
+   {
+      InputStream in = null;
 
-		try {
-			in = new FileInputStream(fileName);
-			load(in);
-		} finally {
-			if (in != null)
-				in.close();
-		}
-	}
+      try
+      {
+         in = new FileInputStream(fileName);
+         load(in);
+      }
+      finally
+      {
+         if (in != null)
+            in.close();
+      }
+   }
 
-	/**
-	 * Load the configuration from the input stream <code>in</code>. The
-	 * configuration is cleared before loading.
-	 * 
-	 * @throws IOException
-	 *             if an error occurred when reading from the input stream.
-	 * @throws IllegalArgumentException
-	 *             if the input stream contains a malformed Unicode escape
-	 *             sequence.
-	 */
-	public void load(InputStream in) throws IOException {
-		clear();
-		init();
-		props.load(in);
-	}
+   /**
+    * Load the configuration from the input stream <code>in</code>. The
+    * configuration is cleared before loading.
+    *
+    * @throws IOException if an error occurred when reading from the input
+    *            stream.
+    * @throws IllegalArgumentException if the input stream contains a malformed
+    *            Unicode escape sequence.
+    */
+   public void load(InputStream in) throws IOException
+   {
+      clear();
+      init();
+      props.load(in);
+   }
 
-	/**
-	 * Save the configuration to the file fileName.
-	 * 
-	 * @throws FileNotFoundException
-	 *             if the file exists but is a directory rather than a regular
-	 *             file, does not exist but cannot be created, or cannot be
-	 *             opened for any other reason.
-	 * @throws SecurityException
-	 *             if a security manager exists and its <code>checkWrite</code>
-	 *             method denies write access to the file.
-	 * @throws IOException
-	 *             if writing the configuration list to the specified output
-	 *             stream throws an <tt>IOException</tt>.
-	 */
-	public void save(String fileName) throws IOException {
-		FileOutputStream out = null;
-		try {
-			out = new FileOutputStream(fileName);
-			save(out);
-		} finally {
-			if (out != null)
-				out.close();
-		}
-	}
+   /**
+    * Save the configuration to the file fileName.
+    *
+    * @throws FileNotFoundException if the file exists but is a directory rather
+    *            than a regular file, does not exist but cannot be created, or
+    *            cannot be opened for any other reason.
+    * @throws SecurityException if a security manager exists and its
+    *            <code>checkWrite</code> method denies write access to the file.
+    * @throws IOException if writing the configuration list to the specified
+    *            output stream throws an <tt>IOException</tt>.
+    */
+   public void save(String fileName) throws IOException
+   {
+      FileOutputStream out = null;
+      try
+      {
+         out = new FileOutputStream(fileName);
+         save(out);
+      }
+      finally
+      {
+         if (out != null)
+            out.close();
+      }
+   }
 
-	/**
-	 * Save the configuration to the output stream <code>out</code>.
-	 * 
-	 * @throws IOException
-	 *             if writing the configuration list to the specified output
-	 *             stream throws an <tt>IOException</tt>.
-	 * @throws NullPointerException
-	 *             if <code>out</code> is null.
-	 */
-	public void save(OutputStream out) throws IOException {
-		props.store(out, Environment.getAppName() + " configuration");
-	}
+   /**
+    * Save the configuration to the output stream <code>out</code>.
+    *
+    * @throws IOException if writing the configuration list to the specified
+    *            output stream throws an <tt>IOException</tt>.
+    * @throws NullPointerException if <code>out</code> is null.
+    */
+   public void save(OutputStream out) throws IOException
+   {
+      props.store(out, Environment.getAppName() + " configuration");
+   }
 }

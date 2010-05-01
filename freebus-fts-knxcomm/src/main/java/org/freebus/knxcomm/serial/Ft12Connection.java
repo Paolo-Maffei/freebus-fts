@@ -156,9 +156,6 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
             if (debugFT12 && logger.isDebugEnabled())
                logger.debug("READ FT1.2: " + HexString.toString(data));
 
-            if (!connected)
-               return;
-
             try
             {
                processVariableFrame(data);
