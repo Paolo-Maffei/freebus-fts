@@ -233,20 +233,12 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       synchronized (sendTelegram)
       {
          sendTelegram.setApplication(application);
-         send(sendTelegram);
+         sendTelegram.setDest(addr);
+         sendTelegram.setTransport(Transport.Connected);
+         sendTelegram.setSequence(++sequence);
+
+         busInterface.send(sendTelegram);
       }
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void send(Telegram telegram) throws IOException
-   {
-      telegram.setDest(addr);
-      telegram.setTransport(Transport.Connected);
-      telegram.setSequence(++sequence);
-
-      busInterface.send(telegram);
    }
 
    /**

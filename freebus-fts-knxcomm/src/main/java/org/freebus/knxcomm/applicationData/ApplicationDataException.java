@@ -1,17 +1,17 @@
 package org.freebus.knxcomm.applicationData;
 
-public class AppilcationDataException extends Exception
+public class ApplicationDataException extends Exception
 {
 
    private static final long serialVersionUID = -4418866152143176572L;
    String ErrorMessage;
 
    /**
-    * Create a new AppilcationDataException Object
-    * 
+    * Create a new ApplicationDataException Object
+    *
     * @param msg - the Error Message
     */
-   AppilcationDataException(String msg)
+   ApplicationDataException(String msg)
    {
       super();
       this.ErrorMessage = msg;

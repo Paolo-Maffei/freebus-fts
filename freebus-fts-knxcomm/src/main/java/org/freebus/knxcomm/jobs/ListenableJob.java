@@ -9,8 +9,8 @@ import org.freebus.knxcomm.BusInterface;
  * Abstract base class for jobs that allow job listeners.
  * <p>
  * The {@link #run(BusInterface)} method is implemented with a try / catch block
- * and calls {@link #init()}, {@link #main(BusInterface)}, and
- * {@link #cleanup()} to do the work.
+ * and calls {@link #init(BusInterface)}, {@link #main(BusInterface)}, and
+ * {@link #cleanup(BusInterface)} to do the work.
  */
 public abstract class ListenableJob implements Job
 {
@@ -39,7 +39,7 @@ public abstract class ListenableJob implements Job
     * Do cleanup. The default implementation is empty. Called by
     * {@link #run(BusInterface) run} after {@link #main(BusInterface)}, even if
     * an exception is thrown in {@link #main(BusInterface) main} - but not if an
-    * exception is thrown in {@link #init()}.
+    * exception is thrown in {@link #init(BusInterface)}.
     *
     * @param bus - the bus interface to use
     */
@@ -48,10 +48,10 @@ public abstract class ListenableJob implements Job
    }
 
    /**
-    * Calls {@link #init()}, then {@link #main(BusInterface)} to do the real
-    * work, and calls {@link #cleanup()}, even if an exception is thrown in
-    * {@link #main(BusInterface)} - but not if an exception is thrown in
-    * {@link #init()}.
+    * Calls {@link #init(BusInterface)}, then {@link #main(BusInterface)} to do
+    * the real work, and calls {@link #cleanup(BusInterface)}, even if an
+    * exception is thrown in {@link #main(BusInterface)} - but not if an
+    * exception is thrown in {@link #init(BusInterface)}.
     *
     * @throws IOException
     */

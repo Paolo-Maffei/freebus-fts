@@ -132,8 +132,7 @@ public final class BusInterfaceFactory
 
    /**
     * Set the default {@link LinkMode link mode} that is used when a bus
-    * interface is created by {@link #createBusInterface()}. Does not change
-    * existing bus interfaces.
+    * interface is created. Does not change existing bus interfaces.
     */
    public static void setDefaultLinkMode(LinkMode mode)
    {
@@ -142,7 +141,7 @@ public final class BusInterfaceFactory
 
    /**
     * @return the default {@link LinkMode link mode} that is used when a bus
-    *         interface is created by {@link #createBusInterface()}.
+    *         interface is created.
     */
    public static LinkMode getDefaultLinkMode()
    {

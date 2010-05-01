@@ -1,8 +1,5 @@
 package org.freebus.knxcomm.applicationData;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 
 public class DeviceDescriptorPropertiesType3 implements DeviceDescriptorProperties
@@ -15,8 +12,7 @@ public class DeviceDescriptorPropertiesType3 implements DeviceDescriptorProperti
       return null;
    }
 
-
-   protected void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws AppilcationDataException
+   protected void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws ApplicationDataException
    {
       // TODO Auto-generated method stub
 

@@ -1,5 +1,7 @@
 package org.freebus.knxcomm.application.devicedescriptor;
 
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+
 /**
  * A device descriptor. Used in {@link DeviceDescriptorResponse}.
  *

@@ -43,7 +43,7 @@ public class DeviceDescriptor0 implements DeviceDescriptor
    }
 
    /**
-    * @param return the 16 bit mask version.
+    * @return the 16 bit mask version.
     */
    public int getMaskVersion()
    {

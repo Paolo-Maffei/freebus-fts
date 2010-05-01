@@ -31,9 +31,9 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
     * resource folder
     *
     * @param deviceDescriptorResponse
-    * @throws AppilcationDataException
+    * @throws ApplicationDataException
     */
-   protected void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws AppilcationDataException
+   protected void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws ApplicationDataException
    {
       //TODO Nice to have: Search in the resources folder the properties files
       String[] kownPropertiesFiles = { "0010", "0011", "0012" };
@@ -52,7 +52,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
       }
       if (!PropertieFileExist){
          logger.error("The device descriptor mask " + mask+" is not supported");
-         throw new AppilcationDataException("The device descriptor mask " + mask+" is not supported");
+         throw new ApplicationDataException("The device descriptor mask " + mask+" is not supported");
 
       }
 
@@ -67,7 +67,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
          catch (FileNotFoundException e)
          {
             logger.error("DeviceDescriptorType0_" + mask + ".properties cannot loaded", e);
-            throw new AppilcationDataException("DeviceDescriptorType0_" + mask + ".properties cannot loaded");
+            throw new ApplicationDataException("DeviceDescriptorType0_" + mask + ".properties cannot loaded");
          }
       }
       try
@@ -78,7 +78,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
       catch (IOException e)
       {
          logger.error("Fie DeviceDescriptorType0_" + mask + ".properties cannot loaded", e);
-         throw new AppilcationDataException("Fie DeviceDescriptorType0_" + mask + ".properties cannot loaded");
+         throw new ApplicationDataException("Fie DeviceDescriptorType0_" + mask + ".properties cannot loaded");
       }
 
    }

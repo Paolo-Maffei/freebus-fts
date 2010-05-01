@@ -376,8 +376,9 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    }
 
    /**
-    * Send a FT1.2 frame of the type {@link Ft12MessageType#FIXED}. The message
-    * is sent 3 times before sending fails if it is not acknowledged.
+    * Send a fixed-length FT1.2 frame of the type {@link Ft12FrameFormat#FIXED}.
+    * The message is sent 3 times before sending fails if it is not
+    * acknowledged.
     *
     * @param func - the function of the frame, see {@link Ft12Function}.
     *
@@ -392,7 +393,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    }
 
    /**
-    * Send a FT1.2 frame of the type {@link Ft12MessageType#FIXED}.
+    * Send a fixed-length FT1.2 frame of the type {@link Ft12FrameFormat#FIXED}.
     *
     * @param func - the function of the frame, see {@link Ft12Function}.
     * @param tries - how many times the sending is repeated until it fails if

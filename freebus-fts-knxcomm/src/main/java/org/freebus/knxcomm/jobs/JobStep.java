@@ -6,8 +6,8 @@ import org.freebus.knxcomm.telegram.Telegram;
 public class JobStep extends Telegram
 {
 
-   private boolean DeviceDescriptorRequired;
-   private Application ResivedApplication;
+   private boolean deviceDescriptorRequired;
+   private Application receivedApplication;
    private JobStepStatus jobStepStatus;
 
    /**
@@ -15,23 +15,23 @@ public class JobStep extends Telegram
     */
    public boolean isDeviceDescriptorRequired()
    {
-      return DeviceDescriptorRequired;
+      return deviceDescriptorRequired;
    }
 
    /**
-    * @param deviceDescriptorRequiered the deviceDescriptorRequiered to set
+    * @param DeviceDescriptorRequired the deviceDescriptorRequiered to set
     */
    public void setDeviceDescriptorRequired(boolean DeviceDescriptorRequired)
    {
-      this.DeviceDescriptorRequired = DeviceDescriptorRequired;
+      this.deviceDescriptorRequired = DeviceDescriptorRequired;
    }
 
    /**
-    * @return the resivedApplication
+    * @return the received application
     */
-   public Application getResivedApplication()
+   public Application getReceivedApplication()
    {
-      return ResivedApplication;
+      return receivedApplication;
    }
 
    /**
@@ -39,7 +39,7 @@ public class JobStep extends Telegram
     */
    public void setResivedApplication(Application resivedApplication)
    {
-      ResivedApplication = resivedApplication;
+      receivedApplication = resivedApplication;
    }
 
    /**
@@ -57,7 +57,7 @@ public class JobStep extends Telegram
    {
       this.jobStepStatus = jobStepStatus;
    }
-   
-   
+
+
 
 }

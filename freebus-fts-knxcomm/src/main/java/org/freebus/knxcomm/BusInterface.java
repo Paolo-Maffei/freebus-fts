@@ -93,7 +93,7 @@ public interface BusInterface
 
    /**
     * Returns the physical address of the BCU that is used to access the KNX/EIB
-    * bus. Valid after a successful {@link #open()}.
+    * bus. Valid after a successful {@link #open(LinkMode)}.
     *
     * @return the physical address of the BCU.
     */

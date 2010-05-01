@@ -12,11 +12,11 @@ public class DeviceDescriptorPropertiesFactory
    /**
     * Creates the DeviceDescriptor class in depends of the DeviceDescriptortype
     * bits in a DeviceDescriptor response
-    * @throws AppilcationDataException 
+    * @throws ApplicationDataException 
     * 
     * 
     */
-   public DeviceDescriptorProperties getDeviceDescriptor(DeviceDescriptorResponse deviceDescriptorResponse) throws AppilcationDataException
+   public DeviceDescriptorProperties getDeviceDescriptor(DeviceDescriptorResponse deviceDescriptorResponse) throws ApplicationDataException
         
    {
       // TODO create own exception class
