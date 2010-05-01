@@ -74,10 +74,10 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    public void close()
    {
       port.removeEventListener();
+      port.close();
 
       inputStream = null;
       outputStream = null;
-      port.close();
    }
 
    /**
@@ -192,5 +192,24 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
             }
             break;
       }
+   }
+
+   /**
+    * Create the listener thread.
+    */
+   protected Thread createListenerThread()
+   {
+      return new Thread(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            Logger.getLogger(getClass()).debug("Starting FT1.2 listener thread");
+
+            while (port.isOpened())
+            {
+            }
+         }
+      });
    }
 }

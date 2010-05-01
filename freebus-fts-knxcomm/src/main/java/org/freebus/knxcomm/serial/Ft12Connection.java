@@ -121,57 +121,54 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
     */
    protected void dataAvailable() throws IOException
    {
-      while (true)
+      final int formatCode = read();
+      if (formatCode == -1) // EOF
+         return;
+
+      final Ft12FrameFormat format = Ft12FrameFormat.valueOf(formatCode);
+      if (format == Ft12FrameFormat.ACK)
       {
-         final int formatCode = read();
-         if (formatCode == -1) // EOF
-            return;
+         if (debugFT12ack)
+            logger.debug("READ: ACK");
+         waitAckSemaphore.release();
+      }
+      else if (format == Ft12FrameFormat.FIXED)
+      {
+         final byte[] data = new byte[4];
+         data[0] = (byte) format.code;
+         read(data, 1, 3);
 
-         final Ft12FrameFormat format = Ft12FrameFormat.valueOf(formatCode);
-         if (format == Ft12FrameFormat.ACK)
+         if (debugFT12 && logger.isDebugEnabled())
+            logger.debug("READ FT1.2: " + HexString.toString(data));
+
+         processFixedFrame(data);
+      }
+      else if (format == Ft12FrameFormat.VARIABLE)
+      {
+         final int len = read();
+         final byte[] data = new byte[len + 6];
+         data[0] = (byte) format.code;
+         data[1] = (byte) len;
+         read(data, 2, len + 4);
+
+         if (debugFT12 && logger.isDebugEnabled())
+            logger.debug("READ FT1.2: " + HexString.toString(data));
+
+         try
          {
-            if (debugFT12ack)
-               logger.debug("READ: ACK");
-            waitAckSemaphore.release();
+            processVariableFrame(data);
          }
-         else if (format == Ft12FrameFormat.FIXED)
+         catch (IOException e)
          {
-            final byte[] data = new byte[4];
-            data[0] = (byte) format.code;
-            read(data, 1, 3);
-
-            if (debugFT12 && logger.isDebugEnabled())
+            if (!debugFT12 && logger.isDebugEnabled())
                logger.debug("READ FT1.2: " + HexString.toString(data));
 
-            processFixedFrame(data);
+            throw e;
          }
-         else if (format == Ft12FrameFormat.VARIABLE)
-         {
-            final int len = read();
-            final byte[] data = new byte[len + 6];
-            data[0] = (byte) format.code;
-            data[1] = (byte) len;
-            read(data, 2, len + 4);
-
-            if (debugFT12 && logger.isDebugEnabled())
-               logger.debug("READ FT1.2: " + HexString.toString(data));
-
-            try
-            {
-               processVariableFrame(data);
-            }
-            catch (IOException e)
-            {
-               if (!debugFT12 && logger.isDebugEnabled())
-                  logger.debug("READ FT1.2: " + HexString.toString(data));
-
-               throw e;
-            }
-         }
-         else
-         {
-            throw new InvalidDataException("Invalid FT1.2 frame format", formatCode);
-         }
+      }
+      else
+      {
+         throw new InvalidDataException("Invalid FT1.2 frame format", formatCode);
       }
    }
 
