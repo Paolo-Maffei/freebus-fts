@@ -12,7 +12,7 @@ import org.freebus.knxcomm.types.LinkMode;
 /**
  * Starts the device scanner job
  */
-public class DeviceScannerJobTest implements TelegramListener
+public class DeviceScannerJobExample implements TelegramListener
 {
    private final BusInterface bus;
 
@@ -25,7 +25,7 @@ public class DeviceScannerJobTest implements TelegramListener
     *
     * @throws Exception
     */
-   public DeviceScannerJobTest() throws Exception
+   public DeviceScannerJobExample() throws Exception
    {
       String commPort = SerialPortUtil.getPortNames()[0];
 
@@ -80,10 +80,10 @@ public class DeviceScannerJobTest implements TelegramListener
    {
       Environment.init();
 
-      DeviceScannerJobTest tst = null;
+      DeviceScannerJobExample tst = null;
       try
       {
-         tst = new DeviceScannerJobTest();
+         tst = new DeviceScannerJobExample();
          Thread.sleep(20000);
 
       }

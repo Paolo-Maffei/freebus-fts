@@ -97,22 +97,24 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    @Override
    protected int read() throws IOException
    {
-      int b = inputStream.read();
-
-      if (b < 0)
+      for (int tries = 0; tries < 10; ++tries)
       {
+         int b = inputStream.read();
+         if (b >= 0)
+            return b;
+
          try
          {
             inputStream.wait(10);
          }
          catch (InterruptedException e)
          {
+            e.printStackTrace();
+            break;
          }
-
-         b = inputStream.read();
       }
 
-      return b;
+      return -1;
    }
 
    /**
@@ -156,14 +158,15 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
          case SerialPortEvent.DSR:
          case SerialPortEvent.RI:
          case SerialPortEvent.OUTPUT_BUFFER_EMPTY:
-//            Logger.getLogger(getClass()).info("+++++ Serial port event: " + event.getEventType());
+            // Logger.getLogger(getClass()).info("+++++ Serial port event: " +
+            // event.getEventType());
             break;
 
          case SerialPortEvent.DATA_AVAILABLE:
             try
             {
                port.notifyOnDataAvailable(false);
-//               Logger.getLogger(getClass()).debug("***** BEGIN dataAvailable *****");
+               // Logger.getLogger(getClass()).debug("***** BEGIN dataAvailable *****");
 
                while (inputStream.available() > 0)
                   dataAvailable();
@@ -184,7 +187,7 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
             }
             finally
             {
-//               Logger.getLogger(getClass()).debug("***** END dataAvailable *****");
+               // Logger.getLogger(getClass()).debug("***** END dataAvailable *****");
                port.notifyOnDataAvailable(true);
             }
             break;
