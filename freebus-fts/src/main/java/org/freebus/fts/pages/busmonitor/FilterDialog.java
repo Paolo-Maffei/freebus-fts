@@ -46,7 +46,6 @@ public class FilterDialog extends Dialog
     * Create a dialog for configuring a telegram filter.
     *
     * @param owner - the owning window.
-    * @param modalityType - the modality type.
     */
    public FilterDialog(Window owner)
    {

@@ -35,8 +35,8 @@ public class FilteredListModel extends AbstractListModel
    /**
     * Create a FilteredListModel from an existing model using a specific filter.
     *
-    * @param model the unfiltered list model
-    * @param sortOrder that should be used
+    * @param model - the unfiltered list model
+    * @param filter - the filter that should be used for filtering
     */
    public FilteredListModel(ListModel model, Filter filter)
    {

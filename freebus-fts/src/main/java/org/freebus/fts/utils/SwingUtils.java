@@ -11,7 +11,7 @@ public final class SwingUtils
    /**
     * Recursively enable or disable a container and its children.
     *
-    * @param panel - the panel to process.
+    * @param container - the container to process.
     * @param enabled - set enable of the components.
     */
    public static void setEnable(final Container container, boolean enabled)

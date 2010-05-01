@@ -5,13 +5,11 @@ import java.awt.Rectangle;
 import java.awt.TextArea;
 import java.awt.event.MouseAdapter;
 
-
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
@@ -128,7 +126,7 @@ public class DeviceStatus extends AbstractPage {
 				String msg, allmsg="";
 				for (JobStep a : e.getJobSteps()) {
 					s = "";
-					Application application = a.getResivedApplication();
+					Application application = a.getReceivedApplication();
 
 					if (application instanceof MemoryResponse) {
 						MemoryResponse b = (MemoryResponse) application;

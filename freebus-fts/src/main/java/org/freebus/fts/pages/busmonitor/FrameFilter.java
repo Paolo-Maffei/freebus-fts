@@ -13,7 +13,7 @@ import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
 
 /**
- * A configurable filter for {@link EMIFrame EMI frames}.
+ * A configurable filter for filtering EMI frames.
  */
 public class FrameFilter implements Filter
 {

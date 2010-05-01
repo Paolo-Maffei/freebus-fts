@@ -10,6 +10,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -33,18 +34,18 @@ public class LineProperties extends Dialog
 {
    private static final long serialVersionUID = 1L;
    private Area parentArea;
-   
+
    private final JTextField inpName = new JTextField();
    private JComboBox inpAddress;
    private JButton btnOk;
 
-   
+
    /**
     * Create a LineProperties dialog
     *
     * @param owner the <code>Window</code> from which the dialog is displayed or
     *           <code>null</code> if this dialog has no owner
-    * @param parentArea the area the line will be added. We need this to find out 
+    * @param parentArea the area the line will be added. We need this to find out
     *           the free addresses in the area
     */
    public LineProperties(Window owner, Area parentArea)
@@ -53,13 +54,13 @@ public class LineProperties extends Dialog
       this.parentArea = parentArea;
       createDialog(owner, I18n.getMessage("LineProperties.DefaultName"), -1);
    }
-   
+
    /**
     * Create a LineProperties dialog
     *
-    * @param owner the <code>Window</code> from which the dialog is displayed or
+    * @param owner - the <code>Window</code> from which the dialog is displayed or
     *           <code>null</code> if this dialog has no owner
-    * @param currentName the name to provide for Area as a start
+    * @param line - the line to show
     */
    public LineProperties(Window owner, Line line)
    {
@@ -67,7 +68,7 @@ public class LineProperties extends Dialog
       this.parentArea = line.getArea();
       createDialog(owner, line.getName(), line.getAddress());
    }
-   
+
    /**
     * creates the dialog
     * @param owner
@@ -79,13 +80,13 @@ public class LineProperties extends Dialog
       final Project project = ProjectManager.getProject();
       if (project == null || parentArea == null)
          throw new IllegalArgumentException();
-      
+
       setTitle(I18n.getMessage("LineProperties.Title"));
       setModal(true);
 
       final Container body = getBodyPane();
       body.setLayout(new GridBagLayout());
-      
+
       JLabel lbl = new JLabel("<html><body>" + I18n.formatMessage("LineProperties.Explain", new String[] { Integer.toString(Area.MIN_NAME_LENGTH) } ) + "</body></html>");
       body.add(lbl, new GridBagConstraints(0, 0, 2, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             new Insets(4, 4, 2, 4), 0, 0));
@@ -114,25 +115,25 @@ public class LineProperties extends Dialog
             validateInput();
          }
       });
-      
+
       final int usedAddr[] = parentArea.getUsedLineAddresses();
-      
+
       //we want a list with all free addresses
       String freeAddr[] = new String[(Line.MAX_ADDR - usedAddr.length + 1 + 1)];
-      
+
       int pos = 0;
       if (address == -1)
          freeAddr[pos] = "---";
       else
-         freeAddr[pos] = Integer.toString(address); 
+         freeAddr[pos] = Integer.toString(address);
       pos++;
-      
+
       for (int cnt = 0 ; cnt <= Area.MAX_ADDR ; cnt++)
       {
          // search for next free number
          while (contains(usedAddr, cnt))
          {
-            cnt++;      
+            cnt++;
          }
          // store it
          if (pos < freeAddr.length)
@@ -141,16 +142,16 @@ public class LineProperties extends Dialog
             pos++;
          }
       }
-      
+
       lbl = new JLabel(I18n.getMessage("LineProperties.Address"));
       body.add(lbl, new GridBagConstraints(0, 3, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE,
             new Insets(4, 2, 2, 4), 0, 0));
-      
+
       inpAddress = new JComboBox(freeAddr);
       inpAddress.setSelectedIndex(0);   // this is either the already set address or nothing use full
       body.add(inpAddress, new GridBagConstraints(1, 3, 1, 1, 1, 1, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, new Insets(4, 2, 2, 4), 0, 0));
-      
+
       inpAddress.addActionListener(new ActionListener()
       {
          @Override
@@ -162,7 +163,7 @@ public class LineProperties extends Dialog
 
       body.add(new JPanel(), new GridBagConstraints(0, 4, 1, 1, 1, 1, GridBagConstraints.WEST,
             GridBagConstraints.VERTICAL, new Insets(0, 0, 0, 0), 0, 0));
-      
+
       btnOk = new JButton(I18n.getMessage("Button.Ok"));
       addButton(btnOk, Dialog.ACCEPT);
 
@@ -189,7 +190,7 @@ public class LineProperties extends Dialog
       }
       return false;
    }
-   
+
    /**
     * @return the physical address that the physical-address input field
     *         contains, or null if the input field contains no valid physical
@@ -203,9 +204,9 @@ public class LineProperties extends Dialog
    }
 
    /**
-    * Set the contents of the physical-address input field.
+    * Set the contents of the line name input field.
     *
-    * @param addr - the physical address to set.
+    * @param newName - the name of the line to set.
     */
    public void setLineName(final String newName)
    {
@@ -215,14 +216,14 @@ public class LineProperties extends Dialog
    /**
     * returns the selected address for the area
     * throws NumberFormatException if an invalid address is selected.
-    * 
+    *
     * @return address
     */
    public int getAddress()
    {
       return Integer.parseInt((String)inpAddress.getSelectedItem());
    }
-   
+
    /**
     * Enable the Program button if the contents of the input field is a valid
     * physical address. Disable the button if not.
@@ -230,10 +231,10 @@ public class LineProperties extends Dialog
    private void validateInput()
    {
       boolean ok = true;
-      
+
       if (!(inpName.getText().length() >= Line.MIN_NAME_LENGTH))
          ok = false;
-      
+
       // I do not know a nicer way to check if we have a valid address
       try
       {
@@ -243,7 +244,7 @@ public class LineProperties extends Dialog
       {
          ok = false;
       }
-      
+
       btnOk.setEnabled(ok);
    }
 }

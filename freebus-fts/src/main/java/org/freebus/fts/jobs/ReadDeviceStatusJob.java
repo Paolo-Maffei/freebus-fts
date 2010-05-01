@@ -2,7 +2,6 @@ package org.freebus.fts.jobs;
 
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
