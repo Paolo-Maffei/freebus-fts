@@ -279,7 +279,7 @@ public class VdxNewEntityManager
             }
             else if (fieldClass.isEnum())
             {
-               @SuppressWarnings("unchecked")
+               @SuppressWarnings({ "unchecked", "rawtypes" })
                Class<? extends Enum> enumClass = (Class<? extends Enum>) type;
 
                if (value.isEmpty())

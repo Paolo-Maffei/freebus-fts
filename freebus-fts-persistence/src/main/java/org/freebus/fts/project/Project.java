@@ -58,7 +58,7 @@ public class Project
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
    @OrderBy("address")
    private List<MainGroup> mainGroups = new Vector<MainGroup>();
-   
+
     /**
     * Create a new project.
     */
@@ -152,7 +152,7 @@ public class Project
    /**
     * Add an area to the project.
     *
-    * @param area - the area to add.
+    * @param name - the name of the area to add.
     *
     * @throws IllegalArgumentException - if the project already contains the area.
     */
@@ -160,10 +160,10 @@ public class Project
    {
       final Area area = new Area();
       area.setName(name);
-      
+
       areas.add(area);
       area.setProject(this);
-      
+
       return area;
    }
 
@@ -317,7 +317,7 @@ public class Project
 
       return true;
    }
-   
+
    /**
     * request number of all used addresses of the physical addresses by areas
     * this could be used to find out free addresses
@@ -332,9 +332,9 @@ public class Project
          used[cnt] = area.getAddress();
          cnt++;
       }
-      
+
       Arrays.sort(used);
-      
+
       return used;
    }
 

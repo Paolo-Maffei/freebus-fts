@@ -27,9 +27,9 @@ import org.freebus.fts.persistence.vdx.internal.VdxEntityInspector;
  * A simple entity manager that holds the entities of a VD_ file. Access methods
  * are {@link #fetch(Class, Object)} to fetch a single entity by key, and
  * {@link #fetchAll(Class)} to fetch all entities of one type.
- * 
+ *
  * Restrictions:
- * 
+ *
  * Currently only field annotations are supported. Method annotations will not
  * be processed.
  */
@@ -40,11 +40,11 @@ public final class VdxEntityManager
 
    /**
     * Create an entity-manager object that works on the VD_ file fileName
-    * 
+    *
     * @param file - The VD_ file that is processed.
     * @param persistenceUnitName -The name of the persistence unit in
     *           persistence.xml
-    * 
+    *
     * @throws PersistenceException
     */
    public VdxEntityManager(File file, String persistenceUnitName) throws PersistenceException
@@ -63,9 +63,9 @@ public final class VdxEntityManager
    /**
     * Create an entity-manager object that works on the VD_ file fileName and
     * uses the default persistence-unit of persistence.xml.
-    * 
+    *
     * @param file - The VD_ file that is processed.
-    * 
+    *
     * @throws PersistenceException
     */
    public VdxEntityManager(File file) throws PersistenceException
@@ -75,11 +75,11 @@ public final class VdxEntityManager
 
    /**
     * Create an entity-manager object that works on the VD_ file fileName
-    * 
+    *
     * @param fileName - The name of the VD_ file that is processed.
     * @param persistenceUnitName -The name of the persistence unit in
     *           persistence.xml
-    * 
+    *
     * @throws PersistenceException
     */
    public VdxEntityManager(String fileName, String persistenceUnitName) throws PersistenceException
@@ -90,9 +90,9 @@ public final class VdxEntityManager
    /**
     * Create an entity-manager object that works on the VD_ file fileName and
     * uses the default persistence-unit of persistence.xml.
-    * 
+    *
     * @param fileName - The name of the VD_ file that is processed.
-    * 
+    *
     * @throws PersistenceException
     */
    public VdxEntityManager(String fileName) throws PersistenceException
@@ -111,7 +111,7 @@ public final class VdxEntityManager
    /**
     * Fetch all entities of the class entityClass from the VD_ file. The
     * returned list is unsorted.
-    * 
+    *
     * @return The found entities, or null if the VD_ file contains no matching
     *         section.
     */
@@ -127,10 +127,10 @@ public final class VdxEntityManager
 
    /**
     * Fetch an entity object by it's key.
-    * 
+    *
     * @param entityClass - The class of the searched entity.
     * @param id - The key for the entities' @{@link Id} annotated field.
-    * 
+    *
     * @return The found object, or null if the object was not found.
     * @throws PersistenceException
     */
@@ -154,7 +154,7 @@ public final class VdxEntityManager
    /**
     * Load all entities for the entity-info info from the VD_ file and store
     * them in the entity-info's objects vector.
-    * 
+    *
     * @param info - The entity-info for which the entities are loaded.
     * @throws PersistenceException
     */
@@ -250,7 +250,7 @@ public final class VdxEntityManager
 
                      if (coll == null)
                      {
-                        final Class<?> type = (Class<?>) f.getType();
+                        final Class<?> type = f.getType();
                         if (Set.class.isAssignableFrom(type))
                            coll = new HashSet<Object>();
                         else if (List.class.isAssignableFrom(type))
@@ -273,10 +273,10 @@ public final class VdxEntityManager
                            final Field targetField = assoc.getTargetField();
                            final boolean targetAccessible = targetField.isAccessible();
                            if (!targetAccessible) targetField.setAccessible(true);
-   
+
                            if (targetField.get(assocObj) == obj)
                               coll.add(assocObj);
-   
+
                            if (!targetAccessible) targetField.setAccessible(false);
                         }
                      }
@@ -302,7 +302,7 @@ public final class VdxEntityManager
     * Set the fields of the object obj with the idx-th record of the given
     * section. The fields that are entity objects or OneToMany/ManyToOne/...
     * associations are not set by this method.
-    * 
+    *
     * @return The contents of the object's @{@link Id} field as {@link String}.
     * @throws PersistenceException
     */
@@ -371,7 +371,7 @@ public final class VdxEntityManager
             }
             else
             {
-               final Class<?> fieldClass = (Class<?>) type;
+               final Class<?> fieldClass = type;
                final Class<?> componentType = fieldClass.getComponentType();
 
                if (fieldClass.isArray() && componentType == byte.class)
@@ -385,7 +385,7 @@ public final class VdxEntityManager
                }
                else if (fieldClass.isEnum())
                {
-                  @SuppressWarnings("unchecked")
+                  @SuppressWarnings({ "unchecked", "rawtypes" })
                   Class<? extends Enum> enumClass = (Class<? extends Enum>) type;
 
                   if (value.isEmpty())
@@ -397,7 +397,7 @@ public final class VdxEntityManager
                      final int ordinal = Integer.parseInt(value);
                      Enum<?> enumVal = null;
 
-                     
+
                      for (Enum<?> e: enumClass.getEnumConstants())
                      {
                         if (e.ordinal() == ordinal)
