@@ -1,14 +1,21 @@
 package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
+import java.awt.event.ActionEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.JButton;
 import javax.swing.JScrollPane;
+import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.event.TreeSelectionEvent;
+import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
+import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.project.MainGroup;
@@ -30,6 +37,7 @@ public class LogicalView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
+   private JButton btnAddMainGrp, btnAddMidGrp, btnAddSubGrp, btnDelete, btnProperties;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -50,8 +58,170 @@ public class LogicalView extends AbstractPage
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
+      
+      initToolBar();
+      
+      tree.addTreeSelectionListener(new TreeSelectionListener()
+      {
+         @Override
+         public void valueChanged(TreeSelectionEvent e)
+         {
+            final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+            final Object userObject = node != null ? node.getUserObject() : null;
+            
+            setIconEnabledFromSelected(userObject);
+         }
+      });
+
+      setIconEnabledFromSelected(null);
    }
 
+   private void setIconEnabledFromSelected(Object userObject)
+   {
+      if (userObject instanceof MainGroup)
+      {
+         btnAddMainGrp.setEnabled(true);
+         btnAddMidGrp.setEnabled(true);
+         btnAddSubGrp.setEnabled(false);
+         btnProperties.setEnabled(true);
+         btnDelete.setEnabled(true);
+      }
+      else if (userObject instanceof MidGroup)
+      {
+         btnAddMainGrp.setEnabled(true);
+         btnAddMidGrp.setEnabled(true);
+         btnAddSubGrp.setEnabled(true);
+         btnProperties.setEnabled(true);
+         btnDelete.setEnabled(true);
+      }
+      else if (userObject instanceof SubGroup)
+      {
+         btnAddMainGrp.setEnabled(true);
+         btnAddMidGrp.setEnabled(true);
+         btnAddSubGrp.setEnabled(true);
+         btnProperties.setEnabled(true);
+         btnDelete.setEnabled(true);
+      }
+      else
+      {
+         btnAddMainGrp.setEnabled(true);
+         btnAddMidGrp.setEnabled(false);
+         btnAddSubGrp.setEnabled(false);
+         btnProperties.setEnabled(false);
+         btnDelete.setEnabled(false);
+      }
+   }
+   
+   /**
+    * Initialize the tool-bar.
+    */
+   private void initToolBar()
+   {
+      final JToolBar toolBar = new ToolBar();
+      add(toolBar, BorderLayout.NORTH);
+
+      btnAddMainGrp = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            addMainGrp();
+         }
+
+      });
+      btnAddMainGrp.setIcon(ImageCache.getIcon("icons/lv-add-main-grp"));
+      btnAddMainGrp.setToolTipText(I18n.getMessage("LogicalView.AddMainGroup"));
+
+      btnAddMidGrp = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            addMidGrp();
+         }
+
+      });
+      btnAddMidGrp.setIcon(ImageCache.getIcon("icons/lv-add-mid-grp"));
+      btnAddMidGrp.setToolTipText(I18n.getMessage("LogicalView.AddMidGroup"));
+
+      btnAddSubGrp = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            addSubGrp();
+         }
+
+      });
+      btnAddSubGrp.setIcon(ImageCache.getIcon("icons/lv-add-sub-grp"));
+      btnAddSubGrp.setToolTipText(I18n.getMessage("LogicalView.AddSubGroup"));
+
+      btnProperties = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            editProperties();
+         }
+
+      });
+      btnProperties.setIcon(ImageCache.getIcon("icons/edit-properties"));
+      btnProperties.setToolTipText(I18n.getMessage("LogicalView.EditProperties"));
+
+      btnDelete = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            deleteGrp();
+         }
+
+      });
+      btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
+      btnDelete.setToolTipText(I18n.getMessage("LogicalView.DeleteGroup"));
+
+   }
+
+   private void addMainGrp()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+   
+   private void addMidGrp()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+   
+   private void addSubGrp()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+
+   private void deleteGrp()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+   
+   private void editProperties()
+   {
+      // TODO Auto-generated method stub
+      
+   }
+   
    /**
     * @return the preferred position of the page: {@link PagePosition#LEFT}.
     */
