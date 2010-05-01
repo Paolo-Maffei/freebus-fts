@@ -93,7 +93,7 @@ public class SerialPortWrapper
          serialPort = (SerialPort) portIdent.open(portName, 2000);
 
          serialPort.setSerialPortParams(baudRate, dataBits, stopBits, parity);
-         serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_RTSCTS_IN | SerialPort.FLOWCONTROL_RTSCTS_OUT);
+         serialPort.setFlowControlMode(SerialPort.FLOWCONTROL_NONE);
          serialPort.setInputBufferSize(2048);
          serialPort.setOutputBufferSize(2048);
       }
