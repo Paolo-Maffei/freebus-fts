@@ -1,7 +1,9 @@
 package org.freebus.fts.project;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -60,7 +62,10 @@ public final class Device
    @MapKey(name = "parameter")
    private Map<Parameter,DeviceParameterValue> parameterValues;
 
-   public final static int MAX_ADDR = 0xFF;        // The highest number valid for address 
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
+   private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
+
+   public final static int MAX_ADDR = 0xFF;        // The highest number valid for address
    public final static int MIN_NAME_LENGTH = 3;    //TODO Define minimum accepted length for an Area Name
 
    /**
@@ -320,6 +325,14 @@ public final class Device
    {
       if (parameterValues != null)
          parameterValues.clear();
+   }
+
+   /**
+    * @return the list of device objects
+    */
+   public List<DeviceObject> getDeviceObjects()
+   {
+      return deviceObjects;
    }
 
    /**

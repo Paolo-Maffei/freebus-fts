@@ -42,7 +42,7 @@ public final class InspectVdxFileAction extends BasicAction
 
          final JFileChooser dlg = new JFileChooser();
          dlg.setSelectedFile(new File(lastDir));
-         final FileFilter fileFilter = new VdxFileFilter(true, false);
+         final FileFilter fileFilter = new VdxFileFilter(true, true);
          dlg.addChoosableFileFilter(fileFilter);
          dlg.addChoosableFileFilter(dlg.getAcceptAllFileFilter());
          dlg.setFileFilter(fileFilter);

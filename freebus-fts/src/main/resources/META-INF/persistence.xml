@@ -22,6 +22,7 @@
   <class>org.freebus.fts.project.Area</class>
   <class>org.freebus.fts.project.Building</class>
   <class>org.freebus.fts.project.Device</class>
+  <class>org.freebus.fts.project.DeviceObject</class>
   <class>org.freebus.fts.project.DeviceParameterValue</class>
   <class>org.freebus.fts.project.Line</class>
   <class>org.freebus.fts.project.MainGroup</class>
@@ -29,6 +30,7 @@
   <class>org.freebus.fts.project.Project</class>
   <class>org.freebus.fts.project.Room</class>
   <class>org.freebus.fts.project.SubGroup</class>
+  <class>org.freebus.fts.project.SubGroupToObject</class>
   <properties>
    <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
    <property name="eclipselink.logging.level" value="FINEST" />

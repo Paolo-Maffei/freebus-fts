@@ -20,6 +20,82 @@
   </addColumn>
  </changeSet>
  <changeSet author="stefant" id="0.1.2-5">
-  <dropNotNullConstraint tableName="device_parameter_value" columnName="parameter_value" columnDataType="VARCHAR(255)" />
+  <dropNotNullConstraint tableName="device_parameter_value"
+   columnName="parameter_value" columnDataType="VARCHAR(255)" />
  </changeSet>
+
+ <changeSet author="stefant" id="0.1.2-6">
+  <createTable tableName="device_object">
+   <column name="device_object_id" type="INT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="device_id" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="true" name="object_read"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="true" name="object_write"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="true" name="object_comm"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="true" name="object_trans"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>   
+   <column defaultValueBoolean="true" name="object_update"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>   
+   <column defaultValueBoolean="false" name="object_readoninit"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>   
+   <column defaultValueBoolean="false" name="device_object_visible"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>   
+   <column name="device_object_type" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="dpt_type" type="INT" />
+  </createTable>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.2-7">
+  <createIndex indexName="FK_device_object_device_id" tableName="device_object"
+   unique="false">
+   <column name="device_id" />
+  </createIndex>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.2-10">
+  <createTable tableName="sub_group_to_object">
+   <column name="sub_group_id" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="device_object_id" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="true" name="send"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="true" name="acknowledge"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+  </createTable>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.2-11">
+  <addPrimaryKey columnNames="sub_group_id, device_object_id"
+   tableName="sub_group_to_object" />
+ </changeSet>
+
 </databaseChangeLog>
