@@ -2,7 +2,7 @@ package org.freebus.knxcomm.application;
 
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -145,11 +145,9 @@ public class DeviceDescriptorRead extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
-      ApplicationTypeResponse appr = new ApplicationTypeResponse();
-      appr.add(ApplicationType.DeviceDescriptor_Read);
-      appr.add(ApplicationType.DeviceDescriptor_Response);
-      return appr;
+
+      return ApplicationType.DeviceDescriptor_Response;
    }
 }

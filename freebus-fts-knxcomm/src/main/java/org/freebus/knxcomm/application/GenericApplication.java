@@ -1,6 +1,6 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -102,7 +102,7 @@ public class GenericApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
       // TODO Auto-generated method stub
       return null;

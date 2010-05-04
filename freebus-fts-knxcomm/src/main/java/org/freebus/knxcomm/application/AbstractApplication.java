@@ -42,10 +42,11 @@ public abstract class AbstractApplication implements Application
 
          final ApplicationType type = getType();
          final int dataMask = type.getDataMask();
-
+         int ApciValue = getApciValue();
+         int apci = type.getApci();
          if (dataMask > 0)
-            out.writeShort(type.getApci() | (getApciValue() & dataMask));
-         else out.writeShort(type.getApci());
+            out.writeShort(apci | (ApciValue & dataMask));
+         else out.writeShort(apci);
 
          writeData(out);
 

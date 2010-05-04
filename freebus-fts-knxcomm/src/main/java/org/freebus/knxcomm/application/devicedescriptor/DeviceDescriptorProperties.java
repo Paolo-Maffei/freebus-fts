@@ -1,4 +1,6 @@
-package org.freebus.knxcomm.applicationData;
+package org.freebus.knxcomm.application.devicedescriptor;
+
+import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 
 
 public interface DeviceDescriptorProperties

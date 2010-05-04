@@ -13,13 +13,14 @@ import javax.swing.JTextField;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.jobs.ReadDeviceStatusJob;
 import org.freebus.knxcomm.application.ADCResponse;
 import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.MemoryResponse;
 import org.freebus.knxcomm.jobs.JobStep;
 import org.freebus.knxcomm.jobs.JobStepStatusEvent;
 import org.freebus.knxcomm.jobs.JobStepStatusListner;
+import org.freebus.knxcomm.jobs.ReadDeviceStatusJob;
 
 public class DeviceStatus extends AbstractPage {
 	private JSplitPane jSplitPane = null;
@@ -127,6 +128,11 @@ public class DeviceStatus extends AbstractPage {
 				for (JobStep a : e.getJobSteps()) {
 					s = "";
 					Application application = a.getReceivedApplication();
+					if (application instanceof DeviceDescriptorResponse) {
+					   DeviceDescriptorResponse b = (DeviceDescriptorResponse) application;
+                                           s = b.toString();
+                                           
+                                   }
 
 					if (application instanceof MemoryResponse) {
 						MemoryResponse b = (MemoryResponse) application;
@@ -141,7 +147,7 @@ public class DeviceStatus extends AbstractPage {
 						s = (new Integer(x)).toString();
 					}
 
-					msg = "PageMsg data received: "
+					msg = "Data:"
 							+ a.getJobStepStatus().toString()
 							+ " for request :" + a.toString() + " : Data " + s;
 					allmsg = allmsg + msg + "\n";

@@ -40,7 +40,7 @@ public class MemoryWrite extends MemoryData
     * {@inheritDoc}
     */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
       // TODO Auto-generated method stub
       return null;

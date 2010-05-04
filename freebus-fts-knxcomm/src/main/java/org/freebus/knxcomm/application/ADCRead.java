@@ -1,6 +1,6 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -160,14 +160,21 @@ public class ADCRead extends AbstractApplication
       // TODO Auto-generated method stub
 
    }
-
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public int getApciValue()
    {
-      ApplicationTypeResponse appr = new ApplicationTypeResponse();
-      appr.add(ApplicationType.ADC_Read);
-      appr.add(ApplicationType.ADC_Response);
-      return appr;
+      return channel;
+   }
+   
+   @Override
+   public ApplicationType getApplicationResponses()
+   {
+
+      return ApplicationType.ADC_Response;
+      
    }
 
 }

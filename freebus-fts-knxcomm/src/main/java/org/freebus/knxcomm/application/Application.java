@@ -4,7 +4,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.freebus.knxcomm.telegram.Telegram;
 
@@ -31,7 +31,7 @@ public interface Application
    /**
     * @return The expected ApplicationType as an ArrayList
     */
-   public ApplicationTypeResponse getApplicationResponses();
+   public ApplicationType getApplicationResponses();
 
    /**
     * @return The type of the application.

@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.applicationData;
+package org.freebus.knxcomm.application.devicedescriptor;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -7,8 +7,8 @@ import java.io.InputStream;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
-import org.freebus.knxcomm.application.DeviceDescriptorResponse;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.applicationData.ApplicationDataException;
+import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 import org.freebus.knxcomm.serial.Ft12Connection;
 
 public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperties
@@ -33,13 +33,15 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
     * @param deviceDescriptorResponse
     * @throws ApplicationDataException
     */
-   protected void loadProperties(DeviceDescriptorResponse deviceDescriptorResponse) throws ApplicationDataException
+   protected void loadProperties(int TypeCode) throws ApplicationDataException
    {
+      
+      
       //TODO Nice to have: Search in the resources folder the properties files
       String[] kownPropertiesFiles = { "0010", "0011", "0012" };
       boolean PropertieFileExist = false;
       deviceProperties = new Properties();
-      String mask = String.format("%04X", ((DeviceDescriptor0)deviceDescriptorResponse.getDescriptor()).getMaskVersion());
+      String mask = String.format("%04X", TypeCode);
       InputStream in = null;
       ClassLoader cl = this.getClass().getClassLoader();
 
@@ -60,6 +62,7 @@ public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperti
       {
          try
          {
+            
             in = new FileInputStream("../freebus-fts-knxcomm/src/main/resources/DeviceDescriptorType0_" + mask
                   + ".properties");
 

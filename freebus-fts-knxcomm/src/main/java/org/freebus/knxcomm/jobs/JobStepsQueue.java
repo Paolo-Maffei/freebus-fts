@@ -3,12 +3,16 @@ package org.freebus.knxcomm.jobs;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.Address;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
+import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.ApplicationType;
-import org.freebus.knxcomm.application.ApplicationTypeResponse;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
+import org.freebus.knxcomm.internal.DataConnectionImpl;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
+import org.freebus.knxcomm.types.LinkMode;
 
 public class JobStepsQueue extends SingleDeviceJob
 {
@@ -34,90 +38,27 @@ public class JobStepsQueue extends SingleDeviceJob
    public void main(BusInterface bus) throws IOException
    {
       // TODO: not finished
-     // jobSteps.setFrom(bus.getPhysicalAddress());
-      Logger.getLogger(getClass()).debug("Send Connect ");
-      bus.send(jobSteps.getConecet());
-
-
-      try
-      {
-
-         TelegramSearchConditions tsc = new TelegramSearchConditions();
-         tsc.setTransport(Transport.ConnectedAck);
-        Telegrams t = waitforTelegram(tsc);
-        if (t.size() == 1)  Logger.getLogger(getClass()).debug("Resived ACK");
-
-      }
-      catch (JobFailedException e)
-      {
-         e.getMessage().equals("NoAnwser");
-         jobSteps.setConnectStatus(JobStepStatus.Error);
-         jobSteps.notifyJobStepStatus();
-      }
-      telegrams.clear();
-      int i = 0;
+      Logger.getLogger(getClass()).debug("Connect to Device "+jobSteps.getDest().toString());
+      DataConnectionImpl dataConnection  =(DataConnectionImpl) bus.connect((PhysicalAddress)  jobSteps.getDest());
       for (JobStep jobStep : jobSteps)
       {
-
-         if (jobStep.getApplication().isDeviceDescriptorRequired())
-         {
-            jobStep.getApplication().setDeviceDescriptorProperties(deviceDescriptorProperties);
-         }
-         jobStep.setSequence(i);
          Logger.getLogger(getClass()).debug("Send Telegram: "+jobStep.toString());
-         bus.send(jobStep);
-
-         ApplicationTypeResponse appres = jobStep.getApplication().getApplicationResponses();
-         for (ApplicationType at : appres)
+         try
          {
-            try
-            {
-
-            	TelegramSearchConditions tsc = new TelegramSearchConditions();
-            	tsc.setTransport(Transport.Connected);
-            	tsc.setApplicationType(at);
-               Telegrams t = waitforTelegram(tsc);
-               Logger.getLogger(getClass()).debug("Found resived telegram: "+t.get(0).toString());
-               jobStep.setResivedApplication(t.get(0).getApplication());
-               jobStep.setJobStepStatus(JobStepStatus.Successfull);
-
-
-            }
-            catch (JobFailedException e)
-            {
-               e.getMessage().equals("Job Step Failed");
-               jobSteps.setConnectStatus(JobStepStatus.Error);
-
-               telegrams.clear();
-            }
+            jobStep.setResivedApplication(dataConnection.qeury(jobStep.getApplication()));
+            jobStep.setJobStepStatus(JobStepStatus.finished);
          }
-         i++;
-         telegrams.clear();
+         catch (Exception e)
+         {
+            jobStep.setJobStepStatus(JobStepStatus.Error);
+         }
       }
-      telegrams.clear();
-
-      msleep(5000);
-      bus.send(jobSteps.getDisconecet());
+      dataConnection.close();
       jobSteps.notifyJobStepStatus();
    }
 
-   public Telegrams waitforTelegram(TelegramSearchConditions telegramSearchConditions)
-         throws JobFailedException
-   {
-
-
-
-      Telegrams ts;
-      for (int i = 0; i < 50; i++)
-      {
-         msleep(10);
-        ts = telegrams.searchTelegram(telegramSearchConditions);
-        if (ts.size()>0)return ts;
-
-      }
-      throw new JobFailedException("NoAnwser");
-   }
-
+  
+     
 
 
    @Override
@@ -127,32 +68,10 @@ public class JobStepsQueue extends SingleDeviceJob
       return null;
    }
 
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      this.deviceDescriptorProperties = deviceDescriptorProperties;
-   }
-
-   public void read(JobStep jobStep)
-   {
-
-   }
+  
 
 
-
-   /**
-    * Sleep some milliseconds.
-    */
-   protected void msleep(int milliseconds)
-   {
-      try
-      {
-         Thread.sleep(milliseconds);
-      }
-      catch (InterruptedException e)
-      {
-         e.printStackTrace();
-      }
-   }
+   
 
    /**
     * {@inheritDoc}
@@ -160,9 +79,7 @@ public class JobStepsQueue extends SingleDeviceJob
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      telegrams.add(telegram);
-      Logger.getLogger(getClass()).debug("Received answer: " + telegram);
-   }
+    }
 
    /**
     * {@inheritDoc}
@@ -170,7 +87,21 @@ public class JobStepsQueue extends SingleDeviceJob
    @Override
    public void telegramSendConfirmed(Telegram telegram)
    {
-      telegrams.add(telegram);
-      Logger.getLogger(getClass()).debug("Confirm answer: " + telegram);
+    }
+
+   /**
+    * @return the deviceDescriptorProperties
+    */
+   public DeviceDescriptorProperties getDeviceDescriptorProperties()
+   {
+      return deviceDescriptorProperties;
+   }
+
+   /**
+    * @param deviceDescriptorProperties the deviceDescriptorProperties to set
+    */
+   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
+   {
+      this.deviceDescriptorProperties = deviceDescriptorProperties;
    }
 }

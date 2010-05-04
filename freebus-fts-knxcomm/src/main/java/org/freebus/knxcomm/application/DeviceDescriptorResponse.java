@@ -3,7 +3,7 @@ package org.freebus.knxcomm.application;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -150,7 +150,7 @@ public class DeviceDescriptorResponse extends AbstractApplication
    }
 
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
       // TODO Auto-generated method stub
       return null;

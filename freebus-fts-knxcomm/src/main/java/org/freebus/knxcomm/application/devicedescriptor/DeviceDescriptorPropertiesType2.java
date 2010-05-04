@@ -1,8 +1,10 @@
-package org.freebus.knxcomm.applicationData;
+package org.freebus.knxcomm.application.devicedescriptor;
 
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.applicationData.ApplicationDataException;
+import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 
-public class DeviceDescriptorPropertiesType3 implements DeviceDescriptorProperties
+public class DeviceDescriptorPropertiesType2 implements DeviceDescriptorProperties
 {
 
    @Override

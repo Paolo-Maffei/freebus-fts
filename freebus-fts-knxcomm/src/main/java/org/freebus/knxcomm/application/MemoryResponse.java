@@ -41,7 +41,7 @@ public class MemoryResponse extends MemoryData
     * {@inheritDoc}
     */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
       // TODO Auto-generated method stub
       return null;

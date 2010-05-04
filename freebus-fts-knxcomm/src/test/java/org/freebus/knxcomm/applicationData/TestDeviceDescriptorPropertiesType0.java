@@ -1,30 +1,27 @@
 package org.freebus.knxcomm.applicationData;
 
-import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 
 public class TestDeviceDescriptorPropertiesType0
 {
-   @Test(expected = ApplicationDataException.class)
+   @Test
    public void testloadProperties0012() throws InvalidDataException, ApplicationDataException
    {
-      DeviceDescriptorResponse ddr = new DeviceDescriptorResponse();
-      int[] data = { 0x40, 0x00, 0x12 };
-
-      ddr.fromRawData(data, 0, 3);
+      DeviceDescriptor deviceDescriptor = new DeviceDescriptor0(0x0012);
       DeviceDescriptorPropertiesFactory ddpf = new DeviceDescriptorPropertiesFactory();
-      ddpf.getDeviceDescriptor(ddr);
+      ddpf.getDeviceDescriptor(deviceDescriptor);
    }
 
    @Test(expected = ApplicationDataException.class)
    public void testloadProperties9999() throws InvalidDataException, ApplicationDataException
    {
-      DeviceDescriptorResponse ddr = new DeviceDescriptorResponse();
-      int[] data = { 0x40, 0x99, 0x99 };
-
-      ddr.fromRawData(data, 0, 3);
+      DeviceDescriptor deviceDescriptor = new DeviceDescriptor0(9999);
       DeviceDescriptorPropertiesFactory ddpf = new DeviceDescriptorPropertiesFactory();
-      ddpf.getDeviceDescriptor(ddr);
+      ddpf.getDeviceDescriptor(deviceDescriptor);
    }
 }

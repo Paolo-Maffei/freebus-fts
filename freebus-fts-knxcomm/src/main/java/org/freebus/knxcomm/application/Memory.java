@@ -1,6 +1,6 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.applicationData.MemoryAddress;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 
@@ -10,7 +10,7 @@ import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 public abstract class Memory extends AbstractApplication
 {
    private int address;
-   private int count;
+   protected int count;
    private MemoryAddressTypes memoryAddressTypes;
    private DeviceDescriptorProperties deviceDescriptorProperties;
 

@@ -84,6 +84,7 @@ public class MemoryRead extends Memory
          throw new IllegalArgumentException("count must be 0..63");
 
       super.setCount(count);
+      super.setApciValue(count);
    }
 
    /**
@@ -144,6 +145,22 @@ public class MemoryRead extends Memory
     * {@inheritDoc}
     */
    @Override
+   public int getApciValue()
+   {
+      if (usercount == 0)
+      {
+         count = (super.getCount() - offset);
+      }
+      else
+      {
+         count = usercount;
+      }
+      return count;
+   }
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(Object o)
    {
       if (o == this)
@@ -165,12 +182,10 @@ public class MemoryRead extends Memory
     * {@inheritDoc}
     */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
-      ApplicationTypeResponse appr = new ApplicationTypeResponse();
-      appr.add(ApplicationType.Memory_Read);
-      appr.add(ApplicationType.Memory_Response);
-      return appr;
+      return ApplicationType.Memory_Response;
+      
    }
 
 }

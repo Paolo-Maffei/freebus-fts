@@ -62,7 +62,7 @@ public final class ConnectedDataTransfer
       final String osname = System.getProperty("os.name", "").toLowerCase();
       if (osname.startsWith("windows"))
       {
-         commPort = "COM1";
+         commPort = "COM5";
       }
       else if (osname.startsWith("linux"))
       {
@@ -83,7 +83,17 @@ public final class ConnectedDataTransfer
    public void run() throws IOException, InterruptedException
    {
       logger.info("*** Opening data-connection to " + deviceAddress);
-      final DataConnection con = bus.connect(deviceAddress);
+ 
+      DataConnection con = null;
+      try
+      {
+         con = bus.connect(deviceAddress);
+      }
+      catch (IOException e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
       logger.debug("Data-connection to " + deviceAddress + " established");
       con.receiveMultiple(1000);
 

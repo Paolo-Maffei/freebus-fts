@@ -7,10 +7,19 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.DeviceDescriptorRead;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.applicationData.ApplicationDataException;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.telegram.Transport;
@@ -46,20 +55,72 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
        */
       CONNECTING;
    }
+   
+   class RecvQueue extends LinkedList<Telegram>
+   {
+
+      /**
+       * 
+       */
+      private static final long serialVersionUID = 8362220814452756284L;
+     
+      
+      /**
+       * search in the list the first telegram with the parameter
+       * @param from - the from Address at  the telegram
+       * @param dest - the destination address at the telegram
+       * @param seq - the sequence number of the telegram
+       * @param app - the Application of the telegram
+       * @return The found telegram. If no Telegram is found null is returned.
+       */
+      public Telegram getItem(Address from, Address dest, int seq, ApplicationType appt)
+      {
+         for (Telegram t : this)
+         {
+            if (t.getFrom().equals(from) && t.getDest().equals(dest) && t.getSequence() == seq
+                  && t.getApplicationType().equals(appt))
+            {
+               return t;
+            }
+         }
+         return null;
+      }
+      
+      
+      /**
+       * search in the list the first telegram with the parameter
+       * @param from - the from Address at  the telegram
+       * @param dest - the destination address at the telegram
+       * @param seq - the sequence number of the telegram
+       * @return The found telegram. If no Telegram is found null is returned.
+       */
+      public Telegram getConnectedAck(Address from, Address dest, int seq){
+         for (Telegram t : this)
+         {
+            if (t.getFrom().equals(from) && t.getDest().equals(dest) && t.getSequence() == seq
+                 && t.getTransport().equals(Transport.ConnectedAck))
+            {
+               return t;
+            }
+         }
+         return null;
+      }
+   }
 
    private State state = State.CLOSED;
    private final PhysicalAddress addr;
    private final BusInterface busInterface;
    private final Telegram sendTelegram = new Telegram();
-   private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
+   private final RecvQueue recvQueue = new RecvQueue();
+   private DeviceDescriptor deviceDescriptor = null;
    private Semaphore recvSemaphore = new Semaphore(0);
-   private int sequence = -1;
+   private int sequence = -2;
    private boolean recvConfirmations = false;
 
    /**
     * Create a connection to the device with the given physical address. Use
     * {@link BusInterface#connect} to get a connection.
-    *
+    * 
     * @param addr - the physical address to which the connection will happen.
     * @param busInterface - the bus interface to use.
     */
@@ -128,6 +189,14 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    }
 
    /**
+    * @return the deviceDescriptor
+    */
+   public DeviceDescriptor getDeviceDescriptor()
+   {
+      return deviceDescriptor;
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
@@ -151,6 +220,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
       synchronized (sendTelegram)
       {
+         sendTelegram.setPriority(Priority.SYSTEM);
+         sendTelegram.setRepeated(true);
          sendTelegram.setTransport(Transport.Connect);
          state = State.CONNECTING;
 
@@ -164,6 +235,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
             throw new IOException(e);
          }
       }
+      sequence = -1;
    }
 
    /**
@@ -225,6 +297,50 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    }
 
    /**
+    * Send a telegram with the application to a device.
+    * 
+    * @param application - the application to send.
+    * @return the responded application.
+    * @throws ApplicationDataException 
+    */
+   public Application qeury(Application application) throws ApplicationDataException 
+   {
+      Telegram con,indack,indapp;
+      if (deviceDescriptor != null){
+         DeviceDescriptorPropertiesFactory ddpf = new DeviceDescriptorPropertiesFactory();
+         DeviceDescriptorProperties deviceDescriptorProperties = ddpf.getDeviceDescriptor(deviceDescriptor);
+      application.setDeviceDescriptorProperties(deviceDescriptorProperties);
+      }
+      sendTelegram.setApplication(application);
+      try
+      {
+         send(sendTelegram);
+         Thread.sleep(500);
+      }
+      catch (Exception e)
+      {
+         // TODO Auto-generated catch block
+         e.printStackTrace();
+      }
+      
+      System.out.println("count resieved recoreds " +recvQueue.size());
+      con = recvQueue.getItem(busInterface.getPhysicalAddress(), addr, sendTelegram.getSequence(), application.getType());
+      indack = recvQueue.getConnectedAck(addr,busInterface.getPhysicalAddress(),  sendTelegram.getSequence());
+      indapp = recvQueue.getItem(addr,busInterface.getPhysicalAddress(), sendTelegram.getSequence(), application.getApplicationResponses());
+      if (con != null && indack != null && indapp != null){
+         Application app = indapp.getApplication();
+         if (app instanceof DeviceDescriptorResponse){
+            DeviceDescriptorResponse appDevRes = (DeviceDescriptorResponse)app;
+            this.deviceDescriptor = appDevRes.getDescriptor();
+         }
+         return indapp.getApplication();
+      }
+      
+      return null;
+
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
@@ -232,13 +348,50 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    {
       synchronized (sendTelegram)
       {
-         sendTelegram.setApplication(application);
-         sendTelegram.setDest(addr);
-         sendTelegram.setTransport(Transport.Connected);
-         sendTelegram.setSequence(++sequence);
+         if (application.isDeviceDescriptorRequired() && deviceDescriptor == null)
+         {
+            readDeviceDescriptor();
 
-         busInterface.send(sendTelegram);
+         }
+         sendTelegram.setApplication(application);
+
+         send(sendTelegram);
       }
+   }
+
+   /**
+    * Read the Device Descriptor
+    * 
+    * @throws IOException
+    */
+   private void readDeviceDescriptor() throws IOException
+   {
+      synchronized (sendTelegram)
+      {
+         sendTelegram.setApplication(new DeviceDescriptorRead());
+         send(sendTelegram);
+         List<Application> apps = receiveMultiple(100);
+         for (Application app : apps)
+         {
+            if (app instanceof DeviceDescriptorResponse)
+            {
+               deviceDescriptor = ((DeviceDescriptorResponse) app).getDescriptor();
+            }
+         }
+
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public void send(Telegram telegram) throws IOException
+   {
+      telegram.setDest(addr);
+      telegram.setTransport(Transport.Connected);
+      telegram.setSequence(++sequence);
+      busInterface.send(telegram);
+      
    }
 
    /**
@@ -246,18 +399,18 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     */
    public void processTelegram(Telegram telegram, boolean isConfirmation)
    {
-      if (!telegram.getFrom().equals(addr))
-         return;
+      System.out.println("*******Daten Empfangen********");
 
-      if (isConfirmation)
-         Logger.getLogger(getClass()).debug("Telegram confirmed: " + telegram);
-      else Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
 
-      synchronized (recvQueue)
-      {
-         recvQueue.push(telegram);
-      }
-      recvSemaphore.release();
+
+         synchronized (recvQueue)
+         {
+            recvQueue.push(telegram);
+         }
+         recvSemaphore.release();
+     
+
+      
    }
 
    /**
@@ -278,7 +431,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    {
       Logger.getLogger(getClass()).debug("con: " + telegram);
 
-      if (recvConfirmations)
+      
          processTelegram(telegram, true);
    }
 

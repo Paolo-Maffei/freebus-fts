@@ -15,7 +15,7 @@ public class MemoryAddressMapper
     *
     * @param deviceProperties
     */
-   protected MemoryAddressMapper(Properties deviceProperties)
+   public MemoryAddressMapper(Properties deviceProperties)
    {
       String strlength;
       String strAddress;

@@ -11,7 +11,7 @@ public class ApplicationDataException extends Exception
     *
     * @param msg - the Error Message
     */
-   ApplicationDataException(String msg)
+   public ApplicationDataException(String msg)
    {
       super();
       this.ErrorMessage = msg;

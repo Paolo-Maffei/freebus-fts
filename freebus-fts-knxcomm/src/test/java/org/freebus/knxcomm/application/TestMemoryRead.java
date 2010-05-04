@@ -6,8 +6,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
@@ -134,12 +135,30 @@ public class TestMemoryRead
       deviceDescriptorResponse.fromRawData(data, 0, 3);
       DeviceDescriptorPropertiesFactory  deviceDescriptorPropertiesFactory = new  DeviceDescriptorPropertiesFactory();
 
-      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(deviceDescriptorResponse);
+      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(new DeviceDescriptor0(0x0012));
       app.setDeviceDescriptorProperties(deviceDescriptorProperties);
 
       int[] a= new int[3];
-      app.toRawData(a, 0);
+
       assertEquals(96, app.getAddress());
       assertEquals(1, app.getCount());
+   }
+   @Test
+   public final void testCreateApliaction() throws Exception
+   {
+       MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
+     
+
+      DeviceDescriptorPropertiesFactory  deviceDescriptorPropertiesFactory = new  DeviceDescriptorPropertiesFactory();
+
+      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(new DeviceDescriptor0(0x0012));
+      app.setDeviceDescriptorProperties(deviceDescriptorProperties);
+      byte[] x = app.toByteArray();
+      int[] a= new int[3];
+      app.toRawData(a,0);
+      assertEquals(2, x[0]);
+      assertEquals(1, x[1]);
+      assertEquals(0, x[2]);
+      assertEquals(96, x[3]);
    }
 }

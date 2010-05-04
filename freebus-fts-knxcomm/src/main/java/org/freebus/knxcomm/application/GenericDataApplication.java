@@ -2,7 +2,7 @@ package org.freebus.knxcomm.application;
 
 import java.util.Arrays;
 
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -192,7 +192,7 @@ public class GenericDataApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public ApplicationTypeResponse getApplicationResponses()
+   public ApplicationType getApplicationResponses()
    {
       // TODO Auto-generated method stub
       return null;
