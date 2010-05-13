@@ -20,17 +20,12 @@ public interface TelegramListener extends EventListener
    public void telegramReceived(Telegram telegram);
 
    /**
-    * A telegram was sent.
+    * A telegram was sent. This method is usually called when the send confirmation
+    * is received from the BAU.
+    *
     * The called object must not change the frame.
     *
     * @param telegram - the sent telegram
     */
    public void telegramSent(Telegram telegram);
-
-   /**
-    * The sending of a telegram was confirmed by the bus coupling unit.
-    *
-    * @param telegram - the confirmation telegram
-    */
-   public void telegramSendConfirmed(Telegram telegram);
 }

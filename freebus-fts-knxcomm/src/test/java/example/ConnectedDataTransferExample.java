@@ -2,6 +2,7 @@ package example;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
@@ -9,33 +10,33 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
+import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.Application;
-import org.freebus.knxcomm.application.MemoryRead;
+import org.freebus.knxcomm.serial.SerialPortUtil;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * An example program that shows the connected data transfer methods.
  */
-public final class ConnectedDataTransfer
+public final class ConnectedDataTransferExample
 {
-   private static final Logger logger = Logger.getLogger(ConnectedDataTransfer.class);
-
-   private final BusInterface bus;
-
-   /**
-    * The physical address of the device to which this test program connects.
-    */
+   // The physical address of the device to which this test program connects.
    private final PhysicalAddress deviceAddress = new PhysicalAddress(1, 1, 6);
+
+   private static final Logger logger = Logger.getLogger(ConnectedDataTransferExample.class);
+   private final BusInterface bus;
 
    /**
     * Create the example main object.
     *
     * @throws Exception
     */
-   public ConnectedDataTransfer() throws Exception
+   public ConnectedDataTransferExample() throws Exception
    {
       logger.info("*** Opening bus connection");
-      bus = createBusInterface();
+      // bus = BusInterfaceFactory.newKNXnetInterface("localhost",
+      // KNXnetConnection.defaultPortUDP);
+      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
       bus.open(LinkMode.LinkLayer);
    }
 
@@ -52,38 +53,15 @@ public final class ConnectedDataTransfer
    }
 
    /**
-    * Create the bus interface
-    * @throws Exception
-    */
-   public BusInterface createBusInterface() throws Exception
-   {
-      String commPort;
-
-      final String osname = System.getProperty("os.name", "").toLowerCase();
-      if (osname.startsWith("windows"))
-      {
-         commPort = "COM5";
-      }
-      else if (osname.startsWith("linux"))
-      {
-         commPort = "/dev/ttyS0";
-      }
-      else
-      {
-         throw new RuntimeException("Sorry, but your platform is not supported by this example");
-      }
-
-      return BusInterfaceFactory.newSerialInterface(commPort);
-   }
-
-   /**
     * Do the real (example) work.
+    *
     * @throws InterruptedException
+    * @throws TimeoutException
     */
-   public void run() throws IOException, InterruptedException
+   public void run() throws IOException, InterruptedException, TimeoutException
    {
       logger.info("*** Opening data-connection to " + deviceAddress);
- 
+
       DataConnection con = null;
       try
       {
@@ -91,26 +69,32 @@ public final class ConnectedDataTransfer
       }
       catch (IOException e)
       {
-         // TODO Auto-generated catch block
          e.printStackTrace();
       }
       logger.debug("Data-connection to " + deviceAddress + " established");
-      con.receiveMultiple(1000);
+      con.receiveMultiple(500);
+
+      Application replyApp;
+
+      logger.info("*** Querying ADC channel #0");
+      con.receiveMultiple(0);
+      replyApp = con.query(new ADCRead(0, 5));
+      logger.debug("*** Reply: " + replyApp);
+      if (replyApp == null)
+         throw new RuntimeException("No reply received");
 
       logger.info("*** Sending memory-read telegram");
 
       con.receiveMultiple(0);
-      con.send(new MemoryRead(1, 10));
+      con.send(new ADCRead(1, 10));
 
       logger.info("*** Waiting for reply");
       List<Application> replies = con.receiveMultiple(2000);
-      for (Application reply: replies)
+      for (Application reply : replies)
          logger.debug("*** Reply: " + reply);
 
       logger.info("*** Closing data-connection");
       con.close();
-
-      logger.info("*** Done, waiting some seconds before terminating");
    }
 
    /**
@@ -120,14 +104,14 @@ public final class ConnectedDataTransfer
    {
       Environment.init();
 
-      ConnectedDataTransfer cdt = null;
+      ConnectedDataTransferExample cdt = null;
       try
       {
-         cdt = new ConnectedDataTransfer();
+         cdt = new ConnectedDataTransferExample();
          cdt.run();
 
          Thread.sleep(500);
-         logger.info("*** Sleeping some seconds to allow device timeouts to occur");
+         logger.info("*** Done, waiting some seconds before terminating");
          Thread.sleep(7000);
       }
       finally

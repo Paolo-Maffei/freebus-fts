@@ -27,9 +27,9 @@ public class DeviceScannerJobExample implements TelegramListener
     */
    public DeviceScannerJobExample() throws Exception
    {
-      String commPort = SerialPortUtil.getPortNames()[0];
+      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+//      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
 
-      bus = BusInterfaceFactory.newSerialInterface(commPort);
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
 
@@ -60,14 +60,6 @@ public class DeviceScannerJobExample implements TelegramListener
     */
    @Override
    public void telegramSent(Telegram telegram)
-   {
-   }
-
-   /**
-    * The sending of the telegram was confirmed by the bus coupling unit (BCU).
-    */
-   @Override
-   public void telegramSendConfirmed(Telegram telegram)
    {
    }
 

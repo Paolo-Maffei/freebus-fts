@@ -58,7 +58,7 @@ public class testcom {
 			telegram.setRepeated(true);
 			telegram.setTransport(Transport.Connected);
 			telegram.setSequence(0);
-			telegram.setApplication(ApplicationType.DeviceDescriptor_Read);
+			telegram.setApplicationType(ApplicationType.DeviceDescriptor_Read);
 
 
 			busInterface.send(telegram);

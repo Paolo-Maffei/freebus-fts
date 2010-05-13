@@ -314,7 +314,7 @@ public class TelegramReceiver extends TelegramAdapter
     * {@inheritDoc}
     */
    @Override
-   public void telegramSendConfirmed(Telegram telegram)
+   public void telegramSent(Telegram telegram)
    {
       processTelegram(telegram, true);
    }

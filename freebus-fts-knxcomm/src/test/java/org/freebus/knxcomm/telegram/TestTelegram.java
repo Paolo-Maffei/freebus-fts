@@ -129,10 +129,10 @@ public class TestTelegram
       final Telegram telegram = new Telegram();
       assertEquals(ApplicationType.None, telegram.getApplicationType());
 
-      telegram.setApplication(ApplicationType.ADC_Read);
+      telegram.setApplicationType(ApplicationType.ADC_Read);
       assertEquals(ApplicationType.ADC_Read, telegram.getApplicationType());
 
-      telegram.setApplication(ApplicationType.GroupValue_Write);
+      telegram.setApplicationType(ApplicationType.GroupValue_Write);
       assertEquals(ApplicationType.GroupValue_Write, telegram.getApplicationType());
    }
 
@@ -220,7 +220,7 @@ public class TestTelegram
       final byte[] data = HexString.valueOf("9c 11 06 08 0a e1 00 81");
       final Telegram telegram = TelegramFactory.createTelegram(data);
 
-      assertEquals(Transport.Group, telegram.getTransport());
+      assertEquals(Transport.Individual, telegram.getTransport());
       assertEquals(ApplicationType.GroupValue_Write, telegram.getApplicationType());
 
       final GenericDataApplication app = (GenericDataApplication) telegram.getApplication();
@@ -252,7 +252,7 @@ public class TestTelegram
       telegram.setRepeated(true);
       telegram.setTransport(Transport.Connected);
       telegram.setSequence(0);
-      telegram.setApplication(ApplicationType.IndividualAddress_Read);
+      telegram.setApplicationType(ApplicationType.IndividualAddress_Read);
 
       assertArrayEquals(HexString.valueOf("90 11 01 33 07 61 41 00"), telegram.toByteArray());
    }
@@ -274,8 +274,8 @@ public class TestTelegram
    {
       final Telegram telegram = new Telegram();
 
-      telegram.setTransport(Transport.Group);
-      assertEquals(Transport.Group, telegram.getTransport());
+      telegram.setTransport(Transport.Individual);
+      assertEquals(Transport.Individual, telegram.getTransport());
 
       telegram.setTransport(Transport.Individual);
       assertEquals(Transport.Individual, telegram.getTransport());
@@ -298,5 +298,25 @@ public class TestTelegram
       final Telegram clonedTelegram = telegram.clone();
       assertEquals(telegram, clonedTelegram);
       assertEquals(telegram.hashCode(), clonedTelegram.hashCode());
+   }
+
+   @Test
+   public void testIsSimilar() throws IOException
+   {
+      final Telegram telegram1 = TelegramFactory.createTelegram(HexString.valueOf("bc 11 ff 11 06 60 81"));
+      final Telegram telegram2 = TelegramFactory.createTelegram(HexString.valueOf("bc 11 ff 11 06 60 81"));
+
+      assertTrue(telegram1.isSimilar(telegram2));
+      assertTrue(telegram2.isSimilar(telegram1));
+   }
+
+   @Test
+   public void testIsSimilar2() throws IOException
+   {
+      final Telegram telegram1 = TelegramFactory.createTelegram(HexString.valueOf("b0 11 ff 00 00 e1 01 00"));
+      final Telegram telegram2 = TelegramFactory.createTelegram(HexString.valueOf("b0 11 ff 00 00 e1 01 00"));
+
+      assertTrue(telegram1.isSimilar(telegram2));
+      assertTrue(telegram2.isSimilar(telegram1));
    }
 }

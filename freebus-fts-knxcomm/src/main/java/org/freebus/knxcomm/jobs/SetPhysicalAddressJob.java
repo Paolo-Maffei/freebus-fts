@@ -3,12 +3,15 @@ package org.freebus.knxcomm.jobs;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.TimeoutException;
 
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
+import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.freebus.knxcomm.application.Restart;
@@ -57,18 +60,15 @@ public final class SetPhysicalAddressJob extends ListenableJob
    @Override
    public void main(BusInterface bus) throws IOException
    {
+      DataConnection con;
       receiver = new TelegramReceiver(bus);
 
       //
-      // Step 0: test if the address is already in use
+      // Step 1: test if the address is already in use, and scan the bus for
+      // devices that are in programming mode
       //
-
-      // TODO
-
-      //
-      // Step 1: scan the bus for devices that are in programming mode
-      //
-      notifyListener(1, I18n.getMessage("SetPhysicalAddressJob.Scanning"));
+      notifyListener(10, I18n.getMessage("SetPhysicalAddressJob.Scanning"));
+      final long startScan = System.currentTimeMillis();
 
       dataTelegram.setDest(GroupAddress.BROADCAST);
       dataTelegram.setApplication(new IndividualAddressRead());
@@ -79,23 +79,47 @@ public final class SetPhysicalAddressJob extends ListenableJob
 
       bus.send(dataTelegram);
 
-      // Wait 3 seconds for devices that answer our telegram
-      Set<PhysicalAddress> found = new HashSet<PhysicalAddress>();
-      for (int i = 1; i <= 6 && found.size() < 2; ++i)
+      con = bus.connect(newAddress);
+      try
       {
-         for (Telegram telegram: receiver.receiveMultiple(500))
+         final Application reply = con.query(new DeviceDescriptorRead(0));
+         if (reply != null)
+         {
+            throw new JobFailedException(I18n.formatMessage("SetPhysicalAddressJob.AddressInUse",
+                  new Object[] { newAddress }));
+         }
+      }
+      catch (TimeoutException e)
+      {
+         // This is the normal case - the physical address that we want to
+         // program is unused.
+      }
+      finally
+      {
+         con.close();
+      }
+
+      final long elapsed = System.currentTimeMillis() - startScan;
+
+      //
+      // Step 2: wait up to 3 seconds for answers
+      //
+      Set<PhysicalAddress> found = new HashSet<PhysicalAddress>();
+      for (int i = 1 + (int) (elapsed / 1000); i <= 6 && found.size() < 2; ++i)
+      {
+         for (Telegram telegram : receiver.receiveMultiple(500))
             found.add(telegram.getFrom());
          notifyListener(i * 10, null);
       }
 
-      // Verify that exactly one device answered
+      // Verify that exactly one device is in programming mode
       if (found.size() < 1)
          throw new JobFailedException(I18n.getMessage("SetPhysicalAddressJob.NoDevice"));
       if (found.size() > 1)
          throw new JobFailedException(I18n.getMessage("SetPhysicalAddressJob.MultipleDevices"));
 
       //
-      // Step 2: set the physical address
+      // Step 3: set the physical address
       //
       notifyListener(60, I18n.getMessage("SetPhysicalAddressJob.Programming"));
 
@@ -109,19 +133,13 @@ public final class SetPhysicalAddressJob extends ListenableJob
       receiver.receive(500);
 
       //
-      // Step 3: restart the device to clear the programming mode
+      // Step 4: restart the device to clear the programming mode
       //
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
-
-      dataTelegram.setApplication(new Restart());
-      bus.send(dataTelegram);
-      receiver.receive(500);
-
-      final DataConnection con = bus.connect(newAddress);
+      con = bus.connect(newAddress);
       try
       {
-         con.send(new Restart());
-         con.receive(500);
+         con.sendUnconfirmed(new Restart());
       }
       finally
       {

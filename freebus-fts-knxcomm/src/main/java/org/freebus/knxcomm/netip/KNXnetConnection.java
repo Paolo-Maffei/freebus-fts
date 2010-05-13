@@ -316,7 +316,6 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       frame.setFrame(emiFrame);
 
       send(dataAddr, frame);
-      notifyListenersSent(emiFrame);
    }
 
    /**
@@ -394,7 +393,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
          @Override
          public void run()
          {
-            logger.debug("Starting listener thread");
+            logger.debug("Starting KNXnet/IP listener thread");
             final DatagramPacket p = new DatagramPacket(recvBuffer, recvBuffer.length);
 
             while (true)

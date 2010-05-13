@@ -160,19 +160,17 @@ public class Telegram implements Cloneable
     *
     * @param type - the application type.
     */
-   public void setApplication(ApplicationType type)
+   public void setApplicationType(ApplicationType type)
    {
-      application = ApplicationFactory.createApplication(type);
+      application = type == null ? null : ApplicationFactory.createApplication(type);
    }
 
    /**
     * Set the destination address. This can either be a {@link PhysicalAddress}
     * physical address, or a {@link GroupAddress} group address.
     *
-    * Also sets the transport type, if it is yet unset: to
-    * {@link Transport#Individual} if the destination is a
-    * {@link PhysicalAddress}, or to {@link Transport#Group} if the destination
-    * is a {@link GroupAddress}.
+    * Also sets the transport type, if it is yet unset, to
+    * {@link Transport#Individual}.
     */
    public void setDest(Address dest)
    {
@@ -180,9 +178,7 @@ public class Telegram implements Cloneable
 
       if (transport == null)
       {
-         if (dest instanceof GroupAddress)
-            transport = Transport.Group;
-         else transport = Transport.Individual;
+         transport = Transport.Individual;
       }
    }
 
@@ -298,6 +294,8 @@ public class Telegram implements Cloneable
       // TPCI - transport control field
       int tpci = in.readUnsignedByte();
       transport = Transport.valueOf(dest instanceof GroupAddress, tpci);
+      if (transport == null)
+         throw new InvalidDataException("TPCI contains no valid transport type", tpci);
 
       if (transport.hasSequence)
          sequence = (tpci >> 2) & 15;
@@ -592,6 +590,21 @@ public class Telegram implements Cloneable
 
       return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && sequence == oo.sequence
             && (application == null ? oo.application == null : application.equals(oo.application));
+   }
+
+   /**
+    * Test if two telegrams are mostly equal. This is the same as {@link #equals(Object)}, except
+    * that the {@link #getFrom() from address} is not compared.
+    *
+    * @param o - the telegram to compare with.
+    * @return true if o is similar to this telegram.
+    */
+   public boolean isSimilar(Telegram o)
+   {
+      return (dest == null ? o.dest == null : dest.equals(o.dest))
+            && transport.mask == o.transport.mask && transport.value == o.transport.value
+            && (transport != Transport.Connected || sequence == o.sequence)
+            && (!transport.hasApplication || application.getType() == o.application.getType());
    }
 
    /**

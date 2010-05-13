@@ -60,6 +60,14 @@ public enum ApplicationType
    IndividualAddress_Read(0x100, 10, 0, 0, IndividualAddress_Response, IndividualAddressRead.class),
 
    /**
+    * The response to the {@link #IndividualAddressSerialNumber_Read} request.
+    * <p>
+    * 10 data bytes: 6 bytes KNX serial number, 2 bytes address high/low, 2
+    * bytes reserved.
+    */
+   IndividualAddressSerialNumber_Response(0x3dd, 10, 10, 10),
+
+   /**
     * Read the individual address of a device which is identified by a given KNX
     * serial number.
     * <p>
@@ -67,15 +75,7 @@ public enum ApplicationType
     * <p>
     * Response: {@link #IndividualAddressSerialNumber_Response}.
     */
-   IndividualAddressSerialNumber_Read(0x3dc, 10, 6, 6),
-
-   /**
-    * The response to the {@link #IndividualAddressSerialNumber_Read} request.
-    * <p>
-    * 10 data bytes: 6 bytes KNX serial number, 2 bytes address high/low, 2
-    * bytes reserved.
-    */
-   IndividualAddressSerialNumber_Response(0x3dd, 10, 10, 10),
+   IndividualAddressSerialNumber_Read(0x3dc, 10, 6, 6, IndividualAddressSerialNumber_Response),
 
    /**
     * Set the serial number of a device which is identified by a given KNX

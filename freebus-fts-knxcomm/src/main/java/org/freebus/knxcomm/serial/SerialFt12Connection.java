@@ -137,6 +137,9 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
    @Override
    protected void write(byte[] data, int length) throws IOException
    {
+      if (outputStream == null)
+         throw new IOException("connection is closed");
+
       outputStream.write(data, 0, length);
       outputStream.flush();
    }
@@ -178,7 +181,9 @@ public final class SerialFt12Connection extends Ft12Connection implements Serial
                // Error recovery: skip all bytes until there is silence
                try
                {
-                  while (read() > 0);
+                  while (isConnected() && read() > 0)
+                  {
+                  }
                }
                catch (IOException e1)
                {

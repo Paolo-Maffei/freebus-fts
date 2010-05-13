@@ -371,16 +371,6 @@ public class BusMonitor extends AbstractPage implements TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
-      // Do nothing, the confirmation will be reported in telegramSendConfirmed() below
-      // addBusMonitorItem(new L_Data_req(telegram));
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void telegramSendConfirmed(Telegram telegram)
-   {
       addBusMonitorItem(new L_Data_con(telegram));
    }
 }

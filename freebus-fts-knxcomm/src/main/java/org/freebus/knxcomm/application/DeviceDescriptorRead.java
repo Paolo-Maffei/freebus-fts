@@ -31,9 +31,12 @@ public class DeviceDescriptorRead extends AbstractApplication
    }
 
    /**
-    * Create a device descriptor object.
+    * Create a device descriptor object. Known descriptor types are type 0 and
+    * type 2. The returned device descriptors will then be
+    * {@link DeviceDescriptor0} or {@link DeviceDescriptor2}.
     *
-    * @param descriptorType - the device descriptor type.
+    * @param descriptorType - the device descriptor type. Known types are type 0
+    *           and type 2.
     */
    public DeviceDescriptorRead(int descriptorType)
    {

@@ -36,7 +36,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    protected int resetPending;
 
    // Enable to get FT1.2 frame data and ACK debug output
-   private boolean debugFT12 = true;
+   private boolean debugFT12 = false;
 
    // Enable debug output for FT1.2 acknowledges
    private boolean debugFT12ack = true;
@@ -65,16 +65,17 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
          connected = false;
          busAddr = PhysicalAddress.NULL;
 
-         send(Ft12Function.RESET, 30);
-         Thread.sleep(100);
+         for (int i = 0; i < 3; ++i)
+            send(Ft12Function.RESET, 10);
+         Thread.sleep(10);
 
          // Identify the BCU
          send(new PEI_Identify_req());
-         Thread.sleep(100);
+         Thread.sleep(10);
 
          // Switch to the proper mode
          setLinkMode(mode);
-         Thread.sleep(100);
+         Thread.sleep(10);
 
          connected = true;
       }
@@ -249,17 +250,20 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
       if (logger.isDebugEnabled())
          logger.debug("READ: " + HexString.toString(frameData) + String.format(" (checksum %02x)", checksum));
 
-      // Send acknowledgment
-      if (debugFT12ack)
-         logger.debug("SEND: ACK");
-      write(ackMsg, ackMsg.length);
-
       final Ft12Function func = Ft12Function.valueOf(controlByte & 15);
       if (func == Ft12Function.DATA)
       {
          final EmiFrame frame = EmiFrameFactory.createFrame(frameData);
          if (frame == null)
             throw new InvalidDataException("Unknown EMI frame type", data[0] & 255);
+
+         if (logger.isDebugEnabled())
+            logger.debug("READ: " + frame);
+
+         // Send acknowledgment
+         if (debugFT12ack)
+            logger.debug("SEND: ACK");
+         write(ackMsg, ackMsg.length);
 
          processEmiFrame(frame);
       }
@@ -358,13 +362,12 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
 
       if (logger.isDebugEnabled())
       {
+         logger.debug("SEND: " + frame);
          logger.debug("SEND: " + HexString.toString(data, 5, len) + String.format(" (checksum %02x)", checksum));
 
          if (debugFT12)
             logger.debug("SEND FT1.2: " + HexString.toString(data, 0, len + 7));
       }
-
-      notifyListenersSent(frame);
 
       writeConfirmed(data, len + 7, 3);
    }

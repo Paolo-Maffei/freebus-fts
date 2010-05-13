@@ -3,16 +3,11 @@ package org.freebus.knxcomm.jobs;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.internal.DataConnectionImpl;
 import org.freebus.knxcomm.telegram.Telegram;
-import org.freebus.knxcomm.telegram.Transport;
-import org.freebus.knxcomm.types.LinkMode;
 
 public class JobStepsQueue extends SingleDeviceJob
 {
@@ -45,7 +40,7 @@ public class JobStepsQueue extends SingleDeviceJob
          Logger.getLogger(getClass()).debug("Send Telegram: "+jobStep.toString());
          try
          {
-            jobStep.setResivedApplication(dataConnection.qeury(jobStep.getApplication()));
+            jobStep.setResivedApplication(dataConnection.query(jobStep.getApplication()));
             jobStep.setJobStepStatus(JobStepStatus.finished);
          }
          catch (Exception e)
@@ -57,8 +52,8 @@ public class JobStepsQueue extends SingleDeviceJob
       jobSteps.notifyJobStepStatus();
    }
 
-  
-     
+
+
 
 
    @Override
@@ -68,24 +63,16 @@ public class JobStepsQueue extends SingleDeviceJob
       return null;
    }
 
-  
 
 
-   
+
+
 
    /**
     * {@inheritDoc}
     */
    @Override
    public void telegramReceived(Telegram telegram)
-   {
-    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void telegramSendConfirmed(Telegram telegram)
    {
     }
 

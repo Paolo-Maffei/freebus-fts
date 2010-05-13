@@ -8,8 +8,8 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.MemoryRead;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorProperties;
-import org.freebus.knxcomm.applicationData.DeviceDescriptorPropertiesFactory;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.applicationData.MemoryAddress;
 import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
@@ -53,7 +53,7 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 			telegram.setRepeated(true);
 			telegram.setTransport(Transport.Connected);
 			telegram.setSequence(0);
-			telegram.setApplication(ApplicationType.DeviceDescriptor_Read);
+			telegram.setApplicationType(ApplicationType.DeviceDescriptor_Read);
 			busInterface.send(telegram);
 
 		}
@@ -64,7 +64,7 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 			telegram.setRepeated(true);
 			telegram.setTransport(Transport.Connected);
 			telegram.setSequence(7);
-			telegram.setApplication(ApplicationType.Memory_Read);
+			telegram.setApplicationType(ApplicationType.Memory_Read);
 			MemoryAddress memoryAddress =memoryAddressMapper.getMemoryAddress(MemoryAddressTypes.SystemState);
 			telegram.setApplication(new MemoryRead(memoryAddress));
 			busInterface.send(telegram);
@@ -98,10 +98,4 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 			// TODO Auto-generated method stub
 
 		}
-
-                @Override
-                public void telegramSendConfirmed(Telegram telegram) {
-                        // TODO Auto-generated method stub
-
-                }
 }

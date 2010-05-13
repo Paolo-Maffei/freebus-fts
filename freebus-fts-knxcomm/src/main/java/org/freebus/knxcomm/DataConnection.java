@@ -2,9 +2,11 @@ package org.freebus.knxcomm;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.TimeoutException;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.ApplicationType;
 
 /**
  * A direct connection to a device on the KNX/EIB bus. Use
@@ -36,12 +38,46 @@ public interface DataConnection
    public void close();
 
    /**
+    * Query the device by sending a telegram containing the given application,
+    * and then wait for the answer from the device. The answer is then returned.
+    *
+    * @param application - the application to send.
+    *
+    * @return the application of the received reply telegram, or null if no
+    *         reply telegram was received within 6 seconds.
+    *
+    * @throws IOException if there was a technical problem sending the telegram.
+    * @throws TimeoutException if the telegram was not acknowledged by the
+    *            remote device.
+    */
+   public Application query(Application application) throws IOException, TimeoutException;
+
+   /**
     * Send a telegram to the device. The given application is wrapped into a
-    * proper telegram and sent to the device.
+    * proper telegram and sent to the device. Send waits for an acknowledge from
+    * the device.
     *
     * @param application - the application to send
+    *
+    * @throws IOException if there was a technical problem sending the telegram.
+    * @throws TimeoutException if the telegram was not acknowledged by the
+    *            remote device.
     */
-   public void send(Application application) throws IOException;
+   public void send(Application application) throws IOException, TimeoutException;
+
+   /**
+    * Send a telegram to the device. The given application is wrapped into a
+    * proper telegram and sent to the device. This method does *not* wait for an
+    * acknowledge from the remote device, as {@link #send(Application)} does.
+    *
+    * This method is e.g. for sending a {@link ApplicationType#Restart restart},
+    * which is not confirmed.
+    *
+    * @param application - the application to send
+    *
+    * @throws IOException if there was a technical problem sending the telegram
+    */
+   public void sendUnconfirmed(Application application) throws IOException;
 
    /**
     * Receive an {@link Application application} from the device. Waits until a
@@ -67,12 +103,4 @@ public interface DataConnection
     * @throws IOException
     */
    public List<Application> receiveMultiple(int timeout) throws IOException;
-
-   /**
-    * Select if confirmation telegrams shall be received by the connection.
-    * Default is that confirmations are discarded.
-    *
-    * @param enable - to enable receiving of confirmations
-    */
-   public void setReceiveConfirmations(boolean enable);
 }

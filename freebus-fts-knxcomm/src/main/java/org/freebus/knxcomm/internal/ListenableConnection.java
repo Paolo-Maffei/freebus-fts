@@ -33,23 +33,12 @@ public abstract class ListenableConnection implements KNXConnection
 
    /**
     * Notify all listeners that a frame was received.
-    * 
+    *
     * @param frame - the frame that was received.
     */
    public void notifyListenersReceived(final EmiFrame frame)
    {
       for (EmiFrameListener listener : listeners)
          listener.frameReceived(frame);
-   }
-
-   /**
-    * Notify all listeners that a frame is sent.
-    * 
-    * @param frame - the frame that is sent.
-    */
-   public void notifyListenersSent(final EmiFrame frame)
-   {
-      for (EmiFrameListener listener : listeners)
-         listener.frameSent(frame);
    }
 }

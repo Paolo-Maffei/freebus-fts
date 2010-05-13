@@ -1,7 +1,8 @@
 package org.freebus.knxcomm.application;
 
 /**
- * Datapoint types for data exchange, e.g. with
+ * Data point types for data exchange, e.g. with
+ *
  * {@link ApplicationType#GroupValue_Read} or
  * {@link ApplicationType#GroupValue_Write} telegrams.
  *
@@ -10,12 +11,12 @@ package org.freebus.knxcomm.application;
 public enum DataPointType
 {
    /**
-    * No datapoint type. FTS internal use.
+    * No data point type. FTS internal use.
     */
    None(0),
 
    /**
-    * 1 bit datapoint type. Used for switch, bool, enable, open/close, alarm,
+    * 1 bit data point type. Used for switch, boolean, enable, open/close, alarm,
     * ...
     * <p>
     * 0 - off 1 - on
@@ -23,7 +24,7 @@ public enum DataPointType
    Bool(1),
 
    /**
-    * 2 bit datapoint type. This is a {@link #Bool} type with an additional
+    * 2 bit data point type. This is a {@link #Bool boolean} type with an additional
     * control bit. Used for switch control, step control, ...
     * <p>
     * 00 - no control 01 - no control 10 - control, off 11 - control, on
@@ -31,7 +32,7 @@ public enum DataPointType
    BoolControl(2),
 
    /**
-    * 4 bit datapoint type: dimming, control blinds.
+    * 4 bit data point type: dimming, control blinds.
     * <p>
     * Bit 3 - direction: 0 decrease, 1 increase. <br>
     * Bit 0..2 - step code: 0 is break, >0 is 2^(value-1) intervals.
@@ -212,14 +213,14 @@ public enum DataPointType
    //
 
    /**
-    * No datapoint type. FTS internal use.
+    * No data point type. FTS internal use.
     */
    _END(0);
 
    private final int bits;
 
    /**
-    * @return the number of bits that the datapoint type requires. -1 if
+    * @return the number of bits that the data point type requires. -1 if
     *         variable.
     */
    public int getBits()

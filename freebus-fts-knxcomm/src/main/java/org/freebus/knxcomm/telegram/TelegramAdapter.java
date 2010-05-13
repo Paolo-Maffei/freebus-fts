@@ -19,14 +19,6 @@ public abstract class TelegramAdapter implements TelegramListener
     * {@inheritDoc}
     */
    @Override
-   public void telegramSendConfirmed(Telegram telegram)
-   {
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public void telegramSent(Telegram telegram)
    {
    }
