@@ -19,6 +19,22 @@
    <organizationUrl>http://www.freebus.org</organizationUrl>
    <timezone>1</timezone>
   </developer>
+  <developer>
+   <id>micha</id>
+   <name>Michael Mason</name>
+   <email>stefan.taferner@gmx.at</email>
+   <organization>The Freebus Project</organization>
+   <organizationUrl>http://www.freebus.org</organizationUrl>
+   <timezone>1</timezone>
+  </developer>
+  <developer>
+   <id>juergens</id>
+   <name>Jürgen Sachs</name>
+   <email>juergen-sachs@gmx.de</email>
+   <organization>The Freebus Project</organization>
+   <organizationUrl>http://www.freebus.org</organizationUrl>
+   <timezone>1</timezone>
+  </developer>
  </developers>
  <scm>
   <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</connection>
