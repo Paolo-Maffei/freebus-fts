@@ -330,7 +330,7 @@ public class Parameter
    }
 
    /**
-    * @return the address, may be null.
+    * @return the address of the parameter, may be null.
     */
    public Integer getAddress()
    {
@@ -338,6 +338,8 @@ public class Parameter
    }
 
    /**
+    * Set the address of the parameter.
+    *
     * @param address the address to set, may be null.
     */
    public void setAddress(Integer address)
@@ -346,7 +348,7 @@ public class Parameter
    }
 
    /**
-    * @return the bitOffset
+    * @return the bit offset of the parameter value.
     */
    public int getBitOffset()
    {
@@ -354,6 +356,8 @@ public class Parameter
    }
 
    /**
+    * Set the bit offset of the parameter value.
+    *
     * @param bitOffset the bitOffset to set
     */
    public void setBitOffset(int bitOffset)

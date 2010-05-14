@@ -19,6 +19,7 @@ import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
@@ -103,7 +104,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     * {@inheritDoc}
     */
    @Override
-   public DataConnection connect(PhysicalAddress addr) throws IOException
+   public DataConnection connect(PhysicalAddress addr, Priority priority) throws IOException
    {
       if (con == null)
          throw new IOException("Not open");
@@ -111,7 +112,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
       if (getLinkMode() == LinkMode.BusMonitor)
          throw new IllegalAccessError("bus monitor link mode is read only");
 
-      final DataConnection dataCon = new DataConnectionImpl(addr, this);
+      final DataConnection dataCon = new DataConnectionImpl(addr, priority, this);
       dataCon.open();
 
       connections.put(addr, dataCon);

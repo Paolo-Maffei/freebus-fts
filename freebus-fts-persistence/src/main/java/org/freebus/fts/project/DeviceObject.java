@@ -14,17 +14,16 @@ import javax.persistence.TableGenerator;
 import org.freebus.fts.products.CommunicationObject;
 
 /**
- * A device object specifies the details of a communication object
- * of a specific device. Device objects represent the input and
- * output connections of devices that are usually connected via
- * address groups.
+ * A device object specifies the details of a communication object of a specific
+ * device. Device objects represent the input and output connections of devices
+ * that are usually connected via address groups.
  */
 @Entity
 @Table(name = "device_object")
 public class DeviceObject
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenDeviceObjectId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenDeviceObjectId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "device_object_id", nullable = false)
    private int id;
@@ -62,7 +61,7 @@ public class DeviceObject
    private int type;
 
    @Column(name = "dpt_type")
-   //@VdxField(name = "eib_data_type_code" * 1000 + "eib_data_subtype_code")
+   // @VdxField(name = "eib_data_type_code" * 1000 + "eib_data_subtype_code")
    private Integer dptType;
 
    /**

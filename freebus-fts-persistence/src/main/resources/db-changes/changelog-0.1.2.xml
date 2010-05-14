@@ -98,4 +98,75 @@
    tableName="sub_group_to_object" />
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.2-12">
+  <createTable tableName="mask">
+   <column name="mask_id" type="INT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="mask_version" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="mask_version_name" type="VARCHAR(255)" />
+   <column name="user_ram_start" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="user_ram_end" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="user_eeprom_start" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="user_eeprom_end" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="run_error_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="address_tab_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="assoctabptr_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="commstabptr_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="manufacturer_data_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="manufacturer_data_size" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="manufacturer_id_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="routecnt_address" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column defaultValueBoolean="false" name="manufacturer_id_protected"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+   <column name="mask_eeprom_data" type="BLOB" />
+   <column name="address_tab_lcs" type="INT" />
+   <column name="assoc_tab_lcs" type="INT" />
+   <column name="application_program_lcs" type="INT" />
+   <column name="pei_program_lcs" type="INT" />
+   <column name="load_control_address" type="INT" />
+   <column name="run_control_address" type="INT" />
+   <column name="external_memory_start" type="INT" />
+   <column name="external_memory_end" type="INT" />
+   <column name="application_program_rcs" type="INT" />
+   <column name="pei_program_rcs" type="INT" />
+   <column name="port_a_ddr" type="INT" />
+   <column defaultValueBoolean="false" name="port_address_protected"
+    type="BIT">
+    <constraints nullable="false" />
+   </column>
+   <column name="medium_type_number" type="INT" />
+   <column name="medium_type_number2" type="INT" />
+   <column name="bcu_type_number" type="INT" />
+  </createTable>
+ </changeSet>
+
 </databaseChangeLog>

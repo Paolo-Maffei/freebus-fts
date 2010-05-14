@@ -25,7 +25,7 @@ public class Telegram implements Cloneable
    private Address dest = GroupAddress.BROADCAST;
    private int routingCounter = 6;
    private Priority priority = Priority.LOW;
-   private boolean repeated;
+   private boolean repeated = true;  // not sure if this is wise, but ETS does it so
    private Transport transport = Transport.Individual;
    private boolean extFormat;
    private int sequence;

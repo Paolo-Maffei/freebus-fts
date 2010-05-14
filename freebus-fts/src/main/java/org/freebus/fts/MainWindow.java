@@ -123,13 +123,14 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       Actions.INSPECT_VDX_FILE.addTo(productsMenu);
 
       final JMenu viewMenu = createJMenu(I18n.getMessage("MainWindow.ViewMenu"));
-      Actions.BUS_MONITOR.addTo(viewMenu);
-      viewMenu.addSeparator();
       Actions.LOGICAL_VIEW.addTo(viewMenu);
       Actions.PHYSICAL_VIEW.addTo(viewMenu);
       Actions.TOPOLOGY_VIEW.addTo(viewMenu);
 
       final JMenu toolsMenu = createJMenu(I18n.getMessage("MainWindow.ToolsMenu"));
+      Actions.BUS_MONITOR.addTo(toolsMenu);
+      Actions.BUS_TRACE_VIEWER.addTo(toolsMenu);
+      viewMenu.addSeparator();
       Actions.SET_PHYSICAL_ADDRESS.addTo(toolsMenu);
       Actions.DEVICE_SCANNER.addTo(toolsMenu);
       Actions.DEVICE_STATUS.addTo(toolsMenu);

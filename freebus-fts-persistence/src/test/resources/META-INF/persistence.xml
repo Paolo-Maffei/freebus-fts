@@ -18,6 +18,7 @@
   <class>org.freebus.fts.products.CommunicationObject</class>
   <class>org.freebus.fts.products.FunctionalEntity</class>
   <class>org.freebus.fts.products.Manufacturer</class>
+  <class>org.freebus.fts.products.Mask</class>
   <class>org.freebus.fts.products.Parameter</class>
   <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.ParameterValue</class>
@@ -52,6 +53,7 @@
   <class>org.freebus.fts.products.CommunicationObject</class>
   <class>org.freebus.fts.products.FunctionalEntity</class>
   <class>org.freebus.fts.products.Manufacturer</class>
+  <class>org.freebus.fts.products.Mask</class>
   <class>org.freebus.fts.products.Parameter</class>
   <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.ParameterValue</class>

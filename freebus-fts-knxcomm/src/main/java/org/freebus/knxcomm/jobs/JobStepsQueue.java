@@ -7,6 +7,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.internal.DataConnectionImpl;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 
 public class JobStepsQueue extends SingleDeviceJob
@@ -34,7 +35,7 @@ public class JobStepsQueue extends SingleDeviceJob
    {
       // TODO: not finished
       Logger.getLogger(getClass()).debug("Connect to Device "+jobSteps.getDest().toString());
-      DataConnectionImpl dataConnection  =(DataConnectionImpl) bus.connect((PhysicalAddress)  jobSteps.getDest());
+      DataConnectionImpl dataConnection  =(DataConnectionImpl) bus.connect((PhysicalAddress)  jobSteps.getDest(), Priority.SYSTEM);
       for (JobStep jobStep : jobSteps)
       {
          Logger.getLogger(getClass()).debug("Send Telegram: "+jobStep.toString());

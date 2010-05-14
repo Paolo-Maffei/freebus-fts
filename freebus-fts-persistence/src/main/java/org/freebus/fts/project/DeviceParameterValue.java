@@ -15,7 +15,8 @@ import org.freebus.fts.persistence.vdx.VdxField;
 import org.freebus.fts.products.Parameter;
 
 /**
- * The parameter value of a specific {@link Device} device.
+ * The parameter value of a specific {@link Device} device. The parameter values
+ * are set by the parameter editor when the user parameterizes a device.
  */
 @Entity
 @VdxEntity(name = "device_parameter")

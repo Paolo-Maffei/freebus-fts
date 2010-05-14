@@ -12,6 +12,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.telegram.Transport;
@@ -50,6 +51,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    private State state = State.CLOSED;
    private final PhysicalAddress addr;
+   private final Priority priority;
    private final BusInterface busInterface;
    private final Telegram sendTelegram = new Telegram();
    private final Telegram ackTelegram = new Telegram();
@@ -62,15 +64,20 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * {@link BusInterface#connect} to get a connection.
     *
     * @param addr - the physical address to which the connection will happen.
+    * @param priority - the priority of the telegrams.
     * @param busInterface - the bus interface to use.
     */
-   public DataConnectionImpl(PhysicalAddress addr, BusInterface busInterface)
+   public DataConnectionImpl(PhysicalAddress addr, Priority priority, BusInterface busInterface)
    {
       this.addr = addr;
+      this.priority = priority;
       this.busInterface = busInterface;
 
       sendTelegram.setDest(addr);
+      sendTelegram.setPriority(priority);
+
       ackTelegram.setDest(addr);
+      ackTelegram.setPriority(priority);
    }
 
    /**
@@ -162,6 +169,14 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public State getState()
    {
       return state;
+   }
+
+   /**
+    * @return the priority that was set for telegrams that are sent.
+    */
+   public Priority getPriority()
+   {
+      return priority;
    }
 
    /**

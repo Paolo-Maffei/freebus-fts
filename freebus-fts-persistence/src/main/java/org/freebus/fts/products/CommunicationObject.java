@@ -13,7 +13,9 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 /**
- * A communication object of a program.
+ * A communication object of a program. Communication objects are the interface
+ * to other devices on the bus. Group data telegrams send and receive the data
+ * of the communication objects.
  */
 @Entity
 @Table(name = "communication_object")
@@ -32,7 +34,7 @@ public class CommunicationObject
    @JoinColumn(name = "program_id", nullable = false)
    private Program program;
 
-   @ManyToOne(optional = false)
+   @ManyToOne(optional = true)
    @JoinColumn(name = "parameter_id")
    private Parameter parameter;
 
@@ -55,7 +57,7 @@ public class CommunicationObject
    private int displayOrder;
 
    @Column(name = "parent_parameter_value")
-   private int parentParameterValue;
+   private Integer parentParameterValue;
 
    @Column(name = "object_description")
    private String description;
@@ -232,17 +234,19 @@ public class CommunicationObject
    }
 
    /**
-    * @return the parentParameterValue
+    * @return the parent parameter value
     */
-   public int getParentParameterValue()
+   public Integer getParentParameterValue()
    {
       return parentParameterValue;
    }
 
    /**
-    * @param parentParameterValue the parentParameterValue to set
+    * Set the value of the parent parameter.
+    *
+    * @param parentParameterValue the parent parameter value to set
     */
-   public void setParentParameterValue(int parentParameterValue)
+   public void setParentParameterValue(Integer parentParameterValue)
    {
       this.parentParameterValue = parentParameterValue;
    }

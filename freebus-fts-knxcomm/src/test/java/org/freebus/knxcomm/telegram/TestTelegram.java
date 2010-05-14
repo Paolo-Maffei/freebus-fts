@@ -28,7 +28,7 @@ public class TestTelegram
    {
       final Telegram telegram = new Telegram();
 
-      assertFalse(telegram.isRepeated());
+      assertTrue(telegram.isRepeated());
       assertEquals(Priority.LOW, telegram.getPriority());
       assertNull(telegram.getApplication());
       assertEquals(ApplicationType.None, telegram.getApplicationType());
@@ -92,7 +92,6 @@ public class TestTelegram
    public void testIsSetRepeated()
    {
       final Telegram telegram = new Telegram();
-      assertFalse(telegram.isRepeated());
 
       telegram.setRepeated(true);
       assertTrue(telegram.isRepeated());
@@ -235,6 +234,7 @@ public class TestTelegram
       telegram.setFrom(new PhysicalAddress(1, 1, 1));
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
+      telegram.setRepeated(false);
       telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new int[] { 0, 1 }));
 
       final byte[] dataOut = telegram.toByteArray();
@@ -265,6 +265,7 @@ public class TestTelegram
       telegram.setDest(new PhysicalAddress(1, 1, 6));
       telegram.setPriority(Priority.SYSTEM);
       telegram.setTransport(Transport.Connect);
+      telegram.setRepeated(false);
 
       assertArrayEquals(HexString.valueOf("b0 11 ff 11 06 60 80"), telegram.toByteArray());
    }

@@ -79,7 +79,7 @@ public final class SetPhysicalAddressJob extends ListenableJob
 
       bus.send(dataTelegram);
 
-      con = bus.connect(newAddress);
+      con = bus.connect(newAddress, Priority.SYSTEM);
       try
       {
          final Application reply = con.query(new DeviceDescriptorRead(0));
@@ -136,7 +136,7 @@ public final class SetPhysicalAddressJob extends ListenableJob
       // Step 4: restart the device to clear the programming mode
       //
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
-      con = bus.connect(newAddress);
+      con = bus.connect(newAddress, Priority.SYSTEM);
       try
       {
          con.sendUnconfirmed(new Restart());

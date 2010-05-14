@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.types.EmiFrameType;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
@@ -63,12 +64,13 @@ public interface BusInterface
     * monitor} link mode.
     *
     * @param addr - the physical address of the target device.
+    * @param priority - the priority of the telegrams.
     *
     * @return The new, {@link DataConnection#open() opened} connection.
     *
     * @throws IOException
     */
-   public DataConnection connect(PhysicalAddress addr) throws IOException;
+   public DataConnection connect(PhysicalAddress addr, Priority priority) throws IOException;
 
    /**
     * @return the internal KNX/EIB bus connection.

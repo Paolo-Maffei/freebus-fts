@@ -6,6 +6,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
@@ -31,7 +32,7 @@ public class SimulatedBusInterface implements BusInterface
    }
 
    @Override
-   public DataConnection connect(PhysicalAddress addr) throws IOException
+   public DataConnection connect(PhysicalAddress addr, Priority priority) throws IOException
    {
       return null;
    }
