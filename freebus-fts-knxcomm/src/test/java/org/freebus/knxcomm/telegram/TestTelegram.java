@@ -220,7 +220,7 @@ public class TestTelegram
       final byte[] data = HexString.valueOf("9c 11 06 08 0a e1 00 81");
       final Telegram telegram = TelegramFactory.createTelegram(data);
 
-      assertEquals(Transport.Individual, telegram.getTransport());
+      assertEquals(Transport.Group, telegram.getTransport());
       assertEquals(ApplicationType.GroupValue_Write, telegram.getApplicationType());
 
       final GenericDataApplication app = (GenericDataApplication) telegram.getApplication();
