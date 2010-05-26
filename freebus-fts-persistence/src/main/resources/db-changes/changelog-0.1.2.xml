@@ -169,4 +169,12 @@
   </createTable>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.2-13">
+   <renameTable newTableName="parameter_tmp" oldTableName="PARAMETER" />
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.2-14">
+   <renameTable newTableName="parameter" oldTableName="parameter_tmp" />
+ </changeSet>
+
 </databaseChangeLog>
