@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
+ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+ xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9 http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
+
+ <changeSet author="stefant" id="0.1.3-1">
+  <addColumn tableName="parameter">
+   <column name="visible" type="BIT" defaultValueBoolean="true">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.3-2">
+  <dropIndex tableName="PARAMETER" indexName="FK_parameter_par_parameter_id" />
+  <createIndex indexName="FK_parameter_par_parameter_id"
+   tableName="parameter" unique="false">
+   <column name="par_parameter_id" />
+  </createIndex>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.3-3">
+  <dropIndex tableName="PARAMETER" indexName="FK_parameter_parameter_type_id" />
+  <createIndex indexName="FK_parameter_parameter_type_id"
+   tableName="parameter" unique="false">
+   <column name="parameter_type_id" />
+  </createIndex>
+  <dropIndex tableName="PARAMETER" indexName="FK_parameter_program_id" />
+  <createIndex indexName="FK_parameter_program_id"
+   tableName="parameter" unique="false">
+   <column name="program_id" />
+  </createIndex>
+ </changeSet>
+
+ <!-- changeSet author="stefant" id="0.1.1-45">
+  <createIndex indexName="FK_parameter_parameter_type_id"
+   tableName="PARAMETER" unique="false">
+   <column name="parameter_type_id" />
+  </createIndex>
+ </changeSet>
+ <changeSet author="stefant" id="0.1.1-46">
+  <createIndex indexName="FK_parameter_program_id"
+   tableName="PARAMETER" unique="false">
+   <column name="program_id" />
+  </createIndex>
+ </changeSet -->
+
+</databaseChangeLog>

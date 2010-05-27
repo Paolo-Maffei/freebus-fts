@@ -53,7 +53,7 @@ public final class VdxEntityInspector
    /**
     * Create an entity-inspector that processes the classes of a persistence
     * unit.
-    * 
+    *
     * @param persistenceUnit - The name of the persistence unit to be processed.
     */
    public VdxEntityInspector(String persistenceUnit)
@@ -72,9 +72,9 @@ public final class VdxEntityInspector
 
    /**
     * Get the information for a class. The class is inspected if required.
-    * 
+    *
     * @param clazz - The class which information is requested.
-    * 
+    *
     * @return The information about the class.
     * @throws PersistenceException - If the class is not found in the
     *            persistence unit of persistence.xml
@@ -209,7 +209,7 @@ public final class VdxEntityInspector
 
       return null;
    }
-   
+
    /**
     * @return The entity class for an association.
     */
@@ -230,9 +230,9 @@ public final class VdxEntityInspector
    /**
     * Read the classes that shall be inspected from the persistence.xml file.
     * Only loads the classes - the classes are inspected later on demand.
-    * 
+    *
     * Called automatically by the constructor.
-    * 
+    *
     * @param persistenceUnit - The name of the persistence unit to be processed.
     */
    private void readClasses(String persistenceUnit)
@@ -261,31 +261,44 @@ public final class VdxEntityInspector
             throw new PersistenceException(e);
          }
 
-         final String entityName = getVdxEntityNameOf(clazz).toLowerCase();
-         if (nameInfos.containsKey(entityName))
-         {
-            throw new PersistenceException("Entity name " + entityName + " is not unique. Used for " + className
-                  + " and for " + nameInfos.get(entityName).getClazz().getCanonicalName());
-         }
-
-         final VdxEntityInfo info = new VdxEntityInfo(entityName, clazz);
-         nameInfos.put(entityName, info);
+         final VdxEntityInfo info = createInfo(clazz);
+         nameInfos.put(info.getName(), info);
          classInfos.put(clazz, info);
       }
+   }
 
+   /**
+    * Create an entity info object for the given class
+    *
+    * @param clazz - the class to process.
+    * @return The new {@link VdxEntityInfo entity info} object.
+    *
+    * @throws PersistenceException if an entity with the same name was
+    *            previously added.
+    */
+   private VdxEntityInfo createInfo(Class<?> clazz)
+   {
+      final String entityName = getVdxEntityNameOf(clazz).toLowerCase();
+      if (nameInfos.containsKey(entityName))
+      {
+         throw new PersistenceException("Entity name " + entityName + " is not unique. Used for "
+               + clazz.getCanonicalName() + " and for " + nameInfos.get(entityName).getClazz().getCanonicalName());
+      }
+
+      return new VdxEntityInfo(entityName, clazz);
    }
 
    /**
     * @return The VDX entity name of the class clazz.
-    * 
+    *
     * @throws PersistenceException If the class does not have a proper
     *            annotation.
     */
    private String getVdxEntityNameOf(Class<?> clazz) throws PersistenceException
    {
       final Entity entity = clazz.getAnnotation(Entity.class);
-      if (entity == null)
-         throw new PersistenceException("Class " + clazz.getCanonicalName() + " contains no entity annotation");
+//      if (entity == null)
+//         throw new PersistenceException("Class " + clazz.getCanonicalName() + " contains no entity annotation");
 
       final VdxEntity vdxEntity = clazz.getAnnotation(VdxEntity.class);
       if (vdxEntity != null)
@@ -303,7 +316,7 @@ public final class VdxEntityInspector
 
    /**
     * Load the persistence unit DOM nodes from the file fileName.
-    * 
+    *
     * @throws PersistenceException
     */
    private Node loadPersistenceUnit(String fileName, String persistenceUnit) throws PersistenceException

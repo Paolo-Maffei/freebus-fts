@@ -113,4 +113,12 @@ public final class VdxProductsFactory implements ProductsFactory
    {
       return transaction;
    }
+
+   /**
+    * @return the entity manager.
+    */
+   public VdxEntityManager getEntityManager()
+   {
+      return manager;
+   }
 }

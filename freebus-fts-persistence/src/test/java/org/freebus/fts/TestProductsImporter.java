@@ -1,4 +1,4 @@
-package org.freebus.fts.products;
+package org.freebus.fts;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -14,9 +14,16 @@ import java.util.Set;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.freebus.fts.ProductsImporter;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
+import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
+import org.freebus.fts.products.ParameterType;
+import org.freebus.fts.products.ParameterValue;
+import org.freebus.fts.products.ProductsManager;
+import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.junit.Test;

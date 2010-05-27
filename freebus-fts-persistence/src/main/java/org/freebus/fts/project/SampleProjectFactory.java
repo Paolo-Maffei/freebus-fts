@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.products.ProductsImporter;
+import org.freebus.fts.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.ProductsFactory;

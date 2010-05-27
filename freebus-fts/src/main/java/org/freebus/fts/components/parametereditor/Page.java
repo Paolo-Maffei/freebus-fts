@@ -166,7 +166,7 @@ public class Page extends JPanel
       int gridRow = -1;
       for (final ParamData data : childDatas)
       {
-         if (data.isVisible())
+         if (data.isVisible() && data.getParameter().getParentValue() == null)
             createParamComponent(data, ++gridRow);
       }
    }
@@ -203,6 +203,7 @@ public class Page extends JPanel
    {
       final Parameter param = data.getParameter();
       final ParameterAtomicType atomicType = param.getParameterType().getAtomicType();
+      Component valueComp = null;
 
       if (atomicType == ParameterAtomicType.NONE)
       {
@@ -210,21 +211,25 @@ public class Page extends JPanel
       }
       else if (atomicType == ParameterAtomicType.STRING)
       {
-         createParamStringComponent(data, gridRow);
+         valueComp = createParamStringComponent(data, gridRow);
       }
       else if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED)
       {
-         createParamNumberComponent(data, gridRow);
+         valueComp = createParamNumberComponent(data, gridRow);
       }
       else if (atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
       {
-         createParamEnumComponent(data, gridRow);
+         valueComp = createParamEnumComponent(data, gridRow);
       }
       else
       {
          createParamLabel(param, gridRow, 1);
          contentAddComponent(new JLabel("Unsupported atomic type " + atomicType), gridRow);
       }
+
+      final Integer addr = param.getAddress();
+      if (valueComp != null && (addr == null || addr == 0) && param.getBitOffset() == 0)
+         valueComp.setEnabled(false);
    }
 
    /**
@@ -235,7 +240,7 @@ public class Page extends JPanel
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
     */
-   public void createParamEnumComponent(final ParamData data, int gridRow)
+   public Component createParamEnumComponent(final ParamData data, int gridRow)
    {
       final Parameter param = data.getParameter();
       final Set<ParameterValue> valuesSet = param.getParameterType().getValues();
@@ -251,8 +256,9 @@ public class Page extends JPanel
             final JLabel lbl = new JLabel(values[0].getDisplayedValue());
             lbl.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             contentAddComponent(lbl, gridRow);
+            return lbl;
          }
-         return;
+         return null;
       }
 
       Arrays.sort(values, new Comparator<ParameterValue>()
@@ -303,6 +309,7 @@ public class Page extends JPanel
       });
 
       contentAddComponent(combo, gridRow);
+      return combo;
    }
 
    /**
@@ -314,7 +321,7 @@ public class Page extends JPanel
     * @param gridRow - the row of the contents grid in which the component(s)
     *           are to be added.
     */
-   public void createParamNumberComponent(final ParamData data, int gridRow)
+   public Component createParamNumberComponent(final ParamData data, int gridRow)
    {
       final Parameter param = data.getParameter();
       final ParameterType paramType = param.getParameterType();
@@ -344,6 +351,7 @@ public class Page extends JPanel
 
       createParamLabel(param, gridRow, 1);
       contentAddComponent(spinner, gridRow);
+      return spinner;
    }
 
    /**
@@ -354,7 +362,7 @@ public class Page extends JPanel
     * @param gridRow - the row of the contents grid in which the component(s)
     *           are to be added.
     */
-   public void createParamStringComponent(final ParamData data, int gridRow)
+   public Component createParamStringComponent(final ParamData data, int gridRow)
    {
       final Parameter param = data.getParameter();
       createParamLabel(param, gridRow, 1);
@@ -386,6 +394,8 @@ public class Page extends JPanel
          {
          }
       });
+
+      return input;
    }
 
    /**

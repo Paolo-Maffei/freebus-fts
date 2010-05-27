@@ -15,8 +15,8 @@ import javax.persistence.TableGenerator;
 /**
  * A parameter of a program.
  */
-@Entity
-@Table(name = "parameter")
+@Entity(name = "parameter")
+@Table(name = "\"parameter\"")
 public class Parameter
 {
    @Id
@@ -87,6 +87,9 @@ public class Parameter
 
    @Column(name = "address_space", columnDefinition = "SMALLINT")
    private int addressSpace;
+
+   @Column(name = "visible")
+   private boolean visible;
 
    /**
     * Create an empty parameter object.
@@ -466,6 +469,22 @@ public class Parameter
    public void setAddressSpace(int addressSpace)
    {
       this.addressSpace = addressSpace;
+   }
+
+   /**
+    * @param visible the visible to set
+    */
+   public void setVisible(boolean visible)
+   {
+      this.visible = visible;
+   }
+
+   /**
+    * @return the visible
+    */
+   public boolean isVisible()
+   {
+      return visible;
    }
 
    /**

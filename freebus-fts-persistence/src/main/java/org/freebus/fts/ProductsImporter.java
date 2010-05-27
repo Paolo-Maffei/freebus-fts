@@ -1,14 +1,24 @@
-package org.freebus.fts.products;
+package org.freebus.fts;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
+import org.freebus.fts.persistence.vdx.VdxEntityManager;
+import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.Program;
+import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
+import org.freebus.fts.products.services.vdx.VdxProductsFactory;
+import org.freebus.fts.project.DeviceParameterValue;
 
 /**
  * Class for importing parts of a org.freebus.fts.products database into FTS'
@@ -45,6 +55,8 @@ public final class ProductsImporter
 
       if (ownTransaction)
          destFactory.getTransaction().begin();
+
+      fixParameters(devices);
 
       for (VirtualDevice device : devices)
       {
@@ -103,5 +115,40 @@ public final class ProductsImporter
    public ProductsFactory getDestFactory()
    {
       return destFactory;
+   }
+
+   /**
+    * Correct the parameter visibility for all parameters of the {@link Program
+    * application programs} of the given devices. This is required because the
+    * visibility is stored in the device's parameter values, where it does not
+    * belong.
+    *
+    * @param devices - the devices whose program's parameters are to be
+    *           processed.
+    */
+   private void fixParameters(List<VirtualDevice> devices)
+   {
+      if (!(sourceFactory instanceof VdxProductsFactory))
+         return;
+
+      final VdxEntityManager manager = ((VdxProductsFactory) sourceFactory).getEntityManager();
+
+      final Set<Program> programs = new HashSet<Program>(devices.size());
+      for (final VirtualDevice device : devices)
+         programs.add(device.getProgram());
+
+      final Map<Integer,DeviceParameterValue> values = new HashMap<Integer,DeviceParameterValue>(16738);
+      for (final Object obj: manager.fetchAll(DeviceParameterValue.class))
+      {
+         DeviceParameterValue val = (DeviceParameterValue) obj;
+         if (val.getParameter() != null)
+            values.put(val.getParameter().getId(), val);
+      }
+
+      for (final Program program : programs)
+      {
+         for (final Parameter param : program.getParameters())
+            param.setVisible(values.get(param.getId()).isVisible());
+      }
    }
 }
