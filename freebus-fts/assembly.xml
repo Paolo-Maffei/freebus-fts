@@ -40,14 +40,6 @@
    <fileMode>0755</fileMode>
   </fileSet>
  </fileSets>
- <!-- files>
-  <file>
-   <source>src/main/resources/gui-images/splash.png</source>
-   <outputDirectory>libs</outputDirectory>
-   <directoryMode>0755</directoryMode>
-   <fileMode>0644</fileMode>
-  </file>
- </files -->
  <dependencySets>
   <dependencySet>
    <useProjectArtifact>true</useProjectArtifact>
