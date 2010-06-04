@@ -4,10 +4,7 @@ import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
-import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.MemoryRead;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
 import org.freebus.knxcomm.telegram.Priority;
 

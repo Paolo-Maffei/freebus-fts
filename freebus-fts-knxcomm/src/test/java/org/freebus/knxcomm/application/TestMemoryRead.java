@@ -138,8 +138,6 @@ public class TestMemoryRead
       DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(new DeviceDescriptor0(0x0012));
       app.setDeviceDescriptorProperties(deviceDescriptorProperties);
 
-      int[] a= new int[3];
-
       assertEquals(96, app.getAddress());
       assertEquals(1, app.getCount());
    }
@@ -147,7 +145,7 @@ public class TestMemoryRead
    public final void testCreateApliaction() throws Exception
    {
        MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
-     
+
 
       DeviceDescriptorPropertiesFactory  deviceDescriptorPropertiesFactory = new  DeviceDescriptorPropertiesFactory();
 

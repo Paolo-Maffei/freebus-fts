@@ -4,7 +4,7 @@ import org.freebus.knxcomm.applicationData.ApplicationDataException;
 
 /**
  *Factory Class for DeviceDescriptors
- * 
+ *
  */
 public final class DeviceDescriptorPropertiesFactory
 {
@@ -12,12 +12,12 @@ public final class DeviceDescriptorPropertiesFactory
    /**
     * Creates the DeviceDescriptor class in depends of the DeviceDescriptortype
     * bits in a DeviceDescriptor response
-    * @throws ApplicationDataException 
-    * 
-    * 
+    * @throws ApplicationDataException
+    *
+    *
     */
    public DeviceDescriptorProperties getDeviceDescriptor(DeviceDescriptor deviceDescriptor) throws ApplicationDataException
-        
+
    {
       // TODO create own exception class
       DeviceDescriptorProperties deviceDescriptorProperties = null;
@@ -27,7 +27,7 @@ public final class DeviceDescriptorPropertiesFactory
          DeviceDescriptor0 ds0 = (DeviceDescriptor0) deviceDescriptor;
          DeviceDescriptorPropertiesType0 deviceDescriptorPropertiesType0 = new DeviceDescriptorPropertiesType0();
          deviceDescriptorPropertiesType0.loadProperties(ds0.getMaskVersion());
-         deviceDescriptorProperties = (DeviceDescriptorProperties)deviceDescriptorPropertiesType0;
+         deviceDescriptorProperties = deviceDescriptorPropertiesType0;
 
       }
       if (deviceDescriptor instanceof DeviceDescriptor2 )

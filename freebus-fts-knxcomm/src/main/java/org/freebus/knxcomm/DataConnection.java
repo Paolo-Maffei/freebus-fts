@@ -10,7 +10,8 @@ import org.freebus.knxcomm.application.ApplicationType;
 
 /**
  * A direct connection to a device on the KNX/EIB bus. Use
- * {@link BusInterface#connect(PhysicalAddress)} to open a data connection.
+ * {@link BusInterface#connect(PhysicalAddress, org.freebus.knxcomm.telegram.Priority)}
+ * to open a data connection.
  *
  * The data connection is {@link Application application} oriented. Proper
  * telegrams for transporting the applications and its data are created as
