@@ -78,7 +78,7 @@ private DeviceDescriptorResponse deviceDescriptorResponse ;
 
 			DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
 
-			deviceDescriptorProperties=	deviceDescriptorPropertiesFactory.getDeviceDescriptor(deviceDescriptorResponse);
+			deviceDescriptorProperties=	deviceDescriptorPropertiesFactory.getDeviceDescriptor(deviceDescriptorResponse.getDescriptor());
 
 
 
