@@ -277,6 +277,6 @@ public class CatalogEntry
    @Override
    public String toString()
    {
-      return getClass().getSimpleName() + " #" + id + " \"" + name + "\"";
+      return name;
    }
 }

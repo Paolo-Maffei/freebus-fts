@@ -593,4 +593,13 @@ public class Program
       final Program oo = (Program) o;
       return id == oo.id && maskId == oo.maskId && peiType == oo.peiType && name.equals(oo.name);
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return name;
+   }
 }

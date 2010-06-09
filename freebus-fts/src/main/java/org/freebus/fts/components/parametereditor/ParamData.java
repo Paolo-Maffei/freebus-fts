@@ -3,6 +3,7 @@ package org.freebus.fts.components.parametereditor;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.products.Parameter;
 
@@ -69,11 +70,14 @@ public class ParamData
     */
    public boolean isVisible()
    {
-      // if (param.getId() == 23315)
-      // {
-      // // Debug hook
-      // Logger.getLogger(getClass()).debug("Param: " + param);
-      // }
+       if (param.getId() == 42869)
+       {
+          // Debug hook
+          Logger.getLogger(getClass()).debug("Param: " + param);
+       }
+
+      if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
+         return false;
 
       if (parent == null)
          return true;

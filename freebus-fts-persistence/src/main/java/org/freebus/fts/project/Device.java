@@ -336,6 +336,15 @@ public final class Device
    }
 
    /**
+    * @return The name of the device
+    */
+   public String getName()
+   {
+      // TODO Define if we want to allow a name for a device
+      return getCatalogEntry().getName();
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
@@ -378,14 +387,6 @@ public final class Device
    @Override
    public String toString()
    {
-      final StringBuilder sb = new StringBuilder();
-      sb.append(getPhysicalAddress().toString()).append(" ").append(catalogEntry).append(" ").append(program);
-      return sb.toString();
-   }
-
-   public String getName()
-   {
-      // TODO Define if we want to allow a name for a device
-      return getCatalogEntry().getName();
+      return getPhysicalAddress().toString() + ' ' + catalogEntry;
    }
 }

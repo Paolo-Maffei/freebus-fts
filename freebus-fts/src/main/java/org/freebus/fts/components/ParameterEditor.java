@@ -146,7 +146,6 @@ public class ParameterEditor extends JPanel
       paramTabs.removeAll();
       paramDatas = DeviceParamData.createParamData(device);
 
-
       // Sort the parameter-data objects by display-order
       final ParamData[] paramDataArr = new ParamData[paramDatas.size()];
       paramDatas.values().toArray(paramDataArr);
@@ -170,8 +169,8 @@ public class ParameterEditor extends JPanel
          if (!paramDatas.containsKey(parentParam))
          {
             Logger.getLogger(getClass()).error(
-                  String.format("Parameter #{0} has an unknown parent parameter #{1}", new Object[] { param.getId(),
-                        parentParam.getId() }));
+                  String.format("Parameter #%1$d has an unknown parent parameter #%2$d", param.getId(),
+                        parentParam.getId()));
             continue;
          }
 

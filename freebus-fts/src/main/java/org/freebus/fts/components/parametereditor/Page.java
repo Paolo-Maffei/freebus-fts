@@ -166,7 +166,8 @@ public class Page extends JPanel
       int gridRow = -1;
       for (final ParamData data : childDatas)
       {
-         if (data.isVisible() && data.getParameter().getParentValue() == null)
+         if (data.isVisible())
+//         if (data.isVisible() && data.getParameter().getParentValue() == null)
             createParamComponent(data, ++gridRow);
       }
    }
@@ -227,9 +228,12 @@ public class Page extends JPanel
          contentAddComponent(new JLabel("Unsupported atomic type " + atomicType), gridRow);
       }
 
-      final Integer addr = param.getAddress();
-      if (valueComp != null && (addr == null || addr == 0) && param.getBitOffset() == 0)
+      if (param.getLowAccess() == 1 && param.getHighAccess() == 1)
          valueComp.setEnabled(false);
+
+//      final Integer addr = param.getAddress();
+//      if (valueComp != null && (addr == null || addr == 0) && param.getBitOffset() == 0)
+//         valueComp.setEnabled(false);
    }
 
    /**

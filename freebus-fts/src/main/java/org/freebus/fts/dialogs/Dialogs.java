@@ -48,7 +48,13 @@ public final class Dialogs
          message = "<html><body width=\"400px\">" + message.replace("\n", "<br>") + "</body></html>";
 
       final AudioClip clip = new AudioClip("fake_monkey_chatter_short");
-      clip.play();
+      try
+      {
+         clip.play();
+      }
+      catch (Exception e)
+      {
+      }
 
       JOptionPane.showMessageDialog(mainWin, message, title, JOptionPane.ERROR_MESSAGE, ImageCache
             .getIcon("icons-large/error-dialog"));
