@@ -24,6 +24,11 @@ public class ParamData
    public ParamData(Parameter param)
    {
       this.param = param;
+      if (param.getId() == 162206)
+      {
+         // Debug hook
+         Logger.getLogger(getClass()).debug("Param: " + param);
+      }
 
       value = param.getDefault();
    }
@@ -70,17 +75,18 @@ public class ParamData
     */
    public boolean isVisible()
    {
-       if (param.getId() == 42869)
-       {
-          // Debug hook
-          Logger.getLogger(getClass()).debug("Param: " + param);
-       }
-
-      if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
-         return false;
+      if (param.getId() == 42869)
+      {
+         // Debug hook
+         Logger.getLogger(getClass()).debug("Param: " + param);
+      }
 
       if (parent == null)
-         return true;
+      {
+         if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
+            return false;
+         else return true;
+      }
 
       if (!parent.isVisible())
          return false;

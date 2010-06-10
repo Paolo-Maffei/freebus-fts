@@ -166,9 +166,14 @@ public class Page extends JPanel
       int gridRow = -1;
       for (final ParamData data : childDatas)
       {
-         if (data.isVisible())
-//         if (data.isVisible() && data.getParameter().getParentValue() == null)
-            createParamComponent(data, ++gridRow);
+         if (!data.isVisible())
+            continue;
+
+         final Parameter param = data.getParameter();
+         if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
+            continue;
+
+         createParamComponent(data, ++gridRow);
       }
    }
 
@@ -228,7 +233,7 @@ public class Page extends JPanel
          contentAddComponent(new JLabel("Unsupported atomic type " + atomicType), gridRow);
       }
 
-      if (param.getLowAccess() == 1 && param.getHighAccess() == 1)
+      if (param.getHighAccess() == 1)
          valueComp.setEnabled(false);
 
 //      final Integer addr = param.getAddress();
@@ -291,10 +296,10 @@ public class Page extends JPanel
          }
       });
 
-      final int defaultValue = (Integer) data.getValue();
+      final int value = (Integer) (param.getHighAccess() == 1 ? param.getDefaultLong() : data.getValue());
       for (final ParameterValue val : values)
       {
-         if (val.getIntValue() == defaultValue)
+         if (val.getIntValue() == value)
          {
             combo.setSelectedItem(val);
             break;
