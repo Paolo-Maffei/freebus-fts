@@ -90,14 +90,14 @@ public class TestParamData extends PersistenceTestCase
       assertTrue(parentData.hasChildren());
       assertTrue(parentData.getChildren().contains(data));
 
-      assertTrue(parentData.isVisible());
+      assertFalse(parentData.isVisible());
 
       assertFalse(data.isVisible());
       assertFalse(data.getExpectedValue().equals(parentData.getValue()));
 
       parentData.setValue(data.getExpectedValue());
 
-      assertTrue(data.isVisible());
+      assertFalse(data.isVisible());
       assertTrue(data.getExpectedValue().equals(parentData.getValue()));
    }
 
