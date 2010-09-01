@@ -120,7 +120,7 @@ public class DeviceProperties extends Dialog
       final int usedAddr[] = parentLine.getUsedDeviceAddresses();
       
       //we want a list with all free addresses
-      String freeAddr[] = new String[(Device.MAX_ADDR - usedAddr.length + 1 + 1)];
+      String freeAddr[] = new String[(255 - usedAddr.length + 1 + 1)];
       
       int pos = 0;
       if (address == -1)
@@ -129,7 +129,7 @@ public class DeviceProperties extends Dialog
          freeAddr[pos] = Integer.toString(address); 
       pos++;
       
-      for (int cnt = 0 ; cnt <= Device.MAX_ADDR ; cnt++)
+      for (int cnt = 0 ; cnt <= 255 ; cnt++)
       {
          // search for next free number
          while (contains(usedAddr, cnt))
@@ -231,7 +231,7 @@ public class DeviceProperties extends Dialog
    {
       boolean ok = true;
       
-      if (!(inpName.getText().length() >= Device.MIN_NAME_LENGTH))
+      if (!(inpName.getText().length() >= 3))
          ok = false;
       
       // I do not know a nicer way to check if we have a valid address

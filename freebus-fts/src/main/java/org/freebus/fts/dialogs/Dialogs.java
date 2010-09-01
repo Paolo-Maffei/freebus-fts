@@ -88,7 +88,9 @@ public final class Dialogs
       sb.append("<html><body width=\"500px\"><h2>").append(I18n.getMessage("Dialogs.Exception_Caption"));
       sb.append("</h2><b>").append(message.replace("\n", "<br />"));
 
-      if (!message.endsWith(".") && !message.endsWith("?") && !message.endsWith("!"))
+      if (message.isEmpty())
+         sb.append(e.getClass().getName());
+      else if (!message.endsWith(".") && !message.endsWith("?") && !message.endsWith("!"))
          sb.append('.');
 
       sb.append("</b><br /><br /><hr /><br />");

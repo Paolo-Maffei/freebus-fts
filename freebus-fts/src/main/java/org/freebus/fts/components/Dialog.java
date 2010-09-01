@@ -16,8 +16,12 @@ import javax.swing.JComponent;
 import javax.swing.JDialog;
 import javax.swing.JPanel;
 
+import org.freebus.fts.dialogs.Dialogs;
+
 /**
  * Base class for custom dialog windows.
+ * 
+ * @see Dialogs FTS standard dialogs
  */
 public class Dialog extends JDialog
 {

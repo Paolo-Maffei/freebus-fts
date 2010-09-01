@@ -67,7 +67,7 @@ public final class ImageCache
 
       final ClassLoader classLoader = ImageCache.class.getClassLoader();
       final URL imgURL = classLoader.getResource(iconName + ".png");
-      final URL ovlURL = classLoader.getResource(overlayName + ".png");
+//      final URL ovlURL = classLoader.getResource(overlayName + ".png");
 
       // TODO, see http://www.jguru.com/faq/view.jsp?EID=130031
 

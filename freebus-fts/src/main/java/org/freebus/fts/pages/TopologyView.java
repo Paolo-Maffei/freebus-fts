@@ -99,7 +99,7 @@ public class TopologyView extends AbstractPage
                btnAddDevice.setEnabled(true);
                btnEditProperties.setEnabled(true);
                btnEditDevice.setEnabled(true);
-               btnDelete.setEnabled(true); // TODO not yet done
+               btnDelete.setEnabled(true);
             }
             else
             {
@@ -171,7 +171,7 @@ public class TopologyView extends AbstractPage
                editLineProperties((Line) obj);
          }
       });
-      
+
       btnEditDevice = new ToolBarButton(ImageCache.getIcon("icons/configure"));
       toolBar.add(btnEditDevice);
       btnEditDevice.setEnabled(false);
@@ -235,13 +235,13 @@ public class TopologyView extends AbstractPage
 
       treeModel.insertNodeInto(areaNode, rootNode, 0);
       tree.expandPath(new TreePath(rootNode));
-      
+
       updateContents();
    }
 
    /**
     * open the dialog to edit the properties of the area
-    * 
+    *
     * @param area to edit
     */
    protected void editAreaProperties(Area area)
@@ -258,13 +258,13 @@ public class TopologyView extends AbstractPage
       }
       area.setName(dlg.getAreaName());
       area.setAddress(dlg.getAddress());
-      
+
       updateContents();
    }
 
    /**
     * Delete the Area from the project
-    * 
+    *
     * @param area to delete
     */
    protected void deleteArea(Area area)
@@ -329,13 +329,13 @@ public class TopologyView extends AbstractPage
       treeModel.insertNodeInto(lineNode, areaNode, 0);
 
       tree.expandPath(new TreePath(areaNode));
-      
+
       //updateContents();
    }
 
    /**
     * open the dialog to edit the properties of the line
-    * 
+    *
     * @param line to edit
     */
    protected void editLineProperties(Line line)
@@ -352,13 +352,13 @@ public class TopologyView extends AbstractPage
       }
       line.setName(dlg.getLineName());
       line.setAddress(dlg.getAddress());
-      
+
       updateContents();
    }
 
    /**
     * Delete the Line from the project
-    * 
+    *
     * @param line to delete
     */
    protected void deleteLine(Line line)
@@ -367,12 +367,12 @@ public class TopologyView extends AbstractPage
          return;
 
       Area parentArea = line.getArea();
-      
+
       if (parentArea != null)
          parentArea.remove(line);
-      
+
       line = null;
-      
+
       updateContents();
    }
 
@@ -384,16 +384,16 @@ public class TopologyView extends AbstractPage
    {
       if (device == null)
          return;
-      
+
       Line line = device.getLine();
       if (line != null)
          line.remove(device);
-      
+
       device = null;
-      
+
       updateContents();
    }
-   
+
    /**
     * Add a device to the selected line.
     */
@@ -402,7 +402,7 @@ public class TopologyView extends AbstractPage
       Line line = device.getLine();
       if (line == null)
          return;
-      
+
       // Request name first
       final DeviceProperties dlg = new DeviceProperties(MainWindow.getInstance(), device);
       dlg.setVisible(true); // this dialog is modal
@@ -451,7 +451,7 @@ public class TopologyView extends AbstractPage
          //TODO Error dialog
          return;
       }
-      
+
       device.setAddress(freeAddr);
       line.add(device);
 
@@ -465,7 +465,7 @@ public class TopologyView extends AbstractPage
 
    /**
     * Edit the device.
-    * 
+    *
     * @param device - the device to edit.
     */
    protected void editDevice(final Device device)

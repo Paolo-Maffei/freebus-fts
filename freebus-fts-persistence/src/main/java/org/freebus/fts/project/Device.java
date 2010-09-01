@@ -1,5 +1,6 @@
 package org.freebus.fts.project;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +22,7 @@ import javax.persistence.TableGenerator;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
@@ -64,9 +66,6 @@ public final class Device
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
    private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
-
-   public final static int MAX_ADDR = 0xFF;        // The highest number valid for address
-   public final static int MIN_NAME_LENGTH = 3;    //TODO Define minimum accepted length for an Area Name
 
    /**
     * Create an empty device object.
@@ -342,6 +341,46 @@ public final class Device
    {
       // TODO Define if we want to allow a name for a device
       return getCatalogEntry().getName();
+   }
+
+   /**
+    * Set the name of the device.
+    *
+    * @param name - the name to set.
+    */
+   public void setName(String name)
+   {
+      // TODO Auto-generated method stub
+   }
+
+   /**
+    * Find all visible communication objects.
+    * 
+    * @return An array of all visible communication objects.
+    */
+   public CommunicationObject[] getVisibleCommunicationObjects()
+   {
+      final Vector<CommunicationObject> comObjects = new Vector<CommunicationObject>();
+
+      for (final CommunicationObject comObject: program.getCommunicationObjects())
+      {
+         final Parameter param = comObject.getParameter();
+         if (param == null)
+            continue;
+
+         final int val = getParameterIntValue(param);
+         final Integer parentVal = comObject.getParentParameterValue();
+         if (parentVal == null || !parentVal.equals(val))
+            continue;
+
+         comObjects.add(comObject);
+      }
+
+      final CommunicationObject[] arr = new CommunicationObject[comObjects.size()];
+      comObjects.toArray(arr);
+      Arrays.sort(arr);
+
+      return arr;
    }
 
    /**

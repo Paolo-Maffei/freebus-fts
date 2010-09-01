@@ -1,21 +1,24 @@
 package org.freebus.fts.pages;
 
-import java.awt.BorderLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 
-import javax.swing.JButton;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
-import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.pages.deviceeditor.CommObjectsPanel;
+import org.freebus.fts.pages.deviceeditor.GeneralPanel;
 import org.freebus.fts.project.Device;
-import org.freebus.fts.utils.ButtonUtils;
 
 /**
  * An editor for the details of a device: description, name, physical address,
@@ -25,7 +28,13 @@ public class DeviceEditor extends AbstractPage
 {
    private static final long serialVersionUID = 1396768831831692179L;
 
-   private ParameterEditor paramEdit = new ParameterEditor();
+   private final JLabel icon = new JLabel();
+   private final JLabel caption = new JLabel();
+   private final JTabbedPane tabPane = new JTabbedPane();
+   private final GeneralPanel generalPanel = new GeneralPanel();
+   private final CommObjectsPanel comObjectsPanel = new CommObjectsPanel();
+   private final ParameterEditor paramsPanel = new ParameterEditor();
+
    private Device device;
 
    /**
@@ -33,11 +42,30 @@ public class DeviceEditor extends AbstractPage
     */
    public DeviceEditor()
    {
-      setLayout(new BorderLayout());
+      setLayout(new GridBagLayout());
       setName(I18n.getMessage("DeviceEditor.EmptyTitle"));
 
-      add(paramEdit, BorderLayout.CENTER);
-      paramEdit.addChangeListener(new ChangeListener()
+      final Dimension iconSize = new Dimension(32, 32);
+      icon.setMinimumSize(iconSize);
+      icon.setMaximumSize(iconSize);
+      icon.setIcon(ImageCache.getIcon("icons-large/device"));
+      add(icon, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.VERTICAL,
+            new Insets(2, 4, 2, 4), 0, 0));
+
+      final Font fnt = caption.getFont();
+      caption.setFont(fnt.deriveFont(Font.BOLD).deriveFont(fnt.getSize2D() * 1.2f));
+      add(caption, new GridBagConstraints(1, 0, 1, 1, 100, 1, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+            new Insets(2, 4, 2, 0), 0, 0));
+
+      add(tabPane, new GridBagConstraints(0, 1, 2, 1, 100, 100, GridBagConstraints.NORTH, GridBagConstraints.BOTH,
+            new Insets(0, 0, 0, 0), 0, 0));
+
+      tabPane.add(I18n.getMessage("DeviceEditor.General") + " ", generalPanel);
+
+      tabPane.add(I18n.getMessage("DeviceEditor.CommunicationObjects"), comObjectsPanel);
+
+      tabPane.add(I18n.getMessage("DeviceEditor.Parameters"), paramsPanel);
+      paramsPanel.addChangeListener(new ChangeListener()
       {
          @Override
          public void stateChanged(ChangeEvent e)
@@ -46,60 +74,60 @@ public class DeviceEditor extends AbstractPage
          }
       });
 
-      initToolBar();
+      // initToolBar();
    }
 
-   /**
-    * Create the tool-bar.
-    */
-   private void initToolBar()
-   {
-      final ToolBar toolBar = new ToolBar();
-      add(toolBar, BorderLayout.NORTH);
-
-      final JButton btnApply = new JButton(I18n.getMessage("Button.Apply"), ImageCache.getIcon("icons/apply"));
-      ButtonUtils.setToolButtonProperties(btnApply);
-      toolBar.add(btnApply);
-      btnApply.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            apply();
-         }
-      });
-
-      final JButton btnRevert = new JButton(I18n.getMessage("Button.Revert"), ImageCache.getIcon("icons/undo"));
-      ButtonUtils.setToolButtonProperties(btnRevert);
-      toolBar.add(btnRevert);
-      btnRevert.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            setObject(device);
-         }
-      });
-
-      final JButton btnCancel = new JButton(I18n.getMessage("Button.Cancel"), ImageCache.getIcon("icons/cancel"));
-      ButtonUtils.setToolButtonProperties(btnCancel);
-      toolBar.add(btnCancel);
-      btnCancel.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            close();
-         }
-      });
-   }
+//   /**
+//    * Create the tool-bar.
+//    */
+//   private void initToolBar()
+//   {
+//      final ToolBar toolBar = new ToolBar();
+//      add(toolBar, BorderLayout.NORTH);
+//
+//      final JButton btnApply = new JButton(I18n.getMessage("Button.Apply"), ImageCache.getIcon("icons/apply"));
+//      ButtonUtils.setToolButtonProperties(btnApply);
+//      toolBar.add(btnApply);
+//      btnApply.addActionListener(new ActionListener()
+//      {
+//         @Override
+//         public void actionPerformed(ActionEvent e)
+//         {
+//            apply();
+//         }
+//      });
+//
+//      final JButton btnRevert = new JButton(I18n.getMessage("Button.Revert"), ImageCache.getIcon("icons/undo"));
+//      ButtonUtils.setToolButtonProperties(btnRevert);
+//      toolBar.add(btnRevert);
+//      btnRevert.addActionListener(new ActionListener()
+//      {
+//         @Override
+//         public void actionPerformed(ActionEvent e)
+//         {
+//            setObject(device);
+//         }
+//      });
+//
+//      final JButton btnCancel = new JButton(I18n.getMessage("Button.Cancel"), ImageCache.getIcon("icons/cancel"));
+//      ButtonUtils.setToolButtonProperties(btnCancel);
+//      toolBar.add(btnCancel);
+//      btnCancel.addActionListener(new ActionListener()
+//      {
+//         @Override
+//         public void actionPerformed(ActionEvent e)
+//         {
+//            close();
+//         }
+//      });
+//   }
 
    /**
     * Apply the changes to the project
     */
    public void apply()
    {
-      paramEdit.apply();
+      paramsPanel.apply();
       setModified(false);
    }
 
@@ -112,10 +140,16 @@ public class DeviceEditor extends AbstractPage
       device = (Device) o;
 
       setModified(false);
-      setName(I18n.formatMessage("DeviceEditor.Title", new Object[] { device.getPhysicalAddress(),
-            device.getCatalogEntry().getName() }));
 
-      paramEdit.setDevice(device);
+      final Object[] msgArgs = new Object[] { device.getPhysicalAddress(),
+            device.getCatalogEntry().getName() };
+      
+      setName(I18n.formatMessage("DeviceEditor.Title", msgArgs));
+      caption.setText(I18n.formatMessage("DeviceEditor.Caption", msgArgs));
+
+      paramsPanel.setDevice(device);
+      generalPanel.setDevice(device);
+      comObjectsPanel.setDevice(device);
    }
 
    /**

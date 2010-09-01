@@ -45,6 +45,7 @@ public class DeviceObject
    @Column(name = "object_comm", nullable = false)
    private boolean comm = true;
 
+   // enable transmissions
    @Column(name = "object_trans", nullable = false)
    private boolean trans = true;
 

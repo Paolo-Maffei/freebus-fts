@@ -19,7 +19,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "communication_object")
-public class CommunicationObject
+public class CommunicationObject implements Comparable<CommunicationObject>
 {
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenCommunicationObjectId")
@@ -313,5 +313,14 @@ public class CommunicationObject
    public void setUpdateEnabled(boolean updateEnabled)
    {
       this.updateEnabled = updateEnabled;
+   }
+
+   /**
+    * Compare two Objects by display order.
+    */
+   @Override
+   public int compareTo(CommunicationObject o)
+   {
+      return o.displayOrder - displayOrder;
    }
 }
