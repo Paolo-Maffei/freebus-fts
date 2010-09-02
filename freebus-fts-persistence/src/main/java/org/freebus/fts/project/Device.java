@@ -19,6 +19,7 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
+import javax.persistence.Transient;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.products.CatalogEntry;
@@ -36,7 +37,7 @@ import org.freebus.fts.products.VirtualDevice;
 public final class Device
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenDeviceId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenDeviceId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "device_id", nullable = false)
    private int id;
@@ -62,10 +63,13 @@ public final class Device
 
    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @MapKey(name = "parameter")
-   private Map<Parameter,DeviceParameterValue> parameterValues;
+   private Map<Parameter, DeviceParameterValue> parameterValues;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
    private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
+
+   @Transient
+   private DeviceParameters deviceParams;
 
    /**
     * Create an empty device object.
@@ -95,7 +99,7 @@ public final class Device
    /**
     * Create a device object by using {@link CatalogEntry} and {@link Program}
     * of a given {@link VirtualDevice}.
-    *
+    * 
     * @param id the id of the object
     * @param virtualDevice the virtual device, from which the
     *           {@link CatalogEntry} and {@link Program} are taken.
@@ -122,8 +126,9 @@ public final class Device
    }
 
    /**
-    * Set the address of the device. This is the last number of
-    * a physical address (e.g. 12 for 1.3.12)
+    * Set the address of the device. This is the last number of a physical
+    * address (e.g. 12 for 1.3.12)
+    * 
     * @param address the address to set
     */
    public void setAddress(int address)
@@ -141,7 +146,7 @@ public final class Device
 
    /**
     * Get the physical address of the device.
-    *
+    * 
     * @return the physical address of the device.
     */
    public PhysicalAddress getPhysicalAddress()
@@ -220,110 +225,15 @@ public final class Device
    }
 
    /**
-    * Set the visibility of a parameter. A parameter-value with value null
-    * is created for the parameter, if the parameter has no value.
-    *
-    * @param param - the parameter for which the visibility is set.
-    * @param visible - the visibility indicator.
+    * @return the device parameters object that is used to access the parameters
+    *         of the device.
     */
-   public void setParameterVisible(final Parameter param, boolean visible)
+   public synchronized DeviceParameters getDeviceParameters()
    {
-      if (parameterValues == null)
-         parameterValues = new HashMap<Parameter,DeviceParameterValue>();
+      if (deviceParams == null)
+         deviceParams = new DeviceParameters(this);
 
-      DeviceParameterValue val = parameterValues.get(param);
-      if (val == null)
-      {
-         val = new DeviceParameterValue(this, param, null);
-         parameterValues.put(param, val);
-      }
-
-      val.setVisible(visible);
-   }
-
-   /**
-    * Set the value of a parameter.
-    *
-    * @param param - the parameter for which a value will be set.
-    * @param value - the parameter value.
-    */
-   public void setParameterValue(final Parameter param, int value)
-   {
-      setParameterValue(param, (Object) value);
-   }
-
-   /**
-    * Set the value of a parameter.
-    *
-    * @param param - the parameter for which a value will be set.
-    * @param value - the parameter value.
-    */
-   public void setParameterValue(final Parameter param, String value)
-   {
-      setParameterValue(param, (Object) value);
-   }
-
-   /**
-    * Set the value of a parameter.
-    *
-    * @param param - the parameter for which a value will be set.
-    * @param value - the parameter value.
-    */
-   public void setParameterValue(final Parameter param, Object value)
-   {
-      if (parameterValues == null)
-         parameterValues = new HashMap<Parameter,DeviceParameterValue>();
-
-      final DeviceParameterValue val = parameterValues.get(param);
-      if (val == null) parameterValues.put(param, new DeviceParameterValue(this, param, value));
-      else val.setValue(value);
-   }
-
-   /**
-    * Returns the string value for the parameter <code>param</code>. If no value
-    * is yet set, the parameter's default value is returned.
-    *
-    * @param param the parameter whose value is requested.
-    * @return the parameter's value.
-    */
-   public String getParameterValue(final Parameter param)
-   {
-      if (parameterValues == null)
-         return param.getDefaultString();
-
-      final DeviceParameterValue val = parameterValues.get(param);
-      if (val == null) return param.getDefaultString();
-
-      return val.getValue();
-   }
-
-   /**
-    * Returns the integer value for the parameter <code>param</code>. If no value
-    * is yet set, the parameter's default value is returned.
-    *
-    * @param param the parameter whose value is requested.
-    * @return the parameter's value.
-    */
-   public int getParameterIntValue(final Parameter param)
-   {
-      if (parameterValues == null)
-         return param.getDefaultLong();
-
-      final DeviceParameterValue val = parameterValues.get(param);
-      if (val == null) return 0;
-
-      final Integer ival = val.getIntValue();
-      return ival == null ? 0 : ival;
-   }
-
-   /**
-    * Clear all parameter values of the device. Should be called when the program
-    * is changed.
-    */
-   public void clearParameterValues()
-   {
-      if (parameterValues != null)
-         parameterValues.clear();
+      return deviceParams;
    }
 
    /**
@@ -345,7 +255,7 @@ public final class Device
 
    /**
     * Set the name of the device.
-    *
+    * 
     * @param name - the name to set.
     */
    public void setName(String name)
@@ -354,21 +264,35 @@ public final class Device
    }
 
    /**
-    * Find all visible communication objects.
+    * Get the map of parameter values of the device. This is an internal method.
+    * 
+    * @return the parameter values of the device.
+    */
+   synchronized Map<Parameter, DeviceParameterValue> getParameterValues()
+   {
+      if (parameterValues == null)
+         parameterValues = new HashMap<Parameter, DeviceParameterValue>();
+
+      return parameterValues;
+   }
+
+   /**
+    * Find all active / visible communication objects.
     * 
     * @return An array of all visible communication objects.
     */
    public CommunicationObject[] getVisibleCommunicationObjects()
    {
       final Vector<CommunicationObject> comObjects = new Vector<CommunicationObject>();
-
-      for (final CommunicationObject comObject: program.getCommunicationObjects())
+      final DeviceParameters devParams = getDeviceParameters();
+      
+      for (final CommunicationObject comObject : program.getCommunicationObjects())
       {
          final Parameter param = comObject.getParameter();
          if (param == null)
             continue;
 
-         final int val = getParameterIntValue(param);
+         final int val = devParams.getIntValue(param);
          final Integer parentVal = comObject.getParentParameterValue();
          if (parentVal == null || !parentVal.equals(val))
             continue;
@@ -400,12 +324,11 @@ public final class Device
       if (id != oo.id || address != oo.address)
          return false;
 
-      if ((catalogEntry == null && oo.catalogEntry != null) ||
-          (catalogEntry != null && !catalogEntry.equals(oo.catalogEntry)))
+      if ((catalogEntry == null && oo.catalogEntry != null)
+            || (catalogEntry != null && !catalogEntry.equals(oo.catalogEntry)))
          return false;
 
-      if ((program == null && oo.program != null) ||
-          (program != null && !program.equals(oo.program)))
+      if ((program == null && oo.program != null) || (program != null && !program.equals(oo.program)))
          return false;
 
       return true;

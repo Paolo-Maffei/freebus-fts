@@ -8,6 +8,7 @@ import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.DeviceParameters;
 
 /**
  * Class that converts the parameter values of a {@link Device} to/from a map of
@@ -30,14 +31,15 @@ public final class DeviceParamData
 
       // Fill the set of parameter data objects
       final Program program = device.getProgram();
+      final DeviceParameters devParams = device.getDeviceParameters();
       for (final Parameter param : program.getParameters())
       {
          final ParameterAtomicType atomicType = param.getParameterType().getAtomicType();
          final ParamData data = new ParamData(param);
 
          if (atomicType == ParameterAtomicType.STRING)
-            data.setValue(device.getParameterValue(param));
-         else data.setValue(device.getParameterIntValue(param));
+            data.setValue(devParams.getValue(param));
+         else data.setValue(devParams.getIntValue(param));
 
          paramDatas.put(param, data);
       }
@@ -74,47 +76,15 @@ public final class DeviceParamData
    public static void applyParamData(final Device device, Map<Parameter, ParamData> paramDatas)
    {
       final Program program = device.getProgram();
+      final DeviceParameters devParams = device.getDeviceParameters();
 
       for (final Parameter param : program.getParameters())
       {
          final ParamData data = paramDatas.get(param);
 
-         if (param.getId() == 42856)
-         {
-            // Debug Catcher
-            Logger.getLogger(DeviceParamData.class).debug("data: " + data);
-         }
-
-         device.setParameterValue(param, data.getValue());
-         device.setParameterVisible(param, data.isVisible());
+         devParams.setValue(param, data.getValue());
+         devParams.setVisible(param, data.isVisible());
       }
-
-      //
-      // Old code from ParameterEditor:
-      //
-      // device.clearParameterValues();
-      //
-      // for (final ParamData data : paramDatas.values())
-      // {
-      // final Parameter param = data.getParameter();
-      // final Object value = data.getValue();
-      // Object defaultValue;
-      //
-      // if (param.getParameterType().getAtomicType() ==
-      // ParameterAtomicType.STRING)
-      // defaultValue = device.getParameterValue(param);
-      // else defaultValue = device.getParameterIntValue(param);
-      //
-      // final boolean isDefaultValue = (value == null ? defaultValue == null :
-      // value.equals(defaultValue));
-      // if (isDefaultValue)
-      // continue;
-      //
-      // device.setParameterValue(data.getParameter(), value);
-      // if (!data.isVisible())
-      // device.setParameterVisible(data.getParameter(), false);
-      // }
-
    }
 
    /*

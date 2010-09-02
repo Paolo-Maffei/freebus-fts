@@ -74,7 +74,7 @@ public class CommObjectsPanel extends JPanel implements DeviceEditorPart
 
       for (final CommunicationObject comObject: device.getVisibleCommunicationObjects())
       {
-         contents.add(new JLabel(comObject.getName()));
+         contents.add(new JLabel("#" + comObject.getId() + " - " + comObject.getName()));
       }
    }
 }

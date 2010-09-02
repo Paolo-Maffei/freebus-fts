@@ -134,10 +134,11 @@ public class TestDevice
       final Device device = new Device();
       device.setProgram(program);
 
-      assertEquals(123, device.getParameterIntValue(param));
+      final DeviceParameters devParams = device.getDeviceParameters();
+      assertEquals(123, devParams.getIntValue(param));
 
-      device.setParameterValue(param, 17);
-      assertEquals(17, device.getParameterIntValue(param));
+      devParams.setValue(param, 17);
+      assertEquals(17, devParams.getIntValue(param));
    }
 
    @Test

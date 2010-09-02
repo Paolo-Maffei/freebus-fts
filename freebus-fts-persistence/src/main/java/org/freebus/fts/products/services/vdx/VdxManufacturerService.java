@@ -40,22 +40,16 @@ public final class VdxManufacturerService implements ManufacturerService
 
    @SuppressWarnings("unchecked")
    @Override
-   public List<Manufacturer> getActiveManufacturers() throws PersistenceException
+   public synchronized List<Manufacturer> getActiveManufacturers() throws PersistenceException
    {
       if (activeManufacturers == null)
       {
-         synchronized (manager)
-         {
-            if (activeManufacturers == null)
-            {
-               activeManufacturers = new LinkedList<Manufacturer>();
+         activeManufacturers = new LinkedList<Manufacturer>();
 
-               for (Manufacturer m : (List<Manufacturer>) manager.fetchAll(Manufacturer.class))
-               {
-                  if (!functionalEntityService.getFunctionalEntities(m).isEmpty())
-                     activeManufacturers.add(m);
-               }
-            }
+         for (Manufacturer m : (List<Manufacturer>) manager.fetchAll(Manufacturer.class))
+         {
+            if (!functionalEntityService.getFunctionalEntities(m).isEmpty())
+               activeManufacturers.add(m);
          }
       }
 

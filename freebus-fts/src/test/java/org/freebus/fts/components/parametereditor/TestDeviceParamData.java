@@ -77,7 +77,7 @@ public class TestDeviceParamData
       assertEquals(0, data.getValue());
 
       // Test the value also direct from the device
-      assertEquals(0, device.getParameterIntValue(param));
+      assertEquals(0, device.getDeviceParameters().getIntValue(param));
 
       // Modify the value
       data.setValue(1);
@@ -86,8 +86,8 @@ public class TestDeviceParamData
       DeviceParamData.applyParamData(device, paramDatas);
 
       // Test if the value was properly applied
-      assertEquals(1, device.getParameterIntValue(param));
-      assertEquals("1", device.getParameterValue(param));
+      assertEquals(1, device.getDeviceParameters().getIntValue(param));
+      assertEquals("1", device.getDeviceParameters().getValue(param));
 
       // Get again and see if the values are still Ok
       paramDatas = DeviceParamData.createParamData(device);
