@@ -42,6 +42,9 @@ public final class Device
    @Column(name = "device_id", nullable = false)
    private int id;
 
+   @Column(name = "name", nullable = true)
+   private String name;
+
    @Column(name = "device_address", nullable = false)
    private int address;
 
@@ -63,7 +66,7 @@ public final class Device
 
    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @MapKey(name = "parameter")
-   private Map<Parameter, DeviceParameterValue> parameterValues;
+   private Map<Parameter, DeviceParameter> parameterValues;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
    private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
@@ -225,6 +228,28 @@ public final class Device
    }
 
    /**
+    * Get a device parameter. If no device parameter exists, one is created with
+    * the parameter's default value as value.
+    * 
+    * @param param - the parameter for which the device parameter is searched.
+    * @return The requested device parameter.
+    */
+   public synchronized DeviceParameter getDeviceParameter(Parameter param)
+   {
+      if (deviceParams == null)
+         deviceParams = new DeviceParameters(this);
+
+      DeviceParameter deviceParam = parameterValues.get(param);
+      if (deviceParam == null)
+      {
+         deviceParam = new DeviceParameter(this, param, param.getDefault());
+         parameterValues.put(param, deviceParam);
+      }
+
+      return deviceParam;
+   }
+
+   /**
     * @return the device parameters object that is used to access the parameters
     *         of the device.
     */
@@ -249,8 +274,13 @@ public final class Device
     */
    public String getName()
    {
-      // TODO Define if we want to allow a name for a device
-      return getCatalogEntry().getName();
+      if (name != null)
+         return name;
+
+      if (catalogEntry != null)
+         return catalogEntry.getName();
+
+      return "device#" + id;
    }
 
    /**
@@ -260,7 +290,7 @@ public final class Device
     */
    public void setName(String name)
    {
-      // TODO Auto-generated method stub
+      this.name = name;
    }
 
    /**
@@ -268,12 +298,35 @@ public final class Device
     * 
     * @return the parameter values of the device.
     */
-   synchronized Map<Parameter, DeviceParameterValue> getParameterValues()
+   synchronized Map<Parameter, DeviceParameter> getParameterValues()
    {
       if (parameterValues == null)
-         parameterValues = new HashMap<Parameter, DeviceParameterValue>();
+         parameterValues = new HashMap<Parameter, DeviceParameter>();
 
       return parameterValues;
+   }
+
+   /**
+    * Test if a specific communication object is visible.
+    * 
+    * @param comObject - the communication object to test.
+    * @return true if the communication object is visible.
+    */
+   public boolean isVisible(final CommunicationObject comObject)
+   {
+      final Parameter param = comObject.getParameter();
+      if (param == null)
+         return true;
+
+      final DeviceParameter devParam = getDeviceParameter(param);
+      if (!devParam.isVisible())
+         return false;
+
+      final Integer expectedParamValue = comObject.getParameterValue();
+      if (expectedParamValue == null)
+         return true;
+
+      return expectedParamValue.equals(devParam.getIntValue());
    }
 
    /**
@@ -284,20 +337,11 @@ public final class Device
    public CommunicationObject[] getVisibleCommunicationObjects()
    {
       final Vector<CommunicationObject> comObjects = new Vector<CommunicationObject>();
-      final DeviceParameters devParams = getDeviceParameters();
-      
+
       for (final CommunicationObject comObject : program.getCommunicationObjects())
       {
-         final Parameter param = comObject.getParameter();
-         if (param == null)
-            continue;
-
-         final int val = devParams.getIntValue(param);
-         final Integer parentVal = comObject.getParentParameterValue();
-         if (parentVal == null || !parentVal.equals(val))
-            continue;
-
-         comObjects.add(comObject);
+         if (isVisible(comObject))
+            comObjects.add(comObject);
       }
 
       final CommunicationObject[] arr = new CommunicationObject[comObjects.size()];
@@ -349,6 +393,6 @@ public final class Device
    @Override
    public String toString()
    {
-      return getPhysicalAddress().toString() + ' ' + catalogEntry;
+      return getPhysicalAddress().toString() + ' ' + getName();
    }
 }

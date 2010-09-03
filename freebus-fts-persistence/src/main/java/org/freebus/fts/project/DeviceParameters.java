@@ -29,7 +29,7 @@ public class DeviceParameters
     */
    public void clear()
    {
-      final Map<Parameter, DeviceParameterValue> values = getParameterValues();
+      final Map<Parameter, DeviceParameter> values = getParameterValues();
       if (values != null)
          values.clear();
    }
@@ -43,9 +43,9 @@ public class DeviceParameters
     */
    public String getValue(final Parameter param)
    {
-      final Map<Parameter, DeviceParameterValue> values = getParameterValues();
+      final Map<Parameter, DeviceParameter> values = getParameterValues();
 
-      final DeviceParameterValue val = values != null ? values.get(param) : null;
+      final DeviceParameter val = values != null ? values.get(param) : null;
       if (val == null)
          return param.getDefaultString();
 
@@ -61,12 +61,12 @@ public class DeviceParameters
     */
    public int getIntValue(final Parameter param)
    {
-      final Map<Parameter, DeviceParameterValue> values = getParameterValues();
+      final Map<Parameter, DeviceParameter> values = getParameterValues();
 
       if (values == null)
          return param.getDefaultLong();
 
-      final DeviceParameterValue val = values.get(param);
+      final DeviceParameter val = values.get(param);
       if (val == null)
          return param.getDefaultLong();
 
@@ -104,9 +104,9 @@ public class DeviceParameters
     */
    public void setValue(Parameter param, Object value)
    {
-      final Map<Parameter, DeviceParameterValue> values = getParameterValues();
+      final Map<Parameter, DeviceParameter> values = getParameterValues();
       if (values != null)
-         values.put(param, new DeviceParameterValue(device.get(), param, value));
+         values.put(param, new DeviceParameter(device.get(), param, value));
    }
 
    /**
@@ -120,12 +120,15 @@ public class DeviceParameters
       if (param.getLowAccess() == 0)
          return false;
 
-      final Map<Parameter, DeviceParameterValue> values = getParameterValues();
-      if (values == null)
-         return false;
+      final Parameter parentParam = param.getParent();
+      if (parentParam == null)
+         return true;
 
-      final DeviceParameterValue val = values.get(param);
-      return val != null && val.isVisible();
+      final Integer expectedParentValue = param.getParentValue();
+      if (expectedParentValue == null)
+         return true;
+
+      return expectedParentValue.equals(getValue(parentParam));
    }
 
    /**
@@ -137,14 +140,14 @@ public class DeviceParameters
     */
    public void setVisible(final Parameter param, boolean visible)
    {
-      final Map<Parameter, DeviceParameterValue> values = getParameterValues();
+      final Map<Parameter, DeviceParameter> values = getParameterValues();
       if (values == null)
          return;
 
-      DeviceParameterValue val = values.get(param);
+      DeviceParameter val = values.get(param);
       if (val == null)
       {
-         val = new DeviceParameterValue(getDevice(), param, null);
+         val = new DeviceParameter(getDevice(), param, null);
          values.put(param, val);
       }
 
@@ -163,7 +166,7 @@ public class DeviceParameters
    /**
     * @return The map of parameter values, or null if the device is null.
     */
-   private Map<Parameter, DeviceParameterValue> getParameterValues()
+   private Map<Parameter, DeviceParameter> getParameterValues()
    {
       final Device dev = device.get();
       if (dev == null)

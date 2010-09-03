@@ -45,6 +45,6 @@ public final class BusMonitorAction extends BasicAction
       }
 
       if (bus != null)
-         mainWin.showUniquePage(BusMonitor.class, bus);
+         mainWin.showPage(BusMonitor.class, bus);
    }
 }

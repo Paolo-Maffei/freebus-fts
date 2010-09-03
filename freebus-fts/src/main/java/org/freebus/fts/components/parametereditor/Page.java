@@ -166,14 +166,8 @@ public class Page extends JPanel
       int gridRow = -1;
       for (final ParamData data : childDatas)
       {
-         if (!data.isVisible())
-            continue;
-
-         final Parameter param = data.getParameter();
-         if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
-            continue;
-
-         createParamComponent(data, ++gridRow);
+         if (data.isVisible())
+            createParamComponent(data, ++gridRow);
       }
    }
 

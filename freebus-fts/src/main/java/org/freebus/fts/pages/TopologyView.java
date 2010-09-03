@@ -470,7 +470,8 @@ public class TopologyView extends AbstractPage
     */
    protected void editDevice(final Device device)
    {
-      MainWindow.getInstance().showUniquePage(DeviceEditor.class, device);
+      //MainWindow.getInstance().showUniquePage(DeviceEditor.class, device);
+      MainWindow.getInstance().showPage(DeviceEditor.class, device);
    }
 
    /**

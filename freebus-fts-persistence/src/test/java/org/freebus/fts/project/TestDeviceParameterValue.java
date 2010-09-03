@@ -13,7 +13,7 @@ public class TestDeviceParameterValue
    @Test
    public final void testDeviceParameterValue()
    {
-      final DeviceParameterValue paramValue = new DeviceParameterValue();
+      final DeviceParameter paramValue = new DeviceParameter();
       assertNull(paramValue.getIntValue());
       assertNull(paramValue.getValue());
       assertNull(paramValue.getDevice());
@@ -24,7 +24,7 @@ public class TestDeviceParameterValue
    {
       final Device device = new Device();
       final Parameter param = new Parameter();
-      final DeviceParameterValue paramValue = new DeviceParameterValue(device, param, null);
+      final DeviceParameter paramValue = new DeviceParameter(device, param, null);
 
       assertEquals(device, paramValue.getDevice());
       assertEquals(param, paramValue.getParameter());
@@ -38,7 +38,7 @@ public class TestDeviceParameterValue
       final Device device = new Device();
       final Parameter param = new Parameter();
       final int val = 12;
-      final DeviceParameterValue paramValue = new DeviceParameterValue(device, param, val);
+      final DeviceParameter paramValue = new DeviceParameter(device, param, val);
 
       assertEquals(device, paramValue.getDevice());
       assertEquals(param, paramValue.getParameter());
@@ -52,7 +52,7 @@ public class TestDeviceParameterValue
       final Device device = new Device();
       final Parameter param = new Parameter();
       final String val = "str";
-      final DeviceParameterValue paramValue = new DeviceParameterValue(device, param, val);
+      final DeviceParameter paramValue = new DeviceParameter(device, param, val);
 
       assertEquals(device, paramValue.getDevice());
       assertEquals(param, paramValue.getParameter());
@@ -62,7 +62,7 @@ public class TestDeviceParameterValue
    @Test
    public final void testGetSetDevice()
    {
-      final DeviceParameterValue paramValue = new DeviceParameterValue();
+      final DeviceParameter paramValue = new DeviceParameter();
 
       final Device device = new Device();
       paramValue.setDevice(device);
@@ -75,7 +75,7 @@ public class TestDeviceParameterValue
    @Test
    public final void testGetSetStringValue()
    {
-      final DeviceParameterValue paramValue = new DeviceParameterValue("string-value");
+      final DeviceParameter paramValue = new DeviceParameter("string-value");
 
       paramValue.setValue("test-1");
       assertEquals("test-1", paramValue.getValue());
@@ -87,7 +87,7 @@ public class TestDeviceParameterValue
    @Test
    public final void testGetSetIntValue()
    {
-      final DeviceParameterValue paramValue = new DeviceParameterValue("1234");
+      final DeviceParameter paramValue = new DeviceParameter("1234");
 
       paramValue.setValue(176);
       assertEquals(Integer.valueOf(176), paramValue.getIntValue());
@@ -99,7 +99,7 @@ public class TestDeviceParameterValue
    @Test
    public final void testSetIsVisible()
    {
-      final DeviceParameterValue paramValue = new DeviceParameterValue();
+      final DeviceParameter paramValue = new DeviceParameter();
 
       paramValue.setVisible(true);
       assertTrue(paramValue.isVisible());

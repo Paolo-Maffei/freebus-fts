@@ -32,6 +32,24 @@
   </createIndex>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.3-4">
+  <dropIndex tableName="device_parameter_value" indexName="FK_device_parameter_value_device_id" />
+  <renameTable newTableName="device_parameter" oldTableName="device_parameter_value" />
+  <createIndex indexName="FK_device_parameter_device_id" tableName="device_parameter" unique="false">
+   <column name="device_id" />
+  </createIndex>
+ </changeSet>
+ 
+ <changeSet author="stefant" id="0.1.3-5">
+  <dropColumn tableName="parameter" columnName="visible"/>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.3-6">
+  <addColumn tableName="device">
+   <column name="name" type="VARCHAR(32)" />
+  </addColumn>
+ </changeSet>
+
  <!-- changeSet author="stefant" id="0.1.1-45">
   <createIndex indexName="FK_parameter_parameter_type_id"
    tableName="PARAMETER" unique="false">

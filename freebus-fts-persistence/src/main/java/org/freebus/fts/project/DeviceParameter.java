@@ -10,18 +10,17 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.freebus.fts.persistence.vdx.VdxEntity;
 import org.freebus.fts.persistence.vdx.VdxField;
 import org.freebus.fts.products.Parameter;
 
 /**
- * The parameter value of a specific {@link Device} device. The parameter values
- * are set by the parameter editor when the user parameterizes a device.
+ * The parameter of a specific {@link Device} device, including the current
+ * parameter value. The parameter values are set by the parameter editor when
+ * the user parameterizes a device.
  */
 @Entity
-@VdxEntity(name = "device_parameter")
-@Table(name = "device_parameter_value")
-public class DeviceParameterValue
+@Table(name = "device_parameter")
+public class DeviceParameter
 {
    @Id
    @ManyToOne(optional = false, fetch = FetchType.LAZY)
@@ -45,16 +44,16 @@ public class DeviceParameterValue
    private boolean visible = true;
 
    /**
-    * Create an empty device parameter-value object.
+    * Create an empty device parameter object.
     */
-   public DeviceParameterValue()
+   public DeviceParameter()
    {
    }
 
    /**
-    * Create an initialized device parameter-value object.
+    * Create an initialized device parameter object.
     */
-   public DeviceParameterValue(Device device, Parameter parameter, Object value)
+   public DeviceParameter(Device device, Parameter parameter, Object value)
    {
       this.device = device;
       this.parameter = parameter;
@@ -64,7 +63,7 @@ public class DeviceParameterValue
    /**
     * An internal constructor, mainly for unit tests
     */
-   DeviceParameterValue(String stringValue)
+   DeviceParameter(String stringValue)
    {
       this.stringValue = stringValue;
    }
@@ -86,11 +85,26 @@ public class DeviceParameterValue
    }
 
    /**
-    * @return the parameter
+    * @return The parameter
     */
    public Parameter getParameter()
    {
       return parameter;
+   }
+
+   /**
+    * @return The parent device parameter, or null if the parameter has no parent.
+    */
+   public DeviceParameter getParent()
+   {
+      if (parameter == null)
+         return null;
+
+      final Parameter parentParam = parameter.getParent();
+      if (parentParam == null)
+         return null;
+
+      return  device.getDeviceParameter(parentParam);
    }
 
    /**
@@ -111,7 +125,7 @@ public class DeviceParameterValue
 
    /**
     * @return the value as integer. Returns zero if the value is not set.
-    *
+    * 
     * @throws ClassCastException if the value cannot be cast to an
     *            {@link Integer}.
     */
@@ -145,11 +159,27 @@ public class DeviceParameterValue
    }
 
    /**
-    * @return the visible flag.
+    * Test if the parameter is visible.
+    * 
+    * @return true if the parameter is visible.
     */
    public boolean isVisible()
    {
-      return visible;
+      if (parameter.getLowAccess() == 0)
+         return false;
+
+      final DeviceParameter parent = getParent();
+      if (parent == null)
+         return true;
+
+      if (!parent.isVisible())
+         return false;
+
+      final Integer expectedParentValue = parameter.getParentValue();
+      if (expectedParentValue == null)
+         return true;
+
+      return expectedParentValue.equals(parent.getIntValue());
    }
 
    /**

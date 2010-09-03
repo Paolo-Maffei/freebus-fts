@@ -15,6 +15,7 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.actions.Actions;
+import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.LogLine;
 import org.freebus.fts.components.ToolBar;
@@ -89,13 +90,14 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
 
       JobQueue.getDefaultJobQueue().addListener(this);
 
-      showUniquePage(TopologyView.class, null);
-      showUniquePage(PhysicalView.class, null);
-      showUniquePage(LogicalView.class, null);
+      AbstractPage startPage;
+      startPage = showPage(TopologyView.class, null);
+      showPage(PhysicalView.class, null);
+      showPage(LogicalView.class, null);
 
       ProjectManager.addListener(this);
 
-      setSelectedPage(getUniquePage(TopologyView.class));
+      setSelectedPage(startPage);
 
       final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
       setSize((int) (screenSize.width * 0.9), (int) (screenSize.height * 0.9));
@@ -256,7 +258,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
    {
       final Device device = new Device(0, virtualDevice);
 
-      final TopologyView topologyView = (TopologyView) getUniquePage(TopologyView.class);
+      final TopologyView topologyView = (TopologyView) getPage(TopologyView.class, null);
       if (topologyView == null)
          return;
 

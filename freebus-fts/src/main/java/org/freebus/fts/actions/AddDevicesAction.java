@@ -29,10 +29,7 @@ public final class AddDevicesAction extends BasicAction
    public void actionPerformed(ActionEvent event)
    {
       final MainWindow mainWin = MainWindow.getInstance();
-      final AddVirtualDeviceBrowser page;
-
-      mainWin.showUniquePage(AddVirtualDeviceBrowser.class, null);
-      page = (AddVirtualDeviceBrowser) mainWin.getUniquePage(AddVirtualDeviceBrowser.class);
+      final AddVirtualDeviceBrowser page = (AddVirtualDeviceBrowser) mainWin.showPage(AddVirtualDeviceBrowser.class, null);
       page.setProjectController(mainWin);
    }
 }

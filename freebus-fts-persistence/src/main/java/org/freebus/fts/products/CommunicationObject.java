@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.persistence.vdx.VdxField;
+
 /**
  * A communication object of a program. Communication objects are the interface
  * to other devices on the bus. Group data telegrams send and receive the data
@@ -54,6 +56,7 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    private boolean transEnabled;
 
    @Column(name = "display_order")
+   @VdxField(name = "object_display_order")
    private int displayOrder;
 
    @Column(name = "parent_parameter_value")
@@ -234,21 +237,24 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    }
 
    /**
-    * @return the parent parameter value
+    * The communication object is visible/available if the {@link #getParameter() parameter}
+    * has this value.
+    * 
+    * @return the expected parameter value.
     */
-   public Integer getParentParameterValue()
+   public Integer getParameterValue()
    {
       return parentParameterValue;
    }
 
    /**
-    * Set the value of the parent parameter.
+    * Set the expected value of the parameter.
     *
-    * @param parentParameterValue the parent parameter value to set
+    * @param value - the expected parameter value to set
     */
-   public void setParentParameterValue(Integer parentParameterValue)
+   public void setParameterValue(Integer value)
    {
-      this.parentParameterValue = parentParameterValue;
+      this.parentParameterValue = value;
    }
 
    /**
@@ -321,6 +327,6 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    @Override
    public int compareTo(CommunicationObject o)
    {
-      return o.displayOrder - displayOrder;
+      return displayOrder - o.displayOrder;
    }
 }

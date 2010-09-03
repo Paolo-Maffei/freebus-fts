@@ -33,7 +33,7 @@ public final class DeviceStatusAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showUniquePage(DeviceStatus.class, null);
+      MainWindow.getInstance().showPage(DeviceStatus.class, null);
    }
 
 }

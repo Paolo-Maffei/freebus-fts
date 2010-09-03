@@ -27,6 +27,6 @@ public final class TopologyViewAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showUniquePage(TopologyView.class, null);
+      MainWindow.getInstance().showPage(TopologyView.class, null);
    }
 }

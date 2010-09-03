@@ -17,6 +17,7 @@ import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.pages.deviceeditor.CommObjectsPanel;
+import org.freebus.fts.pages.deviceeditor.DebugPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;
 import org.freebus.fts.project.Device;
 
@@ -34,6 +35,7 @@ public class DeviceEditor extends AbstractPage
    private final GeneralPanel generalPanel = new GeneralPanel();
    private final CommObjectsPanel comObjectsPanel = new CommObjectsPanel();
    private final ParameterEditor paramsPanel = new ParameterEditor();
+   private final DebugPanel debugPanel = new DebugPanel();
 
    private Device device;
 
@@ -70,9 +72,14 @@ public class DeviceEditor extends AbstractPage
          @Override
          public void stateChanged(ChangeEvent e)
          {
-            setModified(true);
+            paramsPanel.apply();
+            comObjectsPanel.updateContents();
+            debugPanel.updateContents();
+            //setModified(true);
          }
       });
+
+      tabPane.add(I18n.getMessage("DeviceEditor.Debug"), debugPanel);
 
       // initToolBar();
    }
@@ -150,6 +157,7 @@ public class DeviceEditor extends AbstractPage
       paramsPanel.setDevice(device);
       generalPanel.setDevice(device);
       comObjectsPanel.setDevice(device);
+      debugPanel.setDevice(device);
    }
 
    /**

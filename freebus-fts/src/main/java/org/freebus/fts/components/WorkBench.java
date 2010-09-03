@@ -1,11 +1,14 @@
 package org.freebus.fts.components;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.event.ContainerAdapter;
+import java.awt.event.ContainerEvent;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
 import javax.swing.JFrame;
@@ -17,6 +20,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.WorkBenchPageId;
 import org.freebus.fts.dialogs.Dialogs;
 
 /**
@@ -33,7 +37,7 @@ public class WorkBench extends JFrame
    private final JPanel bottomLeftPanel;
    private final StatusBar statusBar = new StatusBar();
 
-   private final Map<Class<? extends AbstractPage>, AbstractPage> uniquePages = new HashMap<Class<? extends AbstractPage>, AbstractPage>();
+   private final Map<WorkBenchPageId, AbstractPage> pages = new HashMap<WorkBenchPageId, AbstractPage>();
 
    /**
     * Create a workbench window.
@@ -50,6 +54,7 @@ public class WorkBench extends JFrame
       leftTabbedPane = new ExtTabbedPane();
       leftTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
       leftTabbedPane.setBorder(BorderFactory.createEmptyBorder());
+      leftTabbedPane.addContainerListener(panesContainerAdapter);
       leftPanel.add(leftTabbedPane, BorderLayout.CENTER);
 
       bottomLeftPanel = new JPanel();
@@ -59,6 +64,7 @@ public class WorkBench extends JFrame
       centerTabbedPane = new ExtTabbedPane();
       centerTabbedPane.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
       centerTabbedPane.setBorder(BorderFactory.createEmptyBorder());
+      centerTabbedPane.addContainerListener(panesContainerAdapter);
 
       leftCenterSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, centerTabbedPane);
       add(leftCenterSplit, BorderLayout.CENTER);
@@ -72,13 +78,38 @@ public class WorkBench extends JFrame
       add(statusBar, BorderLayout.SOUTH);
    }
 
+   //
+   //  Container adapter that removes the page from the map of pages when the page is closed.
+   //
+   private final ContainerAdapter panesContainerAdapter = new ContainerAdapter()
+   {
+      @Override
+      public void componentRemoved(ContainerEvent e)
+      {
+         final Component child = e.getChild();
+         if (!(child instanceof AbstractPage))
+            return;
+
+         final AbstractPage page = (AbstractPage) child;
+
+         for (Entry<WorkBenchPageId,AbstractPage> entry: pages.entrySet())
+         {
+            if (entry.getValue() == page)
+            {
+               pages.remove(entry.getKey());
+               break;
+            }
+         }
+      }
+   };
+
    /**
     * Add a page to the work-bench and show it.
-    *
+    * 
     * @param page - the page to add.
     * @return true if the page was successfully added.
     */
-   public synchronized boolean addPage(AbstractPage page)
+   private synchronized boolean addPage(AbstractPage page)
    {
       JTabbedPane pane = null;
 
@@ -96,8 +127,8 @@ public class WorkBench extends JFrame
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, I18n.formatMessage("WorkBench.errAddPage", new Object[] { page.getClass()
-               .getName() }));
+         Dialogs.showExceptionDialog(e,
+               I18n.formatMessage("WorkBench.errAddPage", new Object[] { page.getClass().getName() }));
          return false;
       }
 
@@ -108,15 +139,15 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Add a page to the work-bench and show it. When the page is created
-    * and visible, the page's {@link AbstractPage#setObject(Object)} is called.
-    *
+    * Add a page to the work-bench and show it. When the page is created and
+    * visible, the page's {@link AbstractPage#setObject(Object)} is called.
+    * 
     * @param page - the page to add.
     * @param obj - the object that is given to the page via
     *           {@link AbstractPage#setObject(Object)}.
     * @return true if the page was successfully added.
     */
-   public synchronized boolean addPage(AbstractPage page, Object obj)
+   public boolean addPage(AbstractPage page, Object obj)
    {
       if (!addPage(page))
          return false;
@@ -156,12 +187,17 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * @return The page object for the given class, or null if the page is
+    * Lookup a page.
+    * 
+    * @param pageClass - the class of the page that is searched.
+    * @param obj - the object of the page that is searched.
+    * 
+    * @return The page object for the given class/object, or null if the page is
     *         currently not opened.
     */
-   public AbstractPage getUniquePage(Class<? extends AbstractPage> pageClass)
+   public AbstractPage getPage(final Class<? extends AbstractPage> pageClass, final Object obj)
    {
-      return uniquePages.get(pageClass);
+      return pages.get(new WorkBenchPageId(pageClass, obj));
    }
 
    /**
@@ -177,11 +213,11 @@ public class WorkBench extends JFrame
    /**
     * Set the page-object of the given page. The actual setting of the object
     * happens after all pending Swing events are processed.
-    *
+    * 
     * @param page - the page to process.
     * @param obj - the object to set.
     */
-   protected synchronized void setPageObject(final AbstractPage page, final Object obj)
+   private synchronized void setPageObject(final AbstractPage page, final Object obj)
    {
       SwingUtilities.invokeLater(new Runnable()
       {
@@ -217,37 +253,49 @@ public class WorkBench extends JFrame
    }
 
    /**
-    * Create or show the page with the given class. Set the object that the page
-    * shall display to the object displayedObject.
+    * Create or show the page with the given class and object. Set the object
+    * that the page shall display to the object displayedObject.
+    *
+    * @param pageClass - the class of the page to show.
+    * @param obj - the object that is displayed in the page. May be null.
+    * 
+    * @return the shown page.
     */
-   public synchronized void showUniquePage(Class<? extends AbstractPage> pageClass, final Object obj)
+   public synchronized AbstractPage showPage(Class<? extends AbstractPage> pageClass, final Object obj)
    {
-      AbstractPage page = uniquePages.get(pageClass);
+      final WorkBenchPageId key = new WorkBenchPageId(pageClass, obj);
+      AbstractPage page = pages.get(key);
       if (page == null)
       {
          try
          {
             page = pageClass.newInstance();
-            if (!addPage(page))
-               return;
+            if (!addPage(page, obj))
+               return null;
 
-            uniquePages.put(pageClass, page);
+            pages.put(key, page);
          }
          catch (Exception e)
          {
-            Dialogs.showExceptionDialog(e, I18n.formatMessage("WorkBench.errCreatePage", new Object[] { pageClass
-                  .getName() }));
-            return;
+            Dialogs.showExceptionDialog(e,
+                  I18n.formatMessage("WorkBench.errCreatePage", new Object[] { pageClass.getName() }));
+            return null;
          }
       }
-      else
-      {
-         if (!addPage(page))
-            return;
-      }
+
+      final PagePosition pagePos = page.getPagePosition();
+
+      JTabbedPane pane = null;
+      if (pagePos == PagePosition.CENTER)
+         pane = centerTabbedPane;
+      else if (pagePos == PagePosition.LEFT)
+         pane = leftTabbedPane;
+      else throw new RuntimeException("Internal error: invalid page position");
 
       page.setVisible(true);
-      setPageObject(page, obj);
+      pane.setSelectedComponent(page);
+
+      return page;
    }
 
    /**
@@ -255,10 +303,7 @@ public class WorkBench extends JFrame
     */
    public void updateContents()
    {
-      final Iterator<Class<? extends AbstractPage>> it = uniquePages.keySet().iterator();
-      while (it.hasNext())
-      {
-         uniquePages.get(it.next()).updateContents();
-      }
+      for (Entry<WorkBenchPageId,AbstractPage> entry: pages.entrySet())
+         entry.getValue().updateContents();
    }
 }

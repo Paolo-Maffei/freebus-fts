@@ -27,6 +27,6 @@ public final class LogicalViewAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showUniquePage(LogicalView.class, null);
+      MainWindow.getInstance().showPage(LogicalView.class, null);
    }
 }

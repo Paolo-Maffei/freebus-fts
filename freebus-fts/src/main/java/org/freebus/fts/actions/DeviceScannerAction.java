@@ -28,6 +28,6 @@ public final class DeviceScannerAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showUniquePage(DeviceScanner.class, null);
+      MainWindow.getInstance().showPage(DeviceScanner.class, null);
    }
 }

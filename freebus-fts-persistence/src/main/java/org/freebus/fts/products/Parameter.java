@@ -20,7 +20,7 @@ import javax.persistence.TableGenerator;
 public class Parameter
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenParameterId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenParameterId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "parameter_id", nullable = false)
    private int id;
@@ -88,9 +88,6 @@ public class Parameter
    @Column(name = "address_space", columnDefinition = "SMALLINT")
    private int addressSpace;
 
-   @Column(name = "visible")
-   private boolean visible;
-
    /**
     * Create an empty parameter object.
     */
@@ -100,7 +97,7 @@ public class Parameter
 
    /**
     * Create a parameter object with a parameter type.
-    *
+    * 
     * @param paramType - the parameter type of the parameter.
     */
    public Parameter(final ParameterType paramType)
@@ -269,7 +266,7 @@ public class Parameter
    }
 
    /**
-    * @return the parent parameter value, or null if undefined.
+    * @return the expected parent parameter's value, or null if undefined.
     */
    public Integer getParentValue()
    {
@@ -277,7 +274,7 @@ public class Parameter
    }
 
    /**
-    * Set the parent parameter value. May be null, if undefined.
+    * Set the expected parent parameter's value. May be null, if undefined.
     */
    public void setParentValue(Integer parentValue)
    {
@@ -342,7 +339,7 @@ public class Parameter
 
    /**
     * Set the address of the parameter.
-    *
+    * 
     * @param address the address to set, may be null.
     */
    public void setAddress(Integer address)
@@ -360,7 +357,7 @@ public class Parameter
 
    /**
     * Set the bit offset of the parameter value.
-    *
+    * 
     * @param bitOffset the bitOffset to set
     */
    public void setBitOffset(int bitOffset)
@@ -369,10 +366,10 @@ public class Parameter
    }
 
    /**
-    * Returns the default value. Depending on the atomic type of
-    * the parameter value this can be an {@link Integer}, {@link String},
-    * or <code>null</code>.
-    *
+    * Returns the default value. Depending on the atomic type of the parameter
+    * value this can be an {@link Integer}, {@link String}, or <code>null</code>
+    * .
+    * 
     * @return the default value.
     */
    public Object getDefault()
@@ -382,8 +379,8 @@ public class Parameter
 
       final ParameterAtomicType atomicType = paramType.getAtomicType();
 
-      if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED ||
-            atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
+      if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED
+            || atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
          return defaultLong;
       else if (atomicType == ParameterAtomicType.STRING)
          return defaultString;
@@ -472,19 +469,14 @@ public class Parameter
    }
 
    /**
-    * @param visible the visible to set
+    * Test if the parameter denotes a page. This is,
+    * if the {@link #getAddress() address} is null.
+    *
+    * @return true if the parameter is a page.
     */
-   public void setVisible(boolean visible)
+   public boolean isPage()
    {
-      this.visible = visible;
-   }
-
-   /**
-    * @return the visible
-    */
-   public boolean isVisible()
-   {
-      return visible;
+      return address == null;
    }
 
    /**

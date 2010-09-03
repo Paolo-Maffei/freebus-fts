@@ -75,18 +75,11 @@ public class ParamData
     */
    public boolean isVisible()
    {
-      if (param.getId() == 42869)
-      {
-         // Debug hook
-         Logger.getLogger(getClass()).debug("Param: " + param);
-      }
+      if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
+         return false;
 
       if (parent == null)
-      {
-         if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
-            return false;
-         else return true;
-      }
+         return true;
 
       if (!parent.isVisible())
          return false;
@@ -146,7 +139,7 @@ public class ParamData
     */
    public boolean isPage()
    {
-      return param.getAddress() == null;
+      return param.isPage();
    }
 
    /**

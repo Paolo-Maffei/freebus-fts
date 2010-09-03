@@ -27,6 +27,6 @@ public final class PhysicalViewAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showUniquePage(PhysicalView.class, null);
+      MainWindow.getInstance().showPage(PhysicalView.class, null);
    }
 }

@@ -18,7 +18,7 @@ import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.products.services.vdx.VdxProductsFactory;
-import org.freebus.fts.project.DeviceParameterValue;
+import org.freebus.fts.project.DeviceParameter;
 
 /**
  * Class for importing parts of a org.freebus.fts.products database into FTS'
@@ -56,7 +56,7 @@ public final class ProductsImporter
       if (ownTransaction)
          destFactory.getTransaction().begin();
 
-      fixParameters(devices);
+//      fixParameters(devices);
 
       for (VirtualDevice device : devices)
       {
@@ -116,39 +116,39 @@ public final class ProductsImporter
    {
       return destFactory;
    }
-
-   /**
-    * Correct the parameter visibility for all parameters of the {@link Program
-    * application programs} of the given devices. This is required because the
-    * visibility is stored in the device's parameter values, where it does not
-    * belong.
-    *
-    * @param devices - the devices whose program's parameters are to be
-    *           processed.
-    */
-   private void fixParameters(List<VirtualDevice> devices)
-   {
-      if (!(sourceFactory instanceof VdxProductsFactory))
-         return;
-
-      final VdxEntityManager manager = ((VdxProductsFactory) sourceFactory).getEntityManager();
-
-      final Set<Program> programs = new HashSet<Program>(devices.size());
-      for (final VirtualDevice device : devices)
-         programs.add(device.getProgram());
-
-      final Map<Integer,DeviceParameterValue> values = new HashMap<Integer,DeviceParameterValue>(16738);
-      for (final Object obj: manager.fetchAll(DeviceParameterValue.class))
-      {
-         DeviceParameterValue val = (DeviceParameterValue) obj;
-         if (val.getParameter() != null)
-            values.put(val.getParameter().getId(), val);
-      }
-
-      for (final Program program : programs)
-      {
-         for (final Parameter param : program.getParameters())
-            param.setVisible(values.get(param.getId()).isVisible());
-      }
-   }
+//
+//   /**
+//    * Correct the parameter visibility for all parameters of the {@link Program
+//    * application programs} of the given devices. This is required because the
+//    * visibility is stored in the device's parameter values, where it does not
+//    * belong.
+//    *
+//    * @param devices - the devices whose program's parameters are to be
+//    *           processed.
+//    */
+//   private void fixParameters(List<VirtualDevice> devices)
+//   {
+//      if (!(sourceFactory instanceof VdxProductsFactory))
+//         return;
+//
+//      final VdxEntityManager manager = ((VdxProductsFactory) sourceFactory).getEntityManager();
+//
+//      final Set<Program> programs = new HashSet<Program>(devices.size());
+//      for (final VirtualDevice device : devices)
+//         programs.add(device.getProgram());
+//
+//      final Map<Integer,DeviceParameter> values = new HashMap<Integer,DeviceParameter>(16738);
+//      for (final Object obj: manager.fetchAll(DeviceParameter.class))
+//      {
+//         DeviceParameter val = (DeviceParameter) obj;
+//         if (val.getParameter() != null)
+//            values.put(val.getParameter().getId(), val);
+//      }
+//
+////      for (final Program program : programs)
+////      {
+////         for (final Parameter param : program.getParameters())
+////            param.setVisible(values.get(param.getId()).isVisible());
+////      }
+//   }
 }
