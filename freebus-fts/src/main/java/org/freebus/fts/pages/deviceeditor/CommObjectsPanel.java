@@ -9,7 +9,6 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;

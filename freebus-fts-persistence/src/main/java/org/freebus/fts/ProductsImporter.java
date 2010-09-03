@@ -1,24 +1,17 @@
 package org.freebus.fts;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
-import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
-import org.freebus.fts.products.Parameter;
-import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
-import org.freebus.fts.products.services.vdx.VdxProductsFactory;
-import org.freebus.fts.project.DeviceParameter;
 
 /**
  * Class for importing parts of a org.freebus.fts.products database into FTS'

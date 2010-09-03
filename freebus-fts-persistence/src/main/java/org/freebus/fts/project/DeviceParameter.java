@@ -39,6 +39,7 @@ public class DeviceParameter
    @Column(name = "parameter_value")
    private String stringValue;
 
+   @Deprecated
    @VdxField(name = "device_parameter_visible")
    @Column(name = "visible", nullable = false)
    private boolean visible = true;
