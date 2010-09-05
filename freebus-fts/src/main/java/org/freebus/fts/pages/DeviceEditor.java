@@ -16,7 +16,7 @@ import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.pages.deviceeditor.CommObjectsPanel;
+import org.freebus.fts.pages.deviceeditor.ComObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.DebugPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;
 import org.freebus.fts.project.Device;
@@ -33,7 +33,7 @@ public class DeviceEditor extends AbstractPage
    private final JLabel caption = new JLabel();
    private final JTabbedPane tabPane = new JTabbedPane();
    private final GeneralPanel generalPanel = new GeneralPanel();
-   private final CommObjectsPanel comObjectsPanel = new CommObjectsPanel();
+   private final ComObjectsPanel comObjectsPanel = new ComObjectsPanel();
    private final ParameterEditor paramsPanel = new ParameterEditor();
    private final DebugPanel debugPanel = new DebugPanel();
 

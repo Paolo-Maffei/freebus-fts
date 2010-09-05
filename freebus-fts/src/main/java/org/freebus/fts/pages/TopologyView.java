@@ -3,6 +3,9 @@ package org.freebus.fts.pages;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -46,6 +49,7 @@ public class TopologyView extends AbstractPage
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
    private JButton btnAddArea, btnAddLine, btnAddDevice, btnEditProperties, btnEditDevice, btnDelete;
+   private Object selectedObject;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -75,9 +79,9 @@ public class TopologyView extends AbstractPage
          public void valueChanged(TreeSelectionEvent e)
          {
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            final Object userObject = node != null ? node.getUserObject() : null;
+            selectedObject = node != null ? node.getUserObject() : null;
 
-            if (userObject instanceof Area)
+            if (selectedObject instanceof Area)
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(false);
@@ -85,7 +89,7 @@ public class TopologyView extends AbstractPage
                btnEditDevice.setEnabled(false);
                btnDelete.setEnabled(true);
             }
-            else if (userObject instanceof Line)
+            else if (selectedObject instanceof Line)
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
@@ -93,7 +97,7 @@ public class TopologyView extends AbstractPage
                btnEditDevice.setEnabled(false);
                btnDelete.setEnabled(true);
             }
-            else if (userObject instanceof Device)
+            else if (selectedObject instanceof Device)
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
@@ -109,6 +113,17 @@ public class TopologyView extends AbstractPage
                btnEditDevice.setEnabled(false);
                btnDelete.setEnabled(false);
             }
+         }
+      });
+
+      tree.addMouseListener(new MouseAdapter()
+      {
+         @Override
+         public void mouseClicked(MouseEvent e)
+         {
+            if (e.getClickCount() == 2 && selectedObject instanceof Device)
+               editDevice((Device) selectedObject);
+               
          }
       });
    }
