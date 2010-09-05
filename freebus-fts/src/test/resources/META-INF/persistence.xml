@@ -30,7 +30,7 @@
   <class>org.freebus.fts.project.Building</class>
   <class>org.freebus.fts.project.Device</class>
   <class>org.freebus.fts.project.DeviceObject</class>
-  <class>org.freebus.fts.project.DeviceParameterValue</class>
+  <class>org.freebus.fts.project.DeviceParameter</class>
   <class>org.freebus.fts.project.Line</class>
   <class>org.freebus.fts.project.MainGroup</class>
   <class>org.freebus.fts.project.MidGroup</class>

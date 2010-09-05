@@ -1,9 +1,7 @@
 package org.freebus.fts.project;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import org.freebus.fts.products.Parameter;
 import org.junit.Test;
@@ -94,17 +92,5 @@ public class TestDeviceParameterValue
 
       paramValue.setValue(null);
       assertNull(paramValue.getIntValue());
-   }
-
-   @Test
-   public final void testSetIsVisible()
-   {
-      final DeviceParameter paramValue = new DeviceParameter();
-
-      paramValue.setVisible(true);
-      assertTrue(paramValue.isVisible());
-
-      paramValue.setVisible(false);
-      assertFalse(paramValue.isVisible());
    }
 }

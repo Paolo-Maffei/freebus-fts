@@ -154,6 +154,7 @@ public class DeviceParameter
    /**
     * Set the visible flag.
     */
+   @Deprecated
    public void setVisible(boolean visible)
    {
       this.visible = visible;
