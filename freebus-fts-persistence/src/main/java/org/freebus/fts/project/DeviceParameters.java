@@ -117,7 +117,7 @@ public class DeviceParameters
     */
    public boolean isVisible(final Parameter param)
    {
-      if (param.getLowAccess() == 0)
+      if (param.getHighAccess() == 0)
          return false;
 
       final Parameter parentParam = param.getParent();

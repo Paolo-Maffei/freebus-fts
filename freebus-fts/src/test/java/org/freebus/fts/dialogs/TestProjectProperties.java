@@ -13,8 +13,10 @@ import junit.extensions.jfcunit.eventdata.MouseEventData;
 import junit.extensions.jfcunit.finder.NamedComponentFinder;
 
 import org.freebus.fts.project.Project;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class TestProjectProperties extends JFCTestCase
 {
    private JFrame parentFrame;

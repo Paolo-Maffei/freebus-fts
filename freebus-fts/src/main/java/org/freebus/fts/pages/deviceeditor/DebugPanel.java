@@ -108,7 +108,7 @@ public class DebugPanel extends JPanel implements DeviceEditorPart
 
          sb.append("  [visible: ");
 
-         if (param.getLowAccess() == 0)
+         if (param.getHighAccess() == 0)
             sb.append("never");
          else if (parentParam == null)
             sb.append("always");

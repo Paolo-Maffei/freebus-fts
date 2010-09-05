@@ -75,7 +75,7 @@ public class ParamData
     */
    public boolean isVisible()
    {
-      if (param.getLowAccess() == 0 && param.getHighAccess() == 0)
+      if (param.getHighAccess() == 0)
          return false;
 
       if (parent == null)
