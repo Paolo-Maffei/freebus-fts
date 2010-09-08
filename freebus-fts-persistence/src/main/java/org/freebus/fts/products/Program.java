@@ -19,6 +19,8 @@ import javax.persistence.TableGenerator;
 
 /**
  * An application program.
+ * 
+ * Device type and program version identify the application program.
  */
 @Entity
 @Table(name = "application_program")
@@ -202,6 +204,8 @@ public class Program
    }
 
    /**
+    * The device type. Is written to the KNX device also.
+    *
     * @return the device type.
     */
    public int getDeviceType()

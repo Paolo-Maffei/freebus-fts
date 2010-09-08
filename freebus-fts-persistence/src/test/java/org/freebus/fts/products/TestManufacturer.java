@@ -16,7 +16,7 @@ public class TestManufacturer extends TestCase
    public final void testManufacturer()
    {
       Manufacturer manu = new Manufacturer();
-      assertEquals(0, manu.getId());
+      assertEquals(Manufacturer.INVALID_ID, manu.getId());
       assertEquals("", manu.getName());
       assertNotNull(manu.toString());
    }
@@ -31,7 +31,7 @@ public class TestManufacturer extends TestCase
    public final void testGetSetId()
    {
       Manufacturer manu = new Manufacturer();
-      assertEquals(0, manu.getId());
+      assertEquals(Manufacturer.INVALID_ID, manu.getId());
 
       manu.setId(1234);
       assertEquals(1234, manu.getId());

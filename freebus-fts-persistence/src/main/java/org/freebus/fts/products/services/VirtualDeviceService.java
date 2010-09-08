@@ -31,7 +31,16 @@ public interface VirtualDeviceService
          throws PersistenceException;
 
    /**
-    * Save a virtual device.
+    * Persist the given virtual device.
     */
-   public void save(VirtualDevice device) throws PersistenceException;
+   public void persist(VirtualDevice device) throws PersistenceException;
+
+   /**
+    * Merge the state of the given virtual device into the current persistence
+    * context.
+    * 
+    * @return the virtual device. The returned object may be different from the
+    *         given object.
+    */
+   public VirtualDevice merge(VirtualDevice device) throws PersistenceException;
 }

@@ -11,6 +11,10 @@ import org.freebus.fts.persistence.vdx.VdxField;
 /**
  * A line of a product description.
  */
+/*
+ * Note for developers: this class cannot be in a JPA @OneToMany relation with
+ * CatalogEntry, as this class has a two-column key.
+ */
 @Entity
 @Table(name = "product_description",
        uniqueConstraints = @UniqueConstraint(columnNames = { "catalog_entry_id", "display_order" }))

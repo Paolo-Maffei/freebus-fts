@@ -1,0 +1,69 @@
+package org.freebus.fts.project.service;
+
+import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.project.Area;
+import org.freebus.fts.project.Device;
+import org.freebus.fts.project.Line;
+import org.freebus.fts.project.ProjectManager;
+
+/**
+ * Interface for project controllers. Project controllers manipulate the
+ * project, and shall be used for the more complex tasks.
+ * 
+ * @see ProjectManager#getController()
+ */
+public interface ProjectController
+{
+   /**
+    * Add a virtual device to the project.
+    * 
+    * @param dev - the device to add.
+    */
+   public void add(VirtualDevice dev);
+
+   /**
+    * Edit an object. Calls the proper edit method to do the job
+    * (e.g. {@link #edit(Device)}). Does nothing if <pre>obj</pre> is
+    * null or has an unsupported type.
+    * 
+    * @param obj - the object to edit.
+    */
+   public void edit(Object obj);
+
+   /**
+    * Edit a device.
+    * 
+    * @param dev - the device to edit.
+    */
+   public void edit(Device dev);
+
+   /**
+    * Remove an object. Calls the proper remove method to do the job
+    * (e.g. {@link #remove(Device)}). Does nothing if <pre>obj</pre> is
+    * null or has an unsupported type.
+    * 
+    * @param obj - the object to remove from the project.
+    */
+   public void remove(Object obj);
+
+   /**
+    * Remove an area from the project.
+    * 
+    * @param area - the area to remove.
+    */
+   public void remove(Area area);
+
+   /**
+    * Remove a line from the project.
+    * 
+    * @param line - the line to remove.
+    */
+   public void remove(Line line);
+
+   /**
+    * Remove a device from the project.
+    * 
+    * @param dev - the device to remove.
+    */
+   public void remove(Device dev);
+}

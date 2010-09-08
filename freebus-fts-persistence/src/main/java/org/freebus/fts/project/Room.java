@@ -22,7 +22,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "room")
-public class Room
+public class Room implements Comparable<Room>
 {
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenRoomId")
@@ -205,6 +205,15 @@ public class Room
     * {@inheritDoc}
     */
    @Override
+   public int compareTo(Room o)
+   {
+      return name.compareTo(o.name);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public int hashCode()
    {
       return id;
@@ -216,6 +225,6 @@ public class Room
    @Override
    public String toString()
    {
-      return getName();
+      return name;
    }
 }

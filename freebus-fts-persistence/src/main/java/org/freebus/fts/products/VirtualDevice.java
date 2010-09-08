@@ -20,7 +20,7 @@ import javax.persistence.TableGenerator;
 public class VirtualDevice
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenVirtualDeviceId")
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenVirtualDeviceId")
    @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "virtual_device_id", nullable = false)
    private int id;
@@ -30,6 +30,9 @@ public class VirtualDevice
 
    @Column(name = "virtual_device_description", length = 80)
    private String description;
+
+   @Column(name = "virtual_device_number")
+   private int number;
 
    @ManyToOne(fetch = FetchType.LAZY, optional = false)
    @JoinColumn(name = "catalog_entry_id", nullable = false)
@@ -43,8 +46,6 @@ public class VirtualDevice
    @JoinColumn(name = "program_id", nullable = true)
    private Program program;
 
-   // Column "PRODUCT_TYPE_ID" is the "ENTITY_ID" of the VD_ table "TEXT_ATTRIBUTE"
-
    /**
     * Create an empty virtual-device object.
     */
@@ -55,7 +56,8 @@ public class VirtualDevice
    /**
     * Create a virtual-device object.
     */
-   public VirtualDevice(int id, String name, String description, FunctionalEntity functionalEntity, CatalogEntry catalogEntry)
+   public VirtualDevice(int id, String name, String description, FunctionalEntity functionalEntity,
+         CatalogEntry catalogEntry)
    {
       this.id = id;
       this.name = name;
@@ -73,11 +75,31 @@ public class VirtualDevice
    }
 
    /**
+    * Set the id.
+    * 
+    * @param id - the id to set.
+    */
+   public void setId(int id)
+   {
+      this.id = id;
+   }
+
+   /**
     * @return the functional entity.
     */
    public FunctionalEntity getFunctionalEntity()
    {
       return functionalEntity;
+   }
+
+   /**
+    * Set the functional entity.
+    * 
+    * @param functionalEntity - the functional entity to set.
+    */
+   public void setFunctionalEntity(FunctionalEntity functionalEntity)
+   {
+      this.functionalEntity = functionalEntity;
    }
 
    /**
@@ -94,6 +116,14 @@ public class VirtualDevice
    public String getDescription()
    {
       return description;
+   }
+
+   /**
+    * Set the catalog entry
+    */
+   public void setCatalogEntry(CatalogEntry catalogEntry)
+   {
+      this.catalogEntry = catalogEntry;
    }
 
    /**
@@ -121,6 +151,30 @@ public class VirtualDevice
    }
 
    /**
+    * Set the number of the virtual device. This seems to be a version number
+    * for the device, starting with 1, and incrementing when the virtual device
+    * is changed (by the manufacturer, in the VD_).
+    * 
+    * @param number - the number to set.
+    */
+   public void setNumber(int number)
+   {
+      this.number = number;
+   }
+
+   /**
+    * Get the number of the virtual device. This seems to be a version number
+    * for the device, starting with 1, and incrementing when the virtual device
+    * is changed (by the manufacturer, in the VD_).
+    * 
+    * @return The number of the virtual device.
+    */
+   public int getNumber()
+   {
+      return number;
+   }
+
+   /**
     * Returns a hash-code for the object.
     */
    @Override
@@ -135,8 +189,10 @@ public class VirtualDevice
    @Override
    public boolean equals(final Object o)
    {
-      if (o == this) return true;
-      if (!(o instanceof VirtualDevice)) return false;
+      if (o == this)
+         return true;
+      if (!(o instanceof VirtualDevice))
+         return false;
       final VirtualDevice oo = (VirtualDevice) o;
       return id == oo.id && catalogEntry == oo.catalogEntry;
    }

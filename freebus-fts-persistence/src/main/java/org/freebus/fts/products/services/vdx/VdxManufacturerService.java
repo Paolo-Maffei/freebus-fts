@@ -1,5 +1,6 @@
 package org.freebus.fts.products.services.vdx;
 
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -69,13 +70,19 @@ public final class VdxManufacturerService implements ManufacturerService
    }
 
    @Override
-   public void save(Manufacturer manufacturer) throws PersistenceException
+   public Manufacturer merge(Manufacturer manufacturer) throws PersistenceException
    {
       throw new PersistenceException("Sorry, not implemented");
    }
 
    @Override
-   public void save(List<Manufacturer> manufacturers) throws PersistenceException
+   public void persist(Manufacturer manufacturer) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   @Override
+   public void save(Collection<Manufacturer> manufacturers) throws PersistenceException
    {
       throw new PersistenceException("Sorry, not implemented");
    }

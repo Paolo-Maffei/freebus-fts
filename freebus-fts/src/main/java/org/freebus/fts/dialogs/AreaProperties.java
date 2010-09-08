@@ -112,7 +112,8 @@ public class AreaProperties extends Dialog
          }
       });
 
-      final int usedAddr[] = project.getUsedAreaAddresses();
+      // TODO
+      final int usedAddr[] = new int[0];
 
       // we want a list with all free addresses
       String freeAddr[] = new String[(Area.MAX_ADDR - usedAddr.length + 1 + 1)];

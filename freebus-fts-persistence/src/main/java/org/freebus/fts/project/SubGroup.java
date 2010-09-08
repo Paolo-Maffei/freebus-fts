@@ -1,5 +1,9 @@
 package org.freebus.fts.project;
 
+import java.util.List;
+import java.util.Vector;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -7,6 +11,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -36,6 +41,9 @@ public class SubGroup
    @ManyToOne(optional = false)
    @JoinColumn(name = "mid_group_id")
    private MidGroup midGroup;
+
+   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "subGroup")
+   private List<SubGroupToObject> subGroupToObjects = new Vector<SubGroupToObject>();
 
    /**
     * Create a new group.
@@ -127,6 +135,16 @@ public class SubGroup
    public void setMidGroup(MidGroup midGroup)
    {
       this.midGroup = midGroup;
+   }
+
+   public void setSubGroupToObjects(List<SubGroupToObject> subGroupToObjects)
+   {
+      this.subGroupToObjects = subGroupToObjects;
+   }
+
+   public List<SubGroupToObject> getSubGroupToObjects()
+   {
+      return subGroupToObjects;
    }
 
    /**

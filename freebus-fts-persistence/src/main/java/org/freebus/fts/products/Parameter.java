@@ -42,6 +42,7 @@ public class Parameter
    @JoinColumn(name = "parameter_type_id", nullable = false)
    private ParameterType paramType;
 
+   // The parameter number is unique for the program and starts with 1
    @Column(name = "parameter_number")
    private int number;
 
@@ -186,6 +187,8 @@ public class Parameter
    }
 
    /**
+    * Get the parameter type.
+    *
     * @return the parameter type.
     */
    public ParameterType getParameterType()
@@ -195,6 +198,8 @@ public class Parameter
 
    /**
     * Set the parameter type.
+    * 
+    * @param paramType - the parameter type to set.
     */
    public void setParameterType(ParameterType paramType)
    {
@@ -202,7 +207,10 @@ public class Parameter
    }
 
    /**
+    * Set the parameter number.
+    * 
     * @param number the number to set
+    * @see #getNumber()
     */
    public void setNumber(int number)
    {
@@ -210,6 +218,11 @@ public class Parameter
    }
 
    /**
+    * Get the parameter number. The parameter number is unique for the
+    * {@link #getProgram() program} and starts with 1 for the first parameter of
+    * a program. It is probably used to identify the parameter when the
+    * parameter-id was mapped when the parameter is imported.
+    * 
     * @return the number
     */
    public int getNumber()
@@ -218,7 +231,9 @@ public class Parameter
    }
 
    /**
-    * @return the lowAccess
+    * Get the parameter low-access. Observed values: 0, 1, 2.
+    * 
+    * @return the low-access
     */
    public int getLowAccess()
    {
@@ -226,7 +241,10 @@ public class Parameter
    }
 
    /**
-    * @param lowAccess the lowAccess to set
+    * Set the parameter low-access.
+    * 
+    * @param lowAccess - the low-access to set
+    * @see #getLowAccess()
     */
    public void setLowAccess(int lowAccess)
    {
@@ -234,7 +252,10 @@ public class Parameter
    }
 
    /**
-    * @return the highAccess
+    * Get the parameter high-access. The parameter is invisible if high-access
+    * is 0. Observed values: 0, 1, 2.
+    * 
+    * @return the high-access.
     */
    public int getHighAccess()
    {
@@ -242,7 +263,10 @@ public class Parameter
    }
 
    /**
-    * @param highAccess the highAccess to set
+    * Set the parameter high-access.
+    * 
+    * @param highAccess - the high-access to set
+    * @see #getHighAccess()
     */
    public void setHighAccess(int highAccess)
    {
@@ -250,7 +274,7 @@ public class Parameter
    }
 
    /**
-    * @return the parent parameter
+    * @return The parent parameter or null if the parameter has no parent.
     */
    public Parameter getParent()
    {
@@ -259,6 +283,8 @@ public class Parameter
 
    /**
     * Set the parent parameter.
+    * 
+    * @param parent - the parent parameter (null allowed).
     */
    public void setParent(Parameter parent)
    {
@@ -282,7 +308,9 @@ public class Parameter
    }
 
    /**
-    * @return the size
+    * Returns the size of the parameter in bits (?)
+    * 
+    * @return The size of the parameter.
     */
    public int getSize()
    {
@@ -290,7 +318,9 @@ public class Parameter
    }
 
    /**
-    * @param size the size to set
+    * Set the size of the parameter.
+    * 
+    * @param size - the size to set
     */
    public void setSize(int size)
    {
@@ -306,7 +336,7 @@ public class Parameter
    }
 
    /**
-    * @param function the function to set
+    * @param function - the function to set
     */
    public void setFunction(String function)
    {
@@ -314,7 +344,7 @@ public class Parameter
    }
 
    /**
-    * @return the displayOrder
+    * @return the display order
     */
    public int getDisplayOrder()
    {
@@ -322,7 +352,7 @@ public class Parameter
    }
 
    /**
-    * @param displayOrder the displayOrder to set
+    * @param displayOrder - the display order to set
     */
    public void setDisplayOrder(int displayOrder)
    {
@@ -389,7 +419,7 @@ public class Parameter
    }
 
    /**
-    * @return the defaultLong
+    * @return the default long value.
     */
    public int getDefaultLong()
    {
@@ -397,7 +427,9 @@ public class Parameter
    }
 
    /**
-    * @param defaultLong the defaultLong to set
+    * Set the default long value.
+    * 
+    * @param defaultLong - the default value to set
     */
    public void setDefaultLong(int defaultLong)
    {
@@ -405,7 +437,7 @@ public class Parameter
    }
 
    /**
-    * @return the defaultString
+    * @return the default string value.
     */
    public String getDefaultString()
    {
@@ -413,7 +445,9 @@ public class Parameter
    }
 
    /**
-    * @param defaultString the defaultString to set
+    * Set the default string value.
+    * 
+    * @param defaultString - the default value to set
     */
    public void setDefaultString(String defaultString)
    {
@@ -421,7 +455,7 @@ public class Parameter
    }
 
    /**
-    * @return the defaultDouble
+    * @return the default double value.
     */
    public double getDefaultDouble()
    {
@@ -429,7 +463,9 @@ public class Parameter
    }
 
    /**
-    * @param defaultDouble the defaultDouble to set
+    * Set the default double value.
+    * 
+    * @param defaultDouble - the default value to set
     */
    public void setDefaultDouble(double defaultDouble)
    {
@@ -437,6 +473,9 @@ public class Parameter
    }
 
    /**
+    * Get the patch-always flag. Seems to be boolean (0 / 1). Observed values:
+    * 0.
+    * 
     * @return the patchAlways
     */
    public int getPatchAlways()
@@ -453,7 +492,10 @@ public class Parameter
    }
 
    /**
-    * @return the addressSpace
+    * Returns the address space. Seems to be a newer feature. Observed values:
+    * 0, 1, 2. Default is 0.
+    * 
+    * @return the address space
     */
    public int getAddressSpace()
    {
@@ -469,9 +511,9 @@ public class Parameter
    }
 
    /**
-    * Test if the parameter denotes a page. This is,
-    * if the {@link #getAddress() address} is null.
-    *
+    * Test if the parameter denotes a page. This is, if the
+    * {@link #getAddress() address} is null.
+    * 
     * @return true if the parameter is a page.
     */
    public boolean isPage()

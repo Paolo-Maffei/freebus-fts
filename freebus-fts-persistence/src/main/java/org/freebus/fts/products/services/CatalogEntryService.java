@@ -31,7 +31,16 @@ public interface CatalogEntryService
          throws PersistenceException;
 
    /**
-    * Save a catalog entry.
+    * Persist the given catalog entry.
     */
-   public void save(CatalogEntry catalogEntry) throws PersistenceException;
+   public void persist(CatalogEntry catalogEntry) throws PersistenceException;
+
+   /**
+    * Merge the state of the given catalog entry into the current persistence
+    * context.
+    * 
+    * @return the catalog entry. The returned object may be different from the
+    *         given object.
+    */
+   public CatalogEntry merge(CatalogEntry catalogEntry) throws PersistenceException;
 }

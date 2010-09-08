@@ -66,7 +66,13 @@ public final class VdxCatalogEntryService implements CatalogEntryService
    }
 
    @Override
-   public void save(CatalogEntry catalogEntry) throws PersistenceException
+   public void persist(CatalogEntry catalogEntry) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry not implemented");
+   }
+
+   @Override
+   public CatalogEntry merge(CatalogEntry catalogEntry) throws PersistenceException
    {
       throw new PersistenceException("Sorry not implemented");
    }

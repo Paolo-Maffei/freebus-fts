@@ -42,7 +42,7 @@ public final class ProjectPropertiesAction extends BasicAction
          public void windowClosed(WindowEvent e)
          {
             if (dlg.isAccepted() && !oldProjectName.equals(project.getName()))
-               ProjectManager.fireProjectChange();
+               ProjectManager.fireChanged();
          }
       });
 

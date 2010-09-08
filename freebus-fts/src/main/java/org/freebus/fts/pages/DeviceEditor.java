@@ -20,6 +20,9 @@ import org.freebus.fts.pages.deviceeditor.ComObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.DebugPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.Project;
+import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.service.ProjectListener;
 
 /**
  * An editor for the details of a device: description, name, physical address,
@@ -75,60 +78,53 @@ public class DeviceEditor extends AbstractPage
             paramsPanel.apply();
             comObjectsPanel.updateContents();
             debugPanel.updateContents();
-            //setModified(true);
          }
       });
 
       tabPane.add(I18n.getMessage("DeviceEditor.Debug"), debugPanel);
 
-      // initToolBar();
+      ProjectManager.addListener(projectListener);
    }
 
-//   /**
-//    * Create the tool-bar.
-//    */
-//   private void initToolBar()
-//   {
-//      final ToolBar toolBar = new ToolBar();
-//      add(toolBar, BorderLayout.NORTH);
-//
-//      final JButton btnApply = new JButton(I18n.getMessage("Button.Apply"), ImageCache.getIcon("icons/apply"));
-//      ButtonUtils.setToolButtonProperties(btnApply);
-//      toolBar.add(btnApply);
-//      btnApply.addActionListener(new ActionListener()
-//      {
-//         @Override
-//         public void actionPerformed(ActionEvent e)
-//         {
-//            apply();
-//         }
-//      });
-//
-//      final JButton btnRevert = new JButton(I18n.getMessage("Button.Revert"), ImageCache.getIcon("icons/undo"));
-//      ButtonUtils.setToolButtonProperties(btnRevert);
-//      toolBar.add(btnRevert);
-//      btnRevert.addActionListener(new ActionListener()
-//      {
-//         @Override
-//         public void actionPerformed(ActionEvent e)
-//         {
-//            setObject(device);
-//         }
-//      });
-//
-//      final JButton btnCancel = new JButton(I18n.getMessage("Button.Cancel"), ImageCache.getIcon("icons/cancel"));
-//      ButtonUtils.setToolButtonProperties(btnCancel);
-//      toolBar.add(btnCancel);
-//      btnCancel.addActionListener(new ActionListener()
-//      {
-//         @Override
-//         public void actionPerformed(ActionEvent e)
-//         {
-//            close();
-//         }
-//      });
-//   }
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void closeEvent()
+   {
+      ProjectManager.removeListener(projectListener);
+   }
 
+   /*
+    * Listener for project changes
+    */
+   private final ProjectListener projectListener = new ProjectListener()
+   {
+      @Override
+      public void projectComponentRemoved(Object obj)
+      {
+         if (obj == device)
+            close();
+      }
+      
+      @Override
+      public void projectComponentModified(Object obj)
+      {
+         if (obj == device)
+            updateContents();
+      }
+
+      @Override
+      public void projectComponentAdded(Object obj)
+      {
+      }
+      
+      @Override
+      public void projectChanged(Project project)
+      {
+         updateContents();
+      }
+   };
    /**
     * Apply the changes to the project
     */

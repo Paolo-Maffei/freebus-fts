@@ -59,7 +59,13 @@ public final class VdxVirtualDeviceService implements VirtualDeviceService
    }
 
    @Override
-   public void save(VirtualDevice device) throws PersistenceException
+   public void persist(VirtualDevice device) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   @Override
+   public VirtualDevice merge(VirtualDevice device) throws PersistenceException
    {
       throw new PersistenceException("Sorry, not implemented");
    }

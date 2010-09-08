@@ -21,7 +21,7 @@ public class ExtTabbedPane extends JTabbedPane
     */
    public ExtTabbedPane()
    {
-      super();
+      this(JTabbedPane.TOP);
    }
 
    /**
@@ -34,7 +34,7 @@ public class ExtTabbedPane extends JTabbedPane
     */
    public ExtTabbedPane(int tabPlacement)
    {
-      super(tabPlacement);
+      this(tabPlacement, JTabbedPane.WRAP_TAB_LAYOUT);
    }
 
    /**

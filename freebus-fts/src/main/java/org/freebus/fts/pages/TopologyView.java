@@ -34,6 +34,7 @@ import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.service.ProjectListener;
 import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.utils.TreeUtils;
 
@@ -120,12 +121,60 @@ public class TopologyView extends AbstractPage
          @Override
          public void mouseClicked(MouseEvent e)
          {
-            if (e.getClickCount() == 2 && selectedObject instanceof Device)
-               editDevice((Device) selectedObject);
-               
+            if (e.getClickCount() == 2)
+            {
+               if (selectedObject instanceof Device)
+                  ProjectManager.getController().edit((Device) selectedObject);
+
+               e.consume();
+            }
          }
       });
+
+      ProjectManager.addListener(projectListener);
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void closeEvent()
+   {
+      ProjectManager.removeListener(projectListener);
+   }
+
+   /*
+    * Listener for project changes
+    */
+   private final ProjectListener projectListener = new ProjectListener()
+   {
+      @Override
+      public void projectComponentRemoved(Object obj)
+      {
+         if (isRelevant(obj))
+            updateContents();
+      }
+
+      @Override
+      public void projectComponentModified(Object obj)
+      {
+         if (isRelevant(obj))
+            tree.updateUI();
+      }
+
+      @Override
+      public void projectComponentAdded(Object obj)
+      {
+         if (isRelevant(obj))
+            updateContents();
+      }
+
+      @Override
+      public void projectChanged(Project project)
+      {
+         updateContents();
+      }
+   };
 
    /**
     * Initialize the tool-bar.
@@ -176,7 +225,7 @@ public class TopologyView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-            final Object obj = getSelectedUserObject();
+            final Object obj = getSelectedObject();
             if (obj instanceof Device)
                editDeviceProperties((Device) obj);
             else if (obj instanceof Area)
@@ -195,9 +244,7 @@ public class TopologyView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-            final Object obj = getSelectedUserObject();
-            if (obj instanceof Device)
-               editDevice((Device) obj);
+            ProjectManager.getController().edit(getSelectedObject());
          }
       });
 
@@ -208,20 +255,24 @@ public class TopologyView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-            final Object obj = getSelectedUserObject();
-            if (obj instanceof Area)
-               deleteArea((Area) obj);
-            else if (obj instanceof Line)
-               deleteLine((Line) obj);
-            else if (obj instanceof Device)
-               deleteDevice((Device) obj);
-
+            ProjectManager.getController().remove(getSelectedObject());
          }
       });
       toolBar.add(btnDelete);
       btnDelete.setEnabled(false);
       btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
       btnDelete.setToolTipText(I18n.getMessage("TopologyView.DeleteItemTip"));
+   }
+
+   /**
+    * Test if an object is relevant for this view. Used e.g. for event handlers.
+    * 
+    * @param obj - the object to test.
+    * @return true if the object is relevant.
+    */
+   private boolean isRelevant(final Object obj)
+   {
+      return obj instanceof Device || obj instanceof Line || obj instanceof Area;
    }
 
    /**
@@ -255,7 +306,7 @@ public class TopologyView extends AbstractPage
 
    /**
     * open the dialog to edit the properties of the area
-    *
+    * 
     * @param area to edit
     */
    protected void editAreaProperties(Area area)
@@ -273,24 +324,6 @@ public class TopologyView extends AbstractPage
       area.setName(dlg.getAreaName());
       area.setAddress(dlg.getAddress());
 
-      updateContents();
-   }
-
-   /**
-    * Delete the Area from the project
-    *
-    * @param area to delete
-    */
-   protected void deleteArea(Area area)
-   {
-      if (area == null)
-         return;
-
-      final Project project = ProjectManager.getProject();
-      if (project == null)
-         return;
-
-      project.remove(area);
       updateContents();
    }
 
@@ -334,7 +367,7 @@ public class TopologyView extends AbstractPage
       final Line line = new Line();
       line.setName(dlg.getLineName());
       line.setAddress(dlg.getAddress());
-      //line.setArea(area);     // wird in area.add erledigt.
+      // line.setArea(area); // wird in area.add erledigt.
       area.add(line);
 
       final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
@@ -344,12 +377,12 @@ public class TopologyView extends AbstractPage
 
       tree.expandPath(new TreePath(areaNode));
 
-      //updateContents();
+      // updateContents();
    }
 
    /**
     * open the dialog to edit the properties of the line
-    *
+    * 
     * @param line to edit
     */
    protected void editLineProperties(Line line)
@@ -371,44 +404,6 @@ public class TopologyView extends AbstractPage
    }
 
    /**
-    * Delete the Line from the project
-    *
-    * @param line to delete
-    */
-   protected void deleteLine(Line line)
-   {
-      if (line == null)
-         return;
-
-      Area parentArea = line.getArea();
-
-      if (parentArea != null)
-         parentArea.remove(line);
-
-      line = null;
-
-      updateContents();
-   }
-
-   /**
-    * delete the device
-    * @param device to delete
-    */
-   protected void deleteDevice(Device device)
-   {
-      if (device == null)
-         return;
-
-      Line line = device.getLine();
-      if (line != null)
-         line.remove(device);
-
-      device = null;
-
-      updateContents();
-   }
-
-   /**
     * Add a device to the selected line.
     */
    public void editDeviceProperties(Device device)
@@ -425,7 +420,8 @@ public class TopologyView extends AbstractPage
          return;
       }
 
-      //device.setName(dlg.getDeviceName());    //TODO do we allow to change the name ?
+      // device.setName(dlg.getDeviceName()); //TODO do we allow to change the
+      // name ?
       device.setAddress(dlg.getAddress());
    }
 
@@ -460,9 +456,9 @@ public class TopologyView extends AbstractPage
       {
          freeAddr = line.getFreeAddress();
       }
-      catch(RuntimeException e)
+      catch (RuntimeException e)
       {
-         //TODO Error dialog
+         // TODO Error dialog
          return;
       }
 
@@ -478,21 +474,10 @@ public class TopologyView extends AbstractPage
    }
 
    /**
-    * Edit the device.
-    *
-    * @param device - the device to edit.
-    */
-   protected void editDevice(final Device device)
-   {
-      //MainWindow.getInstance().showUniquePage(DeviceEditor.class, device);
-      MainWindow.getInstance().showPage(DeviceEditor.class, device);
-   }
-
-   /**
     * @return the user-object of the currently selected tree node, or null if
     *         nothing is selected.
     */
-   public Object getSelectedUserObject()
+   public Object getSelectedObject()
    {
       final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
       if (node == null)

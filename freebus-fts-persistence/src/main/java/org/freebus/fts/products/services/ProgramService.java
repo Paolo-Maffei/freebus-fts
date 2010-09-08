@@ -24,7 +24,16 @@ public interface ProgramService
    public List<Program> getPrograms() throws PersistenceException;
 
    /**
-    * Save a program.
+    * Persist the given program.
     */
-   public void save(Program program);
+   public void persist(Program program) throws PersistenceException;
+
+   /**
+    * Merge the state of the given program into the current persistence
+    * context.
+    * 
+    * @return the program. The returned object may be different from the
+    *         given object.
+    */
+   public Program merge(Program program) throws PersistenceException;
 }

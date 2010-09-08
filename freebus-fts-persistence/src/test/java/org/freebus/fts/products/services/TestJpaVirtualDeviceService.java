@@ -29,16 +29,16 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
       virtDevService = productsFactory.getVirtualDeviceService();
 
       final Manufacturer manu1 = new Manufacturer(1, "manu-1");
-      productsFactory.getManufacturerService().save(manu1);
+      productsFactory.getManufacturerService().persist(manu1);
 
       final FunctionalEntity funcEnt = new FunctionalEntity(1234, manu1, "func-ent-1", "func-ent-desc-1");
       final Product product = new Product(1234, "prod-1", manu1);
       final CatalogEntry catEnt = new CatalogEntry(321, "cat-ent-1", manu1, product);
 
-      productsFactory.getFunctionalEntityService().save(funcEnt);
-      productsFactory.getCatalogEntryService().save(catEnt);
-      virtDevService.save(new VirtualDevice(1, "virt-dev-1", "virt-dev-desc-1", funcEnt, catEnt));
-      virtDevService.save(new VirtualDevice(2, "virt-dev-2", "virt-dev-desc-2", funcEnt, catEnt));
+      productsFactory.getFunctionalEntityService().persist(funcEnt);
+      productsFactory.getCatalogEntryService().persist(catEnt);
+      virtDevService.persist(new VirtualDevice(1, "virt-dev-1", "virt-dev-desc-1", funcEnt, catEnt));
+      virtDevService.persist(new VirtualDevice(2, "virt-dev-2", "virt-dev-desc-2", funcEnt, catEnt));
 
       DatabaseResources.getEntityManager().flush();
       DatabaseResources.getEntityManager().clear();

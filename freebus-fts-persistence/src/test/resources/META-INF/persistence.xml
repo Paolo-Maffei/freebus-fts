@@ -72,6 +72,7 @@
   <class>org.freebus.fts.project.Project</class>
   <class>org.freebus.fts.project.Room</class>
   <class>org.freebus.fts.project.SubGroup</class>
+  <class>org.freebus.fts.project.SubGroupToObject</class>
   <properties>
    <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="create-tables" />

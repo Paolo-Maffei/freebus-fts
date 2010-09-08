@@ -31,14 +31,12 @@ public class TestJpaCatalogEntryService extends ProductsTestCase
       manuService = getJpaProductsFactory().getManufacturerService();
       catService = getJpaProductsFactory().getCatalogEntryService();
 
-      manu1 = new Manufacturer(1, "Manufacturer-1");
-      manu2 = new Manufacturer(2, "Manufacturer-2");
-      manuService.save(manu1);
-      manuService.save(manu2);
+      manu1 = manuService.merge(new Manufacturer(1, "Manufacturer-1"));
+      manu2 = manuService.merge(new Manufacturer(2, "Manufacturer-2"));
 
-      catService.save(new CatalogEntry("CatalogEntry-1", manu1));
-      catService.save(new CatalogEntry("CatalogEntry-2", manu1));
-      catService.save(new CatalogEntry("CatalogEntry-3", manu2));
+      catService.persist(new CatalogEntry("CatalogEntry-1", manu1));
+      catService.persist(new CatalogEntry("CatalogEntry-2", manu1));
+      catService.persist(new CatalogEntry("CatalogEntry-3", manu2));
 
       DatabaseResources.getEntityManager().flush();
    }
@@ -55,7 +53,7 @@ public class TestJpaCatalogEntryService extends ProductsTestCase
    public final void saveGetCatalogEntry()
    {
       final CatalogEntry cat = new CatalogEntry("CatalogEntry-4", manu2);
-      catService.save(cat);
+      catService.persist(cat);
 
       assertTrue(cat.getId() != 0);
       assertEquals("CatalogEntry-4", cat.getName());

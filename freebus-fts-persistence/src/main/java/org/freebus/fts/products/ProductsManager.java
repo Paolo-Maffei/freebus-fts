@@ -2,6 +2,7 @@ package org.freebus.fts.products;
 
 import java.io.File;
 
+import org.freebus.fts.products.importer.DirectProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.jpa.JpaProductsFactory;
 import org.freebus.fts.products.services.vdx.VdxProductsFactory;
@@ -17,8 +18,7 @@ public final class ProductsManager
    }
 
    /**
-    * @return a org.freebus.fts.products factory that accesses FTS's own
-    *         org.freebus.fts.products database.
+    * @return A products factory that accesses FTS's own products database.
     */
    public static ProductsFactory getFactory()
    {
@@ -26,11 +26,11 @@ public final class ProductsManager
    }
 
    /**
-    * Get a org.freebus.fts.products factory for the org.freebus.fts.products
-    * stored in the given VDX file. The persistence unit is set to "default".
-    *
+    * Get a products factory for the products stored in the given VDX file. The
+    * persistence unit is set to "default".
+    * 
     * @param file - the VDX file.
-    *
+    * 
     * @return the DAO factory for accessing the data in the file.
     */
    public static ProductsFactory getFactory(File file)
@@ -39,16 +39,29 @@ public final class ProductsManager
    }
 
    /**
-    * Get a org.freebus.fts.products factory for the org.freebus.fts.products
-    * stored in the given VDX file.
-    *
+    * Get a products factory for the products stored in the given VDX file.
+    * 
     * @param file - the VDX file.
     * @param persistenceUnit - the persistence unit to use.
-    *
+    * 
     * @return the DAO factory for accessing the data in the file.
     */
    public static ProductsFactory getFactory(File file, String persistenceUnit)
    {
       return new VdxProductsFactory(file, persistenceUnit);
    }
+
+   /**
+    * Create an importer that will import products from sourceFactory and save them
+    * into destFactory.
+    * 
+    * @param sourceFactory - the products factory to import products from.
+    * @param destFactory - the products factory to store products into.
+    */
+   public static ProductsImporter getProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
+   {
+      return new DirectProductsImporter(sourceFactory, destFactory);
+      //return new RemappingProductsImporter(sourceFactory, destFactory);
+   }
+
 }

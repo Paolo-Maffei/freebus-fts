@@ -22,9 +22,9 @@ public class TestJpaManufacturerService extends ProductsTestCase
    {
       manuService = getJpaProductsFactory().getManufacturerService();
 
-      manuService.save(new Manufacturer(1, "Manufacturer-1"));
-      manuService.save(new Manufacturer(2, "Manufacturer-2"));
-      manuService.save(new Manufacturer(3, "Manufacturer-3"));
+      manuService.persist(new Manufacturer(1, "Manufacturer-1"));
+      manuService.persist(new Manufacturer(2, "Manufacturer-2"));
+      manuService.persist(new Manufacturer(3, "Manufacturer-3"));
       DatabaseResources.getEntityManager().flush();
    }
 
@@ -40,7 +40,7 @@ public class TestJpaManufacturerService extends ProductsTestCase
    @Test
    public final void getManufacturer()
    {
-      manuService.save(new Manufacturer(10, "Manufacturer-10"));
+      manuService.merge(new Manufacturer(10, "Manufacturer-10"));
 
       Manufacturer manu = manuService.getManufacturer(10);
       assertNotNull(manu);

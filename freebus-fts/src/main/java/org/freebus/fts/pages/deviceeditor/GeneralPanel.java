@@ -24,6 +24,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
+import org.freebus.fts.project.ProjectManager;
 
 /**
  * Show / edit the general settings of a device.
@@ -132,6 +133,8 @@ public class GeneralPanel extends JPanel implements DeviceEditorPart
     */
    protected void fireModified()
    {
+      if (device != null)
+         ProjectManager.fireComponentModified(device);
    }
 
    /**

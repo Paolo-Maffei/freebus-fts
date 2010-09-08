@@ -40,6 +40,13 @@ public abstract class AbstractPage extends JPanel
    public abstract void setObject(Object o);
 
    /**
+    * Called when the page is closed.
+    */
+   protected void closeEvent()
+   {
+   }
+   
+   /**
     * Update the page's contents. This default implementation does nothing.
     */
    public void updateContents()

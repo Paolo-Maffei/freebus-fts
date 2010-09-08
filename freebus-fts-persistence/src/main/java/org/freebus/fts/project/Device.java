@@ -103,6 +103,18 @@ public final class Device
     * Create a device object by using {@link CatalogEntry} and {@link Program}
     * of a given {@link VirtualDevice}.
     * 
+    * @param virtualDevice the virtual device, from which the
+    *           {@link CatalogEntry} and {@link Program} are taken.
+    */
+   public Device(VirtualDevice virtualDevice)
+   {
+      this(0, virtualDevice.getCatalogEntry(), virtualDevice.getProgram());
+   }
+
+   /**
+    * Create a device object by using {@link CatalogEntry} and {@link Program}
+    * of a given {@link VirtualDevice}.
+    * 
     * @param id the id of the object
     * @param virtualDevice the virtual device, from which the
     *           {@link CatalogEntry} and {@link Program} are taken.
@@ -171,7 +183,10 @@ public final class Device
    }
 
    /**
-    * Set the line to which the device belongs.
+    * Set the line to which the device belongs. To add a device to a line, use
+    * {@link Line#add(Device)} and not this method.
+    * 
+    * @param line - the line to set.
     */
    public void setLine(Line line)
    {
@@ -179,7 +194,10 @@ public final class Device
    }
 
    /**
-    * Set the room in which the device is physically installed.
+    * Set the room in which the device is physically installed. To add a device
+    * to a room, use {@link Room#add(Device)} and not this method.
+    * 
+    * @param room - the room to set.
     */
    public void setRoom(Room room)
    {

@@ -34,8 +34,14 @@ public final class JpaProgramService implements ProgramService
    }
 
    @Override
-   public void save(Program program)
+   public void persist(Program program)
    {
       entityManager.persist(program);
+   }
+
+   @Override
+   public Program merge(Program program)
+   {
+      return entityManager.merge(program);
    }
 }

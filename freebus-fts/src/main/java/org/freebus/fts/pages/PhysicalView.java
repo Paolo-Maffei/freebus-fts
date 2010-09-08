@@ -21,17 +21,20 @@ import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.ToolBarButton;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.project.service.ProjectListener;
 import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
- * A page that shows the physical components of the project
- * (buildings, floors, rooms).
+ * A page that shows the physical components of the project (buildings, floors,
+ * rooms).
  */
 public class PhysicalView extends AbstractPage
 {
@@ -40,8 +43,17 @@ public class PhysicalView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
-   private JButton btnAddBuilding, btnAddRoom, btnAddDevice, btnEditProperties, btnEditDevice, btnDelete;
+   private JButton btnAddBuilding, btnAddRoom, btnAddDevice, btnEditProperties, btnEdit, btnDelete;
 
+   static class UnassignedDevicesStore
+   {
+      @Override
+      public String toString()
+      {
+         return I18n.getMessage("PhysicalView.UnassignedDevices");
+      }
+   }
+   
    /**
     * Create a page that shows the topological structure of the project.
     */
@@ -58,6 +70,7 @@ public class PhysicalView extends AbstractPage
       renderer.setCellTypeIcon(Building.class, ImageCache.getIcon("icons/building"));
       renderer.setCellTypeIcon(Room.class, ImageCache.getIcon("icons/room"));
       renderer.setCellTypeIcon(Device.class, ImageCache.getIcon("icons/device"));
+      renderer.setCellTypeIcon(UnassignedDevicesStore.class, ImageCache.getIcon("icons/idea"));
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
@@ -77,7 +90,7 @@ public class PhysicalView extends AbstractPage
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(false);
                btnEditProperties.setEnabled(true);
-               btnEditDevice.setEnabled(false);
+               btnEdit.setEnabled(false);
                btnDelete.setEnabled(true);
             }
             else if (userObject instanceof Room)
@@ -85,7 +98,7 @@ public class PhysicalView extends AbstractPage
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(true);
                btnEditProperties.setEnabled(true);
-               btnEditDevice.setEnabled(false);
+               btnEdit.setEnabled(false);
                btnDelete.setEnabled(true);
             }
             else if (userObject instanceof Device)
@@ -93,20 +106,64 @@ public class PhysicalView extends AbstractPage
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(true);
                btnEditProperties.setEnabled(true);
-               btnEditDevice.setEnabled(true);
-               btnDelete.setEnabled(true); // TODO not yet done
+               btnEdit.setEnabled(true);
+               btnDelete.setEnabled(true);
             }
             else
             {
                btnAddRoom.setEnabled(false);
                btnAddDevice.setEnabled(false);
                btnEditProperties.setEnabled(false);
-               btnEditDevice.setEnabled(false);
+               btnEdit.setEnabled(false);
                btnDelete.setEnabled(false);
             }
          }
       });
+
+      ProjectManager.addListener(projectListener);
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void closeEvent()
+   {
+      ProjectManager.removeListener(projectListener);
+   }
+
+   /*
+    * Listener for project changes
+    */
+   private final ProjectListener projectListener = new ProjectListener()
+   {
+      @Override
+      public void projectComponentRemoved(Object obj)
+      {
+         if (isRelevant(obj))
+            updateContents();
+      }
+
+      @Override
+      public void projectComponentModified(Object obj)
+      {
+         if (isRelevant(obj))
+            tree.updateUI();
+      }
+
+      @Override
+      public void projectComponentAdded(Object obj)
+      {
+         if (isRelevant(obj))
+            updateContents();
+      }
+
+      @Override
+      public void projectChanged(Project project)
+      {
+         updateContents();
+      }
+   };
 
    /**
     * Initialize the tool-bar.
@@ -157,51 +214,54 @@ public class PhysicalView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-//            final Object obj = getSelectedUserObject();
-//            if (obj instanceof Device)
-//               editDeviceProperties((Device) obj);
-//            else if (obj instanceof Area)
-//               editAreaProperties((Area) obj);
-//            else if (obj instanceof Line)
-//               editLineProperties((Line) obj);
+            // final Object obj = getSelectedUserObject();
+            // if (obj instanceof Device)
+            // editDeviceProperties((Device) obj);
+            // else if (obj instanceof Area)
+            // editAreaProperties((Area) obj);
+            // else if (obj instanceof Line)
+            // editLineProperties((Line) obj);
          }
       });
 
-      btnEditDevice = new ToolBarButton(ImageCache.getIcon("icons/configure"));
-      toolBar.add(btnEditDevice);
-      btnEditDevice.setEnabled(false);
-      btnEditDevice.setToolTipText(I18n.getMessage("PhysicalView.EditItemTip"));
-      btnEditDevice.addActionListener(new ActionListener()
+      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
+      toolBar.add(btnEdit);
+      btnEdit.setEnabled(false);
+      btnEdit.setToolTipText(I18n.getMessage("PhysicalView.EditItemTip"));
+      btnEdit.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-//            final Object obj = getSelectedUserObject();
-//            if (obj instanceof Device)
-//               editDevice((Device) obj);
+            ProjectManager.getController().edit(getSelectedObject());
          }
       });
 
       btnDelete = toolBar.add(new AbstractAction()
       {
-         private static final long serialVersionUID = 5637927204922440539L;
+         private static final long serialVersionUID = 1L;
 
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-//            final Object obj = getSelectedUserObject();
-//            if (obj instanceof Area)
-//               deleteArea((Area) obj);
-//            else if (obj instanceof Line)
-//               deleteLine((Line) obj);
-//            else if (obj instanceof Device)
-//               deleteDevice((Device) obj);
+            ProjectManager.getController().remove(getSelectedObject());
          }
       });
       toolBar.add(btnDelete);
       btnDelete.setEnabled(false);
       btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
       btnDelete.setToolTipText(I18n.getMessage("PhysicalView.DeleteItemTip"));
+   }
+
+   /**
+    * Test if an object is relevant for this view. Used e.g. for event handlers.
+    * 
+    * @param obj - the object to test.
+    * @return true if the object is relevant.
+    */
+   private boolean isRelevant(final Object obj)
+   {
+      return obj instanceof Building || obj instanceof Room || obj instanceof Device;
    }
 
    /**
@@ -218,6 +278,18 @@ public class PhysicalView extends AbstractPage
    public void addRoom()
    {
       // TODO
+   }
+
+   /**
+    * @return the user-object of the currently selected tree node, or null if
+    *         nothing is selected.
+    */
+   public Object getSelectedObject()
+   {
+      final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+      if (node == null)
+         return null;
+      return node.getUserObject();
    }
 
    /**
@@ -247,21 +319,44 @@ public class PhysicalView extends AbstractPage
       rootNode.removeAllChildren();
 
       final Project project = ProjectManager.getProject();
-      if (project == null) return;
+      if (project == null)
+         return;
+
+      DefaultMutableTreeNode unassignedDevicesNode = null;
+      for (Area area: project.getAreas())
+      {
+         for (Line line: area.getLines())
+         {
+            for (Device device: line.getDevices())
+            {
+               if (device.getRoom() == null)
+               {
+                  if (unassignedDevicesNode == null)
+                  {
+                     unassignedDevicesNode = new DefaultMutableTreeNode(new UnassignedDevicesStore(), true);
+                     rootNode.add(unassignedDevicesNode);
+                  }
+
+                  final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
+                  unassignedDevicesNode.add(deviceNode);
+               }
+            }
+         }
+      }
 
       for (Building building : project.getBuildings())
       {
-         DefaultMutableTreeNode buildingNode = new DefaultMutableTreeNode(building, true);
+         final DefaultMutableTreeNode buildingNode = new DefaultMutableTreeNode(building, true);
          rootNode.add(buildingNode);
 
          for (Room room : building.getRooms())
          {
-            DefaultMutableTreeNode roomNode = new DefaultMutableTreeNode(room, true);
+            final DefaultMutableTreeNode roomNode = new DefaultMutableTreeNode(room, true);
             buildingNode.add(roomNode);
 
-            for (Device device: room.getDevices())
+            for (Device device : room.getDevices())
             {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
+               final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
                roomNode.add(deviceNode);
             }
          }

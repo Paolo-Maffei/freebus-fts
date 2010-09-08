@@ -23,6 +23,7 @@ import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SubGroup;
+import org.freebus.fts.project.service.ProjectListener;
 import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.utils.TreeUtils;
 
@@ -73,9 +74,150 @@ public class LogicalView extends AbstractPage
          }
       });
 
+      ProjectManager.addListener(projectListener);
+
       setIconEnabledFromSelected(null);
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void closeEvent()
+   {
+      ProjectManager.removeListener(projectListener);
+   }
+
+   /*
+    * Listener for project changes
+    */
+   private final ProjectListener projectListener = new ProjectListener()
+   {
+      @Override
+      public void projectComponentRemoved(Object obj)
+      {
+         if (isRelevant(obj))
+            updateContents();
+      }
+      
+      @Override
+      public void projectComponentModified(Object obj)
+      {
+         if (isRelevant(obj))
+            tree.updateUI();
+      }
+      
+      @Override
+      public void projectComponentAdded(Object obj)
+      {
+         if (isRelevant(obj))
+            updateContents();
+      }
+      
+      @Override
+      public void projectChanged(Project project)
+      {
+         updateContents();
+      }
+   };
+
+   /**
+    * Initialize the tool-bar.
+    */
+   private void initToolBar()
+   {
+      final JToolBar toolBar = new ToolBar();
+      add(toolBar, BorderLayout.NORTH);
+
+      btnAddMainGrp = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            addMainGrp();
+         }
+
+      });
+      btnAddMainGrp.setIcon(ImageCache.getIcon("icons/main-group-new"));
+      btnAddMainGrp.setToolTipText(I18n.getMessage("LogicalView.AddMainGroup"));
+
+      btnAddMidGrp = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            addMidGrp();
+         }
+
+      });
+      btnAddMidGrp.setIcon(ImageCache.getIcon("icons/middle-group-new"));
+      btnAddMidGrp.setToolTipText(I18n.getMessage("LogicalView.AddMidGroup"));
+
+      btnAddSubGrp = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            addSubGrp();
+         }
+
+      });
+      btnAddSubGrp.setIcon(ImageCache.getIcon("icons/sub-group-new"));
+      btnAddSubGrp.setToolTipText(I18n.getMessage("LogicalView.AddSubGroup"));
+
+      btnProperties = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            editProperties();
+         }
+
+      });
+      btnProperties.setIcon(ImageCache.getIcon("icons/edit-properties"));
+      btnProperties.setToolTipText(I18n.getMessage("LogicalView.EditProperties"));
+
+      btnDelete = toolBar.add(new AbstractAction()
+      {
+         private static final long serialVersionUID = 1L;
+
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            deleteGrp();
+         }
+
+      });
+      btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
+      btnDelete.setToolTipText(I18n.getMessage("LogicalView.DeleteGroup"));
+
+   }
+
+   /**
+    * Test if an object is relevant for this view. Used e.g. for
+    * event handlers.
+    * 
+    * @param obj - the object to test.
+    * @return true if the object is relevant.
+    */
+   private boolean isRelevant(final Object obj)
+   {
+      return obj instanceof MainGroup || obj instanceof MidGroup || obj instanceof SubGroup;
+   }
+
+   /**
+    * Modify the toolbar's icons when an object is selected.
+    *
+    * @param userObject - the selected object.
+    */
    private void setIconEnabledFromSelected(Object userObject)
    {
       if (userObject instanceof MainGroup)
@@ -111,86 +253,6 @@ public class LogicalView extends AbstractPage
          btnDelete.setEnabled(false);
       }
    }
-   
-   /**
-    * Initialize the tool-bar.
-    */
-   private void initToolBar()
-   {
-      final JToolBar toolBar = new ToolBar();
-      add(toolBar, BorderLayout.NORTH);
-
-      btnAddMainGrp = toolBar.add(new AbstractAction()
-      {
-         private static final long serialVersionUID = 1L;
-
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            addMainGrp();
-         }
-
-      });
-      btnAddMainGrp.setIcon(ImageCache.getIcon("icons/lv-add-main-grp"));
-      btnAddMainGrp.setToolTipText(I18n.getMessage("LogicalView.AddMainGroup"));
-
-      btnAddMidGrp = toolBar.add(new AbstractAction()
-      {
-         private static final long serialVersionUID = 1L;
-
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            addMidGrp();
-         }
-
-      });
-      btnAddMidGrp.setIcon(ImageCache.getIcon("icons/lv-add-mid-grp"));
-      btnAddMidGrp.setToolTipText(I18n.getMessage("LogicalView.AddMidGroup"));
-
-      btnAddSubGrp = toolBar.add(new AbstractAction()
-      {
-         private static final long serialVersionUID = 1L;
-
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            addSubGrp();
-         }
-
-      });
-      btnAddSubGrp.setIcon(ImageCache.getIcon("icons/lv-add-sub-grp"));
-      btnAddSubGrp.setToolTipText(I18n.getMessage("LogicalView.AddSubGroup"));
-
-      btnProperties = toolBar.add(new AbstractAction()
-      {
-         private static final long serialVersionUID = 1L;
-
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            editProperties();
-         }
-
-      });
-      btnProperties.setIcon(ImageCache.getIcon("icons/edit-properties"));
-      btnProperties.setToolTipText(I18n.getMessage("LogicalView.EditProperties"));
-
-      btnDelete = toolBar.add(new AbstractAction()
-      {
-         private static final long serialVersionUID = 1L;
-
-         @Override
-         public void actionPerformed(ActionEvent e)
-         {
-            deleteGrp();
-         }
-
-      });
-      btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
-      btnDelete.setToolTipText(I18n.getMessage("LogicalView.DeleteGroup"));
-
-   }
 
    private void addMainGrp()
    {
@@ -221,7 +283,19 @@ public class LogicalView extends AbstractPage
       // TODO Auto-generated method stub
       
    }
-   
+
+   /**
+    * @return the user-object of the currently selected tree node, or null if
+    *         nothing is selected.
+    */
+   public Object getSelectedObject()
+   {
+      final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+      if (node == null)
+         return null;
+      return node.getUserObject();
+   }
+
    /**
     * @return the preferred position of the page: {@link PagePosition#LEFT}.
     */

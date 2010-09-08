@@ -15,10 +15,10 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
-import org.freebus.fts.ProductsImporter;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -119,7 +119,7 @@ public class ProductsImportBrowser extends ProductsBrowser
 
          transaction.begin();
 
-         final ProductsImporter importer = new ProductsImporter(getProductsFactory(), ftsProductsFactory);
+         final ProductsImporter importer = ProductsManager.getProductsImporter(getProductsFactory(), ftsProductsFactory);
          importer.copy(virtDevsList);
 
          transaction.commit();

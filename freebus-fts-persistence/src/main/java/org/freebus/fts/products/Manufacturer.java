@@ -12,17 +12,21 @@ import javax.persistence.Table;
 @Table(name = "manufacturer")
 public class Manufacturer
 {
-   public final static Manufacturer NOBODY = new Manufacturer(0, "Nobody");
+   /**
+    * Unset / invalid manufacturer id.
+    */
+   public final static int INVALID_ID = -1;
 
    @Id
    @Column(name = "manufacturer_id", nullable = false)
-   private int id;
+   private int id = INVALID_ID;
 
    @Column(name = "manufacturer_name", length = 50, nullable = false)
    private String name = "";
 
    /**
-    * Create an empty manufacturer.
+    * Create a manufacturer with an empty name and id set to {@link #INVALID_ID}
+    * .
     */
    public Manufacturer()
    {
@@ -30,6 +34,9 @@ public class Manufacturer
 
    /**
     * Create a manufacturer.
+    * 
+    * @param id - the id of the manufacturer.
+    * @param name - the name of the manufacturer.
     */
    public Manufacturer(int id, String name)
    {
@@ -38,7 +45,11 @@ public class Manufacturer
    }
 
    /**
-    * @return the id of the manufacturer.
+    * Get the id of the manufacturer. {@link #INVALID_ID} is returned if the
+    * manufacturer id is not set.
+    * 
+    * @return the id of the manufacturer, or {@link #INVALID_ID} if the id is
+    *         unset.
     */
    public int getId()
    {
@@ -47,6 +58,8 @@ public class Manufacturer
 
    /**
     * Set the id of the manufacturer.
+    * 
+    * @param id - the id to set.
     */
    public void setId(int id)
    {

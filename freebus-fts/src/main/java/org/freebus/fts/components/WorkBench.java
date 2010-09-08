@@ -90,16 +90,7 @@ public class WorkBench extends JFrame
          if (!(child instanceof AbstractPage))
             return;
 
-         final AbstractPage page = (AbstractPage) child;
-
-         for (Entry<WorkBenchPageId,AbstractPage> entry: pages.entrySet())
-         {
-            if (entry.getValue() == page)
-            {
-               pages.remove(entry.getKey());
-               break;
-            }
-         }
+         pageRemoved((AbstractPage) child);
       }
    };
 
@@ -153,6 +144,26 @@ public class WorkBench extends JFrame
          return false;
       setPageObject(page, obj);
       return true;
+   }
+
+   /**
+    * Remove a page from the work-bench's pages container.
+    * Called by the event handler when a page is removed.
+    * 
+    * @param page - the page that is removed.
+    */
+   private synchronized void pageRemoved(AbstractPage page)
+   {
+      page.closeEvent();
+
+      for (Entry<WorkBenchPageId,AbstractPage> entry: pages.entrySet())
+      {
+         if (entry.getValue() == page)
+         {
+            pages.remove(entry.getKey());
+            break;
+         }
+      }
    }
 
    /**

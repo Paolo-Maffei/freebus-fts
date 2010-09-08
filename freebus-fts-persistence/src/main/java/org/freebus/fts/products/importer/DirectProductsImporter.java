@@ -1,12 +1,12 @@
-package org.freebus.fts;
+package org.freebus.fts.products.importer;
 
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
@@ -14,10 +14,12 @@ import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
 /**
- * Class for importing parts of a org.freebus.fts.products database into FTS'
- * internal database.
+ * Class for importing parts of a products database into FTS'
+ * internal database. The IDs are copied as is.
+ * 
+ * @see RemappingProductsImporter
  */
-public final class ProductsImporter
+public final class DirectProductsImporter implements ProductsImporter
 {
    private final ProductsFactory sourceFactory, destFactory;
    private final CatalogEntryService catalogEntryService;
@@ -28,7 +30,7 @@ public final class ProductsImporter
     * Create an importer that will import using sourceFactory and save the
     * objects using destFactory.
     */
-   public ProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
+   public DirectProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {
       this.sourceFactory = sourceFactory;
 
@@ -37,8 +39,9 @@ public final class ProductsImporter
    }
 
    /**
-    * Import a list of virtual devices.
+    * {@inheritDoc}
     */
+   @Override
    public void copy(List<VirtualDevice> devices)
    {
       final VirtualDeviceService virtDevService = destFactory.getVirtualDeviceService();
@@ -49,7 +52,7 @@ public final class ProductsImporter
       if (ownTransaction)
          destFactory.getTransaction().begin();
 
-//      fixParameters(devices);
+      // fixParameters(devices);
 
       for (VirtualDevice device : devices)
       {
@@ -60,25 +63,14 @@ public final class ProductsImporter
          for (FunctionalEntity funcEnt = device.getFunctionalEntity(); funcEnt != null; funcEnt = funcEnt.getParent())
          {
             if (funcEntService.getFunctionalEntity(funcEnt.getId()) == null)
-               funcEntService.save(funcEnt);
+               funcEntService.persist(funcEnt);
          }
 
-         virtDevService.save(device);
+         virtDevService.merge(device);
       }
 
       if (ownTransaction)
          destFactory.getTransaction().commit();
-   }
-
-   /**
-    * Import one virtual device.
-    */
-   public void copy(VirtualDevice device)
-   {
-      final List<VirtualDevice> lst = new LinkedList<VirtualDevice>();
-      lst.add(device);
-
-      copy(lst);
    }
 
    /**
@@ -88,60 +80,25 @@ public final class ProductsImporter
    {
       destFactory.getManufacturerService().saveIfMissing(catalogEntry.getManufacturer());
 
-      catalogEntryService.save(catalogEntry);
+      catalogEntryService.persist(catalogEntry);
       catalogEntries.add(catalogEntry);
    }
 
    /**
-    * @return the org.freebus.fts.products factory from where the
-    *         org.freebus.fts.products are imported.
+    * {@inheritDoc}
     */
+   @Override
    public ProductsFactory getSourceFactory()
    {
       return sourceFactory;
    }
 
    /**
-    * @return the org.freebus.fts.products factory into which the
-    *         org.freebus.fts.products are imported.
+    * {@inheritDoc}
     */
+   @Override
    public ProductsFactory getDestFactory()
    {
       return destFactory;
    }
-//
-//   /**
-//    * Correct the parameter visibility for all parameters of the {@link Program
-//    * application programs} of the given devices. This is required because the
-//    * visibility is stored in the device's parameter values, where it does not
-//    * belong.
-//    *
-//    * @param devices - the devices whose program's parameters are to be
-//    *           processed.
-//    */
-//   private void fixParameters(List<VirtualDevice> devices)
-//   {
-//      if (!(sourceFactory instanceof VdxProductsFactory))
-//         return;
-//
-//      final VdxEntityManager manager = ((VdxProductsFactory) sourceFactory).getEntityManager();
-//
-//      final Set<Program> programs = new HashSet<Program>(devices.size());
-//      for (final VirtualDevice device : devices)
-//         programs.add(device.getProgram());
-//
-//      final Map<Integer,DeviceParameter> values = new HashMap<Integer,DeviceParameter>(16738);
-//      for (final Object obj: manager.fetchAll(DeviceParameter.class))
-//      {
-//         DeviceParameter val = (DeviceParameter) obj;
-//         if (val.getParameter() != null)
-//            values.put(val.getParameter().getId(), val);
-//      }
-//
-////      for (final Program program : programs)
-////      {
-////         for (final Parameter param : program.getParameters())
-////            param.setVisible(values.get(param.getId()).isVisible());
-////      }
-//   }
 }

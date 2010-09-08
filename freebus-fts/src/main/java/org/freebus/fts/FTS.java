@@ -142,7 +142,8 @@ public final class FTS extends Application
          startupLookAndFeel(30);
          startupUpgradeDatabase(40);
          startupConnectDatabase(70);
-         startupMainWindow(90);
+         startupMainWindow(80);
+         startupPostMainWindowCreate(90);
 
          // Final steps
          startupIndicator.setProgress(100, "");
@@ -452,6 +453,16 @@ public final class FTS extends Application
       {
          e1.printStackTrace();
       }
+   }
+
+   /**
+    * Startup tasks that have to happen after the main window is created.
+    *
+    * @param progress - the initial value of the progress indicator.
+    */
+   private void startupPostMainWindowCreate(int progress)
+   {
+      ProjectManager.setController(new ProjectControllerImpl());
    }
 
    /**

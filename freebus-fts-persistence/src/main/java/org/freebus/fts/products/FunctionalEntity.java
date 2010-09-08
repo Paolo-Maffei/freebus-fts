@@ -3,10 +3,13 @@ package org.freebus.fts.products;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.TableGenerator;
 
 import org.freebus.fts.persistence.vdx.VdxField;
 
@@ -18,6 +21,8 @@ import org.freebus.fts.persistence.vdx.VdxField;
 public class FunctionalEntity
 {
    @Id
+   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenFunctionalEntityId")
+   @GeneratedValue(strategy = GenerationType.TABLE)
    @Column(name = "functional_entity_id", nullable = false)
    private int id;
 
@@ -27,6 +32,9 @@ public class FunctionalEntity
 
    @Column(name = "functional_entity_name", nullable = false)
    private String name = "";
+
+   @Column(name = "functional_entity_number", nullable = false)
+   private String number = "";
 
    @Column(name = "functional_entity_description", nullable = false)
    private String description = "";
@@ -99,6 +107,28 @@ public class FunctionalEntity
    public String getName()
    {
       return name;
+   }
+
+   /**
+    * Set the number of the functional entity. This is a string, and is usually a
+    * short 2-5 characters string.
+    *
+    * @param number - the number to set.
+    */
+   public void setNumber(String number)
+   {
+      this.number = number;
+   }
+
+   /**
+    * Get the number of the functional entity. This is a string, and is usually a
+    * short 2-5 characters string.
+    *
+    * @return The number of the functional entity.
+    */
+   public String getNumber()
+   {
+      return number;
    }
 
    /**

@@ -1,5 +1,6 @@
 package org.freebus.fts.products.services;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -13,7 +14,7 @@ public interface ManufacturerService
 {
    /**
     * Get a manufacturer by id.
-    *
+    * 
     * @throws PersistenceException if the object does not exist
     */
    public Manufacturer getManufacturer(int manufacturerId) throws PersistenceException;
@@ -35,14 +36,24 @@ public interface ManufacturerService
    public void saveIfMissing(Manufacturer manufacturer) throws PersistenceException;
 
    /**
-    * Save a manufacturer.
+    * Persist the given manufacturer.
+    * 
+    * @return the manufacturer. The returned object may be different from the
+    *         given object.
     */
-   public void save(Manufacturer manufacturer) throws PersistenceException;
+   public void persist(Manufacturer manufacturer) throws PersistenceException;
+
+   /**
+    * Merge the state of the given manufacturer into the current persistence
+    * context.
+    */
+   public Manufacturer merge(Manufacturer manufacturer) throws PersistenceException;
 
    /**
     * Save multiple manufacturers.
     */
-   public void save(List<Manufacturer> manufacturers) throws PersistenceException;
+   @Deprecated
+   public void save(Collection<Manufacturer> manufacturers) throws PersistenceException;
 
    /**
     * Delete a manufacturer.

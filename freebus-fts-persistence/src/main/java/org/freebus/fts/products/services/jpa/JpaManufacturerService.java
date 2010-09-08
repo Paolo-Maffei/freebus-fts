@@ -1,5 +1,6 @@
 package org.freebus.fts.products.services.jpa;
 
+import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -55,13 +56,19 @@ public final class JpaManufacturerService implements ManufacturerService
    }
 
    @Override
-   public void save(Manufacturer manufacturer) throws PersistenceException
+   public void persist(Manufacturer manufacturer) throws PersistenceException
    {
-      entityManager.merge(manufacturer);
+      entityManager.persist(manufacturer);
    }
 
    @Override
-   public void save(List<Manufacturer> manufacturers) throws PersistenceException
+   public Manufacturer merge(Manufacturer manufacturer) throws PersistenceException
+   {
+      return entityManager.merge(manufacturer);
+   }
+
+   @Override
+   public void save(Collection<Manufacturer> manufacturers) throws PersistenceException
    {
       for (Manufacturer manufacturer: manufacturers)
          entityManager.persist(manufacturer);

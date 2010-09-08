@@ -22,16 +22,13 @@ import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.core.ProjectController;
 import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.pages.LogicalView;
 import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
-import org.freebus.fts.products.VirtualDevice;
-import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
-import org.freebus.fts.project.ProjectListener;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.service.ProjectAdapter;
 import org.freebus.knxcomm.jobs.JobQueue;
 import org.freebus.knxcomm.jobs.JobQueueErrorEvent;
 import org.freebus.knxcomm.jobs.JobQueueEvent;
@@ -40,7 +37,7 @@ import org.freebus.knxcomm.jobs.JobQueueListener;
 /**
  * The main application window.
  */
-public final class MainWindow extends WorkBench implements JobQueueListener, ProjectListener, ProjectController
+public final class MainWindow extends WorkBench implements JobQueueListener
 {
    private static final long serialVersionUID = 4384074439505445519L;
    private static MainWindow instance;
@@ -95,7 +92,16 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
       showPage(PhysicalView.class, null);
       showPage(LogicalView.class, null);
 
-      ProjectManager.addListener(this);
+      ProjectManager.addListener(new ProjectAdapter()
+      {
+         @Override
+         public void projectChanged(Project project)
+         {
+            if (project == null)
+               setTitle(FTS.getInstance().getName());
+            else setTitle(project.getName() + " - " + FTS.getInstance().getName());
+         }
+      });
 
       setSelectedPage(startPage);
 
@@ -233,35 +239,5 @@ public final class MainWindow extends WorkBench implements JobQueueListener, Pro
             else Dialogs.showExceptionDialog(event.exception, event.message);
          }
       });
-   }
-
-   /**
-    * Callback: The active project was changed.
-    */
-   @Override
-   public void projectChange(Project project)
-   {
-      updateContents();
-
-      if (project == null)
-         setTitle(FTS.getInstance().getName());
-      else setTitle(project.getName() + " - " + FTS.getInstance().getName());
-   }
-
-   /**
-    * Add a virtual device to the current project.
-    *
-    * @param virtualDevice the device to add.
-    */
-   @Override
-   public void addDevice(VirtualDevice virtualDevice)
-   {
-      final Device device = new Device(0, virtualDevice);
-
-      final TopologyView topologyView = (TopologyView) getPage(TopologyView.class, null);
-      if (topologyView == null)
-         return;
-
-      topologyView.addDevice(device);
    }
 }

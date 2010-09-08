@@ -69,7 +69,13 @@ public final class VdxProgramService implements ProgramService
    }
 
    @Override
-   public void save(Program program)
+   public void persist(Program program)
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   @Override
+   public Program merge(Program program)
    {
       throw new PersistenceException("Sorry, not implemented");
    }

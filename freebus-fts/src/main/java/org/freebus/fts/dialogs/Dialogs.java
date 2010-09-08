@@ -101,6 +101,8 @@ public final class Dialogs
          if (msg == null)
             continue;
 
+         sb.append("<b>").append(ee.getClass().getSimpleName()).append("</b><br />");
+
          for (String line : msg.split("\r*\n"))
          {
             line = line.trim();
@@ -108,10 +110,11 @@ public final class Dialogs
             if (line.isEmpty())
                continue;
 
-            if (line.length() > 400)
-               line = line.substring(0, 400) + " ...";
+            if (line.length() > 1000)
+               line = line.substring(0, 1000) + " ...";
 
-            sb.append(line.replace('`', '\'').replace("<", "&lt;")).append("<br /><br />");
+            line = line.replace('`', '\'').replace("<", "&lt;");
+            sb.append(line).append("<br /><br />");
          }
       }
 

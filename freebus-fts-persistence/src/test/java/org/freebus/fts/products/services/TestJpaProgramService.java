@@ -25,11 +25,11 @@ public class TestJpaProgramService extends ProductsTestCase
       progService = getJpaProductsFactory().getProgramService();
 
       final Manufacturer manu = new Manufacturer(1, "manu-1");
-      getJpaProductsFactory().getManufacturerService().save(manu);
+      getJpaProductsFactory().getManufacturerService().persist(manu);
 
-      progService.save(new Program(11, "Program-11", manu));
-      progService.save(new Program(12, "Program-12", manu));
-      progService.save(new Program(13, "Program-13", manu));
+      progService.persist(new Program(11, "Program-11", manu));
+      progService.persist(new Program(12, "Program-12", manu));
+      progService.persist(new Program(13, "Program-13", manu));
 
       DatabaseResources.getEntityManager().flush();
    }
@@ -53,13 +53,13 @@ public class TestJpaProgramService extends ProductsTestCase
    public final void testSave()
    {
       final Manufacturer manu88 = new Manufacturer(88, "manu-88");
-      getJpaProductsFactory().getManufacturerService().save(manu88);
+      getJpaProductsFactory().getManufacturerService().persist(manu88);
 
       final Program prog = new Program(0, "Program-88", manu88);
       final byte[] data = new byte[] { 0, 1, 2, 45, 0, 127, 4, -128, 0, 7, 1 };
       prog.setEepromData(data);
 
-      progService.save(prog);
+      progService.persist(prog);
       DatabaseResources.getEntityManager().flush();
 
       assertNotSame(0, prog.getId());

@@ -6,10 +6,12 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.JButton;
 
+import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ProjectController;
+import org.freebus.fts.dialogs.AddDeviceDialog;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.project.service.ProjectController;
 
 
 /**
@@ -54,9 +56,11 @@ public class AddVirtualDeviceBrowser extends ProductsBrowser
    public void addSelectedDevice()
    {
       final VirtualDevice dev = getSelectedVirtualDevice();
-
-      if (dev != null && controller != null)
-         controller.addDevice(dev);
+      if (dev != null)
+      {
+         final AddDeviceDialog dlg = new AddDeviceDialog(dev, MainWindow.getInstance());
+         dlg.setVisible(true);
+      }
    }
 
    /**

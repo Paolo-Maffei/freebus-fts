@@ -42,8 +42,14 @@ public final class JpaFunctionalEntityService implements FunctionalEntityService
    }
 
    @Override
-   public void save(FunctionalEntity funcEnt)
+   public void persist(FunctionalEntity funcEnt)
    {
       entityManager.persist(funcEnt);
+   }
+
+   @Override
+   public FunctionalEntity merge(FunctionalEntity funcEnt)
+   {
+      return entityManager.merge(funcEnt);
    }
 }

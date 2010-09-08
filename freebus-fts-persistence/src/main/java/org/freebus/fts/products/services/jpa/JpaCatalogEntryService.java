@@ -63,8 +63,14 @@ public final class JpaCatalogEntryService implements CatalogEntryService
    }
 
    @Override
-   public void save(CatalogEntry catalogEntry) throws PersistenceException
+   public void persist(CatalogEntry catalogEntry) throws PersistenceException
    {
       entityManager.persist(catalogEntry);
+   }
+
+   @Override
+   public CatalogEntry merge(CatalogEntry catalogEntry) throws PersistenceException
+   {
+      return entityManager.merge(catalogEntry);
    }
 }

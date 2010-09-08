@@ -27,7 +27,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "line")
-public class Line
+public class Line implements Comparable<Line>
 {
    @Id
    @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenLineId")
@@ -49,8 +49,13 @@ public class Line
    @OrderBy("address")
    private List<Device> devices = new Vector<Device>();
 
-   public final static int MAX_ADDR = 0x0F;        // The highest number valid for address 
-   public final static int MIN_NAME_LENGTH = 2;    //TODO Define minimum accepted length for an Area Name
+   @Deprecated
+   public final static int MAX_ADDR = 0x0F; // The highest number valid for
+                                            // address
+
+   @Deprecated
+   public final static int MIN_NAME_LENGTH = 2; // minimum accepted length for a
+                                                // name
 
    /**
     * Create a new line.
@@ -68,7 +73,9 @@ public class Line
    }
 
    /**
-    * @param id the line id to set
+    * Set the line id.
+    * 
+    * @param id - the line id to set
     */
    public void setId(int id)
    {
@@ -84,7 +91,9 @@ public class Line
    }
 
    /**
-    * @param name the name to set
+    * Set the name of the line.
+    * 
+    * @param name - the name to set
     */
    public void setName(String name)
    {
@@ -92,7 +101,7 @@ public class Line
    }
 
    /**
-    * @return the address
+    * @return the KNX bus address of the line (0..255).
     */
    public int getAddress()
    {
@@ -100,7 +109,9 @@ public class Line
    }
 
    /**
-    * @param address the address to set
+    * Set the KNX bus address of the line.
+    * 
+    * @param address - the address to set (0..255)
     */
    public void setAddress(int address)
    {
@@ -116,7 +127,10 @@ public class Line
    }
 
    /**
-    * @param area the area to set
+    * Set the area to which the line belongs. Use {@link Area#add(Line)} instead
+    * of this method if you want to add a line to an {@link Area area}.
+    * 
+    * @param area - the area to set
     */
    public void setArea(Area area)
    {
@@ -125,10 +139,10 @@ public class Line
 
    /**
     * Add a device to the line.
-    *
+    * 
     * @throws IllegalArgumentException - If the device was already added to the
     *            room.
-    *
+    * 
     * @see #getFreeAddress()
     */
    public void add(Device device)
@@ -141,21 +155,22 @@ public class Line
    }
 
    /**
-    * Delete the Device from the line
-    * @param device to remove
+    * Delete the device from the line.
+    *
+    * @param device - the device to remove.
     */
    public void remove(Device device)
    {
       if (!devices.contains(device))
          throw new IllegalArgumentException("Device is not part of this line: " + this + ", Device: " + device);
-      
+
       device.setLine(null);
       devices.remove(device);
    }
-   
+
    /**
     * @return an address that is not used in the line.
-    *
+    * 
     * @throws RuntimeException if no free address can be found.
     */
    public int getFreeAddress()
@@ -212,6 +227,15 @@ public class Line
     * {@inheritDoc}
     */
    @Override
+   public int compareTo(Line o)
+   {
+      return toString().compareTo(o.toString());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public int hashCode()
    {
       return id;
@@ -234,6 +258,7 @@ public class Line
    /**
     * request number of all used addresses of the physical addresses by Lines
     * this could be used to find out free addresses
+    * 
     * @return array with all used addresses
     */
    public int[] getUsedDeviceAddresses()
@@ -245,9 +270,9 @@ public class Line
          used[cnt] = device.getAddress();
          cnt++;
       }
-      
+
       Arrays.sort(used);
-      
+
       return used;
    }
 }

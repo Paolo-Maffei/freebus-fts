@@ -8,9 +8,10 @@ import java.io.OutputStream;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.ProductsImporter;
+import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.products.importer.DirectProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.project.internal.I18n;
@@ -65,7 +66,7 @@ public final class SampleProjectFactory
 
       final ProductsFactory vdxFactory = ProductsManager.getFactory(tempFile, persistenceUnitName);
       final ProductsFactory productsFactory = ProductsManager.getFactory();
-      final ProductsImporter importer = new ProductsImporter(vdxFactory, productsFactory);
+      final ProductsImporter importer = new DirectProductsImporter(vdxFactory, productsFactory);
 
       final List<VirtualDevice> devs = vdxFactory.getVirtualDeviceService().getVirtualDevices();
 

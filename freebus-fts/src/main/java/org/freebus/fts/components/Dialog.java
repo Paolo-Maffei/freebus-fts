@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.HeadlessException;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
@@ -161,12 +162,27 @@ public class Dialog extends JDialog
    }
 
    /**
-    * Center the dialog on the screen.
+    * Center the dialog in the owning window or on the screen, if the dialog
+    * is not owned by a window.
     */
    public void center()
    {
-      final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-      setLocation((screenSize.width - getWidth()) >> 1, (screenSize.height - getHeight()) >> 1);
+      final Window owner = getOwner();
+      Dimension sz;
+      Point pos;
+
+      if (owner == null)
+      {
+         sz = Toolkit.getDefaultToolkit().getScreenSize();
+         pos = new Point();
+      }
+      else
+      {
+         sz = owner.getSize();
+         pos = owner.getLocation();
+      }
+
+      setLocation(pos.x + ((sz.width - getWidth()) >> 1), pos.y + ((sz.height - getHeight()) >> 1));
    }
 
    /**

@@ -48,7 +48,13 @@ public final class VdxFunctionalEntityService implements FunctionalEntityService
    }
 
    @Override
-   public void save(FunctionalEntity funcEnt) throws PersistenceException
+   public void persist(FunctionalEntity funcEnt) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   @Override
+   public FunctionalEntity merge(FunctionalEntity funcEnt) throws PersistenceException
    {
       throw new PersistenceException("Sorry, not implemented");
    }
