@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.persistence.EntityTransaction;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
@@ -105,7 +104,6 @@ public class ProductsImportBrowser extends ProductsBrowser
    protected void importProducts(Set<VirtualDevice> virtualDevices)
    {
       final ProductsFactory ftsProductsFactory = ProductsManager.getFactory();
-      final EntityTransaction transaction = ftsProductsFactory.getTransaction();
 
       try
       {
@@ -117,12 +115,8 @@ public class ProductsImportBrowser extends ProductsBrowser
          while (it.hasNext())
             virtDevsList.add(it.next());
 
-         transaction.begin();
-
          final ProductsImporter importer = ProductsManager.getProductsImporter(getProductsFactory(), ftsProductsFactory);
          importer.copy(virtDevsList);
-
-         transaction.commit();
 
          importDevices.clear();
          updateCatalogEntry();
@@ -130,12 +124,14 @@ public class ProductsImportBrowser extends ProductsBrowser
          JOptionPane.showMessageDialog(this, I18n.formatMessage("ProductsImportBrowser.DoneMessage",
                new Object[] { virtDevsList.size() }), I18n.getMessage("ProductsImportBrowser.DoneTitle"),
                JOptionPane.INFORMATION_MESSAGE);
+
+         // Need to close the page as the contents of the loaded VD file
+         // is unclean after import - the imported products have been transfered
+         // into the FTS database.
+         close();
       }
       catch (Exception e)
       {
-         if (transaction.isActive())
-            transaction.rollback();
-
          Dialogs.showExceptionDialog(e, I18n.getMessage("ProductsImportBrowser.ErrImport"));
       }
       finally

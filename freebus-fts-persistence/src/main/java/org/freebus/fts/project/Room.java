@@ -25,8 +25,8 @@ import javax.persistence.TableGenerator;
 public class Room implements Comparable<Room>
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenRoomId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Room", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Room")
    @Column(name = "room_id", nullable = false)
    private int id;
 
@@ -51,6 +51,15 @@ public class Room implements Comparable<Room>
     */
    public Room()
    {
+   }
+
+   /**
+    * Remove the room from its building.
+    */
+   public void detach()
+   {
+      if (building != null)
+         building.remove(this);
    }
 
    /**
@@ -145,6 +154,10 @@ public class Room implements Comparable<Room>
    {
       if (devices.contains(device))
          throw new IllegalArgumentException("Device was previously added: " + device);
+
+      final Room oldRoom = device.getRoom();
+      if (oldRoom != null)
+         oldRoom.remove(device);
 
       device.setRoom(this);
       devices.add(device);

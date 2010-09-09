@@ -17,4 +17,103 @@
   </addColumn>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-3">
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Area" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Building" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="CatalogEntry" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="CommunicationObject" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Device" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="DeviceObject" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="FunctionalEntity" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Line" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="MainGroup" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="MidGroup" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Mask" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Parameter" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="ParameterType" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="ParameterValue" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Product" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Program" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Project" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="Room" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="SubGroup" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="VirtualDevice" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-4">
+  <addColumn tableName="hw_product">
+   <column name="product_version_number" type="SMALLINT" defaultValueNumeric="1">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-5">
+  <addColumn tableName="virtual_device">
+   <column name="product_type_id" type="INT" defaultValueNumeric="0">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet>
+
 </databaseChangeLog>

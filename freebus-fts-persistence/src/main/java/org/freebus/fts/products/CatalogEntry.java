@@ -22,8 +22,8 @@ import javax.persistence.TableGenerator;
 public class CatalogEntry
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenCatalogEntryId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "CatalogEntry", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "CatalogEntry")
    @Column(name = "catalog_entry_id", nullable = false)
    private int id;
 
@@ -146,6 +146,16 @@ public class CatalogEntry
    public Product getProduct()
    {
       return product;
+   }
+
+   /**
+    * Set the hardware product.
+    * 
+    * @param product - the product to set.
+    */
+   public void setProduct(Product product)
+   {
+      this.product = product;
    }
 
    /**

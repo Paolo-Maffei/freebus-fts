@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
-import org.freebus.fts.products.importer.DirectProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.project.internal.I18n;
@@ -24,7 +23,7 @@ public final class SampleProjectFactory
    /**
     * The device-id of the example virtual device.
     */
-   public static final int sampleVirtualDeviceId = 23652;
+   public static final int sampleVirtualDeviceId = 1;
 
    private static String sampleImportFileName = "sample-products.vd_";
 
@@ -38,7 +37,8 @@ public final class SampleProjectFactory
       final InputStream inStream = SampleProjectFactory.class.getClassLoader()
             .getResourceAsStream(sampleImportFileName);
       if (inStream == null)
-         throw new RuntimeException("Could not find example products file \"" + sampleImportFileName + "\" in class path");
+         throw new RuntimeException("Could not find example products file \"" + sampleImportFileName
+               + "\" in class path");
 
       File tempFile = null;
       try
@@ -52,7 +52,8 @@ public final class SampleProjectFactory
          while (true)
          {
             rlen = inStream.read(buffer, 0, buffer.length);
-            if (rlen <= 0) break;
+            if (rlen <= 0)
+               break;
             outStream.write(buffer, 0, rlen);
          }
 
@@ -66,7 +67,7 @@ public final class SampleProjectFactory
 
       final ProductsFactory vdxFactory = ProductsManager.getFactory(tempFile, persistenceUnitName);
       final ProductsFactory productsFactory = ProductsManager.getFactory();
-      final ProductsImporter importer = new DirectProductsImporter(vdxFactory, productsFactory);
+      final ProductsImporter importer = ProductsManager.getProductsImporter(vdxFactory, productsFactory);
 
       final List<VirtualDevice> devs = vdxFactory.getVirtualDeviceService().getVirtualDevices();
 
@@ -102,10 +103,11 @@ public final class SampleProjectFactory
    }
 
    /**
-    * Creates a project that gets initialized with example values. Calls {@link #importSampleDevices}
-    * if required.
-    *
-    * @param persistenceUnitName - the name of the persistence unit that is used for the import.
+    * Creates a project that gets initialized with example values. Calls
+    * {@link #importSampleDevices} if required.
+    * 
+    * @param persistenceUnitName - the name of the persistence unit that is used
+    *           for the import.
     */
    public static Project newProject(final String persistenceUnitName)
    {
@@ -150,9 +152,10 @@ public final class SampleProjectFactory
          virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
          if (virtDev == null)
          {
-            // should not happen, as importSampleDevices() imports the
+            // Should not happen, as importSampleDevices() imports the
             // device(s).
-            throw new RuntimeException("Internal error: example device #" + sampleVirtualDeviceId + " not found in database after import");
+            throw new RuntimeException("Internal error: example device #" + sampleVirtualDeviceId
+                  + " not found in database after import");
          }
       }
 

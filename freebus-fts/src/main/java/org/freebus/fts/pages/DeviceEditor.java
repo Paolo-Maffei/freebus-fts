@@ -105,26 +105,28 @@ public class DeviceEditor extends AbstractPage
       {
          if (obj == device)
             close();
+         else componentChanged(obj);
       }
       
       @Override
       public void projectComponentModified(Object obj)
       {
-         if (obj == device)
-            updateContents();
+         componentChanged(obj);
       }
 
       @Override
       public void projectComponentAdded(Object obj)
       {
+         componentChanged(obj);
       }
       
       @Override
       public void projectChanged(Project project)
       {
-         updateContents();
+         componentChanged(project);
       }
    };
+
    /**
     * Apply the changes to the project
     */
@@ -147,7 +149,7 @@ public class DeviceEditor extends AbstractPage
       final Object[] msgArgs = new Object[] { device.getPhysicalAddress(),
             device.getCatalogEntry().getName() };
       
-      setName(I18n.formatMessage("DeviceEditor.Title", msgArgs));
+      setName(device.getPhysicalAddress().toString());
       caption.setText(I18n.formatMessage("DeviceEditor.Caption", msgArgs));
 
       paramsPanel.setDevice(device);
@@ -173,5 +175,22 @@ public class DeviceEditor extends AbstractPage
       }
 
       super.close();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void updateContents()
+   {
+      componentChanged(null);
+   }
+
+   public void componentChanged(Object obj)
+   {
+      if (obj == device)
+         setName(device.getPhysicalAddress().toString());
+
+      generalPanel.componentChanged(obj);
    }
 }

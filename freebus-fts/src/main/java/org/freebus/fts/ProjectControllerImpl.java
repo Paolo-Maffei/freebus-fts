@@ -5,10 +5,11 @@ import org.freebus.fts.pages.DeviceEditor;
 import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
+import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
-import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.Room;
 import org.freebus.fts.project.service.ProjectController;
 
 /**
@@ -65,10 +66,14 @@ public final class ProjectControllerImpl implements ProjectController
    {
       if (obj instanceof Area)
          remove((Area) obj);
-      else if (obj instanceof Line)
-         remove((Line) obj);
+      else if (obj instanceof Building)
+         remove((Building) obj);
       else if (obj instanceof Device)
          remove((Device) obj);
+      else if (obj instanceof Line)
+         remove((Line) obj);
+      else if (obj instanceof Room)
+         remove((Room) obj);
    }
 
    /**
@@ -77,9 +82,7 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public void remove(Area area)
    {
-      final Project project = area.getProject();
-      if (project != null)
-         project.remove(area);
+      area.detach();
 
       for (final Object line : area.getLines().toArray())
          remove((Line) line);
@@ -91,11 +94,34 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
+   public void remove(Building building)
+   {
+      building.detach();
+
+      for (final Object room : building.getRooms().toArray())
+         remove((Room) room);
+
+      ProjectManager.fireComponentRemoved(building);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void remove(Device device)
+   {
+      device.detach();
+
+      ProjectManager.fireComponentRemoved(device);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public void remove(Line line)
    {
-      final Area area = line.getArea();
-      if (area != null)
-         area.remove(line);
+      line.detach();
 
       for (final Object device : line.getDevices().toArray())
          remove((Device) device);
@@ -107,12 +133,13 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
-   public void remove(Device device)
+   public void remove(Room room)
    {
-      final Line line = device.getLine();
-      if (line != null)
-         line.remove(device);
+      room.detach();
 
-      ProjectManager.fireComponentRemoved(device);
+      for (final Object device : room.getDevices().toArray())
+         remove((Device) device);
+
+      ProjectManager.fireComponentRemoved(room);
    }
 }

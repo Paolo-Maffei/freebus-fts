@@ -8,6 +8,7 @@ import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductDescriptionService;
+import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
@@ -20,42 +21,72 @@ public final class JpaProductsFactory implements ProductsFactory
 {
    private final EntityManager entityManager = DatabaseResources.getEntityManager();
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public CatalogEntryService getCatalogEntryService()
    {
       return new JpaCatalogEntryService(entityManager);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public FunctionalEntityService getFunctionalEntityService()
    {
       return new JpaFunctionalEntityService(entityManager);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public ManufacturerService getManufacturerService()
    {
       return new JpaManufacturerService(entityManager);
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ProductService getProductService()
+   {
+      return new JpaProductService(entityManager);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public ProductDescriptionService getProductDescriptionService()
    {
       return new JpaProductDescriptionService(entityManager);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public VirtualDeviceService getVirtualDeviceService()
    {
       return new JpaVirtualDeviceService(entityManager);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public ProgramService getProgramService()
    {
       return new JpaProgramService(entityManager);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
    public EntityTransaction getTransaction()
    {

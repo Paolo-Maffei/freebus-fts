@@ -2,9 +2,11 @@ package org.freebus.fts.project.service;
 
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
+import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.Room;
 
 /**
  * Interface for project controllers. Project controllers manipulate the
@@ -54,11 +56,11 @@ public interface ProjectController
    public void remove(Area area);
 
    /**
-    * Remove a line from the project.
+    * Remove a building from the project.
     * 
-    * @param line - the line to remove.
+    * @param building - the building to remove.
     */
-   public void remove(Line line);
+   public void remove(Building building);
 
    /**
     * Remove a device from the project.
@@ -66,4 +68,18 @@ public interface ProjectController
     * @param dev - the device to remove.
     */
    public void remove(Device dev);
+
+   /**
+    * Remove a line from the project.
+    * 
+    * @param line - the line to remove.
+    */
+   public void remove(Line line);
+
+   /**
+    * Remove a room from the project.
+    * 
+    * @param room - the room to remove.
+    */
+   public void remove(Room room);
 }

@@ -10,6 +10,7 @@ import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductDescriptionService;
+import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
@@ -29,6 +30,7 @@ public final class VdxProductsFactory implements ProductsFactory
    private FunctionalEntityService functionalEntityService;
    private ManufacturerService manufacturerService;
    private VirtualDeviceService virtualDeviceService;
+   private ProductService productService;
    private ProductDescriptionService productDescriptionService;
    private ProgramService programService;
 
@@ -73,6 +75,16 @@ public final class VdxProductsFactory implements ProductsFactory
    {
       if (manufacturerService == null) manufacturerService = new VdxManufacturerService(manager, getFunctionalEntityService());
       return manufacturerService;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ProductService getProductService()
+   {
+      if (productService == null) productService = new VdxProductService(manager.getReader());
+      return productService;
    }
 
    /**

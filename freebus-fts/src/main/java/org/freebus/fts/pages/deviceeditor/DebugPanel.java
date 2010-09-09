@@ -27,7 +27,7 @@ import org.freebus.fts.project.DeviceParameters;
  * Displays details of the edited {@link Device}, mainly for debugging. Part of
  * the {@link DeviceEditor}.
  */
-public class DebugPanel extends JPanel implements DeviceEditorPart
+public class DebugPanel extends JPanel implements DeviceEditorComponent
 {
    private static final long serialVersionUID = -5987571412817658216L;
 
@@ -165,6 +165,14 @@ public class DebugPanel extends JPanel implements DeviceEditorPart
       }
 
       ((DefaultTreeModel) tree.getModel()).reload();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void componentChanged(Object obj)
+   {
    }
 
    /**

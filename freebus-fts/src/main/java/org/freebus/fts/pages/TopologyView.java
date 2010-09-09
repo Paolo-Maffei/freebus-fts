@@ -123,9 +123,7 @@ public class TopologyView extends AbstractPage
          {
             if (e.getClickCount() == 2)
             {
-               if (selectedObject instanceof Device)
-                  ProjectManager.getController().edit((Device) selectedObject);
-
+               ProjectManager.getController().edit(selectedObject);
                e.consume();
             }
          }
@@ -158,8 +156,10 @@ public class TopologyView extends AbstractPage
       @Override
       public void projectComponentModified(Object obj)
       {
-         if (isRelevant(obj))
+         if (obj instanceof Device)
             tree.updateUI();
+         else if (isRelevant(obj))
+            updateContents();
       }
 
       @Override

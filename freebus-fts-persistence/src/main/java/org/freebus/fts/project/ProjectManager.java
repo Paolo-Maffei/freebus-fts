@@ -2,6 +2,7 @@ package org.freebus.fts.project;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.project.service.ProjectController;
 import org.freebus.fts.project.service.ProjectFactory;
 import org.freebus.fts.project.service.ProjectListener;
@@ -84,6 +85,8 @@ public final class ProjectManager
     */
    static public void fireChanged()
    {
+      Logger.getLogger(ProjectManager.class).debug("fire project changed");
+
       for (ProjectListener listener : listeners)
          listener.projectChanged(project);
    }
@@ -96,6 +99,8 @@ public final class ProjectManager
     */
    static public void fireComponentAdded(Object obj)
    {
+      Logger.getLogger(ProjectManager.class).debug("fire added: " + obj);
+
       for (ProjectListener listener : listeners)
          listener.projectComponentAdded(obj);
    }
@@ -108,6 +113,8 @@ public final class ProjectManager
     */
    static public void fireComponentModified(Object obj)
    {
+      Logger.getLogger(ProjectManager.class).debug("fire modified: " + obj);
+
       for (ProjectListener listener : listeners)
          listener.projectComponentModified(obj);
    }
@@ -120,6 +127,8 @@ public final class ProjectManager
     */
    static public void fireComponentRemoved(Object obj)
    {
+      Logger.getLogger(ProjectManager.class).debug("fire removed: " + obj);
+
       for (ProjectListener listener : listeners)
          listener.projectComponentRemoved(obj);
    }

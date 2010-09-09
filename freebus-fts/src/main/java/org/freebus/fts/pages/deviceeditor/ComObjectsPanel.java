@@ -16,7 +16,7 @@ import org.freebus.fts.project.Device;
  * An editor for the communication objects of a device.
  * Part of the {@link DeviceEditor}.
  */
-public class ComObjectsPanel extends JPanel implements DeviceEditorPart
+public class ComObjectsPanel extends JPanel implements DeviceEditorComponent
 {
    private static final long serialVersionUID = -6987571415817658896L;
 
@@ -92,13 +92,11 @@ public class ComObjectsPanel extends JPanel implements DeviceEditorPart
       }
    }
 
-//   /*
-//    * Temporary internal helper method.
-//    */
-//   private JLabel newLabel(final String text)
-//   {
-//      final JLabel lbl = new JLabel(text);
-//      lbl.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-//      return lbl;
-//   }
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void componentChanged(Object obj)
+   {
+   }
 }

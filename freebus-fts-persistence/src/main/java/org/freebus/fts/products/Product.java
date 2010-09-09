@@ -23,8 +23,8 @@ public class Product
    public final static Product NONE = new Product(0, "NONE", null);
 
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenProductId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Product", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Product")
    @Column(name = "product_id", nullable = false)
    private int id;
 
@@ -34,6 +34,9 @@ public class Product
    @ManyToOne(optional = false, fetch = FetchType.LAZY)
    @JoinColumn(name = "manufacturer_id", nullable = false, referencedColumnName = "manufacturer_id")
    private Manufacturer manufacturer;
+
+   @Column(name = "product_version_number", nullable = false)
+   private int version;
 
    @Column(name = "product_serial_number", length = 30)
    private String serial;
@@ -59,79 +62,6 @@ public class Product
    }
 
    /**
-    * Set the product id.
-    */
-   public void setId(int id)
-   {
-      this.id = id;
-   }
-
-   /**
-    * @return the product id.
-    */
-   public int getId()
-   {
-      return id;
-   }
-
-   /**
-    * @return the name of the product.
-    */
-   public String getName()
-   {
-      return name;
-   }
-
-   /**
-    * @return the manufacturer.
-    */
-   public Manufacturer getManufacturer()
-   {
-      return manufacturer;
-   }
-
-   /**
-    * Set the serial-number that the manufacturer assigned.
-    */
-   public void setSerial(String serial)
-   {
-      this.serial = serial;
-   }
-
-   /**
-    * @return the product-id that the manufacturer assigned.
-    */
-   public String getSerial()
-   {
-      return serial;
-   }
-
-   /**
-    * Set the current that the product requires, in milli-ampere.
-    */
-   public void setBusCurrent(int busCurrent)
-   {
-      this.busCurrent = busCurrent;
-   }
-
-   /**
-    * Return the current that the product requires, in milli-ampere.
-    */
-   public int getBusCurrent()
-   {
-      return busCurrent;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode()
-   {
-      return id;
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override
@@ -145,6 +75,99 @@ public class Product
 
       final Product oo = (Product) o;
       return id == oo.id && name.equals(oo.name) && manufacturer.equals(oo.manufacturer);
+   }
+
+   /**
+    * Return the current that the product requires, in milli-ampere.
+    */
+   public int getBusCurrent()
+   {
+      return busCurrent;
+   }
+
+   /**
+    * @return the product id.
+    */
+   public int getId()
+   {
+      return id;
+   }
+
+   /**
+    * @return the manufacturer.
+    */
+   public Manufacturer getManufacturer()
+   {
+      return manufacturer;
+   }
+
+   /**
+    * @return the name of the product.
+    */
+   public String getName()
+   {
+      return name;
+   }
+
+   /**
+    * @return the product-id that the manufacturer assigned.
+    */
+   public String getSerial()
+   {
+      return serial;
+   }
+
+   public int getVersion()
+   {
+      return version;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * Set the current that the product requires, in milli-ampere.
+    */
+   public void setBusCurrent(int busCurrent)
+   {
+      this.busCurrent = busCurrent;
+   }
+
+   /**
+    * Set the product id.
+    */
+   public void setId(int id)
+   {
+      this.id = id;
+   }
+
+   /**
+    * Set the manufacturer.
+    * 
+    * @param manufacturer - the manufacturer to set.
+    */
+   public void setManufacturer(Manufacturer manufacturer)
+   {
+      this.manufacturer = manufacturer;
+   }
+
+   /**
+    * Set the serial-number that the manufacturer assigned.
+    */
+   public void setSerial(String serial)
+   {
+      this.serial = serial;
+   }
+
+   public void setVersion(int version)
+   {
+      this.version = version;
    }
 
    /**

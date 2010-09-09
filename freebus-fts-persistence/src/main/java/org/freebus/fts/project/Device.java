@@ -37,8 +37,8 @@ import org.freebus.fts.products.VirtualDevice;
 public final class Device
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenDeviceId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Device", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Device")
    @Column(name = "device_id", nullable = false)
    private int id;
 
@@ -122,6 +122,18 @@ public final class Device
    public Device(int id, VirtualDevice virtualDevice)
    {
       this(id, virtualDevice.getCatalogEntry(), virtualDevice.getProgram());
+   }
+
+   /**
+    * Remove the device from the line and the room.
+    */
+   public void detach()
+   {
+      if (line != null)
+         line.remove(this);
+
+      if (room != null)
+         room.remove(this);
    }
 
    /**

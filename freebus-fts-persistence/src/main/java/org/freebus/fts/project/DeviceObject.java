@@ -23,8 +23,8 @@ import org.freebus.fts.products.CommunicationObject;
 public class DeviceObject
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenDeviceObjectId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "DeviceObject", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "DeviceObject")
    @Column(name = "device_object_id", nullable = false)
    private int id;
 

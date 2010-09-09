@@ -21,8 +21,8 @@ import org.freebus.fts.persistence.vdx.VdxField;
 public class FunctionalEntity
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenFunctionalEntityId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "FunctionalEntity", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "FunctionalEntity")
    @Column(name = "functional_entity_id", nullable = false)
    private int id;
 

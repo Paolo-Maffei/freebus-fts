@@ -28,8 +28,8 @@ import javax.persistence.TableGenerator;
 public class Area
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenAreaId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Area", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Area")
    @Column(name = "area_id", nullable = false)
    private int id;
 
@@ -63,6 +63,15 @@ public class Area
    public Area(int id)
    {
       this.id = id;
+   }
+
+   /**
+    * Remove the area from its project.
+    */
+   public void detach()
+   {
+      if (project != null)
+         project.remove(this);
    }
 
    /**
@@ -141,6 +150,10 @@ public class Area
    {
       if (lines.contains(line))
          throw new IllegalArgumentException("Line was previously added: " + line);
+
+      final Area oldArea = line.getArea();
+      if (oldArea != null)
+         oldArea.remove(line);
 
       line.setArea(this);
       lines.add(line);

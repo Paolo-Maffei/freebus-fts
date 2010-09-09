@@ -124,6 +124,8 @@ public class AddDeviceDialog extends Dialog
 
       setMinimumSize(getPreferredSize());
       setSize((int) (getPreferredSize().width * 1.25), (int) (getPreferredSize().height * 1.25));
+
+      center();
    }
 
    /**
@@ -218,8 +220,9 @@ public class AddDeviceDialog extends Dialog
    private void updateRooms()
    {
       Object selected = cboRoom.getSelectedItem();
-      if (selected == null)
-         selected = getDefaultRoom();
+      if (selected != null)
+         selected = ((RoomItem) selected).room;
+      else selected = getDefaultRoom();
 
       cboRoom.removeAllItems();
       cboRoom.addItem(new RoomItem(null));

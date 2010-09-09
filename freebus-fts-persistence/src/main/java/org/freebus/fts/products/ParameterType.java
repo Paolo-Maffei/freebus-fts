@@ -35,8 +35,8 @@ import org.freebus.fts.persistence.vdx.VdxField;
 public class ParameterType
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenParameterTypeId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "ParameterType", initialValue = 1, allocationSize = 100)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "ParameterType")
    @Column(name = "parameter_type_id", nullable = false)
    private int id;
 

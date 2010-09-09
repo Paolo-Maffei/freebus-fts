@@ -28,8 +28,8 @@ import org.freebus.fts.project.internal.I18n;
 public class MainGroup
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenMainGroupId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "MainGroup", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "MainGroup")
    @Column(name = "main_group_id", nullable = false)
    private int id;
 
@@ -130,7 +130,7 @@ public class MainGroup
    /**
     * Add a mid-group to the main-group.
     *
-    * @param midGroup - the mid-group to add
+    * @param midGroup - the mid-group to add.
     *
     * @throws IllegalArgumentException - if the main-group already contains the mid-group.
     */
@@ -139,8 +139,26 @@ public class MainGroup
       if (midGroups.contains(midGroup))
          throw new IllegalArgumentException("Mid-group was previously added: " + midGroup);
 
+      final MainGroup prev = midGroup.getMainGroup();
+      if (prev != null)
+         prev.remove(midGroup);
+
       midGroup.setMainGroup(this);
       midGroups.add(midGroup);
+   }
+
+   /**
+    * Delete the mid-group from the main-group.
+    *
+    * @param midGroup - the mid-group to remove.
+    */
+   public void remove(MidGroup midGroup)
+   {
+      if (!midGroups.contains(midGroup))
+         throw new IllegalArgumentException("Mid-group is not part of this main-group: " + this + ", mid-group: " + midGroup);
+
+      midGroup.setMainGroup(null);
+      midGroups.remove(midGroup);
    }
 
    /**

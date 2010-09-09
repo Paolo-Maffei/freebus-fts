@@ -18,8 +18,8 @@ import javax.persistence.TableGenerator;
 public class Mask
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenMaskId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Mask", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Mask")
    @Column(name = "mask_id", nullable = false)
    private int id;
 

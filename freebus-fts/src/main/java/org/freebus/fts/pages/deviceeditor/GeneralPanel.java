@@ -11,6 +11,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -19,25 +20,52 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.Room;
 
 /**
  * Show / edit the general settings of a device.
  */
-public class GeneralPanel extends JPanel implements DeviceEditorPart
+public class GeneralPanel extends JPanel implements DeviceEditorComponent
 {
    private static final long serialVersionUID = -7668596031416201110L;
+
+   private boolean updating = false;
    private Device device;
 
    private final JLabel lblLineAddr = new JLabel();
    private final JComboBox cboAddr = new JComboBox();
+   private final JComboBox cboRoom = new JComboBox();
    private final JTextField edtName = new JTextField();
    private final JTextArea edtNotes = new JTextArea();
+
+   /*
+    * Internal class for the rooms combobox
+    */
+   static private class RoomItem
+   {
+      public final Room room;
+
+      public RoomItem(Room room)
+      {
+         this.room = room;
+      }
+
+      @Override
+      public String toString()
+      {
+         if (room == null)
+            return I18n.getMessage("AddDeviceDialog.NoRoom");
+         return room.getBuilding().getName() + " - " + room.getName();
+      }
+   }
 
    /**
     * Create a general device settings panel.
@@ -73,7 +101,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorPart
                return;
 
             device.setName(edtName.getText());
-            fireModified();
+            fireModified(device);
          }
 
          @Override
@@ -106,11 +134,44 @@ public class GeneralPanel extends JPanel implements DeviceEditorPart
                return;
 
             device.setAddress(newNodeAddr);
-            fireModified();
+            fireModified(device);
          }
       });
 
       add(new Label(), new GridBagConstraints(3, gridy, 1, 1, 100, 1, w, GridBagConstraints.BOTH, stdInsets, 0, 0));
+
+      //
+      // Room
+      //
+      lbl = new JLabel(I18n.getMessage("DeviceEditor.GeneralPanel.Room") + ": ");
+      add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
+
+      add(cboRoom, new GridBagConstraints(1, gridy, 3, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
+      cboRoom.setMaximumRowCount(20);
+      cboRoom.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent e)
+         {
+            final Object sel = cboRoom.getSelectedItem();
+            if (!(sel instanceof RoomItem))
+               return;
+
+            Room room = ((RoomItem) sel).room;
+            if (room == null)
+            {
+               room = device.getRoom();
+               if (room != null)
+                  room.remove(device);
+            }
+            else if (device.getRoom() != room)
+            {
+               room.add(device);
+            }
+
+            fireModified(room);
+         }
+      });
 
       //
       // Notes
@@ -129,12 +190,23 @@ public class GeneralPanel extends JPanel implements DeviceEditorPart
    }
 
    /**
-    * The device was modified
+    * An object was modified.
+    * 
+    * obj - The object that was modified.
     */
-   protected void fireModified()
+   protected void fireModified(final Object obj)
    {
-      if (device != null)
-         ProjectManager.fireComponentModified(device);
+      if (!updating && obj != null)
+      {
+         SwingUtilities.invokeLater(new Runnable()
+         {
+            @Override
+            public void run()
+            {
+               ProjectManager.fireComponentModified(obj);
+            }
+         });
+      }
    }
 
    /**
@@ -147,11 +219,31 @@ public class GeneralPanel extends JPanel implements DeviceEditorPart
       if (device == null)
          return;
 
+      updating = true;
       edtName.setText(device.getName());
       
       final PhysicalAddress addr = device.getPhysicalAddress();
       lblLineAddr.setText(Integer.toString(addr.getZone()) + '.' + Integer.toString(addr.getLine()) + '.');
+
       updateDeviceAddresses();
+      updateRooms();
+
+      updating = false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void componentChanged(Object obj)
+   {
+      updating = true;
+
+      if (obj instanceof Device)
+         updateDeviceAddresses();
+      else updateRooms();
+
+      updating = false;
    }
 
    /**
@@ -185,5 +277,32 @@ public class GeneralPanel extends JPanel implements DeviceEditorPart
       
       if (cboAddr.getSelectedIndex() == -1)
          cboAddr.setSelectedIndex(0);
+   }
+
+   /**
+    * Update the combobox with the available rooms.
+    */
+   private void updateRooms()
+   {
+      Object selected = cboRoom.getSelectedItem();
+      if (selected != null)
+         selected = ((RoomItem) selected).room;
+      else if (device != null)
+         selected = device.getRoom();
+
+      cboRoom.removeAllItems();
+      cboRoom.addItem(new RoomItem(null));
+
+      final Set<Room> rooms = new TreeSet<Room>();
+      for (final Building building : ProjectManager.getProject().getBuildings())
+         rooms.addAll(building.getRooms());
+
+      for (final Room room : rooms)
+      {
+         cboRoom.addItem(new RoomItem(room));
+
+         if (room == selected)
+            cboRoom.setSelectedIndex(cboRoom.getItemCount() - 1);
+      }
    }
 }

@@ -3,6 +3,8 @@ package org.freebus.fts.pages;
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
@@ -44,6 +46,7 @@ public class PhysicalView extends AbstractPage
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
    private JButton btnAddBuilding, btnAddRoom, btnAddDevice, btnEditProperties, btnEdit, btnDelete;
+   private Object selectedObject;
 
    static class UnassignedDevicesStore
    {
@@ -83,9 +86,9 @@ public class PhysicalView extends AbstractPage
          public void valueChanged(TreeSelectionEvent e)
          {
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            final Object userObject = node != null ? node.getUserObject() : null;
+            selectedObject = node != null ? node.getUserObject() : null;
 
-            if (userObject instanceof Building)
+            if (selectedObject instanceof Building)
             {
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(false);
@@ -93,7 +96,7 @@ public class PhysicalView extends AbstractPage
                btnEdit.setEnabled(false);
                btnDelete.setEnabled(true);
             }
-            else if (userObject instanceof Room)
+            else if (selectedObject instanceof Room)
             {
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(true);
@@ -101,7 +104,7 @@ public class PhysicalView extends AbstractPage
                btnEdit.setEnabled(false);
                btnDelete.setEnabled(true);
             }
-            else if (userObject instanceof Device)
+            else if (selectedObject instanceof Device)
             {
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(true);
@@ -116,6 +119,19 @@ public class PhysicalView extends AbstractPage
                btnEditProperties.setEnabled(false);
                btnEdit.setEnabled(false);
                btnDelete.setEnabled(false);
+            }
+         }
+      });
+
+      tree.addMouseListener(new MouseAdapter()
+      {
+         @Override
+         public void mouseClicked(MouseEvent e)
+         {
+            if (e.getClickCount() == 2)
+            {
+               ProjectManager.getController().edit(selectedObject);
+               e.consume();
             }
          }
       });
@@ -147,8 +163,10 @@ public class PhysicalView extends AbstractPage
       @Override
       public void projectComponentModified(Object obj)
       {
-         if (isRelevant(obj))
+         if (obj instanceof Device)
             tree.updateUI();
+         else if (isRelevant(obj))
+            updateContents();
       }
 
       @Override

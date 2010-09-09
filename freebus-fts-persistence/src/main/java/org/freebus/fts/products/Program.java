@@ -27,8 +27,8 @@ import javax.persistence.TableGenerator;
 public class Program
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenProgramId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Program", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Program")
    @Column(name = "program_id", nullable = false)
    private int id;
 

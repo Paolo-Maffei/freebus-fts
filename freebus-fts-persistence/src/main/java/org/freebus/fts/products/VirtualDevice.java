@@ -20,8 +20,8 @@ import javax.persistence.TableGenerator;
 public class VirtualDevice
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenVirtualDeviceId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "VirtualDevice", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "VirtualDevice")
    @Column(name = "virtual_device_id", nullable = false)
    private int id;
 
@@ -33,6 +33,9 @@ public class VirtualDevice
 
    @Column(name = "virtual_device_number")
    private int number;
+
+   @Column(name = "product_type_id", nullable = false)
+   private int productTypeId;
 
    @ManyToOne(fetch = FetchType.LAZY, optional = false)
    @JoinColumn(name = "catalog_entry_id", nullable = false)
@@ -172,6 +175,16 @@ public class VirtualDevice
    public int getNumber()
    {
       return number;
+   }
+
+   public void setProductTypeId(int productTypeId)
+   {
+      this.productTypeId = productTypeId;
+   }
+
+   public int getProductTypeId()
+   {
+      return productTypeId;
    }
 
    /**

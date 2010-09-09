@@ -28,8 +28,8 @@ import org.freebus.fts.project.internal.I18n;
 public class MidGroup
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenMidGroupId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "MidGroup", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "MidGroup")
    @Column(name = "mid_group_id", nullable = false)
    private int id;
 
@@ -138,8 +138,26 @@ public class MidGroup
       if (subGroups.contains(group))
          throw new IllegalArgumentException("Sub-group was previously added: " + group);
 
+      final MidGroup prev = group.getMidGroup();
+      if (prev != null)
+         prev.remove(group);
+
       group.setMidGroup(this);
       subGroups.add(group);
+   }
+
+   /**
+    * Delete the sub-group from the mid-group.
+    *
+    * @param subGroup - the sub-group to remove.
+    */
+   public void remove(SubGroup subGroup)
+   {
+      if (!subGroups.contains(subGroup))
+         throw new IllegalArgumentException("Sub-group is not part of this mid-group: " + this + ", sub-group: " + subGroup);
+
+      subGroup.setMidGroup(null);
+      subGroups.remove(subGroup);
    }
 
    /**

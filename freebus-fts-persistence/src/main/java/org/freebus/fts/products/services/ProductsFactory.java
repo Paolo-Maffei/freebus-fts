@@ -24,6 +24,11 @@ public interface ProductsFactory
    public ManufacturerService getManufacturerService();
 
    /**
+    * @return the service for product queries.
+    */
+   public ProductService getProductService();
+
+   /**
     * @return the service for product-description queries.
     */
    public ProductDescriptionService getProductDescriptionService();

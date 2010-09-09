@@ -1,10 +1,11 @@
 package org.freebus.fts.products.importer;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.products.CatalogEntry;
@@ -20,6 +21,7 @@ import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductDescriptionService;
+import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
@@ -31,8 +33,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 {
    private final ProductsImporterContext ctx;
    private final Map<String, CatalogEntry> knownCatEntries = new HashMap<String, CatalogEntry>();
-   private final Set<VirtualDevice> devicesToCleanup = new HashSet<VirtualDevice>();
-   private final Map<CatalogEntry,List<String>> prodDescsToStore = new HashMap<CatalogEntry,List<String>>();
+   private final Map<CatalogEntry, List<String>> prodDescsToStore = new HashMap<CatalogEntry, List<String>>();
    private final Logger logger = Logger.getLogger(getClass());
 
    /**
@@ -84,15 +85,24 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(VirtualDevice device)
    {
-      return getFingerPrint(device.getCatalogEntry()) + ':' + device.getName();
+      return device.getCatalogEntry().getManufacturer().getId() + ':' + device.getProductTypeId() + ':'
+            + device.getName();
+   }
+
+   /**
+    * Create a fingerprint for the given product.
+    */
+   public String getFingerPrint(Product product)
+   {
+      return product.getManufacturer().getId() + ':' + product.getName();
    }
 
    /**
     * Create a fingerprint for the given application program.
     */
-   public String getFingerPrint(Program prog)
+   public String getFingerPrint(Program program)
    {
-      return prog.getManufacturer().getId() + ':' + prog.getDeviceType() + ':' + prog.getName();
+      return program.getManufacturer().getId() + ':' + program.getDeviceType() + ':' + program.getName();
    }
 
    /**
@@ -195,7 +205,6 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Process all catalog entries.
-    * @throws DAOException
     */
    public void copyCatalogEntries(final List<VirtualDevice> devices)
    {
@@ -233,7 +242,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 
             try
             {
-               // Product description lines can only be stored when the catalog entry
+               // Product description lines can only be stored when the catalog
+               // entry
                // has it's new id.
                prodDescsToStore.put(catEntry, srcProdDescService.getProductDescription(catEntry));
             }
@@ -250,6 +260,68 @@ public final class RemappingProductsImporter implements ProductsImporter
          else
          {
             device.setCatalogEntry(knownCatEntry);
+         }
+      }
+   }
+
+   /**
+    * Process all hardware products.
+    */
+   public void copyProducts(final List<VirtualDevice> devices)
+   {
+      final ProductService productService = ctx.destFactory.getProductService();
+      final Map<String, Product> knownProducts = new HashMap<String, Product>();
+
+      // Load all products from the destination factory, remember
+      // those of a manufacturer that is used, and store them in
+      // knownCatEntries.
+      for (final Product product : productService.getProducts())
+      {
+         final int manuId = product.getManufacturer().getId();
+         if (ctx.getManufacturer(manuId) != null)
+         {
+            knownProducts.put(getFingerPrint(product), product);
+         }
+      }
+
+      // Lookup the products of the virtual devices' catalog entries and replace
+      // them with products of the destination database. Also update the
+      // products of the virtual devices to instances of the destination
+      // database.
+      for (final VirtualDevice device : devices)
+      {
+         final CatalogEntry catEntry = device.getCatalogEntry();
+         if (catEntry == null)
+            continue;
+
+         Product product = catEntry.getProduct();
+         if (product == null)
+            continue;
+
+         final String fingerPrint = getFingerPrint(product);
+         Product knownProduct = knownProducts.get(fingerPrint);
+         if (knownProduct == null)
+         {
+            logger.info("New hardware product: " + product);
+
+            product.setId(0);
+            product.setManufacturer(ctx.getManufacturer(catEntry.getManufacturer().getId()));
+            productService.persist(product);
+            knownProducts.put(fingerPrint, product);
+         }
+         else if (product.getVersion() > knownProduct.getVersion())
+         {
+            logger.info("Updated hardware product: " + product);
+
+            product.setId(knownProduct.getId());
+            product.setManufacturer(ctx.getManufacturer(catEntry.getManufacturer().getId()));
+            product = productService.merge(product);
+            catEntry.setProduct(product);
+            knownProducts.put(fingerPrint, product);
+         }
+         else
+         {
+            catEntry.setProduct(knownProduct);
          }
       }
    }
@@ -275,11 +347,11 @@ public final class RemappingProductsImporter implements ProductsImporter
          final Set<ParameterValue> values = paramType.getValues();
          if (values != null)
          {
-            for (ParameterValue value: values)
+            for (ParameterValue value : values)
                value.setId(0);
          }
       }
-      
+
       ctx.destFactory.getProgramService().persist(prog);
    }
 
@@ -341,45 +413,55 @@ public final class RemappingProductsImporter implements ProductsImporter
             knownDevices.put(getFingerPrint(device), device);
       }
 
-      for (final VirtualDevice device : devices)
+      for (VirtualDevice device : devices)
       {
          final String fingerPrint = getFingerPrint(device);
          VirtualDevice knownDevice = knownDevices.get(fingerPrint);
 
-         if (knownDevice != null)
+         if (knownDevice == null)
          {
-            if (device.getNumber() >= knownDevice.getNumber())
-            {
-               logger.info("Not importing device, already have same or newer version: " + device);
-               continue;
-            }
+            logger.info("New device: " + device);
 
-            logger.info("Device with new version: " + device);
-            devicesToCleanup.add(knownDevice);
+            device.setId(0);
+            virtualDeviceService.persist(device);
+            knownDevices.put(fingerPrint, device);
+         }
+         else if (device.getNumber() > knownDevice.getNumber())
+         {
+            logger.info("Updated device: " + device);
+
+            device.setId(knownDevice.getId());
+            device = virtualDeviceService.merge(device);
+            knownDevices.put(fingerPrint, device);
          }
          else
          {
-            logger.info("New device: " + device);
-         }
+            logger.info("Have same/newer device: " + device);
+            continue;
 
-         device.setId(0);
-         virtualDeviceService.persist(device);
+         }
       }
    }
 
    /**
-    * Cleanup orphaned objects. Delete all devices that were replaced with newer versions
-    * and are not used by any project.
+    * Delete orphaned objects. Delete all devices that were replaced with newer
+    * versions and are not used by any project.
     */
    public void cleanup()
    {
+      int num;
+
+      logger.info("Cleaning up database");
+
       // TODO
       //
       // Things to cleanup here:
       //
-      // - Virtual devices from devicesToCleanup
       // - (Application) programs that no virtual device or device references
       // - (Hardware) products that no catalog entry references
+
+      num = ctx.destFactory.getProductService().removeOrphanedProducts();
+      logger.info("Cleanup: " + num + " orphaned hardware products deleted");
    }
 
    /**
@@ -388,20 +470,43 @@ public final class RemappingProductsImporter implements ProductsImporter
    @Override
    public void copy(List<VirtualDevice> devices)
    {
+      final EntityTransaction transaction = ctx.destFactory.getTransaction();
+      final boolean ownTransaction = !transaction.isActive();
+
       ctx.clear();
-      devicesToCleanup.clear();
       prodDescsToStore.clear();
 
-      copyManufacturers(devices);
-      copyFunctionalEntities(devices);
-      copyCatalogEntries(devices);
-      copyPrograms(devices);
-      copyVirtualDevices(devices);
+      try
+      {
+         if (ownTransaction)
+            transaction.begin();
 
-      // TODO store prodDescsToStore after storing the catalog entries - they need
-      // a new catalog entry id to succeed.
-      
-      cleanup();
+         copyManufacturers(devices);
+         copyFunctionalEntities(devices);
+         copyProducts(devices);
+         copyCatalogEntries(devices);
+         copyPrograms(devices);
+         copyVirtualDevices(devices);
+
+         // TODO store prodDescsToStore after storing the catalog entries - they
+         // need a new catalog entry id to succeed.
+
+         if (ownTransaction)
+         {
+            transaction.commit();
+            transaction.begin();
+         }
+
+         cleanup();
+
+         if (ownTransaction)
+            transaction.commit();
+      }
+      finally
+      {
+         if (ownTransaction && transaction.isActive())
+            transaction.rollback();
+      }
    }
 
    /**

@@ -24,8 +24,8 @@ import org.freebus.fts.persistence.vdx.VdxField;
 public class CommunicationObject implements Comparable<CommunicationObject>
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenCommunicationObjectId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "CommunicationObject", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "CommunicationObject")
    @Column(name = "object_id", nullable = false)
    private int id;
 

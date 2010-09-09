@@ -30,9 +30,8 @@ import javax.persistence.TemporalType;
 public class Project
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 1, table = "sequence",  name = "GenProjectId",
-         pkColumnName = "seq_name", valueColumnName = "seq_count")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Project", initialValue = 1, allocationSize = 1)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Project")
    @Column(name = "project_id", nullable = false)
    private int id;
 
@@ -144,6 +143,10 @@ public class Project
       if (areas.contains(area))
          throw new IllegalArgumentException("Area was previously added: " + area);
 
+      final Project prev = area.getProject();
+      if (prev != null)
+         prev.remove(area);
+
       area.setProject(this);
       areas.add(area);
    }
@@ -178,6 +181,10 @@ public class Project
       if (buildings.contains(building))
          throw new IllegalArgumentException("Building was previously added: " + building);
 
+      final Project prev = building.getProject();
+      if (prev != null)
+         prev.remove(building);
+
       building.setProject(this);
       buildings.add(building);
    }
@@ -193,6 +200,10 @@ public class Project
    {
       if (mainGroups.contains(mainGroup))
          throw new IllegalArgumentException("Main-group was previously added: " + mainGroup);
+
+      final Project prev = mainGroup.getProject();
+      if (prev != null)
+         prev.remove(mainGroup);
 
       mainGroup.setProject(this);
       mainGroups.add(mainGroup);

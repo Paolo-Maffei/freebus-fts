@@ -2,7 +2,7 @@ package org.freebus.fts.products;
 
 import java.io.File;
 
-import org.freebus.fts.products.importer.DirectProductsImporter;
+import org.freebus.fts.products.importer.RemappingProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.jpa.JpaProductsFactory;
 import org.freebus.fts.products.services.vdx.VdxProductsFactory;
@@ -60,8 +60,8 @@ public final class ProductsManager
     */
    public static ProductsImporter getProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {
-      return new DirectProductsImporter(sourceFactory, destFactory);
-      //return new RemappingProductsImporter(sourceFactory, destFactory);
+      //return new DirectProductsImporter(sourceFactory, destFactory);
+      return new RemappingProductsImporter(sourceFactory, destFactory);
    }
 
 }

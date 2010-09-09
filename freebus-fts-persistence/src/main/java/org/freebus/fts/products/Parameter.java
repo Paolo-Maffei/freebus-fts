@@ -20,8 +20,8 @@ import javax.persistence.TableGenerator;
 public class Parameter
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenParameterId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Parameter", initialValue = 1, allocationSize = 100)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Parameter")
    @Column(name = "parameter_id", nullable = false)
    private int id;
 

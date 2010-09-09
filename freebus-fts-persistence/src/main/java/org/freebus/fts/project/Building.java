@@ -25,8 +25,8 @@ import javax.persistence.TableGenerator;
 public class Building
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence",  name = "GenBuildingId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Building", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Building")
    @Column(name = "building_id", nullable = false)
    private int id;
 
@@ -58,6 +58,15 @@ public class Building
    public Building(int id)
    {
       this.id = id;
+   }
+
+   /**
+    * Remove the building from its project.
+    */
+   public void detach()
+   {
+      if (project != null)
+         project.remove(this);
    }
 
    /**
@@ -135,6 +144,10 @@ public class Building
    {
       if (rooms.contains(room))
          throw new IllegalArgumentException("Room was previously added: " + room);
+
+      final Building prev = room.getBuilding();
+      if (prev != null)
+         prev.remove(room);
 
       room.setBuilding(this);
       rooms.add(room);

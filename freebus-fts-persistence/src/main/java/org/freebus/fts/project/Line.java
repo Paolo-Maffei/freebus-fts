@@ -30,8 +30,8 @@ import javax.persistence.TableGenerator;
 public class Line implements Comparable<Line>
 {
    @Id
-   @TableGenerator(initialValue = 1, allocationSize = 5, table = "sequence", name = "GenLineId")
-   @GeneratedValue(strategy = GenerationType.TABLE)
+   @TableGenerator(name = "Line", initialValue = 1, allocationSize = 10)
+   @GeneratedValue(strategy = GenerationType.TABLE, generator = "Line")
    @Column(name = "line_id", nullable = false)
    private int id;
 
@@ -62,6 +62,15 @@ public class Line implements Comparable<Line>
     */
    public Line()
    {
+   }
+
+   /**
+    * Remove the line from its area.
+    */
+   public void detach()
+   {
+      if (area != null)
+         area.remove(this);
    }
 
    /**
@@ -149,6 +158,10 @@ public class Line implements Comparable<Line>
    {
       if (devices.contains(device))
          throw new IllegalArgumentException("Device was previously added: " + device);
+
+      final Line prev = device.getLine();
+      if (prev != null)
+         prev.remove(device);
 
       device.setLine(this);
       devices.add(device);

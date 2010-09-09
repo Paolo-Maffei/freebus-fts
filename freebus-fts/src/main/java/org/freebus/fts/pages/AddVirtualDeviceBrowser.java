@@ -1,17 +1,19 @@
 package org.freebus.fts.pages;
 
+import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.AddDeviceDialog;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.VirtualDevice;
-import org.freebus.fts.project.service.ProjectController;
 
 
 /**
@@ -24,8 +26,7 @@ public class AddVirtualDeviceBrowser extends ProductsBrowser
 {
    private static final long serialVersionUID = 5704775166874780673L;
 
-   private JButton btnAdd = new JButton(I18n.getMessage("ProductsToProjectBrowser.AddButton"));
-   private ProjectController controller;
+   private JButton btnAdd = new JButton(I18n.getMessage("ProductsToProjectBrowser.AddButton"), ImageCache.getIcon("icons/add"));
 
    /**
     * Create a org.freebus.fts.products browser. 
@@ -35,9 +36,14 @@ public class AddVirtualDeviceBrowser extends ProductsBrowser
       super();
       setName(I18n.getMessage("ProductsToProjectBrowser.Title"));
 
+      final Font btnFont = btnAdd.getFont();
+      btnAdd.setFont(btnFont.deriveFont(btnFont.getSize2D() * 1.1f));
+
       final Box boxBottom = getBottomBox();
+      boxBottom.setBorder(BorderFactory.createEmptyBorder(5, 15, 5, 15));
       boxBottom.add(Box.createHorizontalGlue());
       boxBottom.add(btnAdd);
+      boxBottom.add(Box.createHorizontalGlue());
 
       btnAdd.addActionListener(new ActionListener()
       {
@@ -61,15 +67,6 @@ public class AddVirtualDeviceBrowser extends ProductsBrowser
          final AddDeviceDialog dlg = new AddDeviceDialog(dev, MainWindow.getInstance());
          dlg.setVisible(true);
       }
-   }
-
-   /**
-    * Set the project controller that is used to manipulate the current
-    * project.
-    */
-   public void setProjectController(final ProjectController controller)
-   {
-      this.controller = controller;
    }
 
    /**
