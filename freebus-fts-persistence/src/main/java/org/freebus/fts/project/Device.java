@@ -89,6 +89,8 @@ public final class Device
       this.id = id;
       this.catalogEntry = catalogEntry;
       this.program = program;
+
+      updateDeviceObjects();
    }
 
    /**
@@ -254,7 +256,11 @@ public final class Device
     */
    public void setProgram(Program program)
    {
-      this.program = program;
+      if (program != this.program)
+      {
+         this.program = program;
+         updateDeviceObjects();
+      }
    }
 
    /**
@@ -360,9 +366,32 @@ public final class Device
    }
 
    /**
+    * Find all active / visible device objects.
+    * 
+    * @return An array of all visible device objects.
+    */
+   public DeviceObject[] getVisibleDeviceObjects()
+   {
+      final Vector<DeviceObject> devObjects = new Vector<DeviceObject>();
+
+      for (final DeviceObject devObject : getDeviceObjects())
+      {
+         if (isVisible(devObject.getCommunicationObject()))
+            devObjects.add(devObject);
+      }
+
+      final DeviceObject[] arr = new DeviceObject[devObjects.size()];
+      devObjects.toArray(arr);
+      Arrays.sort(arr);
+
+      return arr;
+   }
+
+   /**
     * Find all active / visible communication objects.
     * 
     * @return An array of all visible communication objects.
+    * @see #getVisibleDeviceObjects()
     */
    public CommunicationObject[] getVisibleCommunicationObjects()
    {
@@ -379,6 +408,36 @@ public final class Device
       Arrays.sort(arr);
 
       return arr;
+   }
+
+   /**
+    * Update the device objects. Called when the program is set or changed.
+    * Drops all existing device objects and creates a set for the new program's 
+    * communication objects.
+    */
+   public void updateDeviceObjects()
+   {
+      deviceObjects.clear();
+
+      if (program == null)
+         return;
+
+      for (final CommunicationObject comObject : program.getCommunicationObjects())
+      {
+         final DeviceObject devObj = new DeviceObject();
+         devObj.setCommObject(comObject);
+
+         devObj.setDevice(this);
+         deviceObjects.add(devObj);
+      }
+   }
+
+   /**
+    * Update the device parameters. Call when the parameters of the device changed.
+    */
+   public void updateDeviceParameters()
+   {
+      // TODO
    }
 
    /**

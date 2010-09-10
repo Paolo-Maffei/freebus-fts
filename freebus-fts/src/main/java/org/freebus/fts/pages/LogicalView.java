@@ -2,12 +2,16 @@ package org.freebus.fts.pages;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
+import javax.swing.JComponent;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
+import javax.swing.TransferHandler;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.DefaultMutableTreeNode;
@@ -18,6 +22,7 @@ import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
@@ -28,8 +33,8 @@ import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.utils.TreeUtils;
 
 /**
- * Shows the logical structure of the project. The main- and sub-groups with
- * the devices.
+ * Shows the logical structure of the project. The main- and sub-groups with the
+ * devices.
  */
 public class LogicalView extends AbstractPage
 {
@@ -39,6 +44,7 @@ public class LogicalView extends AbstractPage
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
    private JButton btnAddMainGrp, btnAddMidGrp, btnAddSubGrp, btnDelete, btnProperties;
+   private Object selectedObject;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -50,6 +56,8 @@ public class LogicalView extends AbstractPage
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
+      tree.setDragEnabled(true);
+      tree.setTransferHandler(new ObjectTransferHandler());
 
       final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
       tree.setCellRenderer(renderer);
@@ -59,18 +67,39 @@ public class LogicalView extends AbstractPage
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
-      
+
       initToolBar();
-      
+
       tree.addTreeSelectionListener(new TreeSelectionListener()
       {
          @Override
          public void valueChanged(TreeSelectionEvent e)
          {
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            final Object userObject = node != null ? node.getUserObject() : null;
-            
-            setIconEnabledFromSelected(userObject);
+            final Object selectedObject = node != null ? node.getUserObject() : null;
+
+            setIconEnabledFromSelected(selectedObject);
+         }
+      });
+
+      tree.addMouseListener(new MouseAdapter()
+      {
+         @Override
+         public void mousePressed(MouseEvent e)
+         {
+            final JComponent component = (JComponent) e.getSource();
+            final TransferHandler handler = component.getTransferHandler();
+            handler.exportAsDrag(component, e, TransferHandler.COPY);
+         }
+
+         @Override
+         public void mouseClicked(MouseEvent e)
+         {
+            if (e.getClickCount() == 2)
+            {
+               ProjectManager.getController().edit(selectedObject);
+               e.consume();
+            }
          }
       });
 
@@ -99,21 +128,21 @@ public class LogicalView extends AbstractPage
          if (isRelevant(obj))
             updateContents();
       }
-      
+
       @Override
       public void projectComponentModified(Object obj)
       {
          if (isRelevant(obj))
             tree.updateUI();
       }
-      
+
       @Override
       public void projectComponentAdded(Object obj)
       {
          if (isRelevant(obj))
             updateContents();
       }
-      
+
       @Override
       public void projectChanged(Project project)
       {
@@ -202,8 +231,7 @@ public class LogicalView extends AbstractPage
    }
 
    /**
-    * Test if an object is relevant for this view. Used e.g. for
-    * event handlers.
+    * Test if an object is relevant for this view. Used e.g. for event handlers.
     * 
     * @param obj - the object to test.
     * @return true if the object is relevant.
@@ -215,7 +243,7 @@ public class LogicalView extends AbstractPage
 
    /**
     * Modify the toolbar's icons when an object is selected.
-    *
+    * 
     * @param userObject - the selected object.
     */
    private void setIconEnabledFromSelected(Object userObject)
@@ -257,31 +285,31 @@ public class LogicalView extends AbstractPage
    private void addMainGrp()
    {
       // TODO Auto-generated method stub
-      
+
    }
-   
+
    private void addMidGrp()
    {
       // TODO Auto-generated method stub
-      
+
    }
-   
+
    private void addSubGrp()
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    private void deleteGrp()
    {
       // TODO Auto-generated method stub
-      
+
    }
-   
+
    private void editProperties()
    {
       // TODO Auto-generated method stub
-      
+
    }
 
    /**
@@ -290,10 +318,7 @@ public class LogicalView extends AbstractPage
     */
    public Object getSelectedObject()
    {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-      if (node == null)
-         return null;
-      return node.getUserObject();
+      return selectedObject;
    }
 
    /**
@@ -323,21 +348,22 @@ public class LogicalView extends AbstractPage
       rootNode.removeAllChildren();
 
       final Project project = ProjectManager.getProject();
-      if (project == null) return;
+      if (project == null)
+         return;
 
       for (MainGroup mainGroup : project.getMainGroups())
       {
-         DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(mainGroup, true);
+         final DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(mainGroup, true);
          rootNode.add(areaNode);
 
          for (MidGroup midGroup : mainGroup.getMidGroups())
          {
-            DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(midGroup, true);
+            final DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(midGroup, true);
             areaNode.add(lineNode);
 
-            for (SubGroup group: midGroup.getSubGroups())
+            for (SubGroup group : midGroup.getSubGroups())
             {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(group, true);
+               final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(group, true);
                lineNode.add(deviceNode);
             }
          }

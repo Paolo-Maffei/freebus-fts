@@ -82,4 +82,12 @@ public interface ProjectController
     * @param room - the room to remove.
     */
    public void remove(Room room);
+
+   /**
+    * The parameters of a device have been changed. Update the
+    * device parameters and device objects.
+    * 
+    * @param device - the device.
+    */
+   public void parametersChanged(Device device);
 }

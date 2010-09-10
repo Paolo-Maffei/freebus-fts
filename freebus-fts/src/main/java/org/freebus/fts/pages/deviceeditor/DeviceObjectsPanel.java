@@ -1,26 +1,33 @@
 package org.freebus.fts.pages.deviceeditor;
 
 import java.awt.BorderLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 
-import javax.swing.BoxLayout;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.pages.DeviceEditor;
-import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.DeviceObject;
 
 /**
  * An editor for the communication objects of a device.
  * Part of the {@link DeviceEditor}.
  */
-public class ComObjectsPanel extends JPanel implements DeviceEditorComponent
+public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
 {
    private static final long serialVersionUID = -6987571415817658896L;
 
    private final JPanel contents = new JPanel();
+   private final JScrollPane contentsView = new JScrollPane(contents);
 
    private Device device;
    private boolean dirty = false;
@@ -28,14 +35,13 @@ public class ComObjectsPanel extends JPanel implements DeviceEditorComponent
    /**
     * Create a communication-objects editor.
     */
-   public ComObjectsPanel()
+   public DeviceObjectsPanel()
    {
       setLayout(new BorderLayout());
 
-      add(contents, BorderLayout.NORTH);
-      contents.setLayout(new BoxLayout(contents, BoxLayout.Y_AXIS));
-
-      add(new JPanel(), BorderLayout.CENTER);
+      add(contentsView, BorderLayout.CENTER);
+      contents.setLayout(new GridBagLayout());
+      contents.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
       addComponentListener(new ComponentAdapter()
       {
@@ -75,21 +81,20 @@ public class ComObjectsPanel extends JPanel implements DeviceEditorComponent
       if (device == null)
          return;
 
-//      final DeviceParameters devParams = device.getDeviceParameters();
-      for (final CommunicationObject comObject: device.getVisibleCommunicationObjects())
+      final GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
+      
+      int gridy = -1;
+      for (final DeviceObject deviceObject: device.getVisibleDeviceObjects())
       {
-         contents.add(new ComObjectPanel(comObject));
-
-//         final JPanel base = new JPanel();
-//         base.setLayout(new FlowLayout(FlowLayout.LEFT, 5, 2));
-//         contents.add(base);
-//         final Parameter param = comObject.getParameter();
-//         base.add(newLabel(comObject.getName() + " - " + comObject.getFunction() + " #" + comObject.getId()));
-//         base.add(newLabel("DispOrder " + comObject.getDisplayOrder()));
-//         base.add(newLabel("Param #" + (param == null ? -1 : param.getId())));
-//         base.add(newLabel("ExpectedValue=" + comObject.getParameterValue()));
-//         base.add(newLabel("ParamValue=" + (param == null ? "" : devParams.getIntValue(param))));
+         final DeviceObjectPanel pnl = new DeviceObjectPanel(deviceObject);
+         pnl.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(4, 4, 4, 4)));
+         c.gridy = ++gridy;
+         contents.add(pnl, c);
       }
+
+      c.gridy = ++gridy;
+      c.weighty = 100;
+      contents.add(Box.createVerticalGlue(), c);
    }
 
    /**

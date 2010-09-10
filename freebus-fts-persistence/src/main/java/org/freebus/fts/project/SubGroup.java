@@ -137,14 +137,41 @@ public class SubGroup
       this.midGroup = midGroup;
    }
 
-   public void setSubGroupToObjects(List<SubGroupToObject> subGroupToObjects)
-   {
-      this.subGroupToObjects = subGroupToObjects;
-   }
-
+   /**
+    * @return The list of subgroup-to-object mappings.
+    */
    public List<SubGroupToObject> getSubGroupToObjects()
    {
       return subGroupToObjects;
+   }
+
+   /**
+    * Add a device-object to this sub-group. A new {@link SubGroupToObject}
+    * object is created to represent the mapping. The {@link SubGroupToObject}
+    * object is also added to the device-object.
+    * 
+    * @param deviceObject - the device-object to add.
+    * @return The created {@link SubGroupToObject} object.
+    */
+   public SubGroupToObject add(DeviceObject deviceObject)
+   {
+      final SubGroupToObject sgo = new SubGroupToObject(this, deviceObject);
+      add(sgo);
+      deviceObject.add(sgo);
+      return sgo;
+   }
+
+   /**
+    * Add a sub-group-to-object object.
+    * 
+    * @param sgo - the sub-group-to-object object to add.
+    */
+   public void add(SubGroupToObject sgo)
+   {
+      if (subGroupToObjects.contains(sgo))
+         throw new IllegalArgumentException("Object was prevously added");
+
+      subGroupToObjects.add(sgo);
    }
 
    /**

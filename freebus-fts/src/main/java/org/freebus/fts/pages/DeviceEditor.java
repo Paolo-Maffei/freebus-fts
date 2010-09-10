@@ -16,7 +16,7 @@ import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.pages.deviceeditor.ComObjectsPanel;
+import org.freebus.fts.pages.deviceeditor.DeviceObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.DebugPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;
 import org.freebus.fts.project.Device;
@@ -36,7 +36,7 @@ public class DeviceEditor extends AbstractPage
    private final JLabel caption = new JLabel();
    private final JTabbedPane tabPane = new JTabbedPane();
    private final GeneralPanel generalPanel = new GeneralPanel();
-   private final ComObjectsPanel comObjectsPanel = new ComObjectsPanel();
+   private final DeviceObjectsPanel deviceObjectsPanel = new DeviceObjectsPanel();
    private final ParameterEditor paramsPanel = new ParameterEditor();
    private final DebugPanel debugPanel = new DebugPanel();
 
@@ -67,7 +67,7 @@ public class DeviceEditor extends AbstractPage
 
       tabPane.add(I18n.getMessage("DeviceEditor.General") + " ", generalPanel);
 
-      tabPane.add(I18n.getMessage("DeviceEditor.CommunicationObjects"), comObjectsPanel);
+      tabPane.add(I18n.getMessage("DeviceEditor.CommunicationObjects"), deviceObjectsPanel);
 
       tabPane.add(I18n.getMessage("DeviceEditor.Parameters"), paramsPanel);
       paramsPanel.addChangeListener(new ChangeListener()
@@ -76,7 +76,7 @@ public class DeviceEditor extends AbstractPage
          public void stateChanged(ChangeEvent e)
          {
             paramsPanel.apply();
-            comObjectsPanel.updateContents();
+            deviceObjectsPanel.updateContents();
             debugPanel.updateContents();
          }
       });
@@ -154,7 +154,7 @@ public class DeviceEditor extends AbstractPage
 
       paramsPanel.setDevice(device);
       generalPanel.setDevice(device);
-      comObjectsPanel.setDevice(device);
+      deviceObjectsPanel.setDevice(device);
       debugPanel.setDevice(device);
    }
 

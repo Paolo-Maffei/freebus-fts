@@ -272,6 +272,11 @@ public class InspectVdxFile extends AbstractPage
                   logger.warn(I18n.formatMessage("InspectVdxFile.WarnListTruncated",
                         new Object[] { maxRecords, numRecords }));
                }
+               else
+               {
+                  logger.info(I18n.formatMessage("InspectVdxFile.RecordsLoaded",
+                        new Object[] { numRecords }));
+               }
             }
             catch (IOException e)
             {

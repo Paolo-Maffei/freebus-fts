@@ -479,10 +479,7 @@ public class TopologyView extends AbstractPage
     */
    public Object getSelectedObject()
    {
-      final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-      if (node == null)
-         return null;
-      return node.getUserObject();
+      return selectedObject;
    }
 
    /**

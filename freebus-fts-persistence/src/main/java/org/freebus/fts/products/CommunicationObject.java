@@ -43,6 +43,9 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    @Column(name = "object_function")
    private String function;
 
+   @Column(name = "object_number", nullable = false)
+   private int number;
+
    @Column(name = "object_readenabled", nullable = false)
    private boolean readEnabled;
 
@@ -154,6 +157,16 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    public void setFunction(String function)
    {
       this.function = function;
+   }
+
+   public void setNumber(int number)
+   {
+      this.number = number;
+   }
+
+   public int getNumber()
+   {
+      return number;
    }
 
    /**

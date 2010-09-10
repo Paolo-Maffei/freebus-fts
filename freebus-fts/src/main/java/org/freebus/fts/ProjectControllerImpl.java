@@ -28,7 +28,7 @@ public final class ProjectControllerImpl implements ProjectController
       dlg.setVisible(true);
       if (!dlg.isAccepted())
          return;
-      
+
       final Device device = new Device(virtualDevice);
 
       final TopologyView topologyView = (TopologyView) mainWin.getPage(TopologyView.class, null);
@@ -141,5 +141,15 @@ public final class ProjectControllerImpl implements ProjectController
          remove((Device) device);
 
       ProjectManager.fireComponentRemoved(room);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void parametersChanged(Device device)
+   {
+      device.updateDeviceParameters();
+      device.updateDeviceObjects();
    }
 }

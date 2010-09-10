@@ -69,7 +69,7 @@ public class WorkBench extends JFrame
       leftCenterSplit = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, centerTabbedPane);
       add(leftCenterSplit, BorderLayout.CENTER);
       leftCenterSplit.setOneTouchExpandable(false);
-      leftCenterSplit.setDividerLocation(250);
+      leftCenterSplit.setDividerLocation(320);
       leftCenterSplit.setResizeWeight(0);
       leftCenterSplit.setDividerSize(6);
       leftCenterSplit.setContinuousLayout(true);
