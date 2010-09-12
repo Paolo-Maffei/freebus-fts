@@ -105,8 +105,9 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
          if (!visible)
             sb.append(">");
          sb.append(":  value ").append(devParams.getIntValue(param));
+         sb.append(", parameter number ").append(param.getNumber());
 
-         sb.append("  [visible: ");
+         sb.append(" ...  [visible: ");
 
          if (param.getHighAccess() == 0)
             sb.append("never");
@@ -144,8 +145,9 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
          sb.append("COM #").append(comObj.getId()).append(" ").append(comObj.getName());
          if (!visible)
             sb.append(">");
+         sb.append(", com-object number ").append(comObj.getNumber());
 
-         sb.append("  [visible: ");
+         sb.append(" ... [visible: ");
          if (parentParam == null)
             sb.append("always");
          else if (parentParam.getLowAccess() == 0)

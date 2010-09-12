@@ -9,6 +9,7 @@ import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterType;
@@ -351,6 +352,9 @@ public final class RemappingProductsImporter implements ProductsImporter
                value.setId(0);
          }
       }
+
+      for (final CommunicationObject comObject : prog.getCommunicationObjects())
+         comObject.setId(0);
 
       ctx.destFactory.getProgramService().persist(prog);
    }

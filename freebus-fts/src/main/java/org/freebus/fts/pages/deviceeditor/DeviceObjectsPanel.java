@@ -6,6 +6,9 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -15,6 +18,7 @@ import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.pages.DeviceEditor;
+import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
 
@@ -82,9 +86,27 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
          return;
 
       final GridBagConstraints c = new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0);
-      
+
+      final Collection<DeviceObject> deviceObjects = device.getDeviceObjects();
+      final DeviceObject[] sortedDeviceObjects = new DeviceObject[deviceObjects.size()];
+      deviceObjects.toArray(sortedDeviceObjects);
+      Arrays.sort(sortedDeviceObjects, new Comparator<DeviceObject>()
+      {
+         @Override
+         public int compare(DeviceObject a, DeviceObject b)
+         {
+            final CommunicationObject ca = a.getComObject();
+            final CommunicationObject cb = b.getComObject();
+
+            final int keyA = ca == null ? 0 : (ca.getDisplayOrder() << 10) | ca.getNumber();
+            final int keyB = cb == null ? 0 : (cb.getDisplayOrder() << 10) | cb.getNumber();
+
+            return keyA - keyB;
+         }
+      });
+
       int gridy = -1;
-      for (final DeviceObject deviceObject: device.getVisibleDeviceObjects())
+      for (final DeviceObject deviceObject: sortedDeviceObjects)
       {
          final DeviceObjectPanel pnl = new DeviceObjectPanel(deviceObject);
          pnl.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED), BorderFactory.createEmptyBorder(4, 4, 4, 4)));

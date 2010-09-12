@@ -48,6 +48,17 @@ public class SubGroupToObject
    }
 
    /**
+    * Prepare the object for being deleted.
+    */
+   public void dispose()
+   {
+      if (subGroup != null)
+         subGroup.remove(this);
+      if (deviceObject != null)
+         deviceObject.remove(this);
+   }
+
+   /**
     * @return the sub group
     */
    public SubGroup getSubGroup()

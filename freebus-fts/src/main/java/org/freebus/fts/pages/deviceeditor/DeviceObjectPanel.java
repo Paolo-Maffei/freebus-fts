@@ -59,7 +59,7 @@ public class DeviceObjectPanel extends JPanel
       final Insets noInsets = new Insets(0, 0, 0, 0);
       JLabel lbl;
       int gridy = -1;
-
+      
       lbl = new JLabel(ImageCache.getIcon("icons/connect_no"));
       lbl.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4));
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 2, 0, 1, GridBagConstraints.NORTHEAST, GridBagConstraints.VERTICAL, new Insets(0, 2, 0, 2), 0, 0));
@@ -193,10 +193,14 @@ public class DeviceObjectPanel extends JPanel
     */
    public void updateContents()
    {
-      final CommunicationObject comObject = deviceObject.getCommunicationObject();
+      final CommunicationObject comObject = deviceObject.getComObject();
 
       lblName.setText(comObject.getName() + " - " + comObject.getFunction());
       lblType.setText(comObject.getObjectType().getName());
+
+      final String debugTip = "debug: communication-object-id is " + comObject.getId();
+      lblName.setToolTipText(debugTip);
+      lblType.setToolTipText(debugTip);
 
       for (int i = groupsModel.getRowCount() - 1; i >= 0; --i)
          groupsModel.removeRow(i);

@@ -159,11 +159,27 @@ public class CommunicationObject implements Comparable<CommunicationObject>
       this.function = function;
    }
 
+   /**
+    * Set the unique number.
+    * 
+    * @param number - The unique number to set.
+    */
    public void setNumber(int number)
    {
       this.number = number;
    }
 
+   /**
+    * The "unique number" is used to identify communication objects that belong
+    * together. The number is unique for the owning program.
+    * 
+    * When parameter visibility is changed, the communication objects would
+    * change too. With the unique number it is possible to find the correct
+    * "other" communication object that is the same as the one that was
+    * currently in use.
+    * 
+    * @return The unique number of this communication object.
+    */
    public int getNumber()
    {
       return number;
@@ -250,8 +266,8 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    }
 
    /**
-    * The communication object is visible/available if the {@link #getParameter() parameter}
-    * has this value.
+    * The communication object is visible/available if the
+    * {@link #getParameter() parameter} has this value.
     * 
     * @return the expected parameter value.
     */
@@ -262,7 +278,7 @@ public class CommunicationObject implements Comparable<CommunicationObject>
 
    /**
     * Set the expected value of the parameter.
-    *
+    * 
     * @param value - the expected parameter value to set
     */
    public void setParameterValue(Integer value)

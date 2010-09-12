@@ -175,6 +175,17 @@ public class SubGroup
    }
 
    /**
+    * Remove a sub-group-to-object object.
+    * 
+    * @param sgo - the sub-group-to-object object to remove.
+    */
+   public void remove(SubGroupToObject sgo)
+   {
+      subGroupToObjects.remove(sgo);
+      sgo.setSubGroup(null);
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override

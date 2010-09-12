@@ -25,6 +25,7 @@ import org.freebus.fts.components.parametereditor.Page;
 import org.freebus.fts.components.parametereditor.ParamData;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.ProjectManager;
 
 /**
  * A widget that allows to edit the parameters of a program.
@@ -290,7 +291,10 @@ public class ParameterEditor extends JPanel
    public void apply()
    {
       if (device != null)
+      {
          DeviceParamData.applyParamData(device, paramDatas);
+         ProjectManager.getController().parametersChanged(device);
+      }
    }
 
    /**

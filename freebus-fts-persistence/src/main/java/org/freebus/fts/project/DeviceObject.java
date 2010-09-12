@@ -39,7 +39,7 @@ public class DeviceObject implements Comparable<DeviceObject>
 
    @ManyToOne(optional = false, fetch = FetchType.LAZY)
    @JoinColumn(name = "object_id", nullable = false)
-   private CommunicationObject commObject;
+   private CommunicationObject comObject;
 
    @Column(name = "object_read", nullable = false)
    private boolean read = true;
@@ -72,6 +72,35 @@ public class DeviceObject implements Comparable<DeviceObject>
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "deviceObject")
    private List<SubGroupToObject> subGroupToObjects = new Vector<SubGroupToObject>();
+
+   /**
+    * Create a device object.
+    */
+   public DeviceObject()
+   {
+   }
+
+   /**
+    * Create a device object.
+    */
+   public DeviceObject(CommunicationObject comObject)
+   {
+      this.comObject = comObject;
+   }
+   
+   /**
+    * Prepare the device object for being deleted.
+    */
+   public void dispose()
+   {
+      if (device != null)
+         device.remove(this);
+
+      for (final SubGroupToObject sgo : subGroupToObjects)
+         sgo.dispose();
+
+      subGroupToObjects.clear();
+   }
 
    /**
     * @return the id
@@ -110,21 +139,21 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
-    * @return the comm object
+    * @return the communication object
     */
-   public CommunicationObject getCommunicationObject()
+   public CommunicationObject getComObject()
    {
-      return commObject;
+      return comObject;
    }
 
    /**
-    * Set the comm object.
+    * Set the communication object.
     * 
-    * @param commObject - the comm object to set
+    * @param comObject - the communication object to set
     */
-   public void setCommObject(CommunicationObject commObject)
+   public void setComObject(CommunicationObject comObject)
    {
-      this.commObject = commObject;
+      this.comObject = comObject;
    }
 
    /**
@@ -336,6 +365,17 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
+    * Remove a sub-group-to-object object.
+    * 
+    * @param sgo - the sub-group-to-object object to remove.
+    */
+   public void remove(SubGroupToObject sgo)
+   {
+      subGroupToObjects.remove(sgo);
+      sgo.setDeviceObject(null);
+   }
+
+   /**
     * Test if the device object contains a connection to the given sub-group.
     * The comparison is done with {@link SubGroup#equals(Object)}.
     * 
@@ -359,11 +399,11 @@ public class DeviceObject implements Comparable<DeviceObject>
    @Override
    public int compareTo(DeviceObject o)
    {
-      if (commObject == null)
-         return o.commObject == null ? -1 : 0;
-      if (o.commObject == null)
+      if (comObject == null)
+         return o.comObject == null ? -1 : 0;
+      if (o.comObject == null)
          return 1;
 
-      return commObject.compareTo(o.commObject);
+      return comObject.compareTo(o.comObject);
    }
 }

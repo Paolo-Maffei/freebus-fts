@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -21,6 +22,7 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CommunicationObject;
@@ -66,7 +68,7 @@ public final class Device
 
    @OneToMany(mappedBy = "device", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @MapKey(name = "parameter")
-   private Map<Parameter, DeviceParameter> parameterValues;
+   private Map<Parameter, DeviceParameter> parameterValues = new HashMap<Parameter, DeviceParameter>();
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
    private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
@@ -330,6 +332,18 @@ public final class Device
    }
 
    /**
+    * Remove the device object from the device.
+    * 
+    * @param deviceObject - the device object to remove.
+    * @see DeviceObject#dispose()
+    */
+   public void remove(DeviceObject deviceObject)
+   {
+      deviceObjects.remove(deviceObject);
+      deviceObject.setDevice(null);
+   }
+
+   /**
     * Get the map of parameter values of the device. This is an internal method.
     * 
     * @return the parameter values of the device.
@@ -343,7 +357,7 @@ public final class Device
    }
 
    /**
-    * Test if a specific communication object is visible.
+    * Test if a specific communication object is visible for this device.
     * 
     * @param comObject - the communication object to test.
     * @return true if the communication object is visible.
@@ -376,7 +390,7 @@ public final class Device
 
       for (final DeviceObject devObject : getDeviceObjects())
       {
-         if (isVisible(devObject.getCommunicationObject()))
+         if (isVisible(devObject.getComObject()))
             devObjects.add(devObject);
       }
 
@@ -412,28 +426,77 @@ public final class Device
 
    /**
     * Update the device objects. Called when the program is set or changed.
-    * Drops all existing device objects and creates a set for the new program's 
+    * Drops all existing device objects and creates a set for the new program's
     * communication objects.
     */
    public void updateDeviceObjects()
    {
-      deviceObjects.clear();
-
       if (program == null)
+      {
+         deviceObjects.clear();
          return;
+      }
 
+      final Map<Integer, CommunicationObject> visibleComObjects = new HashMap<Integer, CommunicationObject>();
       for (final CommunicationObject comObject : program.getCommunicationObjects())
       {
-         final DeviceObject devObj = new DeviceObject();
-         devObj.setCommObject(comObject);
-
-         devObj.setDevice(this);
-         deviceObjects.add(devObj);
+         if (isVisible(comObject))
+         {
+            final int number = comObject.getNumber();
+            if (visibleComObjects.containsKey(number))
+            {
+               Logger.getLogger(getClass()).error(
+                     "Inconsistency detected: com-objects #" + visibleComObjects.get(number).getId() + " and #"
+                           + comObject.getId() + " are visible and have the same unique com-object number " + number);
+            }
+            visibleComObjects.put(number, comObject);
+         }
       }
+
+      final DeviceObject[] oldDevObjects = new DeviceObject[deviceObjects.size()];
+      deviceObjects.toArray(oldDevObjects);
+
+      deviceObjects.clear();
+
+      for (final DeviceObject devObject : oldDevObjects)
+      {
+         final CommunicationObject comObject = devObject.getComObject();
+         final int comObjectNumber = comObject.getNumber();
+
+         if (visibleComObjects.containsKey(comObjectNumber))
+         {
+            // Device object is still in use
+            // TODO test if the type of the communication object is still
+            // correct
+            devObject.setComObject(comObject);
+            deviceObjects.add(devObject);
+            visibleComObjects.put(comObjectNumber, null);
+         }
+         else
+         {
+            // Device object is no longer used
+            devObject.dispose();
+         }
+      }
+
+      for (final Entry<Integer, CommunicationObject> e : visibleComObjects.entrySet())
+      {
+         final CommunicationObject comObject = e.getValue();
+         if (comObject == null)
+            continue;
+
+         final DeviceObject devObject = new DeviceObject(comObject);
+         devObject.setDevice(this);
+         deviceObjects.add(devObject);
+      }
+
+//      for (final DeviceObject devObject : deviceObjects)
+//         Logger.getLogger(getClass()).debug("  visible device object #" + devObject.getId() + " (com-object #" + devObject.getComObject().getId() + ")");
    }
 
    /**
-    * Update the device parameters. Call when the parameters of the device changed.
+    * Update the device parameters. Call when the parameters of the device
+    * changed.
     */
    public void updateDeviceParameters()
    {
