@@ -60,7 +60,7 @@ public class DeviceObjectPanel extends JPanel
       JLabel lbl;
       int gridy = -1;
       
-      lbl = new JLabel(ImageCache.getIcon("icons/connect_no"));
+      lbl = new JLabel(ImageCache.getIcon("icons/com-object"));
       lbl.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4));
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 2, 0, 1, GridBagConstraints.NORTHEAST, GridBagConstraints.VERTICAL, new Insets(0, 2, 0, 2), 0, 0));
       add(lblName, new GridBagConstraints(1, gridy, 3, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));

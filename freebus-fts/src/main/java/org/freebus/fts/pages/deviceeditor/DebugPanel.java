@@ -15,12 +15,10 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.pages.DeviceEditor;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;
-import org.freebus.fts.project.DeviceParameter;
 import org.freebus.fts.project.DeviceParameters;
 
 /**
@@ -33,6 +31,7 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
 
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("ROOT");
+   private final DeviceDebugTreeCellRenderer treeCellRenderer = new DeviceDebugTreeCellRenderer();
    private final JScrollPane treeView;
 
    private Device device;
@@ -47,6 +46,7 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
+      tree.setCellRenderer(treeCellRenderer);
 
       treeView = new JScrollPane(tree);
       add(treeView, BorderLayout.CENTER);
@@ -68,6 +68,51 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
    public void setDevice(Device device)
    {
       this.device = device;
+      treeCellRenderer.setDevice(device);
+
+      createContents();
+   }
+
+   /**
+    * Create the tree of parameters and com-objects.
+    */
+   public void createContents()
+   {
+      rootNode.removeAllChildren();
+
+      if (device == null)
+         return;
+
+      final Map<Parameter, DefaultMutableTreeNode> paramNodes = new HashMap<Parameter, DefaultMutableTreeNode>();
+
+      for (final Parameter param : sortParametersByDisplayOrder(device.getProgram().getParameters()))
+      {
+         final Parameter parentParam = param.getParent();
+
+         DefaultMutableTreeNode parentNode = parentParam == null ? null : paramNodes.get(parentParam);
+         if (parentNode == null || param.isPage())
+            parentNode = rootNode;
+
+         final DefaultMutableTreeNode paramNode = new DefaultMutableTreeNode(param, true);
+         parentNode.add(paramNode);
+         paramNodes.put(param, paramNode);
+      }
+
+      for (final CommunicationObject comObj : sortCommunicationObjectsByDisplayOrder(device.getProgram()
+            .getCommunicationObjects()))
+      {
+         final Parameter parentParam = comObj.getParameter();
+
+         DefaultMutableTreeNode parentNode = parentParam == null ? null : paramNodes.get(parentParam);
+         if (parentNode == null)
+            parentNode = rootNode;
+
+         final DefaultMutableTreeNode paramNode = new DefaultMutableTreeNode(comObj, true);
+         parentNode.add(paramNode);
+      }
+
+      ((DefaultTreeModel) tree.getModel()).reload();
+
       updateContents();
    }
 
@@ -82,91 +127,7 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
          return;
       }
 
-      Logger.getLogger(getClass()).info("updateContents");
       dirty = false;
-      rootNode.removeAllChildren();
-
-      if (device == null)
-         return;
-
-      final Map<Parameter, DefaultMutableTreeNode> paramNodes = new HashMap<Parameter, DefaultMutableTreeNode>();
-      final DeviceParameters devParams = device.getDeviceParameters();
-
-      for (final Parameter param : sortParametersByDisplayOrder(device.getProgram().getParameters()))
-      {
-         final DeviceParameter devParam = device.getDeviceParameter(param);
-         final Parameter parentParam = param.getParent();
-         boolean visible = devParam.isVisible();
-
-         final StringBuilder sb = new StringBuilder();
-         if (!visible)
-            sb.append("<");
-         sb.append("#").append(param.getId()).append(" ").append(param.getDescription());
-         if (!visible)
-            sb.append(">");
-         sb.append(":  value ").append(devParams.getIntValue(param));
-         sb.append(", parameter number ").append(param.getNumber());
-
-         sb.append(" ...  [visible: ");
-
-         if (param.getHighAccess() == 0)
-            sb.append("never");
-         else if (parentParam == null)
-            sb.append("always");
-         else
-         {
-            final Integer expectedParentValue = param.getParentValue();
-            if (expectedParentValue == null)
-               sb.append("if #").append(parentParam.getId()).append(" is visible");
-            else sb.append("if #").append(parentParam.getId()).append(".value == ")
-                  .append(expectedParentValue);
-         }
-         sb.append("]");
-
-         DefaultMutableTreeNode parentNode = parentParam == null ? null : paramNodes.get(parentParam);
-         if (parentNode == null || param.isPage())
-            parentNode = rootNode;
-
-         final DefaultMutableTreeNode paramNode = new DefaultMutableTreeNode(sb.toString(), true);
-         parentNode.add(paramNode);
-         paramNodes.put(param, paramNode);
-      }
-
-      for (final CommunicationObject comObj : sortCommunicationObjectsByDisplayOrder(device.getProgram()
-            .getCommunicationObjects()))
-      {
-         final Parameter parentParam = comObj.getParameter();
-         final Integer expectedParamValue = comObj.getParameterValue();
-         boolean visible = device.isVisible(comObj);
-
-         final StringBuilder sb = new StringBuilder();
-         if (!visible)
-            sb.append("<");
-         sb.append("COM #").append(comObj.getId()).append(" ").append(comObj.getName());
-         if (!visible)
-            sb.append(">");
-         sb.append(", com-object number ").append(comObj.getNumber());
-
-         sb.append(" ... [visible: ");
-         if (parentParam == null)
-            sb.append("always");
-         else if (parentParam.getLowAccess() == 0)
-            sb.append("never");
-         else if (expectedParamValue == null)
-            sb.append("if #").append(parentParam.getId()).append(" is visible");
-         else sb.append("if #").append(parentParam.getId()).append(".value == ")
-               .append(expectedParamValue);
-         sb.append("]");
-
-         DefaultMutableTreeNode parentNode = parentParam == null ? null : paramNodes.get(parentParam);
-         if (parentNode == null)
-            parentNode = rootNode;
-
-         final DefaultMutableTreeNode paramNode = new DefaultMutableTreeNode(sb.toString(), true);
-         parentNode.add(paramNode);
-      }
-
-      ((DefaultTreeModel) tree.getModel()).reload();
    }
 
    /**

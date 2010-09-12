@@ -43,7 +43,10 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
    {
       setLayout(new BorderLayout());
 
+      contentsView.getVerticalScrollBar().setUnitIncrement(25);
+      contentsView.getVerticalScrollBar().setBlockIncrement(50);
       add(contentsView, BorderLayout.CENTER);
+
       contents.setLayout(new GridBagLayout());
       contents.setBorder(BorderFactory.createEmptyBorder(4, 4, 4, 4));
 
