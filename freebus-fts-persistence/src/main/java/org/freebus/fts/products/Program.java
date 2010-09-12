@@ -82,7 +82,7 @@ public class Program
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinColumn(name = "program_id")
-   private Set<CommunicationObject> communicationObjects;
+   private Set<CommunicationObject> communicationObjects = new HashSet<CommunicationObject>();
 
    @Lob
    @Column(name = "eeprom_data")
@@ -205,7 +205,7 @@ public class Program
 
    /**
     * The device type. Is written to the KNX device also.
-    *
+    * 
     * @return the device type.
     */
    public int getDeviceType()
@@ -351,9 +351,9 @@ public class Program
 
    /**
     * Get a parameter by parameter-id
-    *
+    * 
     * @param id - the parameter id
-    *
+    * 
     * @return the parameter, or null if not found.
     */
    public Parameter getParameter(int id)
@@ -372,7 +372,7 @@ public class Program
 
    /**
     * Add a parameter to the program.
-    *
+    * 
     * @param param - the parameter to add.
     */
    public void addParameter(Parameter param)
@@ -386,7 +386,7 @@ public class Program
 
    /**
     * Remove a parameter from the program.
-    *
+    * 
     * @param param - the parameter to remove.
     */
    public void removeParameter(Parameter param)
@@ -429,7 +429,7 @@ public class Program
 
    /**
     * Set the communication objects of the program.
-    *
+    * 
     * @param communicationObjects the set of communication objects.
     */
    public void setCommunicationObjects(Set<CommunicationObject> communicationObjects)

@@ -16,8 +16,10 @@ import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.test_utils.PersistenceTestCase;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class TestParamData extends PersistenceTestCase
 {
    private static final String persistenceUnitName = "test-full";

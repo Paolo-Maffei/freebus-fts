@@ -19,8 +19,10 @@ import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SampleProjectFactory;
 import org.freebus.fts.project.service.ProjectService;
+import org.junit.Ignore;
 import org.junit.Test;
 
+@Ignore
 public class TestDeviceParamData
 {
    private static final String persistenceUnitName = "test-full";
