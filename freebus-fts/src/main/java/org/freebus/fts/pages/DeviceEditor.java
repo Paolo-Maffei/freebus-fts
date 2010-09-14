@@ -16,9 +16,10 @@ import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.pages.deviceeditor.DeviceObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.DebugPanel;
+import org.freebus.fts.pages.deviceeditor.DeviceObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;
+import org.freebus.fts.pages.deviceeditor.MemoryPanel;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
@@ -39,6 +40,7 @@ public class DeviceEditor extends AbstractPage
    private final DeviceObjectsPanel deviceObjectsPanel = new DeviceObjectsPanel();
    private final ParameterEditor paramsPanel = new ParameterEditor();
    private final DebugPanel debugPanel = new DebugPanel();
+   private final MemoryPanel memoryPanel = new MemoryPanel();
 
    private Device device;
 
@@ -81,6 +83,7 @@ public class DeviceEditor extends AbstractPage
          }
       });
 
+      tabPane.add(I18n.getMessage("DeviceEditor.Memory"), memoryPanel);
       tabPane.add(I18n.getMessage("DeviceEditor.Debug"), debugPanel);
 
       ProjectManager.addListener(projectListener);
@@ -156,6 +159,7 @@ public class DeviceEditor extends AbstractPage
       generalPanel.setDevice(device);
       deviceObjectsPanel.setDevice(device);
       debugPanel.setDevice(device);
+      memoryPanel.setDevice(device);
    }
 
    /**
@@ -192,5 +196,6 @@ public class DeviceEditor extends AbstractPage
          setName(device.getPhysicalAddress().toString());
 
       generalPanel.componentChanged(obj);
+      memoryPanel.updateContents();
    }
 }

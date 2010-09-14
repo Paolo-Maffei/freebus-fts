@@ -38,15 +38,13 @@ public class TestProgram
    public final void testGetSetMaskId()
    {
       final Program prog = new Program();
+      final Mask mask = new Mask();
 
-      prog.setMaskId(1);
-      assertEquals(1, prog.getMaskId());
+      prog.setMask(mask);
+      assertEquals(mask, prog.getMask());
 
-      prog.setMaskId(12345);
-      assertEquals(12345, prog.getMaskId());
-
-      prog.setMaskId(0);
-      assertEquals(0, prog.getMaskId());
+      prog.setMask(null);
+      assertNull(prog.getMask());
    }
 
    @Test

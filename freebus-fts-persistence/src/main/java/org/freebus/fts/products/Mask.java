@@ -628,4 +628,36 @@ public class Mask
    {
       this.bcuTypeNumber = bcuTypeNumber;
    }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this)
+         return true;
+      if (!(o instanceof Mask))
+         return false;
+      final Mask oo = (Mask) o;
+      return id == oo.id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return "mask #" + id + " version " + version;
+   }
 }

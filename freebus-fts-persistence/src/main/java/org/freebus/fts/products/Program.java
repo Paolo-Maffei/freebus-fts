@@ -32,8 +32,9 @@ public class Program
    @Column(name = "program_id", nullable = false)
    private int id;
 
-   @Column(name = "mask_id")
-   private int maskId;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+   @JoinColumn(name = "mask_id", nullable = false)
+   private Mask mask;
 
    @Column(name = "program_name", nullable = false, length = 50)
    private String name = "";
@@ -140,19 +141,19 @@ public class Program
    }
 
    /**
-    * @return the mask id.
+    * @return the mask.
     */
-   public int getMaskId()
+   public Mask getMask()
    {
-      return maskId;
+      return mask;
    }
 
    /**
-    * Set the mask id.
+    * Set the mask.
     */
-   public void setMaskId(int maskId)
+   public void setMask(Mask mask)
    {
-      this.maskId = maskId;
+      this.mask = mask;
    }
 
    /**
@@ -595,7 +596,7 @@ public class Program
          return false;
 
       final Program oo = (Program) o;
-      return id == oo.id && maskId == oo.maskId && peiType == oo.peiType && name.equals(oo.name);
+      return id == oo.id && mask == oo.mask && peiType == oo.peiType && name.equals(oo.name);
    }
 
    /**
