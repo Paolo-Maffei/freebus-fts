@@ -117,11 +117,12 @@ public class Program
    /**
     * Create a program object.
     */
-   public Program(int id, String name, Manufacturer manufacturer)
+   public Program(int id, String name, Manufacturer manufacturer, Mask mask)
    {
       this.id = id;
       this.name = name;
       this.manufacturer = manufacturer;
+      this.mask = mask;
    }
 
    /**
@@ -596,7 +597,11 @@ public class Program
          return false;
 
       final Program oo = (Program) o;
-      return id == oo.id && mask == oo.mask && peiType == oo.peiType && name.equals(oo.name);
+
+      if (mask == null && oo.mask != null)
+         return false;
+
+      return id == oo.id && (mask == oo.mask || mask.equals(oo.mask)) && peiType == oo.peiType && name.equals(oo.name);
    }
 
    /**

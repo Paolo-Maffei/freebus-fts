@@ -65,6 +65,8 @@ public final class MemoryRange implements Comparable<MemoryRange>
    @Override
    public int compareTo(MemoryRange o)
    {
+      if (o.start == start)
+         return size - o.size;
       return o.start - start;
    }
 
@@ -79,7 +81,7 @@ public final class MemoryRange implements Comparable<MemoryRange>
       if (!(o instanceof MemoryRange))
          return false;
       final MemoryRange oo = (MemoryRange) o;
-      return start == oo.start;
+      return start == oo.start && size == oo.size;
    }
 
    /**
@@ -88,7 +90,7 @@ public final class MemoryRange implements Comparable<MemoryRange>
    @Override
    public int hashCode()
    {
-      return start;
+      return (start << 8) | size;
    }
 
    /**

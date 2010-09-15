@@ -68,6 +68,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
             I18n.getMessage("InspectVdxFile.ValueColumn") };
       tbmFields.setColumnIdentifiers(columnNames);
       tblFields.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
+      tblFields.getTableHeader().setReorderingAllowed(true);
    }
 
    /**

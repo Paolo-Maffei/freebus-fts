@@ -8,7 +8,7 @@ import org.freebus.fts.products.Parameter;
 /**
  * A container that manages all parameter values of a {@link Device}.
  * 
- * @see Device#getParameters()
+ * @deprecated use {@link Device#getDeviceParameter(Parameter)}
  */
 public class DeviceParameters
 {

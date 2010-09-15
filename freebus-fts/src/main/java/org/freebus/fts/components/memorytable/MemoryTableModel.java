@@ -153,6 +153,15 @@ public class MemoryTableModel implements TableModel
    }
 
    /**
+    * Reset the modified flag for all memory cells.
+    */
+   public void unsetModified()
+   {
+      for (int i = data.size() - 1; i >= 0; --i)
+         data.get(i).setModified(false);
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override

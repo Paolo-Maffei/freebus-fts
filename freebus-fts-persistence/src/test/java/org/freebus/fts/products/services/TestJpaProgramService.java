@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.test_utils.ProductsTestCase;
 import org.junit.Before;
@@ -27,9 +28,9 @@ public class TestJpaProgramService extends ProductsTestCase
       final Manufacturer manu = new Manufacturer(1, "manu-1");
       getJpaProductsFactory().getManufacturerService().persist(manu);
 
-      progService.persist(new Program(11, "Program-11", manu));
-      progService.persist(new Program(12, "Program-12", manu));
-      progService.persist(new Program(13, "Program-13", manu));
+      progService.persist(new Program(11, "Program-11", manu, new Mask()));
+      progService.persist(new Program(12, "Program-12", manu, new Mask()));
+      progService.persist(new Program(13, "Program-13", manu, new Mask()));
 
       DatabaseResources.getEntityManager().flush();
    }
@@ -55,7 +56,7 @@ public class TestJpaProgramService extends ProductsTestCase
       final Manufacturer manu88 = new Manufacturer(88, "manu-88");
       getJpaProductsFactory().getManufacturerService().persist(manu88);
 
-      final Program prog = new Program(0, "Program-88", manu88);
+      final Program prog = new Program(0, "Program-88", manu88, new Mask());
       final byte[] data = new byte[] { 0, 1, 2, 45, 0, 127, 4, -128, 0, 7, 1 };
       prog.setEepromData(data);
 

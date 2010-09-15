@@ -1,12 +1,22 @@
 package org.freebus.fts.components.memorytable;
 
 import java.awt.Color;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.fts.core.I18n;
 import org.freebus.fts.products.Mask;
+import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.DeviceObject;
+import org.freebus.fts.project.DeviceParameter;
 
 /**
  * A {@link MemoryTableModel} that can be updated from a {@link Device}.
@@ -14,6 +24,7 @@ import org.freebus.fts.project.Device;
 public class DeviceMemoryTableModel extends MemoryTableModel
 {
    private final Set<MemoryRange> ranges = new TreeSet<MemoryRange>();
+   private final Map<Integer, Integer> oldValues = new HashMap<Integer, Integer>();
    private final Color backgroundColor;
    private Device device;
 
@@ -68,13 +79,14 @@ public class DeviceMemoryTableModel extends MemoryTableModel
    }
 
    /**
-    * Add a memory range.
+    * Create a memory range and add it to the memory ranges.
     * 
     * @param start - the start address of the range.
     * @param size - the size of the range.
     * @param name - the name of the range.
+    * @return The created memory range.
     */
-   public void addRange(int start, int size, String name)
+   public MemoryRange createRange(int start, int size, String name)
    {
       final int idx = ranges.size();
 
@@ -82,25 +94,27 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       int g = (idx & 2) | (idx & 16);
       int b = (idx & 4) | (idx & 32);
 
-      r = (int)(backgroundColor.getRed() * 0.8f) + (r << 6) - 32;
+      r = (int) (backgroundColor.getRed() * 0.8f) + (r << 6) - 32;
       if (r > 255)
          r = 255;
       else if (r < 0)
          r = 0;
 
-      g = (int)(backgroundColor.getGreen() * 0.8f) + (g << 6) - 32;
+      g = (int) (backgroundColor.getGreen() * 0.8f) + (g << 6) - 32;
       if (g > 255)
          g = 255;
       else if (g < 0)
          g = 0;
 
-      b = (int)(backgroundColor.getBlue() * 0.8f) + (b << 6) - 32;
+      b = (int) (backgroundColor.getBlue() * 0.8f) + (b << 6) - 32;
       if (b > 255)
          b = 255;
       else if (r < 0)
          b = 0;
 
-      ranges.add(new MemoryRange(start, size, name, new Color(r, g, b)));
+      final MemoryRange range = new MemoryRange(start, size, name, new Color(r, g, b));
+      ranges.add(range);
+      return range;
    }
 
    /**
@@ -124,6 +138,16 @@ public class DeviceMemoryTableModel extends MemoryTableModel
    }
 
    /**
+    * Clear the labels for all memory cells.
+    */
+   public void clearCellLabels()
+   {
+      final int addr0 = getStartAddr();
+      for (int i = getRowCount() - 1; i >= 0; --i)
+         getValueAt(addr0 + i).setLabel(null);
+   }
+
+   /**
     * Called by {@link #setDevice(Device)} when the device is changed.
     */
    public void deviceChanged()
@@ -139,33 +163,62 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
       final Program program = device.getProgram();
       final Mask mask = program.getMask();
-      int size;
+      int size, start;
 
-      addRange(0, 256, "anonymous ram");
-      addRange(256, 256, "anonymous eeprom");
+      createRange(0, 256, I18n.getMessage("DeviceMemoryTableModel.Ram"));
 
       final byte[] eepromData = program.getEepromData();
       if (eepromData != null)
       {
-         addRange(0x100, eepromData.length, "program eeprom data");
+         createRange(256, eepromData.length, I18n.getMessage("DeviceMemoryTableModel.ProgramEeprom"));
 
          for (int i = 0; i < eepromData.length; ++i)
-            getValueAt(0x100 + i).setValue(eepromData[i] & 0xff);
+            getValueAt(256 + i).setValue(eepromData[i] & 0xff);
       }
 
-      addRange(program.getCommsTabAddr(), program.getCommsTabSize(), "communications table");
-      addRange(program.getAssocTabAddr(), program.getAssocTabSize(), "association table");
+      createRange(program.getCommsTabAddr(), program.getCommsTabSize(),
+            I18n.getMessage("DeviceMemoryTableModel.CommunicationsTable"));
+      createRange(program.getAssocTabAddr(), program.getAssocTabSize(),
+            I18n.getMessage("DeviceMemoryTableModel.AssociationTable"));
 
-      addRange(mask.getAddressTabAddress(), program.getAddrTabSize(), "address table");
-      addRange(mask.getManufacturerDataAddress(), mask.getManufacturerDataSize(), "manufacturer data");
+      start = mask.getAddressTabAddress();
+      createRange(start, program.getAddrTabSize(), I18n.getMessage("DeviceMemoryTableModel.AddressTable"));
+      getValueAt(start).setLabel(I18n.getMessage("DeviceMemoryTableModel.AddressTableSize"));
+      getValueAt(start + 1).setLabel(I18n.getMessage("DeviceMemoryTableModel.PhysicalAddress"));
+      getValueAt(start + 2).setLabel(I18n.getMessage("DeviceMemoryTableModel.PhysicalAddress"));
 
-      size = mask.getUserEepromEnd() - mask.getUserEepromStart();
-      addRange(mask.getUserEepromStart(), size, "user eeprom");
+      createRange(mask.getManufacturerDataAddress(), mask.getManufacturerDataSize(),
+            I18n.getMessage("DeviceMemoryTableModel.ManufacturerData"));
 
       size = mask.getUserRamEnd() - mask.getUserRamStart();
-      addRange(mask.getUserRamStart(), size, "user ram");
+      createRange(mask.getUserRamStart(), size, I18n.getMessage("DeviceMemoryTableModel.UserRam"));
+
+      size = mask.getUserEepromEnd() - mask.getUserEepromStart();
+      createRange(mask.getUserEepromStart(), size, I18n.getMessage("DeviceMemoryTableModel.UserEeprom"));
 
       updateMemoryCellRanges();
+
+      final String paramsTmpl = I18n.getMessage("DeviceMemoryTableModel.MemoryCellParameter");
+      final MemoryRange parameterRange = createRange(0, 0, I18n.getMessage("DeviceMemoryTableModel.Parameter"));
+      for (final Parameter param : device.getProgram().getParameters())
+      {
+         final Integer addr = param.getAddress();
+         if (addr == null || addr == 0)
+            continue;
+
+         final MemoryCell cell = getValueAt(addr);
+         cell.setRange(parameterRange);
+
+         String oldLbl = cell.getLabel();
+         if (oldLbl == null)
+            oldLbl = "Address: " + addr;
+         final String paramLbl = String.format("<br>" + paramsTmpl, new Object[] { param.getId(), param.getSize(),
+               param.getBitOffset() });
+         cell.setLabel(oldLbl + paramLbl);
+      }
+
+      updateContents();
+      unsetModified();
       fireTableChanged(0, getRowCount());
    }
 
@@ -196,6 +249,34 @@ public class DeviceMemoryTableModel extends MemoryTableModel
    }
 
    /**
+    * Set a value and remember the old value.
+    * 
+    * @param addr - the address to set the value into.
+    * @param value - the value to set.
+    * 
+    * @return true if the value differs from the current value
+    */
+   public boolean setValue(int addr, int value)
+   {
+      final MemoryCell cell = getValueAt(addr);
+
+      int oldValue = cell.getValue();
+      if (oldValue == -1)
+         oldValue = 0;
+
+      value &= 255;
+
+      if (value == oldValue)
+         return false;
+
+      if (!oldValues.containsKey(addr))
+         oldValues.put(addr, oldValue);
+
+      cell.setValue(value);
+      return true;
+   }
+
+   /**
     * Update the contents of the object. Call when the device has changed.
     */
    public void updateContents()
@@ -203,7 +284,72 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       if (device == null)
          return;
 
-      // TODO
+      Logger.getLogger(getClass()).debug("updateContents");
+      unsetModified();
+
+      oldValues.clear();
+
+      final Program prog = device.getProgram();
+      final Mask mask = prog.getMask();
+      int pos;
+
+      for (final Parameter param : device.getProgram().getParameters())
+      {
+         final DeviceParameter devParam = device.getDeviceParameter(param);
+         if (!devParam.isVisible())
+            continue;
+
+         final Integer addr = param.getAddress();
+         if (addr == null || addr == 0)
+            continue;
+
+         final int bits = param.getSize();
+         final int bitOffset = param.getBitOffset();
+
+         int bitMask = (1 << bits) - 1;
+         bitMask <<= bitOffset;
+
+         final MemoryCell cell = getValueAt(addr);
+
+         int oldValue = cell.getValue();
+         if (oldValue == -1)
+            oldValue = 0;
+
+         final int paramValue = devParam.getIntValue() & 255;
+         final int newValue = (oldValue & ~bitMask) | ((paramValue << bitOffset) & bitMask);
+
+         if (setValue(addr, newValue))
+         {
+            Logger.getLogger(getClass()).debug(
+                  "@" + addr + ": " + oldValue + "->" + newValue + " (param #" + param.getId() + " value " + paramValue
+                        + ", " + bits + " bits, offset " + bitOffset + ")");
+         }
+      }
+
+      for (final DeviceObject devObject : device.getVisibleDeviceObjects())
+      {
+      }
+
+      final PhysicalAddress physicalAddress = device.getPhysicalAddress();
+      final Collection<GroupAddress> groupAddresses = device.getGroupAdresses();
+      pos = mask.getAddressTabAddress();
+      setValue(pos, groupAddresses.size() + 1);
+      setValue(++pos, physicalAddress.getBytes()[0]);
+      setValue(++pos, physicalAddress.getBytes()[1]);
+      for (final GroupAddress addr : groupAddresses)
+      {
+         setValue(++pos, addr.getBytes()[0]);
+         setValue(++pos, addr.getBytes()[1]);
+      }
+
+      for (Integer addr : oldValues.keySet())
+      {
+         final MemoryCell cell = getValueAt(addr);
+         if (oldValues.get(addr) != cell.getValue())
+            Logger.getLogger(getClass()).debug(
+                  "@" + addr + ": modified " + oldValues.get(addr) + "->" + cell.getValue());
+         else cell.setModified(false);
+      }
 
       fireTableChanged(0, getRowCount());
    }

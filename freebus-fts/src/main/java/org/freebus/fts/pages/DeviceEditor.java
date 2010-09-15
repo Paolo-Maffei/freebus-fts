@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.Icon;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
@@ -33,7 +34,7 @@ public class DeviceEditor extends AbstractPage
 {
    private static final long serialVersionUID = 1396768831831692179L;
 
-   private final JLabel icon = new JLabel();
+   private final JLabel iconLabel = new JLabel();
    private final JLabel caption = new JLabel();
    private final JTabbedPane tabPane = new JTabbedPane();
    private final GeneralPanel generalPanel = new GeneralPanel();
@@ -52,11 +53,14 @@ public class DeviceEditor extends AbstractPage
       setLayout(new GridBagLayout());
       setName(I18n.getMessage("DeviceEditor.EmptyTitle"));
 
-      final Dimension iconSize = new Dimension(32, 32);
-      icon.setMinimumSize(iconSize);
-      icon.setMaximumSize(iconSize);
-      icon.setIcon(ImageCache.getIcon("icons-large/device"));
-      add(icon, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.VERTICAL,
+      final Icon icon = ImageCache.getIcon("icons-large/device");
+      final Dimension iconSize = new Dimension(icon.getIconWidth(), icon.getIconHeight());
+      iconLabel.setMinimumSize(iconSize);
+      iconLabel.setMaximumSize(iconSize);
+      iconLabel.setPreferredSize(iconSize);
+      iconLabel.setIcon(icon);
+      
+      add(iconLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.VERTICAL,
             new Insets(2, 4, 2, 4), 0, 0));
 
       final Font fnt = caption.getFont();

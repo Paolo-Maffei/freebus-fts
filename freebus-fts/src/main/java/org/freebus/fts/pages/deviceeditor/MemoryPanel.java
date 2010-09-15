@@ -1,12 +1,15 @@
 package org.freebus.fts.pages.deviceeditor;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
@@ -14,6 +17,7 @@ import javax.swing.JTable;
 import org.freebus.fts.components.memorytable.DeviceMemoryTableModel;
 import org.freebus.fts.components.memorytable.MemoryCell;
 import org.freebus.fts.components.memorytable.MemoryCellRenderer;
+import org.freebus.fts.core.I18n;
 import org.freebus.fts.pages.DeviceEditor;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
@@ -27,39 +31,9 @@ public class MemoryPanel extends JPanel implements DeviceEditorComponent
 {
    private static final long serialVersionUID = -2622838125174217870L;
 
-   private final DeviceMemoryTableModel tableModel;
+   private DeviceMemoryTableModel tableModel;
    private final JTable table;
    private final JScrollPane tableView;
-
-   private boolean dirty = false;
-
-//   class JColoredTable extends JTable
-//   {
-//      private static final long serialVersionUID = 1L;
-//
-//      public JColoredTable(TableModel model)
-//      {
-//         super(model);
-//      }
-//
-//      @Override
-//      public Component prepareRenderer(TableCellRenderer renderer, int rowIndex, int vColIndex)
-//      {
-//         Component c = super.prepareRenderer(renderer, rowIndex, vColIndex);
-//         Object o = getModel().getValueAt(rowIndex, vColIndex);
-//
-//         if (c instanceof JLabel && o instanceof MemoryCell)
-//         {
-//            JLabel jl = (JLabel) c;
-//
-//            MemoryCell cell = (MemoryCell) o;
-//            MemoryRange range = cell.getRange();
-//            jl.setBackground(range == null ? getBackground() : range.getBackground());
-//         }
-//         return c;
-//      }
-//
-//   }
 
    /**
     * Create a debug panel.
@@ -68,7 +42,12 @@ public class MemoryPanel extends JPanel implements DeviceEditorComponent
    {
       setLayout(new BorderLayout());
 
-      tableModel = new DeviceMemoryTableModel(0, 512, getBackground());
+      final JLabel lbl = new JLabel(I18n.getMessage("MemoryPanel.Caption"));
+      lbl.setFont(lbl.getFont().deriveFont(lbl.getFont().getSize2D() * 1.2f));
+      lbl.setBorder(BorderFactory.createEmptyBorder(4, 2, 4, 2));
+      add(lbl, BorderLayout.NORTH);
+
+      tableModel = new DeviceMemoryTableModel(0, 4096, getBackground());
       table = new JTable(tableModel);
       table.setDefaultRenderer(MemoryCell.class, new MemoryCellRenderer());
       table.setCellSelectionEnabled(true);
@@ -82,8 +61,7 @@ public class MemoryPanel extends JPanel implements DeviceEditorComponent
          @Override
          public void componentShown(ComponentEvent e)
          {
-            if (dirty)
-               updateContents();
+            updateContents();
          }
       });
    }
@@ -93,6 +71,15 @@ public class MemoryPanel extends JPanel implements DeviceEditorComponent
     */
    public void setDevice(Device device)
    {
+      if (device != null)
+      {
+         int endAddr = device.getProgram().getMask().getUserEepromEnd();
+         endAddr = (endAddr + 15) & ~15;
+
+         tableModel = new DeviceMemoryTableModel(0, endAddr, getBackground());
+         table.setModel(tableModel);
+      }
+
       tableModel.setDevice(device);
    }
 
@@ -102,12 +89,8 @@ public class MemoryPanel extends JPanel implements DeviceEditorComponent
    public void updateContents()
    {
       if (!isVisible())
-      {
-         dirty = true;
          return;
-      }
 
-      dirty = false;
       tableModel.updateContents();
    }
 

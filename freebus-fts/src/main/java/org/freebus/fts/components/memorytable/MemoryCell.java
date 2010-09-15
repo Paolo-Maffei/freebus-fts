@@ -5,9 +5,10 @@ package org.freebus.fts.components.memorytable;
  */
 public class MemoryCell
 {
-   private int value;
+   private int value = -1;
    private boolean modified;
    private MemoryRange range;
+   private String label;
 
    /**
     * Create an empty memory cell.
@@ -17,7 +18,8 @@ public class MemoryCell
    }
 
    /**
-    * @return The value of the memory cell (0..255)
+    * @return The value of the memory cell (0..255), or -1 if the value was
+    *         never set.
     */
    public int getValue()
    {
@@ -36,6 +38,24 @@ public class MemoryCell
 
       this.value = value;
       modified = true;
+   }
+
+   /**
+    * @return The optional label of the memory cell. May be null.
+    */
+   public String getLabel()
+   {
+      return label;
+   }
+
+   /**
+    * Set the optional label of the memory cell.
+    * 
+    * @param label - the label to set. May be null.
+    */
+   public void setLabel(String label)
+   {
+      this.label = label;
    }
 
    /**
@@ -79,7 +99,8 @@ public class MemoryCell
     */
    public void clear()
    {
-      value = 0;
+      value = -1;
+      label = null;
       modified = false;
    }
 
@@ -89,6 +110,8 @@ public class MemoryCell
    @Override
    public String toString()
    {
+      if (value == -1)
+         return "";
       return String.format("%1$02X", new Object[] { value });
    }
 }

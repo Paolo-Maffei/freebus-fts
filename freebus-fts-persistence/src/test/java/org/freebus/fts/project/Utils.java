@@ -1,6 +1,7 @@
 package org.freebus.fts.project;
 
 import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.ParameterType;
@@ -22,7 +23,7 @@ final class Utils
     */
    static Program createProgram(int id, String name, Manufacturer manufacturer)
    {
-      final Program program = new Program(id, "hello-bus", manufacturer);
+      final Program program = new Program(id, "hello-bus", manufacturer, new Mask());
 
       Parameter param;
       ParameterType paramType;

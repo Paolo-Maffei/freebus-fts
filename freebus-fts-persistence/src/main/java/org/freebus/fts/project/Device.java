@@ -1,10 +1,13 @@
 package org.freebus.fts.project;
 
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -23,6 +26,7 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CommunicationObject;
@@ -267,7 +271,8 @@ public final class Device
 
    /**
     * Get a device parameter. If no device parameter exists, one is created with
-    * the parameter's default value as value.
+    * the parameter's default value as value. Use {@link #getDeviceParameters()}
+    * to access the device parameters.
     * 
     * @param param - the parameter for which the device parameter is searched.
     * @return The requested device parameter.
@@ -425,6 +430,24 @@ public final class Device
    }
 
    /**
+    * Collect all group addresses that the device uses.
+    * 
+    * @return The list of group addresses.
+    */
+   public Collection<GroupAddress> getGroupAdresses()
+   {
+      final Set<GroupAddress> result = new HashSet<GroupAddress>(64);
+
+      for (final DeviceObject devObject: getVisibleDeviceObjects())
+      {
+         for (final SubGroupToObject sgo : devObject.getSubGroupToObjects())
+            result.add(sgo.getSubGroup().getGroupAddress());
+      }
+
+      return result;
+   }
+
+   /**
     * Update the device objects. Called when the program is set or changed.
     * Drops all existing device objects and creates a set for the new program's
     * communication objects.
@@ -490,8 +513,10 @@ public final class Device
          deviceObjects.add(devObject);
       }
 
-//      for (final DeviceObject devObject : deviceObjects)
-//         Logger.getLogger(getClass()).debug("  visible device object #" + devObject.getId() + " (com-object #" + devObject.getComObject().getId() + ")");
+      // for (final DeviceObject devObject : deviceObjects)
+      // Logger.getLogger(getClass()).debug("  visible device object #" +
+      // devObject.getId() + " (com-object #" + devObject.getComObject().getId()
+      // + ")");
    }
 
    /**
