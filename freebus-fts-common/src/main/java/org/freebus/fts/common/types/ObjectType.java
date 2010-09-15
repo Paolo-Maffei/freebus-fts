@@ -1,8 +1,10 @@
-package org.freebus.fts.products;
-
+package org.freebus.fts.common.types;
 
 /**
  * Types of communication objects.
+ * 
+ * The {@link #ordinal() ordinal} of the communication object gives the ID for
+ * KNX devices, e.g. in the EEPROM communication table.
  */
 public enum ObjectType
 {
@@ -57,7 +59,7 @@ public enum ObjectType
    BYTES_3("3 Bytes", 24),
 
    /**
-    * 4 bytes
+    * 4 bytes float
     */
    BYTES_4("4 Bytes", 32),
 
@@ -79,8 +81,12 @@ public enum ObjectType
    /**
     * 14 bytes
     */
-   BYTES_14("14 Bytes", 112);
+   BYTES_14("14 Bytes", 112),
 
+   /**
+    * 1..14 bytes
+    */
+   VARBYTES_14("1..14 Bytes", 112);
 
    private final String name;
    private final int bitLength;
@@ -107,6 +113,23 @@ public enum ObjectType
    public int getBitLength()
    {
       return bitLength;
+   }
+
+   /**
+    * Get the object type from the object type's ordinal number.
+    * 
+    * @param ordinal - the ordinal number to process.
+    * @return The object type.
+    */
+   static public ObjectType valueOf(int ordinal)
+   {
+      for (ObjectType t : values())
+      {
+         if (t.ordinal() == ordinal)
+            return t;
+      }
+
+      return null;
    }
 
    /*

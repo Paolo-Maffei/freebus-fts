@@ -12,6 +12,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.common.types.ObjectPriority;
+import org.freebus.fts.common.types.ObjectType;
 import org.freebus.fts.persistence.vdx.VdxField;
 
 /**

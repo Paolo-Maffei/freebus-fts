@@ -3,7 +3,7 @@ package org.freebus.fts.common.address;
 /**
  * A physical (device) address on the EIB/KNX bus.
  */
-public final class PhysicalAddress implements Address
+public final class PhysicalAddress implements Address, Comparable<PhysicalAddress>
 {
    private final int addr;
 
@@ -146,6 +146,15 @@ public final class PhysicalAddress implements Address
          return false;
       final PhysicalAddress oo = (PhysicalAddress) o;
       return oo.addr == addr;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int compareTo(PhysicalAddress o)
+   {
+      return addr - o.addr;
    }
 
    /**

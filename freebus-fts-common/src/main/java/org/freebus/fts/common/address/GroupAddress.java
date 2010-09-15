@@ -3,7 +3,7 @@ package org.freebus.fts.common.address;
 /**
  * A group address on the EIB/KNX bus.
  */
-public final class GroupAddress implements Address
+public final class GroupAddress implements Address, Comparable<GroupAddress>
 {
    private final int addr;
 
@@ -141,6 +141,15 @@ public final class GroupAddress implements Address
          return false;
       final GroupAddress oo = (GroupAddress) o;
       return oo.addr == addr;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int compareTo(GroupAddress o)
+   {
+      return addr - o.addr;
    }
 
    /**

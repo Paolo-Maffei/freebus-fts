@@ -6,6 +6,8 @@ import java.util.Vector;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -16,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.common.types.ObjectType;
 import org.freebus.fts.products.CommunicationObject;
 
 /**
@@ -63,8 +66,9 @@ public class DeviceObject implements Comparable<DeviceObject>
    @Column(name = "device_object_visible", nullable = false)
    private boolean visible;
 
-   @Column(name = "device_object_type", nullable = false)
-   private int type;
+   @Enumerated(EnumType.ORDINAL)
+   @Column(name = "device_object_type", nullable = true)
+   private ObjectType objectType;
 
    @Column(name = "dpt_type")
    // @VdxField(name = "eib_data_type_code" * 1000 + "eib_data_subtype_code")
@@ -277,19 +281,21 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
-    * @return the type
+    * @return the object type
     */
-   public int getType()
+   public ObjectType getObjectType()
    {
-      return type;
+      return objectType;
    }
 
    /**
-    * @param type the type to set
+    * Set the object type.
+    *
+    * @param type - the object type to set
     */
-   public void setType(int type)
+   public void setObjectType(ObjectType type)
    {
-      this.type = type;
+      this.objectType = type;
    }
 
    /**

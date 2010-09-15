@@ -3,11 +3,11 @@ package org.freebus.fts.project;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -295,6 +295,7 @@ public final class Device
    /**
     * @return the device parameters object that is used to access the parameters
     *         of the device.
+    * @deprecated
     */
    public synchronized DeviceParameters getDeviceParameters()
    {
@@ -432,11 +433,11 @@ public final class Device
    /**
     * Collect all group addresses that the device uses.
     * 
-    * @return The list of group addresses.
+    * @return A sorted collection of group addresses.
     */
    public Collection<GroupAddress> getGroupAdresses()
    {
-      final Set<GroupAddress> result = new HashSet<GroupAddress>(64);
+      final Set<GroupAddress> result = new TreeSet<GroupAddress>();
 
       for (final DeviceObject devObject: getVisibleDeviceObjects())
       {
