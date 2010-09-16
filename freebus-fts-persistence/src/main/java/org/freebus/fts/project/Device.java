@@ -431,24 +431,6 @@ public final class Device
    }
 
    /**
-    * Collect all group addresses that the device uses.
-    * 
-    * @return A sorted collection of group addresses.
-    */
-   public Collection<GroupAddress> getGroupAdresses()
-   {
-      final Set<GroupAddress> result = new TreeSet<GroupAddress>();
-
-      for (final DeviceObject devObject: getVisibleDeviceObjects())
-      {
-         for (final SubGroupToObject sgo : devObject.getSubGroupToObjects())
-            result.add(sgo.getSubGroup().getGroupAddress());
-      }
-
-      return result;
-   }
-
-   /**
     * Update the device objects. Called when the program is set or changed.
     * Drops all existing device objects and creates a set for the new program's
     * communication objects.

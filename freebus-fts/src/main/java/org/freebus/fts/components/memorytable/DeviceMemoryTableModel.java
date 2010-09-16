@@ -9,6 +9,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.bus.DeviceMemoryAdapter;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
@@ -17,9 +18,7 @@ import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
-import org.freebus.fts.project.DeviceObject;
 import org.freebus.fts.project.DeviceParameter;
-import org.freebus.fts.utils.DeviceUtils;
 
 /**
  * A {@link MemoryTableModel} that can be updated from a {@link Device}.
@@ -29,6 +28,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
    private final Set<MemoryRange> ranges = new TreeSet<MemoryRange>();
    private final Map<Integer, Integer> oldValues = new HashMap<Integer, Integer>();
    private final Color backgroundColor;
+   private final DeviceMemoryAdapter deviceMemoryAdapter = new DeviceMemoryAdapter();
    private Device device;
 
    /**
@@ -52,6 +52,8 @@ public class DeviceMemoryTableModel extends MemoryTableModel
    public void setDevice(Device device)
    {
       this.device = device;
+      deviceMemoryAdapter.setDevice(device);
+
       deviceChanged();
    }
 
@@ -297,6 +299,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       unsetModified();
 
       oldValues.clear();
+      deviceMemoryAdapter.update();
 
       final Program prog = device.getProgram();
       final Mask mask = prog.getMask();
@@ -336,22 +339,26 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       }
 
       pos = mask.getCommsTabPtrAddress();
-      final List<ObjectDescriptor> objDescs = DeviceUtils.getObjectDescriptors(device);
+      final List<ObjectDescriptor> objDescs = deviceMemoryAdapter.getObjectDescriptors();
       setValue(pos, objDescs.size());
+
+      int ramFlagTablePtr = deviceMemoryAdapter.getRamFlagTablePtr();
+      setValue(++pos, ramFlagTablePtr);
+      for (int i = (objDescs.size() + 1) >> 1; i > 0; --i)
+         setValue(ramFlagTablePtr++, 0xcf);
+
+      int idx = 0xc0;
       for (final ObjectDescriptor objDesc : objDescs)
       {
          final byte[] data = objDesc.toByteArray();
          setValue(++pos, data[0]); 
          setValue(++pos, data[1]); 
          setValue(++pos, data[2]); 
-      }
-
-      for (final DeviceObject devObject : device.getVisibleDeviceObjects())
-      {
+         setValue(objDesc.getDataPointer(), ++idx);
       }
 
       final PhysicalAddress physicalAddress = device.getPhysicalAddress();
-      final Collection<GroupAddress> groupAddresses = device.getGroupAdresses();
+      final Collection<GroupAddress> groupAddresses = deviceMemoryAdapter.getGroupAddresses();
       pos = mask.getAddressTabAddress();
       setValue(pos, groupAddresses.size() + 1);
       setValue(++pos, physicalAddress.getBytes()[0]);
