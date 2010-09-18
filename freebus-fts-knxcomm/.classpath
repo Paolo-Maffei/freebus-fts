@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry excluding="org/freebus/knxcomm/application/attic/|org/freebus/knxcomm/jobs/steps/|org/freebus/knxcomm/jobs/ReadDeviceStatusJob.java" kind="src" output="target/classes" path="src/main/java"/>
+	<classpathentry excluding="org/freebus/knxcomm/application/attic/|org/freebus/knxcomm/jobs/steps/" kind="src" output="target/classes" path="src/main/java"/>
 	<classpathentry excluding="**" kind="src" output="target/classes" path="src/main/resources"/>
 	<classpathentry excluding="org/freebus/knxcomm/applicationData/TestMemoryAddressMapper.java|org/freebus/knxcomm/applicationData/|org/freebus/knxcomm/jobs/JobStepTest.java|org/freebus/knxcomm/jobs/TestTelegrams.java" kind="src" output="target/test-classes" path="src/test/java"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>

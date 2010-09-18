@@ -141,7 +141,6 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       viewMenu.addSeparator();
       Actions.SET_PHYSICAL_ADDRESS.addTo(toolsMenu);
       Actions.DEVICE_SCANNER.addTo(toolsMenu);
-//      Actions.DEVICE_STATUS.addTo(toolsMenu);
 
       final JMenu settingsMenu = createJMenu(I18n.getMessage("MainWindow.SettingsMenu"));
       Actions.SETTINGS.addTo(settingsMenu);
@@ -172,9 +171,6 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       Actions.BUS_TRACE_VIEWER.addTo(toolBar);
       Actions.ADD_DEVICES.addTo(toolBar);
       Actions.SETTINGS.addTo(toolBar);
-
-//      toolBar.addSeparator();
-//      Actions.DEVICE_STATUS.addTo(toolBar);
    }
 
    /**
