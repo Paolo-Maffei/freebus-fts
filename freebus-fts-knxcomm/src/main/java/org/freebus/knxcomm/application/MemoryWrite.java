@@ -35,14 +35,4 @@ public class MemoryWrite extends MemoryData
    {
       return ApplicationType.Memory_Write;
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
 }

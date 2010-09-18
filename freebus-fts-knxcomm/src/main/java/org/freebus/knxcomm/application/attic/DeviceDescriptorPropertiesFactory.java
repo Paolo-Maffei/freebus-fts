@@ -1,5 +1,8 @@
-package org.freebus.knxcomm.application.devicedescriptor;
+package org.freebus.knxcomm.application.attic;
 
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
 import org.freebus.knxcomm.applicationData.ApplicationDataException;
 
 /**

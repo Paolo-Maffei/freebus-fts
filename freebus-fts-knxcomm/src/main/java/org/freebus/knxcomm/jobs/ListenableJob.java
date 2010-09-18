@@ -109,4 +109,19 @@ public abstract class ListenableJob implements Job
    {
       return listeners;
    }
+
+   /**
+    * Sleep some milliseconds.
+    */
+   protected final void msleep(int milliseconds)
+   {
+      try
+      {
+         Thread.sleep(milliseconds);
+      }
+      catch (InterruptedException e)
+      {
+         e.printStackTrace();
+      }
+   }
 }

@@ -3,8 +3,6 @@ package org.freebus.knxcomm.application;
 import java.io.DataInput;
 import java.io.IOException;
 
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-
 /**
  * Read values from an A/D converter channel.
  */
@@ -147,37 +145,8 @@ public class ADCRead extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-
-      return true;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
    public int getApciValue()
    {
       return channel;
    }
-   
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-
-      return ApplicationType.ADC_Response;
-      
-   }
-
 }

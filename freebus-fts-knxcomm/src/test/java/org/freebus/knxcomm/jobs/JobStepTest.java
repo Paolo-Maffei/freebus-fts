@@ -8,7 +8,7 @@ import org.freebus.knxcomm.application.IndividualAddressRead;
 import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.application.Restart;
-import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.application.memory.MemoryLocation;
 import org.freebus.knxcomm.jobs.steps.JobSteps;
 import org.freebus.knxcomm.jobs.steps.JobStepsQueue;
 
@@ -23,7 +23,7 @@ public class JobStepTest
       jobSteps.setFrom(new PhysicalAddress(1, 1, 1));
       jobSteps.setDest(new PhysicalAddress(1, 2, 3));
       jobSteps.add(new DeviceDescriptorRead(0));
-      jobSteps.add(new MemoryRead(MemoryAddressTypes.System));
+      jobSteps.add(new MemoryRead(MemoryLocation.System));
       jobSteps.add(new ADCRead(1, 5));
       jobStepsQueue = new JobStepsQueue(jobSteps);
       JobQueue.getDefaultJobQueue().add(jobStepsQueue);

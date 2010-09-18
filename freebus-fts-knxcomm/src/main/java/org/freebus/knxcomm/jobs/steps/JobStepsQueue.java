@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
+import org.freebus.knxcomm.application.attic.DeviceDescriptorProperties;
 import org.freebus.knxcomm.internal.DataConnectionImpl;
 import org.freebus.knxcomm.jobs.SingleDeviceJob;
 import org.freebus.knxcomm.telegram.Priority;

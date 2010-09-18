@@ -1,7 +1,10 @@
-package org.freebus.knxcomm.applicationData;
+package org.freebus.knxcomm.application.attic;
 
 import java.util.ArrayList;
 import java.util.Properties;
+
+import org.freebus.knxcomm.application.memory.MemoryAddress;
+import org.freebus.knxcomm.application.memory.MemoryAddressType;
 
 public class MemoryAddressMapper
 {
@@ -20,7 +23,7 @@ public class MemoryAddressMapper
       String strlength;
       String strAddress;
       this.memoryAddressList = new ArrayList<MemoryAddress>();
-      for (MemoryAddressTypes mat : MemoryAddressTypes.values())
+      for (MemoryAddressType mat : MemoryAddressType.values())
       {
          strAddress = deviceProperties.getProperty("MemoryAddress." + mat.toString() + "Address");
          strlength = deviceProperties.getProperty("MemoryAddress." + mat.toString() + "Length");
@@ -92,12 +95,12 @@ public class MemoryAddressMapper
     * @param AddressType - a MemoryAddressTypes
     * @return The MemoryAddress object for the memory address type
     */
-   public MemoryAddress getMemoryAddress(MemoryAddressTypes AddressType)
+   public MemoryAddress getMemoryAddress(MemoryAddressType AddressType)
    {
       for (MemoryAddress m : memoryAddressList)
       {
 
-         if (m.getMemoryAddressType() == AddressType)
+         if (m.getType() == AddressType)
             return m;
 
       }

@@ -1,45 +1,51 @@
-package org.freebus.knxcomm.applicationData;
+package org.freebus.knxcomm.application.memory;
 
-public enum MemoryAddressTypes
+/**
+ * Symbolic names for known memory addresses of a device. Which addresses
+ * are available depend on the type of the device.
+ * 
+ * @see MemoryAddressMapper
+ */
+public enum MemoryLocation
 {
    /**
-  *
-  */
+    *
+    */
    AND_TAB,
 
    /**
-   *
-   */
+    *
+    */
    ApplicationID,
 
    /**
-   *
-   */
+    *
+    */
    AssocTabPtr,
 
    /**
-   *
-   */
+    *
+    */
    BootloaderROM,
 
    /**
-   *
-   */
+    *
+    */
    Bootloadervectors,
 
    /**
-   *
-   */
+    *
+    */
    CheckLim,
 
    /**
-   *
-   */
+    *
+    */
    CommsTabPtr,
 
    /**
-   *
-   */
+    *
+    */
    ConfigDes,
 
    /**
@@ -48,185 +54,184 @@ public enum MemoryAddressTypes
    I_O_space1,
 
    /**
- *
- */
+    *
+    */
    I_O_space2,
 
    /**
-   *
-   */
+    *
+    */
    IregB_N,
 
    /**
-   *
-   */
+    *
+    */
    ManData,
 
    /**
-   *
-   */
+    *
+    */
    Masktype,
 
    /**
-   *
-   */
+    *
+    */
    maskversion,
 
    /**
-   *
-   */
+    *
+    */
    MS_Buffer,
 
    /**
-   *
-   */
+    *
+    */
    MxRstCnt,
 
    /**
-   *
-   */
+    *
+    */
    OptionReg,
 
    /**
-   *
-   */
+    *
+    */
    OR_TAB,
 
    /**
-*
-*/
+    *
+    */
    Page0ROM,
 
    /**
-   *
-   */
+    *
+    */
    PEI_Buff,
 
    /**
-   *
-   */
+    *
+    */
    PEI_Info,
 
    /**
-   *
-   */
+    *
+    */
    PEI_Interface,
 
    /**
-   *
-   */
+    *
+    */
    PEI_RecBuf,
 
    /**
-   *
-   */
+    *
+    */
    PEI_SndBuf,
 
    /**
-   *
-   */
+    *
+    */
    PEI_Type,
 
    /**
-   *
-   */
+    *
+    */
    PortADDR,
 
    /**
-   *
-   */
+    *
+    */
    PortCDDR,
 
    /**
-   *
-   */
+    *
+    */
    protectedEEPROM,
 
    /**
-   *
-   */
+    *
+    */
    RegB_N,
 
    /**
-   *
-   */
+    *
+    */
    RouteCnt,
 
    /**
-   *
-   */
+    *
+    */
    RunError,
 
    /**
-   *
-   */
+    *
+    */
    stack,
 
    /**
-   *
-   */
+    *
+    */
    SyncRate,
 
    /**
-   *
-   */
+    *
+    */
    System,
 
    /**
-   *
-   */
+    *
+    */
    system1,
 
    /**
-   *
-   */
+    *
+    */
    system2,
 
    /**
-   *
-   */
+    *
+    */
    SystemROM,
 
    /**
-   *
-   */
+    *
+    */
    SystemROMvectors,
 
    /**
-   *
-   */
+    *
+    */
    SystemState,
 
    /**
-   *
-   */
+    *
+    */
    UserRAM,
 
    /**
-   *
-   */
+    *
+    */
    userRAM2,
 
    /**
-   *
-   */
+    *
+    */
    UsrEEPROM,
 
    /**
-   *
-   */
+    *
+    */
    UsrInitPtr,
 
    /**
-   *
-   */
+    *
+    */
    UsrPrgPtr,
 
    /**
-   *
-   */
+    *
+    */
    UsrSavPtr,
 
    ;
-
 }

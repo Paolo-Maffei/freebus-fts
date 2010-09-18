@@ -9,10 +9,9 @@ import static org.junit.Assert.assertTrue;
 import java.io.IOException;
 
 import org.freebus.fts.common.HexString;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
-import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapperFactory;
+import org.freebus.knxcomm.application.memory.MemoryLocation;
 import org.junit.Test;
 
 public class TestMemoryRead
@@ -133,35 +132,62 @@ public class TestMemoryRead
    }
 
    @Test
-   public final void testSetProperties() throws Exception
+   public final void testLocation() throws Exception
    {
-      final MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
+      final MemoryRead app = new MemoryRead(MemoryLocation.SystemState, 0, 1);
 
-      DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
-      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory
-            .getDeviceDescriptor(new DeviceDescriptor0(0x0012));
-      app.setDeviceDescriptorProperties(deviceDescriptorProperties);
+      assertEquals(MemoryLocation.SystemState, app.getLocation());
+      assertEquals(0, app.getOffset());
+      assertEquals(1, app.getCount());
+
+      final MemoryAddressMapper mapper = MemoryAddressMapperFactory.getMemoryAddressMapper(0x12);
+      assertNotNull(mapper);
+
+      app.setAddressMapper(mapper);
+      assertEquals(mapper, app.getAddressMapper());
 
       assertEquals(96, app.getAddress());
       assertEquals(1, app.getCount());
    }
 
-   @Test
-   public final void testCreateApplication() throws Exception
+   @Test(expected = RuntimeException.class)
+   public final void testLocationNoMapper() throws Exception
    {
-      MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
+      final MemoryRead app = new MemoryRead(MemoryLocation.SystemState, 0, 1);
+      app.getAddress();
+   }
 
-      DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
+   @Test(expected = IllegalArgumentException.class)
+   public final void testLocationInvalidCount() throws Exception
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.SystemState, 0, -1);
+      app.getAddress();
+   }
 
-      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory
-            .getDeviceDescriptor(new DeviceDescriptor0(0x0012));
-      app.setDeviceDescriptorProperties(deviceDescriptorProperties);
-      byte[] x = app.toByteArray();
-      int[] a = new int[3];
-      app.toRawData(a, 0);
-      assertEquals(2, x[0]);
-      assertEquals(1, x[1]);
-      assertEquals(0, x[2]);
-      assertEquals(96, x[3]);
+   @Test(expected = IllegalArgumentException.class)
+   public final void testLocationInvalidCount2() throws Exception
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.SystemState, 0, 64);
+      app.getAddress();
+   }
+
+   @Test(expected = IllegalArgumentException.class)
+   public final void testLocationInvalidLocation() throws Exception
+   {
+      final MemoryRead app = new MemoryRead(null, 0, 1);
+      app.setAddressMapper(MemoryAddressMapperFactory.getMemoryAddressMapper(0x12));
+      app.getAddress();
+   }
+
+   @Test
+   public final void testToData() throws Exception
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.SystemState, 0, 1);
+      final MemoryAddressMapper mapper = MemoryAddressMapperFactory.getMemoryAddressMapper(0x12);
+      app.setAddressMapper(mapper);
+
+      final byte[] expected = HexString.valueOf("02 01 00 60");
+      final byte[] data = app.toByteArray();
+      assertArrayEquals(expected, data);
    }
 }

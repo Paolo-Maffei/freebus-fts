@@ -4,8 +4,6 @@ import java.io.DataInput;
 import java.io.IOException;
 import java.util.Arrays;
 
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-
 /**
  * A generic application with data bytes. For application types where no
  * application class exists.
@@ -159,35 +157,5 @@ public class GenericDataApplication extends AbstractApplication
       }
 
       return sb.toString();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 }

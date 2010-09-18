@@ -36,14 +36,4 @@ public class MemoryResponse extends MemoryData
    {
       return ApplicationType.Memory_Response;
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
 }

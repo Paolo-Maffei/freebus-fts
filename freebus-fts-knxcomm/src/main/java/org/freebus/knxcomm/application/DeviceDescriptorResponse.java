@@ -6,7 +6,6 @@ import java.io.IOException;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
@@ -144,26 +143,5 @@ public class DeviceDescriptorResponse extends AbstractApplication
    public String toString()
    {
       return super.toString() + ' ' + descriptor;
-   }
-
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
-   @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   @Override
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      // TODO Auto-generated method stub
-
    }
 }

@@ -135,6 +135,7 @@ public final class SetPhysicalAddressJob extends ListenableJob
       //
       // Step 4: restart the device to clear the programming mode
       //
+      msleep(250);
       notifyListener(80, I18n.getMessage("SetPhysicalAddressJob.Restart"));
       con = bus.connect(newAddress, Priority.SYSTEM);
       try
@@ -155,20 +156,5 @@ public final class SetPhysicalAddressJob extends ListenableJob
    {
       if (receiver != null)
          receiver.close();
-   }
-
-   /**
-    * Sleep some milliseconds.
-    */
-   protected void msleep(int milliseconds)
-   {
-      try
-      {
-         Thread.sleep(milliseconds);
-      }
-      catch (InterruptedException e)
-      {
-         e.printStackTrace();
-      }
    }
 }

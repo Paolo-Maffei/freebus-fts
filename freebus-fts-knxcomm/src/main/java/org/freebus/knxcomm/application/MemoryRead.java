@@ -3,17 +3,14 @@ package org.freebus.knxcomm.application;
 import java.io.DataInput;
 import java.io.IOException;
 
-import org.freebus.knxcomm.applicationData.MemoryAddress;
-import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.application.memory.MemoryLocation;
 
 /**
  * Read a block of bytes from the memory of a remote device.
  */
 public class MemoryRead extends Memory
 {
-
-   private int usercount = 0;
-   private int offset = 0;
+   private int count;
 
    /**
     * Create a memory read object with address and count 0.
@@ -26,7 +23,7 @@ public class MemoryRead extends Memory
    /**
     * Create a memory read object.
     *
-    * @param address - the 16 bit memory address.
+    * @param address - the memory address.
     * @param count - the number of bytes to read/write, in the range 0..63
     *
     * @throws IllegalArgumentException if count is not in the range 0..63
@@ -34,42 +31,22 @@ public class MemoryRead extends Memory
    public MemoryRead(int address, int count)
    {
       super(address);
-
-      if (count < 0 || count > 63)
-         throw new IllegalArgumentException("count must be 0..63");
-
-      super.setCount(count);
+      setCount(count);
    }
 
    /**
     * Create a memory read object.
     *
-    * @param memoryAddress a MemoryAddress Class
+    * @param location - the memory location.
+    * @param offset - the offset relative to the location.
+    * @param count - the number of bytes to read/write, in the range 0..63
+    *
+    * @throws IllegalArgumentException if count is not in the range 0..63
     */
-   public MemoryRead(MemoryAddress memoryAddress)
+   public MemoryRead(MemoryLocation location, int offset, int count)
    {
-      super(memoryAddress.getAdress());
-      super.setCount(memoryAddress.getLength());
-   }
-
-   public MemoryRead(MemoryAddressTypes memoryAddressTypes, int offset)
-   {
-      super(memoryAddressTypes);
-      this.offset = offset;
-
-   }
-
-   public MemoryRead(MemoryAddressTypes memoryAddressTypes, int offset, int usercount)
-   {
-      super(memoryAddressTypes);
-      this.offset = offset;
-      this.usercount = usercount;
-
-   }
-
-   public MemoryRead(MemoryAddressTypes memoryAddressTypes)
-   {
-      super(memoryAddressTypes);
+      super(location, offset);
+      setCount(count);
    }
 
    /**
@@ -79,14 +56,21 @@ public class MemoryRead extends Memory
     *
     * @throws IllegalArgumentException if count is not in the range 0..63
     */
-   @Override
    public void setCount(int count)
    {
       if (count < 0 || count > 63)
-         throw new IllegalArgumentException("count must be 0..63");
+         throw new IllegalArgumentException("count must be in the range 0..63");
 
-      super.setCount(count);
+      this.count = count;
       super.setApciValue(count);
+   }
+
+   /**
+    * @return The number of bytes to read from the memory.
+    */
+   public int getCount()
+   {
+      return count;
    }
 
    /**
@@ -104,7 +88,7 @@ public class MemoryRead extends Memory
    @Override
    public void readData(DataInput in, int length) throws IOException
    {
-      super.setCount(super.getApciValue());
+      count = getApciValue();
       setAddress(in.readUnsignedShort());
    }
 
@@ -116,49 +100,16 @@ public class MemoryRead extends Memory
    {
       final ApplicationType appType = getType();
       int pos = start;
-      int count;
-      if (usercount == 0)
-      {
-         count = (super.getCount() - offset);
-      }
-      else
-      {
-         count = usercount;
-      }
+
       rawData[pos++] = (appType.getApci() & 255) | (count & appType.getDataMask());
 
-      final int address = getAddress() + offset;
+      final int address = getAddress();
       rawData[pos++] = (address >> 8) & 255;
       rawData[pos++] = address & 255;
 
       return pos - start;
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode()
-   {
-      return (getAddress() << 8) | super.getCount();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getApciValue()
-   {
-      if (usercount == 0)
-      {
-         count = (super.getCount() - offset);
-      }
-      else
-      {
-         count = usercount;
-      }
-      return count;
-   }
    /**
     * {@inheritDoc}
     */
@@ -172,22 +123,6 @@ public class MemoryRead extends Memory
          return false;
 
       final MemoryRead oo = (MemoryRead) o;
-      return getAddress() == oo.getAddress() && super.getCount() == oo.getCount();
+      return getAddress() == oo.getAddress() && count == oo.count;
    }
-
-   public void setoffset(int offset)
-   {
-      this.offset = offset;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      return ApplicationType.Memory_Response;
-      
-   }
-
 }

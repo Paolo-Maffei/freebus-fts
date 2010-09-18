@@ -29,8 +29,9 @@ public enum Actions
    /** Open the device scanner. */
    DEVICE_SCANNER(new DeviceScannerAction()),
 
-   /** Read the status of a device. */
-   DEVICE_STATUS(new DeviceStatusAction()),
+//   /** Read the status of a device. */
+//   @Deprecated
+//   DEVICE_STATUS(new DeviceStatusAction()),
 
    /** Exit the application. */
    EXIT(new ExitAction()),

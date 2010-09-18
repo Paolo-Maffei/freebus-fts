@@ -177,7 +177,7 @@ public class DeviceDescriptor0 implements DeviceDescriptor
    @Override
    public String toString()
    {
-      return "medium " + getMediumType() + " mask " + getMaskType() + " version " + getVersion() + "."
+      return "medium " + getMediumType() + " type " + getMaskType() + " version " + getVersion() + "."
             + getSubVersion();
    }
 }

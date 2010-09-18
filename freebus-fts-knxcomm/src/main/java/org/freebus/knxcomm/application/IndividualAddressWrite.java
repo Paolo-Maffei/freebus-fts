@@ -4,7 +4,6 @@ import java.io.DataInput;
 import java.io.IOException;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 
 /**
  * Set the physical address of all devices that are in programming mode. To be
@@ -77,36 +76,6 @@ public class IndividualAddressWrite extends AbstractApplication
       rawData[start++] = addrData[1];
 
       return 3;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 
    /**

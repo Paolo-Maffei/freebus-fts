@@ -19,6 +19,8 @@ import org.freebus.knxcomm.telegram.Transport;
 
 /**
  * Scan for devices on a KNX/EIB network line.
+ * 
+ * Use a {@link DeviceScannerJobListener} listener to get informed about the progress of this job.
  */
 public final class DeviceScannerJob extends ListenableJob
 {
@@ -168,20 +170,5 @@ public final class DeviceScannerJob extends ListenableJob
    {
       if (receiver != null)
          receiver.close();
-   }
-
-   /**
-    * Sleep some milliseconds.
-    */
-   protected void msleep(int milliseconds)
-   {
-      try
-      {
-         Thread.sleep(milliseconds);
-      }
-      catch (InterruptedException e)
-      {
-         e.printStackTrace();
-      }
    }
 }

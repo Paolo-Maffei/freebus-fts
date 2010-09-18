@@ -4,7 +4,6 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
@@ -16,41 +15,9 @@ import org.freebus.knxcomm.telegram.Telegram;
 public interface Application
 {
    /**
-    * Initialize the object from the given raw data, starting at start, using at
-    * most length bytes. The first byte contains the application type.
-    *
-    * @param rawData - the raw data to be processed.
-    * @param start - the index of the first byte in rawData to use.
-    * @param length - the number of bytes to process.
-    *
-    * @throws InvalidDataException
-    */
-//   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException;
-
-   /**
-    * @return The expected ApplicationType as an ArrayList
-    */
-   public ApplicationType getApplicationResponses();
-
-   /**
     * @return The type of the application.
     */
    public ApplicationType getType();
-
-   /**
-    * @return True if the Application needs a DeviceDescriptorProperties
-    */
-   public boolean isDeviceDescriptorRequired();
-
-   /**
-    * Set the DeviceDescriptorProperties for the Application. The
-    * DeviceDescriptorProperties is required if the ApplicationData Classes are
-    * used.
-    *
-    * @param deviceDescriptorProperties - The DeviceDescriptorProperties for the
-    *           Application
-    */
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties);
 
    /**
     * Write the raw data of the message into the array rawData, starting at

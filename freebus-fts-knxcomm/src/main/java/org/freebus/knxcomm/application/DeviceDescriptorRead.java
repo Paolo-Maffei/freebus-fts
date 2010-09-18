@@ -5,7 +5,6 @@ import java.io.IOException;
 
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 
 /**
  * Read a device descriptor.
@@ -127,32 +126,5 @@ public class DeviceDescriptorRead extends AbstractApplication
    public String toString()
    {
       return getType().toString() + " type #" + descriptorType;
-   }
-
-   @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-      // TODO Auto-generated method stub
-      return false;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-
-      return ApplicationType.DeviceDescriptor_Response;
    }
 }

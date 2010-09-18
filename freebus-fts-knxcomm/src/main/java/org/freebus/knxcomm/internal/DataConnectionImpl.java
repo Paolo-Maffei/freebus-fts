@@ -318,11 +318,16 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public Application query(Application application) throws IOException, TimeoutException
    {
+//      Logger.getLogger(getClass()).debug("query - sending: " + application);
+
       final long start = System.currentTimeMillis();
       send(application);
 
       final int timeout = (int) (System.currentTimeMillis() - start + 6000);
-      return receive(timeout);
+      final Application reply = receive(timeout);
+
+//      Logger.getLogger(getClass()).debug("query - reply: " + reply);
+      return reply;
    }
 
    /**

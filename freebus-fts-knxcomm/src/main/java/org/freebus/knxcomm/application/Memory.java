@@ -1,23 +1,22 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.applicationData.MemoryAddress;
-import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapping;
+import org.freebus.knxcomm.application.memory.MemoryLocation;
 
 /**
  * Abstract base class for device memory access.
  */
 public abstract class Memory extends AbstractApplication
 {
-   private int address;
-   protected int count;
-   private MemoryAddressTypes memoryAddressTypes;
-   private DeviceDescriptorProperties deviceDescriptorProperties;
+   private MemoryAddressMapper mapper;
+   private MemoryLocation location;
+   private int address, offset;
 
    /**
     * Create a memory object.
-    *
-    * @param address - the 16 bit memory address.
+    * 
+    * @param address - the physical memory address.
     */
    protected Memory(int address)
    {
@@ -26,38 +25,125 @@ public abstract class Memory extends AbstractApplication
 
    /**
     * Create a memory object.
-    *
-    * @param address - the 16 bit memory address.
+    * 
+    * @param location - the memory location.
+    * @param offset - the offset to the starting address of the type.
     */
-   protected Memory(MemoryAddressTypes memoryAddressTypes)
+   protected Memory(MemoryLocation location, int offset)
    {
-      this.memoryAddressTypes = memoryAddressTypes;
+      this.location = location;
+      this.offset = offset;
+      address = -1;
    }
 
    /**
-    * @return the 16-bit memory address
+    * @return the physical memory address.
     */
    public int getAddress()
    {
+      if (address < 0)
+      {
+         if (mapper == null)
+            throw new RuntimeException("no memory address mapper is installed");
+
+         update();
+
+         if (address < 0)
+            throw new RuntimeException("failed to map location to an address: " + location);
+      }
+
       return address;
    }
 
    /**
-    * Set the 16-bit memory address.
-    *
+    * Set the physical memory address.
+    * 
     * @param address the address to set
     */
    public void setAddress(int address)
    {
       this.address = address;
+      this.location = null;
+      this.offset = 0;
    }
 
    /**
-    * @return the number of bytes to read from the memory / write to the memory.
+    * Set the memory address by location + offset.
+    * 
+    * @param location - the memory location.
+    * @param offset - the offset to the starting address of the type.
     */
-   public int getCount()
+   public void setAddress(MemoryLocation location, int offset)
    {
-      return count;
+      this.address = -1;
+      this.location = location;
+      this.offset = offset;
+   }
+
+   /**
+    * @return The memory location, or null if no
+    *         {@link #setAddressMapper(MemoryAddressMapper) address mapper} is
+    *         installed.
+    */
+   public MemoryLocation getLocation()
+   {
+      if (location == null && mapper != null)
+         update();
+
+      return location;
+   }
+
+   /**
+    * @return the offset to the memory location.
+    */
+   public int getOffset()
+   {
+      return offset;
+   }
+
+   /**
+    * Set the memory address mapper.
+    * 
+    * @param mapper - the mapper to set.
+    */
+   public void setAddressMapper(MemoryAddressMapper mapper)
+   {
+      this.mapper = mapper;
+   }
+
+   /**
+    * @return the {@link #setAddressMapper(MemoryAddressMapper) installed}
+    *         memory address mapper, or null if none is installed.
+    */
+   public MemoryAddressMapper getAddressMapper()
+   {
+      return mapper;
+   }
+
+   /**
+    * Update mapping of address, type, and offset.
+    */
+   private void update()
+   {
+      if (address < 0)
+         address = mapper.getAddress(location, offset);
+      else if (location == null)
+      {
+         final MemoryAddressMapping am = mapper.getMapping(address);
+         if (am != null)
+         {
+            location = am.getLocation();
+         }
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return address < 0 && location != null ? location.hashCode() : address;
    }
 
    /**
@@ -66,46 +152,20 @@ public abstract class Memory extends AbstractApplication
    @Override
    public String toString()
    {
-      return getType().name() + String.format(" address 0x%04x, %d bytes", address, getCount());
-   }
+      if (mapper != null && (location == null || address < 0))
+         update();
 
-   /**
-    * {@inheritDoc}
-    */
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      this.deviceDescriptorProperties = deviceDescriptorProperties;
-      updateAdresseFromAddressType();
-
-   }
-
-   /**
-    * @param count the number of bytes to read from the memory / write to the
-    *           memory.
-    */
-   public void setCount(int count)
-   {
-      this.count = count;
-   }
-
-   private void updateAdresseFromAddressType()
-   {
-      MemoryAddress memoryAddress = deviceDescriptorProperties.getMemoryAddressMapper().getMemoryAddress(
-            memoryAddressTypes);
-      address = memoryAddress.getAdress();
-      if (count == 0)
+      final StringBuffer sb = new StringBuffer();
+      sb.append(getType().name()).append(" address");
+      if (address >= 0)
+         sb.append(" 0x").append(Integer.toHexString(address));
+      if (location != null)
       {
-         count = memoryAddress.getLength();
+         sb.append(" ").append(location.toString());
+         if (offset != 0)
+            sb.append('+').append(offset);
       }
-   }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-      // TODO Auto-generated method stub
-      return true;
+      return sb.toString();
    }
 }

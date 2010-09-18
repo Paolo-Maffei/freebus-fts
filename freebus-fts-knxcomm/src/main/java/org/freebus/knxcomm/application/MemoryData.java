@@ -27,11 +27,19 @@ public abstract class MemoryData extends Memory
    }
 
    /**
-    * @return the memory data
+    * @return The memory data
     */
    public final int[] getData()
    {
       return data;
+   }
+
+   /**
+    * @return The number of bytes that {@link #getData() the data} contains.
+    */
+   public final int getCount()
+   {
+      return data == null ? 0 : data.length;
    }
 
    /**
@@ -58,21 +66,12 @@ public abstract class MemoryData extends Memory
    }
 
    /**
-    * @return the number of bytes that the {@link #getData data} contains.
-    */
-   @Override
-   public final int getCount()
-   {
-      return data == null ? super.getCount() : data.length;
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override
-   public int getApciValue()
+   public final int getApciValue()
    {
-      return getCount();
+      return data == null ? 0 : data.length;
    }
 
    /**
@@ -81,7 +80,7 @@ public abstract class MemoryData extends Memory
    @Override
    public void readData(DataInput in, int length) throws IOException
    {
-      count = super.getApciValue();
+      int count = super.getApciValue();
       setAddress(in.readUnsignedShort());
 
       if (count > 0)
@@ -102,14 +101,15 @@ public abstract class MemoryData extends Memory
       final ApplicationType appType = getType();
       int pos = start;
 
-      final int count = getCount();
+      final int[] data = getData();
+      final int count = data == null ? 0 : data.length;
+
       rawData[pos++] = (appType.getApci() & 255) | (count & appType.getDataMask());
 
       final int address = getAddress();
       rawData[pos++] = (address >> 8) & 255;
       rawData[pos++] = address & 255;
 
-      final int[] data = getData();
       for (int i = 0; i < count; ++i)
          rawData[pos++] = data[i];
 

@@ -3,8 +3,6 @@ package org.freebus.knxcomm.application;
 import java.io.DataInput;
 import java.io.IOException;
 
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-
 /**
  * A generic application without data bytes. For application types where no
  * application class exists.
@@ -78,35 +76,5 @@ public class GenericApplication extends AbstractApplication
 
       final GenericApplication oo = (GenericApplication) o;
       return type == oo.type;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean isDeviceDescriptorRequired()
-   {
-      // TODO Auto-generated method stub
-      return true;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setDeviceDescriptorProperties(DeviceDescriptorProperties deviceDescriptorProperties)
-   {
-      // TODO Auto-generated method stub
-
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public ApplicationType getApplicationResponses()
-   {
-      // TODO Auto-generated method stub
-      return null;
    }
 }

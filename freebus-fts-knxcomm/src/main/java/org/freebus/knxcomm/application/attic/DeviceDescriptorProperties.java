@@ -1,6 +1,5 @@
-package org.freebus.knxcomm.application.devicedescriptor;
+package org.freebus.knxcomm.application.attic;
 
-import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 
 
 public interface DeviceDescriptorProperties

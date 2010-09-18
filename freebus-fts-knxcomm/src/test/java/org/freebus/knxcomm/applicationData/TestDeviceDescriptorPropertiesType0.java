@@ -1,9 +1,9 @@
 package org.freebus.knxcomm.applicationData;
 
 
+import org.freebus.knxcomm.application.attic.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
-import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 

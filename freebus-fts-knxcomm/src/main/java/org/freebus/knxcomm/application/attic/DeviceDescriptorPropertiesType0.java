@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.application.devicedescriptor;
+package org.freebus.knxcomm.application.attic;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -8,7 +8,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.freebus.knxcomm.applicationData.ApplicationDataException;
-import org.freebus.knxcomm.applicationData.MemoryAddressMapper;
 import org.freebus.knxcomm.serial.Ft12Connection;
 
 public class DeviceDescriptorPropertiesType0 implements DeviceDescriptorProperties

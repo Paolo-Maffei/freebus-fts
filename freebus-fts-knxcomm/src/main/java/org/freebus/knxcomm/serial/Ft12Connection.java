@@ -39,7 +39,7 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    private boolean debugFT12 = false;
 
    // Enable debug output for FT1.2 acknowledges
-   private boolean debugFT12ack = true;
+   private boolean debugFT12ack = false;
 
    // FT1.2 end-of-message byte.
    protected final int eofMarker = 0x16;
