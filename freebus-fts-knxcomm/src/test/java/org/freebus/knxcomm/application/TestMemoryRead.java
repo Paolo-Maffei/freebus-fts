@@ -6,11 +6,13 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import java.io.IOException;
+
+import org.freebus.fts.common.HexString;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorPropertiesFactory;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 
 public class TestMemoryRead
@@ -95,10 +97,14 @@ public class TestMemoryRead
    }
 
    @Test
-   public final void testFromRawData() throws InvalidDataException
+   public final void testFromRawData() throws IOException
    {
-      final MemoryRead app = new MemoryRead();
-      app.fromRawData(new int[] { 0x03, 0x10, 0x20 }, 0, 3);
+      // app.fromRawData(new int[] { 0x03, 0x10, 0x20 }, 0, 3);
+      final byte[] data = HexString.valueOf("03 10 20");
+      final Application gapp = ApplicationFactory.createApplication(2, data);
+
+      assertEquals(ApplicationType.Memory_Read, gapp.getType());
+      final MemoryRead app = (MemoryRead) gapp;
 
       assertEquals(3, app.getCount());
       assertEquals(0x1020, app.getAddress());
@@ -130,30 +136,29 @@ public class TestMemoryRead
    public final void testSetProperties() throws Exception
    {
       final MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
-      DeviceDescriptorResponse deviceDescriptorResponse = new DeviceDescriptorResponse();
-      int[] data = {0x40,0x00,0x12};
-      deviceDescriptorResponse.fromRawData(data, 0, 3);
-      DeviceDescriptorPropertiesFactory  deviceDescriptorPropertiesFactory = new  DeviceDescriptorPropertiesFactory();
 
-      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(new DeviceDescriptor0(0x0012));
+      DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
+      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory
+            .getDeviceDescriptor(new DeviceDescriptor0(0x0012));
       app.setDeviceDescriptorProperties(deviceDescriptorProperties);
 
       assertEquals(96, app.getAddress());
       assertEquals(1, app.getCount());
    }
+
    @Test
-   public final void testCreateApliaction() throws Exception
+   public final void testCreateApplication() throws Exception
    {
-       MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
+      MemoryRead app = new MemoryRead(MemoryAddressTypes.SystemState);
 
+      DeviceDescriptorPropertiesFactory deviceDescriptorPropertiesFactory = new DeviceDescriptorPropertiesFactory();
 
-      DeviceDescriptorPropertiesFactory  deviceDescriptorPropertiesFactory = new  DeviceDescriptorPropertiesFactory();
-
-      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory.getDeviceDescriptor(new DeviceDescriptor0(0x0012));
+      DeviceDescriptorProperties deviceDescriptorProperties = deviceDescriptorPropertiesFactory
+            .getDeviceDescriptor(new DeviceDescriptor0(0x0012));
       app.setDeviceDescriptorProperties(deviceDescriptorProperties);
       byte[] x = app.toByteArray();
-      int[] a= new int[3];
-      app.toRawData(a,0);
+      int[] a = new int[3];
+      app.toRawData(a, 0);
       assertEquals(2, x[0]);
       assertEquals(1, x[1]);
       assertEquals(0, x[2]);

@@ -84,6 +84,7 @@ public class SetPhysicalAddress extends Dialog
 
       setMinimumSize(new Dimension(400, 150));
       setSize(getMinimumSize());
+      center();
 
       validateInput();
    }

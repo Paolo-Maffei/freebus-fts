@@ -117,7 +117,7 @@ public class DeviceDebugTreeCellRenderer extends DefaultTreeCellRenderer
       sb.append("#").append(param.getId()).append(" ").append(param.getDescription());
       if (!visible)
          sb.append(">");
-      sb.append(":  value ").append(device.getDeviceParameters().getIntValue(param));
+      sb.append(":  value ").append(devParam.getIntValue());
       sb.append(", parameter number ").append(param.getNumber());
 
       sb.append(" ...  [visible: ");

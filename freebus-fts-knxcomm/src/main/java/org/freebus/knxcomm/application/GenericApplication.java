@@ -1,7 +1,9 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * A generic application without data bytes. For application types where no
@@ -39,7 +41,7 @@ public class GenericApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
    }
 

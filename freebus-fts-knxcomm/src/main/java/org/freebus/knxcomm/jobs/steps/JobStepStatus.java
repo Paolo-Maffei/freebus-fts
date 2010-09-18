@@ -1,7 +1,7 @@
 /**
  * 
  */
-package org.freebus.knxcomm.jobs;
+package org.freebus.knxcomm.jobs.steps;
 
 /**
  * 

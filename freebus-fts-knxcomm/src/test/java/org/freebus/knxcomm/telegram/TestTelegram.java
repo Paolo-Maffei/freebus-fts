@@ -167,13 +167,13 @@ public class TestTelegram
    @Test(expected = IOException.class)
    public void testFromRawDataWrongLen() throws IOException
    {
-      TelegramFactory.createTelegram(HexString.valueOf("90 33 07 00 00 64 43 40 00 12"));
+      TelegramFactory.createTelegram(HexString.valueOf("90 33 07 00 00 64 43 42 00 12"));
    }
 
    @Test
    public final void testFromRawData3() throws IOException
    {
-      final byte[] data = HexString.valueOf("90 33 07 00 00 63  43 40 00 12");
+      final byte[] data = HexString.valueOf("90 33 07 00 00 63 43 40 00 12");
       final Telegram telegram = TelegramFactory.createTelegram(data);
 
       assertEquals(ApplicationType.DeviceDescriptor_Response, telegram.getApplicationType());
@@ -235,7 +235,7 @@ public class TestTelegram
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
       telegram.setRepeated(false);
-      telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new int[] { 0, 1 }));
+      telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new int[] { 1 }));
 
       final byte[] dataOut = telegram.toByteArray();
       assertArrayEquals(HexString.valueOf("bc 11 01 0a 05 b2 00 80 01"), dataOut);

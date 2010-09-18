@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.knxcomm.jobs.steps;
 
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.telegram.Telegram;

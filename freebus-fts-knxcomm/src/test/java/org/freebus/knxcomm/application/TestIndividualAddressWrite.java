@@ -3,8 +3,10 @@ package org.freebus.knxcomm.application;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
+
+import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 
 public class TestIndividualAddressWrite
@@ -37,10 +39,14 @@ public class TestIndividualAddressWrite
    }
 
    @Test
-   public final void testFromRawData() throws InvalidDataException
+   public final void testFromRawData() throws IOException
    {
-      final IndividualAddressWrite app = new IndividualAddressWrite();
-      app.fromRawData(new int[] { 0, 0x89, 0x12, 0x34 }, 1, 2);
+      final byte[] data = HexString.valueOf("c0 12 34");
+      final Application gapp = ApplicationFactory.createApplication(0, data);
+
+      assertEquals(ApplicationType.IndividualAddress_Write, gapp.getType());
+      final IndividualAddressWrite app = (IndividualAddressWrite) gapp;
+
       assertEquals(new PhysicalAddress(1, 2, 0x34), app.getAddress());
    }
 

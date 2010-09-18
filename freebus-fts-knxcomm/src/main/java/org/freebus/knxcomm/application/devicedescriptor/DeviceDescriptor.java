@@ -1,10 +1,13 @@
 package org.freebus.knxcomm.application.devicedescriptor;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 
 /**
  * A device descriptor. Used in {@link DeviceDescriptorResponse}.
- *
+ * 
  * @see DeviceDescriptor0
  * @see DeviceDescriptor2
  */
@@ -16,7 +19,19 @@ public interface DeviceDescriptor
    public int getTypeCode();
 
    /**
+    * Initialize the device descriptor from a {@link DataInput data input
+    * stream}.
+    * 
+    * @param in - the input stream to read.
+    * @param length - the number of bytes that the application shall read
+    * 
+    * @throws IOException
+    */
+   void readData(DataInput in, int length) throws IOException;
+
+   /**
     * @return the object as data byte array.
+    * @deprecated TODO: implement writeData()
     */
    public byte[] toByteArray();
 }

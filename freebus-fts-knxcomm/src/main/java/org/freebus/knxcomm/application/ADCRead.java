@@ -1,7 +1,9 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Read values from an A/D converter channel.
@@ -86,10 +88,10 @@ public class ADCRead extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      setChannel(rawData[start++] & 0x3f);
-      setCount(rawData[start++]);
+      channel = super.getApciValue();
+      count = in.readUnsignedByte();
    }
 
    /**
@@ -160,6 +162,7 @@ public class ADCRead extends AbstractApplication
       // TODO Auto-generated method stub
 
    }
+
    /**
     * {@inheritDoc}
     */

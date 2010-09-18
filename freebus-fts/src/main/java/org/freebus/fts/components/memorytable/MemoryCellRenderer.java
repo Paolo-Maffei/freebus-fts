@@ -60,7 +60,11 @@ public class MemoryCellRenderer extends DefaultTableCellRenderer
             final StringBuilder sb = new StringBuilder();
             sb.append("<html><body>Type: ").append(range.getName());
             if (range.getStart() != 0 || range.getSize() != 0)
-               sb.append("<br>Start: ").append(range.getStart()).append("<br>Size: ").append(range.getSize());
+            {
+               sb.append("<br>Start: ").append(range.getStart()).append(" (0x")
+                 .append(Integer.toHexString(range.getStart()))
+                 .append(")<br>Size: ").append(range.getSize());
+            }
             if (cell.getLabel() != null)
                sb.append("<br>").append(cell.getLabel());
             sb.append("</body></html>");

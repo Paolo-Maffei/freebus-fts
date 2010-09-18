@@ -7,7 +7,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.IOException;
+
+import org.freebus.fts.common.HexString;
 import org.junit.Test;
 
 public class TestMemoryResponse
@@ -100,12 +102,15 @@ public class TestMemoryResponse
    }
 
    @Test
-   public final void testFromRawData() throws InvalidDataException
+   public final void testFromRawData() throws IOException
    {
-      final MemoryResponse app = new MemoryResponse();
-      app.fromRawData(new int[] { 0x43, 0x10, 0x20, 0x11, 0x12, 0x13, 0x14 }, 0, 7);
+      //app.fromRawData(new int[] { 0x43, 0x10, 0x20, 0x11, 0x12, 0x13, 0x14 }, 0, 7);
+      final byte[] data = HexString.valueOf("43 10 20 11 12 13 14");
+      final Application gapp = ApplicationFactory.createApplication(2, data);
 
-      assertEquals(ApplicationType.Memory_Response, app.getType());
+      assertEquals(ApplicationType.Memory_Response, gapp.getType());
+      final MemoryResponse app = (MemoryResponse) gapp;
+
       assertEquals(3, app.getCount());
       assertEquals(0x1020, app.getAddress());
       assertArrayEquals(new int[] { 0x11, 0x12, 0x13 }, app.getData());

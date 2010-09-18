@@ -163,7 +163,9 @@ public class ProductsBrowser extends AbstractPage
          @Override
          public void valueChanged(TreeSelectionEvent e)
          {
+            MainWindow.getInstance().setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
             updateCatalogEntries();
+            MainWindow.getInstance().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
          }
       });
       scpCategories = new JScrollPane(treCategories);

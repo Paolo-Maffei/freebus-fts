@@ -16,9 +16,9 @@ public final class EmiFrameFactory
 {
    /**
     * Create an EMI frame object.
-    *
+    * 
     * @param type - the type of the EMI frame to create.
-    *
+    * 
     * @return the created frame, or null if the frame type is valid, but there
     *         exists no frame class for the frame type.
     */
@@ -45,12 +45,12 @@ public final class EmiFrameFactory
     * Create an EMI frame object from the input stream. It is expected that the
     * first byte of the data input stream contains the {@link EmiFrameType EMI
     * frame type}.
-    *
+    * 
     * @param in - the EMI frame is read from this stream.
-    *
+    * 
     * @return the created frame, or null if the frame type is valid, but there
     *         exists no frame class for the frame type.
-    *
+    * 
     * @throws IOException
     * @throws InvalidDataException
     */
@@ -67,32 +67,19 @@ public final class EmiFrameFactory
 
    /**
     * Create an EMI frame object from the data. It is expected that the data
-    * input stream contains a full frame, including the frame header.
-    *
+    * contains a full frame, including the frame header.
+    * 
     * @param data - the raw data of the EMI frame.
-    *
+    * 
     * @return the created frame (body), or null if the frame type is valid, but
     *         there exists no frame class for the frame type.
-    *
+    * 
     * @throws IOException
     * @throws InvalidDataException
     */
    static public EmiFrame createFrame(final byte[] data) throws IOException
    {
       return createFrame(new DataInputStream(new ByteArrayInputStream(data)));
-   }
-
-   /**
-    * A temporary method until EmiFrame users use byte buffers too.
-    */
-   @Deprecated
-   static public EmiFrame createFrame(final int[] data) throws IOException
-   {
-      final byte[] byteData = new byte[data.length];
-      for (int i = 0; i < data.length; ++i)
-         byteData[i] = (byte) data[i];
-
-      return createFrame(new DataInputStream(new ByteArrayInputStream(byteData)));
    }
 
    /*

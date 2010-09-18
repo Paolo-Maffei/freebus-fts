@@ -196,7 +196,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
       {
          con.send(new L_Data_req(telegram));
 
-         if (replySemaphore.tryAcquire(1000, TimeUnit.MILLISECONDS))
+         if (replySemaphore.tryAcquire(1500, TimeUnit.MILLISECONDS))
             return;
       }
       catch (InterruptedException e)

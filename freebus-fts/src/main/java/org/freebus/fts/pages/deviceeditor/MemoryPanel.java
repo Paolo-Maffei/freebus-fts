@@ -1,7 +1,6 @@
 package org.freebus.fts.pages.deviceeditor;
 
 import java.awt.BorderLayout;
-import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Arrays;

@@ -10,7 +10,6 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
-import org.freebus.fts.persistence.vdx.VdxField;
 import org.freebus.fts.products.Parameter;
 
 /**
@@ -39,10 +38,10 @@ public class DeviceParameter
    @Column(name = "parameter_value")
    private String stringValue;
 
-   @Deprecated
-   @VdxField(name = "device_parameter_visible")
-   @Column(name = "visible", nullable = false)
-   private boolean visible = true;
+//   @Deprecated
+//   @VdxField(name = "device_parameter_visible")
+//   @Column(name = "visible", nullable = false)
+//   private boolean visible = true;
 
    /**
     * Create an empty device parameter object.
@@ -152,21 +151,15 @@ public class DeviceParameter
    }
 
    /**
-    * Set the visible flag.
-    */
-   @Deprecated
-   public void setVisible(boolean visible)
-   {
-      this.visible = visible;
-   }
-
-   /**
     * Test if the parameter is visible.
     * 
     * @return true if the parameter is visible.
     */
    public boolean isVisible()
    {
+      // TODO verify Merten  #626199 - INSTABUS Tastermodul 1fach System Fläche
+      // in merten-ets.vd_
+
       if (parameter.getHighAccess() == 0)
          return false;
 
@@ -175,6 +168,31 @@ public class DeviceParameter
          return true;
 
       if (!parent.isVisible())
+         return false;
+
+      final Integer expectedParentValue = parameter.getParentValue();
+      if (expectedParentValue == null)
+         return true;
+
+      return expectedParentValue.equals(parent.getIntValue());
+   }
+
+   /**
+    * Test if the parameter shall be stored in the eeprom.
+    * 
+    * @return true if the parameter shall be stored in the eeprom.
+    */
+   public boolean isUsed()
+   {
+      // TODO verify the if-condition ... it is only a guess!
+      if (parameter.getLowAccess() == 0 && parameter.getHighAccess() == 0)
+         return false;
+
+      final DeviceParameter parent = getParent();
+      if (parent == null)
+         return true;
+
+      if (!parent.isUsed())
          return false;
 
       final Integer expectedParentValue = parameter.getParentValue();

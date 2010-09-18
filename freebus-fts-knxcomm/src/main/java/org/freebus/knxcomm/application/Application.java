@@ -5,7 +5,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
@@ -26,7 +25,7 @@ public interface Application
     *
     * @throws InvalidDataException
     */
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException;
+//   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException;
 
    /**
     * @return The expected ApplicationType as an ArrayList
@@ -82,7 +81,7 @@ public interface Application
     * @param in - the input stream to read.
     * @param length - the number of bytes that the application shall read
     *
-    * @throws InvalidDataException
+    * @throws IOException
     */
    public void readData(DataInput in, int length) throws IOException;
 

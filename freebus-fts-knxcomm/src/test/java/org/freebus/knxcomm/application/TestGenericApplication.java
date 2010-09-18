@@ -6,7 +6,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
 import org.junit.Test;
 
 public class TestGenericApplication
@@ -26,42 +25,6 @@ public class TestGenericApplication
    public final void testGenericApplicationApplicationTypeNull()
    {
       new GenericApplication(null);
-   }
-
-   @Test
-   public final void testFromRawData() throws InvalidDataException
-   {
-      final GenericApplication app = new GenericApplication(ApplicationType.IndividualAddress_Read);
-      app.fromRawData(new int[] { 0x00, 1, 4, 9 }, 0, 4);
-
-      assertEquals(ApplicationType.IndividualAddress_Read, app.getType());
-   }
-
-   @Test
-   public final void testFromRawData2() throws InvalidDataException
-   {
-      final GenericApplication app = new GenericApplication(ApplicationType.IndividualAddress_Read);
-      app.fromRawData(new int[] { 0x00 }, 0, 1);
-
-      assertEquals(ApplicationType.IndividualAddress_Read, app.getType());
-   }
-
-   @Test
-   public final void testFromRawData3() throws InvalidDataException
-   {
-      final GenericApplication app = new GenericApplication(ApplicationType.GroupValue_Response);
-      app.fromRawData(new int[] { 0x45, 1, 4, 9 }, 0, 4);
-
-      assertEquals(ApplicationType.GroupValue_Response, app.getType());
-   }
-
-   @Test
-   public final void testFromRawData4() throws InvalidDataException
-   {
-      final GenericApplication app = new GenericApplication(ApplicationType.GroupValue_Response);
-      app.fromRawData(new int[] { 0x45 }, 0, 1);
-
-      assertEquals(ApplicationType.GroupValue_Response, app.getType());
    }
 
    @Test

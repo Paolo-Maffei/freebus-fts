@@ -85,6 +85,7 @@ public class FilterDialog extends Dialog
       addButton(new JButton(I18n.getMessage("Button.Cancel")), Dialog.REJECT);
 
       setSize(getPreferredSize());
+      center();
    }
 
    /**

@@ -50,8 +50,7 @@ public final class DeviceScannerJob extends ListenableJob
    @Override
    public String getLabel()
    {
-      // TODO Auto-generated method stub
-      return null;
+      return I18n.formatMessage("DeviceScannerJob.Label", new Object[] { zone + "." + line });
    }
 
    /**
@@ -85,15 +84,19 @@ public final class DeviceScannerJob extends ListenableJob
          bus.send(dataTelegram);
          msleep(50);
 
-         // Freebus Controller need this to be detected:
+         // The Freebus controller currently (2010-03) needs an extra telegram to be detected.
+         // But this is ok as we want to read the device descriptor anyways. The process could
+         // be optimated to only read the device descriptors from found devices - as soon as
+         // the Freebus controller sends a Disconnect after a timeout (which the LPC controller
+         // does not yet).
          dataTelegram.setTransport(Transport.Connected);
          dataTelegram.setSequence(0);
          dataTelegram.setApplication(new DeviceDescriptorRead(0));
          bus.send(dataTelegram);
-         msleep(20);
+         msleep(25);
 
          notifyListener((deviceId * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
-         processAnswers(50);
+         processAnswers(100);
       }
 
       // Wait 6+ seconds for answers at the end.

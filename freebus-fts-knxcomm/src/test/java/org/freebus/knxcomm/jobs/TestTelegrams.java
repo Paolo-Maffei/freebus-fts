@@ -5,6 +5,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.jobs.steps.TelegramSearchConditions;
+import org.freebus.knxcomm.jobs.steps.Telegrams;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.junit.Ignore;
 import org.junit.Test;

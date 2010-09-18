@@ -17,10 +17,10 @@ import org.freebus.knxcomm.application.ADCResponse;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.MemoryResponse;
-import org.freebus.knxcomm.jobs.JobStep;
-import org.freebus.knxcomm.jobs.JobStepStatusEvent;
-import org.freebus.knxcomm.jobs.JobStepStatusListner;
 import org.freebus.knxcomm.jobs.ReadDeviceStatusJob;
+import org.freebus.knxcomm.jobs.steps.JobStep;
+import org.freebus.knxcomm.jobs.steps.JobStepStatusEvent;
+import org.freebus.knxcomm.jobs.steps.JobStepStatusListener;
 
 public class DeviceStatus extends AbstractPage {
 	private JSplitPane jSplitPane = null;
@@ -115,7 +115,7 @@ public class DeviceStatus extends AbstractPage {
 
 		ReadDeviceStatusJob readDeviceStatusJob = new ReadDeviceStatusJob(
 				physicalAddress);
-		readDeviceStatusJob.addMyListener(new JobStepStatusListner() {
+		readDeviceStatusJob.addMyListener(new JobStepStatusListener() {
 
 
 

@@ -1,8 +1,10 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.applicationData.MemoryAddress;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Read a block of bytes from the memory of a remote device.
@@ -100,10 +102,10 @@ public class MemoryRead extends Memory
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      super.setCount(rawData[start++] & 0x3f);
-      setAddress((rawData[start++] << 8) | rawData[start++]);
+      super.setCount(super.getApciValue());
+      setAddress(in.readUnsignedShort());
    }
 
    /**

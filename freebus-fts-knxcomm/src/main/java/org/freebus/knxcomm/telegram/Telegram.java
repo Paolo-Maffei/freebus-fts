@@ -311,13 +311,8 @@ public class Telegram implements Cloneable
 
          final int dataMask = type.getDataMask();
          if (dataMask != 0)
-         {
             application.setApciValue(apciByte & dataMask);
-            // --dataLen;
-         }
 
-         // TODO remove "dataMask != 0" when application.readData() is properly
-         // using DataInput
          if (dataLen > 1)
             application.readData(in, dataLen - 1);
       }

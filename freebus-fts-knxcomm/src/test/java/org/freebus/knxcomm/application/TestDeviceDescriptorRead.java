@@ -6,7 +6,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.IOException;
+
+import org.freebus.fts.common.HexString;
 import org.junit.Test;
 
 public class TestDeviceDescriptorRead
@@ -46,23 +48,27 @@ public class TestDeviceDescriptorRead
    }
 
    @Test
-   public final void testFromRawData() throws InvalidDataException
+   public final void testFromRawData() throws IOException
    {
-      final DeviceDescriptorRead app = new DeviceDescriptorRead();
-      final int[] rawData = new int[] { 0x07, 1, 8, 17 };
+      final byte[] data = HexString.valueOf("07 01 08 17");
+      final Application gapp = ApplicationFactory.createApplication(3, data);
 
-      app.fromRawData(rawData, 0, 4);
+      assertEquals(ApplicationType.DeviceDescriptor_Read, gapp.getType());
+      final DeviceDescriptorRead app = (DeviceDescriptorRead) gapp;
+
       assertEquals(ApplicationType.DeviceDescriptor_Read, app.getType());
       assertEquals(7, app.getDescriptorType());
    }
 
    @Test
-   public final void testFromRawData2() throws InvalidDataException
+   public final void testFromRawData2() throws IOException
    {
-      final DeviceDescriptorRead app = new DeviceDescriptorRead();
-      final int[] rawData = new int[] { 0x3f };
+      final byte[] data = HexString.valueOf("3f");
+      final Application gapp = ApplicationFactory.createApplication(3, data);
 
-      app.fromRawData(rawData, 0, 1);
+      assertEquals(ApplicationType.DeviceDescriptor_Read, gapp.getType());
+      final DeviceDescriptorRead app = (DeviceDescriptorRead) gapp;
+
       assertEquals(ApplicationType.DeviceDescriptor_Read, app.getType());
       assertEquals(DeviceDescriptorRead.INVALID_DESCRIPTOR_TYPE, app.getDescriptorType());
    }

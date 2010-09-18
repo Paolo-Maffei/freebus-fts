@@ -272,12 +272,17 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       final MemoryCell cell = getValueAt(addr);
 
       int oldValue = cell.getValue();
+      boolean undefinedValue = false;
+
       if (oldValue == -1)
+      {
          oldValue = 0;
+         undefinedValue = true;
+      }
 
       value &= 255;
 
-      if (value == oldValue)
+      if (value == oldValue && !undefinedValue)
          return false;
 
       if (!oldValues.containsKey(addr))
@@ -308,7 +313,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       for (final Parameter param : device.getProgram().getParameters())
       {
          final DeviceParameter devParam = device.getDeviceParameter(param);
-         if (!devParam.isVisible())
+         if (!devParam.isUsed())
             continue;
 
          final Integer addr = param.getAddress();
@@ -338,7 +343,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
          }
       }
 
-      pos = mask.getCommsTabPtrAddress();
+      pos = prog.getCommsTabAddr();
       final List<ObjectDescriptor> objDescs = deviceMemoryAdapter.getObjectDescriptors();
       setValue(pos, objDescs.size());
 

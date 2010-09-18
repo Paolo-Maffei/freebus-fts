@@ -8,7 +8,6 @@ import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
-import org.freebus.fts.project.DeviceParameters;
 
 /**
  * Class that converts the parameter values of a {@link Device} to/from a map of
@@ -31,15 +30,15 @@ public final class DeviceParamData
 
       // Fill the set of parameter data objects
       final Program program = device.getProgram();
-      final DeviceParameters devParams = device.getDeviceParameters();
+//      final DeviceParameters devParams = device.getDeviceParameters();
       for (final Parameter param : program.getParameters())
       {
          final ParameterAtomicType atomicType = param.getParameterType().getAtomicType();
          final ParamData data = new ParamData(param);
 
          if (atomicType == ParameterAtomicType.STRING)
-            data.setValue(devParams.getValue(param));
-         else data.setValue(devParams.getIntValue(param));
+            data.setValue(device.getDeviceParameter(param).getValue());
+         else data.setValue(device.getDeviceParameter(param).getIntValue());
 
          paramDatas.put(param, data);
       }
@@ -75,15 +74,10 @@ public final class DeviceParamData
     */
    public static void applyParamData(final Device device, Map<Parameter, ParamData> paramDatas)
    {
-      final Program program = device.getProgram();
-      final DeviceParameters devParams = device.getDeviceParameters();
-
-      for (final Parameter param : program.getParameters())
+      for (final Parameter param : device.getProgram().getParameters())
       {
          final ParamData data = paramDatas.get(param);
-
-         devParams.setValue(param, data.getValue());
-         devParams.setVisible(param, data.isVisible());
+         device.getDeviceParameter(param).setValue(data.getValue());
       }
    }
 

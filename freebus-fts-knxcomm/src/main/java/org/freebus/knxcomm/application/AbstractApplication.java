@@ -58,22 +58,22 @@ public abstract class AbstractApplication implements Application
       }
    }
 
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void readData(DataInput in, int length) throws IOException
-   {
-      // TODO temporary implementation
-
-      final int data[] = new int[length + 1];
-      data[0] = (getType().getApci() & 255) | (getApciValue() & getType().getDataMask());
-
-      for (int i = 0; i < length; ++i)
-         data[i + 1] = in.readUnsignedByte();
-
-      fromRawData(data, 0, data.length);
-   }
+//   /**
+//    * {@inheritDoc}
+//    */
+//   @Override
+//   public void readData(DataInput in, int length) throws IOException
+//   {
+//      // TODO temporary implementation
+//
+//      final int data[] = new int[length + 1];
+//      data[0] = (getType().getApci() & 255) | (getApciValue() & getType().getDataMask());
+//
+//      for (int i = 0; i < length; ++i)
+//         data[i + 1] = in.readUnsignedByte();
+//
+//      fromRawData(data, 0, data.length);
+//   }
 
    /**
     * {@inheritDoc}

@@ -6,7 +6,9 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.IOException;
+
+import org.freebus.fts.common.HexString;
 import org.junit.Test;
 
 public class TestADCResponse
@@ -48,10 +50,13 @@ public class TestADCResponse
    }
 
    @Test
-   public final void testFromRawData() throws InvalidDataException
+   public final void testFromRawData() throws IOException
    {
-      final ADCResponse app = new ADCResponse();
-      app.fromRawData(new int[] { 0xc6, 0x10, 0x04, 0x05 }, 0, 4);
+      final byte[] data = HexString.valueOf("c6 10 04 05");
+      final Application gapp = ApplicationFactory.createApplication(1, data);
+
+      assertEquals(ApplicationType.ADC_Response, gapp.getType());
+      final ADCResponse app = (ADCResponse) gapp;
 
       assertEquals(6, app.getChannel());
       assertEquals(0x10, app.getCount());

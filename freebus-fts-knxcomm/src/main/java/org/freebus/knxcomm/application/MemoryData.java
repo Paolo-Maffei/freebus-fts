@@ -1,8 +1,8 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.Arrays;
-
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Abstract class for memory response or write, including memory data.
@@ -29,7 +29,7 @@ public abstract class MemoryData extends Memory
    /**
     * @return the memory data
     */
-   public int[] getData()
+   public final int[] getData()
    {
       return data;
    }
@@ -42,7 +42,7 @@ public abstract class MemoryData extends Memory
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   public void setData(int[] data)
+   public final void setData(int[] data)
    {
       if (data == null)
       {
@@ -61,7 +61,7 @@ public abstract class MemoryData extends Memory
     * @return the number of bytes that the {@link #getData data} contains.
     */
    @Override
-   public int getCount()
+   public final int getCount()
    {
       return data == null ? super.getCount() : data.length;
    }
@@ -70,12 +70,27 @@ public abstract class MemoryData extends Memory
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public int getApciValue()
    {
-      final int count = rawData[start++] & 0x3f;
-      setAddress((rawData[start++] << 8) | rawData[start++]);
+      return getCount();
+   }
 
-      setData(Arrays.copyOfRange(rawData, start, start + count));
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void readData(DataInput in, int length) throws IOException
+   {
+      count = super.getApciValue();
+      setAddress(in.readUnsignedShort());
+
+      if (count > 0)
+      {
+         data = new int[count];
+         for (int i = 0; i < count; ++i)
+            data[i] = in.readUnsignedByte();
+      }
+      else data = null;
    }
 
    /**

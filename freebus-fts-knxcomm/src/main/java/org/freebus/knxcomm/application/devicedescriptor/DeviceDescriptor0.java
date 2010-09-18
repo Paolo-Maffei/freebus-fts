@@ -1,5 +1,8 @@
 package org.freebus.knxcomm.application.devicedescriptor;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 /**
  * Device descriptor type 0. This device descriptor holds a single 16 bit value
  * that contains medium type, firmware type, firmware version, and firmware sub
@@ -13,6 +16,13 @@ public class DeviceDescriptor0 implements DeviceDescriptor
    public static final DeviceDescriptor0 NULL = new DeviceDescriptor0(0);
 
    private int maskVersion;
+
+   /**
+    * Create a device descriptor type 0 object.
+    */
+   public DeviceDescriptor0()
+   {
+   }
 
    /**
     * Create a device descriptor type 0 object.
@@ -111,6 +121,15 @@ public class DeviceDescriptor0 implements DeviceDescriptor
    public int getSubVersion()
    {
       return maskVersion & 15;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void readData(DataInput in, int length) throws IOException
+   {
+      maskVersion = in.readUnsignedShort();
    }
 
    /**

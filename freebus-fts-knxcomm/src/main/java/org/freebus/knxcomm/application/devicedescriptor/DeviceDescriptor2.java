@@ -1,5 +1,7 @@
 package org.freebus.knxcomm.application.devicedescriptor;
 
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.Arrays;
 
 /**
@@ -39,7 +41,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Set the manufacturer.
-    *
+    * 
     * @param manufacturer - the manufacturer to set
     */
    public void setManufacturer(int manufacturer)
@@ -57,7 +59,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Set the device type.
-    *
+    * 
     * @param type - the device type to set
     */
    public void setType(int type)
@@ -75,7 +77,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Set the version.
-    *
+    * 
     * @param version - the version to set
     */
    public void setVersion(int version)
@@ -93,7 +95,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Set the misc bits.
-    *
+    * 
     * @param misc - the misc to set
     */
    public void setMisc(int misc)
@@ -112,7 +114,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    /**
     * Set the base value for local tags, derived from the local selector value.
     * 0x3f means no selector active.
-    *
+    * 
     * @param logicalTags - the logical tags to set
     */
    public void setLogicalTags(int logicalTags)
@@ -122,9 +124,9 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Get the channel code of a channel.
-    *
+    * 
     * @param idx - the index in the channel info table (0..3)
-    *
+    * 
     * @return the channel code. Zero if unused.
     */
    public int getChannelCode(int idx)
@@ -134,7 +136,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Set the channel code of a channel.
-    *
+    * 
     * @param idx - the index in the channel info table (0..3)
     * @param code - the channel code (0..8191)
     */
@@ -145,9 +147,9 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Get the number of channels that the channel info with the given index has.
-    *
+    * 
     * @param idx - the index in the channel info table (0..3)
-    *
+    * 
     * @return the number of channels (0..7)
     */
    public int getChannelCount(int idx)
@@ -157,7 +159,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
 
    /**
     * Get the number of channels that the channel info with the given index has.
-    *
+    * 
     * @param idx - the index in the channel info table (0..3)
     * @param count - the number of channels (0..7)
     */
@@ -167,26 +169,21 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * Create a device descriptor type object from a data byte array.
-    *
-    * @param data - the raw bytes to process
-    * @return the device descriptor type object.
+    * {@inheritDoc}
     */
-   public static DeviceDescriptor2 valueOf(final byte[] data)
+   @Override
+   public void readData(DataInput in, int length) throws IOException
    {
-      final DeviceDescriptor2 dd = new DeviceDescriptor2();
+      manufacturer = in.readUnsignedShort();
+      type = in.readUnsignedShort();
+      version = in.readUnsignedByte();
 
-      int pos = 0;
-      dd.manufacturer = ((data[pos++] & 255) << 8) | (data[pos++] & 255);
-      dd.type = ((data[pos++] & 255) << 8) | (data[pos++] & 255);
-      dd.version = data[pos++] & 255;
-      dd.misc = (data[pos] >> 6) & 3;
-      dd.logicalTags = data[pos++] & 63;
+      final int mlt = in.readUnsignedByte();
+      misc = (mlt >> 6) & 3;
+      logicalTags = mlt & 63;
 
-      for (int i = 0; i < dd.channelInfos.length; ++i)
-         dd.channelInfos[i] = ((data[pos++] & 255) << 8) | (data[pos++] & 255);
-
-      return dd;
+      for (int i = 0; i < channelInfos.length; ++i)
+         channelInfos[i] = in.readUnsignedShort();
    }
 
    /**

@@ -1,9 +1,11 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Read a device descriptor.
@@ -77,9 +79,9 @@ public class DeviceDescriptorRead extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      descriptorType = rawData[start] & DESCRIPTOR_TYPE_MASK;
+      descriptorType = getApciValue() & DESCRIPTOR_TYPE_MASK;
    }
 
    /**

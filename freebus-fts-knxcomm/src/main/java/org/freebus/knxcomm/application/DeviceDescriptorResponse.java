@@ -1,5 +1,8 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor2;
@@ -75,26 +78,20 @@ public class DeviceDescriptorResponse extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      int type = rawData[start] & DeviceDescriptorRead.DESCRIPTOR_TYPE_MASK;
+      final int type = getApciValue();
 
       if (type == 0)
-      {
-         descriptor = new DeviceDescriptor0((rawData[start + 1] << 8) | rawData[start + 2]);
-      }
+         descriptor = new DeviceDescriptor0();
       else if (type == 2)
-      {
-         final byte[] descriptorData = new byte[length - 1];
-         for (int i = 0; i < length - 1; ++i)
-            descriptorData[i] = (byte) rawData[i];
-
-         descriptor = DeviceDescriptor2.valueOf(descriptorData);
-      }
-      else
-      {
+         descriptor = new DeviceDescriptor2();
+      else if (type == DeviceDescriptorRead.INVALID_DESCRIPTOR_TYPE)
          descriptor = null;
-      }
+      else throw new InvalidDataException("unknown device descriptor type", type);
+
+      if (descriptor != null)
+         descriptor.readData(in, length);
    }
 
    /**

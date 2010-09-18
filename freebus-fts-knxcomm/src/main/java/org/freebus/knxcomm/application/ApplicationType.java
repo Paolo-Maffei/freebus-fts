@@ -16,7 +16,7 @@ public enum ApplicationType
     * <p>
     * 0-14 data bytes: the value of the communication object.
     */
-   GroupValue_Response(0x040, 4, 0, 14),
+   GroupValue_Response(0x040, 4, 0, 14, null, GroupValueResponse.class),
 
    /**
     * Read the value of the ASAP (communication object).
@@ -25,7 +25,7 @@ public enum ApplicationType
     * <p>
     * Response: {@link #GroupValue_Response}.
     */
-   GroupValue_Read(0x000, 10, 0, 0, GroupValue_Response),
+   GroupValue_Read(0x000, 10, 0, 0, GroupValue_Response, GroupValueRead.class),
 
    /**
     * Send an update of an ASAP (communication object) to all connected ASAPs.
@@ -33,7 +33,7 @@ public enum ApplicationType
     * <p>
     * 0-14 data bytes: data.
     */
-   GroupValue_Write(0x080, 4, 1, 14),
+   GroupValue_Write(0x080, 4, 0, 14, null, GroupValueWrite.class),
 
    /**
     * Set the physical address of all devices that are in programming mode.

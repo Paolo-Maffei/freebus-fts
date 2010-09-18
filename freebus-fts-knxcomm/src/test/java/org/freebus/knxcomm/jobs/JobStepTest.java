@@ -9,6 +9,8 @@ import org.freebus.knxcomm.application.IndividualAddressWrite;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.application.Restart;
 import org.freebus.knxcomm.applicationData.MemoryAddressTypes;
+import org.freebus.knxcomm.jobs.steps.JobSteps;
+import org.freebus.knxcomm.jobs.steps.JobStepsQueue;
 
 public class JobStepTest
 {

@@ -7,7 +7,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.IOException;
+
+import org.freebus.fts.common.HexString;
 import org.junit.Test;
 
 public class TestGenericDataApplication
@@ -57,43 +59,51 @@ public class TestGenericDataApplication
    }
 
    @Test
-   public final void testFromRawData() throws InvalidDataException
+   public final void testFromRawData() throws IOException
    {
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.IndividualAddress_Read);
-      app.fromRawData(new int[] { 0x00, 1, 4, 9 }, 0, 4);
+      final byte[] data = HexString.valueOf("80 01 04 09");
+      final Application app = ApplicationFactory.createApplication(data);
 
-      assertEquals(ApplicationType.IndividualAddress_Read, app.getType());
-      assertArrayEquals(new int[] { 1, 4, 9 }, app.getData());
+      assertEquals(ApplicationType.GroupValue_Write, app.getType());
+      assertArrayEquals(new int[] { 1, 4, 9 }, ((GroupValueWrite) app).getData());
    }
 
    @Test
-   public final void testFromRawData2() throws InvalidDataException
+   public final void testFromRawData2() throws IOException
    {
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.IndividualAddress_Read);
-      app.fromRawData(new int[] { 0x00 }, 0, 1);
+      final byte[] data = HexString.valueOf("87");
+      final Application app = ApplicationFactory.createApplication(data);
 
-      assertEquals(ApplicationType.IndividualAddress_Read, app.getType());
-      assertNull(app.getData());
+      assertEquals(ApplicationType.GroupValue_Write, app.getType());
+      final GroupValueWrite iapp = (GroupValueWrite) app;
+
+      assertNull(iapp.getData());
+      assertEquals(7, iapp.getApciValue());
    }
 
    @Test
-   public final void testFromRawData3() throws InvalidDataException
+   public final void testFromRawData3() throws IOException
    {
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Response);
-      app.fromRawData(new int[] { 0x45, 1, 4, 9 }, 0, 4);
+      final byte[] data = HexString.valueOf("41 05 01 04 09");
+      final Application app = ApplicationFactory.createApplication(data);
 
       assertEquals(ApplicationType.GroupValue_Response, app.getType());
-      assertArrayEquals(new int[] { 5, 1, 4, 9 }, app.getData());
+      final GroupValueResponse iapp = (GroupValueResponse) app;
+
+      assertArrayEquals(new int[] { 5, 1, 4, 9 }, iapp.getData());
    }
 
    @Test
-   public final void testFromRawData4() throws InvalidDataException
+   public final void testFromRawData4() throws IOException
    {
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Response);
-      app.fromRawData(new int[] { 0x45 }, 0, 1);
+      final byte[] data = HexString.valueOf("45");
+      final Application app = ApplicationFactory.createApplication(data);
 
       assertEquals(ApplicationType.GroupValue_Response, app.getType());
-      assertArrayEquals(new int[] { 5 }, app.getData());
+      final GroupValueResponse iapp = (GroupValueResponse) app;
+
+      assertNull(iapp.getData());
+      assertEquals(5, iapp.getApciValue());
    }
 
    @Test
@@ -122,32 +132,43 @@ public class TestGenericDataApplication
    {
       final int[] data = new int[] { 5, 1, 4, 9 };
       final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Response, data);
-      final int[] rawData = new int[4];
+      final int[] rawData = new int[5];
 
-      assertEquals(4, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x45, 1, 4, 9 }, rawData);
+      assertEquals(5, app.toRawData(rawData, 0));
+      assertArrayEquals(new int[] { 0x40, 5, 1, 4, 9 }, rawData);
    }
 
    @Test
    public final void testToRawData4()
    {
       final int[] data = new int[] { 5, 1, 4, 9 };
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Response, data);
-      final int[] rawData = new int[4];
+      final GroupValueResponse app = new GroupValueResponse(data);
+      final int[] rawData = new int[5];
 
-      assertEquals(4, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x45, 1, 4, 9 }, rawData);
+      assertEquals(5, app.toRawData(rawData, 0));
+      assertArrayEquals(new int[] { 0x40, 5, 1, 4, 9 }, rawData);
    }
 
    @Test
    public final void testToRawData5()
    {
-      final int[] data = new int[] { 0, 1 };
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Write, data);
+      final int[] data = new int[] { 1 };
+      final GroupValueWrite app = new GroupValueWrite(data);
       final int[] rawData = new int[2];
 
       assertEquals(2, app.toRawData(rawData, 0));
       assertArrayEquals(new int[] { 0x80, 0x01 }, rawData);
+   }
+
+   @Test
+   public final void testToRawData6()
+   {
+      final GroupValueResponse app = new GroupValueResponse(12);
+      final int[] rawData = new int[1];
+
+      assertEquals(1, app.toRawData(rawData, 0));
+      assertArrayEquals(new int[] { 0x4c }, rawData);
+      assertEquals(12, app.getApciValue());
    }
 
    @Test

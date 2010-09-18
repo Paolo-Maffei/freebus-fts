@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.knxcomm.jobs.steps;
 
 import org.freebus.fts.common.address.Address;
 import org.freebus.knxcomm.application.ApplicationType;

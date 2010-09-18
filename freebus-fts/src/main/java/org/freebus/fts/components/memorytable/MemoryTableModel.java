@@ -77,7 +77,7 @@ public class MemoryTableModel implements TableModel
    {
       if (columnIndex == 0)
          return I18n.getMessage("MemoryTableModel.Address");
-      return "+" + Integer.toString(columnIndex - 1);
+      return String.format("+%1$02X", new Object[] { columnIndex - 1 });
    }
 
    /**
@@ -110,7 +110,7 @@ public class MemoryTableModel implements TableModel
    public Object getValueAt(int rowIndex, int columnIndex)
    {
       if (columnIndex == 0)
-         return String.format("%1$04d", new Object[] { startAddr + (rowIndex << 4) });
+         return String.format("%1$04X", new Object[] { startAddr + (rowIndex << 4) });
 //         return String.format("%1$4X", new Object[] { startAddr + (rowIndex << 4) });
 
       return data.get((rowIndex << 4) + columnIndex - 1);

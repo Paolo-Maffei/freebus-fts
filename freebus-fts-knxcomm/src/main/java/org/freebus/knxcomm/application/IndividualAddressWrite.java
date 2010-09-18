@@ -1,8 +1,10 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
+
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Set the physical address of all devices that are in programming mode. To be
@@ -57,9 +59,9 @@ public class IndividualAddressWrite extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      address = new PhysicalAddress(rawData[start + 1], rawData[start + 2]);
+      address = new PhysicalAddress(in.readUnsignedShort());
    }
 
    /**

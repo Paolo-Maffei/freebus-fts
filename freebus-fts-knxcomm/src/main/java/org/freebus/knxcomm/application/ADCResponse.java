@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
-import org.freebus.knxcomm.telegram.InvalidDataException;
+import java.io.DataInput;
+import java.io.IOException;
 
 /**
  * Response to an A/D converter {@link ADCRead read request}.
@@ -60,10 +61,10 @@ public class ADCResponse extends ADCRead
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      super.fromRawData(rawData, start, length);
-      value = (rawData[start + 2] << 8) | rawData[start + 3];
+      super.readData(in, length);
+      value = in.readUnsignedShort();
    }
 
    /**

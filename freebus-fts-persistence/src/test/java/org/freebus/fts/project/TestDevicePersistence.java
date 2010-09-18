@@ -73,9 +73,8 @@ public class TestDevicePersistence extends ProjectTestCase
       final Device dev = new Device(catalogEntry, program);
       dev.setId(18);
 
-      final DeviceParameters devParams = dev.getDeviceParameters();
-      devParams.setValue(param1, 1001);
-      devParams.setValue(param2, "a string value");
+      dev.getDeviceParameter(param1).setValue(1001);
+      dev.getDeviceParameter(param2).setValue("a string value");
 
       entityManager.persist(dev);
       entityManager.flush();
@@ -84,10 +83,7 @@ public class TestDevicePersistence extends ProjectTestCase
       final Device loadedDev = entityManager.find(Device.class, 18);
       assertNotNull(loadedDev);
 
-      final DeviceParameters loadedDevParams = dev.getDeviceParameters();
-      assertNotNull(loadedDevParams);
-
-      assertEquals(1001, loadedDevParams.getIntValue(param1));
-      assertEquals("a string value", loadedDevParams.getValue(param2));
+      assertEquals(Integer.valueOf(1001), loadedDev.getDeviceParameter(param1).getIntValue());
+      assertEquals("a string value", loadedDev.getDeviceParameter(param2).getValue());
    }
 }

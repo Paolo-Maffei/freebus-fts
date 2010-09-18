@@ -10,7 +10,10 @@ import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
- * Starts the device scanner job
+ * Starts the device scanner job.
+ * 
+ * You can change the bus connection in {@link #DeviceScannerJobExample()}, the
+ * constructor.
  */
 public class DeviceScannerJobExample implements TelegramListener
 {
@@ -22,13 +25,16 @@ public class DeviceScannerJobExample implements TelegramListener
 
    /**
     * Create the bus monitor.
-    *
+    * 
     * @throws Exception
     */
    public DeviceScannerJobExample() throws Exception
    {
+      //
+      //  Bus connection
+      //
       bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
-//      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
+      // bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
@@ -65,7 +71,7 @@ public class DeviceScannerJobExample implements TelegramListener
 
    /**
     * Start the application.
-    *
+    * 
     * @throws Exception
     */
    public static void main(String[] args) throws Exception

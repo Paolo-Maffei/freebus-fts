@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.knxcomm.jobs.steps;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -95,18 +95,18 @@ public class JobSteps extends ArrayList<JobStep>
       add(jobStep);
    }
 
-   private java.util.Vector<JobStepStatusListner> listeners;
+   private java.util.Vector<JobStepStatusListener> listeners;
 
-   public void addMyListener(JobStepStatusListner l)
+   public void addMyListener(JobStepStatusListener l)
    {
       if (listeners == null)
       {
-         listeners = new Vector<JobStepStatusListner>();
+         listeners = new Vector<JobStepStatusListener>();
       }
       listeners.add(l);
    }
 
-   public void removeMyListener(JobStepStatusListner l)
+   public void removeMyListener(JobStepStatusListener l)
    {
       if (listeners != null)
       {
@@ -122,7 +122,7 @@ public class JobSteps extends ArrayList<JobStep>
       int size = listeners.size();
       for (int i = 0; i < size; i++)
       {
-         JobStepStatusListner l = listeners.elementAt(i);
+         JobStepStatusListener l = listeners.elementAt(i);
          l.JobStepStatus(e);
       }
    }

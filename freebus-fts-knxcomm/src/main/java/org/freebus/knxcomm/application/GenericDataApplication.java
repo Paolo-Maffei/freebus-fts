@@ -1,9 +1,10 @@
 package org.freebus.knxcomm.application;
 
+import java.io.DataInput;
+import java.io.IOException;
 import java.util.Arrays;
 
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptorProperties;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * A generic application with data bytes. For application types where no
@@ -16,9 +17,9 @@ public class GenericDataApplication extends AbstractApplication
 
    /**
     * Create an instance for a specific application type.
-    *
+    * 
     * @param type - the application type.
-    *
+    * 
     * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type)
@@ -28,10 +29,10 @@ public class GenericDataApplication extends AbstractApplication
 
    /**
     * Create an instance for a specific application type. The data is cloned.
-    *
+    * 
     * @param type - the application type.
     * @param data - the application's data.
-    *
+    * 
     * @throws IllegalArgumentException if the type is null
     */
    public GenericDataApplication(ApplicationType type, int[] data)
@@ -54,7 +55,7 @@ public class GenericDataApplication extends AbstractApplication
 
    /**
     * Set the application data. The data is cloned.
-    *
+    * 
     * @param data - the data to set
     */
    public void setData(int[] data)
@@ -74,24 +75,15 @@ public class GenericDataApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public void fromRawData(int[] rawData, int start, int length) throws InvalidDataException
+   public void readData(DataInput in, int length) throws IOException
    {
-      final int dataMask = type.getDataMask();
-
-      if (dataMask != 0)
+      if (length > 0)
       {
-         final int[] tmpData = Arrays.copyOfRange(rawData, start, start + length);
-         tmpData[0] &= dataMask;
-         setData(tmpData);
+         data = new int[length];
+         for (int i = 0; i < length; ++i)
+            data[i] = in.readUnsignedByte();
       }
-      else if (length <= 1)
-      {
-         setData(null);
-      }
-      else
-      {
-         setData(Arrays.copyOfRange(rawData, start + 1, start + length));
-      }
+      else data = null;
    }
 
    /**
@@ -105,16 +97,11 @@ public class GenericDataApplication extends AbstractApplication
       final int apci = type.getApci();
       int pos = start;
 
-      rawData[pos++] = apci & ~dataMask & 255;
+      rawData[pos++] = ((apci & ~dataMask) | (getApciValue() & dataMask)) & 255;
 
       if (data != null)
       {
-         int i = 0;
-
-         if (dataMask > 0)
-            rawData[pos - 1] |= data[i++] & dataMask;
-
-         for (; i < data.length; ++i)
+         for (int i = 0; i < data.length; ++i)
             rawData[pos++] = data[i];
       }
 
@@ -156,13 +143,19 @@ public class GenericDataApplication extends AbstractApplication
 
       sb.append(type.name());
 
-      if (data == null || data.length == 0)
-         sb.append(" no data");
-      else
+      if (data != null && data.length > 0)
       {
          sb.append(" data");
          for (int i = 0; i < data.length; ++i)
             sb.append(String.format(" %02x", data[i]));
+      }
+      else if (getType().getDataMask() > 0)
+      {
+         sb.append(" data").append(String.format(" %02x", getApciValue()));
+      }
+      else
+      {
+         sb.append(" no data");
       }
 
       return sb.toString();

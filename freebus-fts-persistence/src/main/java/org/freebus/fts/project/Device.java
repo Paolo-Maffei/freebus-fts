@@ -1,13 +1,10 @@
 package org.freebus.fts.project;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.Vector;
 
 import javax.persistence.CascadeType;
@@ -23,10 +20,8 @@ import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
-import javax.persistence.Transient;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CommunicationObject;
@@ -76,9 +71,6 @@ public final class Device
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
    private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
-
-   @Transient
-   private DeviceParameters deviceParams;
 
    /**
     * Create an empty device object.
@@ -279,9 +271,6 @@ public final class Device
     */
    public synchronized DeviceParameter getDeviceParameter(Parameter param)
    {
-      if (deviceParams == null)
-         deviceParams = new DeviceParameters(this);
-
       DeviceParameter deviceParam = parameterValues.get(param);
       if (deviceParam == null)
       {
@@ -290,19 +279,6 @@ public final class Device
       }
 
       return deviceParam;
-   }
-
-   /**
-    * @return the device parameters object that is used to access the parameters
-    *         of the device.
-    * @deprecated
-    */
-   public synchronized DeviceParameters getDeviceParameters()
-   {
-      if (deviceParams == null)
-         deviceParams = new DeviceParameters(this);
-
-      return deviceParams;
    }
 
    /**
