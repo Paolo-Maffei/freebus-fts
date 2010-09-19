@@ -12,6 +12,12 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.DeviceDescriptorRead;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.application.Memory;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapperFactory;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
@@ -58,6 +64,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
    private Semaphore recvSemaphore = new Semaphore(0);
    private int sequence = -1;
+   private int deviceDescriptorMaskVersion;
+   private MemoryAddressMapper memoryAddressMapper;
 
    /**
     * Create a connection to the device with the given physical address. Use
@@ -281,6 +289,9 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void send(Application application) throws IOException, TimeoutException
    {
+      if (application instanceof Memory && memoryAddressMapper != null)
+         ((Memory) application).setAddressMapper(memoryAddressMapper);
+
       synchronized (sendTelegram)
       {
          sendTelegram.setApplication(application);
@@ -300,6 +311,9 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void sendUnconfirmed(Application application) throws IOException
    {
+      if (application instanceof Memory && memoryAddressMapper != null)
+         ((Memory) application).setAddressMapper(memoryAddressMapper);
+
       synchronized (sendTelegram)
       {
          sendTelegram.setApplication(application);
@@ -341,6 +355,18 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       if (!telegram.getFrom().equals(addr))
          return;
 
+      final Application app = telegram.getApplication();
+      if (app instanceof Memory && memoryAddressMapper != null)
+      {
+         ((Memory) app).setAddressMapper(memoryAddressMapper);
+      }
+      else if (deviceDescriptorMaskVersion == 0 && app instanceof DeviceDescriptorResponse)
+      {
+         final DeviceDescriptorResponse ddapp = (DeviceDescriptorResponse) app;
+         if (ddapp.getDescriptorType() == 0)
+            deviceDescriptorMaskVersion = ((DeviceDescriptor0) ddapp.getDescriptor()).getMaskVersion();
+      }
+
       Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
 
       synchronized (recvQueue)
@@ -377,5 +403,34 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public void telegramSent(Telegram telegram)
    {
       Logger.getLogger(getClass()).debug("sent: " + telegram);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void installMemoryAddressMapper()
+   {
+      if (memoryAddressMapper != null)
+         return;
+
+      if (deviceDescriptorMaskVersion == 0)
+      {
+         try
+         {
+            final DeviceDescriptorResponse reply = (DeviceDescriptorResponse) query(new DeviceDescriptorRead(0));
+            deviceDescriptorMaskVersion = ((DeviceDescriptor0) reply.getDescriptor()).getMaskVersion();
+         }
+         catch (TimeoutException e)
+         {
+            throw new RuntimeException("failed to get device descriptor from " + addr, e);
+         }
+         catch (IOException e)
+         {
+            throw new RuntimeException("failed to get device descriptor from " + addr, e);
+         }
+      }
+
+      memoryAddressMapper = MemoryAddressMapperFactory.getMemoryAddressMapper(deviceDescriptorMaskVersion);
    }
 }

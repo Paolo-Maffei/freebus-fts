@@ -2,6 +2,7 @@ package org.freebus.knxcomm.jobs;
 
 import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeoutException;
 
 import org.freebus.knxcomm.BusInterface;
 
@@ -32,8 +33,9 @@ public abstract class ListenableJob implements Job
     * @param bus - the bus interface to use
     *
     * @throws IOException
+    * @throws TimeoutException 
     */
-   public abstract void main(BusInterface bus) throws IOException;
+   public abstract void main(BusInterface bus) throws IOException, TimeoutException;
 
    /**
     * Do cleanup. The default implementation is empty. Called by

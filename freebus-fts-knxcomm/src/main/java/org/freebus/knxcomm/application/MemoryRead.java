@@ -22,10 +22,10 @@ public class MemoryRead extends Memory
 
    /**
     * Create a memory read object.
-    *
+    * 
     * @param address - the memory address.
     * @param count - the number of bytes to read/write, in the range 0..63
-    *
+    * 
     * @throws IllegalArgumentException if count is not in the range 0..63
     */
    public MemoryRead(int address, int count)
@@ -36,11 +36,11 @@ public class MemoryRead extends Memory
 
    /**
     * Create a memory read object.
-    *
+    * 
     * @param location - the memory location.
     * @param offset - the offset relative to the location.
     * @param count - the number of bytes to read/write, in the range 0..63
-    *
+    * 
     * @throws IllegalArgumentException if count is not in the range 0..63
     */
    public MemoryRead(MemoryLocation location, int offset, int count)
@@ -50,10 +50,25 @@ public class MemoryRead extends Memory
    }
 
    /**
+    * Create a memory read object that reads the entire memory range of the
+    * location.
+    * 
+    * @param location - the memory location.
+    */
+   public MemoryRead(MemoryLocation location)
+   {
+      super(location, 0);
+      count = -1;
+
+      // TODO handle this correct
+      throw new RuntimeException("sorry not implemented");
+   }
+
+   /**
     * Set the number of bytes to read from the memory.
-    *
+    * 
     * @param count - the number of bytes to read. Range 1-63.
-    *
+    * 
     * @throws IllegalArgumentException if count is not in the range 0..63
     */
    public void setCount(int count)
