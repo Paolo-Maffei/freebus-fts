@@ -96,11 +96,12 @@ public class TestDeviceDescriptorResponse
    @Test
    public final void testToRawData()
    {
-      final DeviceDescriptorResponse app = new DeviceDescriptorResponse(new DeviceDescriptor0(0x1234));
-      final int[] rawData = new int[3];
+      final Application app = new DeviceDescriptorResponse(new DeviceDescriptor0(0x1234));
 
-      assertEquals(3, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x40, 0x12, 0x34 }, rawData);
+      final byte[] expected = HexString.valueOf("03 40 12 34");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

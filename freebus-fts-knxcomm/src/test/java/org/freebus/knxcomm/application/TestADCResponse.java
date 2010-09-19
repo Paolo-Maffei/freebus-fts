@@ -66,11 +66,12 @@ public class TestADCResponse
    @Test
    public final void testToRawData()
    {
-      final ADCResponse app = new ADCResponse(6, 0x10, 0x0405);
-      final int[] rawData = new int[4];
+      final Application app = new ADCResponse(6, 0x10, 0x0405);
 
-      assertEquals(4, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0xc6, 0x10, 0x04, 0x05 }, rawData);
+      final byte[] expected = HexString.valueOf("01 c6 10 04 05");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

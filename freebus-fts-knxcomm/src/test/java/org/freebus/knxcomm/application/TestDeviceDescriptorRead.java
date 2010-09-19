@@ -76,11 +76,12 @@ public class TestDeviceDescriptorRead
    @Test
    public final void testToRawData()
    {
-      final DeviceDescriptorRead app = new DeviceDescriptorRead(7);
-      final int[] rawData = new int[1];
+      final Application app = new DeviceDescriptorRead(7);
 
-      assertEquals(1, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x07 }, rawData);
+      final byte[] expected = HexString.valueOf("03 07");
+      final byte[] rawData = app.toByteArray();
+      
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

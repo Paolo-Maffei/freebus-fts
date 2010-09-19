@@ -109,66 +109,68 @@ public class TestGenericDataApplication
    @Test
    public final void testToRawData()
    {
-      final int[] data = new int[] { 1, 4, 9 };
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.IndividualAddress_Read, data);
-      final int[] rawData = new int[4];
+      final Application app = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new int[] { 2, 4, 9 });
 
-      assertEquals(4, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x00, 1, 4, 9 }, rawData);
+      final byte[] expected = HexString.valueOf("01 00 02 04 09");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawData2()
    {
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.IndividualAddress_Read);
-      final int[] rawData = new int[1];
+      final Application app = new GenericDataApplication(ApplicationType.IndividualAddress_Read);
 
-      assertEquals(1, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x00 }, rawData);
+      final byte[] expected = HexString.valueOf("01 00");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawData3()
    {
-      final int[] data = new int[] { 5, 1, 4, 9 };
-      final GenericDataApplication app = new GenericDataApplication(ApplicationType.GroupValue_Response, data);
-      final int[] rawData = new int[5];
+      final Application app = new GenericDataApplication(ApplicationType.GroupValue_Response, new int[] { 5, 1, 4, 9 });
 
-      assertEquals(5, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x40, 5, 1, 4, 9 }, rawData);
+      final byte[] expected = HexString.valueOf("00 40 05 01 04 09");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawData4()
    {
-      final int[] data = new int[] { 5, 1, 4, 9 };
-      final GroupValueResponse app = new GroupValueResponse(data);
-      final int[] rawData = new int[5];
+      final Application app = new GroupValueResponse(new int[] { 5, 1, 4, 9 });
 
-      assertEquals(5, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x40, 5, 1, 4, 9 }, rawData);
+      final byte[] expected = HexString.valueOf("00 40 05 01 04 09");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawData5()
    {
-      final int[] data = new int[] { 1 };
-      final GroupValueWrite app = new GroupValueWrite(data);
-      final int[] rawData = new int[2];
+      final Application app = new GroupValueWrite(new int[] { 1 });
 
-      assertEquals(2, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x80, 0x01 }, rawData);
+      final byte[] expected = HexString.valueOf("00 80 01");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawData6()
    {
-      final GroupValueResponse app = new GroupValueResponse(12);
-      final int[] rawData = new int[1];
+      final Application app = new GroupValueWrite();
+      app.setApciValue(1);
 
-      assertEquals(1, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x4c }, rawData);
-      assertEquals(12, app.getApciValue());
+      final byte[] expected = HexString.valueOf("00 81");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

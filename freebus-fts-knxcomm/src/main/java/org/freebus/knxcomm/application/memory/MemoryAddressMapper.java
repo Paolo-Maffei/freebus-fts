@@ -118,6 +118,17 @@ public final class MemoryAddressMapper
    }
 
    /**
+    * Get the mapping for a specific location.
+    * 
+    * @param location - the searched location.
+    * @return The mapping for the location, or null if no mapping was found.
+    */
+   public MemoryAddressMapping getMapping(MemoryLocation location)
+   {
+      return map.get(location);
+   }
+
+   /**
     * Get the properties for a specific mask version.
     * 
     * @param maskVersion - the mask version.

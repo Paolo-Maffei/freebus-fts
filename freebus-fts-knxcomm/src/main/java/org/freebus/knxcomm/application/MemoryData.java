@@ -1,8 +1,11 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
+
+import org.freebus.knxcomm.application.memory.MemoryLocation;
 
 /**
  * Abstract class for memory response or write, including memory data.
@@ -14,7 +17,7 @@ public abstract class MemoryData extends Memory
    /**
     * Create a memory data object.
     * 
-    * @param address - the 16 bit memory address.
+    * @param address - the memory address.
     * @param data - the data. Up to 63 bytes.
     * 
     * @throws IllegalArgumentException if the supplied memory data has more than
@@ -23,6 +26,21 @@ public abstract class MemoryData extends Memory
    protected MemoryData(int address, int[] data)
    {
       super(address);
+      setData(data);
+   }
+
+   /**
+    * Create a memory data object.
+    * 
+    * @param location - the memory location.
+    * @param data - the data. Up to 63 bytes.
+    * 
+    * @throws IllegalArgumentException if the supplied memory data has more than
+    *            63 bytes.
+    */
+   protected MemoryData(MemoryLocation location, int[] data)
+   {
+      super(location, 0);
       setData(data);
    }
 
@@ -96,24 +114,12 @@ public abstract class MemoryData extends Memory
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      final ApplicationType appType = getType();
-      int pos = start;
+      out.writeShort(getAddress());
 
-      final int[] data = getData();
-      final int count = data == null ? 0 : data.length;
-
-      rawData[pos++] = (appType.getApci() & 255) | (count & appType.getDataMask());
-
-      final int address = getAddress();
-      rawData[pos++] = (address >> 8) & 255;
-      rawData[pos++] = address & 255;
-
-      for (int i = 0; i < count; ++i)
-         rawData[pos++] = data[i];
-
-      return pos - start;
+      for (int i = 0; i < data.length; ++i)
+         out.write(data[i]);
    }
 
    /**

@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 import org.freebus.fts.common.address.GroupAddress;
@@ -39,8 +40,7 @@ public final class GroupValueRead extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      return 0;
    }
 }

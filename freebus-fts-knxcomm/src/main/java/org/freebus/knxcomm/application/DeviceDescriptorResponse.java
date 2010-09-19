@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
@@ -74,12 +75,21 @@ public class DeviceDescriptorResponse extends AbstractApplication
    }
 
    /**
+    * @return 
+    */
+   @Override
+   public final int getApciValue()
+   {
+      return getDescriptorType();
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
    public void readData(DataInput in, int length) throws IOException
    {
-      final int type = getApciValue();
+      final int type = super.getApciValue();
 
       if (type == 0)
          descriptor = new DeviceDescriptor0();
@@ -97,17 +107,9 @@ public class DeviceDescriptorResponse extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = start;
-
-      rawData[pos++] = (getType().getApci() | getDescriptorType()) & 255;
-
-      final byte[] descriptorData = descriptor.toByteArray();
-      for (int i = 0; i < descriptorData.length; ++i)
-         rawData[pos++] = descriptorData[i] & 255;
-
-      return pos - start;
+      out.write(descriptor.toByteArray());
    }
 
    /**

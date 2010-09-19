@@ -1,5 +1,7 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.application.memory.MemoryLocation;
+
 /**
  * Response to a {@link MemoryRead memory read} request.
  */
@@ -16,7 +18,7 @@ public class MemoryResponse extends MemoryData
    /**
     * Create a memory response object.
     * 
-    * @param address - the 16 bit memory address.
+    * @param address - the memory address.
     * @param data - the data. Up to 63 bytes.
     * 
     * @throws IllegalArgumentException if the supplied memory data has more than
@@ -25,6 +27,20 @@ public class MemoryResponse extends MemoryData
    protected MemoryResponse(int address, int[] data)
    {
       super(address, data);
+   }
+
+   /**
+    * Create a memory response object.
+    * 
+    * @param location - the memory location.
+    * @param data - the data. Up to 63 bytes.
+    * 
+    * @throws IllegalArgumentException if the supplied memory data has more than
+    *            63 bytes.
+    */
+   protected MemoryResponse(MemoryLocation location, int[] data)
+   {
+      super(location, data);
    }
 
    /**

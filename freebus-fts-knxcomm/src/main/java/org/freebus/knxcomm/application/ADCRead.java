@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 /**
@@ -74,6 +75,15 @@ public class ADCRead extends AbstractApplication
    }
 
    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int getApciValue()
+   {
+      return channel;
+   }
+
+   /**
     * @return The type of the application: {@link ApplicationType#ADC_Read}.
     */
    @Override
@@ -96,15 +106,9 @@ public class ADCRead extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      final ApplicationType appType = getType();
-      int pos = start;
-
-      rawData[pos++] = (appType.getApci() & 255) | (getChannel() & 0x3f);
-      rawData[pos++] = getCount() & 255;
-
-      return pos - start;
+      out.write(getCount());
    }
 
    /**
@@ -139,14 +143,5 @@ public class ADCRead extends AbstractApplication
    public String toString()
    {
       return getType().name() + String.format(" channel %d, %d samples", channel, count);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int getApciValue()
-   {
-      return channel;
    }
 }

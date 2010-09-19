@@ -20,15 +20,30 @@ public interface Application
    public ApplicationType getType();
 
    /**
-    * Write the raw data of the message into the array rawData, starting at
-    * index start. The first byte has to contain the application type.
+    * The APCI field of a {@link Telegram telegram} has up to 6 bits extra space
+    * for a value. Whether or not this 6 bit are used depends on the
+    * {@link Application application}.
+    * <p>
+    * The caller might not call {@link #writeData(DataOutput)}, so the
+    * implementation of this method shall not depend on
+    * {@link #writeData(DataOutput)} being called.
     *
-    * @param rawData - the data buffer to be filled.
-    * @param start - the index of the first byte in rawData to use.
-    *
-    * @return number of bytes that were written.
+    * @return the APCI data value
     */
-   public int toRawData(int[] rawData, int start);
+   public int getApciValue();
+
+   /**
+    * Set the APCI data value.
+    * <p>
+    * The caller might not call {@link #readData(DataInput, int)}, so the
+    * implementation of this method shall not depend on
+    * {@link #readData(DataInput, int)} being called.
+    *
+    * @param value - the data value
+    *
+    * @see #getApciValue()
+    */
+   public void setApciValue(int value);
 
    /**
     * Write the application into a byte array. The first two bytes of the
@@ -63,30 +78,4 @@ public interface Application
     * @throws IOException
     */
    public void writeData(DataOutput out) throws IOException;
-
-   /**
-    * The APCI field of a {@link Telegram telegram} has up to 6 bits extra space
-    * for a value. Whether or not this 6 bit are used depends on the
-    * {@link Application application}.
-    * <p>
-    * The caller might not call {@link #writeData(DataOutput)}, so the
-    * implementation of this method shall not depend on
-    * {@link #writeData(DataOutput)} being called.
-    *
-    * @return the APCI data value
-    */
-   public int getApciValue();
-
-   /**
-    * Set the APCI data value.
-    * <p>
-    * The caller might not call {@link #readData(DataInput, int)}, so the
-    * implementation of this method shall not depend on
-    * {@link #readData(DataInput, int)} being called.
-    *
-    * @param value - the data value
-    *
-    * @see #getApciValue()
-    */
-   public void setApciValue(int value);
 }

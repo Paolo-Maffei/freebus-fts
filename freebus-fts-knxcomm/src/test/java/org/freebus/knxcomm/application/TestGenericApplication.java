@@ -6,6 +6,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
+import org.freebus.fts.common.HexString;
 import org.junit.Test;
 
 public class TestGenericApplication
@@ -30,21 +31,24 @@ public class TestGenericApplication
    @Test
    public final void testToRawData()
    {
-      final GenericApplication app = new GenericApplication(ApplicationType.IndividualAddress_Read);
-      final int[] rawData = new int[1];
+      final Application app = new GenericApplication(ApplicationType.IndividualAddress_Read);
 
-      assertEquals(1, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x00 }, rawData);
+      final byte[] expected = HexString.valueOf("01 00");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawData2()
    {
-      final GenericApplication app = new GenericApplication(ApplicationType.GroupValue_Response);
-      final int[] rawData = new int[1];
+      final Application app = new GenericApplication(ApplicationType.GroupValue_Response);
+      app.setApciValue(7);
 
-      assertEquals(1, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x40 }, rawData);
+      final byte[] expected = HexString.valueOf("00 47");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

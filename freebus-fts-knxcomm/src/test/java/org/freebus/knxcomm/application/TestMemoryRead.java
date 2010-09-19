@@ -36,6 +36,33 @@ public class TestMemoryRead
       assertEquals(17, app.getCount());
    }
 
+   @Test
+   public final void testMemoryReadLocation()
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.ApplicationID);
+      assertEquals(MemoryLocation.ApplicationID, app.getLocation());
+
+      app.setAddressMapper(MemoryAddressMapperFactory.getMemoryAddressMapper(0x0010));
+      assertEquals(5, app.getCount());
+      assertEquals(259, app.getAddress());
+   }
+
+   @Test(expected = RuntimeException.class)
+   public final void testMemoryReadLocationNoMapper()
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.ApplicationID);
+      assertEquals(MemoryLocation.ApplicationID, app.getLocation());
+      app.getCount();
+   }
+
+   @Test(expected = RuntimeException.class)
+   public final void testMemoryReadLocationNoMapper2()
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.ApplicationID);
+      assertEquals(MemoryLocation.ApplicationID, app.getLocation());
+      app.getAddress();
+   }
+
    @Test(expected = IllegalArgumentException.class)
    public final void testMemoryReadIntIntTooSmall()
    {
@@ -74,8 +101,8 @@ public class TestMemoryRead
       app.setCount(41);
       assertEquals(41, app.getCount());
 
-      app.setCount(0);
-      assertEquals(0, app.getCount());
+      app.setCount(1);
+      assertEquals(1, app.getCount());
 
       app.setCount(63);
       assertEquals(63, app.getCount());
@@ -85,7 +112,7 @@ public class TestMemoryRead
    public final void testGetSetCountTooSmall()
    {
       final MemoryRead app = new MemoryRead();
-      app.setCount(-1);
+      app.setCount(0);
    }
 
    @Test(expected = IllegalArgumentException.class)
@@ -112,11 +139,12 @@ public class TestMemoryRead
    @Test
    public final void testToRawData()
    {
-      final MemoryRead app = new MemoryRead(0x1020, 3);
-      final int[] rawData = new int[3];
+      final Application app = new MemoryRead(0x1020, 3);
 
-      assertEquals(3, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x03, 0x10, 0x20 }, rawData);
+      final byte[] expected = HexString.valueOf("02 03 10 20");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

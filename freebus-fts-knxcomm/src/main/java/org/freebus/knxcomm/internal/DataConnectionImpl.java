@@ -350,7 +350,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      Logger.getLogger(getClass()).debug("recv: " + telegram);
+      Logger.getLogger(getClass()).debug("++ Recv: " + telegram);
 
       if (!telegram.getFrom().equals(addr))
          return;
@@ -367,7 +367,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
             deviceDescriptorMaskVersion = ((DeviceDescriptor0) ddapp.getDescriptor()).getMaskVersion();
       }
 
-      Logger.getLogger(getClass()).debug("Telegram received: " + telegram);
+      Logger.getLogger(getClass()).debug("++ Telegram received: " + telegram);
 
       synchronized (recvQueue)
       {
@@ -383,7 +383,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
             try
             {
-               Logger.getLogger(getClass()).debug("send: " + ackTelegram.getTransport());
+               Logger.getLogger(getClass()).debug("++ Send: " + ackTelegram.getTransport());
                busInterface.send(ackTelegram);
             }
             catch (IOException e)
@@ -402,7 +402,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
-      Logger.getLogger(getClass()).debug("sent: " + telegram);
+      Logger.getLogger(getClass()).debug("++ Sent: " + telegram);
    }
 
    /**

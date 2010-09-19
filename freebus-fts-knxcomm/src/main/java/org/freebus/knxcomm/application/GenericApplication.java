@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 /**
@@ -47,10 +48,8 @@ public class GenericApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      rawData[start] = type.getApci() & 255;
-      return 1;
    }
 
    /**

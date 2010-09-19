@@ -109,7 +109,7 @@ public enum ApplicationType
     * 4+ data bytes: number of memory bytes (1..63), 2-byte address, memory
     * contents.
     */
-   Memory_Response(0x240, 6, 3, 15, null, MemoryResponse.class),
+   Memory_Response(0x240, 4, 3, 15, null, MemoryResponse.class),
 
    /**
     * Read application memory.
@@ -118,7 +118,7 @@ public enum ApplicationType
     * <p>
     * Response: {@link #Memory_Response}.
     */
-   Memory_Read(0x200, 6, 3, 3, Memory_Response, MemoryRead.class),
+   Memory_Read(0x200, 4, 3, 3, Memory_Response, MemoryRead.class),
 
    /**
     * Write application memory.
@@ -126,7 +126,7 @@ public enum ApplicationType
     * 3+ data bytes: number of bytes to read (1..63), 2-byte address, memory
     * contents.
     */
-   Memory_Write(0x280, 6, 3, 15, null, MemoryWrite.class),
+   Memory_Write(0x280, 4, 3, 15, null, MemoryWrite.class),
 
    /**
     * Response to {@link #UserMemory_Read}.

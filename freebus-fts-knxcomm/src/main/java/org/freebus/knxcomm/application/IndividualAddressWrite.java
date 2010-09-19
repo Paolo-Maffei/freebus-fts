@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 import org.freebus.fts.common.address.PhysicalAddress;
@@ -67,15 +68,9 @@ public class IndividualAddressWrite extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      final int[] addrData = (address == null ? PhysicalAddress.NULL : address).getBytes();
-
-      rawData[start++] = ApplicationType.IndividualAddress_Write.getApci() & 255;
-      rawData[start++] = addrData[0];
-      rawData[start++] = addrData[1];
-
-      return 3;
+      out.writeShort(address == null ? 0 : address.getAddr());
    }
 
    /**

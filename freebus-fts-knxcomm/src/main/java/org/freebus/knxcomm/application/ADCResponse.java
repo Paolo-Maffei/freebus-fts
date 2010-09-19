@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 /**
@@ -71,14 +72,10 @@ public class ADCResponse extends ADCRead
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      int pos = super.toRawData(rawData, start);
-
-      rawData[pos++] = (value >> 8) & 255;
-      rawData[pos++] = value & 255;
-
-      return pos - start;
+      super.writeData(out);
+      out.writeShort(getValue());
    }
 
    /**

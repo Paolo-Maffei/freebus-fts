@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 import org.freebus.knxcomm.application.memory.MemoryLocation;
@@ -17,7 +18,7 @@ public class MemoryRead extends Memory
     */
    public MemoryRead()
    {
-      this(0, 0);
+      super(0);
    }
 
    /**
@@ -35,21 +36,6 @@ public class MemoryRead extends Memory
    }
 
    /**
-    * Create a memory read object.
-    * 
-    * @param location - the memory location.
-    * @param offset - the offset relative to the location.
-    * @param count - the number of bytes to read/write, in the range 0..63
-    * 
-    * @throws IllegalArgumentException if count is not in the range 0..63
-    */
-   public MemoryRead(MemoryLocation location, int offset, int count)
-   {
-      super(location, offset);
-      setCount(count);
-   }
-
-   /**
     * Create a memory read object that reads the entire memory range of the
     * location.
     * 
@@ -59,22 +45,34 @@ public class MemoryRead extends Memory
    {
       super(location, 0);
       count = -1;
+   }
 
-      // TODO handle this correct
-      throw new RuntimeException("sorry not implemented");
+   /**
+    * Create a memory read object.
+    * 
+    * @param location - the memory location.
+    * @param offset - the offset relative to the location.
+    * @param count - the number of bytes to read/write, in the range 1..63
+    * 
+    * @throws IllegalArgumentException if count is not in the range 1..63
+    */
+   public MemoryRead(MemoryLocation location, int offset, int count)
+   {
+      super(location, offset);
+      setCount(count);
    }
 
    /**
     * Set the number of bytes to read from the memory.
     * 
-    * @param count - the number of bytes to read. Range 1-63.
+    * @param count - the number of bytes to read. Range 1..63.
     * 
-    * @throws IllegalArgumentException if count is not in the range 0..63
+    * @throws IllegalArgumentException if count is not in the range 1..63.
     */
    public void setCount(int count)
    {
-      if (count < 0 || count > 63)
-         throw new IllegalArgumentException("count must be in the range 0..63");
+      if (count < 1 || count > 63)
+         throw new IllegalArgumentException("count must be in the range 1..63");
 
       this.count = count;
       super.setApciValue(count);
@@ -85,6 +83,9 @@ public class MemoryRead extends Memory
     */
    public int getCount()
    {
+      if (count < 0)
+         update();
+
       return count;
    }
 
@@ -98,12 +99,36 @@ public class MemoryRead extends Memory
    }
 
    /**
+    * @return The {@link #getCount() count}.
+    */
+   @Override
+   public int getApciValue()
+   {
+      return getCount();
+   }
+
+   /**
+    * Update mapping of address, type, and offset.
+    */
+   @Override
+   protected void update()
+   {
+      super.update();
+
+      if (count < 0)
+      {
+         count = getMapping().getSize();
+         super.setApciValue(count);
+      }
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
    public void readData(DataInput in, int length) throws IOException
    {
-      count = getApciValue();
+      count = super.getApciValue();
       setAddress(in.readUnsignedShort());
    }
 
@@ -111,18 +136,9 @@ public class MemoryRead extends Memory
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      final ApplicationType appType = getType();
-      int pos = start;
-
-      rawData[pos++] = (appType.getApci() & 255) | (count & appType.getDataMask());
-
-      final int address = getAddress();
-      rawData[pos++] = (address >> 8) & 255;
-      rawData[pos++] = address & 255;
-
-      return pos - start;
+      out.writeShort(getAddress());
    }
 
    /**
@@ -139,5 +155,14 @@ public class MemoryRead extends Memory
 
       final MemoryRead oo = (MemoryRead) o;
       return getAddress() == oo.getAddress() && count == oo.count;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return super.toString() + " " + getCount() + " bytes";
    }
 }

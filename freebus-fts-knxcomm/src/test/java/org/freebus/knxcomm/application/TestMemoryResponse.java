@@ -119,10 +119,11 @@ public class TestMemoryResponse
    @Test
    public final void testToRawData()
    {
-      final MemoryResponse app = new MemoryResponse(0x1020, new int[] { 0x11, 0x12, 0x13 });
-      final int[] rawData = new int[6];
+      final Application app = new MemoryResponse(0x1020, new int[] { 0x11, 0x12, 0x13 });
 
-      assertEquals(6, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x43, 0x10, 0x20, 0x11, 0x12, 0x13 }, rawData);
+      final byte[] expected = HexString.valueOf("02 43 10 20 11 12 13");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 }

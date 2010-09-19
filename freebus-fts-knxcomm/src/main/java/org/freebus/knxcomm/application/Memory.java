@@ -106,25 +106,36 @@ public abstract class Memory extends AbstractApplication
     * 
     * @param mapper - the mapper to set.
     */
-   public void setAddressMapper(MemoryAddressMapper mapper)
+   public final void setAddressMapper(MemoryAddressMapper mapper)
    {
       this.mapper = mapper;
    }
 
    /**
-    * @return the {@link #setAddressMapper(MemoryAddressMapper) installed}
+    * @return The {@link #setAddressMapper(MemoryAddressMapper) installed}
     *         memory address mapper, or null if none is installed.
     */
-   public MemoryAddressMapper getAddressMapper()
+   public final MemoryAddressMapper getAddressMapper()
    {
       return mapper;
    }
 
    /**
+    * @return The address mapping for the {@link #getLocation() location}.
+    */
+   protected final MemoryAddressMapping getMapping()
+   {
+      return mapper.getMapping(location);
+   }
+
+   /**
     * Update mapping of address, type, and offset.
     */
-   private void update()
+   protected void update()
    {
+      if (mapper == null)
+         throw new RuntimeException("no memory address mapper installed");
+
       if (address < 0)
          address = mapper.getAddress(location, offset);
       else if (location == null)

@@ -17,6 +17,7 @@ public class TestMemoryAddressMapper
 
       assertEquals(0x4e, mapper.getAddress(MemoryLocation.Masktype, 0));
       assertEquals(0x5100, mapper.getAddress(MemoryLocation.SystemROM, 0x100));
+      assertEquals(MemoryLocation.Masktype, mapper.getMapping(MemoryLocation.Masktype).getLocation());
    }
 
    @Test(expected = IOException.class)

@@ -43,16 +43,16 @@ public class ReadDeviceStatusJob extends ListenableJob
       con.installMemoryAddressMapper();
 
       // old code: add(new MemoryRead(MemoryAddressType.ApplicationID, 1, 1));
-      con.query(new MemoryRead(MemoryLocation.ApplicationID, 0, 5));
+      con.query(new MemoryRead(MemoryLocation.ApplicationID));
 
       // old code: add(new ADCRead(1, 8));
       con.query(new ADCRead(1, 8));
 
       // old code: add(new MemoryRead(MemoryAddressType.SystemState));
-      con.query(new MemoryRead(MemoryLocation.SystemState, 0, 1));
+      con.query(new MemoryRead(MemoryLocation.SystemState));
 
       // old code: add(new MemoryRead(MemoryAddressType.RunError));
-      con.query(new MemoryRead(MemoryLocation.RunError, 0, 1));
+      con.query(new MemoryRead(MemoryLocation.RunError));
 
       // old code: add(new ADCRead(4, 8));
       con.query(new ADCRead(4, 8));
@@ -61,7 +61,7 @@ public class ReadDeviceStatusJob extends ListenableJob
       // old code: add(new MemoryRead(MemoryAddressType.SystemState));
 
       // old code: add(new MemoryRead(MemoryAddressType.PEI_Type));
-      con.query(new MemoryRead(MemoryLocation.PEI_Type, 0, 1));
+      con.query(new MemoryRead(MemoryLocation.PEI_Type));
    }
 
    /**

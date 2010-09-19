@@ -1,7 +1,6 @@
 package org.freebus.knxcomm.application;
 
 import java.io.ByteArrayOutputStream;
-import java.io.DataOutput;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
@@ -32,7 +31,7 @@ public abstract class AbstractApplication implements Application
    /**
     * {@inheritDoc}
     */
-   public byte[] toByteArray()
+   public final byte[] toByteArray()
    {
       try
       {
@@ -55,18 +54,6 @@ public abstract class AbstractApplication implements Application
       {
          throw new RuntimeException();
       }
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   public void writeData(DataOutput out) throws IOException
-   {
-      final int data[] = new int[256];
-      final int wlen = toRawData(data, 0);
-
-      for (int i = 1; i < wlen; ++i)
-         out.write((byte) data[i]);
    }
 
    /**

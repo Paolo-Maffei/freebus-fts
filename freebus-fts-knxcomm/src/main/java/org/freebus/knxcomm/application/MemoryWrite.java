@@ -1,5 +1,7 @@
 package org.freebus.knxcomm.application;
 
+import org.freebus.knxcomm.application.memory.MemoryLocation;
+
 /**
  * Write up to 63 bytes into device memory.
  */
@@ -14,7 +16,7 @@ public class MemoryWrite extends MemoryData
    }
 
    /**
-    * Create a memory response object.
+    * Create a memory write object.
     * 
     * @param address - the 16 bit memory address.
     * @param data - the data. Up to 63 bytes.
@@ -25,6 +27,20 @@ public class MemoryWrite extends MemoryData
    protected MemoryWrite(int address, int[] data)
    {
       super(address, data);
+   }
+
+   /**
+    * Create a memory write object.
+    * 
+    * @param location - the memory location.
+    * @param data - the data. Up to 63 bytes.
+    * 
+    * @throws IllegalArgumentException if the supplied memory data has more than
+    *            63 bytes.
+    */
+   protected MemoryWrite(MemoryLocation location, int[] data)
+   {
+      super(location, data);
    }
 
    /**

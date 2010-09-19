@@ -98,11 +98,12 @@ public class TestADCRead
    @Test
    public final void testToRawData()
    {
-      final ADCRead app = new ADCRead(6, 16);
-      final int[] rawData = new int[2];
+      final Application app = new ADCRead(6, 16);
 
-      assertEquals(2, app.toRawData(rawData, 0));
-      assertArrayEquals(new int[] { 0x86, 0x10 }, rawData);
+      final byte[] expected = HexString.valueOf("01 86 10");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test

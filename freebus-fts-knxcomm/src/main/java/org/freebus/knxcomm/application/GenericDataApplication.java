@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -88,22 +89,13 @@ public class GenericDataApplication extends AbstractApplication
     * {@inheritDoc}
     */
    @Override
-   public int toRawData(int[] rawData, int start)
+   public void writeData(DataOutput out) throws IOException
    {
-      final int dataMask = type.getDataMask();
-      final int[] data = getData();
-      final int apci = type.getApci();
-      int pos = start;
-
-      rawData[pos++] = ((apci & ~dataMask) | (getApciValue() & dataMask)) & 255;
-
       if (data != null)
       {
          for (int i = 0; i < data.length; ++i)
-            rawData[pos++] = data[i];
+            out.write(data[i]);
       }
-
-      return pos - start;
    }
 
    /**

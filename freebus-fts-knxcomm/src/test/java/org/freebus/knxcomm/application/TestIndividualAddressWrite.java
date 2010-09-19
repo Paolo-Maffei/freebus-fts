@@ -1,5 +1,6 @@
 package org.freebus.knxcomm.application;
 
+import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
@@ -53,22 +54,22 @@ public class TestIndividualAddressWrite
    @Test
    public final void testToRawData()
    {
-      final IndividualAddressWrite app = new IndividualAddressWrite(new PhysicalAddress(50, 60));
-      final int[] rawData = new int[16];
-      assertEquals(3, app.toRawData(rawData, 0));
-      assertEquals(ApplicationType.IndividualAddress_Write.getApci() & 255, rawData[0]);
-      assertEquals(50, rawData[1]);
-      assertEquals(60, rawData[2]);
+      final Application app = new IndividualAddressWrite(new PhysicalAddress(1, 2));
+
+      final byte[] expected = HexString.valueOf("00 c0 01 02");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 
    @Test
    public final void testToRawDataNullAddr()
    {
       final IndividualAddressWrite app = new IndividualAddressWrite();
-      final int[] rawData = new int[16];
-      assertEquals(3, app.toRawData(rawData, 0));
-      assertEquals(ApplicationType.IndividualAddress_Write.getApci() & 255, rawData[0]);
-      assertEquals(0, rawData[1]);
-      assertEquals(0, rawData[2]);
+
+      final byte[] expected = HexString.valueOf("00 c0 00 00");
+      final byte[] rawData = app.toByteArray();
+
+      assertArrayEquals(expected, rawData);
    }
 }
