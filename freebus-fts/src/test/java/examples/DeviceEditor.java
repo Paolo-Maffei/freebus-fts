@@ -1,4 +1,4 @@
-package non_unit_tests;
+package examples;
 
 import java.awt.BorderLayout;
 import java.awt.Cursor;
@@ -71,7 +71,7 @@ public class DeviceEditor
             try
             {
                frame.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-               final Device dev = new Device(0, virtualDevices[idx]);
+               final Device dev = new Device(virtualDevices[idx]);
                paramEdit.setDevice(dev);
             }
             catch (Exception e)

@@ -109,7 +109,7 @@ public class DeviceDescriptorResponse extends AbstractApplication
    @Override
    public void writeData(DataOutput out) throws IOException
    {
-      out.write(descriptor.toByteArray());
+      descriptor.writeData(out);
    }
 
    /**

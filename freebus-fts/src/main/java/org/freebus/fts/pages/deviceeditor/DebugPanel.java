@@ -1,6 +1,7 @@
 package org.freebus.fts.pages.deviceeditor;
 
 import java.awt.BorderLayout;
+import java.awt.Font;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.Arrays;
@@ -9,12 +10,15 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.swing.BorderFactory;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
+import org.freebus.fts.core.I18n;
 import org.freebus.fts.pages.DeviceEditor;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
@@ -42,6 +46,11 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
    public DebugPanel()
    {
       setLayout(new BorderLayout());
+
+      final JLabel caption = new JLabel(I18n.getMessage("DeviceEditor.DebugPanel.Caption"));
+      caption.setFont(caption.getFont().deriveFont(Font.BOLD));
+      caption.setBorder(BorderFactory.createEmptyBorder(6, 4, 6, 4));
+      add(caption, BorderLayout.NORTH);
 
       tree = new JTree(rootNode);
       tree.setRootVisible(false);
@@ -83,18 +92,38 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
          return;
 
       final Map<Parameter, DefaultMutableTreeNode> paramNodes = new HashMap<Parameter, DefaultMutableTreeNode>();
+      final Parameter[] params = sortParametersByDisplayOrder(device.getProgram().getParameters());
 
-      for (final Parameter param : sortParametersByDisplayOrder(device.getProgram().getParameters()))
+      boolean foundWork = true;
+      for (int tries = 20; tries > 0 && foundWork; --tries)
       {
-         final Parameter parentParam = param.getParent();
+         foundWork = false;
 
-         DefaultMutableTreeNode parentNode = parentParam == null ? null : paramNodes.get(parentParam);
-         if (parentNode == null || param.isPage())
-            parentNode = rootNode;
+         for (final Parameter param : params)
+         {
+            if (paramNodes.containsKey(param))
+               continue;
 
-         final DefaultMutableTreeNode paramNode = new DefaultMutableTreeNode(param, true);
-         parentNode.add(paramNode);
-         paramNodes.put(param, paramNode);
+            final Parameter parentParam = param.getParent();
+            DefaultMutableTreeNode parentNode;
+
+            if (parentParam == null)
+            {
+               parentNode = rootNode;
+            }
+            else
+            {
+               parentNode = paramNodes.get(parentParam);
+               if (parentNode == null)
+                  continue;
+            }
+
+            foundWork = true;
+
+            final DefaultMutableTreeNode paramNode = new DefaultMutableTreeNode(param, true);
+            parentNode.add(paramNode);
+            paramNodes.put(param, paramNode);
+         }
       }
 
       for (final CommunicationObject comObj : sortCommunicationObjectsByDisplayOrder(device.getProgram()

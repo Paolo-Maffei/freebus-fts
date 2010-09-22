@@ -1,4 +1,4 @@
-package non_unit_tests;
+package examples;
 
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.core.AudioClip;

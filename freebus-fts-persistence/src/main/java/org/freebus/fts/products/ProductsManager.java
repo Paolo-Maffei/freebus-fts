@@ -60,7 +60,7 @@ public final class ProductsManager
     */
    public static ProductsImporter getProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {
-      //return new DirectProductsImporter(sourceFactory, destFactory);
+//      return new DirectProductsImporter(sourceFactory, destFactory);
       return new RemappingProductsImporter(sourceFactory, destFactory);
    }
 

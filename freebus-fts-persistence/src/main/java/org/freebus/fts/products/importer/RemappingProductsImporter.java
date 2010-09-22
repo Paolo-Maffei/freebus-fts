@@ -380,6 +380,7 @@ public final class RemappingProductsImporter implements ProductsImporter
       for (final VirtualDevice device : devices)
       {
          final Program prog = device.getProgram();
+         prog.getMask().setId(0);
 
          final String fingerPrint = getFingerPrint(prog);
          final Program knownProg = knownPrograms.get(fingerPrint);

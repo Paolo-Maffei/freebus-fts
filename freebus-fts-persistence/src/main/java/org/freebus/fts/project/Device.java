@@ -346,12 +346,17 @@ public final class Device
     */
    public boolean isVisible(final CommunicationObject comObject)
    {
+      if (comObject.getNumber() == 3)
+      {
+         Logger.getLogger(getClass()).debug("debug catcher");
+      }
+
       final Parameter param = comObject.getParameter();
       if (param == null)
          return true;
 
       final DeviceParameter devParam = getDeviceParameter(param);
-      if (!devParam.isVisible())
+      if (!devParam.isEnabled())
          return false;
 
       final Integer expectedParamValue = comObject.getParameterValue();
@@ -413,6 +418,8 @@ public final class Device
     */
    public void updateDeviceObjects()
    {
+      Logger.getLogger(getClass()).debug("updateDeviceObjects");
+
       if (program == null)
       {
          deviceObjects.clear();
@@ -445,12 +452,13 @@ public final class Device
          final CommunicationObject comObject = devObject.getComObject();
          final int comObjectNumber = comObject.getNumber();
 
-         if (visibleComObjects.containsKey(comObjectNumber))
+         final CommunicationObject newComObject = visibleComObjects.get(comObjectNumber);
+         if (newComObject != null)
          {
             // Device object is still in use
             // TODO test if the type of the communication object is still
             // correct
-            devObject.setComObject(comObject);
+            devObject.setComObject(newComObject);
             deviceObjects.add(devObject);
             visibleComObjects.put(comObjectNumber, null);
          }
@@ -472,10 +480,10 @@ public final class Device
          deviceObjects.add(devObject);
       }
 
-      // for (final DeviceObject devObject : deviceObjects)
-      // Logger.getLogger(getClass()).debug("  visible device object #" +
-      // devObject.getId() + " (com-object #" + devObject.getComObject().getId()
-      // + ")");
+      for (final DeviceObject devObject : deviceObjects)
+         Logger.getLogger(getClass()).debug(
+               "  visible device object #" + devObject.getId() + " (com-object #" + devObject.getComObject().getId()
+                     + ")");
    }
 
    /**

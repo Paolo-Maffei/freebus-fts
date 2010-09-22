@@ -157,17 +157,23 @@ public class DeviceParameter
     */
    public boolean isVisible()
    {
-      // TODO verify Merten  #626199 - INSTABUS Tastermodul 1fach System Fläche
-      // in merten-ets.vd_
-
-      if (parameter.getHighAccess() == 0)
+      if (!isEnabled())
          return false;
 
+      return getParameter().getHighAccess() != 0;
+   }
+
+   /**
+    * @return True if the parameter is enabled.
+    */
+   public boolean isEnabled()
+   {
       final DeviceParameter parent = getParent();
+
       if (parent == null)
          return true;
 
-      if (!parent.isVisible())
+      if (!parent.isEnabled())
          return false;
 
       final Integer expectedParentValue = parameter.getParentValue();
@@ -214,5 +220,23 @@ public class DeviceParameter
             stringValue = "";
          else stringValue = value.toString();
       }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return parameter == null ? 0 : parameter.hashCode();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return "#" + (parameter == null ? -1 : parameter.getId()) + " value " + value;
    }
 }

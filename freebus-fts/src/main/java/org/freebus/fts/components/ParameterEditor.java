@@ -6,8 +6,6 @@ import java.awt.Dimension;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.Vector;
 
@@ -20,11 +18,10 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.components.parametereditor.DeviceParamData;
 import org.freebus.fts.components.parametereditor.Page;
-import org.freebus.fts.components.parametereditor.ParamData;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.DeviceParameter;
 import org.freebus.fts.project.ProjectManager;
 
 /**
@@ -32,19 +29,17 @@ import org.freebus.fts.project.ProjectManager;
  */
 public class ParameterEditor extends JPanel
 {
-   private static final long serialVersionUID = -2143429346277511397L;
+   private static final long serialVersionUID = -2143429348377511397L;
 
    private JTabbedPane paramTabs = new JTabbedPane(JTabbedPane.LEFT);
-   private int tabWidth = 150;
+   private int tabWidth = 200;
    private int tabHeight;
 
    private Device device;
-   private Map<Parameter, ParamData> paramDatas;
-   private final List<Page> paramPages = new Vector<Page>();
+   private final Vector<Page> paramPages = new Vector<Page>();
    private final EventListenerList listenerList = new EventListenerList();
    private transient ChangeEvent changeEvent = null;
-   private boolean updateContentsEnabled;
-   private boolean inStateChanged;
+   private boolean updateContentsEnabled, inStateChanged;
 
    /**
     * Create a parameter editor.
@@ -60,10 +55,7 @@ public class ParameterEditor extends JPanel
          public void stateChanged(ChangeEvent e)
          {
             final Component comp = paramTabs.getSelectedComponent();
-            if (!(comp instanceof Page))
-               return;
-
-            if (updateContentsEnabled)
+            if (updateContentsEnabled && comp instanceof Page)
                ((Page) comp).updateContents();
          }
       });
@@ -90,9 +82,9 @@ public class ParameterEditor extends JPanel
 
    /**
     * Adds a <code>ChangeListener</code> to this object.
-    *
+    * 
     * @param l the <code>ChangeListener</code> to add
-    *
+    * 
     * @see #fireStateChanged
     * @see #removeChangeListener
     */
@@ -103,7 +95,7 @@ public class ParameterEditor extends JPanel
 
    /**
     * Removes a <code>ChangeListener</code> from this object.
-    *
+    * 
     * @param l the <code>ChangeListener</code> to remove
     * @see #fireStateChanged
     * @see #addChangeListener
@@ -128,9 +120,10 @@ public class ParameterEditor extends JPanel
       {
          if (listeners[i] == ChangeListener.class)
          {
-            // Lazily create the event:
+            // Lazily create the event
             if (changeEvent == null)
                changeEvent = new ChangeEvent(this);
+
             ((ChangeListener) listeners[i + 1]).stateChanged(changeEvent);
          }
       }
@@ -145,63 +138,61 @@ public class ParameterEditor extends JPanel
 
       paramPages.clear();
       paramTabs.removeAll();
-      paramDatas = DeviceParamData.createParamData(device);
 
-      // Sort the parameter-data objects by display-order
-      final ParamData[] paramDataArr = new ParamData[paramDatas.size()];
-      paramDatas.values().toArray(paramDataArr);
-      Arrays.sort(paramDataArr, new Comparator<ParamData>()
+      if (device == null)
+      {
+         updateContentsEnabled = true;
+         return;
+      }
+
+      //
+      // Get the parameters and sort them by display order
+      //
+      final Set<Parameter> paramsSet = device.getProgram().getParameters();
+      final Parameter[] paramsSorted = new Parameter[paramsSet.size()];
+      paramsSet.toArray(paramsSorted);
+      Arrays.sort(paramsSorted, new Comparator<Parameter>()
       {
          @Override
-         public int compare(ParamData a, ParamData b)
+         public int compare(Parameter a, Parameter b)
          {
             return a.getDisplayOrder() - b.getDisplayOrder();
          }
       });
 
-      // Set the dependent parameters of the parameter-data objects
-      for (final ParamData data : paramDataArr)
-      {
-         final Parameter param = data.getParameter();
-         final Parameter parentParam = param.getParent();
-         if (parentParam == null)
-            continue;
-
-         if (!paramDatas.containsKey(parentParam))
-         {
-            Logger.getLogger(getClass()).error(
-                  String.format("Parameter #%1$d has an unknown parent parameter #%2$d", param.getId(),
-                        parentParam.getId()));
-            continue;
-         }
-
-         paramDatas.get(parentParam).addChild(paramDatas.get(param));
-      }
-
-      // Create the parameter pages and add the parameter-data objects to their
-      // pages
+      //
+      // Create the parameter pages.
+      // Fill the "normal" parameters into the parameter pages.
+      //
       Page page = null;
-      for (final ParamData data : paramDataArr)
+      for (final Parameter param : paramsSorted)
       {
-         if (data.isPage() && (page == null || page.getDisplayOrder() != data.getDisplayOrder()))
-         {
-            page = new Page(data);
-            page.addChangeListener(paramValueChangedListener);
+         final DeviceParameter devParam = device.getDeviceParameter(param);
 
-            paramPages.add(page);
+         if (param.isPage())
+         {
+            if (page != null && page.getDisplayOrder() == param.getDisplayOrder())
+               page.addPageParam(devParam);
+            else
+            {
+               page = new Page(devParam);
+               page.addChangeListener(paramValueChangedListener);
+               paramPages.add(page);
+               paramTabs.add(param.getName(), page);
+            }
          }
          else if (page != null)
          {
-            page.addParamData(data);
+            page.addParam(devParam);
          }
          else
          {
             // Parameter does not belong to a page
-            Logger.getLogger(getClass()).debug("Skipping orphaned parameter: " + data.getParameter());
+            Logger.getLogger(getClass()).debug("Parameter does not belong to a page: " + param);
          }
       }
 
-      updateVisibility();
+      updatePagesVisibility();
 
       if (paramTabs.getComponentCount() > 0)
       {
@@ -210,12 +201,14 @@ public class ParameterEditor extends JPanel
          paramTabs.setSelectedIndex(0);
          updateContentsEnabled = true;
       }
+
+      updateContentsEnabled = true;
    }
 
    /**
     * Update the visibility of the parameter pages.
     */
-   public void updateVisibility()
+   public void updatePagesVisibility()
    {
       // Logger.getLogger(getClass()).debug("start updateVisibility");
       updateContentsEnabled = false;
@@ -224,7 +217,7 @@ public class ParameterEditor extends JPanel
       final Set<Page> visiblePages = new HashSet<Page>();
       for (final Page page : paramPages)
       {
-         if (page.getPageData().isVisible())
+         if (page.isPageVisible())
             visiblePages.add(page);
       }
 
@@ -239,7 +232,7 @@ public class ParameterEditor extends JPanel
          if (visiblePages.contains(page))
          {
             paramTabs.setTitleAt(i, page.getName());
-            paramTabs.setToolTipTextAt(i, "Debug: parameter-id is " + page.getPageParameter().getId());
+            paramTabs.setToolTipTextAt(i, "Debug: parameter #" + page.getVisibleDevParameter().getParameter().getNumber());
             visiblePages.remove(page);
          }
          else paramTabs.remove(i);
@@ -268,18 +261,17 @@ public class ParameterEditor extends JPanel
          ++i;
          paramTabs.add(page, i);
          paramTabs.setTabComponentAt(i, tabLabel);
-         paramTabs.setToolTipTextAt(i, "Debug: parameter-id is " + page.getPageParameter().getId());
+         paramTabs.setToolTipTextAt(i, "Debug: parameter #" + page.getVisibleDevParameter().getParameter().getNumber());
       }
 
       // Ensure that all tabs have the same width and that the tabs will not
-      // shrink
-      // if the widest tab is removed.
-      if (paramTabs.getTabCount() > 0)
-      {
-         final Dimension preferredSize = new Dimension(tabWidth, tabHeight + 4);
-         for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
-            paramTabs.getTabComponentAt(i).setPreferredSize(preferredSize);
-      }
+      // shrink when the widest tab is removed.
+//      if (paramTabs.getTabCount() > 0)
+//      {
+//         final Dimension preferredSize = new Dimension(tabWidth, tabHeight + 4);
+//         for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
+//            paramTabs.getTabComponentAt(i).setPreferredSize(preferredSize);
+//      }
 
       updateContentsEnabled = true;
       // Logger.getLogger(getClass()).debug("end updateVisibility");
@@ -291,10 +283,7 @@ public class ParameterEditor extends JPanel
    public void apply()
    {
       if (device != null)
-      {
-         DeviceParamData.applyParamData(device, paramDatas);
          ProjectManager.getController().parametersChanged(device);
-      }
    }
 
    /**
@@ -308,10 +297,9 @@ public class ParameterEditor extends JPanel
          if (!updateContentsEnabled)
             return;
 
-         final ParamData data = (ParamData) e.getSource();
          fireStateChanged();
 
-         if (!inStateChanged && data.hasChildren())
+         if (!inStateChanged)
          {
             SwingUtilities.invokeLater(new Runnable()
             {
@@ -321,7 +309,7 @@ public class ParameterEditor extends JPanel
                   try
                   {
                      inStateChanged = true;
-                     updateVisibility();
+                     updatePagesVisibility();
 
                      final Component currentPageComp = paramTabs.getSelectedComponent();
                      if (currentPageComp instanceof Page)
@@ -334,6 +322,34 @@ public class ParameterEditor extends JPanel
                }
             });
          }
+
+         //
+         // final ParamData data = (ParamData) e.getSource();
+         // fireStateChanged();
+         //
+         // if (!inStateChanged && data.hasChildren())
+         // {
+         // SwingUtilities.invokeLater(new Runnable()
+         // {
+         // @Override
+         // public void run()
+         // {
+         // try
+         // {
+         // inStateChanged = true;
+         // updateVisibility();
+         //
+         // final Component currentPageComp = paramTabs.getSelectedComponent();
+         // if (currentPageComp instanceof Page)
+         // ((Page) currentPageComp).updateContents();
+         // }
+         // finally
+         // {
+         // inStateChanged = false;
+         // }
+         // }
+         // });
+         // }
       }
    };
 }

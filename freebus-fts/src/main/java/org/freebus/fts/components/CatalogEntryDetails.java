@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -110,10 +111,14 @@ public final class CatalogEntryDetails extends JPanel
       entWidthMM.setText("" + entry.getWidthMM());
       entDinRail.setText(I18n.getMessage(entry.getDIN() ? "CatalogEntryDetails.DIN_Yes" : "CatalogEntryDetails.DIN_No"));
 
+      ProductDescriptionService prodDescService = productDescriptionService;
+      if (prodDescService == null)
+         prodDescService = ProductsManager.getFactory().getProductDescriptionService();
+
       try
       {
          final StringBuilder descSB = new StringBuilder();
-         final List<String> lines = productDescriptionService.getProductDescription(entry);
+         final List<String> lines = prodDescService.getProductDescription(entry);
          if (lines != null)
          {
             for (String line : lines)

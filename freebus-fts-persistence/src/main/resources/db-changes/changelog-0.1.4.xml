@@ -132,4 +132,12 @@
   </addColumn>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-8">
+  <addColumn tableName="communication_object">
+   <column name="object_unique_number" type="SMALLINT" defaultValueNumeric="0">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet>
+
 </databaseChangeLog>

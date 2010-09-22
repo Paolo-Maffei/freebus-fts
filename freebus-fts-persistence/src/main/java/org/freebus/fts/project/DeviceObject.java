@@ -63,8 +63,8 @@ public class DeviceObject implements Comparable<DeviceObject>
    @Column(name = "object_readoninit", nullable = false)
    private boolean readOnInit;
 
-   @Column(name = "device_object_visible", nullable = false)
-   private boolean visible;
+//   @Column(name = "device_object_visible", nullable = false)
+//   private boolean visible;
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "device_object_type", nullable = true)
@@ -269,15 +269,7 @@ public class DeviceObject implements Comparable<DeviceObject>
     */
    public boolean isVisible()
    {
-      return visible;
-   }
-
-   /**
-    * @param visible the visible to set
-    */
-   public void setVisible(boolean visible)
-   {
-      this.visible = visible;
+      return device.isVisible(getComObject());
    }
 
    /**

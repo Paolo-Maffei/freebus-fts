@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application.devicedescriptor;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 
 /**
@@ -136,14 +137,9 @@ public class DeviceDescriptor0 implements DeviceDescriptor
     * {@inheritDoc}
     */
    @Override
-   public byte[] toByteArray()
+   public void writeData(DataOutput out) throws IOException
    {
-      final byte[] data = new byte[2];
-
-      data[0] = (byte) (maskVersion >> 8);
-      data[1] = (byte) maskVersion;
-
-      return data;
+      out.writeShort(maskVersion);
    }
 
    /**

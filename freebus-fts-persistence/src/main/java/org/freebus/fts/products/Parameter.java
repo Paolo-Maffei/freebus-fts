@@ -188,7 +188,7 @@ public class Parameter
 
    /**
     * Get the parameter type.
-    *
+    * 
     * @return the parameter type.
     */
    public ParameterType getParameterType()
@@ -204,6 +204,21 @@ public class Parameter
    public void setParameterType(ParameterType paramType)
    {
       this.paramType = paramType;
+   }
+
+   /**
+    * Get the {@link ParameterAtomicType atomic type} of the parameter. This is
+    * a shortcut that fetches the atomic type from the parameter's
+    * {@link #getParameterType() parameter type} object.
+    * 
+    * @return The atomic type of the parameter, or null if the parameter has no
+    *         {@link #getParameterType() parameter type}.
+    */
+   public ParameterAtomicType getAtomicType()
+   {
+      if (paramType == null)
+         return null;
+      return paramType.getAtomicType();
    }
 
    /**
@@ -252,8 +267,12 @@ public class Parameter
    }
 
    /**
-    * Get the parameter high-access. The parameter is invisible if high-access
-    * is 0. Observed values: 0, 1, 2.
+    * Get the parameter high-access. The following values can be returned:
+    * <ul>
+    * <li>0 - the parameter is invisible,
+    * <li>1 - the parameter is read-only,
+    * <li>2 - the parameter is read/write.
+    * </ul>
     * 
     * @return the high-access.
     */
@@ -515,10 +534,24 @@ public class Parameter
     * {@link #getAddress() address} is null.
     * 
     * @return true if the parameter is a page.
+    * @see #isLabel()
     */
    public boolean isPage()
    {
       return address == null;
+   }
+
+   /**
+    * Test if the parameter denotes a label (a fixed text without a value). This
+    * is, if the {@link #getAddress() address} is not null and the
+    * {@link #getAtomicType() atomic type} is {@link ParameterAtomicType#NONE}.
+    * 
+    * @return true if the parameter is a page.
+    * @see #isPage()
+    */
+   public boolean isLabel()
+   {
+      return getAtomicType() == ParameterAtomicType.NONE && address != null;
    }
 
    /**

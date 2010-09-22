@@ -8,7 +8,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.bus.DeviceMemoryAdapter;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -194,12 +193,9 @@ public class DeviceMemoryTableModel extends MemoryTableModel
             I18n.getMessage("DeviceMemoryTableModel.CommunicationsTable"));
       createRange(program.getAssocTabAddr(), program.getAssocTabSize(),
             I18n.getMessage("DeviceMemoryTableModel.AssociationTable"));
-      createRange(mask.getManufacturerIdAddress(), 2,
-            I18n.getMessage("DeviceMemoryTableModel.ManufacturerId"));
-      createRange(mask.getRouteCountAddress(), 1,
-            I18n.getMessage("DeviceMemoryTableModel.RouteCount"));
-      createRange(mask.getRunErrorAddress(), 1,
-            I18n.getMessage("DeviceMemoryTableModel.RunError"));
+      createRange(mask.getManufacturerIdAddress(), 2, I18n.getMessage("DeviceMemoryTableModel.ManufacturerId"));
+      createRange(mask.getRouteCountAddress(), 1, I18n.getMessage("DeviceMemoryTableModel.RouteCount"));
+      createRange(mask.getRunErrorAddress(), 1, I18n.getMessage("DeviceMemoryTableModel.RunError"));
 
       start = mask.getAddressTabAddress();
       createRange(start, program.getAddrTabSize(), I18n.getMessage("DeviceMemoryTableModel.AddressTable"));
@@ -223,7 +219,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
          String oldLbl = cell.getLabel();
          if (oldLbl == null)
             oldLbl = "Address: " + addr;
-         final String paramLbl = String.format("<br>" + paramsTmpl, new Object[] { param.getId(), param.getSize(),
+         final String paramLbl = String.format("<br>" + paramsTmpl, new Object[] { param.getNumber(), param.getSize(),
                param.getBitOffset() });
          cell.setLabel(oldLbl + paramLbl);
       }
@@ -300,7 +296,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       if (device == null)
          return;
 
-      Logger.getLogger(getClass()).debug("updateContents");
+      // Logger.getLogger(getClass()).debug("updateContents");
       unsetModified();
 
       oldValues.clear();
@@ -337,9 +333,10 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
          if (setValue(addr, newValue))
          {
-            Logger.getLogger(getClass()).debug(
-                  "@" + addr + ": " + oldValue + "->" + newValue + " (param #" + param.getId() + " value " + paramValue
-                        + ", " + bits + " bits, offset " + bitOffset + ")");
+            // Logger.getLogger(getClass()).debug(
+            // "@" + addr + ": " + oldValue + "->" + newValue + " (param #" +
+            // param.getId() + " value " + paramValue
+            // + ", " + bits + " bits, offset " + bitOffset + ")");
          }
       }
 
@@ -356,9 +353,9 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       for (final ObjectDescriptor objDesc : objDescs)
       {
          final byte[] data = objDesc.toByteArray();
-         setValue(++pos, data[0]); 
-         setValue(++pos, data[1]); 
-         setValue(++pos, data[2]); 
+         setValue(++pos, data[0]);
+         setValue(++pos, data[1]);
+         setValue(++pos, data[2]);
          setValue(objDesc.getDataPointer(), ++idx);
       }
 
@@ -377,10 +374,13 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       for (Integer addr : oldValues.keySet())
       {
          final MemoryCell cell = getValueAt(addr);
-         if (oldValues.get(addr) != cell.getValue())
-            Logger.getLogger(getClass()).debug(
-                  "@" + addr + ": modified " + oldValues.get(addr) + "->" + cell.getValue());
-         else cell.setModified(false);
+         if (oldValues.get(addr) == cell.getValue())
+            cell.setModified(false);
+//         else
+//         {
+//            Logger.getLogger(getClass()).debug(
+//                  "@" + addr + ": modified " + oldValues.get(addr) + "->" + cell.getValue());
+//         }
       }
 
       fireTableChanged(0, getRowCount());

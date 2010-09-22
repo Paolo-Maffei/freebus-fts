@@ -48,6 +48,9 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    @Column(name = "object_number", nullable = false)
    private int number;
 
+   @Column(name = "object_unique_number", nullable = false)
+   private int uniqueNumber;
+
    @Column(name = "object_readenabled", nullable = false)
    private boolean readEnabled;
 
@@ -165,6 +168,31 @@ public class CommunicationObject implements Comparable<CommunicationObject>
     * Set the unique number.
     * 
     * @param number - The unique number to set.
+    * 
+    * @see #getUniqueNumber()
+    */
+   public void setUniqueNumber(int uniqueNumber)
+   {
+      this.uniqueNumber = uniqueNumber;
+   }
+
+   /**
+    * The unique number is unique within the {@link Program application program}
+    * .
+    * 
+    * @return The unique number.
+    */
+   public int getUniqueNumber()
+   {
+      return uniqueNumber;
+   }
+
+   /**
+    * Set the number.
+    * 
+    * @param number - The unique number to set.
+    * 
+    * @see #getNumber()
     */
    public void setNumber(int number)
    {
@@ -172,15 +200,15 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    }
 
    /**
-    * The "unique number" is used to identify communication objects that belong
-    * together. The number is unique for the owning program.
+    * The "number" is used to identify communication objects that belong
+    * together.
     * 
     * When parameter visibility is changed, the communication objects would
-    * change too. With the unique number it is possible to find the correct
-    * "other" communication object that is the same as the one that was
-    * currently in use.
+    * change too. With this number it is possible to find the correct "other"
+    * communication object that is the same as the one that was currently in
+    * use.
     * 
-    * @return The unique number of this communication object.
+    * @return The number of this communication object.
     */
    public int getNumber()
    {

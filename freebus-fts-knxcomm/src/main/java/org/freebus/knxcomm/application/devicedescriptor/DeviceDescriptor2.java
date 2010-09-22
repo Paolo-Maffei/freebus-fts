@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.application.devicedescriptor;
 
 import java.io.DataInput;
+import java.io.DataOutput;
 import java.io.IOException;
 import java.util.Arrays;
 
@@ -187,27 +188,18 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * @return the object as data byte array.
+    * {@inheritDoc}
     */
-   public byte[] toByteArray()
+   @Override
+   public void writeData(DataOutput out) throws IOException
    {
-      final byte[] data = new byte[14];
-
-      int pos = 0;
-      data[pos++] = (byte) (manufacturer >> 8);
-      data[pos++] = (byte) manufacturer;
-      data[pos++] = (byte) (type >> 8);
-      data[pos++] = (byte) type;
-      data[pos++] = (byte) version;
-      data[pos++] = (byte) ((misc << 6) | (logicalTags & 63));
+      out.writeShort(manufacturer);
+      out.writeShort(type);
+      out.writeByte(version);
+      out.writeByte((misc << 6) | (logicalTags & 63));
 
       for (int i = 0; i < channelInfos.length; ++i)
-      {
-         data[pos++] = (byte) (channelInfos[i] >> 8);
-         data[pos++] = (byte) channelInfos[i];
-      }
-
-      return data;
+         out.writeShort(channelInfos[i]);
    }
 
    /**

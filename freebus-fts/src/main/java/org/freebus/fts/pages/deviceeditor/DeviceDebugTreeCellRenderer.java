@@ -10,6 +10,7 @@ import javax.swing.tree.DefaultTreeCellRenderer;
 import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
+import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceParameter;
 
@@ -25,7 +26,9 @@ public class DeviceDebugTreeCellRenderer extends DefaultTreeCellRenderer
    private static final long serialVersionUID = -6988751970917478985L;
 
    private final Icon comObjectIcon = ImageCache.getIcon("icons/com-object");
-   private final Icon parameterIcon = ImageCache.getIcon("icons/empty-page");
+   private final Icon parameterIcon = ImageCache.getIcon("icons/completion");
+   private final Icon parameterLabelIcon = ImageCache.getIcon("icons/charset");
+   private final Icon parameterPageIcon = ImageCache.getIcon("icons/empty-page");
 
    private Device device;
 
@@ -48,7 +51,14 @@ public class DeviceDebugTreeCellRenderer extends DefaultTreeCellRenderer
          }
          else if (userObject instanceof Parameter)
          {
-            setIcon(parameterIcon);
+            final Parameter param = (Parameter) userObject;
+
+            if (param.isPage())
+               setIcon(parameterPageIcon);
+            else if (param.isLabel())
+               setIcon(parameterLabelIcon);
+            else setIcon(parameterIcon);
+
             setTextFor((Parameter) userObject);
          }
          else setText(userObject.toString());
@@ -81,20 +91,21 @@ public class DeviceDebugTreeCellRenderer extends DefaultTreeCellRenderer
       final StringBuilder sb = new StringBuilder();
       if (!visible)
          sb.append("<");
-      sb.append("COM #").append(comObject.getId()).append(" ").append(comObject.getName());
+      sb.append("COM-").append(comObject.getNumber()).append(" #").append(comObject.getUniqueNumber()).append(" ")
+            .append(comObject.getName());
       if (!visible)
          sb.append(">");
-      sb.append(", com-object number ").append(comObject.getNumber());
 
-      sb.append(" ... [visible: ");
+      sb.append(" ... ").append(comObject.getObjectType().getName());
+
+      sb.append("  ... [visible: ");
       if (parentParam == null)
          sb.append("always");
-      else if (parentParam.getLowAccess() == 0)
+      else if (parentParam.getHighAccess() == 0)
          sb.append("never");
       else if (expectedParamValue == null)
-         sb.append("if #").append(parentParam.getId()).append(" is visible");
-      else sb.append("if #").append(parentParam.getId()).append(".value == ")
-            .append(expectedParamValue);
+         sb.append("if #").append(parentParam.getNumber()).append(" is visible");
+      else sb.append("if #").append(parentParam.getNumber()).append(".value == ").append(expectedParamValue);
       sb.append("]");
 
       setText(sb.toString());
@@ -114,24 +125,27 @@ public class DeviceDebugTreeCellRenderer extends DefaultTreeCellRenderer
       final StringBuilder sb = new StringBuilder();
       if (!visible)
          sb.append("<");
-      sb.append("#").append(param.getId()).append(" ").append(param.getDescription());
+      sb.append("#").append(param.getNumber()).append(" ").append(param.getDescription().replaceAll("\\\\r\\\\n", " "));
       if (!visible)
          sb.append(">");
-      sb.append(":  value ").append(devParam.getIntValue());
-      sb.append(", parameter number ").append(param.getNumber());
+      sb.append(" ...");
+      if (param.getAtomicType() != ParameterAtomicType.NONE)
+         sb.append(" value ").append(devParam.getIntValue());
 
       sb.append(" ...  [visible: ");
 
-      if (param.getHighAccess() == 0)
-         sb.append("never");
-      else if (parentParam == null)
-         sb.append("always");
+      if (parentParam == null)
+      {
+         if (param.getHighAccess() == 0)
+            sb.append("never");
+         else sb.append("always");
+      }
       else
       {
          final Integer expectedParentValue = param.getParentValue();
          if (expectedParentValue == null)
-            sb.append("if #").append(parentParam.getId()).append(" is visible");
-         else sb.append("if #").append(parentParam.getId()).append(".value == ").append(expectedParentValue);
+            sb.append("if #").append(parentParam.getNumber()).append(" is visible");
+         else sb.append("if #").append(parentParam.getNumber()).append(".value == ").append(expectedParentValue);
       }
       sb.append("]");
 

@@ -1,4 +1,4 @@
-package non_unit_tests;
+package examples;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

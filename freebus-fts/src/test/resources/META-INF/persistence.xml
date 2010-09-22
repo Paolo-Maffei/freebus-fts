@@ -2,16 +2,9 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence persistence_2_0.xsd"
- version="2.0">
+ version="1.0">
 
  <persistence-unit name="default">
-  <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <properties>
-   <property name="eclipselink.logging.level" value="FINER" />
-  </properties>
- </persistence-unit>
-
- <persistence-unit name="test-full">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <!-- products -->
   <class>org.freebus.fts.products.CatalogEntry</class>
@@ -23,6 +16,7 @@
   <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.ParameterValue</class>
   <class>org.freebus.fts.products.Product</class>
+  <class>org.freebus.fts.products.ProductDescription</class>
   <class>org.freebus.fts.products.Program</class>
   <class>org.freebus.fts.products.VirtualDevice</class>
   <!-- project -->
@@ -37,45 +31,23 @@
   <class>org.freebus.fts.project.Project</class>
   <class>org.freebus.fts.project.Room</class>
   <class>org.freebus.fts.project.SubGroup</class>
+  <class>org.freebus.fts.project.SubGroupToObject</class>
   <properties>
-   <property name="eclipselink.logging.level" value="FINE" />
-   <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINEST" />
    <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation" value="none" />
+   <!-- property name="eclipselink.ddl-generation" value="create-tables" /-->
+   <!-- property name="eclipselink.ddl-generation" value="drop-and-create-tables" /-->
+   <!-- property name="eclipselink.ddl-generation.output-mode" value="database" /-->
+
+   <property name="hsqldb.default_table_type" value="cached" />
   </properties>
  </persistence-unit>
 
-
- <persistence-unit name="test-full-keep-tables">
-  <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
-  <!-- products -->
-  <class>org.freebus.fts.products.CatalogEntry</class>
-  <class>org.freebus.fts.products.CommunicationObject</class>
-  <class>org.freebus.fts.products.FunctionalEntity</class>
-  <class>org.freebus.fts.products.Manufacturer</class>
-  <class>org.freebus.fts.products.Mask</class>
-  <class>org.freebus.fts.products.Parameter</class>
-  <class>org.freebus.fts.products.ParameterType</class>
-  <class>org.freebus.fts.products.ParameterValue</class>
-  <class>org.freebus.fts.products.Product</class>
-  <class>org.freebus.fts.products.Program</class>
-  <class>org.freebus.fts.products.VirtualDevice</class>
-  <!-- project -->
-  <class>org.freebus.fts.project.Area</class>
-  <class>org.freebus.fts.project.Building</class>
-  <class>org.freebus.fts.project.Device</class>
-  <class>org.freebus.fts.project.DeviceObject</class>
-  <class>org.freebus.fts.project.DeviceParameterValue</class>
-  <class>org.freebus.fts.project.Line</class>
-  <class>org.freebus.fts.project.MainGroup</class>
-  <class>org.freebus.fts.project.MidGroup</class>
-  <class>org.freebus.fts.project.Project</class>
-  <class>org.freebus.fts.project.Room</class>
-  <class>org.freebus.fts.project.SubGroup</class>
-  <properties>
+ <persistence-unit name="connect-test">
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
    <property name="eclipselink.logging.level" value="FINE" />
-   <property name="eclipselink.ddl-generation" value="create-tables" />
-   <property name="eclipselink.ddl-generation.output-mode" value="database" />
-  </properties>
  </persistence-unit>
 
 </persistence>

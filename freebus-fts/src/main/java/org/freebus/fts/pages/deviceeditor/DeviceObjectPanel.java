@@ -198,7 +198,7 @@ public class DeviceObjectPanel extends JPanel
       lblName.setText(comObject.getName() + " - " + comObject.getFunction());
       lblType.setText(comObject.getObjectType().getName());
 
-      final String debugTip = "debug: communication-object-id is " + comObject.getId();
+      final String debugTip = "debug: COM-" + comObject.getNumber() + " #" + comObject.getUniqueNumber();
       lblName.setToolTipText(debugTip);
       lblType.setToolTipText(debugTip);
 

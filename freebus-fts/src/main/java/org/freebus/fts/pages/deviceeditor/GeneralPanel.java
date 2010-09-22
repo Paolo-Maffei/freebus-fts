@@ -23,6 +23,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.fts.components.CatalogEntryDetails;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
@@ -45,6 +46,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    private final JComboBox cboRoom = new JComboBox();
    private final JTextField edtName = new JTextField();
    private final JTextArea edtNotes = new JTextArea();
+   private final CatalogEntryDetails catEntryDetails = new CatalogEntryDetails();
 
    /*
     * Internal class for the rooms combobox
@@ -184,6 +186,11 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       scpNotes.setPreferredSize(new Dimension(100, 100));
 
       //
+      // Catalog entry details
+      //
+      add(catEntryDetails, new GridBagConstraints(0, ++gridy, gridWidth, 1, 1, 1, w, GridBagConstraints.BOTH, blkInsets, 0, 0));
+
+      //
       // Page filler
       //
       add(new Label(), new GridBagConstraints(0, ++gridy, 1, 1, 1, 100, w, GridBagConstraints.BOTH, stdInsets, 0, 0));
@@ -221,6 +228,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
 
       updating = true;
       edtName.setText(device.getName());
+      catEntryDetails.setCatalogEntry(device.getCatalogEntry());
       
       final PhysicalAddress addr = device.getPhysicalAddress();
       lblLineAddr.setText(Integer.toString(addr.getZone()) + '.' + Integer.toString(addr.getLine()) + '.');

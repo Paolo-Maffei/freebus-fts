@@ -56,6 +56,8 @@ public final class DirectProductsImporter implements ProductsImporter
 
       for (VirtualDevice device : devices)
       {
+         device.setId(0);
+
          final CatalogEntry catalogEntry = device.getCatalogEntry();
          if (catalogEntryService.getCatalogEntry(catalogEntry.getId()) == null)
             copy(catalogEntry);

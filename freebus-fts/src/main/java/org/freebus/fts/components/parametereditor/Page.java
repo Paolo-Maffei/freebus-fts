@@ -8,12 +8,10 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.Vector;
+import java.util.concurrent.CopyOnWriteArraySet;
 
 import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
@@ -39,40 +37,44 @@ import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.ParameterType;
 import org.freebus.fts.products.ParameterValue;
+import org.freebus.fts.project.DeviceParameter;
 
 /**
  * A tab page of the parameter editor.
- *
+ * 
  * @see ParameterEditor
  */
 public class Page extends JPanel
 {
-   private static final long serialVersionUID = 719661697391054660L;
+   private static final long serialVersionUID = -1L;
 
-   private final Set<ChangeListener> changeListeners = new HashSet<ChangeListener>();
-   private final List<ParamData> childDatas = new Vector<ParamData>();
-   private final List<ParamData> pageDatas = new Vector<ParamData>();
-   private final JPanel contents;
-   private final JLabel title;
+   private final Set<ChangeListener> changeListeners = new CopyOnWriteArraySet<ChangeListener>();
+   private final Vector<DeviceParameter> pageDevParams = new Vector<DeviceParameter>();
+   private final Vector<DeviceParameter> devParams = new Vector<DeviceParameter>(8000);
    private final int displayOrder;
+
+   private final JLabel title = new JLabel("<title>");
+   private final JPanel contents = new JPanel(new GridBagLayout());
 
    /**
     * Create a tab page for the parameter editor.
-    *
-    * @param data the parameter-data for the parameter which is displayed on
-    *           this the page.
+    * 
+    * @param devParam - the device-parameter of the parameter which represents
+    *           the page.
     */
-   public Page(final ParamData data)
+   public Page(DeviceParameter devParam)
    {
       super(new GridBagLayout());
+      pageDevParams.add(devParam);
+      this.displayOrder = devParam.getParameter().getDisplayOrder();
 
-      displayOrder = data.getDisplayOrder();
-      addParamData(data);
+      // setBackground(new Color((pageParam.getId() & 15) << 4,
+      // (pageParam.getId() >> 4 & 15) << 4,
+      // (pageParam.getId() >> 8 & 15) << 4));
 
       final Insets insets = new Insets(8, 8, 8, 8);
       final Insets separatorInsets = new Insets(0, 8, 0, 8);
 
-      title = new JLabel("???");
       title.setFont(title.getFont().deriveFont(Font.BOLD).deriveFont(title.getFont().getSize() * 1.1f));
       add(title, new GridBagConstraints(0, 0, 1, 1, 1, 0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL,
             insets, 0, 0));
@@ -80,7 +82,6 @@ public class Page extends JPanel
       add(new JSeparator(JSeparator.HORIZONTAL), new GridBagConstraints(0, 1, 1, 1, 1, 0, GridBagConstraints.CENTER,
             GridBagConstraints.HORIZONTAL, separatorInsets, 0, 0));
 
-      contents = new JPanel(new GridBagLayout());
       add(contents, new GridBagConstraints(0, 2, 1, 1, 1, 10, GridBagConstraints.NORTH, GridBagConstraints.HORIZONTAL,
             insets, 0, 0));
 
@@ -88,33 +89,6 @@ public class Page extends JPanel
             insets, 0, 0));
 
       updateName();
-   }
-
-   /**
-    * @return the parameter that represents the page.
-    */
-   public Parameter getPageParameter()
-   {
-      return getPageData().getParameter();
-   }
-
-   /**
-    * Returns the first visible parameter-data. If no parameter-data is visible,
-    * the first parameter-data of the page parameter-data's is returned anyways.
-    *
-    * @return the parameter-data that represents the page.
-    */
-   public ParamData getPageData()
-   {
-      for (final ParamData data : pageDatas)
-      {
-         if (data.isVisible())
-            return data;
-      }
-
-      if (pageDatas.isEmpty())
-         return null;
-      return pageDatas.get(0);
    }
 
    /**
@@ -126,8 +100,75 @@ public class Page extends JPanel
    }
 
    /**
+    * @return True if the page is visible.
+    */
+   /*
+    * WARNING Do NOT rename this method to isVisible(), it will break the
+    * underlying Swing component!
+    */
+   public boolean isPageVisible()
+   {
+      for (final DeviceParameter devParam: pageDevParams)
+      {
+         if (devParam.isVisible())
+            return true;
+      }
+
+      return false;
+   }
+
+   /**
+    * @return The first visible page device-parameter, or null if none is visible.
+    */
+   public DeviceParameter getVisibleDevParameter()
+   {
+      for (final DeviceParameter devParam: pageDevParams)
+      {
+         if (devParam.isVisible())
+            return devParam;
+      }
+
+      return null;
+   }
+
+   /**
+    * Add a device parameter to the page.
+    * 
+    * @param devParam - the device parameter to add.
+    */
+   public void addParam(DeviceParameter devParam)
+   {
+      devParams.add(devParam);
+   }
+
+   /**
+    * Add a page device parameter.
+    * 
+    * @param devParam - the page device parameter to add.
+    */
+   public void addPageParam(DeviceParameter devParam)
+   {
+      pageDevParams.add(devParam);
+   }
+
+   /**
+    * Update the name of the page.
+    */
+   public void updateName()
+   {
+      final Parameter pageParam = pageDevParams.get(0).getParameter();
+
+      String name = pageParam.getDescription();
+      if (name == null || name.isEmpty())
+         name = pageParam.getName();
+
+      setName(name);
+      title.setText(name);
+   }
+
+   /**
     * Add a listener that gets called when a parameter value is changed.
-    *
+    * 
     * @param listener the listener to be added.
     */
    public void addChangeListener(ChangeListener listener)
@@ -137,7 +178,7 @@ public class Page extends JPanel
 
    /**
     * Remove a change listener.
-    *
+    * 
     * @param listener the listener to be removed.
     */
    public void removeChangeListener(ChangeListener listener)
@@ -146,52 +187,22 @@ public class Page extends JPanel
    }
 
    /**
-    * Add a parameter-data object to the page.
-    */
-   public void addParamData(ParamData data)
-   {
-      if (data.isPage() && data.getDisplayOrder() == displayOrder)
-         pageDatas.add(data);
-      else childDatas.add(data);
-   }
-
-   /**
     * Update the contents of the page. Called when the page gets visible.
     */
    public void updateContents()
    {
+//      Logger.getLogger(getClass()).debug(
+//            "Page " + pageDevParam.getParameter() + " (" + pageDevParam.getParameter().getDescription() + ") - updateContents");
+
       updateName();
       contents.removeAll();
 
       int gridRow = -1;
-      for (final ParamData data : childDatas)
+      for (final DeviceParameter devParam : devParams)
       {
-         if (data.isVisible())
-            createParamComponent(data, ++gridRow);
-      }
-   }
-
-   /**
-    * Update the name of the page.
-    */
-   public void updateName()
-   {
-      final ParamData pageData = getPageData();
-      if (pageData == null)
-      {
-         setName("Unnamed");
-         title.setText("Unnamed");
-      }
-      else
-      {
-         final Parameter pageParam = pageData.getParameter();
-
-         String name = pageParam.getDescription();
-         if (name == null || name.isEmpty())
-            name = pageParam.getName();
-
-         setName(name);
-         title.setText(name);
+//         Logger.getLogger(getClass()).debug("   " + devParam.getParameter() + " visible " + devParam.isVisible());
+         if (devParam.isVisible())
+            createParamComponent(devParam, ++gridRow);
       }
    }
 
@@ -199,27 +210,27 @@ public class Page extends JPanel
     * Create a component that can be used to edit the value of the
     * parameter-data <code>data</code>.
     */
-   public void createParamComponent(final ParamData data, int gridRow)
+   public void createParamComponent(final DeviceParameter devParam, int gridRow)
    {
-      final Parameter param = data.getParameter();
-      final ParameterAtomicType atomicType = param.getParameterType().getAtomicType();
+      final Parameter param = devParam.getParameter();
+      final ParameterAtomicType atomicType = param.getAtomicType();
       Component valueComp = null;
 
       if (atomicType == ParameterAtomicType.NONE)
       {
-         createParamNoneComponent(data, gridRow);
+         createParamNoneComponent(devParam, gridRow);
       }
       else if (atomicType == ParameterAtomicType.STRING)
       {
-         valueComp = createParamStringComponent(data, gridRow);
+         valueComp = createParamStringComponent(devParam, gridRow);
       }
       else if (atomicType == ParameterAtomicType.SIGNED || atomicType == ParameterAtomicType.UNSIGNED)
       {
-         valueComp = createParamNumberComponent(data, gridRow);
+         valueComp = createParamNumberComponent(devParam, gridRow);
       }
       else if (atomicType == ParameterAtomicType.ENUM || atomicType == ParameterAtomicType.LONG_ENUM)
       {
-         valueComp = createParamEnumComponent(data, gridRow);
+         valueComp = createParamEnumComponent(devParam, gridRow);
       }
       else
       {
@@ -230,22 +241,23 @@ public class Page extends JPanel
       if (param.getHighAccess() == 1)
          valueComp.setEnabled(false);
 
-//      final Integer addr = param.getAddress();
-//      if (valueComp != null && (addr == null || addr == 0) && param.getBitOffset() == 0)
-//         valueComp.setEnabled(false);
+      // final Integer addr = param.getAddress();
+      // if (valueComp != null && (addr == null || addr == 0) &&
+      // param.getBitOffset() == 0)
+      // valueComp.setEnabled(false);
    }
 
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType#ENUM}.
-    *
-    * @param data the parameter-data to process.
+    * 
+    * @param devParam the parameter-data to process.
     * @param gridRow the row of the contents grid in which the component(s) are
     *           to be added.
     */
-   public Component createParamEnumComponent(final ParamData data, int gridRow)
+   public Component createParamEnumComponent(final DeviceParameter devParam, int gridRow)
    {
-      final Parameter param = data.getParameter();
+      final Parameter param = devParam.getParameter();
       final Set<ParameterValue> valuesSet = param.getParameterType().getValues();
       final ParameterValue[] values = new ParameterValue[valuesSet.size()];
       valuesSet.toArray(values);
@@ -290,7 +302,7 @@ public class Page extends JPanel
          }
       });
 
-      final int value = (Integer) (param.getHighAccess() == 1 ? param.getDefaultLong() : data.getValue());
+      final int value = param.getHighAccess() == 1 ? param.getDefaultLong() : devParam.getIntValue();
       for (final ParameterValue val : values)
       {
          if (val.getIntValue() == value)
@@ -306,8 +318,8 @@ public class Page extends JPanel
          public void actionPerformed(ActionEvent e)
          {
             final ParameterValue val = (ParameterValue) combo.getSelectedItem();
-            data.setValue(val == null ? null : val.getIntValue());
-            fireStateChanged(data);
+            devParam.setValue(val == null ? null : val.getIntValue());
+            fireStateChanged(devParam);
          }
       });
 
@@ -319,20 +331,20 @@ public class Page extends JPanel
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType#SIGNED} or {@link ParameterAtomicType#UNSIGNED}
     * .
-    *
-    * @param data - the parameter-data to process.
+    * 
+    * @param devParam - the parameter-data to process.
     * @param gridRow - the row of the contents grid in which the component(s)
     *           are to be added.
     */
-   public Component createParamNumberComponent(final ParamData data, int gridRow)
+   public Component createParamNumberComponent(final DeviceParameter devParam, int gridRow)
    {
-      final Parameter param = data.getParameter();
+      final Parameter param = devParam.getParameter();
       final ParameterType paramType = param.getParameterType();
 
       final int min = paramType.getMinValue();
       final int max = paramType.getMaxValue();
 
-      int value = (Integer) data.getValue();
+      int value = devParam.getIntValue();
       if (value < min)
          value = min;
       else if (value > max)
@@ -347,8 +359,8 @@ public class Page extends JPanel
          @Override
          public void stateChanged(ChangeEvent e)
          {
-            data.setValue(model.getValue());
-            fireStateChanged(data);
+            devParam.setValue(model.getValue());
+            fireStateChanged(devParam);
          }
       });
 
@@ -360,18 +372,18 @@ public class Page extends JPanel
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType#STRING}.
-    *
-    * @param data - the parameter-data to process.
+    * 
+    * @param devParam - the parameter-data to process.
     * @param gridRow - the row of the contents grid in which the component(s)
     *           are to be added.
     */
-   public Component createParamStringComponent(final ParamData data, int gridRow)
+   public Component createParamStringComponent(final DeviceParameter devParam, int gridRow)
    {
-      final Parameter param = data.getParameter();
+      final Parameter param = devParam.getParameter();
       createParamLabel(param, gridRow, 1);
 
       final JTextArea input = new JTextArea();
-      input.setText((String) data.getValue());
+      input.setText((String) devParam.getValue());
       input.setName("param-" + param.getId());
 
       contentAddComponent(input, gridRow);
@@ -381,15 +393,15 @@ public class Page extends JPanel
          @Override
          public void removeUpdate(DocumentEvent e)
          {
-            data.setValue(input.getText());
-            fireStateChanged(data);
+            devParam.setValue(input.getText());
+            fireStateChanged(devParam);
          }
 
          @Override
          public void insertUpdate(DocumentEvent e)
          {
-            data.setValue(input.getText());
-            fireStateChanged(data);
+            devParam.setValue(input.getText());
+            fireStateChanged(devParam);
          }
 
          @Override
@@ -404,12 +416,12 @@ public class Page extends JPanel
    /**
     * Create a {@link JComponent} for a parameter of the atomic type
     * {@link ParameterAtomicType#NONE}.
-    *
+    * 
     * @param data - the parameter-data to process.
     * @param gridRow - the row of the contents grid in which the component(s)
     *           are to be added.
     */
-   public void createParamNoneComponent(final ParamData data, int gridRow)
+   public void createParamNoneComponent(final DeviceParameter data, int gridRow)
    {
       final Parameter param = data.getParameter();
       final JLabel lbl = createParamLabel(param, gridRow, 2);
@@ -419,13 +431,13 @@ public class Page extends JPanel
    /**
     * Create a label for the parameter. The label is added to the contents grid
     * in column zero, spanning one or more columns.
-    *
+    * 
     * @param param - the parameter whose label shall be used.
     * @param gridRow - the row of the contents grid in which the label is
     *           placed.
     * @param gridWidth - the number of grid columns the label shall use (usually
     *           1 or 2).
-    *
+    * 
     * @return The created label.
     */
    public JLabel createParamLabel(final Parameter param, int gridRow, int gridWidth)
@@ -444,7 +456,7 @@ public class Page extends JPanel
    /**
     * Add the component to the grid in column zero, row <code>gridRow</code>,
     * using suitable grid bag constraints.
-    *
+    * 
     * @param comp - the component to be added.
     * @param gridRow - the row of the contents grid in which the component is
     *           added.
@@ -456,70 +468,22 @@ public class Page extends JPanel
    }
 
    /**
-    * Inform all change listeners that a parameter was changed.
-    *
-    * @param data - the parameter-data that was changed.
+    * Inform all change listeners that a device parameter was changed.
+    * 
+    * @param devParam - the device parameter that was changed.
     */
-   public void fireStateChanged(final ParamData data)
+   public void fireStateChanged(final DeviceParameter devParam)
    {
       SwingUtilities.invokeLater(new Runnable()
       {
          @Override
          public void run()
          {
-            final ChangeEvent e = new ChangeEvent(data);
+            final ChangeEvent e = new ChangeEvent(devParam);
 
             for (ChangeListener listener : changeListeners)
                listener.stateChanged(e);
          }
       });
-   }
-
-   /**
-    * Sort the parameter-data by display order
-    * {@link Parameter#getDisplayOrder()}.
-    *
-    * @param paramsData - the parameter-datas to be sorted.
-    *
-    * @return a sorted array of parameters.
-    */
-   public static ParamData[] sortByDisplayOrder(final Collection<ParamData> paramsData)
-   {
-      final ParamData[] paramsDataSorted = new ParamData[paramsData.size()];
-      paramsData.toArray(paramsDataSorted);
-      Arrays.sort(paramsDataSorted, new Comparator<ParamData>()
-      {
-         @Override
-         public int compare(ParamData a, ParamData b)
-         {
-            return a.getDisplayOrder() - b.getDisplayOrder();
-         }
-      });
-
-      return paramsDataSorted;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode()
-   {
-      return getPageData().hashCode();
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public boolean equals(Object o)
-   {
-      if (o == this)
-         return true;
-      if (!(o instanceof Page))
-         return false;
-      final Page oo = (Page) o;
-
-      return pageDatas.equals(oo.pageDatas);
    }
 }

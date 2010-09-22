@@ -80,9 +80,14 @@ public final class TableUtils
 
       for (int i = 0; i < colNames.length; ++i)
       {
-         final int idx = columnModel.getColumnIndex(colNames[i]);
-
-         if (idx >= 0) columnModel.moveColumn(idx, i);
+         try
+         {
+            final int idx = columnModel.getColumnIndex(colNames[i]);
+            if (idx >= 0) columnModel.moveColumn(idx, i);
+         }
+         catch (IllegalArgumentException e)
+         {
+         }
       }
    }
 
