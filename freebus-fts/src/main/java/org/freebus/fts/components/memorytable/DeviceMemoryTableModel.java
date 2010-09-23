@@ -183,10 +183,10 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       createRange(mask.getManufacturerDataAddress(), mask.getManufacturerDataSize(),
             I18n.getMessage("DeviceMemoryTableModel.ManufacturerData"));
 
-      size = mask.getUserRamEnd() - mask.getUserRamStart();
+      size = mask.getUserRamEnd() - mask.getUserRamStart() + 1;
       createRange(mask.getUserRamStart(), size, I18n.getMessage("DeviceMemoryTableModel.UserRam"));
 
-      size = mask.getUserEepromEnd() - mask.getUserEepromStart();
+      size = mask.getUserEepromEnd() - mask.getUserEepromStart() + 1;
       createRange(mask.getUserEepromStart(), size, I18n.getMessage("DeviceMemoryTableModel.UserEeprom"));
 
       createRange(program.getCommsTabAddr(), program.getCommsTabSize(),
@@ -353,10 +353,12 @@ public class DeviceMemoryTableModel extends MemoryTableModel
       for (final ObjectDescriptor objDesc : objDescs)
       {
          final byte[] data = objDesc.toByteArray();
-         setValue(++pos, data[0]);
+         ++pos;
+         final int dataPointer = getValueAt(pos).getValue(); // objDesc.getDataPointer();
+//         setValue(pos, data[0]);
          setValue(++pos, data[1]);
          setValue(++pos, data[2]);
-         setValue(objDesc.getDataPointer(), ++idx);
+         setValue(dataPointer, idx++);
       }
 
       final PhysicalAddress physicalAddress = device.getPhysicalAddress();

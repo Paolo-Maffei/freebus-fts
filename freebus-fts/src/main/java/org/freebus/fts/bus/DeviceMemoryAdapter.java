@@ -5,6 +5,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.types.ObjectType;
@@ -34,6 +35,8 @@ public final class DeviceMemoryAdapter
 
    // User EEPROM: start, end, and next free address
    private int userEepromStart, userEepromEnd, userEepromAddr;
+
+   private boolean outOfRamReported;
 
    /**
     * Create an empty device-memory adapter.
@@ -72,8 +75,8 @@ public final class DeviceMemoryAdapter
    }
 
    /**
-    * Get all group addresses that the device uses. The
-    * returned list is sorted by group address.
+    * Get all group addresses that the device uses. The returned list is sorted
+    * by group address.
     * 
     * @return A sorted collection of group addresses.
     */
@@ -140,8 +143,12 @@ public final class DeviceMemoryAdapter
       final int addr = userRamAddr;
       userRamAddr += count;
 
-      if (userRamAddr > userRamEnd)
-         throw new OutOfMemoryError("device's user RAM is exhausted");
+      if (userRamAddr > userRamEnd && !outOfRamReported)
+      {
+         outOfRamReported = true;
+         Logger.getLogger(getClass()).warn("device's user-RAM is exhausted");
+//         throw new OutOfMemoryError("device's user-RAM is exhausted");
+      }
 
       return addr;
    }
@@ -161,7 +168,10 @@ public final class DeviceMemoryAdapter
       userEepromAddr += count;
 
       if (userEepromAddr > userEepromEnd)
-         throw new OutOfMemoryError("device's user EEPROM is exhausted");
+      {
+         Logger.getLogger(getClass()).warn("device's user-EEPROM is exhausted");
+//         throw new OutOfMemoryError("device's user-EEPROM is exhausted");
+      }
 
       return addr;
    }
@@ -181,6 +191,8 @@ public final class DeviceMemoryAdapter
       userRamStart = mask.getUserRamStart();
       userRamEnd = mask.getUserRamEnd();
       userRamAddr = userRamStart;
+
+      outOfRamReported = false;
    }
 
    /**
@@ -192,7 +204,7 @@ public final class DeviceMemoryAdapter
    {
       final Set<GroupAddress> groupAddressSet = new TreeSet<GroupAddress>();
 
-      for (final DeviceObject devObject: device.getVisibleDeviceObjects())
+      for (final DeviceObject devObject : device.getVisibleDeviceObjects())
       {
          for (final SubGroupToObject sgo : devObject.getSubGroupToObjects())
             groupAddressSet.add(sgo.getSubGroup().getGroupAddress());
@@ -203,15 +215,48 @@ public final class DeviceMemoryAdapter
    }
 
    /**
+    * Get the maximum sizes of the communication objects.
+    * 
+    * @return A vector with the maximum sizes of the communication objects.
+    *         Index is the {@link CommunicationObject#getNumber() communication
+    *         object number}, value is the maximum size in bits.
+    */
+   private Vector<Integer> getComObjectMaxSizes()
+   {
+      final Vector<Integer> sizes = new Vector<Integer>(64);
+
+      for (final CommunicationObject comObject : device.getProgram().getCommunicationObjects())
+      {
+         final int comObjectNumber = comObject.getNumber();
+         if (sizes.size() <= comObjectNumber)
+            sizes.setSize(comObjectNumber + 1);
+
+         final int bitLength = comObject.getObjectType().getBitLength();
+         final Integer sz = sizes.get(comObjectNumber);
+
+         if (sz == null || sz < bitLength)
+            sizes.set(comObjectNumber, bitLength);
+      }
+
+      return sizes;
+   }
+
+   /**
     * Update the list of object descriptors of the device.
     */
    private void updateObjectDescriptors()
    {
-      objectDescriptors.clear();
-
       final List<DeviceObject> devObjects = device.getDeviceObjects();
-      ramFlagTablePtr = allocateRam((devObjects.size() + 1) >> 1);
 
+      final Vector<Integer> maxSizes = getComObjectMaxSizes();
+      final int numComObjects = maxSizes.size();
+
+      objectDescriptors.clear();
+      objectDescriptors.setSize(numComObjects);
+
+      ramFlagTablePtr = allocateRam((numComObjects + 1) >> 1);
+
+      // Create the object descriptors for the used device objects
       for (DeviceObject devObject : devObjects)
       {
          final CommunicationObject comObject = devObject.getComObject();
@@ -228,11 +273,29 @@ public final class DeviceMemoryAdapter
          od.setWriteEnabled(devObject.isWrite());
          od.setTransEnabled(devObject.isTrans());
 
-         // TODO add handling for read-only device objects
-         od.setDataPointer(allocateRam(1), false);
-
-         objectDescriptors.add(od);
+         objectDescriptors.set(comObject.getNumber(), od);
       }
+
+      // Create the object descriptors for the unused device object numbers
+      for (int i = 0; i < numComObjects; ++i)
+      {
+         if (objectDescriptors.get(i) == null)
+            objectDescriptors.set(i, new ObjectDescriptor());
+      }
+
+      // Allocate RAM for every object descriptor
+      for (int i = 0; i < numComObjects; ++i)
+      {
+         final ObjectDescriptor od = objectDescriptors.get(i);
+         final int numBytes = (maxSizes.get(i) + 7) >> 3; 
+
+         if (od.isEepromDataPointer())
+            od.setDataPointer(allocateEeprom(numBytes), true);
+         else od.setDataPointer(allocateRam(numBytes), false);
+      }
+
+      // TODO add handling for read-only device objects
+//      od.setDataPointer(allocateRam(1), false);
    }
 
    /**

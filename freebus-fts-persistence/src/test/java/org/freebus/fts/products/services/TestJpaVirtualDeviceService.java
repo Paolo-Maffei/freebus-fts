@@ -6,6 +6,8 @@ import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
+import javax.persistence.NoResultException;
+
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
@@ -14,13 +16,13 @@ import org.freebus.fts.products.Product;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.test_utils.ProductsTestCase;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
 public class TestJpaVirtualDeviceService extends ProductsTestCase
 {
    private VirtualDeviceService virtDevService;
+   private Manufacturer manu;
 
    @Before
    public void setUp() throws Exception
@@ -28,12 +30,12 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
       final ProductsFactory productsFactory = getJpaProductsFactory();
       virtDevService = productsFactory.getVirtualDeviceService();
 
-      final Manufacturer manu1 = new Manufacturer(1, "manu-1");
-      productsFactory.getManufacturerService().persist(manu1);
+      manu = new Manufacturer(1, "manu-1");
+      productsFactory.getManufacturerService().persist(manu);
 
-      final FunctionalEntity funcEnt = new FunctionalEntity(1234, manu1, "func-ent-1", "func-ent-desc-1");
-      final Product product = new Product(1234, "prod-1", manu1);
-      final CatalogEntry catEnt = new CatalogEntry(321, "cat-ent-1", manu1, product);
+      final FunctionalEntity funcEnt = new FunctionalEntity(1234, manu, "func-ent-1", "func-ent-desc-1");
+      final Product product = new Product(1234, "prod-1", manu);
+      final CatalogEntry catEnt = new CatalogEntry(321, "cat-ent-1", manu, product);
 
       productsFactory.getFunctionalEntityService().persist(funcEnt);
       productsFactory.getCatalogEntryService().persist(catEnt);
@@ -46,7 +48,6 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
 
    // Test fails if all freebus-fts-persistence unit tests are started e.g. from within
    // Eclipse.
-   @Ignore
    @Test
    public final void getVirtualDevices()
    {
@@ -58,12 +59,30 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
    }
 
    @Test
-   public final void getVirtualDevice()
+   public final void getVirtualDeviceId()
    {
       assertNull(virtDevService.getVirtualDevice(-1));
       assertNull(virtDevService.getVirtualDevice(0));
+      assertNotNull(virtDevService.getVirtualDevice(1));
+   }
 
-      final VirtualDevice virtDev = virtDevService.getVirtualDevice(1);
+   @Test
+   public final void getVirtualDeviceName()
+   {
+      final VirtualDevice virtDev = virtDevService.getVirtualDevice(manu, "virt-dev-1");
       assertNotNull(virtDev);
+      assertEquals("virt-dev-1", virtDev.getName());
+   }
+
+   @Test(expected = NoResultException.class)
+   public final void getVirtualDeviceNameInvalidName()
+   {
+      virtDevService.getVirtualDevice(manu, "no-such-device");
+   }
+
+   @Test(expected = NoResultException.class)
+   public final void getVirtualDeviceNameInvalidManufacturer()
+   {
+      virtDevService.getVirtualDevice(new Manufacturer(7715, "manu-7715"), "virt-dev-1");
    }
 }

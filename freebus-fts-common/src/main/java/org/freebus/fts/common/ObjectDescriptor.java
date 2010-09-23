@@ -19,7 +19,7 @@ public class ObjectDescriptor
    private boolean eepromDataPointer;
 
    private int dataPointer;
-   private ObjectType type =ObjectType.BITS_1;
+   private ObjectType type = ObjectType.BITS_1;
    private ObjectPriority priority = ObjectPriority.LOW;
 
    /**

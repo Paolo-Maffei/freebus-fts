@@ -8,6 +8,7 @@ import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
@@ -26,6 +27,16 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
       return entityManager.find(VirtualDevice.class, id);
    }
 
+   @Override
+   public VirtualDevice getVirtualDevice(Manufacturer manufacturer, String name) throws PersistenceException
+   {
+      final Query query = entityManager
+            .createQuery("select vd from VirtualDevice vd where vd.name=?1 and vd.catalogEntry.manufacturer=?2");
+      query.setParameter(1, name);
+      query.setParameter(2, manufacturer);
+      return (VirtualDevice) query.getSingleResult();
+   }
+
    @SuppressWarnings("unchecked")
    @Override
    public List<VirtualDevice> getVirtualDevices() throws PersistenceException
@@ -36,8 +47,7 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
 
    @SuppressWarnings("unchecked")
    @Override
-   public List<VirtualDevice> getVirtualDevices(FunctionalEntity[] functionalEntities)
-         throws PersistenceException
+   public List<VirtualDevice> getVirtualDevices(FunctionalEntity[] functionalEntities) throws PersistenceException
    {
       if (functionalEntities == null || functionalEntities.length < 1)
          return new LinkedList<VirtualDevice>();
@@ -45,7 +55,8 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
       final StringBuilder funcsStr = new StringBuilder();
       for (int i = 0; i < functionalEntities.length; ++i)
       {
-         if (i > 0) funcsStr.append(',');
+         if (i > 0)
+            funcsStr.append(',');
          funcsStr.append(functionalEntities[i].getId());
       }
 

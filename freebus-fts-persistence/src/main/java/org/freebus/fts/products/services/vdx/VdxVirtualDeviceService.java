@@ -9,6 +9,7 @@ import javax.persistence.PersistenceException;
 
 import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
@@ -28,6 +29,12 @@ public final class VdxVirtualDeviceService implements VirtualDeviceService
    public VirtualDevice getVirtualDevice(int id) throws PersistenceException
    {
       return manager.fetch(VirtualDevice.class, id);
+   }
+
+   @Override
+   public VirtualDevice getVirtualDevice(Manufacturer manufacturer, String name) throws PersistenceException
+   {
+      throw new PersistenceException("Sorry, not implemented");
    }
 
    @SuppressWarnings("unchecked")
