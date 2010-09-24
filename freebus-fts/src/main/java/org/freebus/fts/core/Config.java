@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.SimpleConfig;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.elements.components.Dialogs;
 
 /**
  * Configuration settings. The configuration is a global singleton object that

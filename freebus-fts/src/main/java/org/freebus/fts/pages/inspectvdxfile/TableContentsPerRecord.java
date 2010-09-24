@@ -11,11 +11,11 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.SortedListModel;
+import org.freebus.fts.elements.models.SortedListModel;
+import org.freebus.fts.elements.utils.TableUtils;
 import org.freebus.fts.pages.InspectVdxFile;
 import org.freebus.fts.persistence.vdx.VdxSection;
 import org.freebus.fts.persistence.vdx.VdxSectionHeader;
-import org.freebus.fts.utils.TableUtils;
 
 /**
  * Displays the contents of a VDX table, with a list of records on the left side

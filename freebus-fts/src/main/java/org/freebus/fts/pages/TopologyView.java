@@ -22,21 +22,21 @@ import org.freebus.fts.MainWindow;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
-import org.freebus.fts.components.ToolBar;
-import org.freebus.fts.components.ToolBarButton;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.AreaProperties;
 import org.freebus.fts.dialogs.DeviceProperties;
 import org.freebus.fts.dialogs.LineProperties;
+import org.freebus.fts.elements.components.ToolBar;
+import org.freebus.fts.elements.components.ToolBarButton;
+import org.freebus.fts.elements.renderers.DynamicIconTreeCellRenderer;
+import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectListener;
-import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
-import org.freebus.fts.utils.TreeUtils;
 
 /**
  * Shows the topological structure of the project.
@@ -48,7 +48,7 @@ public class TopologyView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
-   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEditProperties, btnEditDevice, btnDelete;
+   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEditProperties, btnEdit, btnDelete;
    private Object selectedObject;
 
    /**
@@ -86,7 +86,7 @@ public class TopologyView extends AbstractPage
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(false);
                btnEditProperties.setEnabled(true);
-               btnEditDevice.setEnabled(false);
+               btnEdit.setEnabled(false);
                btnDelete.setEnabled(true);
             }
             else if (selectedObject instanceof Line)
@@ -94,7 +94,7 @@ public class TopologyView extends AbstractPage
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
                btnEditProperties.setEnabled(true);
-               btnEditDevice.setEnabled(false);
+               btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
             else if (selectedObject instanceof Device)
@@ -102,7 +102,7 @@ public class TopologyView extends AbstractPage
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
                btnEditProperties.setEnabled(true);
-               btnEditDevice.setEnabled(true);
+               btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
             else
@@ -110,7 +110,7 @@ public class TopologyView extends AbstractPage
                btnAddLine.setEnabled(false);
                btnAddDevice.setEnabled(false);
                btnEditProperties.setEnabled(false);
-               btnEditDevice.setEnabled(false);
+               btnEdit.setEnabled(false);
                btnDelete.setEnabled(false);
             }
          }
@@ -235,11 +235,11 @@ public class TopologyView extends AbstractPage
          }
       });
 
-      btnEditDevice = new ToolBarButton(ImageCache.getIcon("icons/configure"));
-      toolBar.add(btnEditDevice);
-      btnEditDevice.setEnabled(false);
-      btnEditDevice.setToolTipText(I18n.getMessage("TopologyView.EditItemTip"));
-      btnEditDevice.addActionListener(new ActionListener()
+      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
+      toolBar.add(btnEdit);
+      btnEdit.setEnabled(false);
+      btnEdit.setToolTipText(I18n.getMessage("TopologyView.EditItemTip"));
+      btnEdit.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent arg0)

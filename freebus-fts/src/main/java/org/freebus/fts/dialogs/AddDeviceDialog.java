@@ -16,9 +16,9 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 
 import org.freebus.fts.MainWindow;
-import org.freebus.fts.components.Dialog;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.components.Dialog;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.products.VirtualDevice;

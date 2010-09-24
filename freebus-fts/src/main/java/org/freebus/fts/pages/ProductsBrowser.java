@@ -43,7 +43,8 @@ import org.freebus.fts.MainWindow;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.CatalogEntryDetails;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.elements.components.Dialogs;
+import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.pages.productsbrowser.FunctionalEntityTreeNode;
 import org.freebus.fts.pages.productsbrowser.ManufacturerItem;
 import org.freebus.fts.pages.productsbrowser.ProductsListCellRenderer;
@@ -57,7 +58,6 @@ import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
-import org.freebus.fts.utils.TreeUtils;
 
 /**
  * A browser for a org.freebus.fts.products database.

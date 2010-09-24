@@ -40,6 +40,13 @@ public interface ProjectController
    public void edit(Device dev);
 
    /**
+    * Edit a line.
+    * 
+    * @param line - the line to edit.
+    */
+   public void edit(Line line);
+
+   /**
     * Remove an object. Calls the proper remove method to do the job
     * (e.g. {@link #remove(Device)}). Does nothing if <pre>obj</pre> is
     * null or has an unsupported type.

@@ -22,17 +22,17 @@ import javax.swing.SwingUtilities;
 import org.apache.log4j.Logger;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.elements.components.Dialogs;
+import org.freebus.fts.elements.components.ToolBar;
+import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.utils.ButtonUtils;
 import org.freebus.fts.pages.inspectvdxfile.TableContents;
 import org.freebus.fts.pages.inspectvdxfile.TableContentsGrid;
 import org.freebus.fts.pages.inspectvdxfile.TableContentsPerRecord;
 import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.persistence.vdx.VdxSection;
-import org.freebus.fts.utils.ButtonUtils;
 
 /**
  * A page that displays the contents of a VDX file.

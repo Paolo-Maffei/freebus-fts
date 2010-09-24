@@ -22,9 +22,9 @@ import javax.swing.JPanel;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AddressField;
-import org.freebus.fts.components.Dialog;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.utils.SwingUtils;
+import org.freebus.fts.elements.components.Dialog;
+import org.freebus.fts.elements.utils.SwingUtils;
 import org.freebus.knxcomm.telegram.Transport;
 
 /**

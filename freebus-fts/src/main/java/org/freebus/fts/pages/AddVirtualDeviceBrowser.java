@@ -10,8 +10,8 @@ import javax.swing.JButton;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.AddDeviceDialog;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.VirtualDevice;
 

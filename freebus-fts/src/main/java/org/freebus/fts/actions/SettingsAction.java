@@ -5,8 +5,8 @@ import java.awt.event.ActionEvent;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dialogs.Settings;
+import org.freebus.fts.elements.services.ImageCache;
 
 /**
  * Open the settings dialog.

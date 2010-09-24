@@ -19,8 +19,8 @@ import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.components.TelegramDetails;
 import org.freebus.fts.core.Config;
-import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.core.LookAndFeelManager;
+import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.services.LookAndFeelManager;
 
 /**
  * A test program that opens a telegram details viewer and displays a test

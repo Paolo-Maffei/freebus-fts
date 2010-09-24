@@ -19,10 +19,12 @@ import javax.swing.tree.DefaultTreeModel;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
-import org.freebus.fts.components.ToolBar;
-import org.freebus.fts.components.ToolBarButton;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.components.ToolBar;
+import org.freebus.fts.elements.components.ToolBarButton;
+import org.freebus.fts.elements.renderers.DynamicIconTreeCellRenderer;
+import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
@@ -31,8 +33,6 @@ import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.service.ProjectListener;
-import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
-import org.freebus.fts.utils.TreeUtils;
 
 /**
  * A page that shows the physical components of the project (buildings, floors,

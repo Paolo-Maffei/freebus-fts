@@ -17,8 +17,8 @@ import javax.swing.JTextField;
 
 import org.freebus.fts.actions.SetPhysicalAddressAction;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.fts.components.Dialog;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.elements.components.Dialog;
 
 /**
  * A small dialog that allows to enter a physical address.

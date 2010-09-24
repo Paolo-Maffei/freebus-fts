@@ -16,7 +16,7 @@ import javax.swing.event.ChangeListener;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.pages.deviceeditor.DebugPanel;
 import org.freebus.fts.pages.deviceeditor.DeviceObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;

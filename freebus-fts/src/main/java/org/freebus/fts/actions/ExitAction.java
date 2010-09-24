@@ -7,7 +7,7 @@ import javax.swing.KeyStroke;
 
 import org.freebus.fts.FTS;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.services.ImageCache;
 
 /**
  * Exit the application.

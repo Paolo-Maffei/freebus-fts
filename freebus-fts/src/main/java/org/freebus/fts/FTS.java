@@ -25,11 +25,12 @@ import liquibase.lock.LockHandler;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
-import org.freebus.fts.components.StartupIndicator;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.LookAndFeelManager;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.core.ProjectControllerImpl;
+import org.freebus.fts.elements.StartupIndicator;
+import org.freebus.fts.elements.components.Dialogs;
+import org.freebus.fts.elements.services.LookAndFeelManager;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.project.ProjectManager;

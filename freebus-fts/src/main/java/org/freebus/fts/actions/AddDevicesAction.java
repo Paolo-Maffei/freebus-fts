@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.pages.AddVirtualDeviceBrowser;
 
 /**

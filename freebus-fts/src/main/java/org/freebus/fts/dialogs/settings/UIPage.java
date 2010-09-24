@@ -21,7 +21,7 @@ import org.freebus.fts.MainWindow;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.elements.components.Dialogs;
 
 /**
  * Settings page for user interface settings.

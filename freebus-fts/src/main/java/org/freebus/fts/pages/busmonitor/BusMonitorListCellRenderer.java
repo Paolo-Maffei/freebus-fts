@@ -16,7 +16,7 @@ import javax.swing.ListCellRenderer;
 
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;

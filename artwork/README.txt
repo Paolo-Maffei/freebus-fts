@@ -1,2 +1,4 @@
 This directory is meant for the artwork source files.
-Files in this directory do not get distributed.
+
+Files in this directory are not added to the (binary only)
+distribution.

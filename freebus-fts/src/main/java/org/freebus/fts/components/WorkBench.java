@@ -11,7 +11,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import javax.swing.BorderFactory;
-import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JPanel;
@@ -21,13 +20,15 @@ import javax.swing.SwingUtilities;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.WorkBenchPageId;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.elements.ApplicationWindow;
+import org.freebus.fts.elements.components.Dialogs;
+import org.freebus.fts.elements.components.ExtTabbedPane;
 
 /**
  * A class for main application windows. This class contains no FTS specific
  * code. This class is meant to be sub-classed.
  */
-public class WorkBench extends JFrame
+public class WorkBench extends ApplicationWindow
 {
    private static final long serialVersionUID = 6080914627731378282L;
 

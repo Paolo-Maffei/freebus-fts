@@ -7,7 +7,7 @@ import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeCellRenderer;
 
-import org.freebus.fts.core.ImageCache;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;

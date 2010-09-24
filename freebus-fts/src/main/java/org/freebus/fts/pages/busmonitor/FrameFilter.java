@@ -7,7 +7,7 @@ import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.AddressFactory;
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.fts.core.Filter;
+import org.freebus.fts.elements.models.Filter;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;

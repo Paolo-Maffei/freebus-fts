@@ -36,10 +36,10 @@ public abstract class Ft12Connection extends ListenableConnection implements KNX
    protected int resetPending;
 
    // Enable to get FT1.2 frame data and ACK debug output
-   private boolean debugFT12 = false;
+   private boolean debugFT12 = true;
 
    // Enable debug output for FT1.2 acknowledges
-   private boolean debugFT12ack = false;
+   private boolean debugFT12ack = true;
 
    // FT1.2 end-of-message byte.
    protected final int eofMarker = 0x16;

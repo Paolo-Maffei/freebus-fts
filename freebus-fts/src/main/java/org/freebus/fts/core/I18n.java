@@ -6,22 +6,29 @@ import java.util.ResourceBundle;
 
 public final class I18n
 {
-   private static final String bundleName = "fts-messages";
+   private static final String bundleName = "org.freebus.fts.messages";
    private static final ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 
    private I18n()
    {
    }
 
-   public static String getMessage(String key)
+   /**
+    * Returns the message string for the given message-id for the active
+    * language.
+    * 
+    * @param msgid - the message id.
+    * @return the message string.
+    */
+   public static String getMessage(String msgid)
    {
       try
       {
-         return bundle.getString(key);
+         return bundle.getString(msgid);
       }
       catch (MissingResourceException e)
       {
-         return '!' + key + '!';
+         return '!' + msgid + '!';
       }
    }
 
@@ -29,13 +36,13 @@ public final class I18n
     * Returns the message string for the given message-id for the active
     * language. The variables {0}, {1}, ... are replaced with the arguments
     * given in <code>args</code>.
-    *
+    * 
     * The class {@link MessageFormat} contains more further information on
     * formatting the arguments.
-    *
+    * 
     * @param msgid - the message id
     * @param args - an array of arguments.
-    * @return the message string
+    * @return the message string.
     */
    public static String formatMessage(final String msgid, Object[] args)
    {

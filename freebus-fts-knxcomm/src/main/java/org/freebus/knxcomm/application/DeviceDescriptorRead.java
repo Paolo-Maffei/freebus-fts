@@ -42,7 +42,7 @@ public class DeviceDescriptorRead extends AbstractApplication
     */
    public DeviceDescriptorRead(int descriptorType)
    {
-      setDescriptorType(descriptorType);
+      this.descriptorType = descriptorType;
    }
 
    /**
@@ -99,6 +99,7 @@ public class DeviceDescriptorRead extends AbstractApplication
    @Override
    public void writeData(DataOutput out) throws IOException
    {
+      // descriptorType is sent in the APCI-value field
    }
 
    /**

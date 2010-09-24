@@ -20,9 +20,9 @@ import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.dialogs.Dialogs;
 import org.freebus.fts.dragdrop.TransferableObject;
+import org.freebus.fts.elements.components.Dialogs;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.DeviceObject;
 import org.freebus.fts.project.ProjectManager;

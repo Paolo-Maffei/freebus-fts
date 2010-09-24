@@ -75,7 +75,7 @@ public class ReadDeviceStatusJobExample extends TelegramAdapter
       try
       {
          tst = new ReadDeviceStatusJobExample();
-         Thread.sleep(500);
+         Thread.sleep(5000);
       }
       finally
       {

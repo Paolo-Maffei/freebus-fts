@@ -1,6 +1,6 @@
 package org.freebus.fts.pages.busmonitor;
 
-import org.freebus.fts.core.Filter;
+import org.freebus.fts.elements.models.Filter;
 
 /**
  * A proxy filter class that filters bus monitor items by filtering the

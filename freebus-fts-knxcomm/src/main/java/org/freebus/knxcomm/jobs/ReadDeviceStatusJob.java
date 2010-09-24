@@ -3,6 +3,7 @@ package org.freebus.knxcomm.jobs;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
@@ -74,15 +75,20 @@ public class ReadDeviceStatusJob extends ListenableJob
 
       try
       {
-         msleep(50);
+         msleep(100);
          innerMain(con);
       }
       catch (TimeoutException e)
       {
          throw new IOException("timeout: no reply from device " + address, e);
       }
+      catch (Exception e)
+      {
+         Logger.getLogger(getClass()).error("exception in job execution", e);
+      }
       finally
       {
+         Logger.getLogger(getClass()).info("*** job done, closing connection");
          con.close();
       }
    }

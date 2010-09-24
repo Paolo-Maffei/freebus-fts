@@ -17,12 +17,13 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.JobQueueView;
-import org.freebus.fts.components.LogLine;
-import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.components.WorkBench;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
-import org.freebus.fts.dialogs.Dialogs;
+import org.freebus.fts.elements.ApplicationWindow;
+import org.freebus.fts.elements.components.Dialogs;
+import org.freebus.fts.elements.components.LogLine;
+import org.freebus.fts.elements.components.ToolBar;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.pages.LogicalView;
 import org.freebus.fts.pages.PhysicalView;
 import org.freebus.fts.pages.TopologyView;
@@ -40,7 +41,6 @@ import org.freebus.knxcomm.jobs.JobQueueListener;
 public final class MainWindow extends WorkBench implements JobQueueListener
 {
    private static final long serialVersionUID = 4384074439505445519L;
-   private static MainWindow instance;
 
    private final JobQueueView jobQueueView;
    private Timer tmrJobQueueView;
@@ -50,15 +50,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
     */
    public static MainWindow getInstance()
    {
-      return instance;
-   }
-
-   /**
-    * Set the global {@link MainWindow} instance.
-    */
-   public static void setInstance(MainWindow mainWindow)
-   {
-      instance = mainWindow;
+      return (MainWindow) ApplicationWindow.getInstance();
    }
 
    /**

@@ -70,7 +70,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    /**
     * Create a connection to the device with the given physical address. Use
     * {@link BusInterface#connect} to get a connection.
-    *
+    * 
     * @param addr - the physical address to which the connection will happen.
     * @param priority - the priority of the telegrams.
     * @param busInterface - the bus interface to use.
@@ -194,13 +194,17 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public Application receive(int timeout) throws IOException
    {
       final Telegram telegram = receiveTelegram(timeout);
-      return telegram == null ? null : telegram.getApplication();
+//      Logger.getLogger(getClass()).debug("%%% receive: " + telegram);
+
+      if (telegram != null)
+         return telegram.getApplication();
+      return null;
    }
 
    /**
     * Receive an {@link Transport#ConnectedAck acknowledge} from the remote
     * device. Waits 3 seconds for the acknowledge to be received.
-    *
+    * 
     * @throws IOException if a NACK (not-acknowledged) was received.
     * @throws TimeoutException if no acknowledge was received within the timeout
     */
@@ -221,11 +225,11 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    /**
     * Receive a telegram from the remote device.
-    *
+    * 
     * @param timeout - how long to wait, in milliseconds, -1 waits infinitely.
-    *
+    * 
     * @return the received telegram
-    *
+    * 
     * @throws IOException
     */
    private Telegram receiveTelegram(int timeout) throws IOException
@@ -284,6 +288,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    /**
     * {@inheritDoc}
+    * 
     * @throws TimeoutException
     */
    @Override
@@ -327,12 +332,18 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    /**
     * {@inheritDoc}
+    * 
     * @throws TimeoutException
     */
    @Override
    public Application query(Application application) throws IOException, TimeoutException
    {
+//      // To install the mapper here is only required if the log output below is
+//      // enabled. #send(Application) installs the mapper anyways before sending
+//      if (application instanceof Memory && memoryAddressMapper != null)
+//         ((Memory) application).setAddressMapper(memoryAddressMapper);
 //      Logger.getLogger(getClass()).debug("query - sending: " + application);
+
 
       final long start = System.currentTimeMillis();
       send(application);

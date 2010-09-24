@@ -19,18 +19,18 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
-import org.freebus.fts.components.ToolBar;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.core.ImageCache;
 import org.freebus.fts.dragdrop.ObjectTransferHandler;
+import org.freebus.fts.elements.components.ToolBar;
+import org.freebus.fts.elements.renderers.DynamicIconTreeCellRenderer;
+import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.service.ProjectListener;
-import org.freebus.fts.renderers.DynamicIconTreeCellRenderer;
-import org.freebus.fts.utils.TreeUtils;
 
 /**
  * Shows the logical structure of the project. The main- and sub-groups with the

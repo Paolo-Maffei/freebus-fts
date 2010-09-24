@@ -6,12 +6,13 @@ import javax.swing.JTabbedPane;
 
 import org.freebus.fts.FTS;
 import org.freebus.fts.core.I18n;
+import org.freebus.fts.elements.components.Closeable;
 
 /**
  * Common class for pages that are usually displayed in the {@link WorkBench}
  * application window.
  */
-public abstract class AbstractPage extends JPanel
+public abstract class AbstractPage extends JPanel implements Closeable
 {
    private static final long serialVersionUID = 4021452407687663969L;
 
@@ -56,6 +57,7 @@ public abstract class AbstractPage extends JPanel
    /**
     * Close the page.
     */
+   @Override
    public void close()
    {
       setVisible(false);
