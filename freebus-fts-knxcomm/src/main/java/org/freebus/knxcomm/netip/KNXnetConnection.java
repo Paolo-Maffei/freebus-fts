@@ -47,6 +47,12 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
     */
    public static final int defaultPortTCP = 6720;
 
+   // Enable to get debug output of the KNXnet/IP communication data
+   private boolean debugData = true;
+
+   // Enable to get debug output of the KNXnet/IP communication protocol
+   private boolean debugProto = false;
+
    private final Logger logger = Logger.getLogger(getClass());
    private final InetSocketAddress addr;
    private InetSocketAddress dataAddr;
@@ -223,14 +229,16 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    @Override
    public void close()
    {
+//      logger.debug("Closing KNXnet/IP connection");
+
       try
       {
          send(addr,
                new DisconnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), channelId));
 
-         final Frame frame = receive(500);
+         final Frame frame = receive(1000);
          if (!(frame instanceof DisconnectResponse))
-            throw new ConnectException("no response to KNXnet/IP disconnect request");
+            throw new ConnectException("No response to KNXnet/IP disconnect request");
 
          final DisconnectResponse resp = (DisconnectResponse) frame;
          if (resp.getStatus() != StatusCode.OK)
@@ -314,7 +322,6 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    {
       final TunnelingRequest frame = new TunnelingRequest(channelId, ++sequence);
       frame.setFrame(emiFrame);
-
       send(dataAddr, frame);
    }
 
@@ -327,10 +334,12 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
    public void send(InetSocketAddress address, Frame frame) throws IOException
    {
       final ServiceType serviceType = frame.getServiceType();
-      logger.debug("Send: " + serviceType + " (seq " + sequence + ")");
+
+      if (debugProto)
+         logger.debug("Send: " + serviceType + " (seq " + sequence + ")");
 
       final byte[] data = frame.toByteArray();
-      if (logger.isDebugEnabled())
+      if (debugData && logger.isDebugEnabled())
          logger.debug("SEND: " + HexString.toString(data));
 
       final DatagramPacket dp = new DatagramPacket(data, data.length);
@@ -351,7 +360,7 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
       if (len < 6)
          return;
 
-      if (logger.isDebugEnabled())
+      if (debugData && logger.isDebugEnabled())
          logger.debug("RECV: " + HexString.toString(data, 0, len));
 
       final Frame frame = FrameFactory.createFrame(data);
@@ -363,7 +372,8 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
          return;
       }
 
-      logger.debug("Recv: " + frame.getServiceType());
+      if (debugProto)
+         logger.debug("Recv: " + frame.getServiceType());
 
       if (receiveSemaphore.hasQueuedThreads())
       {
@@ -375,7 +385,8 @@ public final class KNXnetConnection extends ListenableConnection implements KNXC
          final TunnelingRequest tunnelFrame = (TunnelingRequest) frame;
          final int recvSequence = tunnelFrame.getSequence();
 
-         logger.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + recvSequence + ")");
+         if (debugData)
+            logger.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + recvSequence + ")");
 
          send(dataAddr, new TunnelingAck(channelId, recvSequence, StatusCode.OK));
 

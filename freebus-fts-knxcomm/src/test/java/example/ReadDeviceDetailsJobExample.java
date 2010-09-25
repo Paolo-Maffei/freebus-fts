@@ -1,9 +1,13 @@
 package example;
 
+import java.io.IOException;
+
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
+import org.freebus.knxcomm.jobs.JobListener;
 import org.freebus.knxcomm.jobs.ReadDeviceDetailsJob;
 import org.freebus.knxcomm.netip.KNXnetConnection;
 import org.freebus.knxcomm.telegram.Telegram;
@@ -13,16 +17,16 @@ import org.freebus.knxcomm.types.LinkMode;
 /**
  * Starts a {@link ReadDeviceDetailsJob} job for a specific device.
  * 
- * You can change the bus connection in {@link #ReadDeviceDetailsJobExample()}, the
- * constructor.
+ * You can change the bus connection in {@link #ReadDeviceDetailsJobExample()},
+ * the constructor.
  * 
- * You can change the physical address of the target device by changing {@link #target}
- * just below here.
+ * You can change the physical address of the target device by changing
+ * {@link #target} just below here.
  */
 public class ReadDeviceDetailsJobExample extends TelegramAdapter
 {
-   //  Physical address of the device to read details from
-   private final PhysicalAddress target = new PhysicalAddress(1, 1, 33);
+   // Physical address of the device to read details from
+   private final PhysicalAddress target = new PhysicalAddress(1, 1, 13);
 
    private final BusInterface bus;
 
@@ -34,15 +38,37 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
    public ReadDeviceDetailsJobExample() throws Exception
    {
       //
-      //  Bus connection
+      // Bus connection
       //
-//      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      // bus =
+      // BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
       bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
+   }
 
+   /**
+    * Run the example
+    * 
+    * @throws IOException
+    */
+   public void run() throws IOException
+   {
       final ReadDeviceDetailsJob job = new ReadDeviceDetailsJob(target);
+
+      job.addListener(new JobListener()
+      {
+         @Override
+         public void progress(int done, String message)
+         {
+            if (message == null)
+               message = "";
+
+            Logger.getLogger(SetPhysicalAddressExample.class).info("%%% Job " + done + "%: " + message);
+         }
+      });
+
       job.run(bus);
    }
 
@@ -61,7 +87,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
    @Override
    public void telegramReceived(Telegram telegram)
    {
-//      System.out.println(telegram.toString());
+      // System.out.println(telegram.toString());
    }
 
    /**
@@ -77,13 +103,19 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       try
       {
          tst = new ReadDeviceDetailsJobExample();
-         Thread.sleep(3000);
+         tst.run();
+      }
+      catch (Exception e)
+      {
+         Logger.getLogger(ReadDeviceDetailsJobExample.class).error(e);
       }
       finally
       {
+         Logger.getLogger(ReadDeviceDetailsJobExample.class).debug("done, exit");
          if (tst != null)
             tst.dispose();
 
+         Thread.sleep(500);
          System.exit(0);
       }
    }

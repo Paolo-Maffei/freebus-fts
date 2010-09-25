@@ -124,6 +124,9 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public synchronized void close()
    {
+      if (state == State.CLOSED)
+         return;
+
       synchronized (sendTelegram)
       {
          sendTelegram.setTransport(Transport.Disconnect);
@@ -140,9 +143,21 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          }
          finally
          {
-            state = State.CLOSED;
-            busInterface.removeListener(this);
+            dispose();
          }
+      }
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public synchronized void dispose()
+   {
+      if (state != State.CLOSED)
+      {
+         state = State.CLOSED;
+         busInterface.removeListener(this);
       }
    }
 
@@ -194,7 +209,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public Application receive(int timeout) throws IOException
    {
       final Telegram telegram = receiveTelegram(timeout);
-//      Logger.getLogger(getClass()).debug("%%% receive: " + telegram);
+//      Logger.getLogger(getClass()).debug("::: receive: " + telegram);
 
       if (telegram != null)
          return telegram.getApplication();
@@ -338,20 +353,20 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public Application query(Application application) throws IOException, TimeoutException
    {
-//      // To install the mapper here is only required if the log output below is
-//      // enabled. #send(Application) installs the mapper anyways before sending
-//      if (application instanceof Memory && memoryAddressMapper != null)
-//         ((Memory) application).setAddressMapper(memoryAddressMapper);
-//      Logger.getLogger(getClass()).debug("query - sending: " + application);
-
+      // To install the mapper here is only required if the log output below
+      // is enabled. #send(Application) installs the mapper anyways before
+      // sending.
+      if (application instanceof Memory && memoryAddressMapper != null)
+         ((Memory) application).setAddressMapper(memoryAddressMapper);
+      Logger.getLogger(getClass()).debug("query - sending: " + application);
 
       final long start = System.currentTimeMillis();
       send(application);
 
-      final int timeout = (int) (System.currentTimeMillis() - start + 6000);
+      final int timeout = (int) (/*System.currentTimeMillis() - start + */ 6000);
       final Application reply = receive(timeout);
 
-//      Logger.getLogger(getClass()).debug("query - reply: " + reply);
+      Logger.getLogger(getClass()).debug("query - reply: " + reply);
       return reply;
    }
 

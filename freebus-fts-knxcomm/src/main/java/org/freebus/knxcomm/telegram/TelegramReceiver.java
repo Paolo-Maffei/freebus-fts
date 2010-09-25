@@ -181,7 +181,7 @@ public class TelegramReceiver extends TelegramAdapter
 
       synchronized (telegrams)
       {
-         Logger.getLogger(getClass()).debug("receiveMultiple: " + telegrams.size() + " telegrams received");
+//         Logger.getLogger(getClass()).debug("receiveMultiple: " + telegrams.size() + " telegrams received");
 
          if (!waitSem.tryAcquire(telegrams.size()))
             throw new RuntimeException("internal error");

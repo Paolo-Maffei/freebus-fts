@@ -39,6 +39,12 @@ public interface DataConnection
    public void close();
 
    /**
+    * Destroy the connection without closing it. Use with care!
+    * @see #close()
+    */
+   public void dispose();
+
+   /**
     * Query the device by sending a telegram containing the given application,
     * and then wait for the answer from the device. The answer is then returned.
     * 

@@ -54,7 +54,7 @@ public final class SetPhysicalAddressJob extends ListenableJob
 
    /**
     * {@inheritDoc}
-    *
+    * 
     * @throws IOException
     */
    @Override
@@ -93,6 +93,7 @@ public final class SetPhysicalAddressJob extends ListenableJob
       {
          // This is the normal case - the physical address that we want to
          // program is unused.
+         con.dispose();
       }
       finally
       {
@@ -141,11 +142,17 @@ public final class SetPhysicalAddressJob extends ListenableJob
       try
       {
          con.sendUnconfirmed(new Restart());
+         msleep(250);
       }
       finally
       {
-         con.close();
+         con.dispose();
       }
+
+      // (At least) the Freebus LPC controller seems to require this unconnected
+      // restart to reset properly (06/2010)
+      dataTelegram.setDest(newAddress);
+      bus.send(dataTelegram);
    }
 
    /**
