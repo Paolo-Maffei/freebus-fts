@@ -33,7 +33,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * @return the manufacturer
+    * @return The application program's manufacturer.
     */
    public int getManufacturer()
    {
@@ -41,7 +41,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * Set the manufacturer.
+    * Set the application program's manufacturer.
     * 
     * @param manufacturer - the manufacturer to set
     */
@@ -51,7 +51,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * @return the device type.
+    * @return The manufacturer specific device type.
     */
    public int getType()
    {
@@ -59,7 +59,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * Set the device type.
+    * Set the manufacturer specific device type.
     * 
     * @param type - the device type to set
     */
@@ -69,7 +69,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * @return the version
+    * @return the version of the manufacturer specific device type.
     */
    public int getVersion()
    {
@@ -77,7 +77,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * Set the version.
+    * Set the version of the manufacturer specific device type.
     * 
     * @param version - the version to set
     */
@@ -87,7 +87,14 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * @return the misc bits.
+    * Get the miscellaneous 2-bit value:
+    * <ul>
+    * <li>0 - link management services not supported,
+    * <li>1 - link management services supported,
+    * <li>2, 3 - undefined.
+    * </ul>
+    * 
+    * @return the miscellaneous bits value.
     */
    public int getMisc()
    {
@@ -95,9 +102,10 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * Set the misc bits.
+    * Set the miscellaneous 2-bit value.
     * 
     * @param misc - the misc to set
+    * @see #getMisc()
     */
    public void setMisc(int misc)
    {
@@ -105,7 +113,9 @@ public class DeviceDescriptor2 implements DeviceDescriptor
    }
 
    /**
-    * @return the logical tags.
+    * Get the base value for logical tags.
+    * 
+    * @return The logical tags.
     */
    public int getLogicalTags()
    {
@@ -128,7 +138,16 @@ public class DeviceDescriptor2 implements DeviceDescriptor
     * 
     * @param idx - the index in the channel info table (0..3)
     * 
-    * @return the channel code. Zero if unused.
+    * @return <ul>
+    *         <li>0 - unused,
+    *         <li>1 - reserved,
+    *         <li>0x1ff0 - localisation channel for 1-8 channels,
+    *         <li>0x1ff1 - localisation channel for 1-16 channels,
+    *         <li>0x1ff2 - localisation channel for 1-24 channels,
+    *         <li>0x1ff3 - this channel code shall not be used,
+    *         <li>0x1ff4 - this channel code shall be used by LTE-mode devices,
+    *         <li>0x1ff5..0x1fff - system reserved.
+    *         </ul>
     */
    public int getChannelCode(int idx)
    {
@@ -140,6 +159,8 @@ public class DeviceDescriptor2 implements DeviceDescriptor
     * 
     * @param idx - the index in the channel info table (0..3)
     * @param code - the channel code (0..8191)
+    * 
+    * @see #getChannelCode(int)
     */
    public void setChannelCode(int idx, int code)
    {
@@ -238,7 +259,7 @@ public class DeviceDescriptor2 implements DeviceDescriptor
       final StringBuffer sb = new StringBuffer();
 
       sb.append("manufacturer ").append(manufacturer);
-      sb.append(" type ").append(type);
+      sb.append(" type 0x").append(Integer.toHexString(type));
       sb.append(" version ").append(version);
 
       return sb.toString();

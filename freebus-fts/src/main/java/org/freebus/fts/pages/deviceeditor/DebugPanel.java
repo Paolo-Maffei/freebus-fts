@@ -19,14 +19,14 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.pages.DeviceEditor;
+import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;
 
 /**
  * Displays details of the edited {@link Device}, mainly for debugging. Part of
- * the {@link DeviceEditor}.
+ * the {@link DeviceDetails}.
  */
 public class DebugPanel extends JPanel implements DeviceEditorComponent
 {

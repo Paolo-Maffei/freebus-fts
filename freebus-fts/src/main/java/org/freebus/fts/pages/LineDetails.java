@@ -31,7 +31,7 @@ import org.freebus.fts.project.service.ProjectListener;
 /**
  * An editor page for a {@link Line line}. 
  */
-public final class LinePage extends AbstractPage
+public final class LineDetails extends AbstractPage
 {
    private static final long serialVersionUID = 4496164130912865790L;
 
@@ -46,7 +46,7 @@ public final class LinePage extends AbstractPage
    /**
     * Create a line page.
     */
-   public LinePage()
+   public LineDetails()
    {
       setLayout(new GridBagLayout());
       setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 32));
@@ -149,15 +149,19 @@ public final class LinePage extends AbstractPage
       @Override
       public void projectComponentModified(Object obj)
       {
-         if (obj == line)
-            updateContents();
-         else updateDeviceAddresses();
+         if (!updating)
+         {
+            if (obj == line)
+               updateContents();
+            else updateDeviceAddresses();
+         }
       }
 
       @Override
       public void projectComponentAdded(Object obj)
       {
-         updateDeviceAddresses();
+         if (!updating)
+            updateDeviceAddresses();
       }
       
       @Override
@@ -230,6 +234,8 @@ public final class LinePage extends AbstractPage
     */
    private void updateDeviceAddresses()
    {
+      updating = true;
+
       addrCombo.removeAllItems();
 
       final Area area = line.getArea();
@@ -256,5 +262,7 @@ public final class LinePage extends AbstractPage
       
       if (addrCombo.getSelectedIndex() == -1)
          addrCombo.setSelectedIndex(0);
+
+      updating = false;
    }
 }

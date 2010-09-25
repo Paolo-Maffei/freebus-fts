@@ -30,7 +30,7 @@ import org.freebus.fts.project.service.ProjectListener;
  * An editor for the details of a device: description, name, physical address,
  * parameters, etc.
  */
-public class DeviceEditor extends AbstractPage
+public class DeviceDetails extends AbstractPage
 {
    private static final long serialVersionUID = 1396768831831692179L;
 
@@ -48,7 +48,7 @@ public class DeviceEditor extends AbstractPage
    /**
     * Create a device-editor.
     */
-   public DeviceEditor()
+   public DeviceDetails()
    {
       setLayout(new GridBagLayout());
       setName(I18n.getMessage("DeviceEditor.EmptyTitle"));

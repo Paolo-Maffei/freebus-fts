@@ -17,14 +17,14 @@ import org.freebus.fts.components.memorytable.DeviceMemoryTableModel;
 import org.freebus.fts.components.memorytable.MemoryCell;
 import org.freebus.fts.components.memorytable.MemoryCellRenderer;
 import org.freebus.fts.core.I18n;
-import org.freebus.fts.pages.DeviceEditor;
+import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;
 
 /**
  * Displays details of the edited {@link Device}: the EEPROM memory contents of
- * the device. Part of the {@link DeviceEditor}.
+ * the device. Part of the {@link DeviceDetails}.
  */
 public class MemoryPanel extends JPanel implements DeviceEditorComponent
 {

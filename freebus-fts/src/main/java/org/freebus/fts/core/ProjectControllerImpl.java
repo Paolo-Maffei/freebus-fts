@@ -2,8 +2,8 @@ package org.freebus.fts.core;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.dialogs.AddDeviceDialog;
-import org.freebus.fts.pages.DeviceEditor;
-import org.freebus.fts.pages.LinePage;
+import org.freebus.fts.pages.DeviceDetails;
+import org.freebus.fts.pages.LineDetails;
 import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
@@ -59,7 +59,7 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public void edit(Device device)
    {
-      MainWindow.getInstance().showPage(DeviceEditor.class, device);
+      MainWindow.getInstance().showPage(DeviceDetails.class, device);
    }
 
    /**
@@ -68,7 +68,7 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public void edit(Line line)
    {
-      MainWindow.getInstance().showPage(LinePage.class, line);
+      MainWindow.getInstance().showPage(LineDetails.class, line);
    }
 
    /**

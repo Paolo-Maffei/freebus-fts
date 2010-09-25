@@ -29,7 +29,7 @@ import org.freebus.fts.project.Device;
  * This program works with the virtual devices that were imported with FTS into
  * FTS' database.
  */
-public class DeviceEditor
+public class DeviceDetails
 {
    static private final String appTitle = "FTS Device Editor";
    private final JFrame frame = new JFrame();
@@ -42,7 +42,7 @@ public class DeviceEditor
     *
     * @param virtualDevs - the list of devices that can be edited.
     */
-   public DeviceEditor(final List<VirtualDevice> virtualDevs)
+   public DeviceDetails(final List<VirtualDevice> virtualDevs)
    {
       this.virtualDevices = new VirtualDevice[virtualDevs.size()];
       virtualDevs.toArray(this.virtualDevices);
@@ -111,6 +111,6 @@ public class DeviceEditor
          System.exit(1);
       }
 
-      new DeviceEditor(virtualDevices);
+      new DeviceDetails(virtualDevices);
    }
 }

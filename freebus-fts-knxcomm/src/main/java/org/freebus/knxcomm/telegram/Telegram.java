@@ -310,8 +310,7 @@ public class Telegram implements Cloneable
          application = ApplicationFactory.createApplication(type);
 
          final int dataMask = type.getDataMask();
-         if (dataMask != 0)
-            application.setApciValue(apciByte & dataMask);
+         application.setApciValue(apciByte & dataMask);
 
          if (dataLen > 1)
             application.readData(in, dataLen - 1);
@@ -431,7 +430,7 @@ public class Telegram implements Cloneable
    {
       byte[] appData = null;
       int appDataLen = 0;
-      int apci = 0;
+      int apciHigh = 0;
 
       if (transport.mask != 255 && application != null)
       {
@@ -441,7 +440,7 @@ public class Telegram implements Cloneable
          if (appDataLen > 15)
             extFormat = true;
 
-         apci = application.getType().getApci();
+         apciHigh = appData[0];
       }
 
       if (extFormat)
@@ -449,7 +448,7 @@ public class Telegram implements Cloneable
       else writeDataShortHeader(out, appDataLen);
 
       int tpci = transport.value;
-      tpci |= (apci >> 8) & ~transport.mask;
+      tpci |= apciHigh & ~transport.mask;
       if (transport.hasSequence)
          tpci |= (sequence & 15) << 2;
       out.write(tpci);

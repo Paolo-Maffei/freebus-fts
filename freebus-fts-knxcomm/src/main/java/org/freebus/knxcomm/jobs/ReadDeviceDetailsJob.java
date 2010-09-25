@@ -65,7 +65,7 @@ public final class ReadDeviceDetailsJob extends ListenableJob
 
       reply = con.query(new DeviceDescriptorRead(2));
       deviceDescriptor = ((DeviceDescriptorResponse) reply).getDescriptor();
-      logger.info("Device descriptor: " + deviceDescriptor);
+      logger.info("%%% Device descriptor: " + deviceDescriptor);
    }
 
    /**
@@ -80,6 +80,7 @@ public final class ReadDeviceDetailsJob extends ListenableJob
       {
          msleep(50);
          innerMain(con);
+         con.close();
       }
       catch (TimeoutException e)
       {
@@ -87,7 +88,6 @@ public final class ReadDeviceDetailsJob extends ListenableJob
       }
       finally
       {
-         con.close();
       }
    }
 }

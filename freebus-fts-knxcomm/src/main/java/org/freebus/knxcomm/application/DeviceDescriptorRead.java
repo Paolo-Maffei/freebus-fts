@@ -22,8 +22,6 @@ public class DeviceDescriptorRead extends AbstractApplication
     */
    final public static int DESCRIPTOR_TYPE_MASK = 0x3f;
 
-   private int descriptorType;
-
    /**
     * Create a device descriptor object for device descriptor type 0.
     */
@@ -42,7 +40,7 @@ public class DeviceDescriptorRead extends AbstractApplication
     */
    public DeviceDescriptorRead(int descriptorType)
    {
-      this.descriptorType = descriptorType;
+      setApciValue(descriptorType);
    }
 
    /**
@@ -50,7 +48,7 @@ public class DeviceDescriptorRead extends AbstractApplication
     */
    public int getDescriptorType()
    {
-      return descriptorType;
+      return getApciValue() & DESCRIPTOR_TYPE_MASK;
    }
 
    /**
@@ -62,7 +60,7 @@ public class DeviceDescriptorRead extends AbstractApplication
     */
    public void setDescriptorType(int descriptorType)
    {
-      this.descriptorType = descriptorType;
+      setApciValue(descriptorType);
    }
 
    /**
@@ -76,21 +74,12 @@ public class DeviceDescriptorRead extends AbstractApplication
    }
 
    /**
-    * @return The {@link #getDescriptorType() descriptor type} as APCI value.
-    */
-   @Override
-   public final int getApciValue()
-   {
-      return descriptorType;
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override
    public void readData(DataInput in, int length) throws IOException
    {
-      descriptorType = super.getApciValue() & DESCRIPTOR_TYPE_MASK;
+   // descriptorType is in the APCI-value field
    }
 
    /**
@@ -99,7 +88,7 @@ public class DeviceDescriptorRead extends AbstractApplication
    @Override
    public void writeData(DataOutput out) throws IOException
    {
-      // descriptorType is sent in the APCI-value field
+      // descriptorType is in the APCI-value field
    }
 
    /**
@@ -108,7 +97,7 @@ public class DeviceDescriptorRead extends AbstractApplication
    @Override
    public int hashCode()
    {
-      return getType().getApci() | descriptorType;
+      return getType().getApci() | getDescriptorType();
    }
 
    /**
@@ -124,7 +113,7 @@ public class DeviceDescriptorRead extends AbstractApplication
          return false;
 
       final DeviceDescriptorRead oo = (DeviceDescriptorRead) o;
-      return descriptorType == oo.descriptorType;
+      return getDescriptorType() == oo.getDescriptorType();
    }
 
    /**
@@ -133,6 +122,6 @@ public class DeviceDescriptorRead extends AbstractApplication
    @Override
    public String toString()
    {
-      return getType().toString() + " type #" + descriptorType;
+      return getType().toString() + " type #" + getDescriptorType();
    }
 }

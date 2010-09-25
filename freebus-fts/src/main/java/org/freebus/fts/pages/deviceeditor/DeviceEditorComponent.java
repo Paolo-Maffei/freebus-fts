@@ -1,10 +1,10 @@
 package org.freebus.fts.pages.deviceeditor;
 
-import org.freebus.fts.pages.DeviceEditor;
+import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.project.Device;
 
 /**
- * Interface for parts of the {@link DeviceEditor} that need to know about the
+ * Interface for parts of the {@link DeviceDetails} that need to know about the
  * edited device.
  */
 public interface DeviceEditorComponent

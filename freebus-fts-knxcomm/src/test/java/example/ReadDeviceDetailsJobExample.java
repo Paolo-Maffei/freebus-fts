@@ -5,7 +5,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.jobs.ReadDeviceDetailsJob;
-import org.freebus.knxcomm.serial.SerialPortUtil;
+import org.freebus.knxcomm.netip.KNXnetConnection;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;
 import org.freebus.knxcomm.types.LinkMode;
@@ -22,7 +22,7 @@ import org.freebus.knxcomm.types.LinkMode;
 public class ReadDeviceDetailsJobExample extends TelegramAdapter
 {
    //  Physical address of the device to read details from
-   private final PhysicalAddress target = new PhysicalAddress(1, 1, 13);
+   private final PhysicalAddress target = new PhysicalAddress(1, 1, 33);
 
    private final BusInterface bus;
 
@@ -36,8 +36,8 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       //
       //  Bus connection
       //
-      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
-      // bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
+//      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
@@ -61,7 +61,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      System.out.println(telegram.toString());
+//      System.out.println(telegram.toString());
    }
 
    /**
@@ -77,12 +77,14 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       try
       {
          tst = new ReadDeviceDetailsJobExample();
-         Thread.sleep(7000); // sleep some seconds to wait for extra telegrams at the end
+         Thread.sleep(3000);
       }
       finally
       {
          if (tst != null)
             tst.dispose();
+
+         System.exit(0);
       }
    }
 }

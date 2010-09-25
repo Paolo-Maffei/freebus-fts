@@ -17,14 +17,14 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.pages.DeviceEditor;
+import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
 
 /**
  * An editor for the communication objects of a device.
- * Part of the {@link DeviceEditor}.
+ * Part of the {@link DeviceDetails}.
  */
 public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
 {

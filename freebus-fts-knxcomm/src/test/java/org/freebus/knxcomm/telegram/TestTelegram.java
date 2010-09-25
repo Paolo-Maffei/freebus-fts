@@ -14,6 +14,7 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.GenericApplication;
 import org.freebus.knxcomm.application.GenericDataApplication;
@@ -268,6 +269,28 @@ public class TestTelegram
       telegram.setRepeated(false);
 
       assertArrayEquals(HexString.valueOf("b0 11 ff 11 06 60 80"), telegram.toByteArray());
+   }
+
+   @Test
+   public void testDeviceDescriptorRead() throws IOException
+   {
+      final Telegram telegram = new Telegram(new DeviceDescriptorRead(2));
+      telegram.setFrom(new PhysicalAddress(1, 1, 255));
+      telegram.setDest(new PhysicalAddress(1, 1, 6));
+      telegram.setPriority(Priority.SYSTEM);
+      telegram.setTransport(Transport.Connected);
+      telegram.setRepeated(false);
+
+      final byte[] data = telegram.toByteArray();
+      assertArrayEquals(HexString.valueOf("b0 11 ff 11 06 61 43 02"), data);
+
+      final Telegram telegramOut = TelegramFactory.createTelegram(data);
+      assertNotNull(telegramOut);
+      assertEquals(ApplicationType.DeviceDescriptor_Read, telegramOut.getApplicationType());
+      assertEquals(DeviceDescriptorRead.class, telegramOut.getApplication().getClass());
+      final DeviceDescriptorRead ddr = (DeviceDescriptorRead) telegramOut.getApplication();
+      assertEquals(2, ddr.getApciValue());
+      assertEquals(2, ddr.getDescriptorType());
    }
 
    @Test
