@@ -9,7 +9,7 @@ import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.jobs.JobListener;
 import org.freebus.knxcomm.jobs.ReadDeviceDetailsJob;
-import org.freebus.knxcomm.link.netip.KNXnetLink;
+import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;
 import org.freebus.knxcomm.types.LinkMode;
@@ -40,9 +40,8 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       //
       // Bus connection
       //
-      // bus =
-      // BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
-      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
+      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      //bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);

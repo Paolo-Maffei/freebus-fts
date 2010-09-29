@@ -18,6 +18,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.common.types.ObjectPriority;
 import org.freebus.fts.common.types.ObjectType;
 import org.freebus.fts.products.CommunicationObject;
 
@@ -63,12 +64,16 @@ public class DeviceObject implements Comparable<DeviceObject>
    @Column(name = "object_readoninit", nullable = false)
    private boolean readOnInit;
 
-//   @Column(name = "device_object_visible", nullable = false)
-//   private boolean visible;
+   // @Column(name = "device_object_visible", nullable = false)
+   // private boolean visible;
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "device_object_type", nullable = true)
    private ObjectType objectType;
+
+   @Enumerated(EnumType.ORDINAL)
+   @Column(name = "object_priority", nullable = false)
+   private ObjectPriority priority;
 
    @Column(name = "dpt_type")
    // @VdxField(name = "eib_data_type_code" * 1000 + "eib_data_subtype_code")
@@ -90,8 +95,9 @@ public class DeviceObject implements Comparable<DeviceObject>
    public DeviceObject(CommunicationObject comObject)
    {
       this.comObject = comObject;
+      copyComObjectFlags();
    }
-   
+
    /**
     * Prepare the device object for being deleted.
     */
@@ -158,6 +164,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    public void setComObject(CommunicationObject comObject)
    {
       this.comObject = comObject;
+      copyComObjectFlags();
    }
 
    /**
@@ -272,6 +279,16 @@ public class DeviceObject implements Comparable<DeviceObject>
       return device.isVisible(getComObject());
    }
 
+   public void setPriority(ObjectPriority priority)
+   {
+      this.priority = priority;
+   }
+
+   public ObjectPriority getPriority()
+   {
+      return priority;
+   }
+
    /**
     * @return the object type
     */
@@ -282,7 +299,7 @@ public class DeviceObject implements Comparable<DeviceObject>
 
    /**
     * Set the object type.
-    *
+    * 
     * @param type - the object type to set
     */
    public void setObjectType(ObjectType type)
@@ -374,6 +391,19 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
+    * Copy the communication flags and the object priority from the
+    * communication object to this object.
+    */
+   private void copyComObjectFlags()
+   {
+      trans = comObject.isTransEnabled();
+      read = comObject.isReadEnabled();
+      write = comObject.isWriteEnabled();
+      comm = comObject.isCommEnabled();
+      priority = comObject.getObjectPriority();
+   }
+
+   /**
     * Test if the device object contains a connection to the given sub-group.
     * The comparison is done with {@link SubGroup#equals(Object)}.
     * 
@@ -387,7 +417,7 @@ public class DeviceObject implements Comparable<DeviceObject>
          if (sgo.getSubGroup().equals(subGroup))
             return true;
       }
-      
+
       return false;
    }
 

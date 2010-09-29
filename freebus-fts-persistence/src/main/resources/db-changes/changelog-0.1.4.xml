@@ -222,4 +222,12 @@
   </createIndex>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-14">
+  <addColumn tableName="device_object">
+   <column name="object_priority" type="SMALLINT" defaultValueNumeric="3">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet>
+
 </databaseChangeLog>

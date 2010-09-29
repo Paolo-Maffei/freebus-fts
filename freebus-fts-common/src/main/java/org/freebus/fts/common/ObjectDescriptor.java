@@ -9,11 +9,11 @@ import org.freebus.fts.common.types.ObjectType;
  */
 public class ObjectDescriptor
 {
-   private final static int TRANSMIT_ENABLED = 1 << 6;
-   private final static int EEPROM_DATAPOINTER = 1 << 5;
-   private final static int WRITE_ENABLED = 1 << 4;
-   private final static int READ_ENABLED = 1 << 3;
-   private final static int COMM_ENABLED = 1 << 2;
+   private final static int TRANSMIT_ENABLED = 0x40;
+   private final static int EEPROM_DATAPOINTER = 0x20;
+   private final static int WRITE_ENABLED = 0x10;
+   private final static int READ_ENABLED = 0x08;
+   private final static int COMM_ENABLED = 0x04;
 
    private boolean transmitEnabled, writeEnabled, readEnabled, commEnabled;
    private boolean eepromDataPointer;

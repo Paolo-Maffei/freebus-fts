@@ -89,10 +89,16 @@ public class SerialBusMonitor implements TelegramListener
             Thread.sleep(1000);
 
       }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
       finally
       {
          if (mon != null)
             mon.dispose();
+
+         System.exit(0);
       }
    }
 }
