@@ -99,7 +99,7 @@ public class SerialPortWrapper
          serialPort.setOutputBufferSize(2048);
 
          // Taken from Calimero's RxtxAdapter:
-         serialPort.enableReceiveThreshold(1024);
+//         serialPort.enableReceiveThreshold(1024);
       }
       catch (Exception e)
       {
