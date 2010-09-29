@@ -1,11 +1,15 @@
 package org.freebus.fts.products;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -114,8 +118,9 @@ public class Mask
    @Column(name = "medium_type_number2")
    private Integer mediumTypeNumber2;
 
-   @Column(name = "bcu_type_number")
-   private Integer bcuTypeNumber;
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+   @JoinColumn(name = "bcu_type_number", nullable = true, referencedColumnName = "bcu_type_number")
+   private BcuType bcuType;
 
    /**
     * @return the id
@@ -614,19 +619,21 @@ public class Mask
    }
 
    /**
-    * @return the bcuTypeNumber
+    * @return The BCU type
     */
-   public Integer getBcuTypeNumber()
+   public BcuType getBcuType()
    {
-      return bcuTypeNumber;
+      return bcuType;
    }
 
    /**
-    * @param bcuTypeNumber the bcuTypeNumber to set
+    * Set the BCU type.
+    *
+    * @param bcuType - the BCU type to set
     */
-   public void setBcuTypeNumber(Integer bcuTypeNumber)
+   public void setBcuType(BcuType bcuType)
    {
-      this.bcuTypeNumber = bcuTypeNumber;
+      this.bcuType = bcuType;
    }
 
    /**

@@ -63,7 +63,7 @@ public final class LineDetails extends AbstractPage
       //
       // Line name
       //
-      lbl = new JLabel(I18n.getMessage("LinePage.Name") + ": ");
+      lbl = new JLabel(I18n.getMessage("LineDetails.Name") + ": ");
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
       add(nameEdit, new GridBagConstraints(1, gridy, 3, 1, 1, 1, w, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
       nameEdit.addFocusListener(new FocusListener()
@@ -90,7 +90,7 @@ public final class LineDetails extends AbstractPage
       //
       // Line address
       //
-      lbl = new JLabel(I18n.getMessage("LinePage.Address") + ": ");
+      lbl = new JLabel(I18n.getMessage("LineDetails.Address") + ": ");
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
       add(areaAddrLabel, new GridBagConstraints(1, gridy, 1, 1, 1, 1, e, GridBagConstraints.NONE, stdInsets, 0, 0));
 
@@ -151,9 +151,9 @@ public final class LineDetails extends AbstractPage
       {
          if (!updating)
          {
-            if (obj == line)
+            if (obj == line || line.getArea() == obj)
                updateContents();
-            else updateDeviceAddresses();
+            else updateLineAddresses();
          }
       }
 
@@ -161,7 +161,7 @@ public final class LineDetails extends AbstractPage
       public void projectComponentAdded(Object obj)
       {
          if (!updating)
-            updateDeviceAddresses();
+            updateLineAddresses();
       }
       
       @Override
@@ -224,7 +224,7 @@ public final class LineDetails extends AbstractPage
       nameEdit.setText(line.getName());
       // TODO notesEdit.setText(line.getNotes());
 
-      updateDeviceAddresses();
+      updateLineAddresses();
 
       updating = false;
    }
@@ -232,7 +232,7 @@ public final class LineDetails extends AbstractPage
    /**
     * Update the combobox with the available line addresses.
     */
-   private void updateDeviceAddresses()
+   private void updateLineAddresses()
    {
       updating = true;
 

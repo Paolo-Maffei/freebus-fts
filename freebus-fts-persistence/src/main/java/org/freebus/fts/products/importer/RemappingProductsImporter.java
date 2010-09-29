@@ -17,6 +17,7 @@ import org.freebus.fts.products.ParameterValue;
 import org.freebus.fts.products.Product;
 import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.Program;
+import org.freebus.fts.products.S19Block;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
@@ -388,6 +389,10 @@ public final class RemappingProductsImporter implements ProductsImporter
          if (knownProg == null)
          {
             logger.info("New program: " + prog);
+
+            for (final S19Block block : prog.getS19Blocks())
+               block.setId(0);
+
             persist(prog);
          }
          else if (prog.getVersion().compareToIgnoreCase(knownProg.getVersion()) > 0)

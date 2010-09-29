@@ -140,4 +140,86 @@
   </addColumn>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-9">
+  <insert tableName="SEQUENCE">
+   <column name="SEQ_NAME" value="S19Block" />
+   <column name="SEQ_COUNT" value="0" />
+  </insert>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-10">
+  <createTable tableName="s19_block">
+   <column name="block_id" type="INT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="block_number" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="program_id" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="block_name" type="VARCHAR(50)" />
+   <column name="block_type" type="SMALLINT" />
+   <column name="control_code" type="SMALLINT">
+    <constraints nullable="false" />
+   </column>
+   <column name="segment_type" type="SMALLINT" />
+   <column name="segment_id" type="SMALLINT" />
+   <column name="segment_address" type="INT" />
+   <column name="segment_length" type="INT" />
+   <column name="access_attributes" type="SMALLINT" />
+   <column name="memory_type" type="SMALLINT" />
+   <column name="memory_attributes" type="SMALLINT" />
+   <column name="block_data" type="BLOB" />
+   <column name="block_mask" type="BLOB" />
+   <column name="record" type="BLOB" />
+   <column name="merge_id" type="SMALLINT" />
+   <column name="proc_mask" type="SMALLINT" defaultValueNumeric="0">
+    <constraints nullable="false" />
+   </column>
+  </createTable>
+
+  <createIndex indexName="FK_s19_block_program_id" tableName="s19_block" unique="false">
+   <column name="program_id" />
+  </createIndex>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-11">
+  <createTable tableName="bcu_type">
+   <column name="bcu_type_number" type="SMALLINT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="bcu_type_name" type="VARCHAR(50)">
+    <constraints nullable="false" />
+   </column>
+   <column name="bcu_type_cpu" type="VARCHAR(50)" />
+  </createTable>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-12">
+  <addColumn tableName="hw_product">
+   <column name="bcu_type_number" type="SMALLINT" />
+  </addColumn>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-13">
+  <createTable tableName="s19_block_paragraph">
+   <column name="s19_block_paragraph_id" type="INT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="block_id" type="INT">
+    <constraints nullable="false" />
+   </column>
+   <column name="pt_column_id" type="SMALLINT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="data_long" type="INT" />
+   <column name="data_binary" type="BLOB" />
+  </createTable>
+
+  <createIndex indexName="FK_s19_block_paragraph_block_id" tableName="s19_block_paragraph" unique="false">
+   <column name="block_id" />
+  </createIndex>
+ </changeSet>
+
 </databaseChangeLog>

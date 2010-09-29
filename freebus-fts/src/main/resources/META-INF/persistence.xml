@@ -7,6 +7,7 @@
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <!-- products -->
+  <class>org.freebus.fts.products.BcuType</class>
   <class>org.freebus.fts.products.CatalogEntry</class>
   <class>org.freebus.fts.products.CommunicationObject</class>
   <class>org.freebus.fts.products.FunctionalEntity</class>
@@ -18,6 +19,8 @@
   <class>org.freebus.fts.products.Product</class>
   <class>org.freebus.fts.products.ProductDescription</class>
   <class>org.freebus.fts.products.Program</class>
+  <class>org.freebus.fts.products.S19Block</class>
+  <class>org.freebus.fts.products.S19BlockParagraph</class>
   <class>org.freebus.fts.products.VirtualDevice</class>
   <!-- project -->
   <class>org.freebus.fts.project.Area</class>

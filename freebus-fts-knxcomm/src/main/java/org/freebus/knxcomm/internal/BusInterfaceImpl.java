@@ -14,11 +14,11 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.link.Link;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
@@ -32,7 +32,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
 {
    protected final CopyOnWriteArraySet<TelegramListener> listeners = new CopyOnWriteArraySet<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
-   private final KNXConnection con;
+   private final Link con;
    private final Semaphore replySemaphore = new Semaphore(0);
    private Telegram waitConTelegram;
 
@@ -44,7 +44,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     * Create a bus-interface object that uses the given connection for the bus
     * communication.
     */
-   public BusInterfaceImpl(KNXConnection con)
+   public BusInterfaceImpl(Link con)
    {
       this.con = con;
 
@@ -123,7 +123,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     * {@inheritDoc}
     */
    @Override
-   public KNXConnection getConnection()
+   public Link getConnection()
    {
       return con;
    }
@@ -213,7 +213,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
 
    /**
     * An {@link EmiFrame EMI frame} was received. This method is called from the
-    * {@link KNXConnection connection's} receiver thread.
+    * {@link Link connection's} receiver thread.
     */
    @Override
    public void frameReceived(EmiFrame frame)

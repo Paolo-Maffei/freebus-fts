@@ -9,7 +9,7 @@ public class TestVdxSectionHeader
    @Test
    public final void testVdxSectionHeader()
    {
-      final VdxSectionHeader hdr = new VdxSectionHeader("section-1", 123, 4567890, null, null);
+      final VdxSectionHeader hdr = new VdxSectionHeader("section-1", 123, 4567890, null, null, null);
       assertNotNull(hdr);
 
       assertEquals("section-1", hdr.name);
@@ -24,10 +24,12 @@ public class TestVdxSectionHeader
    {
       final String[] fields = new String[] { "field1", "field2", "field3" };
       final VdxFieldType[] types = new VdxFieldType[] { VdxFieldType.STRING, VdxFieldType.STRING, VdxFieldType.STRING };
-      final VdxSectionHeader hdr = new VdxSectionHeader("section-1", 1, 0, fields, types);
+      final int[] sizes = new int[] { 10, 5, 8 };
+      final VdxSectionHeader hdr = new VdxSectionHeader("section-1", 1, 0, fields, types, sizes);
 
       assertEquals(-1, hdr.getIndexOf(null));
       assertEquals(-1, hdr.getIndexOf("no-such-field"));
       assertEquals(1, hdr.getIndexOf("field2"));
+      assertEquals(5, hdr.sizes[1]);
    }
 }

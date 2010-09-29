@@ -5,7 +5,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.jobs.ReadDeviceStatusJob;
-import org.freebus.knxcomm.serial.SerialPortUtil;
+import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;
 import org.freebus.knxcomm.types.LinkMode;

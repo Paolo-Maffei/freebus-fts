@@ -1,5 +1,6 @@
 package org.freebus.fts.products;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,6 +44,10 @@ public class Product
 
    @Column(name = "bus_current")
    private int busCurrent;
+
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+   @JoinColumn(name = "bcu_type_number", nullable = true, referencedColumnName = "bcu_type_number")
+   private BcuType bcuType;
 
    /**
     * Create an empty product object.
@@ -168,6 +173,22 @@ public class Product
    public void setVersion(int version)
    {
       this.version = version;
+   }
+
+   /**
+    * @param bcuType the bcuType to set
+    */
+   public void setBcuType(BcuType bcuType)
+   {
+      this.bcuType = bcuType;
+   }
+
+   /**
+    * @return the bcuType
+    */
+   public BcuType getBcuType()
+   {
+      return bcuType;
    }
 
    /**

@@ -14,6 +14,7 @@ import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.models.SortedListModel;
 import org.freebus.fts.elements.utils.TableUtils;
 import org.freebus.fts.pages.InspectVdxFile;
+import org.freebus.fts.persistence.vdx.VdxFieldType;
 import org.freebus.fts.persistence.vdx.VdxSection;
 import org.freebus.fts.persistence.vdx.VdxSectionHeader;
 
@@ -65,7 +66,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
       add(scpFields);
 
       final String[] columnNames = new String[] { I18n.getMessage("InspectVdxFile.KeyColumn"),
-            I18n.getMessage("InspectVdxFile.ValueColumn") };
+            I18n.getMessage("InspectVdxFile.TypeColumn"), I18n.getMessage("InspectVdxFile.ValueColumn") };
       tbmFields.setColumnIdentifiers(columnNames);
       tblFields.setAutoResizeMode(JTable.AUTO_RESIZE_OFF);
       tblFields.getTableHeader().setReorderingAllowed(true);
@@ -164,8 +165,21 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
 
       for (int fieldIdx = 0; fieldIdx < numFields; ++fieldIdx)
       {
+         final String valueStr = section.getValue(recordIdx, fieldIdx);
+         final VdxFieldType fieldType = header.types[fieldIdx];
+         Object value;
+
+         if (!valueStr.isEmpty() && (fieldType == VdxFieldType.INTEGER || fieldType == VdxFieldType.SHORT))
+            value = valueStr + "  (0x" + Integer.toHexString(Integer.valueOf(valueStr)) + ')';
+         else value = valueStr;
+
+         String fieldTypeStr = fieldType.toString().toLowerCase();
+         if (fieldType == VdxFieldType.STRING || fieldType == VdxFieldType.BYTE_ARRAY || fieldType == VdxFieldType.BYTE)
+            fieldTypeStr += '[' + Integer.toString(header.sizes[fieldIdx]) + ']';
+
          tbmFields.setValueAt(header.fields[fieldIdx], fieldIdx, 0);
-         tbmFields.setValueAt(section.getValue(recordIdx, fieldIdx), fieldIdx, 1);
+         tbmFields.setValueAt(fieldTypeStr, fieldIdx, 1);
+         tbmFields.setValueAt(value, fieldIdx, 2);
       }
 
       TableUtils.pack(tblFields, 2);

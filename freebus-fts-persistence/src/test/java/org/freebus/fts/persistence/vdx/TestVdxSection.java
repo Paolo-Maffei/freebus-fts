@@ -20,7 +20,8 @@ public class TestVdxSection
    {
       final String[] fields = new String[] { "field1", "field2", "field3" };
       final VdxFieldType[] types = new VdxFieldType[] { VdxFieldType.STRING, VdxFieldType.STRING, VdxFieldType.STRING };
-      header = new VdxSectionHeader("section-1", 1, 0, fields, types);
+      final int[] sizes = new int[] { 10, 5, 8 };
+      header = new VdxSectionHeader("section-1", 1, 0, fields, types, sizes);
 
       section = new VdxSection(header);
 

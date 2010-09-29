@@ -177,7 +177,7 @@ public enum ApplicationType
    UserManufacturerInfo_Read(0x2c5, 10, 0, 0, UserManufacturerInfo_Response),
 
    /**
-    * Call a function property of an interface object.
+    * Call a function property command of an interface object.
     * <p>
     * 3+ data bytes: object index, property id, data.
     */

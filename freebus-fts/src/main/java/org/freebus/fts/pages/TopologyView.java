@@ -48,7 +48,7 @@ public class TopologyView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
-   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEditProperties, btnEdit, btnDelete;
+   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEdit, btnDelete;
    private Object selectedObject;
 
    /**
@@ -85,15 +85,13 @@ public class TopologyView extends AbstractPage
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(false);
-               btnEditProperties.setEnabled(true);
-               btnEdit.setEnabled(false);
+               btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
             else if (selectedObject instanceof Line)
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
-               btnEditProperties.setEnabled(true);
                btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
@@ -101,7 +99,6 @@ public class TopologyView extends AbstractPage
             {
                btnAddLine.setEnabled(true);
                btnAddDevice.setEnabled(true);
-               btnEditProperties.setEnabled(true);
                btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
@@ -109,7 +106,6 @@ public class TopologyView extends AbstractPage
             {
                btnAddLine.setEnabled(false);
                btnAddDevice.setEnabled(false);
-               btnEditProperties.setEnabled(false);
                btnEdit.setEnabled(false);
                btnDelete.setEnabled(false);
             }
@@ -215,25 +211,6 @@ public class TopologyView extends AbstractPage
       btnAddDevice.setEnabled(false);
       btnAddDevice.setIcon(ImageCache.getIcon("icons/device-new"));
       btnAddDevice.setToolTipText(I18n.getMessage("TopologyView.AddDeviceTip"));
-
-      btnEditProperties = new ToolBarButton(ImageCache.getIcon("icons/edit-properties"));
-      toolBar.add(btnEditProperties);
-      btnEditProperties.setEnabled(false);
-      btnEditProperties.setToolTipText(I18n.getMessage("TopologyView.EditItemTip"));
-      btnEditProperties.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent arg0)
-         {
-            final Object obj = getSelectedObject();
-            if (obj instanceof Device)
-               editDeviceProperties((Device) obj);
-            else if (obj instanceof Area)
-               editAreaProperties((Area) obj);
-            else if (obj instanceof Line)
-               editLineProperties((Line) obj);
-         }
-      });
 
       btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
       toolBar.add(btnEdit);
@@ -403,75 +380,53 @@ public class TopologyView extends AbstractPage
       updateContents();
    }
 
-   /**
-    * Add a device to the selected line.
-    */
-   public void editDeviceProperties(Device device)
-   {
-      Line line = device.getLine();
-      if (line == null)
-         return;
-
-      // Request name first
-      final DeviceProperties dlg = new DeviceProperties(MainWindow.getInstance(), device);
-      dlg.setVisible(true); // this dialog is modal
-      if (dlg.isAccepted() == false)
-      {
-         return;
-      }
-
-      // device.setName(dlg.getDeviceName()); //TODO do we allow to change the
-      // name ?
-      device.setAddress(dlg.getAddress());
-   }
-
-   /**
-    * Add a device to the selected line.
-    */
-   public void addDevice(Device device)
-   {
-      DefaultMutableTreeNode lineNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-      final Object selectedObject = lineNode == null ? null : lineNode.getUserObject();
-      Line line = null;
-
-      if (selectedObject instanceof Line)
-      {
-         line = (Line) selectedObject;
-      }
-      else if (selectedObject instanceof Device)
-      {
-         line = ((Device) selectedObject).getLine();
-         lineNode = (DefaultMutableTreeNode) lineNode.getParent();
-      }
-
-      if (line == null)
-      {
-         JOptionPane.showMessageDialog(MainWindow.getInstance(), I18n.getMessage("TopologyView.ErrNoLineSelected"),
-               I18n.getMessage("TopologyView.ErrTitle"), JOptionPane.ERROR_MESSAGE);
-         return;
-      }
-
-      int freeAddr = 0;
-      try
-      {
-         freeAddr = line.getFreeAddress();
-      }
-      catch (RuntimeException e)
-      {
-         // TODO Error dialog
-         return;
-      }
-
-      device.setAddress(freeAddr);
-      line.add(device);
-
-      final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
-
-      final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
-      treeModel.insertNodeInto(deviceNode, lineNode, 0);
-
-      tree.expandPath(new TreePath(lineNode));
-   }
+//   /**
+//    * Add a device to the selected line.
+//    */
+//   public void addDevice(Device device)
+//   {
+//      DefaultMutableTreeNode lineNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+//      final Object selectedObject = lineNode == null ? null : lineNode.getUserObject();
+//      Line line = null;
+//
+//      if (selectedObject instanceof Line)
+//      {
+//         line = (Line) selectedObject;
+//      }
+//      else if (selectedObject instanceof Device)
+//      {
+//         line = ((Device) selectedObject).getLine();
+//         lineNode = (DefaultMutableTreeNode) lineNode.getParent();
+//      }
+//
+//      if (line == null)
+//      {
+//         JOptionPane.showMessageDialog(MainWindow.getInstance(), I18n.getMessage("TopologyView.ErrNoLineSelected"),
+//               I18n.getMessage("TopologyView.ErrTitle"), JOptionPane.ERROR_MESSAGE);
+//         return;
+//      }
+//
+//      int freeAddr = 0;
+//      try
+//      {
+//         freeAddr = line.getFreeAddress();
+//      }
+//      catch (RuntimeException e)
+//      {
+//         // TODO Error dialog
+//         return;
+//      }
+//
+//      device.setAddress(freeAddr);
+//      line.add(device);
+//
+//      final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
+//
+//      final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
+//      treeModel.insertNodeInto(deviceNode, lineNode, 0);
+//
+//      tree.expandPath(new TreePath(lineNode));
+//   }
 
    /**
     * @return the user-object of the currently selected tree node, or null if

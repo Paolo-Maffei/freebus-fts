@@ -4,13 +4,13 @@ import java.io.IOException;
 import java.util.Arrays;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.knxcomm.serial.Ft12Connection;
+import org.freebus.knxcomm.link.serial.Ft12Link;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
- * An implementation of the {@link Ft12Connection}, used for unit testing.
+ * An implementation of the {@link Ft12Link}, used for unit testing.
  */
-public class SimulatedFt12Connection extends Ft12Connection
+public class SimulatedFt12Connection extends Ft12Link
 {
    private byte[] dataToRead, writtenData;
    public int readIndex;

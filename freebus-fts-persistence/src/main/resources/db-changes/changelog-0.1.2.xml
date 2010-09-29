@@ -32,34 +32,29 @@
    <column name="device_id" type="INT">
     <constraints nullable="false" />
    </column>
-   <column defaultValueBoolean="true" name="object_read"
-    type="BIT">
+   <column defaultValueBoolean="true" name="object_read" type="BIT">
     <constraints nullable="false" />
    </column>
-   <column defaultValueBoolean="true" name="object_write"
-    type="BIT">
+   <column defaultValueBoolean="true" name="object_write" type="BIT">
     <constraints nullable="false" />
    </column>
-   <column defaultValueBoolean="true" name="object_comm"
-    type="BIT">
+   <column defaultValueBoolean="true" name="object_comm" type="BIT">
     <constraints nullable="false" />
    </column>
-   <column defaultValueBoolean="true" name="object_trans"
-    type="BIT">
+   <column defaultValueBoolean="true" name="object_trans" type="BIT">
     <constraints nullable="false" />
-   </column>   
-   <column defaultValueBoolean="true" name="object_update"
-    type="BIT">
+   </column>
+   <column defaultValueBoolean="true" name="object_update" type="BIT">
     <constraints nullable="false" />
-   </column>   
+   </column>
    <column defaultValueBoolean="false" name="object_readoninit"
     type="BIT">
     <constraints nullable="false" />
-   </column>   
+   </column>
    <column defaultValueBoolean="false" name="device_object_visible"
     type="BIT">
     <constraints nullable="false" />
-   </column>   
+   </column>
    <column name="device_object_type" type="INT">
     <constraints nullable="false" />
    </column>
@@ -68,8 +63,8 @@
  </changeSet>
 
  <changeSet author="stefant" id="0.1.2-7">
-  <createIndex indexName="FK_device_object_device_id" tableName="device_object"
-   unique="false">
+  <createIndex indexName="FK_device_object_device_id"
+   tableName="device_object" unique="false">
    <column name="device_id" />
   </createIndex>
  </changeSet>
@@ -82,12 +77,10 @@
    <column name="device_object_id" type="INT">
     <constraints nullable="false" />
    </column>
-   <column defaultValueBoolean="true" name="send"
-    type="BIT">
+   <column defaultValueBoolean="true" name="send" type="BIT">
     <constraints nullable="false" />
    </column>
-   <column defaultValueBoolean="true" name="acknowledge"
-    type="BIT">
+   <column defaultValueBoolean="true" name="acknowledge" type="BIT">
     <constraints nullable="false" />
    </column>
   </createTable>
@@ -175,6 +168,12 @@
 
  <changeSet author="stefant" id="0.1.2-14">
   <renameTable newTableName="parameter" oldTableName="parameter_tmp" />
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.2-15">
+  <modifyColumn tableName="mask">
+   <column name="bcu_type_number" type="SMALLINT" />
+  </modifyColumn>
  </changeSet>
 
 </databaseChangeLog>

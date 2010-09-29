@@ -2,14 +2,14 @@ package org.freebus.knxcomm.internal;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.freebus.knxcomm.KNXConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameListener;
+import org.freebus.knxcomm.link.Link;
 
 /**
  * An abstract KNX connection class that has methods for handling listeners.
  */
-public abstract class ListenableConnection implements KNXConnection
+public abstract class ListenableConnection implements Link
 {
    private final CopyOnWriteArrayList<EmiFrameListener> listeners = new CopyOnWriteArrayList<EmiFrameListener>();
 

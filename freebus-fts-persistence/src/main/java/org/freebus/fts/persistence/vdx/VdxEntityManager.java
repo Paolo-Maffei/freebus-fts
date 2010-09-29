@@ -218,6 +218,9 @@ public final class VdxEntityManager
                final int vdxFieldId = section.getHeader().getIndexOf(assoc.getVdxFieldName());
                if (vdxFieldId < 0)
                {
+                  if (assoc.isNullable())
+                     continue;
+
                   throw new PersistenceException(info.getClazz() + ": VDX section " + info.getName() + " has no field "
                         + assoc.getVdxFieldName());
                }

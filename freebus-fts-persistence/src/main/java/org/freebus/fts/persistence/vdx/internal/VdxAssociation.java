@@ -18,16 +18,18 @@ public final class VdxAssociation
    private String vdxFieldName;
    private Class<?> targetClass;
    private Field targetField;
+   private boolean nullable;
 
    /**
     * Create an association object.
     */
-   public VdxAssociation(Annotation type, Field field, String vdxFieldName, Class<?> targetClass)
+   public VdxAssociation(Annotation type, Field field, String vdxFieldName, Class<?> targetClass, boolean nullable)
    {
       this.type = type;
       this.field = field;
       this.setVdxFieldName(vdxFieldName);
       this.targetClass = targetClass;
+      this.setNullable(nullable);
    }
 
    /**
@@ -110,5 +112,21 @@ public final class VdxAssociation
    public Field getTargetField()
    {
       return targetField;
+   }
+
+   /**
+    * @param nullable the nullable to set
+    */
+   public void setNullable(boolean nullable)
+   {
+      this.nullable = nullable;
+   }
+
+   /**
+    * @return the nullable
+    */
+   public boolean isNullable()
+   {
+      return nullable;
    }
 }

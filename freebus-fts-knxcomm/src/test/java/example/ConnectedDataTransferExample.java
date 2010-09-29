@@ -12,7 +12,7 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.Application;
-import org.freebus.knxcomm.serial.SerialPortUtil;
+import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.types.LinkMode;
 

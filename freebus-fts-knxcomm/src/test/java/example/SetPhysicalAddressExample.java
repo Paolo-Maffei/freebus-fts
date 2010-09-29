@@ -8,7 +8,7 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.jobs.Job;
 import org.freebus.knxcomm.jobs.JobListener;
 import org.freebus.knxcomm.jobs.SetPhysicalAddressJob;
-import org.freebus.knxcomm.netip.KNXnetConnection;
+import org.freebus.knxcomm.link.netip.KNXnetLink;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
@@ -31,7 +31,7 @@ public final class SetPhysicalAddressExample
          Environment.init();
 
          logger.info("*** Opening bus connection");
-         bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
+         bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 //         bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
          bus.open(LinkMode.LinkLayer);
 

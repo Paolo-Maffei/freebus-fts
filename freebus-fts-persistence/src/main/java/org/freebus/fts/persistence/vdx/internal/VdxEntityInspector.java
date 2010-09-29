@@ -123,6 +123,7 @@ public final class VdxEntityInspector
       for (Field field : clazz.getDeclaredFields())
       {
          String fieldName = null;
+         boolean nullable = false;
 
          final VdxField annoVdxField = field.getAnnotation(VdxField.class);
          if (annoVdxField != null)
@@ -135,6 +136,7 @@ public final class VdxEntityInspector
             if (annoJoinColumn != null)
             {
                fieldName = annoJoinColumn.name();
+               nullable = annoJoinColumn.nullable();
             }
             else
             {
@@ -142,6 +144,7 @@ public final class VdxEntityInspector
                if (annoColumn != null)
                {
                   fieldName = annoColumn.name();
+                  nullable = annoColumn.nullable();
                }
             }
          }
@@ -159,7 +162,7 @@ public final class VdxEntityInspector
             {
                final OneToMany aa = (OneToMany) a;
                final Class<?> entityClass = getAssociationEntityClass(field.getType(), field.getGenericType());
-               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, entityClass);
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, entityClass, nullable);
                assoc.setTargetField(findTargetField(assoc.getTargetClass(), clazz));
                info.addAssociation(assoc);
                fieldName = null;
@@ -170,7 +173,7 @@ public final class VdxEntityInspector
 
                final ManyToMany aa = (ManyToMany) a;
                final Class<?> entityClass = getAssociationEntityClass(field.getType(), field.getGenericType());
-               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, entityClass);
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, entityClass, nullable);
                assoc.setTargetField(findTargetField(assoc.getTargetClass(), clazz));
                info.addAssociation(assoc);
                fieldName = null;
@@ -178,14 +181,14 @@ public final class VdxEntityInspector
             else if (a instanceof ManyToOne)
             {
                final ManyToOne aa = (ManyToOne) a;
-               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, field.getType());
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, field.getType(), nullable);
                info.addAssociation(assoc);
                fieldName = null;
             }
             else if (a instanceof OneToOne)
             {
                final OneToOne aa = (OneToOne) a;
-               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, field.getType());
+               final VdxAssociation assoc = new VdxAssociation(aa, field, fieldName, field.getType(), nullable);
                info.addAssociation(assoc);
                fieldName = null;
             }

@@ -33,11 +33,11 @@ public interface ProjectController
    public void edit(Object obj);
 
    /**
-    * Edit a device.
+    * Edit an area.
     * 
-    * @param dev - the device to edit.
+    * @param area - the area to edit.
     */
-   public void edit(Device dev);
+   public void edit(Area area);
 
    /**
     * Edit a line.
@@ -45,6 +45,20 @@ public interface ProjectController
     * @param line - the line to edit.
     */
    public void edit(Line line);
+
+   /**
+    * Edit a device.
+    * 
+    * @param dev - the device to edit.
+    */
+   public void edit(Device dev);
+
+   /**
+    * Edit a building.
+    * 
+    * @param building - the building to edit.
+    */
+   public void edit(Building building);
 
    /**
     * Remove an object. Calls the proper remove method to do the job

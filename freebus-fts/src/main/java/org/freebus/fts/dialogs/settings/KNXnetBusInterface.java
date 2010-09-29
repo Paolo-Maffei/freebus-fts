@@ -16,7 +16,7 @@ import javax.swing.JTextField;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.knxcomm.netip.KNXnetConnection;
+import org.freebus.knxcomm.link.netip.KNXnetLink;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
@@ -60,7 +60,7 @@ final class KNXnetBusInterface extends JPanel
       c.gridx = 0;
       c.gridy = ++gridY;
       add(new JLabel(I18n.formatMessage("Settings.KNXnetBusInterface.Port", new String[] { Integer
-            .toString(KNXnetConnection.defaultPortUDP) })), c);
+            .toString(KNXnetLink.defaultPortUDP) })), c);
 
       inpPort = new JTextField();
       c.fill = GridBagConstraints.HORIZONTAL;
@@ -117,7 +117,7 @@ final class KNXnetBusInterface extends JPanel
 
       int port = cfg.getIntValue(configKey + ".port");
       if (port < 1)
-         port = KNXnetConnection.defaultPortUDP;
+         port = KNXnetLink.defaultPortUDP;
       inpPort.setText(Integer.toString(port));
    }
 
@@ -132,8 +132,8 @@ final class KNXnetBusInterface extends JPanel
          lblTestOutput.setText(I18n.getMessage("Settings.KNXnetBusInterface.TestConnecting"));
          setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
-         KNXnetConnection con = new KNXnetConnection(inpHost.getText(), Integer.valueOf(inpPort.getText()));
-         con.open(LinkMode.LinkLayer);
+         KNXnetLink link = new KNXnetLink(inpHost.getText(), Integer.valueOf(inpPort.getText()));
+         link.open(LinkMode.LinkLayer);
 
          final StringBuffer sb = new StringBuffer();
 
@@ -144,7 +144,7 @@ final class KNXnetBusInterface extends JPanel
 
          lblTestOutput.setText(sb.toString());
 
-         con.close();
+         link.close();
       }
       catch (Exception e)
       {

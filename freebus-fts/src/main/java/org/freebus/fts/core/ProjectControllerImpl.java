@@ -2,9 +2,10 @@ package org.freebus.fts.core;
 
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.dialogs.AddDeviceDialog;
+import org.freebus.fts.pages.AreaDetails;
+import org.freebus.fts.pages.BuildingDetails;
 import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.pages.LineDetails;
-import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
@@ -28,17 +29,6 @@ public final class ProjectControllerImpl implements ProjectController
       final MainWindow mainWin = MainWindow.getInstance();
       final AddDeviceDialog dlg = new AddDeviceDialog(virtualDevice, mainWin);
       dlg.setVisible(true);
-      if (!dlg.isAccepted())
-         return;
-
-      final Device device = new Device(virtualDevice);
-
-      final TopologyView topologyView = (TopologyView) mainWin.getPage(TopologyView.class, null);
-      if (topologyView == null)
-         return;
-
-      topologyView.addDevice(device);
-      ProjectManager.fireComponentAdded(device);
    }
 
    /**
@@ -47,10 +37,32 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public void edit(Object obj)
    {
-      if (obj instanceof Device)
-         edit((Device) obj);
+      if (obj instanceof Area)
+         edit((Area) obj);
       else if (obj instanceof Line)
          edit((Line) obj);
+      else if (obj instanceof Device)
+         edit((Device) obj);
+      else if (obj instanceof Building)
+         edit((Building) obj);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void edit(Area area)
+   {
+      MainWindow.getInstance().showPage(AreaDetails.class, area);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void edit(Line line)
+   {
+      MainWindow.getInstance().showPage(LineDetails.class, line);
    }
 
    /**
@@ -66,9 +78,9 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
-   public void edit(Line line)
+   public void edit(Building building)
    {
-      MainWindow.getInstance().showPage(LineDetails.class, line);
+      MainWindow.getInstance().showPage(BuildingDetails.class, building);
    }
 
    /**

@@ -13,7 +13,7 @@ public enum KNXConnectionType
    /**
     * Serial port connection, using FT1.2
     */
-   SERIAL_FT12("Serial Port FT1.2"),
+   SERIAL_FT12("Serial FT1.2"),
 
    /**
     * KNXnet/IP network connection

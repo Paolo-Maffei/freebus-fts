@@ -65,6 +65,8 @@ public class About extends Dialog
 
       sb.append("<i>").append(htmlEncode(I18n.getMessage("About.Copyright"))).append("</i><br /><br />");
 
+      sb.append(I18n.getMessage("About.Details")).append("<br /><br />");
+
       sb.append(MessageFormat.format(htmlEncode(I18n.getMessage("About.Website")), "<a href=\"" + projectUrl + "\">"
             + projectUrl + "</a>", null));
       sb.append("<br /><br />");

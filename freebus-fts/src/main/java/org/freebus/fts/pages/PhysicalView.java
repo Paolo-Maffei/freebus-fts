@@ -45,7 +45,7 @@ public class PhysicalView extends AbstractPage
    private final JTree tree;
    private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
    private final JScrollPane treeView;
-   private JButton btnAddBuilding, btnAddRoom, btnAddDevice, btnEditProperties, btnEdit, btnDelete;
+   private JButton btnAddBuilding, btnAddRoom, btnAddDevice, btnEdit, btnDelete;
    private Object selectedObject;
 
    static class UnassignedDevicesStore
@@ -92,23 +92,20 @@ public class PhysicalView extends AbstractPage
             {
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(false);
-               btnEditProperties.setEnabled(true);
-               btnEdit.setEnabled(false);
+               btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
             else if (selectedObject instanceof Room)
             {
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(true);
-               btnEditProperties.setEnabled(true);
-               btnEdit.setEnabled(false);
+               btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
             else if (selectedObject instanceof Device)
             {
                btnAddRoom.setEnabled(true);
                btnAddDevice.setEnabled(true);
-               btnEditProperties.setEnabled(true);
                btnEdit.setEnabled(true);
                btnDelete.setEnabled(true);
             }
@@ -116,7 +113,6 @@ public class PhysicalView extends AbstractPage
             {
                btnAddRoom.setEnabled(false);
                btnAddDevice.setEnabled(false);
-               btnEditProperties.setEnabled(false);
                btnEdit.setEnabled(false);
                btnDelete.setEnabled(false);
             }
@@ -222,25 +218,6 @@ public class PhysicalView extends AbstractPage
       btnAddDevice.setEnabled(false);
       btnAddDevice.setIcon(ImageCache.getIcon("icons/device-new"));
       btnAddDevice.setToolTipText(I18n.getMessage("PhysicalView.AddDeviceTip"));
-
-      btnEditProperties = new ToolBarButton(ImageCache.getIcon("icons/edit-properties"));
-      toolBar.add(btnEditProperties);
-      btnEditProperties.setEnabled(false);
-      btnEditProperties.setToolTipText(I18n.getMessage("PhysicalView.EditItemTip"));
-      btnEditProperties.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent arg0)
-         {
-            // final Object obj = getSelectedUserObject();
-            // if (obj instanceof Device)
-            // editDeviceProperties((Device) obj);
-            // else if (obj instanceof Area)
-            // editAreaProperties((Area) obj);
-            // else if (obj instanceof Line)
-            // editLineProperties((Line) obj);
-         }
-      });
 
       btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
       toolBar.add(btnEdit);

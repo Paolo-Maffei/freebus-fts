@@ -448,6 +448,7 @@ public final class VdxFileReader
       VdxSectionHeader sectionHeader;
       final Vector<String> fieldNames = new Vector<String>(32);
       final Vector<VdxFieldType> fieldTypes = new Vector<VdxFieldType>(32);
+      final Vector<Integer> fieldSizes = new Vector<Integer>(32);
       String line;
       long offset;
 
@@ -473,13 +474,17 @@ public final class VdxFileReader
          // Read the fields of the section
          fieldNames.clear();
          fieldTypes.clear();
+         fieldSizes.clear();
          while (!reader.atEnd() && reader.read() == 'C')
          {
             // A field definition line looks like this:
             // C1 T3 1 4 N MANUFACTURER_ID
-            reader.readWord(); // Skip the field-id "1" (we already read the
-            // 'C')
-            reader.readWord(); // Skip the section name "T3"
+
+            // Skip the field-id "1" (we already read the 'C')
+            reader.readWord();
+
+            // Skip the section name "T3"
+            reader.readWord(); 
 
             // the field data type
             try
@@ -492,9 +497,11 @@ public final class VdxFileReader
                      + Long.toString(reader.getFilePointer()), e);
             }
 
-            reader.readWord(); // Skip the size of the field in bytes (int:4,
-            // short:2, string:length, ...)
-            reader.readWord(); // Skip the null-allowed Y|N switch
+            // The size of the field in bytes
+            fieldSizes.add(Integer.valueOf(reader.readWord()));
+
+            // Skip the null-allowed Y|N switch
+            reader.readWord();
 
             // the field name
             line = reader.readLine();
@@ -509,8 +516,12 @@ public final class VdxFileReader
          final VdxFieldType[] fieldTypesArr = new VdxFieldType[fieldTypes.size()];
          fieldTypes.toArray(fieldTypesArr);
 
+         final int[] fieldSizesArr = new int[fieldSizes.size()];
+         for (int i = fieldSizes.size() - 1; i >= 0; --i)
+            fieldSizesArr[i] = fieldSizes.get(i);
+
          // Create the section header object
-         sectionHeader = new VdxSectionHeader(sectionName, sectionId, offset, fieldNamesArr, fieldTypesArr);
+         sectionHeader = new VdxSectionHeader(sectionName, sectionId, offset, fieldNamesArr, fieldTypesArr, fieldSizesArr);
          sectionHeaders.put(sectionName, sectionHeader);
 
          // Skip the section entries

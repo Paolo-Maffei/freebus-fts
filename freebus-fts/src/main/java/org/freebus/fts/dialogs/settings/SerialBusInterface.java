@@ -10,7 +10,7 @@ import javax.swing.JPanel;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
-import org.freebus.knxcomm.serial.SerialPortUtil;
+import org.freebus.knxcomm.link.serial.SerialPortUtil;
 
 /**
  * A widget for configuring a serial bus interface connection.

@@ -9,7 +9,7 @@ import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.jobs.JobListener;
 import org.freebus.knxcomm.jobs.ReadDeviceDetailsJob;
-import org.freebus.knxcomm.netip.KNXnetConnection;
+import org.freebus.knxcomm.link.netip.KNXnetLink;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;
 import org.freebus.knxcomm.types.LinkMode;
@@ -42,7 +42,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       //
       // bus =
       // BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
-      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetConnection.defaultPortUDP);
+      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
@@ -111,11 +111,14 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       }
       finally
       {
-         Logger.getLogger(ReadDeviceDetailsJobExample.class).debug("done, exit");
          if (tst != null)
+         {
+            Logger.getLogger(ReadDeviceDetailsJobExample.class).debug("closing connection");
             tst.dispose();
+         }
 
          Thread.sleep(500);
+         Logger.getLogger(ReadDeviceDetailsJobExample.class).debug("done, exit");
          System.exit(0);
       }
    }

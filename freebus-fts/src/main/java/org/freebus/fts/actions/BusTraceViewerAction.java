@@ -11,8 +11,8 @@ import org.freebus.fts.core.Config;
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.filter.TrxFileFilter;
 import org.freebus.fts.pages.BusTraceViewer;
-import org.freebus.fts.utils.TrxFileFilter;
 
 /**
  * Ask the user for a bus trace file and open a {@link BusTraceViewer bus trace

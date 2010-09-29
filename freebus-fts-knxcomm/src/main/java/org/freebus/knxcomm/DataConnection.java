@@ -7,17 +7,20 @@ import java.util.concurrent.TimeoutException;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.freebus.knxcomm.application.Memory;
 
 /**
  * A direct connection to a device on the KNX/EIB bus. Use
  * {@link BusInterface#connect(PhysicalAddress, org.freebus.knxcomm.telegram.Priority)}
  * to open a data connection.
- * 
+ * <p>
  * The data connection is {@link Application application} oriented. Proper
  * telegrams for transporting the applications and its data are created as
  * needed internally.
- * 
+ * <p>
  * Always close the connection with {@link #close} when done.
+ * 
+ * @see BusInterface#connect(PhysicalAddress, org.freebus.knxcomm.telegram.Priority)
  */
 public interface DataConnection
 {

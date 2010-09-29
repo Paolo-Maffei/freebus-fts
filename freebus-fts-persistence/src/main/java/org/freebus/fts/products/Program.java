@@ -107,6 +107,10 @@ public class Program
    @Column(name = "number_of_polling_groups")
    private int numPollingGroups;
 
+   @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+   @JoinColumn(name = "program_id")
+   private Set<S19Block> s19Blocks = new HashSet<S19Block>();
+
    /**
     * Create an empty program object.
     */
@@ -573,6 +577,14 @@ public class Program
    public Set<ParameterType> getParameterTypes()
    {
       return parameterTypes;
+   }
+
+   /**
+    * @return the S19 Blocks
+    */
+   public Set<S19Block> getS19Blocks()
+   {
+      return s19Blocks;
    }
 
    /**

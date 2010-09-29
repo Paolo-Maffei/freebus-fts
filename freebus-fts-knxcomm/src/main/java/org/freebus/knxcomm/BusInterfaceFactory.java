@@ -3,9 +3,9 @@ package org.freebus.knxcomm;
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.knxcomm.internal.BusInterfaceImpl;
-import org.freebus.knxcomm.netip.KNXnetConnection;
-import org.freebus.knxcomm.serial.SerialFt12Connection;
-import org.freebus.knxcomm.serial.SerialPortUtil;
+import org.freebus.knxcomm.link.netip.KNXnetLink;
+import org.freebus.knxcomm.link.serial.SerialFt12Link;
+import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.types.KNXConnectionType;
 import org.freebus.knxcomm.types.LinkMode;
 
@@ -64,7 +64,7 @@ public final class BusInterfaceFactory
 
    /**
     * Create the default bus interface. Automatically called on demand by
-    * {@link #getBusInterface}.
+    * {@link #getBusInterface()}.
     *
     * @throws Exception
     *
@@ -91,7 +91,7 @@ public final class BusInterfaceFactory
    }
 
    /**
-    * Close the default bus-interface. The bus-interface will be re-created upon
+    * Close the default bus-interface. The bus-interface will be recreated upon
     * the next {@link #getBusInterface()} call.
     */
    public synchronized static void closeBusInterface()
@@ -114,7 +114,7 @@ public final class BusInterfaceFactory
    {
       SerialPortUtil.loadSerialPortLib();
 
-      return new BusInterfaceImpl(new SerialFt12Connection(portName));
+      return new BusInterfaceImpl(new SerialFt12Link(portName));
    }
 
    /**
@@ -127,7 +127,7 @@ public final class BusInterfaceFactory
     */
    public static BusInterface newKNXnetInterface(String host, int port)
    {
-      return new BusInterfaceImpl(new KNXnetConnection(host, port));
+      return new BusInterfaceImpl(new KNXnetLink(host, port));
    }
 
    /**

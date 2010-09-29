@@ -12,8 +12,8 @@ import java.util.TooManyListenersException;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
-import org.freebus.knxcomm.serial.SerialPortUtil;
-import org.freebus.knxcomm.serial.SerialPortWrapper;
+import org.freebus.knxcomm.link.serial.SerialPortUtil;
+import org.freebus.knxcomm.link.serial.SerialPortWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;

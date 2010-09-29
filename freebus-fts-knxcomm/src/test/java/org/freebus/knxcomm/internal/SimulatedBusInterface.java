@@ -5,7 +5,7 @@ import java.io.IOException;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.KNXConnection;
+import org.freebus.knxcomm.link.Link;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
@@ -38,7 +38,7 @@ public class SimulatedBusInterface implements BusInterface
    }
 
    @Override
-   public KNXConnection getConnection()
+   public Link getConnection()
    {
       return null;
    }

@@ -64,6 +64,7 @@ public final class ReadDeviceDetailsJob extends ListenableJob
       Application reply;
 
       con.installMemoryAddressMapper();
+      msleep(10);
 
       reply = con.query(new DeviceDescriptorRead(2));
       deviceDescriptor = ((DeviceDescriptorResponse) reply).getDescriptor();
