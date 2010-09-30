@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityTransaction;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
@@ -20,6 +21,15 @@ import org.freebus.fts.products.services.VirtualDeviceService;
 public final class JpaProductsFactory implements ProductsFactory
 {
    private final EntityManager entityManager = DatabaseResources.getEntityManager();
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public EntityTransaction getTransaction()
+   {
+      return entityManager.getTransaction();
+   }
 
    /**
     * {@inheritDoc}
@@ -88,8 +98,8 @@ public final class JpaProductsFactory implements ProductsFactory
     * {@inheritDoc}
     */
    @Override
-   public EntityTransaction getTransaction()
+   public BcuTypeService getBcuTypeService()
    {
-      return entityManager.getTransaction();
+      return new JpaBcuTypeService(entityManager);
    }
 }

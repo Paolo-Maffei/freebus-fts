@@ -8,9 +8,11 @@ import java.util.Set;
 import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.products.BcuType;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterType;
 import org.freebus.fts.products.ParameterValue;
@@ -19,6 +21,7 @@ import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.S19Block;
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;
@@ -454,6 +457,38 @@ public final class RemappingProductsImporter implements ProductsImporter
    }
 
    /**
+    * Import all BCU types of the {@link Product hardware products} and
+    * {@link Program application programs} of the virtual devices.
+    * 
+    * @param devices - the virtual devices to process.
+    */
+   public void copyBcuTypes(List<VirtualDevice> devices)
+   {
+      final BcuTypeService bcuTypeService = ctx.destFactory.getBcuTypeService();
+
+      for (final VirtualDevice device : devices)
+      {
+         final Product product = device.getCatalogEntry().getProduct();
+         BcuType bcuType = product.getBcuType();
+         if (bcuType != null)
+         {
+            final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
+            if (bt == null) bcuTypeService.persist(bcuType);
+            else product.setBcuType(bt);
+         }
+
+         final Mask mask = device.getProgram().getMask();
+         bcuType = mask.getBcuType();
+         if (bcuType != null)
+         {
+            final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
+            if (bt == null) bcuTypeService.persist(bcuType);
+            else mask.setBcuType(bt);
+         }
+      }
+   }
+
+   /**
     * Delete orphaned objects. Delete all devices that were replaced with newer
     * versions and are not used by any project.
     */
@@ -491,6 +526,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          if (ownTransaction)
             transaction.begin();
 
+         copyBcuTypes(devices);
          copyManufacturers(devices);
          copyFunctionalEntities(devices);
          copyProducts(devices);

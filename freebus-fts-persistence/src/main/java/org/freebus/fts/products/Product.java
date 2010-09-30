@@ -1,6 +1,5 @@
 package org.freebus.fts.products;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -45,7 +44,7 @@ public class Product
    @Column(name = "bus_current")
    private int busCurrent;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
+   @ManyToOne(optional = false, fetch = FetchType.LAZY)
    @JoinColumn(name = "bcu_type_number", nullable = true, referencedColumnName = "bcu_type_number")
    private BcuType bcuType;
 

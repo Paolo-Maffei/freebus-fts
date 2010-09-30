@@ -6,6 +6,7 @@ import javax.persistence.EntityTransaction;
 import javax.persistence.PersistenceException;
 
 import org.freebus.fts.persistence.vdx.VdxEntityManager;
+import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
@@ -33,6 +34,15 @@ public final class VdxProductsFactory implements ProductsFactory
    private ProductService productService;
    private ProductDescriptionService productDescriptionService;
    private ProgramService programService;
+   private BcuTypeService bcuTypeService;
+
+   /**
+    * @return the entity manager.
+    */
+   public VdxEntityManager getEntityManager()
+   {
+      return manager;
+   }
 
    /**
     * Create a factory for the file fileName.
@@ -127,10 +137,12 @@ public final class VdxProductsFactory implements ProductsFactory
    }
 
    /**
-    * @return the entity manager.
+    * {@inheritDoc}
     */
-   public VdxEntityManager getEntityManager()
+   @Override
+   public BcuTypeService getBcuTypeService()
    {
-      return manager;
+      if (bcuTypeService == null) bcuTypeService = new VdxBcuTypeService(manager.getReader());
+      return bcuTypeService;
    }
 }

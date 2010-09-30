@@ -44,6 +44,11 @@ public interface ProductsFactory
    public ProgramService getProgramService();
 
    /**
+    * @return the service for BCU-type queries.
+    */
+   public BcuTypeService getBcuTypeService();
+
+   /**
     * Return the resource-level <code>EntityTransaction</code> object. 
     * The <code>EntityTransaction</code> instance may be used serially to 
     * begin and commit multiple transactions.
