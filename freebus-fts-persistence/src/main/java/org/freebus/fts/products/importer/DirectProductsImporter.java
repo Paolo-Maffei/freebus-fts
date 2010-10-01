@@ -4,10 +4,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.freebus.fts.products.BcuType;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
+import org.freebus.fts.products.Mask;
+import org.freebus.fts.products.Product;
 import org.freebus.fts.products.ProductsImporter;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -52,6 +57,7 @@ public final class DirectProductsImporter implements ProductsImporter
       if (ownTransaction)
          destFactory.getTransaction().begin();
 
+      copyBcuTypes(devices);
       // fixParameters(devices);
 
       for (VirtualDevice device : devices)
@@ -82,6 +88,38 @@ public final class DirectProductsImporter implements ProductsImporter
 
       catalogEntryService.persist(catalogEntry);
       catalogEntries.add(catalogEntry);
+   }
+
+   /**
+    * Import all BCU types of the {@link Product hardware products} and
+    * {@link Program application programs} of the virtual devices.
+    * 
+    * @param devices - the virtual devices to process.
+    */
+   public void copyBcuTypes(List<VirtualDevice> devices)
+   {
+      final BcuTypeService bcuTypeService = destFactory.getBcuTypeService();
+
+      for (final VirtualDevice device : devices)
+      {
+         final Product product = device.getCatalogEntry().getProduct();
+         BcuType bcuType = product.getBcuType();
+         if (bcuType != null)
+         {
+            final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
+            if (bt == null) bcuTypeService.persist(bcuType);
+            else product.setBcuType(bt);
+         }
+
+         final Mask mask = device.getProgram().getMask();
+         bcuType = mask.getBcuType();
+         if (bcuType != null)
+         {
+            final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
+            if (bt == null) bcuTypeService.persist(bcuType);
+            else mask.setBcuType(bt);
+         }
+      }
    }
 
    /**
