@@ -120,7 +120,7 @@ public class ObjectDescriptor
 
    /**
     * Set the data pointer.
-    * 
+    *
     * @param dataPointer - the data pointer to set (0..255)
     * @param isEepromDataPointer - true if the data pointer points into EEPROM,
     *           false if the data pointer points into RAM.

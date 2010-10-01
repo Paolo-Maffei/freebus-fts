@@ -4,7 +4,7 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.knxcomm.internal.BusInterfaceImpl;
 import org.freebus.knxcomm.link.netip.KNXnetLink;
-import org.freebus.knxcomm.link.serial.SerialFt12Link;
+import org.freebus.knxcomm.link.serial.Ft12SerialLink;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.types.KNXConnectionType;
 import org.freebus.knxcomm.types.LinkMode;
@@ -114,7 +114,8 @@ public final class BusInterfaceFactory
    {
       SerialPortUtil.loadSerialPortLib();
 
-      return new BusInterfaceImpl(new SerialFt12Link(portName));
+//      return new BusInterfaceImpl(new SerialFt12Link(portName));
+      return new BusInterfaceImpl(new Ft12SerialLink(portName));
    }
 
    /**

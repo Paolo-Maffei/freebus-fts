@@ -5,7 +5,6 @@ import java.io.IOException;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.emi.EmiFrame;
-import org.freebus.knxcomm.emi.EmiFrameListener;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
@@ -51,20 +50,23 @@ public interface Link
    /**
     * Send an EMI frame to the bus.
     * 
+    * @param frame - the frame to send.
+    * @param blocking - enable to wait for an acknowledge.
+    * 
     * @throws IOException
     */
-   public void send(EmiFrame frame) throws IOException;
+   public void send(EmiFrame frame, boolean blocking) throws IOException;
 
    /**
-    * Add a frame listener. Frame listeners get called when {@link EmiFrame}s
-    * arrive.
+    * Add a link listener. Link listeners get called when {@link EmiFrame}s
+    * arrive or the link is closed.
     */
-   public void addListener(EmiFrameListener listener);
+   public void addListener(LinkListener listener);
 
    /**
-    * Remove a frame listener.
+    * Remove a link listener.
     */
-   public void removeListener(EmiFrameListener listener);
+   public void removeListener(LinkListener listener);
 
    /**
     * @return the physical address of the bus interface.

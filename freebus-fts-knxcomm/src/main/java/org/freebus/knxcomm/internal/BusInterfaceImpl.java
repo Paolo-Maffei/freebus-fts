@@ -10,15 +10,20 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
-import org.freebus.knxcomm.emi.EmiFrameListener;
+import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.event.CloseEvent;
+import org.freebus.knxcomm.event.FrameEvent;
 import org.freebus.knxcomm.link.Link;
+import org.freebus.knxcomm.link.LinkListener;
+import org.freebus.knxcomm.link.serial.Ft12SerialLink;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
@@ -28,17 +33,15 @@ import org.freebus.knxcomm.types.LinkMode;
  * {@link BusInterface} implementation. Use {@link BusInterfaceFactory} to get a
  * bus interface object.
  */
-public class BusInterfaceImpl implements BusInterface, EmiFrameListener
+public class BusInterfaceImpl implements BusInterface
 {
    protected final CopyOnWriteArraySet<TelegramListener> listeners = new CopyOnWriteArraySet<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
-   private final Link con;
    private final Semaphore replySemaphore = new Semaphore(0);
+   private final Logger logger = Logger.getLogger(getClass());
    private Telegram waitConTelegram;
-
-   private final Queue<EmiFrame> receiveQueue = new ConcurrentLinkedQueue<EmiFrame>();
-   private final Semaphore received = new Semaphore(0);
-   private boolean active = true;
+   private final Link link;
+   private Receiver receiver;
 
    /**
     * Create a bus-interface object that uses the given connection for the bus
@@ -46,7 +49,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     */
    public BusInterfaceImpl(Link con)
    {
-      this.con = con;
+      this.link = con;
 
       (new Thread(receiver)).start();
    }
@@ -66,8 +69,11 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void open(LinkMode mode) throws IOException
    {
-      con.open(mode);
-      con.addListener(this);
+      receiver = new Receiver();
+      link.addListener(receiver);
+
+      link.open(mode);
+      receiver.start();
    }
 
    /**
@@ -76,11 +82,22 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public void close()
    {
-      active = false;
-      received.release(1);
+      close(true, "normal close");
+   }
 
-      con.removeListener(this);
-      con.close();
+   /**
+    * Close the connection.
+    * 
+    * @param normal
+    * @param reason
+    */
+   private void close(boolean normal, String reason)
+   {
+      logger.info("closing bus interface - " + reason);
+
+      link.removeListener(receiver);
+      receiver.quit();
+      link.close();
    }
 
    /**
@@ -88,8 +105,8 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     */
    public void setLinkMode(LinkMode mode) throws IOException
    {
-      Logger.getLogger(getClass()).debug("Switching to " + mode + " link mode");
-      con.setLinkMode(mode);
+      logger.debug("Switching to " + mode + " link mode");
+      link.setLinkMode(mode);
    }
 
    /**
@@ -97,7 +114,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
     */
    public LinkMode getLinkMode()
    {
-      return con.getLinkMode();
+      return link.getLinkMode();
    }
 
    /**
@@ -106,7 +123,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public DataConnection connect(PhysicalAddress addr, Priority priority) throws IOException
    {
-      if (con == null)
+      if (link == null)
          throw new IOException("Not open");
 
       if (getLinkMode() == LinkMode.BusMonitor)
@@ -125,7 +142,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public Link getConnection()
    {
-      return con;
+      return link;
    }
 
    /**
@@ -134,7 +151,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public PhysicalAddress getPhysicalAddress()
    {
-      return con.getPhysicalAddress();
+      return link.getPhysicalAddress();
    }
 
    /**
@@ -143,7 +160,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public boolean isConnected()
    {
-      return con != null && con.isConnected();
+      return link != null && link.isConnected();
    }
 
    /**
@@ -179,7 +196,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    @Override
    public synchronized void send(Telegram telegram) throws IOException
    {
-      if (con == null)
+      if (link == null)
          throw new IOException("Not open");
 
       if (getLinkMode() == LinkMode.BusMonitor)
@@ -194,7 +211,7 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
 
       try
       {
-         con.send(new L_Data_req(telegram));
+         link.send(new L_Data_req(telegram), true);
 
          if (replySemaphore.tryAcquire(1500, TimeUnit.MILLISECONDS))
             return;
@@ -212,63 +229,136 @@ public class BusInterfaceImpl implements BusInterface, EmiFrameListener
    }
 
    /**
-    * An {@link EmiFrame EMI frame} was received. This method is called from the
-    * {@link Link connection's} receiver thread.
+    * FT1.2 receiver thread for the {@link Ft12SerialLink FT1.2 serial
+    * communication link}.
     */
-   @Override
-   public void frameReceived(EmiFrame frame)
-   {
-      if (replySemaphore.hasQueuedThreads() && frame.getType().isConfirmation() && frame instanceof EmiTelegramFrame)
-      {
-         final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
-//         if (telegram.getTransport() == Transport.Disconnect)
-//         {
-//            // Debug catchpoint
-//            Logger.getLogger(getClass()).debug("close confirmed");
-//         }
-//         Logger.getLogger(getClass()).debug("possible confirmation, isSimilar=" + telegram.isSimilar(waitConTelegram) + " telegram: " + telegram + " waitConTelegram: " + waitConTelegram);
-         if (telegram.isSimilar(waitConTelegram))
-            replySemaphore.release();
-      }
-
-      receiveQueue.add(frame);
-      received.release();
-   }
-
-   /**
-    * A runnable that handles received frames.
-    */
-   private final Runnable receiver = new Runnable()
+   private final class Receiver extends Thread implements LinkListener
    {
       private final Logger logger = Logger.getLogger(getClass());
+      private final Queue<FrameEvent> receiveQueue = new ConcurrentLinkedQueue<FrameEvent>();
+      private final Semaphore received = new Semaphore(0);
+      private volatile boolean active;
 
+      Receiver()
+      {
+         super("bus interface receiver");
+         setDaemon(true);
+      }
+
+      /**
+       * The receiver's main loop
+       */
       @Override
       public void run()
       {
-         while (active)
+         active = true;
+
+         try
+         {
+            while (active)
+            {
+               try
+               {
+                  received.acquire();
+               }
+               catch (InterruptedException e)
+               {
+                  logger.warn("interrupted", e);
+               }
+
+               if (active)
+                  processFrameEvent(receiveQueue.poll());
+            }
+         }
+         finally
+         {
+            if (active)
+               close(false, "receiver communication failure");
+         }
+      }
+
+      /**
+       * Process a frame event.
+       * 
+       * @param e - the frame event to process.
+       * @return true if the frame was valid, false if not.
+       */
+      boolean processFrameEvent(FrameEvent e)
+      {
+         EmiFrame frame = e.getFrame();
+         if (frame == null)
          {
             try
             {
-               received.acquire();
-
-               if (!active)
-                  break;
-
-               final EmiFrame frame = receiveQueue.poll();
-               if (frame instanceof EmiTelegramFrame)
-               {
-                  final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
-
-                  if (frame.getType().isConfirmation())
-                     notifyListenersSent(telegram);
-                  else notifyListenersReceived(telegram);
-               }
+               frame = EmiFrameFactory.createFrame(e.getData());
             }
-            catch (InterruptedException e)
+            catch (IOException ex)
             {
-               logger.error("EMI frame receiver thread was interrupted", e);
+               final byte[] data = e.getData();
+               logger.warn("invalid EMI frame, discarding " + data.length + " bytes:" + HexString.toString(data));
+               return false;
             }
          }
+
+         if (frame instanceof EmiTelegramFrame)
+         {
+            final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
+
+            if (frame.getType().isConfirmation())
+            {
+               if (replySemaphore.hasQueuedThreads() && telegram.isSimilar(waitConTelegram))
+                  replySemaphore.release();
+
+               notifyListenersSent(telegram);
+            }
+            else
+            {
+               notifyListenersReceived(telegram);
+            }
+         }
+
+         return true;
+      }
+
+      /**
+       * Terminate the receiver thread.
+       */
+      void quit()
+      {
+         active = false;
+         received.release(1);
+
+         interrupt();
+
+         if (currentThread() == this)
+            return;
+
+         try
+         {
+            join(100);
+         }
+         catch (final InterruptedException e)
+         {
+         }
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void frameReceived(FrameEvent e)
+      {
+         receiveQueue.add(e);
+         received.release();
+      }
+
+      /**
+       * {@inheritDoc}
+       */
+      @Override
+      public void linkClosed(CloseEvent e)
+      {
+         quit();
       }
    };
 }

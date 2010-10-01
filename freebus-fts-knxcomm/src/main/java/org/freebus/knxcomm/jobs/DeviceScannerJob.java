@@ -84,7 +84,7 @@ public final class DeviceScannerJob extends ListenableJob
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
-         msleep(50);
+         msleep(150);
 
          // The Freebus controller currently (2010-03) needs an extra telegram to be detected.
          // But this is ok as we want to read the device descriptor anyways. The process could
@@ -95,10 +95,10 @@ public final class DeviceScannerJob extends ListenableJob
          dataTelegram.setSequence(0);
          dataTelegram.setApplication(new DeviceDescriptorRead(0));
          bus.send(dataTelegram);
-         msleep(25);
+         msleep(150);
 
          notifyListener((deviceId * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
-         processAnswers(100);
+         processAnswers(200);
       }
 
       // Wait 6+ seconds for answers at the end.

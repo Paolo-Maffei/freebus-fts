@@ -3,6 +3,7 @@ package org.freebus.knxcomm.link.serial;
 import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 import gnu.io.SerialPortEventListener;
+import gnu.io.UnsupportedCommOperationException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -193,6 +194,18 @@ public class SerialPortWrapper
    public OutputStream getOutputStream()
    {
       return outputStream;
+   }
+
+   /**
+    * Set the receive timeout.
+    * 
+    * @param time - the timeout to set, in milliseconds.
+    * @throws UnsupportedCommOperationException 
+    */
+   public void setReceiveTimeout(int time) throws UnsupportedCommOperationException
+   {
+      serialPort.enableReceiveTimeout(time);
+      serialPort.enableReceiveThreshold(1024);
    }
 
    /**

@@ -118,12 +118,19 @@ public enum EmiFrameType
    U_VALUE_WRITE_REQ(0x71, EmiFrameClass.SEND),
 
    /**
-    * Physical external interface
+    * Request for an identification of the PEI (physical external interface).
+    * Reply is {@link #PEI_IDENTIFY_CON}.
     */
    PEI_IDENTIFY_REQ(0xa7, EmiFrameClass.SEND, PEI_Identify_req.class),
 
+   /**
+    * Reply to {@link #PEI_IDENTIFY_REQ}: the physical address of the BCU.
+    */
    PEI_IDENTIFY_CON(0xa8, EmiFrameClass.CONFIRM, PEI_Identify_con.class, PEI_IDENTIFY_REQ),
 
+   /**
+    * Switch the PEI mode of the BCU.
+    */
    PEI_SWITCH_REQ(0xa9, EmiFrameClass.SEND, PEI_Switch_req.class),
 
    /**

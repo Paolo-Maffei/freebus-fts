@@ -48,8 +48,7 @@ public enum Ft12Function
    final public Ft12FrameFormat format;
 
    /**
-    * @return the function code symbol for the given code value.
-    * @throws IllegalArgumentException if the code is invalid.
+    * @return the function code symbol for the given code value, or null if the code is invalid.
     */
    static public Ft12Function valueOf(int code)
    {
@@ -59,7 +58,7 @@ public enum Ft12Function
             return fc;
       }
 
-      throw new IllegalArgumentException(String.format("Invalid FT1.2 function code: 0x%02x", code));
+      return null;
    }
 
    /*
