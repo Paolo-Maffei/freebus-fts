@@ -7,6 +7,7 @@ import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 
 /**
@@ -37,9 +38,16 @@ public class ProductsListCellRenderer extends JLabel implements ListCellRenderer
          final VirtualDevice virtDev = (VirtualDevice) value;
          final CatalogEntry catEntry = virtDev.getCatalogEntry();
 
-         if (virtDev.getName().equals(catEntry.getName()))
-            setText(virtDev.getName());
-         else setText(virtDev.getName() + " [" + catEntry.getName() + "]");
+         String txt = virtDev.getName();
+//         if (virtDev.getName().equals(catEntry.getName()))
+//            txt = virtDev.getName();
+//         else txt = virtDev.getName() + " [" + catEntry.getName() + "]";
+
+         final Program prog = virtDev.getProgram();
+         if (prog != null)
+            txt += " [" + prog.getName() + ']';
+
+         setText(txt);
       }
       else if (value != null)
       {

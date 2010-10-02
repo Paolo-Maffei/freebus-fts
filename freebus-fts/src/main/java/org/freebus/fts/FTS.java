@@ -161,29 +161,6 @@ public final class FTS extends Application
    }
 
    /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void ready()
-   {
-      mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-      try
-      {
-         Logger.getLogger(getClass()).info("Creating an example project");
-         ProjectManager.setProject(SampleProjectFactory.newProject());
-      }
-      catch (Exception e)
-      {
-         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrCreatingSampleProject"));
-      }
-      finally
-      {
-         mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
-      }
-   }
-
-   /**
     * Load the configuration. Called from {@link #startup()}.
     * 
     * @param progress - the initial value of the progress indicator.
@@ -266,9 +243,9 @@ public final class FTS extends Application
       {
          Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrConnectDatabase"));
 
-         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
-               + I18n.getMessage("FTS.ConnectDatabaseProblem") + "</body></html>", I18n
-               .getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
+         int ret = JOptionPane.showConfirmDialog(null,
+               "<html><body width=\"300\">" + I18n.getMessage("FTS.ConnectDatabaseProblem") + "</body></html>",
+               I18n.getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
 
          if (ret != JOptionPane.YES_OPTION)
             Runtime.getRuntime().exit(2);
@@ -310,9 +287,9 @@ public final class FTS extends Application
 
       if (tries <= 0)
       {
-         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
-               + I18n.getMessage("FTS.UpgradeDatabaseForceLock") + "</body></html>", I18n
-               .getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
+         int ret = JOptionPane.showConfirmDialog(null,
+               "<html><body width=\"300\">" + I18n.getMessage("FTS.UpgradeDatabaseForceLock") + "</body></html>",
+               I18n.getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
 
          if (ret != JOptionPane.YES_OPTION)
             Runtime.getRuntime().exit(2);
@@ -331,9 +308,9 @@ public final class FTS extends Application
          if (!dbConfigExisted)
             Runtime.getRuntime().exit(1);
 
-         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
-               + I18n.getMessage("FTS.UpgradeDatabaseWipe") + "</body></html>", I18n.getMessage("Dialogs.Error_Title"),
-               JOptionPane.YES_NO_OPTION);
+         int ret = JOptionPane.showConfirmDialog(null,
+               "<html><body width=\"300\">" + I18n.getMessage("FTS.UpgradeDatabaseWipe") + "</body></html>",
+               I18n.getMessage("Dialogs.Error_Title"), JOptionPane.YES_NO_OPTION);
 
          if (ret != JOptionPane.YES_OPTION)
             Runtime.getRuntime().exit(3);
@@ -374,8 +351,8 @@ public final class FTS extends Application
          }
          catch (LiquibaseException e1)
          {
-            Dialogs.showExceptionDialog(e, I18n.formatMessage("FTS.ErrUpgradeDatabaseFailed",
-                  new Object[] { Environment.getAppDir() }));
+            Dialogs.showExceptionDialog(e,
+                  I18n.formatMessage("FTS.ErrUpgradeDatabaseFailed", new Object[] { Environment.getAppDir() }));
             Runtime.getRuntime().exit(1);
          }
       }
@@ -408,9 +385,9 @@ public final class FTS extends Application
       {
          Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrConnectDatabase"));
 
-         int ret = JOptionPane.showConfirmDialog(null, "<html><body width=\"300\">"
-               + I18n.getMessage("FTS.ConnectDatabaseProblem") + "</body></html>", I18n
-               .getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
+         int ret = JOptionPane.showConfirmDialog(null,
+               "<html><body width=\"300\">" + I18n.getMessage("FTS.ConnectDatabaseProblem") + "</body></html>",
+               I18n.getMessage("Dialogs.Warning_Title"), JOptionPane.YES_NO_OPTION);
 
          if (ret != JOptionPane.YES_OPTION)
             Runtime.getRuntime().exit(2);
@@ -458,12 +435,54 @@ public final class FTS extends Application
 
    /**
     * Startup tasks that have to happen after the main window is created.
-    *
+    * 
     * @param progress - the initial value of the progress indicator.
     */
    private void startupPostMainWindowCreate(int progress)
    {
       ProjectManager.setController(new ProjectControllerImpl());
+   }
+
+   /**
+    * Called after the startup() method has returned and there are no more
+    * events on the system event queue. When this method is called, the
+    * application's GUI is ready to use.
+    */
+   @Override
+   protected void ready()
+   {
+      mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
+
+      if (!readyLoadProject())
+         readyCreateSampleProject();
+
+      mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+   }
+
+   /**
+    * Load the project that was open on the last session.
+    * 
+    * @return True if the project could be loaded
+    */
+   protected boolean readyLoadProject()
+   {
+      return false;
+   }
+
+   /**
+    * Create a sample project.
+    */
+   protected void readyCreateSampleProject()
+   {
+      try
+      {
+         Logger.getLogger(getClass()).info("Creating an example project");
+         ProjectManager.setProject(SampleProjectFactory.newProject());
+      }
+      catch (Exception e)
+      {
+         Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrCreatingSampleProject"));
+      }
    }
 
    /**

@@ -37,7 +37,7 @@
   <class>org.freebus.fts.project.SubGroupToObject</class>
   <properties>
    <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
-   <property name="eclipselink.logging.level" value="FINEST" />
+   <property name="eclipselink.logging.level" value="FINE" />
    <property name="eclipselink.ddl-generation.output-mode" value="database" />
    <property name="eclipselink.ddl-generation" value="none" />
    <!-- property name="eclipselink.ddl-generation" value="create-tables" /-->

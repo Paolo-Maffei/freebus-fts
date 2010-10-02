@@ -11,6 +11,7 @@ import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
+import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.service.ProjectController;
@@ -35,59 +36,28 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
-   public void edit(Object obj)
+   public boolean edit(Object obj)
    {
+      final MainWindow mainWin = MainWindow.getInstance();
+
       if (obj instanceof Area)
-         edit((Area) obj);
+         mainWin.showPage(AreaDetails.class, obj);
       else if (obj instanceof Line)
-         edit((Line) obj);
+         mainWin.showPage(LineDetails.class, obj);
       else if (obj instanceof Device)
-         edit((Device) obj);
+         mainWin.showPage(DeviceDetails.class, obj);
       else if (obj instanceof Building)
-         edit((Building) obj);
+         mainWin.showPage(BuildingDetails.class, obj);
+      else return false;
+
+      return true;
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void edit(Area area)
-   {
-      MainWindow.getInstance().showPage(AreaDetails.class, area);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void edit(Line line)
-   {
-      MainWindow.getInstance().showPage(LineDetails.class, line);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void edit(Device device)
-   {
-      MainWindow.getInstance().showPage(DeviceDetails.class, device);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void edit(Building building)
-   {
-      MainWindow.getInstance().showPage(BuildingDetails.class, building);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void remove(Object obj)
+   public boolean remove(Object obj)
    {
       if (obj instanceof Area)
          remove((Area) obj);
@@ -99,12 +69,14 @@ public final class ProjectControllerImpl implements ProjectController
          remove((Line) obj);
       else if (obj instanceof Room)
          remove((Room) obj);
+      else return false;
+
+      return true;
    }
 
    /**
-    * {@inheritDoc}
+    * Remove an area.
     */
-   @Override
    public void remove(Area area)
    {
       area.detach();
@@ -116,9 +88,8 @@ public final class ProjectControllerImpl implements ProjectController
    }
 
    /**
-    * {@inheritDoc}
+    * Remove a building.
     */
-   @Override
    public void remove(Building building)
    {
       building.detach();
@@ -130,9 +101,8 @@ public final class ProjectControllerImpl implements ProjectController
    }
 
    /**
-    * {@inheritDoc}
+    * Remove a device.
     */
-   @Override
    public void remove(Device device)
    {
       device.detach();
@@ -141,9 +111,8 @@ public final class ProjectControllerImpl implements ProjectController
    }
 
    /**
-    * {@inheritDoc}
+    * Remove a line.
     */
-   @Override
    public void remove(Line line)
    {
       line.detach();
@@ -155,9 +124,8 @@ public final class ProjectControllerImpl implements ProjectController
    }
 
    /**
-    * {@inheritDoc}
+    * Remove a room.
     */
-   @Override
    public void remove(Room room)
    {
       room.detach();
@@ -166,6 +134,14 @@ public final class ProjectControllerImpl implements ProjectController
          remove((Device) device);
 
       ProjectManager.fireComponentRemoved(room);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void projectChanged(Project project)
+   {
    }
 
    /**

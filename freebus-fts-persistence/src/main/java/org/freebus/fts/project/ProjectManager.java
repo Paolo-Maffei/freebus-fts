@@ -24,7 +24,7 @@ public final class ProjectManager
    static public void setProject(Project project)
    {
       ProjectManager.project = project;
-      fireChanged();
+      fireProjectChanged();
    }
 
    /**
@@ -83,7 +83,7 @@ public final class ProjectManager
     * 
     * @param obj - the object that has changes.
     */
-   static public void fireChanged()
+   static public void fireProjectChanged()
    {
       Logger.getLogger(ProjectManager.class).debug("fire project changed");
 

@@ -33,6 +33,7 @@ public class FunctionalEntity
    @Column(name = "functional_entity_name", nullable = false)
    private String name = "";
 
+   @VdxField(name = "functional_entity_numb")
    @Column(name = "functional_entity_number", nullable = false)
    private String number = "";
 

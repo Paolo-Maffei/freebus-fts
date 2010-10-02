@@ -62,8 +62,11 @@ public final class RemappingProductsImporter implements ProductsImporter
       while (funcEntity != null)
       {
          sb.append(funcEntity.getNumber() == null ? "--" : funcEntity.getNumber());
-         sb.append(':').append(funcEntity.getManufacturer().getId()).append('/');
+         sb.append(':').append(funcEntity.getManufacturer().getId());
          funcEntity = funcEntity.getParent();
+         
+         if (funcEntity != null)
+            sb.append('/');
       }
 
       return sb.toString();
@@ -74,7 +77,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getAltFingerPrint(FunctionalEntity funcEntity)
    {
-      return funcEntity.getManufacturer().getId() + ':' + funcEntity.getName();
+      return funcEntity.getManufacturer().getId() + ":" + funcEntity.getName();
    }
 
    /**
@@ -82,7 +85,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(CatalogEntry catEntry)
    {
-      return catEntry.getManufacturer().getId() + ':' + catEntry.getName();
+      return catEntry.getManufacturer().getId() + ":" + catEntry.getName();
    }
 
    /**
@@ -90,7 +93,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(VirtualDevice device)
    {
-      return device.getCatalogEntry().getManufacturer().getId() + ':' + device.getProductTypeId() + ':'
+      return device.getCatalogEntry().getManufacturer().getId() + ":" + device.getProductTypeId() + ":"
             + device.getName();
    }
 
@@ -99,7 +102,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(Product product)
    {
-      return product.getManufacturer().getId() + ':' + product.getName();
+      return product.getManufacturer().getId() + ":" + product.getName();
    }
 
    /**
@@ -107,7 +110,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(Program program)
    {
-      return program.getManufacturer().getId() + ':' + program.getDeviceType() + ':' + program.getName();
+      return program.getManufacturer().getId() + ":" + program.getDeviceType() + ":" + program.getName();
    }
 
    /**
@@ -384,6 +387,9 @@ public final class RemappingProductsImporter implements ProductsImporter
       for (final VirtualDevice device : devices)
       {
          final Program prog = device.getProgram();
+         if (prog == null)
+            continue;
+
          prog.getMask().setId(0);
 
          final String fingerPrint = getFingerPrint(prog);
@@ -477,8 +483,9 @@ public final class RemappingProductsImporter implements ProductsImporter
             else product.setBcuType(bt);
          }
 
-         final Mask mask = device.getProgram().getMask();
-         bcuType = mask.getBcuType();
+         final Program program = device.getProgram();
+         final Mask mask = program == null ? null : program.getMask();
+         bcuType = mask == null ? null : mask.getBcuType();
          if (bcuType != null)
          {
             final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
