@@ -13,13 +13,14 @@ import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
+import org.freebus.fts.products.services.ProgramDescriptionService;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
 /**
- * Factory for accessing data access objects for the org.freebus.fts.products database
- * that are stored in a vd_ file.
- *
+ * Factory for accessing data access objects for the org.freebus.fts.products
+ * database that are stored in a vd_ file.
+ * 
  * The access is read-only for now.
  */
 public final class VdxProductsFactory implements ProductsFactory
@@ -33,6 +34,7 @@ public final class VdxProductsFactory implements ProductsFactory
    private VirtualDeviceService virtualDeviceService;
    private ProductService productService;
    private ProductDescriptionService productDescriptionService;
+   private ProgramDescriptionService programDescriptionService;
    private ProgramService programService;
    private BcuTypeService bcuTypeService;
 
@@ -45,11 +47,20 @@ public final class VdxProductsFactory implements ProductsFactory
    }
 
    /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void flushEntityManager()
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   /**
     * Create a factory for the file fileName.
-    *
+    * 
     * @param file - the vd_ file that is processed.
     * @param persistenceUnitName - the name of the persistence unit.
-    *
+    * 
     * @throws PersistenceException
     */
    public VdxProductsFactory(File file, String persistenceUnitName) throws PersistenceException
@@ -63,7 +74,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public CatalogEntryService getCatalogEntryService()
    {
-      if (catalogEntryService == null) catalogEntryService = new VdxCatalogEntryService(manager, getVirtualDeviceService());
+      if (catalogEntryService == null)
+         catalogEntryService = new VdxCatalogEntryService(manager, getVirtualDeviceService());
       return catalogEntryService;
    }
 
@@ -73,7 +85,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public FunctionalEntityService getFunctionalEntityService()
    {
-      if (functionalEntityService == null) functionalEntityService = new VdxFunctionalEntityService(manager);
+      if (functionalEntityService == null)
+         functionalEntityService = new VdxFunctionalEntityService(manager);
       return functionalEntityService;
    }
 
@@ -83,7 +96,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public ManufacturerService getManufacturerService()
    {
-      if (manufacturerService == null) manufacturerService = new VdxManufacturerService(manager, getFunctionalEntityService());
+      if (manufacturerService == null)
+         manufacturerService = new VdxManufacturerService(manager, getFunctionalEntityService());
       return manufacturerService;
    }
 
@@ -93,7 +107,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public ProductService getProductService()
    {
-      if (productService == null) productService = new VdxProductService(manager.getReader());
+      if (productService == null)
+         productService = new VdxProductService(manager.getReader());
       return productService;
    }
 
@@ -103,7 +118,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public ProductDescriptionService getProductDescriptionService()
    {
-      if (productDescriptionService == null) productDescriptionService = new VdxProductDescriptionService(manager.getReader());
+      if (productDescriptionService == null)
+         productDescriptionService = new VdxProductDescriptionService(manager.getReader());
       return productDescriptionService;
    }
 
@@ -113,7 +129,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public VirtualDeviceService getVirtualDeviceService()
    {
-      if (virtualDeviceService == null) virtualDeviceService = new VdxVirtualDeviceService(manager);
+      if (virtualDeviceService == null)
+         virtualDeviceService = new VdxVirtualDeviceService(manager);
       return virtualDeviceService;
    }
 
@@ -123,7 +140,8 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public ProgramService getProgramService()
    {
-      if (programService == null) programService = new VdxProgramService(manager.getReader());
+      if (programService == null)
+         programService = new VdxProgramService(manager.getReader());
       return programService;
    }
 
@@ -142,7 +160,19 @@ public final class VdxProductsFactory implements ProductsFactory
    @Override
    public BcuTypeService getBcuTypeService()
    {
-      if (bcuTypeService == null) bcuTypeService = new VdxBcuTypeService(manager.getReader());
+      if (bcuTypeService == null)
+         bcuTypeService = new VdxBcuTypeService(manager.getReader());
       return bcuTypeService;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ProgramDescriptionService getProgramDescriptionService()
+   {
+      if (programDescriptionService == null)
+         programDescriptionService = new VdxProgramDescriptionService(manager.getReader());
+      return programDescriptionService;
    }
 }

@@ -34,6 +34,11 @@ public interface ProductsFactory
    public ProductDescriptionService getProductDescriptionService();
 
    /**
+    * @return the service for program-description queries.
+    */
+   public ProgramDescriptionService getProgramDescriptionService();
+
+   /**
     * @return the service for virtual-device queries.
     */
    public VirtualDeviceService getVirtualDeviceService();
@@ -57,4 +62,9 @@ public interface ProductsFactory
     *         entity manager
     */
    public EntityTransaction getTransaction();
+
+   /**
+    * Flush the entity manager.
+    */
+   public void flushEntityManager();
 }

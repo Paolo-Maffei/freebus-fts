@@ -24,7 +24,9 @@
   <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.ParameterValue</class>
   <class>org.freebus.fts.products.Product</class>
+  <class>org.freebus.fts.products.ProductDescription</class>
   <class>org.freebus.fts.products.Program</class>
+  <class>org.freebus.fts.products.ProgramDescription</class>
   <class>org.freebus.fts.products.S19Block</class>
   <class>org.freebus.fts.products.S19BlockParagraph</class>
   <class>org.freebus.fts.products.VirtualDevice</class>
@@ -62,7 +64,9 @@
   <class>org.freebus.fts.products.ParameterType</class>
   <class>org.freebus.fts.products.ParameterValue</class>
   <class>org.freebus.fts.products.Product</class>
+  <class>org.freebus.fts.products.ProductDescription</class>
   <class>org.freebus.fts.products.Program</class>
+  <class>org.freebus.fts.products.ProgramDescription</class>
   <class>org.freebus.fts.products.S19Block</class>
   <class>org.freebus.fts.products.S19BlockParagraph</class>
   <class>org.freebus.fts.products.VirtualDevice</class>

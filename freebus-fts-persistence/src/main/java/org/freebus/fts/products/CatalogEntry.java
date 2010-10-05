@@ -9,6 +9,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -55,6 +56,9 @@ public class CatalogEntry
 
    @Column(name = "series")
    private String series;
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "catalogEntry")
+   private ProductDescription description;
 
    /**
     * Create an empty catalog-entry object.
@@ -252,6 +256,24 @@ public class CatalogEntry
    public void setSeries(String series)
    {
       this.series = series;
+   }
+
+   /**
+    * Set the description.
+    * 
+    * @param description - the description to set.
+    */
+   public void setDescription(ProductDescription description)
+   {
+      this.description = description;
+   }
+
+   /**
+    * @return The description.
+    */
+   public ProductDescription getDescription()
+   {
+      return description;
    }
 
    /**

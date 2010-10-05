@@ -11,6 +11,7 @@ import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
+import org.freebus.fts.products.services.ProgramDescriptionService;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
@@ -29,6 +30,15 @@ public final class JpaProductsFactory implements ProductsFactory
    public EntityTransaction getTransaction()
    {
       return entityManager.getTransaction();
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void flushEntityManager()
+   {
+      entityManager.flush();
    }
 
    /**
@@ -101,5 +111,14 @@ public final class JpaProductsFactory implements ProductsFactory
    public BcuTypeService getBcuTypeService()
    {
       return new JpaBcuTypeService(entityManager);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public ProgramDescriptionService getProgramDescriptionService()
+   {
+      return new JpaProgramDescriptionService(entityManager);
    }
 }

@@ -1,4 +1,4 @@
-package org.freebus.fts.products.internal;
+package org.freebus.fts.products.importer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -30,7 +30,7 @@ import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.junit.Test;
 
-public class TestProductsImporterDirect
+public class TestDirectProductsImporter
 {
    private static final File productsFile = new File("src/test/resources/test-device.vd_");
    private static final File productsFile2 = new File("src/test/resources/test-device-2.vd_");

@@ -1,8 +1,10 @@
 package org.freebus.fts.products.importer;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import javax.persistence.EntityTransaction;
@@ -17,8 +19,10 @@ import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterType;
 import org.freebus.fts.products.ParameterValue;
 import org.freebus.fts.products.Product;
+import org.freebus.fts.products.ProductDescription;
 import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.Program;
+import org.freebus.fts.products.ProgramDescription;
 import org.freebus.fts.products.S19Block;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.BcuTypeService;
@@ -28,6 +32,7 @@ import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
+import org.freebus.fts.products.services.ProgramDescriptionService;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
@@ -38,7 +43,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 {
    private final ProductsImporterContext ctx;
    private final Map<String, CatalogEntry> knownCatEntries = new HashMap<String, CatalogEntry>();
-   private final Map<CatalogEntry, List<String>> prodDescsToStore = new HashMap<CatalogEntry, List<String>>();
+   private final Map<CatalogEntry, ProductDescription> prodDescsToStore = new HashMap<CatalogEntry, ProductDescription>();
+   private final List<ProgramDescription> progDescsToStore = new LinkedList<ProgramDescription>();
    private final Logger logger = Logger.getLogger(getClass());
 
    /**
@@ -251,8 +257,7 @@ public final class RemappingProductsImporter implements ProductsImporter
             try
             {
                // Product description lines can only be stored when the catalog
-               // entry
-               // has it's new id.
+               // entry has it's new id.
                prodDescsToStore.put(catEntry, srcProdDescService.getProductDescription(catEntry));
             }
             catch (DAOException e)
@@ -339,7 +344,25 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public void persist(Program prog)
    {
+      try
+      {
+         final ProgramDescriptionService srcProgDescService = ctx.sourceFactory.getProgramDescriptionService();
+         final ProgramDescription desc = srcProgDescService.getProgramDescription(prog);
+         
+         if (desc != null)
+         {
+            desc.setProgram(prog);
+            progDescsToStore.add(desc);
+            
+         }
+      }
+      catch (DAOException e)
+      {
+         e.printStackTrace();
+      }
+
       prog.setId(0);
+      prog.setDescription(null);
       prog.setManufacturer(ctx.getManufacturer(prog.getManufacturer().getId()));
       final Set<ParameterType> paramTypes = prog.getParameterTypes();
       paramTypes.clear();
@@ -496,6 +519,37 @@ public final class RemappingProductsImporter implements ProductsImporter
    }
 
    /**
+    * Persist the collected product descriptions.
+    */
+   public void persistProductDescriptions()
+   {
+      final ProductDescriptionService prodDescService = ctx.destFactory.getProductDescriptionService();
+
+      for (Entry<CatalogEntry, ProductDescription> e : prodDescsToStore.entrySet())
+      {
+         final CatalogEntry catEntry = e.getKey();
+         final ProductDescription desc = e.getValue();
+
+         catEntry.setDescription(desc);
+         prodDescService.persist(desc);
+      }
+   }
+
+   /**
+    * Persist the collected program descriptions.
+    */
+   public void persistProgramDescriptions()
+   {
+      final ProgramDescriptionService progDescService = ctx.destFactory.getProgramDescriptionService();
+
+      for (final ProgramDescription desc : progDescsToStore)
+      {
+         desc.getProgram().setDescription(desc);
+         progDescService.persist(desc);
+      }
+   }
+
+   /**
     * Delete orphaned objects. Delete all devices that were replaced with newer
     * versions and are not used by any project.
     */
@@ -510,8 +564,9 @@ public final class RemappingProductsImporter implements ProductsImporter
       // Things to cleanup here:
       //
       // - (Application) programs that no virtual device or device references
-      // - (Hardware) products that no catalog entry references
+      // - Orphaned ProductDescription and ProgramDescription entries
 
+      // Cleanup (Hardware) products that no catalog entry references 
       num = ctx.destFactory.getProductService().removeOrphanedProducts();
       logger.info("Cleanup: " + num + " orphaned hardware products deleted");
    }
@@ -527,6 +582,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 
       ctx.clear();
       prodDescsToStore.clear();
+      progDescsToStore.clear();
 
       try
       {
@@ -541,15 +597,15 @@ public final class RemappingProductsImporter implements ProductsImporter
          copyPrograms(devices);
          copyVirtualDevices(devices);
 
-         // TODO store prodDescsToStore after storing the catalog entries - they
-         // need a new catalog entry id to succeed.
-
+         ctx.destFactory.flushEntityManager();
          if (ownTransaction)
          {
             transaction.commit();
             transaction.begin();
          }
 
+         persistProductDescriptions();
+         persistProgramDescriptions();
          cleanup();
 
          if (ownTransaction)

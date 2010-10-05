@@ -14,6 +14,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -110,6 +111,9 @@ public class Program
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinColumn(name = "program_id")
    private Set<S19Block> s19Blocks = new HashSet<S19Block>();
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "program")
+   private ProgramDescription description;
 
    /**
     * Create an empty program object.
@@ -577,6 +581,24 @@ public class Program
    public Set<ParameterType> getParameterTypes()
    {
       return parameterTypes;
+   }
+
+   /**
+    * Set the program description.
+    *
+    * @param description
+    */
+   public void setDescription(ProgramDescription description)
+   {
+      this.description = description;
+   }
+
+   /**
+    * @return The program description.
+    */
+   public ProgramDescription getDescription()
+   {
+      return description;
    }
 
    /**

@@ -230,4 +230,27 @@
   </addColumn>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-15">
+  <modifyColumn tableName="product_description">
+   <column name="product_description" type="CLOB" />
+  </modifyColumn>
+  <renameColumn tableName="product_description" oldColumnName="product_description" newColumnName="text" />
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-16">
+  <dropPrimaryKey tableName="product_description" />
+  <dropIndex tableName="product_description" indexName="UNQ_product_description_0" />
+  <addPrimaryKey tableName="product_description" columnNames="catalog_entry_id" />
+  <dropColumn tableName="product_description" columnName="display_order" />
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-17">
+  <createTable tableName="program_description">
+   <column name="program_id" type="INT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="text" type="CLOB" />
+  </createTable>
+ </changeSet>
+
 </databaseChangeLog>

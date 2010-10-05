@@ -4,8 +4,8 @@ import java.awt.Font;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
-import java.util.List;
 
+import javax.persistence.NoResultException;
 import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -14,6 +14,7 @@ import javax.swing.JTextArea;
 
 import org.freebus.fts.core.I18n;
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.ProductDescription;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductDescriptionService;
@@ -117,17 +118,12 @@ public final class CatalogEntryDetails extends JPanel
 
       try
       {
-         final StringBuilder descSB = new StringBuilder();
-         final List<String> lines = prodDescService.getProductDescription(entry);
-         if (lines != null)
-         {
-            for (String line : lines)
-            {
-               descSB.append(line);
-               descSB.append('\n');
-            }
-         }
-         entDescription.setText(descSB.toString());
+         final ProductDescription desc = prodDescService.getProductDescription(entry);
+         entDescription.setText(desc == null ? "" : desc.getDescription());
+      }
+      catch (NoResultException e)
+      {
+         entDescription.setText("");
       }
       catch (DAOException e)
       {

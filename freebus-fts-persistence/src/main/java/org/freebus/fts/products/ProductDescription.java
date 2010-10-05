@@ -3,65 +3,69 @@ package org.freebus.fts.products;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
 
 import org.freebus.fts.persistence.vdx.VdxField;
 
 /**
- * A line of a product description.
+ * Description for a product description. A better name would probably be
+ * "catalog entry description", as this description depends on a {@link CatalogEntry}
+ * and not on a (hardware) {@link Product}.
  */
 /*
  * Note for developers: this class cannot be in a JPA @OneToMany relation with
  * CatalogEntry, as this class has a two-column key.
  */
 @Entity
-@Table(name = "product_description",
-       uniqueConstraints = @UniqueConstraint(columnNames = { "catalog_entry_id", "display_order" }))
+@Table(name = "product_description")
 public class ProductDescription
 {
    @Id
-   @Column(name = "catalog_entry_id", columnDefinition = "INT", nullable = false)
-   private int catalogEntryId;
+   @JoinColumn(name = "catalog_entry_id", nullable = false)
+   private CatalogEntry catalogEntry;
 
-   @Id
-   @Column(name = "display_order", columnDefinition = "INT", nullable = false)
-   private int displayOrder;
-
-   @Column(name = "product_description", nullable = false)
+   @Lob
+   @Column(name = "text", nullable = false)
    @VdxField(name = "product_description_text")
    private String description;
 
    /**
-    * @return the catalogEntryId
+    * Create a product description object.
     */
-   public int getCatalogEntryId()
+   public ProductDescription()
    {
-      return catalogEntryId;
    }
 
    /**
-    * @param catalogEntryId the catalogEntryId to set
+    * Create a product description object.
+    * 
+    * @param catEntry - the ID of the catalog entry to which the product description belongs.
+    * @param description - the description text.
     */
-   public void setCatalogEntryId(int catalogEntryId)
+   public ProductDescription(CatalogEntry catEntry, String description)
    {
-      this.catalogEntryId = catalogEntryId;
+      this.catalogEntry = catEntry;
+      this.description = description;
    }
 
    /**
-    * @return the displayOrder
+    * @return The catalog entry.
     */
-   public int getDisplayOrder()
+   public CatalogEntry getCatalogEntry()
    {
-      return displayOrder;
+      return catalogEntry;
    }
 
    /**
-    * @param displayOrder the displayOrder to set
+    * Set the catalog entry.
+    *
+    * @param catalogEntry - the catalog entry to set
     */
-   public void setDisplayOrder(int displayOrder)
+   public void setCatalogEntry(CatalogEntry catalogEntry)
    {
-      this.displayOrder = displayOrder;
+      this.catalogEntry = catalogEntry;
    }
 
    /**
@@ -78,5 +82,14 @@ public class ProductDescription
    public void setDescription(String description)
    {
       this.description = description;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return catalogEntry == null ? 0 : catalogEntry.getId();
    }
 }

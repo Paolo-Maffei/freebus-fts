@@ -1,11 +1,11 @@
 package org.freebus.fts.products.services.jpa;
 
-import java.util.List;
-
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.freebus.fts.products.CatalogEntry;
+import org.freebus.fts.products.ProductDescription;
 import org.freebus.fts.products.services.ProductDescriptionService;
 
 public final class JpaProductDescriptionService implements ProductDescriptionService
@@ -17,12 +17,23 @@ public final class JpaProductDescriptionService implements ProductDescriptionSer
       this.entityManager = entityManager;
    }
 
-   @SuppressWarnings("unchecked")
    @Override
-   public List<String> getProductDescription(CatalogEntry entry)
+   public ProductDescription getProductDescription(CatalogEntry entry)
    {
-      final Query query = entityManager.createQuery("select pd.description from ProductDescription pd where pd.catalogEntryId=?1 order by pd.displayOrder");
-      query.setParameter(1, entry.getId());
-      return query.getResultList();
+      final Query query = entityManager.createQuery("select pd from ProductDescription pd where pd.catalogEntry=?1");
+      query.setParameter(1, entry);
+      return (ProductDescription) query.getSingleResult();
+   }
+
+   @Override
+   public void persist(ProductDescription desc) throws PersistenceException
+   {
+      entityManager.persist(desc);
+   }
+
+   @Override
+   public ProductDescription merge(ProductDescription desc) throws PersistenceException
+   {
+      return entityManager.merge(desc);
    }
 }
