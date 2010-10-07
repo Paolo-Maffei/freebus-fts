@@ -1,6 +1,6 @@
 package org.freebus.fts.backend;
 
-import org.freebus.fts.products.BcuType;
+import org.freebus.fts.backend.deviceadapter.Bcu1DeviceAdapter;
 import org.freebus.fts.project.Device;
 
 /**
@@ -16,9 +16,9 @@ public final class KNXDeviceAdapterFactory
     */
    public static KNXDeviceAdapter getDeviceAdapter(Device device)
    {
-      final BcuType bcuType = device.getCatalogEntry().getProduct().getBcuType();
+//      final BcuType bcuType = device.getCatalogEntry().getProduct().getBcuType();
 
-      return null;
+      return new Bcu1DeviceAdapter(device);
    }
 
    /*
