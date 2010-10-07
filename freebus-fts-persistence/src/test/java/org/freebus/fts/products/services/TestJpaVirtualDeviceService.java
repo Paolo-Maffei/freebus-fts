@@ -3,6 +3,7 @@ package org.freebus.fts.products.services;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.junit.Test;
 public class TestJpaVirtualDeviceService extends ProductsTestCase
 {
    private VirtualDeviceService virtDevService;
+   private VirtualDevice virtDev1;
    private Manufacturer manu;
 
    @Before
@@ -39,7 +41,8 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
 
       productsFactory.getFunctionalEntityService().persist(funcEnt);
       productsFactory.getCatalogEntryService().persist(catEnt);
-      virtDevService.persist(new VirtualDevice(1, "virt-dev-1", "virt-dev-desc-1", funcEnt, catEnt));
+      virtDev1 = new VirtualDevice(1, "virt-dev-1", "virt-dev-desc-1", funcEnt, catEnt);
+      virtDevService.persist(virtDev1);
       virtDevService.persist(new VirtualDevice(2, "virt-dev-2", "virt-dev-desc-2", funcEnt, catEnt));
 
       DatabaseResources.getEntityManager().flush();
@@ -54,8 +57,7 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
       List<VirtualDevice> virtDevs = virtDevService.getVirtualDevices();
       assertNotNull(virtDevs);
       assertEquals(2, virtDevs.size());
-      assertEquals("virt-dev-1", virtDevs.get(0).getName());
-      assertEquals("virt-dev-2", virtDevs.get(1).getName());
+      assertTrue(virtDevs.contains(virtDev1));
    }
 
    @Test

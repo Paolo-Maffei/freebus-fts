@@ -43,7 +43,7 @@ public abstract class PersistenceTestCase
    public PersistenceTestCase(final String persistenceUnitName)
    {
       this.persistenceUnitName = persistenceUnitName;
-      conDetails = new ConnectionDetails(DriverType.HSQL_MEM, databaseName);
+      conDetails = new ConnectionDetails(DriverType.H2_MEM, databaseName);
    }
 
    /**

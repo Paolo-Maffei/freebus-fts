@@ -2,6 +2,7 @@ package org.freebus.fts.products.services;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class TestJpaManufacturerService extends ProductsTestCase
       List<Manufacturer> manus = manuService.getManufacturers();
       assertNotNull(manus);
       assertEquals(3, manus.size());
-      assertEquals("Manufacturer-1", manus.get(0).getName());
+      assertTrue(manus.contains(new Manufacturer(1, "Manufacturer-1")));
    }
 
    @Test

@@ -16,6 +16,11 @@ public enum DriverType
    H2("org.h2.Driver", "jdbc:h2:", null, DriverClass.FILE_BASED),
 
    /**
+    * H2 memory based database driver.
+    */
+   H2_MEM("org.h2.Driver", "jdbc:h2:mem:", null, DriverClass.NONE),
+
+   /**
     * Hypersonic SQL (HSQL) file based driver.
     */
    HSQL("org.hsqldb.jdbcDriver", "jdbc:hsqldb:file:", ";create=true;shutdown=true;hsqldb.default_table_type=cached", DriverClass.FILE_BASED),
