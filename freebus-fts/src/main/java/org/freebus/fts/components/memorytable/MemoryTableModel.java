@@ -8,7 +8,7 @@ import javax.swing.event.TableModelEvent;
 import javax.swing.event.TableModelListener;
 import javax.swing.table.TableModel;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 
 /**
  * A table model that represents a memory range. Every memory cell can have a

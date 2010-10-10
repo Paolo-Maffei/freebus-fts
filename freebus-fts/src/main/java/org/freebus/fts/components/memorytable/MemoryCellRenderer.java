@@ -10,7 +10,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 import javax.swing.table.DefaultTableCellRenderer;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 
 /**
  * A {@link DefaultTableCellRenderer table cell renderer} that is suited to

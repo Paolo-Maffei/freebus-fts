@@ -4,8 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.SetPhysicalAddress;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.knxcomm.jobs.JobQueue;

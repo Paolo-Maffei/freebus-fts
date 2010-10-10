@@ -39,10 +39,10 @@ import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.CatalogEntryDetails;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.pages.productsbrowser.FunctionalEntityTreeNode;

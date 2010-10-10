@@ -13,10 +13,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.components.memorytable.DeviceMemoryTableModel;
 import org.freebus.fts.components.memorytable.MemoryCell;
 import org.freebus.fts.components.memorytable.MemoryCellRenderer;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;

@@ -1,4 +1,4 @@
-package org.freebus.fts.core;
+package org.freebus.fts;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;

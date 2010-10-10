@@ -13,7 +13,7 @@ import javax.swing.event.HyperlinkEvent;
 import javax.swing.event.HyperlinkListener;
 
 import org.freebus.fts.FTS;
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.elements.components.Dialogs;
 

@@ -26,7 +26,6 @@ import liquibase.lock.LockHandler;
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.core.Config;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.core.ProjectControllerImpl;
 import org.freebus.fts.elements.StartupIndicator;
 import org.freebus.fts.elements.components.Dialogs;

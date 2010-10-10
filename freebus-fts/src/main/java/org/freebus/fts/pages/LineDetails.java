@@ -20,8 +20,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;

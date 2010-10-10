@@ -10,8 +10,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.core.Config;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;

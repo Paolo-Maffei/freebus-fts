@@ -12,9 +12,9 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSeparator;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.core.Config;
-import org.freebus.fts.core.I18n;
 import org.freebus.knxcomm.types.KNXConnectionType;
 
 /**

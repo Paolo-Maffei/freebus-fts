@@ -5,9 +5,9 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.core.Config;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.filter.VdxFileFilter;

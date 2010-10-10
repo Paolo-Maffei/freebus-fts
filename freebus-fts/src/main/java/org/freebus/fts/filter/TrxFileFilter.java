@@ -5,7 +5,7 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.fts.elements.utils.FileUtils;
 
 /**

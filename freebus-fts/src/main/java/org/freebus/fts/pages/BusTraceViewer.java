@@ -18,11 +18,11 @@ import javax.swing.JList;
 import javax.swing.JScrollPane;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.core.Config;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.components.ToolBarButton;

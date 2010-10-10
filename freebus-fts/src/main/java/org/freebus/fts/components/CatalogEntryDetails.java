@@ -12,7 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.ProductDescription;
 import org.freebus.fts.products.ProductsManager;

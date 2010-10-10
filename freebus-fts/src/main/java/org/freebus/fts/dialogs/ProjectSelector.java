@@ -14,7 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;

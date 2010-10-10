@@ -9,7 +9,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.EtchedBorder;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.knxcomm.jobs.JobQueue;
 import org.freebus.knxcomm.jobs.JobQueueErrorEvent;
 import org.freebus.knxcomm.jobs.JobQueueEvent;

@@ -18,7 +18,6 @@ import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.WorkBench;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.ApplicationWindow;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.LogLine;

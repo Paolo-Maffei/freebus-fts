@@ -8,11 +8,11 @@ import javax.swing.BoxLayout;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.common.address.Address;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AddressField;
-import org.freebus.fts.core.I18n;
 
 /**
  * {@link DetailsPart Details part} for the header of

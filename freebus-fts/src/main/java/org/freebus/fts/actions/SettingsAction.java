@@ -3,8 +3,8 @@ package org.freebus.fts.actions;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.Settings;
 import org.freebus.fts.elements.services.ImageCache;
 

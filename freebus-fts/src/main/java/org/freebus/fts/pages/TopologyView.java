@@ -18,11 +18,11 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.PagePosition;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.dialogs.AreaProperties;
 import org.freebus.fts.dialogs.DeviceProperties;
 import org.freebus.fts.dialogs.LineProperties;

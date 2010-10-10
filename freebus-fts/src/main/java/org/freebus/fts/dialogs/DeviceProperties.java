@@ -18,7 +18,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;

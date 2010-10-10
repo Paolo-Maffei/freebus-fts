@@ -4,6 +4,7 @@ import java.awt.Dimension;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.fts.elements.components.Dialogs;

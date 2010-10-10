@@ -14,7 +14,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JOptionPane;
 
-import org.freebus.fts.core.I18n;
+import org.freebus.fts.I18n;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.ProductsImporter;

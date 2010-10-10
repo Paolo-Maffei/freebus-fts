@@ -22,9 +22,9 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.CatalogEntryDetails;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;

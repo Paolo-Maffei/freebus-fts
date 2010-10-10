@@ -14,8 +14,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+import org.freebus.fts.I18n;
 import org.freebus.fts.common.HexString;
-import org.freebus.fts.core.I18n;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.emi.EmiFrame;
