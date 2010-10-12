@@ -176,13 +176,13 @@ public class DeviceObjectPanel extends JPanel
          final Object btn = e.getSource();
 
          if (btn == transButton)
-            deviceObject.setTrans(transButton.isSelected());
+            deviceObject.setTransEnabled(transButton.isSelected());
          else if (btn == readButton)
-            deviceObject.setRead(readButton.isSelected());
+            deviceObject.setReadEnabled(readButton.isSelected());
          else if (btn == writeButton)
-            deviceObject.setRead(writeButton.isSelected());
+            deviceObject.setReadEnabled(writeButton.isSelected());
          else if (btn == commButton)
-            deviceObject.setRead(commButton.isSelected());
+            deviceObject.setReadEnabled(commButton.isSelected());
       }
    };
 
@@ -250,17 +250,17 @@ public class DeviceObjectPanel extends JPanel
       final CommunicationObject comObject = deviceObject.getComObject();
 
       lblName.setText(comObject.getName() + " - " + comObject.getFunction());
-      lblType.setText(comObject.getObjectType().getName());
+      lblType.setText(comObject.getType().getName());
 
       final String debugTip = "debug: COM-" + comObject.getNumber() + " #" + comObject.getUniqueNumber();
       lblName.setToolTipText(debugTip);
       lblType.setToolTipText(debugTip);
 
-      transButton.setSelected(deviceObject.isTrans());
-      readButton.setSelected(deviceObject.isRead());
-      writeButton.setSelected(deviceObject.isWrite());
-      commButton.setSelected(deviceObject.isComm());
-      priorityCombo.setSelectedItem(deviceObject.getObjectType());
+      transButton.setSelected(deviceObject.isTransEnabled());
+      readButton.setSelected(deviceObject.isReadEnabled());
+      writeButton.setSelected(deviceObject.isWriteEnabled());
+      commButton.setSelected(deviceObject.isCommEnabled());
+      priorityCombo.setSelectedItem(deviceObject.getType());
 
       for (int i = groupsModel.getRowCount() - 1; i >= 0; --i)
          groupsModel.removeRow(i);

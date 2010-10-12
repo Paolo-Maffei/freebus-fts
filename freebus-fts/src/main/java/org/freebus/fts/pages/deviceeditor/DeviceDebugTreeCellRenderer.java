@@ -96,7 +96,7 @@ public class DeviceDebugTreeCellRenderer extends DefaultTreeCellRenderer
       if (!visible)
          sb.append(">");
 
-      sb.append(" ... ").append(comObject.getObjectType().getName());
+      sb.append(" ... ").append(comObject.getType().getName());
 
       sb.append("  ... [visible: ");
       if (parentParam == null)

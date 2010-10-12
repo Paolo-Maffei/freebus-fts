@@ -232,7 +232,7 @@ public final class DeviceMemoryAdapter
          if (sizes.size() <= comObjectNumber)
             sizes.setSize(comObjectNumber + 1);
 
-         final int bitLength = comObject.getObjectType().getBitLength();
+         final int bitLength = comObject.getType().getBitLength();
          final Integer sz = sizes.get(comObjectNumber);
 
          if (sz == null || sz < bitLength)
@@ -262,17 +262,17 @@ public final class DeviceMemoryAdapter
       {
          final CommunicationObject comObject = devObject.getComObject();
          final ObjectDescriptor od = new ObjectDescriptor();
-         od.setPriority(comObject.getObjectPriority());
+         od.setPriority(comObject.getPriority());
 
-         ObjectType type = devObject.getObjectType();
+         ObjectType type = devObject.getType();
          if (type == null)
-            type = comObject.getObjectType();
+            type = comObject.getType();
          od.setType(type);
 
-         od.setCommEnabled(devObject.isComm());
-         od.setReadEnabled(devObject.isRead());
-         od.setWriteEnabled(devObject.isWrite());
-         od.setTransEnabled(devObject.isTrans());
+         od.setCommEnabled(devObject.isCommEnabled());
+         od.setReadEnabled(devObject.isReadEnabled());
+         od.setWriteEnabled(devObject.isWriteEnabled());
+         od.setTransEnabled(devObject.isTransEnabled());
 
          objectDescriptors.set(comObject.getNumber(), od);
       }

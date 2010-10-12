@@ -9,7 +9,6 @@ import org.freebus.fts.backend.KNXDeviceAdapter;
 import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
-import org.freebus.fts.common.types.ObjectType;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
@@ -52,7 +51,7 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
    {
       groupAddresses = null;
       objectDescriptors = null;
-
+      associationTable = null;
    }
 
    @Override
@@ -97,17 +96,14 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
       {
          final CommunicationObject comObject = devObject.getComObject();
          final ObjectDescriptor od = new ObjectDescriptor();
-         od.setPriority(comObject.getObjectPriority());
 
-         ObjectType type = devObject.getObjectType();
-         if (type == null)
-            type = comObject.getObjectType();
-         od.setType(type);
+         od.setPriority(devObject.getPriority());
+         od.setType(devObject.getType());
 
-         od.setCommEnabled(devObject.isComm());
-         od.setReadEnabled(devObject.isRead());
-         od.setWriteEnabled(devObject.isWrite());
-         od.setTransEnabled(devObject.isTrans());
+         od.setCommEnabled(devObject.isCommEnabled());
+         od.setReadEnabled(devObject.isReadEnabled());
+         od.setWriteEnabled(devObject.isWriteEnabled());
+         od.setTransEnabled(devObject.isTransEnabled());
 
          objectDescriptors[comObject.getNumber()] = od;
       }
@@ -149,7 +145,7 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
       // for certain BCU firmware implementations.
       for (final DeviceObject devObject: device.getDeviceObjects())
       {
-         if (!devObject.isTrans())
+         if (!devObject.isTransEnabled())
             continue;
 
          final List<SubGroupToObject> sgos = devObject.getSubGroupToObjects();
@@ -177,7 +173,7 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
          if (sgos.isEmpty())
             continue;
 
-         boolean skipFirst = devObject.isTrans();
+         boolean skipFirst = devObject.isTransEnabled();
          for (final SubGroupToObject sgo : devObject.getSubGroupToObjects())
          {
             if (skipFirst)

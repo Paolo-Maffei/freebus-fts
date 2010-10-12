@@ -69,7 +69,7 @@ public class DeviceObject implements Comparable<DeviceObject>
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "device_object_type", nullable = true)
-   private ObjectType objectType;
+   private ObjectType type;
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "object_priority", nullable = false)
@@ -170,7 +170,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    /**
     * @return the read flag.
     */
-   public boolean isRead()
+   public boolean isReadEnabled()
    {
       return read;
    }
@@ -180,7 +180,7 @@ public class DeviceObject implements Comparable<DeviceObject>
     * 
     * @param read - the read flag to set.
     */
-   public void setRead(boolean read)
+   public void setReadEnabled(boolean read)
    {
       this.read = read;
    }
@@ -188,7 +188,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    /**
     * @return the write flag.
     */
-   public boolean isWrite()
+   public boolean isWriteEnabled()
    {
       return write;
    }
@@ -198,7 +198,7 @@ public class DeviceObject implements Comparable<DeviceObject>
     * 
     * @param write - the write flag to set
     */
-   public void setWrite(boolean write)
+   public void setWriteEnabled(boolean write)
    {
       this.write = write;
    }
@@ -206,7 +206,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    /**
     * @return the comm flag
     */
-   public boolean isComm()
+   public boolean isCommEnabled()
    {
       return comm;
    }
@@ -216,7 +216,7 @@ public class DeviceObject implements Comparable<DeviceObject>
     * 
     * @param comm - the comm flag to set
     */
-   public void setComm(boolean comm)
+   public void setCommEnabled(boolean comm)
    {
       this.comm = comm;
    }
@@ -224,7 +224,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    /**
     * @return the trans flag
     */
-   public boolean isTrans()
+   public boolean isTransEnabled()
    {
       return trans;
    }
@@ -232,7 +232,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    /**
     * @param trans - the trans flag to set
     */
-   public void setTrans(boolean trans)
+   public void setTransEnabled(boolean trans)
    {
       this.trans = trans;
    }
@@ -290,11 +290,16 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
-    * @return the object type
+    * Get the object type. Returns the object type of the communication
+    * object if null.
+    *
+    * @return the object type.
     */
-   public ObjectType getObjectType()
+   public ObjectType getType()
    {
-      return objectType;
+      if (type == null && comObject != null)
+         return comObject.getType();
+      return type;
    }
 
    /**
@@ -302,9 +307,9 @@ public class DeviceObject implements Comparable<DeviceObject>
     * 
     * @param type - the object type to set
     */
-   public void setObjectType(ObjectType type)
+   public void setType(ObjectType type)
    {
-      this.objectType = type;
+      this.type = type;
    }
 
    /**
@@ -400,7 +405,7 @@ public class DeviceObject implements Comparable<DeviceObject>
       read = comObject.isReadEnabled();
       write = comObject.isWriteEnabled();
       comm = comObject.isCommEnabled();
-      priority = comObject.getObjectPriority();
+      priority = comObject.getPriority();
    }
 
    /**

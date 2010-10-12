@@ -75,11 +75,11 @@ public class CommunicationObject implements Comparable<CommunicationObject>
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "object_type", nullable = false)
-   private ObjectType objectType;
+   private ObjectType type;
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "object_priority", nullable = false)
-   private ObjectPriority objectPriority;
+   private ObjectPriority priority;
 
    @Column(name = "object_updateenabled", nullable = false)
    private boolean updateEnabled;
@@ -335,33 +335,39 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    /**
     * @return the object type
     */
-   public ObjectType getObjectType()
+   public ObjectType getType()
    {
-      return objectType;
+      return type;
    }
 
    /**
-    * Set the object type
+    * Set the object type.
+    * 
+    * @param type - the object type to set.
     */
-   public void setObjectType(ObjectType objectType)
+   public void setType(ObjectType type)
    {
-      this.objectType = objectType;
+      this.type = type;
    }
 
    /**
-    * @return the objectPriority
+    * Get the priority of the communication object.
+    *
+    * @return the object priority
     */
-   public ObjectPriority getObjectPriority()
+   public ObjectPriority getPriority()
    {
-      return objectPriority;
+      return priority;
    }
 
    /**
-    * @param objectPriority the objectPriority to set
+    * Set the priority of the communication object.
+    * 
+    * @param priority the priority to set
     */
-   public void setObjectPriority(ObjectPriority objectPriority)
+   public void setPriority(ObjectPriority priority)
    {
-      this.objectPriority = objectPriority;
+      this.priority = priority;
    }
 
    /**

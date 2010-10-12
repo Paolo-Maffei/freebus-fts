@@ -23,7 +23,6 @@ public class TablesPanel extends JPanel implements DeviceEditorComponent
    private static final long serialVersionUID = -7096959777110755305L;
 
    private final DeviceTables tables = new DeviceTables();
-
    private boolean dirty = false;
 
    /**
@@ -45,8 +44,7 @@ public class TablesPanel extends JPanel implements DeviceEditorComponent
          @Override
          public void componentShown(ComponentEvent e)
          {
-            if (dirty)
-               updateContents();
+            updateContents();
          }
       });
    }
@@ -70,6 +68,7 @@ public class TablesPanel extends JPanel implements DeviceEditorComponent
          return;
       }
 
+      tables.updateContents();
       dirty = false;
    }
 
