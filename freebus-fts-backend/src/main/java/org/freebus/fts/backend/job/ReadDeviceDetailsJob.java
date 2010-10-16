@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.fts.backend.job;
 
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;

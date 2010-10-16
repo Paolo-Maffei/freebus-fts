@@ -10,10 +10,10 @@ import javax.swing.JProgressBar;
 import javax.swing.border.EtchedBorder;
 
 import org.freebus.fts.I18n;
-import org.freebus.knxcomm.jobs.JobQueue;
-import org.freebus.knxcomm.jobs.JobQueueErrorEvent;
-import org.freebus.knxcomm.jobs.JobQueueEvent;
-import org.freebus.knxcomm.jobs.JobQueueListener;
+import org.freebus.fts.backend.job.JobQueue;
+import org.freebus.fts.backend.job.JobQueueListener;
+import org.freebus.fts.backend.job.event.JobQueueErrorEvent;
+import org.freebus.fts.backend.job.event.JobQueueEvent;
 
 /**
  * A widget that displays the state of the {@link JobQueue}.

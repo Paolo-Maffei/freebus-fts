@@ -1,10 +1,10 @@
 package example;
 
+import org.freebus.fts.backend.job.ReadDeviceStatusJob;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.jobs.ReadDeviceStatusJob;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;

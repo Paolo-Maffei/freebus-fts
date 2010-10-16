@@ -6,10 +6,10 @@ import java.awt.event.WindowEvent;
 
 import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
+import org.freebus.fts.backend.job.JobQueue;
+import org.freebus.fts.backend.job.SetPhysicalAddressJob;
 import org.freebus.fts.dialogs.SetPhysicalAddress;
 import org.freebus.fts.elements.services.ImageCache;
-import org.freebus.knxcomm.jobs.JobQueue;
-import org.freebus.knxcomm.jobs.SetPhysicalAddressJob;
 
 /**
  * Set the physical address of a device on the bus that is in programming mode.

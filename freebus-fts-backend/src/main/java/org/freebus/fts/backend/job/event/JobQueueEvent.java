@@ -1,4 +1,7 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.fts.backend.job.event;
+
+import org.freebus.fts.backend.job.Job;
+import org.freebus.fts.backend.job.JobQueue;
 
 
 /**

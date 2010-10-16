@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.fts.backend.job;
 
 import org.freebus.fts.common.address.Address;
 import org.freebus.knxcomm.BusInterface;

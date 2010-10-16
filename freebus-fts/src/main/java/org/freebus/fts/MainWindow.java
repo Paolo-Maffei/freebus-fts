@@ -15,6 +15,10 @@ import javax.swing.SwingUtilities;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.actions.Actions;
+import org.freebus.fts.backend.job.JobQueue;
+import org.freebus.fts.backend.job.JobQueueListener;
+import org.freebus.fts.backend.job.event.JobQueueErrorEvent;
+import org.freebus.fts.backend.job.event.JobQueueEvent;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.JobQueueView;
 import org.freebus.fts.components.WorkBench;
@@ -29,10 +33,6 @@ import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectAdapter;
-import org.freebus.knxcomm.jobs.JobQueue;
-import org.freebus.knxcomm.jobs.JobQueueErrorEvent;
-import org.freebus.knxcomm.jobs.JobQueueEvent;
-import org.freebus.knxcomm.jobs.JobQueueListener;
 
 /**
  * The main application window.

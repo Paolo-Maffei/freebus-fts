@@ -8,17 +8,18 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import org.freebus.fts.I18n;
+import org.freebus.fts.backend.job.DeviceScannerJob;
+import org.freebus.fts.backend.job.DeviceScannerJobListener;
+import org.freebus.fts.backend.job.JobQueue;
+import org.freebus.fts.backend.job.entity.DeviceInfo;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
-import org.freebus.knxcomm.jobs.DeviceScannerJob;
-import org.freebus.knxcomm.jobs.DeviceScannerJobListener;
-import org.freebus.knxcomm.jobs.JobQueue;
 
 /**
- * A page for scanning the KNX/EIB network for devices and gather
- * some info from the devices.
+ * A page for scanning the KNX/EIB network for devices and gather some info from
+ * the devices.
  */
 public class DeviceScanner extends AbstractPage implements DeviceScannerJobListener
 {
@@ -28,7 +29,6 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    private final JTable tblDevices = new ReadOnlyTable(tbmDevices);
    private final JScrollPane scpDevices = new JScrollPane(tblDevices);
 
-
    /**
     * Create a device scanner page.
     */
@@ -37,7 +37,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
       setLayout(new BorderLayout());
       setName(I18n.getMessage("DeviceScanner.Title"));
 
-      tbmDevices.setColumnIdentifiers(new String[] { I18n.getMessage("DeviceScanner.ColAddress") });
+      tbmDevices.setColumnIdentifiers(new String[] { I18n.getMessage("DeviceScanner.ColAddress"), I18n.getMessage("DeviceScanner.ColInfo") });
       tblDevices.setFillsViewportHeight(true);
 
       add(scpDevices, BorderLayout.CENTER);
@@ -64,29 +64,57 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    }
 
    /**
-    * {@inheritDoc}
+    * Find the table model row where the device info for the address is stored.
+    * 
+    * @param address - the address to find.
+    * @return The row index of the address, or -1 if not found. 
     */
-   @Override
-   public void deviceFound(final PhysicalAddress addr)
+   private int getRowIndex(final PhysicalAddress address)
    {
-      SwingUtilities.invokeLater(new Runnable()
+      for (int i = tbmDevices.getRowCount() - 1; i >= 0; --i)
       {
-         @Override
-         public void run()
-         {
-            tbmDevices.addRow(new Object[] { addr });
-            tblDevices.revalidate();
-         }
-      });
+         if (address.equals(tbmDevices.getValueAt(i, 0)))
+            return i;
+      }
+
+      return -1;
+   }
+
+   /**
+    * Update a device information
+    * 
+    * @param info - the device information.
+    */
+   public void updateDeviceInfo(DeviceInfo info)
+   {
+      final int row = getRowIndex(info.getAddress());
+      final DeviceDescriptor descriptor = info.getDescriptor();
+
+      if (row < 0)
+      {
+         tbmDevices.addRow(new Object[] { info.getAddress(), descriptor });         
+      }
+      else
+      {
+         tbmDevices.setValueAt(descriptor, row, 1);
+      }
+
+      tblDevices.revalidate();
    }
 
    /**
     * {@inheritDoc}
     */
    @Override
-   public void deviceDescriptorReceived(DeviceDescriptor descriptor)
+   public void deviceInfo(final DeviceInfo info)
    {
-      // TODO Auto-generated method stub
-      
+      SwingUtilities.invokeLater(new Runnable()
+      {
+         @Override
+         public void run()
+         {
+            updateDeviceInfo(info);
+         }
+      });
    }
 }

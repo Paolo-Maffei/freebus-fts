@@ -1,4 +1,7 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.fts.backend.job.event;
+
+import org.freebus.fts.backend.job.Job;
+import org.freebus.fts.backend.job.JobQueue;
 
 /**
  * An event that gets sent by the {@link JobQueue} when an error about

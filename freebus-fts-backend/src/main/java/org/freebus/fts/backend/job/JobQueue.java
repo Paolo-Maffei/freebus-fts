@@ -1,4 +1,4 @@
-package org.freebus.knxcomm.jobs;
+package org.freebus.fts.backend.job;
 
 import java.io.IOException;
 import java.util.Queue;
@@ -7,6 +7,8 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.backend.job.event.JobQueueErrorEvent;
+import org.freebus.fts.backend.job.event.JobQueueEvent;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.internal.I18n;
