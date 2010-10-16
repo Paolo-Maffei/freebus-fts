@@ -15,6 +15,7 @@ import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.utils.TableUtils;
 
 /**
@@ -26,15 +27,15 @@ public class DeviceTables extends JPanel
    private static final long serialVersionUID = 3586461856829202482L;
 
    private DefaultTableModel groupsModel = new DefaultTableModel();
-   private final JTable groupsTable = new JTable(groupsModel);
+   private final JTable groupsTable = new ReadOnlyTable(groupsModel);
    private final JScrollPane groupsScrollPane = new JScrollPane(groupsTable);
 
    private DefaultTableModel associationsModel = new DefaultTableModel();
-   private final JTable associationsTable = new JTable(associationsModel);
+   private final JTable associationsTable = new ReadOnlyTable(associationsModel);
    private final JScrollPane associationsScrollPane = new JScrollPane(associationsTable);
 
    private DefaultTableModel objectsModel = new DefaultTableModel();
-   private final JTable objectsTable = new JTable(objectsModel);
+   private final JTable objectsTable = new ReadOnlyTable(objectsModel);
    private final JScrollPane objectsScrollPane = new JScrollPane(objectsTable);
 
    private DeviceController deviceAdapter;

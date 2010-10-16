@@ -16,6 +16,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.freebus.fts.core.Config;
+import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.utils.TableUtils;
 import org.freebus.fts.pages.InspectVdxFile;
 import org.freebus.fts.persistence.vdx.VdxFieldType;
@@ -36,7 +37,7 @@ public class TableContentsGrid extends JScrollPane implements TableContents
    private int maxRecords = 1000;
 
    private final DefaultTableModel tmData = new DefaultTableModel();
-   private final JTable tblData = new JTable(tmData);
+   private final JTable tblData = new ReadOnlyTable(tmData);
    private final TableRowSorter<? extends TableModel> sorter = new TableRowSorter<DefaultTableModel>(tmData);
 
    private final VdxNumberComparator compNumber = new VdxNumberComparator();

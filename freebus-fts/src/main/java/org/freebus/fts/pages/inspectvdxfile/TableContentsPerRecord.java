@@ -11,6 +11,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.freebus.fts.I18n;
+import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.models.SortedListModel;
 import org.freebus.fts.elements.utils.TableUtils;
 import org.freebus.fts.pages.InspectVdxFile;
@@ -33,7 +34,7 @@ public class TableContentsPerRecord extends JSplitPane implements TableContents
    private final JList lstRecords = new JList(slmRecords);
 
    private final DefaultTableModel tbmFields = new DefaultTableModel();
-   private final JTable tblFields = new JTable(tbmFields);
+   private final JTable tblFields = new ReadOnlyTable(tbmFields);
    private String selectedTableName;
 
    private VdxSection table;

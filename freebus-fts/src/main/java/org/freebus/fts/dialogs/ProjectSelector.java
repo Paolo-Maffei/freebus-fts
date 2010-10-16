@@ -16,6 +16,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.freebus.fts.I18n;
 import org.freebus.fts.elements.components.Dialog;
+import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 
@@ -27,7 +28,7 @@ public final class ProjectSelector extends Dialog
    private static final long serialVersionUID = 7580878090288641271L;
 
    private final ProjectsModel projectsModel = new ProjectsModel();
-   private final JTable projectsTable = new JTable(projectsModel);
+   private final JTable projectsTable = new ReadOnlyTable(projectsModel);
    private final JScrollPane projectsView;
    private final JButton btnOpen;
 

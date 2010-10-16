@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import org.freebus.fts.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
+import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.knxcomm.jobs.DeviceScannerJob;
 import org.freebus.knxcomm.jobs.DeviceScannerJobListener;
 import org.freebus.knxcomm.jobs.JobQueue;
@@ -23,7 +24,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    private static final long serialVersionUID = 5059567180513438199L;
 
    private DefaultTableModel tbmDevices = new DefaultTableModel();
-   private final JTable tblDevices = new JTable(tbmDevices);
+   private final JTable tblDevices = new ReadOnlyTable(tbmDevices);
    private final JScrollPane scpDevices = new JScrollPane(tblDevices);
 
 
