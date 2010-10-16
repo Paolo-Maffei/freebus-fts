@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -24,7 +24,7 @@ import org.freebus.fts.project.internal.I18n;
  */
 @Entity
 @Table(name = "sub_group")
-public class SubGroup
+public class SubGroup implements Comparable<SubGroup>
 {
    @Id
    @TableGenerator(name = "SubGroup", initialValue = 1, allocationSize = 10)
@@ -43,7 +43,7 @@ public class SubGroup
    private MidGroup midGroup;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "subGroup")
-   private List<SubGroupToObject> subGroupToObjects = new Vector<SubGroupToObject>();
+   private Set<SubGroupToObject> subGroupToObjects = new TreeSet<SubGroupToObject>();
 
    /**
     * Create a new group.
@@ -140,7 +140,7 @@ public class SubGroup
    /**
     * @return The list of subgroup-to-object mappings.
     */
-   public List<SubGroupToObject> getSubGroupToObjects()
+   public Set<SubGroupToObject> getSubGroupToObjects()
    {
       return subGroupToObjects;
    }
@@ -189,6 +189,15 @@ public class SubGroup
     * {@inheritDoc}
     */
    @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(Object o)
    {
       if (o == this)
@@ -202,12 +211,19 @@ public class SubGroup
    }
 
    /**
-    * {@inheritDoc}
+    * Compare by address and id.
     */
    @Override
-   public int hashCode()
+   public int compareTo(SubGroup o)
    {
-      return id;
+      if (o == null)
+         return 1;
+
+      final int d = address - o.address;
+      if (d != 0)
+         return d;
+
+      return id - o.id;
    }
 
    /**

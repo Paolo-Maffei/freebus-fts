@@ -109,4 +109,16 @@ public class TestSubGroup
       assertFalse(sg1.equals(null));
       assertFalse(sg1.equals(new Object()));
    }
+
+   @Test
+   public final void testAddSubGroupToObject()
+   {
+      final SubGroup subGroup = new SubGroup();
+      assertTrue(subGroup.getSubGroupToObjects().isEmpty());
+
+      final DeviceObject devObject = new DeviceObject();
+
+      final SubGroupToObject sgo1 = new SubGroupToObject(subGroup, devObject);
+      subGroup.add(sgo1);
+   }
 }

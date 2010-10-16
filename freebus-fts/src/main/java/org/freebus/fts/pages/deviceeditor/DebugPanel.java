@@ -19,6 +19,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.I18n;
+import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
@@ -73,7 +74,7 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
    /**
     * Set the edited device.
     */
-   public void setDevice(Device device)
+   public void setDevice(Device device, DeviceController adapter)
    {
       this.device = device;
       treeCellRenderer.setDevice(device);

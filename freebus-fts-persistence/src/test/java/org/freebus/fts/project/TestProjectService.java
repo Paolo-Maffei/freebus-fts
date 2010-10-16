@@ -24,16 +24,16 @@ public class TestProjectService extends ProjectTestCase
 
       final Project project1 = new Project();
       project1.setName("Project-1");
-      projectService.save(project1);
+      projectService.persist(project1);
 
       final Project project2 = new Project();
       project2.setName("Project-2");
-      projectService.save(project2);
+      projectService.persist(project2);
       assertNotSame(project1.getId(), project2.getId());
 
       final Project project3 = new Project();
       project3.setName("Project-3");
-      projectService.save(project3);
+      projectService.persist(project3);
       assertNotSame(project1.getId(), project3.getId());
       assertNotSame(project2.getId(), project3.getId());
 
@@ -63,7 +63,7 @@ public class TestProjectService extends ProjectTestCase
 
       final Project project = new Project();
       project.setName("Empty Project");
-      projectService.save(project);
+      projectService.persist(project);
       DatabaseResources.getEntityManager().flush();
       assertTrue(project.getId() != 0);
 
@@ -78,8 +78,8 @@ public class TestProjectService extends ProjectTestCase
       final ProjectService projectService = getProjectFactory().getProjectService();
 
       final Project project = SampleProjectFactory.newProject(persistenceUnitName);
-      project.setName("Sample Project 1");
-      projectService.save(project);
+      project.setName("Sample Project 17");
+      projectService.persist(project);
       DatabaseResources.getEntityManager().flush();
 
       final int projectId = project.getId();

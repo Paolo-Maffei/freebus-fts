@@ -32,7 +32,7 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
       final ProductsFactory productsFactory = getJpaProductsFactory();
       virtDevService = productsFactory.getVirtualDeviceService();
 
-      manu = new Manufacturer(1, "manu-1");
+      manu = new Manufacturer(100, "manu-100");
       productsFactory.getManufacturerService().persist(manu);
 
       final FunctionalEntity funcEnt = new FunctionalEntity(1234, manu, "func-ent-1", "func-ent-desc-1");

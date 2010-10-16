@@ -13,7 +13,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "sub_group_to_object")
-public class SubGroupToObject
+public class SubGroupToObject implements Comparable<SubGroupToObject>
 {
    @Id
    @ManyToOne(optional = false)
@@ -128,5 +128,74 @@ public class SubGroupToObject
    public void setAcknowledge(boolean enable)
    {
       this.acknowledge = enable;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return ((subGroup == null ? 0 : subGroup.getId()) << 16) | (deviceObject == null ? 0 : deviceObject.getId());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public boolean equals(Object o)
+   {
+      if (o == this)
+         return true;
+      if (!(o instanceof SubGroupToObject))
+         return false;
+      final SubGroupToObject oo = (SubGroupToObject) o;
+
+      return (subGroup == null ? oo.subGroup == null : subGroup.equals(oo.subGroup)) &&
+         (deviceObject == null ? oo.deviceObject == null : deviceObject.equals(oo.deviceObject));
+   }
+
+   /**
+    * Compare by device-object and sub-group.
+    */
+   @Override
+   public int compareTo(SubGroupToObject o)
+   {
+      if (o == null)
+         return 1;
+
+      int d;
+
+      if (deviceObject == null)
+         d = o.deviceObject == null ? 0 : -1;
+      else d = deviceObject.compareTo(o.deviceObject);
+
+      if (d != 0)
+         return d;
+
+      if (subGroup == null)
+         d = o.subGroup == null ? 0 : -1;
+      else d = subGroup.compareTo(o.subGroup);
+
+      return 0;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      final StringBuilder sb = new StringBuilder();
+
+      sb.append("device object ");
+      if (deviceObject == null) sb.append("<null>");
+      else sb.append("#").append(deviceObject.getId());
+
+      sb.append(" group ");
+      if (subGroup == null) sb.append("<null>");
+      else sb.append(subGroup.getGroupAddress());
+
+      return sb.toString();
    }
 }

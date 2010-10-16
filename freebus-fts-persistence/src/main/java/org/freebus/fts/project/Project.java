@@ -1,8 +1,8 @@
 package org.freebus.fts.project;
 
 import java.util.Date;
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
@@ -46,16 +45,13 @@ public class Project
    private Date lastModified = new Date();
 
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "project")
-   @OrderBy("id")
-   private List<Area> areas = new Vector<Area>();
+   private Set<Area> areas = new TreeSet<Area>();
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-   @OrderBy("id")
-   private List<Building> buildings = new Vector<Building>();
+   private Set<Building> buildings = new TreeSet<Building>();
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "project")
-   @OrderBy("address")
-   private List<MainGroup> mainGroups = new Vector<MainGroup>();
+   private Set<MainGroup> mainGroups = new TreeSet<MainGroup>();
 
     /**
     * Create a new project.
@@ -138,7 +134,7 @@ public class Project
     *
     * @throws IllegalArgumentException - if the project already contains the area.
     */
-   public void addArea(Area area)
+   public void add(Area area)
    {
       if (areas.contains(area))
          throw new IllegalArgumentException("Area was previously added: " + area);
@@ -239,7 +235,7 @@ public class Project
    /**
     * Set the areas container.
     */
-   public void setAreas(List<Area> areas)
+   void setAreas(TreeSet<Area> areas)
    {
       this.areas = areas;
    }
@@ -247,7 +243,7 @@ public class Project
    /**
     * @return the areas container.
     */
-   public List<Area> getAreas()
+   public Set<Area> getAreas()
    {
       return areas;
    }
@@ -255,7 +251,7 @@ public class Project
    /**
     * Set the buildings container.
     */
-   public void setBuildings(List<Building> buildings)
+   void setBuildings(TreeSet<Building> buildings)
    {
       this.buildings = buildings;
    }
@@ -263,7 +259,7 @@ public class Project
    /**
     * @return the buildings container.
     */
-   public List<Building> getBuildings()
+   public Set<Building> getBuildings()
    {
       return buildings;
    }
@@ -271,7 +267,7 @@ public class Project
    /**
     * Set the main-groups container.
     */
-   public void setMainGroups(List<MainGroup> mainGroups)
+   void setMainGroups(TreeSet<MainGroup> mainGroups)
    {
       this.mainGroups = mainGroups;
    }
@@ -279,7 +275,7 @@ public class Project
    /**
     * @return the main-groups container.
     */
-   public List<MainGroup> getMainGroups()
+   public Set<MainGroup> getMainGroups()
    {
       return mainGroups;
    }

@@ -14,6 +14,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.freebus.fts.I18n;
+import org.freebus.fts.backend.DeviceController;
+import org.freebus.fts.backend.DeviceControllerFactory;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.elements.services.ImageCache;
@@ -46,6 +48,7 @@ public class DeviceDetails extends AbstractPage
    private final TablesPanel tablesPanel = new TablesPanel();
 
    private Device device;
+   private DeviceController adapter;
 
    /**
     * Create a device-editor.
@@ -153,6 +156,7 @@ public class DeviceDetails extends AbstractPage
    public void setObject(Object o)
    {
       device = (Device) o;
+      adapter = DeviceControllerFactory.getDeviceController(device);
 
       setModified(false);
 
@@ -163,11 +167,11 @@ public class DeviceDetails extends AbstractPage
       caption.setText(I18n.formatMessage("DeviceEditor.Caption", msgArgs));
 
       paramsPanel.setDevice(device);
-      generalPanel.setDevice(device);
-      deviceObjectsPanel.setDevice(device);
-      debugPanel.setDevice(device);
-      memoryPanel.setDevice(device);
-      tablesPanel.setDevice(device);
+      generalPanel.setDevice(device, adapter);
+      deviceObjectsPanel.setDevice(device, adapter);
+      debugPanel.setDevice(device, adapter);
+      memoryPanel.setDevice(device, adapter);
+      tablesPanel.setDevice(device, adapter);
    }
 
    /**
@@ -201,7 +205,10 @@ public class DeviceDetails extends AbstractPage
    public void componentChanged(Object obj)
    {
       if (obj == device)
+      {
+         adapter.deviceChanged();
          setName(device.getPhysicalAddress().toString());
+      }
 
       generalPanel.componentChanged(obj);
       memoryPanel.updateContents();

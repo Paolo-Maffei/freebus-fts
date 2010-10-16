@@ -2,6 +2,8 @@ package org.freebus.fts.test_utils;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.Iterator;
+
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
@@ -45,13 +47,15 @@ public abstract class ProjectTestCase extends PersistenceTestCase
          project = SampleProjectFactory.newProject(persistenceUnitName);
          assertNotNull(project);
 
-         final Device dev = project.getAreas().get(0).getLines().get(0).getDevices().get(0);
+         final Device dev = project.getAreas().iterator().next().getLines().iterator().next().getDevices().iterator().next();
          assertNotNull(dev);
 
-         final SubGroup subGroup1 = project.getMainGroups().get(0).getMidGroups().get(0).getSubGroups().get(0);
+         final Iterator<SubGroup> sgIterator = project.getMainGroups().iterator().next().getMidGroups().iterator().next().getSubGroups().iterator();
+
+         final SubGroup subGroup1 = sgIterator.next();
          subGroup1.add(dev.getDeviceObjects().get(0));
 
-         final SubGroup subGroup2 = project.getMainGroups().get(0).getMidGroups().get(0).getSubGroups().get(1);
+         final SubGroup subGroup2 = sgIterator.next();
          subGroup2.add(dev.getDeviceObjects().get(1));
       }
 

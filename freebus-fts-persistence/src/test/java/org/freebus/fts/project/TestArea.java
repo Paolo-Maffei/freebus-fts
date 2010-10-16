@@ -6,8 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -56,7 +55,7 @@ public class TestArea
       area.setProject(null);
       assertNull(area.getProject());
 
-      project.addArea(area);
+      project.add(area);
       assertEquals(project, area.getProject());
    }
 
@@ -100,7 +99,7 @@ public class TestArea
    {
       final Area area = new Area();
 
-      final List<Line> newLines = new Vector<Line>();
+      final TreeSet<Line> newLines = new TreeSet<Line>();
       area.setLines(newLines);
 
       assertEquals(newLines, area.getLines());

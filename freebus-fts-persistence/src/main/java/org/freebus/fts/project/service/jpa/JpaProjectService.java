@@ -1,13 +1,11 @@
 package org.freebus.fts.project.service.jpa;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Vector;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceException;
 import javax.persistence.Query;
 
 import org.freebus.fts.project.Project;
@@ -28,21 +26,22 @@ public final class JpaProjectService implements ProjectService
       return entityManager.find(Project.class, id);
    }
 
+   /**
+    * {@inheritDoc}
+    */
    @Override
-   public void save(Project project) throws PersistenceException
+   public void persist(Project project)
    {
-      try
-      {
-         project.setLastModified(new Date());
+      entityManager.persist(project);
+   }
 
-         if (project.getId() != 0)
-            entityManager.merge(project);
-         else entityManager.persist(project);
-      }
-      catch (PersistenceException e)
-      {
-         throw new PersistenceException("Cannot save project", e);
-      }
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Project merge(Project project)
+   {
+      return entityManager.merge(project);
    }
 
    @Override

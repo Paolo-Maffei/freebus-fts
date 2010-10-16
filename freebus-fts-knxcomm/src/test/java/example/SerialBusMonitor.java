@@ -18,28 +18,14 @@ public class SerialBusMonitor implements TelegramListener
 
    /**
     * Create the bus monitor.
-    *
+    * 
     * @throws Exception
     */
    public SerialBusMonitor() throws Exception
    {
-      String commPort;
+      // iface = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      iface = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
 
-      final String osname = System.getProperty("os.name", "").toLowerCase();
-      if (osname.startsWith("windows"))
-      {
-         commPort = "COM1";
-      }
-      else if (osname.startsWith("linux"))
-      {
-         commPort = "/dev/ttyS0";
-      }
-      else
-      {
-         throw new RuntimeException("Sorry, but your platform is not supported by this example");
-      }
-
-      iface = BusInterfaceFactory.newSerialInterface(commPort);
       iface.addListener(this);
       iface.open(LinkMode.BusMonitor);
       Logger.getLogger(getClass()).debug("Bus connection opened");
@@ -73,7 +59,7 @@ public class SerialBusMonitor implements TelegramListener
 
    /**
     * Start the application.
-    *
+    * 
     * @throws Exception
     */
    public static void main(String[] args) throws Exception

@@ -10,7 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.backend.KNXDeviceAdapterFactory;
+import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.components.DeviceTables;
 import org.freebus.fts.project.Device;
 
@@ -52,9 +52,9 @@ public class TablesPanel extends JPanel implements DeviceEditorComponent
    /**
     * Set the edited device.
     */
-   public void setDevice(Device device)
+   public void setDevice(Device device, DeviceController adapter)
    {
-      tables.setDeviceAdapter(KNXDeviceAdapterFactory.getDeviceAdapter(device));
+      tables.setDeviceAdapter(adapter);
    }
 
    /**

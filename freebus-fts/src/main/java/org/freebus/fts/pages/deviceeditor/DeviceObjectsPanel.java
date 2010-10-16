@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
@@ -64,7 +65,7 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
    /**
     * Set the edited device.
     */
-   public void setDevice(Device device)
+   public void setDevice(Device device, DeviceController adapter)
    {
       this.device = device;
       updateContents();

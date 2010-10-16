@@ -11,7 +11,7 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.backend.KNXDeviceAdapter;
+import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -37,7 +37,7 @@ public class DeviceTables extends JPanel
    private final JTable objectsTable = new JTable(objectsModel);
    private final JScrollPane objectsScrollPane = new JScrollPane(objectsTable);
 
-   private KNXDeviceAdapter deviceAdapter;
+   private DeviceController deviceAdapter;
    private boolean updatingSelections;
 
    /**
@@ -71,6 +71,19 @@ public class DeviceTables extends JPanel
       associationsScrollPane.setBorder(BorderFactory.createTitledBorder(I18n
             .getMessage("DeviceTables.AssociationsTable")));
       add(associationsScrollPane);
+      associationsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+      {
+         @Override
+         public void valueChanged(ListSelectionEvent e)
+         {
+            if (!updatingSelections)
+            {
+               updatingSelections = true;
+               associationsSelectionChanged();
+               updatingSelections = false;
+            }
+         }
+      });
 
       objectsModel.addColumn(I18n.getMessage("DeviceTables.ColNumber"));
       objectsModel.addColumn(I18n.getMessage("DeviceTables.ColComObjectType"));
@@ -78,6 +91,19 @@ public class DeviceTables extends JPanel
       objectsModel.addColumn(I18n.getMessage("DeviceTables.ColComObjectPrio"));
       objectsScrollPane.setBorder(BorderFactory.createTitledBorder(I18n.getMessage("DeviceTables.ObjectsTable")));
       add(objectsScrollPane);
+      objectsTable.getSelectionModel().addListSelectionListener(new ListSelectionListener()
+      {
+         @Override
+         public void valueChanged(ListSelectionEvent e)
+         {
+            if (!updatingSelections)
+            {
+               updatingSelections = true;
+               objectsSelectionChanged();
+               updatingSelections = false;
+            }
+         }
+      });
    }
 
    /**
@@ -86,7 +112,7 @@ public class DeviceTables extends JPanel
     * 
     * @param deviceAdapter - the KNX device adapter to set.
     */
-   public void setDeviceAdapter(KNXDeviceAdapter deviceAdapter)
+   public void setDeviceAdapter(DeviceController deviceAdapter)
    {
       this.deviceAdapter = deviceAdapter;
       updateContents();
@@ -140,7 +166,7 @@ public class DeviceTables extends JPanel
    }
 
    /**
-    * The selection of the groups in the groups table has changed.
+    * The selection in the groups table has changed.
     */
    private synchronized void groupsSelectionChanged()
    {
@@ -153,7 +179,7 @@ public class DeviceTables extends JPanel
 
       for (int i = associationsModel.getRowCount() - 1; i >= 0; --i)
       {
-         final Object obj = associationsModel.getValueAt(i, 0);
+         final Object obj = associationsModel.getValueAt(i, 0); 
          if (!(obj instanceof Integer))
             continue;
 
@@ -165,6 +191,62 @@ public class DeviceTables extends JPanel
 
          final Integer objectIdx = (Integer) associationsModel.getValueAt(i, 1);
          objectsSelModel.addSelectionInterval(objectIdx, objectIdx);
+      }
+   }
+
+   /**
+    * The selection in the associations table has changed.
+    */
+   private synchronized void associationsSelectionChanged()
+   {
+      final ListSelectionModel groupsSelModel = groupsTable.getSelectionModel();
+      final ListSelectionModel assocSelModel = associationsTable.getSelectionModel();
+      final ListSelectionModel objectsSelModel = objectsTable.getSelectionModel();
+
+      groupsSelModel.clearSelection();
+      objectsSelModel.clearSelection();
+
+      for (int i = associationsModel.getRowCount() - 1; i >= 0; --i)
+      {
+         if (!assocSelModel.isSelectedIndex(i))
+            continue;
+
+         if (!(associationsModel.getValueAt(i, 0) instanceof Integer))
+            continue;
+
+         final Integer groupIdx = (Integer) associationsModel.getValueAt(i, 0);
+         final Integer objectIdx = (Integer) associationsModel.getValueAt(i, 1);
+
+         groupsSelModel.addSelectionInterval(groupIdx, groupIdx);
+         objectsSelModel.addSelectionInterval(objectIdx, objectIdx);
+      }
+   }
+
+   /**
+    * The selection in the device objects table has changed.
+    */
+   private synchronized void objectsSelectionChanged()
+   {
+      final ListSelectionModel groupsSelModel = groupsTable.getSelectionModel();
+      final ListSelectionModel assocSelModel = associationsTable.getSelectionModel();
+      final ListSelectionModel objectsSelModel = objectsTable.getSelectionModel();
+
+      groupsSelModel.clearSelection();
+      assocSelModel.clearSelection();
+
+      for (int i = associationsModel.getRowCount() - 1; i >= 0; --i)
+      {
+         if (!(associationsModel.getValueAt(i, 0) instanceof Integer))
+            continue;
+
+         final Integer objectIdx = (Integer) associationsModel.getValueAt(i, 1);
+         if (objectIdx == null || !objectsSelModel.isSelectedIndex(objectIdx))
+            continue;
+
+         assocSelModel.addSelectionInterval(i, i);
+
+         final Integer groupIdx = (Integer) associationsModel.getValueAt(i, 0);
+         groupsSelModel.addSelectionInterval(groupIdx, groupIdx);
       }
    }
 }

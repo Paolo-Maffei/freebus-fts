@@ -6,8 +6,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -89,7 +89,7 @@ public class TestBuilding
    public final void testGetSetRooms()
    {
       final Building building = new Building();
-      final List<Room> newRooms = new Vector<Room>();
+      final Set<Room> newRooms = new TreeSet<Room>();
 
       building.setRooms(newRooms);
       assertEquals(newRooms, building.getRooms());

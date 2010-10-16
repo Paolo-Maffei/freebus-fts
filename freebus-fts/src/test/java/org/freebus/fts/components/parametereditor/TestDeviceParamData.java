@@ -50,7 +50,7 @@ public class TestDeviceParamData
       assertNotNull(project);
 
       project.setId(projectId);
-      ProjectManager.getProjectFactory().getProjectService().save(project);
+      ProjectManager.getProjectFactory().getProjectService().persist(project);
 
       trans.commit();
    }
@@ -63,7 +63,7 @@ public class TestDeviceParamData
       final Project project = projectService.getProject(projectId);
       assertNotNull(project);
 
-      final Device device = project.getAreas().get(0).getLines().get(0).getDevices().get(0);
+      final Device device = project.getAreas().iterator().next().getLines().iterator().next().getDevices().iterator().next();
       assertNotNull(device);
 
       final Program program = device.getProgram();

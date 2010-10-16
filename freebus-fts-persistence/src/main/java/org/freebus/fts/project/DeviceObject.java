@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -80,7 +80,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    private Integer dptType;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "deviceObject")
-   private List<SubGroupToObject> subGroupToObjects = new Vector<SubGroupToObject>();
+   private Set<SubGroupToObject> subGroupToObjects = new HashSet<SubGroupToObject>();
 
    /**
     * Create a device object.
@@ -350,7 +350,7 @@ public class DeviceObject implements Comparable<DeviceObject>
    /**
     * @return The list of subgroup-to-object mappings.
     */
-   public List<SubGroupToObject> getSubGroupToObjects()
+   public Set<SubGroupToObject> getSubGroupToObjects()
    {
       return subGroupToObjects;
    }
@@ -427,11 +427,14 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
-    * {@inheritDoc}
+    * Compare by comparing the {@link CommunicationObject communication objects}.
     */
    @Override
    public int compareTo(DeviceObject o)
    {
+      if (o == null)
+         return 1;
+
       if (comObject == null)
          return o.comObject == null ? -1 : 0;
       if (o.comObject == null)

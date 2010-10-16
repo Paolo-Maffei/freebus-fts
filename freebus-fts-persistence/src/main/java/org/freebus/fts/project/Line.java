@@ -2,9 +2,8 @@ package org.freebus.fts.project;
 
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.Vector;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -16,7 +15,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -46,8 +44,7 @@ public class Line implements Comparable<Line>
    private Area area;
 
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "line")
-   @OrderBy("address")
-   private List<Device> devices = new Vector<Device>();
+   private Set<Device> devices = new TreeSet<Device>();
 
    @Deprecated
    public final static int MAX_ADDR = 0x0F; // The highest number valid for
@@ -207,7 +204,7 @@ public class Line implements Comparable<Line>
    /**
     * @return the devices
     */
-   public List<Device> getDevices()
+   public Set<Device> getDevices()
    {
       return devices;
    }
@@ -215,7 +212,7 @@ public class Line implements Comparable<Line>
    /**
     * @param devices the devices to set
     */
-   public void setDevices(List<Device> devices)
+   void setDevices(TreeSet<Device> devices)
    {
       this.devices = devices;
    }
@@ -237,12 +234,19 @@ public class Line implements Comparable<Line>
    }
 
    /**
-    * {@inheritDoc}
+    * Compare by address and id.
     */
    @Override
    public int compareTo(Line o)
    {
-      return toString().compareTo(o.toString());
+      if (o == null)
+         return 1;
+
+      final int d = address - o.address;
+      if (d != 0)
+         return d;
+
+      return id - o.id;
    }
 
    /**

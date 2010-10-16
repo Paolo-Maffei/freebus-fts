@@ -23,8 +23,10 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.freebus.fts.I18n;
+import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.CatalogEntryDetails;
+import org.freebus.fts.components.DeviceProgrammingPanel;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
@@ -46,6 +48,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    private final JComboBox cboRoom = new JComboBox();
    private final JTextField edtName = new JTextField();
    private final JTextArea edtNotes = new JTextArea();
+   private final DeviceProgrammingPanel programmingPanel = new DeviceProgrammingPanel();
    private final CatalogEntryDetails catEntryDetails = new CatalogEntryDetails();
 
    /*
@@ -79,10 +82,11 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
 
       final Insets blkInsets = new Insets(16, 0, 0, 0);
       final Insets stdInsets = new Insets(0, 0, 0, 0);
+      final int ne = GridBagConstraints.NORTHEAST;
       final int nw = GridBagConstraints.NORTHWEST;
       final int e = GridBagConstraints.EAST;
       final int w = GridBagConstraints.WEST;
-      final int gridWidth = 4;
+      final int gridWidth = 5;
       int gridy = -1;
       JLabel lbl;
 
@@ -182,8 +186,14 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       add(lbl, new GridBagConstraints(0, ++gridy, 3, 1, 1, 1, w, GridBagConstraints.NONE, blkInsets, 0, 0));
 
       final JScrollPane scpNotes = new JScrollPane(edtNotes);
-      add(scpNotes, new GridBagConstraints(0, ++gridy, gridWidth, 1, 1, 1, nw, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
+      add(scpNotes, new GridBagConstraints(0, ++gridy, gridWidth - 1, 1, 1, 1, nw, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
       scpNotes.setPreferredSize(new Dimension(100, 100));
+
+      //
+      // Programming details
+      //
+      programmingPanel.setBorder(BorderFactory.createTitledBorder(I18n.getMessage("DeviceEditor.GeneralPanel.ProgrammingDetails")));
+      add(programmingPanel, new GridBagConstraints(4, 0, 1, gridy + 1, 1, 1, ne, GridBagConstraints.VERTICAL, new Insets(0, 8, 0, 0), 0, 0));
 
       //
       // Catalog entry details
@@ -193,7 +203,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       //
       // Page filler
       //
-      add(new Label(), new GridBagConstraints(0, ++gridy, 1, 1, 1, 100, w, GridBagConstraints.BOTH, stdInsets, 0, 0));
+      add(new Label(), new GridBagConstraints(0, ++gridy, gridWidth, 1, 1, 100, w, GridBagConstraints.BOTH, stdInsets, 0, 0));
    }
 
    /**
@@ -219,7 +229,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    /**
     * Set the edited device.
     */
-   public void setDevice(Device device)
+   public void setDevice(Device device, DeviceController adapter)
    {
       this.device = device;
 
@@ -229,6 +239,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       updating = true;
       edtName.setText(device.getName());
       catEntryDetails.setCatalogEntry(device.getCatalogEntry());
+      programmingPanel.setDevice(device);
       
       final PhysicalAddress addr = device.getPhysicalAddress();
       lblLineAddr.setText(Integer.toString(addr.getZone()) + '.' + Integer.toString(addr.getLine()) + '.');
@@ -248,7 +259,10 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       updating = true;
 
       if (obj instanceof Device)
+      {
          updateDeviceAddresses();
+         programmingPanel.updateContents();
+      }
       else updateRooms();
 
       updating = false;

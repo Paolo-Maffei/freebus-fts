@@ -120,7 +120,7 @@ public final class SampleProjectFactory
       final Area area = new Area();
       area.setName(I18n.getMessage("SampleProjectFactory.Area1"));
       area.setAddress(1);
-      project.addArea(area);
+      project.add(area);
 
       final Line line1 = new Line();
       line1.setName(I18n.getMessage("SampleProjectFactory.Line1"));

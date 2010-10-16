@@ -6,8 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -117,9 +116,12 @@ public class TestRoom
    public final void testGetSetDevices()
    {
       final Room room = new Room();
-      final List<Device> newDevices = new Vector<Device>();
+      assertTrue(room.getDevices().isEmpty());
 
+      final TreeSet<Device> newDevices = new TreeSet<Device>();
+      newDevices.add(new Device());
       room.setDevices(newDevices);
+
       assertEquals(newDevices, room.getDevices());
    }
 

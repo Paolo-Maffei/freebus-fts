@@ -253,4 +253,26 @@
   </createTable>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-18">
+  <createTable tableName="device_programming">
+   <column name="device_id" type="INT">
+    <constraints nullable="false" primaryKey="true" />
+   </column>
+   <column name="last_modified" type="DATETIME" />
+   <column name="last_upload" type="DATETIME" />
+   <column name="communication_valid" type="BIT" defaultValueBoolean="false">
+    <constraints nullable="false" />
+   </column>
+   <column name="parameters_valid" type="BIT" defaultValueBoolean="false">
+    <constraints nullable="false" />
+   </column>
+   <column name="physical_address_valid" type="BIT" defaultValueBoolean="false">
+    <constraints nullable="false" />
+   </column>
+   <column name="program_valid" type="BIT" defaultValueBoolean="false">
+    <constraints nullable="false" />
+   </column>
+  </createTable>
+ </changeSet>
+
 </databaseChangeLog>

@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -25,7 +25,7 @@ import org.freebus.fts.project.internal.I18n;
  */
 @Entity
 @Table(name = "mid_group")
-public class MidGroup
+public class MidGroup implements Comparable<MidGroup>
 {
    @Id
    @TableGenerator(name = "MidGroup", initialValue = 1, allocationSize = 10)
@@ -45,7 +45,7 @@ public class MidGroup
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "midGroup")
    @OrderBy("address")
-   private List<SubGroup> subGroups = new Vector<SubGroup>();
+   private Set<SubGroup> subGroups = new TreeSet<SubGroup>();
 
    /**
     * Create a new mid-group.
@@ -163,7 +163,7 @@ public class MidGroup
    /**
     * @return the sub-groups container.
     */
-   public List<SubGroup> getSubGroups()
+   public Set<SubGroup> getSubGroups()
    {
       return subGroups;
    }
@@ -171,9 +171,18 @@ public class MidGroup
    /**
     * Set the sub-groups container.
     */
-   public void setSubGroups(List<SubGroup> groups)
+   void setSubGroups(TreeSet<SubGroup> groups)
    {
       this.subGroups = groups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return id;
    }
 
    /**
@@ -199,12 +208,19 @@ public class MidGroup
    }
 
    /**
-    * {@inheritDoc}
+    * Compare by address and id.
     */
    @Override
-   public int hashCode()
+   public int compareTo(MidGroup o)
    {
-      return id;
+      if (o == null)
+         return 1;
+
+      final int d = address - o.address;
+      if (d != 0)
+         return d;
+
+      return id - o.id;
    }
 
    /**

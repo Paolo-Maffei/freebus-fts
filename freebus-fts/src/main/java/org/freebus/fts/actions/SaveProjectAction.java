@@ -47,7 +47,11 @@ public final class SaveProjectAction extends BasicAction
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 
          projectFactory.getTransaction().begin();
-         projectFactory.getProjectService().save(project);
+
+         if (project.getId() == 0)
+            projectFactory.getProjectService().persist(project);
+         else projectFactory.getProjectService().merge(project);
+
          projectFactory.getTransaction().commit();
 
          Logger.getLogger(getClass()).info("Project saved");

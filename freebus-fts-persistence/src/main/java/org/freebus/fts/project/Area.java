@@ -1,19 +1,19 @@
 package org.freebus.fts.project;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -25,7 +25,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "area")
-public class Area
+public class Area implements Comparable<Area>
 {
    @Id
    @TableGenerator(name = "Area", initialValue = 1, allocationSize = 10)
@@ -43,9 +43,8 @@ public class Area
    @Column(name = "area_address", nullable = false)
    private int address;
 
-   @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "area")
-   @OrderBy("address")
-   private List<Line> lines = new Vector<Line>();
+   @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "area")
+   private TreeSet<Line> lines = new TreeSet<Line>();
 
    public final static int MAX_ADDR = 0x0F;        // The highest number valid for address 
    public final static int MIN_NAME_LENGTH = 2;    //TODO Define minimum accepted length for an Area Name
@@ -181,7 +180,7 @@ public class Area
    /**
     * @return the lines
     */
-   public List<Line> getLines()
+   public Set<Line> getLines()
    {
       return lines;
    }
@@ -189,7 +188,7 @@ public class Area
    /**
     * @param lines the lines to set
     */
-   public void setLines(List<Line> lines)
+   void setLines(TreeSet<Line> lines)
    {
       this.lines = lines;
    }
@@ -232,12 +231,28 @@ public class Area
    }
 
    /**
+    * Compare two areas by address and id.
+    */
+   @Override
+   public int compareTo(Area o)
+   {
+      if (o == null)
+         return 1;
+
+      final int d = address - o.address;
+      if (d != 0)
+         return d;
+
+      return id - o.id;
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override
    public int hashCode()
    {
-      return id;
+      return (id << 8) | address;
    }
 
    /**

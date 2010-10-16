@@ -18,6 +18,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKey;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -35,7 +36,7 @@ import org.freebus.fts.products.VirtualDevice;
  */
 @Entity
 @Table(name = "device")
-public final class Device
+public final class Device implements Comparable<Device>
 {
    @Id
    @TableGenerator(name = "Device", initialValue = 1, allocationSize = 10)
@@ -71,6 +72,9 @@ public final class Device
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
    private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
+
+   @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "device")
+   private DeviceProgramming programming;
 
    /**
     * Create an empty device object.
@@ -339,6 +343,30 @@ public final class Device
    }
 
    /**
+    * Get the device programming details object. A new programming details
+    * object is created if none exists.
+    *
+    * @return The programming details object.
+    */
+   public synchronized DeviceProgramming getProgramming()
+   {
+      if (programming == null)
+         programming = new DeviceProgramming(this);
+
+      return programming;
+   }
+
+   /**
+    * Test if programming details exist for the device.
+    * 
+    * @return True if programming details exist.
+    */
+   public boolean hasProgramming()
+   {
+      return programming != null;
+   }
+
+   /**
     * Test if a specific communication object is visible for this device.
     * 
     * @param comObject - the communication object to test.
@@ -346,11 +374,6 @@ public final class Device
     */
    public boolean isVisible(final CommunicationObject comObject)
    {
-      if (comObject.getNumber() == 3)
-      {
-         Logger.getLogger(getClass()).debug("debug catcher");
-      }
-
       final Parameter param = comObject.getParameter();
       if (param == null)
          return true;
@@ -418,7 +441,7 @@ public final class Device
     */
    public void updateDeviceObjects()
    {
-      Logger.getLogger(getClass()).debug("updateDeviceObjects");
+//      Logger.getLogger(getClass()).debug("updateDeviceObjects");
 
       if (program == null)
       {
@@ -489,10 +512,13 @@ public final class Device
    /**
     * Update the device parameters. Call when the parameters of the device
     * changed.
+    * 
+    * @deprecated probably not used?
     */
+   @Deprecated
    public void updateDeviceParameters()
    {
-      // TODO
+      throw new RuntimeException("not implemented");
    }
 
    /**
@@ -520,6 +546,19 @@ public final class Device
          return false;
 
       return true;
+   }
+
+   /**
+    * Compare by address and id.
+    */
+   @Override
+   public int compareTo(Device o)
+   {
+      int d = address - o.address;
+      if (d != 0)
+         return d;
+
+      return id - o.id;
    }
 
    /**

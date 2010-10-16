@@ -18,9 +18,18 @@ public interface ProjectService
    public Project getProject(int id) throws PersistenceException;
 
    /**
-    * Save the project.
+    * Persist the given project.
     */
-   public void save(Project project) throws PersistenceException;
+   public void persist(Project project) throws PersistenceException;
+
+   /**
+    * Merge the state of the given project into the current persistence
+    * context.
+    * 
+    * @return the project. The returned object may be different from the
+    *         given object.
+    */
+   public Project merge(Project project) throws PersistenceException;
 
    /**
     * Get all available projects.

@@ -18,14 +18,14 @@ public class TestJpaProjectService extends ProjectTestCase
    }
 
    @Test
-   public final void testSave()
+   public final void testPersist()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
 
       final Project project = SampleProjectFactory.newProject(persistenceUnitName);
       assertNotNull(project);
 
-      projectService.save(project);
+      projectService.persist(project);
       assertFalse(project.getId() == 0);
 
       DatabaseResources.getEntityManager().flush();

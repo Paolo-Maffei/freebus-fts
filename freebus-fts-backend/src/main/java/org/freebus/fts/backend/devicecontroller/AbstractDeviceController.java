@@ -1,11 +1,13 @@
-package org.freebus.fts.backend.deviceadapter;
+package org.freebus.fts.backend.devicecontroller;
 
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.freebus.fts.backend.KNXDeviceAdapter;
+import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -13,13 +15,14 @@ import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
+import org.freebus.fts.project.DeviceProgramming;
 import org.freebus.fts.project.SubGroupToObject;
 
 /**
  * Base class for device adapters that handles the creation of the various
  * device tables.
  */
-public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
+public abstract class AbstractDeviceController implements DeviceController
 {
    private final Device device;
 
@@ -32,7 +35,7 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
     * 
     * @param device - the device to handle.
     */
-   public BasicDeviceAdapter(Device device)
+   public AbstractDeviceController(Device device)
    {
       this.device = device;
    }
@@ -138,66 +141,34 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
     */
    private synchronized void updateAssociationTable()
    {
-      final Vector<AssociationTableEntry> assocTab = new Vector<AssociationTableEntry>(64);
+      final Vector<AssociationTableEntry> assocTab = new Vector<AssociationTableEntry>(100);
 
-      // Transmitting device objects get an association table entry
-      // at the index of their device object number. This is required
-      // for certain BCU firmware implementations.
       for (final DeviceObject devObject: device.getDeviceObjects())
       {
-         if (!devObject.isTransEnabled())
-            continue;
+         final int comObjNumber = devObject.getComObject().getNumber(); 
 
-         final List<SubGroupToObject> sgos = devObject.getSubGroupToObjects();
-         if (sgos.isEmpty())
-            continue;
-
-         final int groupAddrIndex = getGroupAddrIndex(sgos.get(0).getSubGroup().getGroupAddress());
-
-         final int number = devObject.getComObject().getNumber(); 
-         if (assocTab.size() <= number)
-            assocTab.setSize(number + 1);
-
-         if (assocTab.get(number) != null)
-            throw new RuntimeException("internal error: association table position is used twice");
-
-         assocTab.set(number, new AssociationTableEntry(groupAddrIndex, number));
-      }
-
-      // Add all non-transmitting device objects, and the group addresses
-      // of transmitting device objects after the first group address,
-      // into the free positions and at the end of the association table.
-      for (final DeviceObject devObject: device.getDeviceObjects())
-      {
-         final List<SubGroupToObject> sgos = devObject.getSubGroupToObjects();
-         if (sgos.isEmpty())
-            continue;
-
-         boolean skipFirst = devObject.isTransEnabled();
          for (final SubGroupToObject sgo : devObject.getSubGroupToObjects())
          {
-            if (skipFirst)
-            {
-               skipFirst = false;
-               continue;
-            }
-
             final int groupAddrIndex = getGroupAddrIndex(sgo.getSubGroup().getGroupAddress());
-            final int number = devObject.getComObject().getNumber();
-
-            int i = 0;
-            while (i < assocTab.size() && assocTab.get(i) != null)
-               ++i;
-
-            if (assocTab.size() <= i)
-               assocTab.setSize(i + 1);
-
-            assocTab.set(number, new AssociationTableEntry(groupAddrIndex, number));
+            assocTab.add(new AssociationTableEntry(groupAddrIndex, comObjNumber));
          }
       }
 
       associationTable = new AssociationTableEntry[assocTab.size()];
       assocTab.toArray(associationTable);
+
+      Arrays.sort(associationTable, new Comparator<AssociationTableEntry>()
+      {
+         @Override
+         public int compare(AssociationTableEntry a, AssociationTableEntry b)
+         {
+            final int diff = a.getConnectionIndex() - b.getConnectionIndex();
+            if (diff != 0)
+               return diff;
+
+            return a.getDeviceObjectIndex() - b.getDeviceObjectIndex();
+         }
+      });
    }
 
    /**
@@ -243,4 +214,24 @@ public abstract class BasicDeviceAdapter implements KNXDeviceAdapter
       return maxNum + 1;
    }
 
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public List<DeviceProgrammer> getRequiredProgrammers()
+   {
+      final List<DeviceProgrammer> programmers = new Vector<DeviceProgrammer>();
+      final DeviceProgramming progr = device.getProgramming();
+
+      if (!progr.isPhysicalAddressValid())
+         programmers.add(getProgrammer(DeviceProgrammerType.PHYSICAL_ADDRESS));
+      if (!progr.isProgramValid())
+         programmers.add(getProgrammer(DeviceProgrammerType.PROGRAM));
+      if (!progr.isParametersValid())
+         programmers.add(getProgrammer(DeviceProgrammerType.PARAMETERS));
+      if (!progr.isCommunicationValid())
+         programmers.add(getProgrammer(DeviceProgrammerType.COMMUNICATIONS));
+
+      return programmers;
+   }
 }

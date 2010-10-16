@@ -6,8 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -92,7 +91,8 @@ public class TestLine
       final Line line = new Line();
       assertNotNull(line.getDevices());
 
-      List<Device> newDevices = new Vector<Device>();
+      TreeSet<Device> newDevices = new TreeSet<Device>();
+      newDevices.add(new Device());
       line.setDevices(newDevices);
       assertEquals(newDevices, line.getDevices());
    }

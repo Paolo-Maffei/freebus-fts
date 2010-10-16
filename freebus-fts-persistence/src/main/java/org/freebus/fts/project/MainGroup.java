@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -25,7 +24,7 @@ import org.freebus.fts.project.internal.I18n;
  */
 @Entity
 @Table(name = "main_group")
-public class MainGroup
+public class MainGroup implements Comparable<MainGroup>
 {
    @Id
    @TableGenerator(name = "MainGroup", initialValue = 1, allocationSize = 10)
@@ -44,8 +43,7 @@ public class MainGroup
    private Project project;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "mainGroup")
-   @OrderBy("address")
-   private List<MidGroup> midGroups = new Vector<MidGroup>();
+   private Set<MidGroup> midGroups = new TreeSet<MidGroup>();
 
    /**
     * Create a new main-group.
@@ -164,7 +162,7 @@ public class MainGroup
    /**
     * @return the mid-groups container.
     */
-   public List<MidGroup> getMidGroups()
+   public Set<MidGroup> getMidGroups()
    {
       return midGroups;
    }
@@ -172,9 +170,18 @@ public class MainGroup
    /**
     * Set the mid-groups container.
     */
-   public void setMidGroups(List<MidGroup> midGroups)
+   void setMidGroups(Set<MidGroup> midGroups)
    {
       this.midGroups = midGroups;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public int hashCode()
+   {
+      return (id << 8) | address;
    }
 
    /**
@@ -200,12 +207,19 @@ public class MainGroup
    }
 
    /**
-    * {@inheritDoc}
+    * Compare by address and id.
     */
    @Override
-   public int hashCode()
+   public int compareTo(MainGroup o)
    {
-      return (id << 8) | address;
+      if (o == null)
+         return 1;
+
+      final int d = address - o.address;
+      if (d != 0)
+         return d;
+
+      return id - o.id;
    }
 
    /**

@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,7 +12,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
-import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
@@ -22,7 +21,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "building")
-public class Building
+public class Building implements Comparable<Building>
 {
    @Id
    @TableGenerator(name = "Building", initialValue = 1, allocationSize = 10)
@@ -41,8 +40,7 @@ public class Building
    private String description = "";
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "building")
-   @OrderBy("id")
-   private List<Room> rooms = new Vector<Room>();
+   private Set<Room> rooms = new TreeSet<Room>();
 
    /**
     * Create a new building.
@@ -167,15 +165,18 @@ public class Building
    /**
     * @return the rooms.
     */
-   public List<Room> getRooms()
+   public Set<Room> getRooms()
    {
+      if (rooms == null)
+         rooms = new TreeSet<Room>();
+
       return rooms;
    }
 
    /**
     * @param rooms the rooms to set.
     */
-   public void setRooms(List<Room> rooms)
+   public void setRooms(Set<Room> rooms)
    {
       this.rooms = rooms;
    }
@@ -193,7 +194,22 @@ public class Building
          return false;
 
       final Building oo = (Building) o;
-      return id == oo.id && name.equals(oo.name) && description.equals(oo.description) && rooms.equals(oo.rooms);
+      if (id != oo.id || !name.equals(oo.name) || !description.equals(oo.description))
+         return false;
+      return rooms.equals(oo.rooms);
+   }
+
+   /**
+    * Compare by name & id.
+    */
+   @Override
+   public int compareTo(Building o)
+   {
+      int d = name.compareTo(o.name);
+      if (d != 0)
+         return d;
+
+      return id - o.id;
    }
 
    /**

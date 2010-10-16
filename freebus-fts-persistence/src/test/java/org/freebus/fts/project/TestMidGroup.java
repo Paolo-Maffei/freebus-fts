@@ -6,8 +6,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.TreeSet;
 
 import org.junit.Test;
 
@@ -101,8 +100,10 @@ public class TestMidGroup
    public final void testGetSetGroups()
    {
       final MidGroup midGroup = new MidGroup();
+      assertTrue(midGroup.getSubGroups().isEmpty());
 
-      final List<SubGroup> newGroups = new Vector<SubGroup>();
+      final TreeSet<SubGroup> newGroups = new TreeSet<SubGroup>();
+      newGroups.add(new SubGroup(17));
       midGroup.setSubGroups(newGroups);
 
       assertEquals(newGroups, midGroup.getSubGroups());

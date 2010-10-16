@@ -25,20 +25,21 @@ public class TestJpaProgramService extends ProductsTestCase
    {
       progService = getJpaProductsFactory().getProgramService();
 
-      final Manufacturer manu = new Manufacturer(1, "manu-1");
+      final Manufacturer manu = new Manufacturer(118, "manu-118");
       getJpaProductsFactory().getManufacturerService().persist(manu);
 
-      progService.persist(new Program(11, "Program-11", manu, new Mask()));
-      progService.persist(new Program(12, "Program-12", manu, new Mask()));
-      progService.persist(new Program(13, "Program-13", manu, new Mask()));
+      progService.persist(new Program(111, "Program-11", manu, new Mask()));
+      progService.persist(new Program(112, "Program-12", manu, new Mask()));
+      progService.persist(new Program(113, "Program-13", manu, new Mask()));
 
       DatabaseResources.getEntityManager().flush();
+      DatabaseResources.getEntityManager().getTransaction().setRollbackOnly();
    }
 
    @Test
    public final void testGetProgram() throws DAOException
    {
-      final Program prog = progService.getProgram(11);
+      final Program prog = progService.getProgram(112);
       assertNotNull(prog);
    }
 

@@ -6,7 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.Window;
-import java.util.List;
+import java.util.Collection;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -143,9 +143,9 @@ public class AddDeviceDialog extends Dialog
       final Object obj = topologyView.getSelectedObject();
       if (obj instanceof Area)
       {
-         final List<Line> lines = ((Area) obj).getLines();
+         final Collection<Line> lines = ((Area) obj).getLines();
          if (lines != null && !lines.isEmpty())
-            return lines.get(0);
+            return lines.iterator().next();
       }
       else if (obj instanceof Line)
       {
@@ -174,9 +174,9 @@ public class AddDeviceDialog extends Dialog
       final Object obj = physicalView.getSelectedObject();
       if (obj instanceof Building)
       {
-         final List<Room> rooms = ((Building) obj).getRooms();
+         final Collection<Room> rooms = ((Building) obj).getRooms();
          if (rooms != null && !rooms.isEmpty())
-            return rooms.get(0);
+            return rooms.iterator().next();
       }
       else if (obj instanceof Room)
       {

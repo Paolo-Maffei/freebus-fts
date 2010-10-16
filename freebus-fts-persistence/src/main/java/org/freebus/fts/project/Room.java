@@ -1,7 +1,7 @@
 package org.freebus.fts.project;
 
-import java.util.List;
-import java.util.Vector;
+import java.util.Set;
+import java.util.TreeSet;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -44,7 +44,7 @@ public class Room implements Comparable<Room>
    private Building building;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "room")
-   private List<Device> devices = new Vector<Device>();
+   private Set<Device> devices = new TreeSet<Device>();
 
    /**
     * Create a new room.
@@ -177,7 +177,7 @@ public class Room implements Comparable<Room>
    /**
     * @return the devices
     */
-   public List<Device> getDevices()
+   public Set<Device> getDevices()
    {
       return devices;
    }
@@ -187,7 +187,7 @@ public class Room implements Comparable<Room>
     *
     * @param devices the devices to set
     */
-   public void setDevices(List<Device> devices)
+   void setDevices(TreeSet<Device> devices)
    {
       this.devices = devices;
    }
@@ -215,12 +215,16 @@ public class Room implements Comparable<Room>
    }
 
    /**
-    * {@inheritDoc}
+    * Compare by name and id.
     */
    @Override
    public int compareTo(Room o)
    {
-      return name.compareTo(o.name);
+      int d = name.compareTo(o.name);
+      if (d != 0)
+         return d;
+      
+      return id - o.id;
    }
 
    /**
