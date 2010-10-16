@@ -11,6 +11,7 @@ import org.freebus.fts.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.elements.components.ReadOnlyTable;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 import org.freebus.knxcomm.jobs.DeviceScannerJob;
 import org.freebus.knxcomm.jobs.DeviceScannerJobListener;
 import org.freebus.knxcomm.jobs.JobQueue;
@@ -77,5 +78,15 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
             tblDevices.revalidate();
          }
       });
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void deviceDescriptorReceived(DeviceDescriptor descriptor)
+   {
+      // TODO Auto-generated method stub
+      
    }
 }

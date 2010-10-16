@@ -4,7 +4,6 @@ import org.freebus.fts.common.Environment;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.jobs.DeviceScannerJob;
-import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
@@ -33,14 +32,16 @@ public class DeviceScannerJobExample implements TelegramListener
       //
       // Bus connection
       //
-      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
-//      bus = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
+//      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      bus = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
 //      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
 
       final DeviceScannerJob job = new DeviceScannerJob(zone, line);
+      job.setMinAddress(1);
+      job.setMaxAddress(40);
       job.run(bus);
    }
 
@@ -86,10 +87,16 @@ public class DeviceScannerJobExample implements TelegramListener
          Thread.sleep(20000);
 
       }
+      catch (Exception e)
+      {
+         e.printStackTrace();
+      }
       finally
       {
          if (tst != null)
             tst.dispose();
+
+         System.exit(0);
       }
    }
 }

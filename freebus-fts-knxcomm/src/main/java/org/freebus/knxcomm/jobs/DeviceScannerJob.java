@@ -28,6 +28,8 @@ public final class DeviceScannerJob extends ListenableJob
    final Telegram dataTelegram = new Telegram();
    private TelegramReceiver receiver;
    private final int zone, line;
+   private int minAddress = 0;
+   private int maxAddress = 255;
 
    /**
     * Create a device scanner job that will scan for devices in a specific zone
@@ -44,6 +46,50 @@ public final class DeviceScannerJob extends ListenableJob
       dataTelegram.setFrom(PhysicalAddress.NULL);
       dataTelegram.setPriority(Priority.SYSTEM);
       dataTelegram.setTransport(Transport.Connect);
+   }
+
+   /**
+    * @return The minimum address that is scanned.
+    */
+   public int getMinAddress()
+   {
+      return minAddress;
+   }
+
+   /**
+    * Set the minimum address that is scanned.
+    * 
+    * @param minAddress - the minimum address to set (0..255)
+    * @throws IllegalArgumentException if the address is out of range.
+    */
+   public void setMinAddress(int minAddress)
+   {
+      if (minAddress < 0 || minAddress > 255)
+         throw new IllegalArgumentException("address out of range 0..255");
+
+      this.minAddress = minAddress;
+   }
+
+   /**
+    * @return The maximum address that is scanned.
+    */
+   public int getMaxAddress()
+   {
+      return maxAddress;
+   }
+
+   /**
+    * Set the maximum address that is scanned.
+    *
+    * @param maxAddress - the maximum address to set (0..255)
+    * @throws IllegalArgumentException if the address is out of range.
+    */
+   public void setMaxAddress(int maxAddress)
+   {
+      if (maxAddress < 0 || maxAddress > 255)
+         throw new IllegalArgumentException("address out of range 0..255");
+
+      this.maxAddress = maxAddress;
    }
 
    /**
@@ -76,17 +122,18 @@ public final class DeviceScannerJob extends ListenableJob
       //receiver.setDest(bus.getPhysicalAddress());
       receiver.clear();
 
-      for (int deviceId = 0; deviceId <= 255; ++deviceId)
+      final int addressRange = maxAddress - minAddress + 1;
+      for (int address = minAddress; address <= maxAddress; ++address)
       {
-         Logger.getLogger(getClass()).info("Probing " + zone + "." + line + "." + deviceId);
+         Logger.getLogger(getClass()).info("Probing " + zone + "." + line + "." + address);
 
-         dataTelegram.setDest(new PhysicalAddress(zone, line, deviceId));
+         dataTelegram.setDest(new PhysicalAddress(zone, line, address));
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
-         msleep(150);
+         msleep(50);
 
-         // The Freebus controller currently (2010-03) needs an extra telegram to be detected.
+         // Freebus LPC controllers currently (2010-03) need an extra telegram to be detected.
          // But this is ok as we want to read the device descriptor anyways. The process could
          // be optimated to only read the device descriptors from found devices - as soon as
          // the Freebus controller sends a Disconnect after a timeout (which the LPC controller
@@ -95,10 +142,11 @@ public final class DeviceScannerJob extends ListenableJob
          dataTelegram.setSequence(0);
          dataTelegram.setApplication(new DeviceDescriptorRead(0));
          bus.send(dataTelegram);
-         msleep(150);
+         msleep(50);
 
-         notifyListener((deviceId * 80) >> 8, I18n.getMessage("DeviceScannerJob.Scanning"));
-         processAnswers(200);
+         final int donePerc = (address - minAddress) * 80 / addressRange;
+         notifyListener(donePerc, I18n.getMessage("DeviceScannerJob.Scanning"));
+         processAnswers(100);
       }
 
       // Wait 6+ seconds for answers at the end.

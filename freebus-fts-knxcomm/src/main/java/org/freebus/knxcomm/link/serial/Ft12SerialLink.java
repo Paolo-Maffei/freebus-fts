@@ -58,11 +58,12 @@ public class Ft12SerialLink extends ListenableLink
    private static final int FRAMECOUNT_VALID = 0x10;
 
    private final SerialPortWrapper port = new SerialPortWrapper();
-   private final Object lock = new Object();
+   private final Object ackLock = new Object();
+   private volatile Object openLock;
    private final String portName;
 
    private volatile Ft12State state = Ft12State.CLOSED;
-   private PhysicalAddress bcuAddress;
+   private PhysicalAddress bcuAddress = PhysicalAddress.NULL;
    private Receiver receiver;
    private OutputStream outputStream;
    private InputStream inputStream;
@@ -112,25 +113,37 @@ public class Ft12SerialLink extends ListenableLink
 
       // Reset the BCU
       send(Ft12Function.RESET);
-      msleep(100);
-
-      // Wait for silence on the input stream
-      while (inputStream.read() >= 0)
-         ;
+      msleep(500);
 
       // Start the receiver thread
       receiver = new Receiver();
       receiver.start();
-
-      state = Ft12State.OK;
-
-      // Identify the BCU
-      send(new PEI_Identify_req(), true);
       msleep(100);
+
+      openLock = new Object();
+      synchronized (openLock)
+      {
+         try
+         {
+            // Identify the BCU
+            send((new PEI_Identify_req()).toByteArray(), true);
+
+            // Wait for the Identify reply
+            openLock.wait(1000);
+         }
+         catch (InterruptedException e)
+         {
+            logger.error("interrupted waiting for PEI_Identify reply from the BCU", e);
+         }
+      }
+      logger.debug("BCU address is " + bcuAddress);
 
       // Set the link mode
       setLinkMode(mode);
-      msleep(100);
+      msleep(500);
+
+      openLock = null;
+      logger.debug("FT1.2 link opened");
    }
 
    /**
@@ -209,7 +222,7 @@ public class Ft12SerialLink extends ListenableLink
 
       Logger.getLogger(getClass()).debug("Activating " + mode + " link mode");
       this.mode = mode;
-      send(new PEI_Switch_req(switchMode), true);
+      send((new PEI_Switch_req(switchMode)).toByteArray(), true);
    }
 
    /**
@@ -355,13 +368,13 @@ public class Ft12SerialLink extends ListenableLink
       final long now = System.currentTimeMillis();
       final long end = now + remaining;
 
-      synchronized (lock)
+      synchronized (ackLock)
       {
          while (state == Ft12State.ACK_PENDING && remaining > 0)
          {
             try
             {
-               lock.wait(remaining);
+               ackLock.wait(remaining);
             }
             catch (final InterruptedException e)
             {
@@ -442,6 +455,14 @@ public class Ft12SerialLink extends ListenableLink
       {
          final PEI_Identify_con frame = (PEI_Identify_con) EmiFrameFactory.createFrame(data);
          bcuAddress = frame.getAddr();
+
+         if (openLock != null)
+         {
+            synchronized (openLock)
+            {
+               openLock.notify();
+            }
+         }
       }
       catch (IOException e)
       {
@@ -481,10 +502,10 @@ public class Ft12SerialLink extends ListenableLink
                   {
                      if (state == Ft12State.ACK_PENDING)
                      {
-                        synchronized (lock)
+                        synchronized (ackLock)
                         {
                            state = Ft12State.OK;
-                           lock.notify();
+                           ackLock.notify();
                         }
                      }
                   }
@@ -559,7 +580,8 @@ public class Ft12SerialLink extends ListenableLink
             final byte chk = buf[buf.length - 2];
             if (!checkCtrlField(buf[2] & 0xff, chk))
             {
-               logger.warn("... in received frame: " + HexString.toString(new byte[] { FT12_START_VARIABLE, (byte) len }) + ' '
+               logger.warn("... in received frame: "
+                     + HexString.toString(new byte[] { FT12_START_VARIABLE, (byte) len }) + ' '
                      + HexString.toString(buf));
             }
             else if (calcChecksum(buf, 2, len) != chk)

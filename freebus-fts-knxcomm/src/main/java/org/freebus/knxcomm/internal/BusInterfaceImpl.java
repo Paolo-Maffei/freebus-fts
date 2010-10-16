@@ -70,9 +70,10 @@ public class BusInterfaceImpl implements BusInterface
    public void open(LinkMode mode) throws IOException
    {
       receiver = new Receiver();
-      link.addListener(receiver);
 
       link.open(mode);
+
+      link.addListener(receiver);
       receiver.start();
    }
 
@@ -209,22 +210,24 @@ public class BusInterfaceImpl implements BusInterface
       replySemaphore.drainPermits();
       waitConTelegram = telegram;
 
+      final int waitTimeMS = 1500;
       try
       {
          link.send(new L_Data_req(telegram), true);
 
-         if (replySemaphore.tryAcquire(1500, TimeUnit.MILLISECONDS))
+         if (replySemaphore.tryAcquire(waitTimeMS, TimeUnit.MILLISECONDS))
             return;
       }
       catch (InterruptedException e)
       {
-         Logger.getLogger(getClass()).warn("Interrupted while waiting for send confirmation", e);
+         logger.warn("Interrupted while waiting for send confirmation", e);
       }
       finally
       {
          waitConTelegram = null;
       }
 
+      logger.error("Sent telegram was not confirmed within " + waitTimeMS + "ms");
       throw new IOException("Sent telegram was not confirmed: " + telegram);
    }
 
@@ -263,7 +266,8 @@ public class BusInterfaceImpl implements BusInterface
                }
                catch (InterruptedException e)
                {
-                  logger.warn("interrupted", e);
+                  if (active)
+                     logger.warn("interrupted", e);
                }
 
                if (active)

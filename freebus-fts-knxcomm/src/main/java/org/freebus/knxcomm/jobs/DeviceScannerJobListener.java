@@ -1,6 +1,7 @@
 package org.freebus.knxcomm.jobs;
 
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 
 /**
  * Interface for listeners that get informed about the progress of a
@@ -13,5 +14,12 @@ public interface DeviceScannerJobListener extends JobListener
     *
     * @param addr - the address of the found device.
     */
-   public void deviceFound(PhysicalAddress addr);
+   void deviceFound(PhysicalAddress addr);
+
+   /**
+    * The device descriptor of a device was received.
+    * 
+    * @param descriptor - the device descriptor.
+    */
+   void deviceDescriptorReceived(DeviceDescriptor descriptor);
 }
