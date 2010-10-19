@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
-import org.freebus.fts.pages.TopologyView;
+import org.freebus.fts.view.TopologyView;
 
 /**
  * Open the bus monitor.

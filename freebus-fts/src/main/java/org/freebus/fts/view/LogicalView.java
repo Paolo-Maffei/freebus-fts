@@ -1,4 +1,4 @@
-package org.freebus.fts.pages;
+package org.freebus.fts.view;
 
 import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;

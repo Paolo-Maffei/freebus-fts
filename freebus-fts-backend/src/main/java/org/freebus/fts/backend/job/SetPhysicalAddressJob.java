@@ -106,12 +106,15 @@ public final class SetPhysicalAddressJob extends ListenableJob
       // Step 2: wait up to 3 seconds for answers
       //
       Set<PhysicalAddress> found = new HashSet<PhysicalAddress>();
-      for (int i = 1 + (int) (elapsed / 1000); i <= 6 && found.size() < 2; ++i)
+      for (int i = 1 + (int) (elapsed / 1000); i <= 6 && found.size() < 2 && isActive(); ++i)
       {
          for (Telegram telegram : receiver.receiveMultiple(500))
             found.add(telegram.getFrom());
          notifyListener(i * 10, null);
       }
+
+      if (!isActive())
+         return;
 
       // Verify that exactly one device is in programming mode
       if (found.size() < 1)

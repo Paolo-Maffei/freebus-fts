@@ -136,13 +136,11 @@ public class Ft12SerialLink extends ListenableLink
             logger.error("interrupted waiting for PEI_Identify reply from the BCU", e);
          }
       }
-      logger.debug("BCU address is " + bcuAddress);
 
       // Set the link mode
       setLinkMode(mode);
       msleep(500);
 
-      openLock = null;
       logger.debug("FT1.2 link opened");
    }
 
@@ -455,6 +453,7 @@ public class Ft12SerialLink extends ListenableLink
       {
          final PEI_Identify_con frame = (PEI_Identify_con) EmiFrameFactory.createFrame(data);
          bcuAddress = frame.getAddr();
+         logger.debug("BCU address is " + bcuAddress);
 
          if (openLock != null)
          {

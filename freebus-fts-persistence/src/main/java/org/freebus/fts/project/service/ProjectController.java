@@ -1,9 +1,11 @@
 package org.freebus.fts.project.service;
 
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.Room;
 
 /**
  * Interface for project controllers. Project controllers manipulate the
@@ -18,7 +20,23 @@ public interface ProjectController
     * 
     * @param dev - the device to add.
     */
-   public void add(VirtualDevice dev);
+   void add(VirtualDevice dev);
+
+   /**
+    * Add a building to the project. The building may
+    * have a parent building.
+    * 
+    * @param building - the building to add.
+    */
+   void add(Building building);
+
+   /**
+    * Add a room to a building.
+    *
+    * @param building - the building to add the room to.
+    * @param room - the room to add.
+    */
+   void add(Building building, Room room);
 
    /**
     * Edit an object. Calls the proper edit method to do the job (e.g.
@@ -30,7 +48,7 @@ public interface ProjectController
     * @return true if the object is edited, false if the object is of an
     *         unsupported class.
     */
-   public boolean edit(Object obj);
+   boolean edit(Object obj);
 
    /**
     * Remove an object. Calls the proper remove method to do the job (e.g.
@@ -39,7 +57,7 @@ public interface ProjectController
     * 
     * @param obj - the object to remove from the project.
     */
-   public boolean remove(Object obj);
+   boolean remove(Object obj);
 
    /**
     * The project has changed. Call after the new project has been loaded or
@@ -47,7 +65,7 @@ public interface ProjectController
     * 
     * @param project - the new project.
     */
-   public void projectChanged(Project project);
+   void projectChanged(Project project);
 
    /**
     * The parameters of a device have been changed. Update the device parameters
@@ -55,5 +73,5 @@ public interface ProjectController
     * 
     * @param device - the device.
     */
-   public void parametersChanged(Device device);
+   void parametersChanged(Device device);
 }

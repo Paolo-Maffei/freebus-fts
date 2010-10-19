@@ -33,6 +33,10 @@ public class Building implements Comparable<Building>
    @JoinColumn(name = "project_id")
    private Project project;
 
+   @ManyToOne(optional = true)
+   @JoinColumn(name = "bui_building_id", nullable = true)
+   private Building parent;
+
    @Column(name = "building_name", nullable = false)
    private String name = "";
 
@@ -81,6 +85,24 @@ public class Building implements Comparable<Building>
    public void setId(int id)
    {
       this.id = id;
+   }
+
+   /**
+    * @return The parent building. May be null.
+    */
+   public Building getParent()
+   {
+      return parent;
+   }
+
+   /**
+    * Set the parent building.
+    *
+    * @param parent - the parent building to set.
+    */
+   public void setParent(Building parent)
+   {
+      this.parent = parent;
    }
 
    /**

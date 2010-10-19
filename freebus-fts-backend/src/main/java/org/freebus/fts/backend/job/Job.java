@@ -17,6 +17,12 @@ public interface Job
    public void run(BusInterface bus) throws IOException;
 
    /**
+    * Cancel the job. The job shall exit when it is running.
+    * Has no effect if the job is not running.
+    */
+   public void cancel();
+
+   /**
     * @return a human readable label with a short explanation of the job.
     */
    public String getLabel();

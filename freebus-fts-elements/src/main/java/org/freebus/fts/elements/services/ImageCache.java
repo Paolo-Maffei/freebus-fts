@@ -1,5 +1,8 @@
 package org.freebus.fts.elements.services;
 
+import java.awt.AlphaComposite;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
@@ -49,7 +52,7 @@ public final class ImageCache
     * Load the icon with the given name, and add the overlay icon with the given
     * name.
     *
-    * @param iconName - the name of the icon, without extension. The path to the
+    * @param imageName - the name of the main icon, without extension. The path to the
     *           icon shall be a resource path that can be resolved by
     *           {@link ClassLoader#getResource(String)}.
     * @param overlayName - the name of the overlay icon, without extension. The
@@ -58,28 +61,35 @@ public final class ImageCache
     *
     * @return the combined icon
     */
-   public static synchronized ImageIcon getIcon(String iconName, String overlayName)
+   public static synchronized ImageIcon getIcon(String imageName, String overlayName)
    {
-      final String cacheKey = iconName + '|' + overlayName;
+      final String cacheKey = imageName + '|' + overlayName;
       ImageIcon icon = iconCache.get(cacheKey);
       if (icon != null)
          return icon;
 
-      final ClassLoader classLoader = ImageCache.class.getClassLoader();
-      final URL imgURL = classLoader.getResource(iconName + ".png");
-//      final URL ovlURL = classLoader.getResource(overlayName + ".png");
+      final ImageIcon imageIcon = getIcon(imageName);
+      final ImageIcon overlayIcon = getIcon(overlayName);
 
-      // TODO, see http://www.jguru.com/faq/view.jsp?EID=130031
+      if (overlayIcon == null)
+         return imageIcon;
+      if (imageIcon == null)
+         return overlayIcon;
 
-      if (imgURL != null)
-      {
-         icon = new ImageIcon(imgURL);
-      }
-      else
-      {
-         Logger.getLogger(ImageCache.class).error("Could not find icon: " + iconName);
-      }
+      final int iw = imageIcon.getIconWidth();
+      final int ih = imageIcon.getIconHeight();
 
+//      final int ow = overlayIcon.getIconWidth();
+//      final int oh = overlayIcon.getIconHeight();
+
+      final BufferedImage img = new BufferedImage(iw, ih, BufferedImage.TYPE_INT_ARGB);
+      Graphics2D g2d = img.createGraphics();
+      g2d.drawImage(imageIcon.getImage(), null, null);
+
+      g2d.setComposite(AlphaComposite.SrcOver);
+      g2d.drawImage(overlayIcon.getImage(), null, null);
+
+      icon = new ImageIcon(img);
       iconCache.put(cacheKey, icon);
       return icon;
    }

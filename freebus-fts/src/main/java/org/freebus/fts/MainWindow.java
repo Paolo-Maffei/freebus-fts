@@ -27,12 +27,12 @@ import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.LogLine;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.services.ImageCache;
-import org.freebus.fts.pages.LogicalView;
-import org.freebus.fts.pages.PhysicalView;
-import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectAdapter;
+import org.freebus.fts.view.LogicalView;
+import org.freebus.fts.view.PhysicalView;
+import org.freebus.fts.view.TopologyView;
 
 /**
  * The main application window.

@@ -36,6 +36,26 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
+   public void add(Building building)
+   {
+      ProjectManager.getProject().add(building);
+      ProjectManager.fireComponentAdded(building);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void add(Building building, Room room)
+   {
+      building.add(room);
+      ProjectManager.fireComponentAdded(room);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean edit(Object obj)
    {
       final MainWindow mainWin = MainWindow.getInstance();

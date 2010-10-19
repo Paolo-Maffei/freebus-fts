@@ -116,7 +116,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(Program program)
    {
-      return program.getManufacturer().getId() + ":" + program.getDeviceType() + ":" + program.getName();
+      return program.getManufacturer().getId() + ":" + program.getDeviceType();
    }
 
    /**

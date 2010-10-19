@@ -16,11 +16,12 @@ import org.freebus.knxcomm.BusInterface;
 public abstract class ListenableJob implements Job
 {
    private final CopyOnWriteArrayList<JobListener> listeners = new CopyOnWriteArrayList<JobListener>();
+   private boolean active;
 
    /**
     * Do the initialization. The default implementation is empty. Called by
     * {@link #run(BusInterface) run}.
-    *
+    * 
     * @param bus - the bus interface to use
     */
    public void init(BusInterface bus)
@@ -28,12 +29,14 @@ public abstract class ListenableJob implements Job
    }
 
    /**
-    * Do the work. Called by {@link #run(BusInterface) run}.
-    *
+    * Do the work. Called by {@link #run(BusInterface) run}. Implementations
+    * shall test regularly within main() if the job is still {@link #isActive()
+    * active} and terminate main() if the job is not active anymore.
+    * 
     * @param bus - the bus interface to use
-    *
+    * 
     * @throws IOException
-    * @throws TimeoutException 
+    * @throws TimeoutException
     */
    public abstract void main(BusInterface bus) throws IOException, TimeoutException;
 
@@ -42,7 +45,7 @@ public abstract class ListenableJob implements Job
     * {@link #run(BusInterface) run} after {@link #main(BusInterface)}, even if
     * an exception is thrown in {@link #main(BusInterface) main} - but not if an
     * exception is thrown in {@link #init(BusInterface)}.
-    *
+    * 
     * @param bus - the bus interface to use
     */
    public void cleanup(BusInterface bus)
@@ -54,31 +57,57 @@ public abstract class ListenableJob implements Job
     * the real work, and calls {@link #cleanup(BusInterface)}, even if an
     * exception is thrown in {@link #main(BusInterface)} - but not if an
     * exception is thrown in {@link #init(BusInterface)}.
-    *
+    * 
     * @throws IOException
     */
    @Override
    public final void run(BusInterface bus) throws IOException
    {
-      init(bus);
+      boolean initDone = false;
 
       try
       {
+         active = true;
+
+         init(bus);
+         initDone = true;
+
          main(bus);
       }
       catch (Exception e)
       {
+         notifyListener(100, null);
          throw new IOException(e);
       }
       finally
       {
-         cleanup(bus);
+         if (initDone)
+            cleanup(bus);
+
+         active = false;
       }
    }
 
    /**
+    * {@inheritDoc}
+    */
+   public final void cancel()
+   {
+      active = false;
+   }
+
+   /**
+    * Test if the job is active. {@link #cancel()} clears the
+    * active flag.
+    */
+   public final boolean isActive()
+   {
+      return active;
+   }
+
+   /**
     * Inform all listeners about the current progress.
-    *
+    * 
     * @param done - how much of the work is done, in percent.
     * @param message - a detailed message about the progress. Can be null.
     */

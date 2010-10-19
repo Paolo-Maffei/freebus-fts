@@ -488,7 +488,11 @@ public class Program
    }
 
    /**
-    * @return the programType
+    * Get the program type. The program type is a 16 bit number that
+    * is unique for a specific manufacturer. It can be used to identify
+    * the program that is running in a BCU.
+    *
+    * @return The program type
     */
    public int getProgramType()
    {

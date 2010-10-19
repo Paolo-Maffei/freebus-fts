@@ -275,4 +275,18 @@
   </createTable>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-19">
+  <addColumn tableName="building">
+   <column name="bui_building_id" type="INT" />
+  </addColumn>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-20">
+  <addColumn tableName="room">
+   <column name="type" type="SMALLINT" defaultValueNumeric="0">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+ </changeSet>
+
 </databaseChangeLog>

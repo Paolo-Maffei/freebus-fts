@@ -19,8 +19,6 @@ import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.elements.services.ImageCache;
-import org.freebus.fts.pages.PhysicalView;
-import org.freebus.fts.pages.TopologyView;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
@@ -28,6 +26,8 @@ import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.view.PhysicalView;
+import org.freebus.fts.view.TopologyView;
 
 /**
  * Dialog for adding new devices to the project.

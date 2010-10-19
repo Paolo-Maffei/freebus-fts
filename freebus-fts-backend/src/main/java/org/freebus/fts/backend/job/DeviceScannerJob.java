@@ -28,20 +28,20 @@ public final class DeviceScannerJob extends ListenableJob
    final Map<PhysicalAddress, DeviceInfo> deviceDescriptors = new TreeMap<PhysicalAddress, DeviceInfo>();
    final Telegram dataTelegram = new Telegram();
    private TelegramReceiver receiver;
-   private final int zone, line;
+   private final int area, line;
    private int minAddress = 0;
    private int maxAddress = 255;
 
    /**
-    * Create a device scanner job that will scan for devices in a specific zone
+    * Create a device scanner job that will scan for devices in a specific area
     * and line.
     * 
-    * @param zone - the zone address (0..15) to scan
+    * @param area - the area address (0..15) to scan
     * @param line - the line address (0..15) to scan
     */
-   public DeviceScannerJob(int zone, int line)
+   public DeviceScannerJob(int area, int line)
    {
-      this.zone = zone;
+      this.area = area;
       this.line = line;
 
       dataTelegram.setFrom(PhysicalAddress.NULL);
@@ -99,7 +99,7 @@ public final class DeviceScannerJob extends ListenableJob
    @Override
    public String getLabel()
    {
-      return I18n.formatMessage("DeviceScannerJob.Label", new Object[] { zone + "." + line });
+      return I18n.formatMessage("DeviceScannerJob.Label", new Object[] { area + "." + line });
    }
 
    /**
@@ -124,22 +124,22 @@ public final class DeviceScannerJob extends ListenableJob
       receiver.clear();
 
       final int addressRange = maxAddress - minAddress + 1;
-      for (int address = minAddress; address <= maxAddress; ++address)
+      for (int address = minAddress; address <= maxAddress && isActive(); ++address)
       {
-         Logger.getLogger(getClass()).info("Probing " + zone + "." + line + "." + address);
+         Logger.getLogger(getClass()).info("Probing " + area + "." + line + "." + address);
 
-         dataTelegram.setDest(new PhysicalAddress(zone, line, address));
+         dataTelegram.setDest(new PhysicalAddress(area, line, address));
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
          msleep(50);
 
-         // Freebus LPC controllers currently (2010-03) need an extra telegram
-         // to be detected.
-         // But this is ok as we want to read the device descriptor anyways. The
-         // process could be optimated to only read the device descriptors from
-         // found devices - as soon as the Freebus controller sends a Disconnect
-         // after a timeout (which the LPC controller does not yet).
+         // Freebus LPC controllers currently (2010/03) need an extra telegram
+         // to be detected. We want to read the device descriptor anyways, so it
+         // does not hurt that much. The process could be optimated to only read
+         // the device descriptors from found devices - as soon as the Freebus
+         // controller sends a Disconnect after a timeout (which the LPC
+         // controller does not yet).
          dataTelegram.setTransport(Transport.Connected);
          dataTelegram.setSequence(0);
          dataTelegram.setApplication(new DeviceDescriptorRead(0));
@@ -152,7 +152,7 @@ public final class DeviceScannerJob extends ListenableJob
       }
 
       // Wait 6+ seconds for answers at the end.
-      for (int wait = 0; wait < 120; wait += 5)
+      for (int wait = 0; wait < 120 && isActive(); wait += 5)
       {
          notifyListener(85 + wait / 10, I18n.getMessage("DeviceScannerJob.WaitAnswers"));
          if (!processAnswers(500) && wait > 60)

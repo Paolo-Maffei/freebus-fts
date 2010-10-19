@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 public final class I18n
 {
-   private static final String bundleName = "org.freebus.fts.messages";
+   private static final String bundleName = "messages";
    private static final ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 
    private I18n()

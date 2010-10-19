@@ -60,6 +60,10 @@ public class SimpleConfig
    }
 
    /**
+    * Get a string value from the configuration.
+    * 
+    * @param key - the configuration key to get.
+    *
     * @return the configuration value for the given key as String. Returns an
     *         empty string if the key does not exist in the config object.
     */
@@ -72,6 +76,27 @@ public class SimpleConfig
    }
 
    /**
+    * Get a string value from the configuration.
+    *
+    * @param key - the configuration key to get.
+    * @param defaultValue - the default value.
+    *
+    * @return The configuration value for the given key as String. Returns
+    *         the default value if the key does not exist in the config object.
+    */
+   public String getStringValue(String key, String defaultValue)
+   {
+      String val = props.getProperty(key);
+      if (val == null)
+         return defaultValue;
+      return val;
+   }
+
+   /**
+    * Get an integer value from the configuration.
+    * 
+    * @param key - the configuration key to get.
+    *
     * @return the configuration value for the given key as Integer. Returns zero
     *         if the key does not exist in the configuration object.
     */
@@ -80,6 +105,23 @@ public class SimpleConfig
       String val = props.getProperty(key);
       if (val == null)
          return 0;
+      return Integer.parseInt(val);
+   }
+
+   /**
+    * Get an integer value from the configuration.
+    * 
+    * @param key - the configuration key to get.
+    * @param defaultValue - the default value.
+    * 
+    * @return the configuration value for the given key as Integer. Return the
+    *         default value if the key does not exist in the configuration object.
+    */
+   public int getIntValue(String key, int defaultValue)
+   {
+      String val = props.getProperty(key);
+      if (val == null)
+         return defaultValue;
       return Integer.parseInt(val);
    }
 

@@ -6,6 +6,8 @@ import java.util.TreeSet;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -38,6 +40,10 @@ public class Room implements Comparable<Room>
 
    @Column(name = "description", nullable = false)
    private String description = "";
+
+   @Column(name = "type")
+   @Enumerated(EnumType.ORDINAL)
+   private RoomType type;
 
    @ManyToOne(optional = false)
    @JoinColumn(name = "building_id")
@@ -124,6 +130,16 @@ public class Room implements Comparable<Room>
    public void setDescription(String description)
    {
       this.description = description == null ? "" : description;
+   }
+
+   public void setType(RoomType type)
+   {
+      this.type = type;
+   }
+
+   public RoomType getType()
+   {
+      return type;
    }
 
    /**

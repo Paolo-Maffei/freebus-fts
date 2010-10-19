@@ -94,6 +94,8 @@ public class JobQueue implements JobListener
 
    /**
     * Add a job to the end of the queue.
+    * 
+    * @param job - the job to add.
     */
    public void add(Job job)
    {
@@ -101,6 +103,19 @@ public class JobQueue implements JobListener
          throw new IllegalAccessError("the job-queue object is disposed");
       jobs.add(job);
       semaphore.release();
+   }
+
+   /**
+    * Cancel a job. Removes the job from the job queue. The job is
+    * {@link Job#cancel() canceled}. If canceling a running job
+    * succeeds depends on the specific job implementation.
+    * 
+    * @param job - the job to cancel.
+    */
+   public void cancel(Job job)
+   {
+      jobs.remove(job);
+      job.cancel();
    }
 
    /**
@@ -149,7 +164,7 @@ public class JobQueue implements JobListener
 
    /**
     * Execute the given job.
-    *
+    * 
     * @throws JobFailedException
     */
    protected void runJob(Job job)
@@ -216,9 +231,9 @@ public class JobQueue implements JobListener
    }
 
    /**
-    * Switch the bus interface to a specific link mode.
-    * Does nothing if the bus interface is undefined.
-    *
+    * Switch the bus interface to a specific link mode. Does nothing if the bus
+    * interface is undefined.
+    * 
     * @param mode - the bus link mode to activate.
     */
    private void setLinkMode(LinkMode mode)
