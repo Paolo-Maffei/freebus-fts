@@ -133,17 +133,12 @@ public class TestBuilding
       assertTrue(building1.equals(building2));
       assertTrue(building2.equals(building1));
 
-      building1.add(new Room());
+      building1.setName("building XV");
       assertFalse(building1.equals(building2));
       assertFalse(building2.equals(building1));
 
-      building2.add(new Room());
+      building2.setName("building XV");
       assertTrue(building1.equals(building2));
       assertTrue(building2.equals(building1));
-
-      building1.setDescription("desc-1");
-      building2.setDescription("desc-2");
-      assertFalse(building1.equals(building2));
-      assertFalse(building2.equals(building1));
    }
 }

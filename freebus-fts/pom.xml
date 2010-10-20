@@ -98,7 +98,7 @@
       <argument>--verbose</argument>
       <argument>--index</argument>
       <argument>--wipe</argument>
-      <argument>target/freebus-fts-${project.version}-distribution.zip</argument>
+      <argument>target/freebus-fts-${project.version}-r${buildNumber}.zip</argument>
      </arguments>
     </configuration>
    </plugin>
