@@ -503,10 +503,10 @@ public final class Device implements Comparable<Device>
          deviceObjects.add(devObject);
       }
 
-      for (final DeviceObject devObject : deviceObjects)
-         Logger.getLogger(getClass()).debug(
-               "  visible device object #" + devObject.getId() + " (com-object #" + devObject.getComObject().getId()
-                     + ")");
+//      for (final DeviceObject devObject : deviceObjects)
+//         Logger.getLogger(getClass()).debug(
+//               "  visible device object #" + devObject.getId() + " (com-object #" + devObject.getComObject().getId()
+//                     + ")");
    }
 
    /**

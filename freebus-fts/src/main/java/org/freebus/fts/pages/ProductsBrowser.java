@@ -423,7 +423,7 @@ public class ProductsBrowser extends AbstractPage
 
       if (valid)
       {
-         lblEntryName.setText(I18n.formatMessage("ProductsBrowser.DetailsCaption", new Object[] { dev.getName() }));
+         lblEntryName.setText(I18n.formatMessage("ProductsBrowser.DetailsCaption", dev.getName()));
          ceDetails.setCatalogEntry(entry);
       }
    }

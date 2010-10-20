@@ -64,7 +64,7 @@ public class DeviceDetails extends AbstractPage
       iconLabel.setMaximumSize(iconSize);
       iconLabel.setPreferredSize(iconSize);
       iconLabel.setIcon(icon);
-      
+
       add(iconLabel, new GridBagConstraints(0, 0, 1, 1, 1, 1, GridBagConstraints.NORTH, GridBagConstraints.VERTICAL,
             new Insets(2, 4, 2, 4), 0, 0));
 
@@ -120,7 +120,7 @@ public class DeviceDetails extends AbstractPage
             close();
          else componentChanged(obj);
       }
-      
+
       @Override
       public void projectComponentModified(Object obj)
       {
@@ -132,7 +132,7 @@ public class DeviceDetails extends AbstractPage
       {
          componentChanged(obj);
       }
-      
+
       @Override
       public void projectChanged(Project project)
       {
@@ -160,11 +160,9 @@ public class DeviceDetails extends AbstractPage
 
       setModified(false);
 
-      final Object[] msgArgs = new Object[] { device.getPhysicalAddress(),
-            device.getCatalogEntry().getName() };
-      
       setName(device.getPhysicalAddress().toString());
-      caption.setText(I18n.formatMessage("DeviceEditor.Caption", msgArgs));
+      caption.setText(I18n.formatMessage("DeviceEditor.Caption", device.getPhysicalAddress().toString(),
+            device.getCatalogEntry().getName()));
 
       paramsPanel.setDevice(device);
       generalPanel.setDevice(device, adapter);

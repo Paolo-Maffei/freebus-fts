@@ -132,7 +132,7 @@ public class BusTraceViewer extends AbstractPage
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, I18n.formatMessage("BusTraceViewer.ErrOpen", new Object[] { o }));
+         Dialogs.showExceptionDialog(e, I18n.formatMessage("BusTraceViewer.ErrOpen", o.toString()));
       }
    }
 

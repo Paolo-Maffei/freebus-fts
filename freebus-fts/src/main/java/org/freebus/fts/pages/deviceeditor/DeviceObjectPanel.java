@@ -68,52 +68,66 @@ public class DeviceObjectPanel extends JPanel
 
       final Insets noInsets = new Insets(0, 0, 0, 0);
       int gridy = -1;
-      
+
       final JLabel iconLabel = new JLabel(ImageCache.getIcon("icons/com-object"));
       iconLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 4));
-      add(iconLabel, new GridBagConstraints(0, ++gridy, 1, 2, 0, 1, GridBagConstraints.NORTHEAST, GridBagConstraints.VERTICAL, new Insets(0, 2, 0, 2), 0, 0));
+      add(iconLabel, new GridBagConstraints(0, ++gridy, 1, 2, 0, 1, GridBagConstraints.NORTHEAST,
+            GridBagConstraints.VERTICAL, new Insets(0, 2, 0, 2), 0, 0));
 
-      add(lblName, new GridBagConstraints(1, gridy, 2, 1, 100, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
+      add(lblName, new GridBagConstraints(1, gridy, 2, 1, 100, 1, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
 
-      add(transButton, new GridBagConstraints(3, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(transButton, new GridBagConstraints(3, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            noInsets, 0, 0));
       transButton.addActionListener(flagsButtonListener);
       transButton.setToolTipText(I18n.getMessage("DeviceObjectPanel.ButtonTransmitTip"));
 
-      add(readButton, new GridBagConstraints(4, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(readButton, new GridBagConstraints(4, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            noInsets, 0, 0));
       readButton.addActionListener(flagsButtonListener);
       readButton.setToolTipText(I18n.getMessage("DeviceObjectPanel.ButtonReadTip"));
 
-      add(writeButton, new GridBagConstraints(5, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(writeButton, new GridBagConstraints(5, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            noInsets, 0, 0));
       writeButton.addActionListener(flagsButtonListener);
       writeButton.setToolTipText(I18n.getMessage("DeviceObjectPanel.ButtonWriteTip"));
 
-      add(commButton, new GridBagConstraints(6, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(commButton, new GridBagConstraints(6, gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE,
+            noInsets, 0, 0));
       commButton.addActionListener(flagsButtonListener);
       commButton.setToolTipText(I18n.getMessage("DeviceObjectPanel.ButtonCommTip"));
 
-      add(lblType, new GridBagConstraints(1, ++gridy, 2, 1, 100, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
+      add(lblType, new GridBagConstraints(1, ++gridy, 2, 1, 100, 1, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
 
-      add(priorityCombo, new GridBagConstraints(4, gridy, 4, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
+      add(priorityCombo, new GridBagConstraints(4, gridy, 4, 1, 1, 1, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
       priorityCombo.addItem(ObjectPriority.LOW);
       priorityCombo.addItem(ObjectPriority.HIGH);
       priorityCombo.addItem(ObjectPriority.ALARM);
       priorityCombo.addItem(ObjectPriority.SYSTEM);
 
-      add(Box.createVerticalStrut(4), new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(Box.createVerticalStrut(4), new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.WEST,
+            GridBagConstraints.NONE, noInsets, 0, 0));
 
       groupsModel.addColumn("<Group>");
-//      groupsTable.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
+      // groupsTable.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
       groupsTable.getTableHeader().setVisible(false);
-      add(groupsTable, new GridBagConstraints(1, ++gridy, 6, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
+      add(groupsTable, new GridBagConstraints(1, ++gridy, 6, 1, 1, 1, GridBagConstraints.WEST,
+            GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
 
-      add(Box.createVerticalStrut(4), new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.WEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(Box.createVerticalStrut(4), new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.WEST,
+            GridBagConstraints.NONE, noInsets, 0, 0));
 
-//      addGroupButton.setBorderPainted(false);
+      // addGroupButton.setBorderPainted(false);
       addGroupButton.setFocusPainted(false);
       addGroupButton.setToolTipText(I18n.getMessage("DeviceObjectPanel.AddGroupButtonTip"));
-      add(addGroupButton, new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, noInsets, 0, 0));
+      add(addGroupButton, new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.NORTHWEST,
+            GridBagConstraints.NONE, noInsets, 0, 0));
 
-//      add(new JPanel(), new GridBagConstraints(3, gridy, 1, 1, 100, 1, GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
+      // add(new JPanel(), new GridBagConstraints(3, gridy, 1, 1, 100, 1,
+      // GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, noInsets,
+      // 0, 0));
 
       setDropTarget(new DropTarget(this, new DropTargetListener()
       {
@@ -121,7 +135,7 @@ public class DeviceObjectPanel extends JPanel
          public void dropActionChanged(DropTargetDragEvent dtde)
          {
          }
-         
+
          @Override
          public void drop(DropTargetDropEvent dtde)
          {
@@ -130,7 +144,8 @@ public class DeviceObjectPanel extends JPanel
                try
                {
                   @SuppressWarnings("unchecked")
-                  final List<Object> objs = (List<Object>) dtde.getTransferable().getTransferData(TransferableObject.objectFlavor);
+                  final List<Object> objs = (List<Object>) dtde.getTransferable().getTransferData(
+                        TransferableObject.objectFlavor);
                   if (objectsDropped(objs) <= 0)
                      dtde.rejectDrop();
                }
@@ -141,19 +156,19 @@ public class DeviceObjectPanel extends JPanel
                }
             }
             else dtde.rejectDrop();
-            
+
          }
-         
+
          @Override
          public void dragOver(DropTargetDragEvent dtde)
          {
          }
-         
+
          @Override
          public void dragExit(DropTargetEvent dte)
          {
          }
-         
+
          @Override
          public void dragEnter(DropTargetDragEvent dtde)
          {
@@ -205,7 +220,8 @@ public class DeviceObjectPanel extends JPanel
 
             if (deviceObject.contains(subGroup))
             {
-               Logger.getLogger(getClass()).warn(I18n.formatMessage("DeviceObjectPanel.GroupAlreadyAdded", new Object[] { subGroup.getGroupAddress() }));
+               Logger.getLogger(getClass()).warn(
+                     I18n.formatMessage("DeviceObjectPanel.GroupAlreadyAdded", subGroup.getGroupAddress().toString()));
             }
             else
             {
@@ -225,7 +241,7 @@ public class DeviceObjectPanel extends JPanel
 
       return num;
    }
-   
+
    /**
     * @return The communication object that is displayed.
     */

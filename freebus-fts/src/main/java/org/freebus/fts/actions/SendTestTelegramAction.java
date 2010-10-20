@@ -115,7 +115,7 @@ public final class SendTestTelegramAction extends BasicAction
          }
          catch (Exception e)
          {
-            Dialogs.showExceptionDialog(e, I18n.formatMessage("SendTestTelegramAction.ErrSendTelegram", new Object[]{ telegramType }));
+            Dialogs.showExceptionDialog(e, I18n.formatMessage("SendTestTelegramAction.ErrSendTelegram", telegramType));
          }
       }
    }

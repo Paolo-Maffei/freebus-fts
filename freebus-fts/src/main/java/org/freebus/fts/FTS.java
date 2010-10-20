@@ -134,9 +134,9 @@ public final class FTS extends Application
       try
       {
          Logger.getLogger(getClass()).debug("FTS startup");
-         startupIndicator = new StartupIndicator();
 
          // The startup steps
+         startupShowIndicator();
          startupConfig(10);
          startupPlugins(20);
          startupLookAndFeel(30);
@@ -152,10 +152,35 @@ public final class FTS extends Application
          startupIndicator = null;
          config.save();
       }
+      catch (ExceptionInInitializerError e)
+      {
+         Dialogs.showErrorDialog(e.getException().getMessage());
+         Runtime.getRuntime().exit(1);
+      }
       catch (Exception e)
       {
          Dialogs.showExceptionDialog(e, I18n.getMessage("FTS.ErrStartup"));
          Runtime.getRuntime().exit(1);
+      }
+   }
+
+   /**
+    * Show the startup indicator (splash screen)
+    */
+   private void startupShowIndicator()
+   {
+      startupIndicator = new StartupIndicator();
+
+      String version = manifestProps.getProperty("Version");
+      final String revision =  manifestProps.getProperty("SCM-Revision");
+
+      if (version != null)
+      {
+         if (revision != null && !revision.isEmpty())
+            version += " r" + revision;
+
+         final String versionText = I18n.formatMessage("FTS.StartupVersion", version, revision);
+         startupIndicator.setVersionText(startupIndicator.getTextPos().x, 135, versionText);
       }
    }
 
@@ -206,7 +231,7 @@ public final class FTS extends Application
          }
          catch (Exception e)
          {
-            Dialogs.showExceptionDialog(e, I18n.formatMessage("FTS.ErrChangeLookAndFeel", new Object[] { lafName }));
+            Dialogs.showExceptionDialog(e, I18n.formatMessage("FTS.ErrChangeLookAndFeel", lafName));
             config.setLookAndFeelName("");
             LookAndFeelManager.setDefaultLookAndFeel();
          }
@@ -351,7 +376,7 @@ public final class FTS extends Application
          catch (LiquibaseException e1)
          {
             Dialogs.showExceptionDialog(e,
-                  I18n.formatMessage("FTS.ErrUpgradeDatabaseFailed", new Object[] { Environment.getAppDir() }));
+                  I18n.formatMessage("FTS.ErrUpgradeDatabaseFailed", Environment.getAppDir()));
             Runtime.getRuntime().exit(1);
          }
       }

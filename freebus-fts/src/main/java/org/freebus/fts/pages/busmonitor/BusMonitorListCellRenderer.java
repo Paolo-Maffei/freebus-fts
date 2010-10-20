@@ -135,10 +135,8 @@ public final class BusMonitorListCellRenderer implements ListCellRenderer
          {
             final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
 
-            lblFrom.setText(I18n.formatMessage("BusMonitorCellRenderer.From", new Object[] { telegram.getFrom()
-                  .toString() }));
-            lblDest.setText(I18n.formatMessage("BusMonitorCellRenderer.Dest", new Object[] { telegram.getDest()
-                  .toString() }));
+            lblFrom.setText(I18n.formatMessage("BusMonitorCellRenderer.From", telegram.getFrom().toString()));
+            lblDest.setText(I18n.formatMessage("BusMonitorCellRenderer.Dest", telegram.getDest().toString()));
 
             final Application app = telegram.getApplication();
             if (app == null)

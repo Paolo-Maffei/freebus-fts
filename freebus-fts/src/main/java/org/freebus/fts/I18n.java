@@ -24,12 +24,14 @@ public final class I18n
    {
       try
       {
-         return bundle.getString(msgid);
+         if (bundle != null)
+            return bundle.getString(msgid);
       }
       catch (MissingResourceException e)
       {
-         return '!' + msgid + '!';
       }
+
+      return '!' + msgid + '!';
    }
 
    /**
@@ -44,7 +46,7 @@ public final class I18n
     * @param args - an array of arguments.
     * @return the message string.
     */
-   public static String formatMessage(final String msgid, Object[] args)
+   public static String formatMessage(final String msgid, String... args)
    {
       final StringBuffer sb = new StringBuffer();
       (new MessageFormat(getMessage(msgid))).format(args, sb, null);

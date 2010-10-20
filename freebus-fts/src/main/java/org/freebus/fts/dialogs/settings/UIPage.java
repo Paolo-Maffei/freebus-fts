@@ -168,7 +168,7 @@ public final class UIPage extends SettingsPage
             catch (Exception e)
             {
                Dialogs.showExceptionDialog(e, I18n.formatMessage("Settings.UIPage.ErrChangeLookAndFeel",
-                     new Object[] { item.info.getName() }));
+                     item.info.getName()));
 
                if (previousLookAndFeel != null)
                {

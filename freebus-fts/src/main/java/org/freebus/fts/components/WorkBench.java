@@ -120,7 +120,7 @@ public class WorkBench extends ApplicationWindow
       catch (Exception e)
       {
          Dialogs.showExceptionDialog(e,
-               I18n.formatMessage("WorkBench.errAddPage", new Object[] { page.getClass().getName() }));
+               I18n.formatMessage("WorkBench.errAddPage", page.getClass().getName()));
          return false;
       }
 
@@ -290,7 +290,7 @@ public class WorkBench extends ApplicationWindow
          catch (Exception e)
          {
             Dialogs.showExceptionDialog(e,
-                  I18n.formatMessage("WorkBench.errCreatePage", new Object[] { pageClass.getName() }));
+                  I18n.formatMessage("WorkBench.errCreatePage", pageClass.getName()));
             return null;
          }
       }

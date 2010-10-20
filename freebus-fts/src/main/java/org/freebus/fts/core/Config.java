@@ -103,7 +103,7 @@ public final class Config extends SimpleConfig
       }
       catch (Exception e)
       {
-         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrLoad", new Object[] { configFileName }));
+         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrLoad", configFileName));
       }
    }
 
@@ -121,7 +121,7 @@ public final class Config extends SimpleConfig
       }
       catch (IOException e)
       {
-         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrSave", new Object[] { configFileName }));
+         Dialogs.showExceptionDialog(e, I18n.formatMessage("Config.ErrSave", configFileName));
          e.printStackTrace();
       }
    }

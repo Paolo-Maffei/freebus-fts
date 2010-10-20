@@ -3,7 +3,9 @@ package org.freebus.fts.elements;
 import java.awt.AlphaComposite;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.Rectangle;
 
 /**
@@ -18,13 +20,16 @@ public class StartupIndicator
 {
    private final java.awt.SplashScreen splash;
    private Graphics2D graphics;
-   private Rectangle progressBounds, textBounds;
+   private Rectangle progressBounds;
+   private Point textPos, versionTextPos;
    private final Color progressColor = new Color(0x6E88A2);
    private final Color progressLineColor = progressColor.darker();
    private final Color textColor = Color.white;
+   private final Color versionTextColor = Color.white;
+   private Font textFont, versionTextFont;
    private Dimension size;
    private int progress = 0;
-   private String text;
+   private String text, versionText;
 
    /**
     * Create a splash screen.
@@ -38,8 +43,11 @@ public class StartupIndicator
       graphics = splash.createGraphics();
       size = splash.getSize();
 
-      progressBounds = new Rectangle(20, size.height - 40, size.width - 40, 15);
-      textBounds = new Rectangle(progressBounds.x, progressBounds.y - 20, progressBounds.width, 20);
+      progressBounds = new Rectangle(28, size.height - 40, size.width - 56, 15);
+      textPos = new Point(progressBounds.x, progressBounds.y - 20);
+
+      textFont = graphics.getFont();
+      versionTextFont = textFont.deriveFont(textFont.getSize2D() * 0.8f);
    }
 
    /**
@@ -49,6 +57,46 @@ public class StartupIndicator
    {
       if (splash != null && splash.isVisible())
          splash.close();
+   }
+
+   /**
+    * Set the position of the progress text.
+    *
+    * @param x - the x coordinate
+    * @param y - the y coordinate
+    */
+   public void setTextPos(int x, int y)
+   {
+      textPos = new Point(x, y);
+   }
+
+   /**
+    * @return The position of the progress text.
+    */
+   public Point getTextPos()
+   {
+      return textPos;
+   }
+
+   /**
+    * Set the optional version text and it's position.
+    * 
+    * @param x - the x coordinate
+    * @param y - the y coordinate
+    * @param text - the text that is displayed
+    */
+   public void setVersionText(int x, int y, String text)
+   {
+      versionTextPos = new Point(x, y);
+      versionText = text;
+   }
+
+   /**
+    * @return The position of the version text.
+    */
+   public Point getVersionTextPos()
+   {
+      return versionTextPos;
    }
 
    /**
@@ -94,9 +142,19 @@ public class StartupIndicator
       graphics.fillRect(progressBounds.x, progressBounds.y, progressBounds.width * progress / 100,
             progressBounds.height + 1);
 
-      graphics.setColor(textColor);
       if (text != null && !text.isEmpty())
-         graphics.drawString(text, textBounds.x, textBounds.y);
+      {
+         graphics.setFont(textFont);
+         graphics.setColor(textColor);
+         graphics.drawString(text, textPos.x, textPos.y);
+      }
+
+      if (versionText != null && !versionText.isEmpty())
+      {
+         graphics.setFont(versionTextFont);
+         graphics.setColor(versionTextColor);
+         graphics.drawString(versionText, versionTextPos.x, versionTextPos.y);
+      }
 
       splash.update();
    }

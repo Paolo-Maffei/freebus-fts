@@ -122,7 +122,7 @@ public class ProductsImportBrowser extends ProductsBrowser
          updateCatalogEntry();
 
          JOptionPane.showMessageDialog(this, I18n.formatMessage("ProductsImportBrowser.DoneMessage",
-               new Object[] { virtDevsList.size() }), I18n.getMessage("ProductsImportBrowser.DoneTitle"),
+               Integer.toString(virtDevsList.size())), I18n.getMessage("ProductsImportBrowser.DoneTitle"),
                JOptionPane.INFORMATION_MESSAGE);
 
          // Need to close the page as the contents of the loaded VD file

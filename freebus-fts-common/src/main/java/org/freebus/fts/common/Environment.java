@@ -29,6 +29,7 @@ public final class Environment
       {
          osname = "windows";
          tempDir = "c:/windows/temp";
+         // C:\Dokumente und Einstellungen\joe
          envHomeDir = System.getenv("USERPROFILE");
       }
       else if (os.startsWith("linux"))

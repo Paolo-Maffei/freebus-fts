@@ -200,7 +200,7 @@ public class InspectVdxFile extends AbstractPage
       catch (IOException e)
       {
          Dialogs
-               .showExceptionDialog(e, I18n.formatMessage("VdxBrowser.ErrOpenFile", new Object[] { inFile.getPath() }));
+               .showExceptionDialog(e, I18n.formatMessage("VdxBrowser.ErrOpenFile", inFile.getPath()));
          return;
       }
       finally
@@ -270,12 +270,11 @@ public class InspectVdxFile extends AbstractPage
                if (numRecords >= maxRecords)
                {
                   logger.warn(I18n.formatMessage("InspectVdxFile.WarnListTruncated",
-                        new Object[] { maxRecords, numRecords }));
+                        Integer.toString(maxRecords), Integer.toString(numRecords)));
                }
                else
                {
-                  logger.info(I18n.formatMessage("InspectVdxFile.RecordsLoaded",
-                        new Object[] { numRecords }));
+                  logger.info(I18n.formatMessage("InspectVdxFile.RecordsLoaded", Integer.toString(numRecords)));
                }
             }
             catch (IOException e)
