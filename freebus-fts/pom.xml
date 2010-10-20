@@ -62,7 +62,7 @@
 
    <plugin>
     <artifactId>maven-assembly-plugin</artifactId>
-    <version>2.2-beta-5</version>
+    <version>2.2</version>
     <executions>
      <execution>
       <id>make shared resources</id>
@@ -73,8 +73,9 @@
      </execution>
     </executions>
     <configuration>
-     <!-- <finalName>fts-snapshot</finalName> -->
-     <appendAssemblyId>true</appendAssemblyId>
+     <finalName>freebus-fts-${project.version}-r${buildNumber}</finalName>
+     <ignorePermissions>false</ignorePermissions>
+     <appendAssemblyId>false</appendAssemblyId>
      <archive>
       <manifest>
        <mainClass>org.freebus.fts.FTS</mainClass>
@@ -95,6 +96,8 @@
      <arguments>
       <argument>--config=~/.deploy-fts</argument>
       <argument>--verbose</argument>
+      <argument>--index</argument>
+      <argument>--wipe</argument>
       <argument>target/freebus-fts-${project.version}-distribution.zip</argument>
      </arguments>
     </configuration>
