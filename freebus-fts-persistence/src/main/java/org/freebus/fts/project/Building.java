@@ -207,6 +207,15 @@ public class Building implements Comparable<Building>
     * {@inheritDoc}
     */
    @Override
+   public int hashCode()
+   {
+      return id;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public boolean equals(Object o)
    {
       if (o == this)
@@ -216,9 +225,10 @@ public class Building implements Comparable<Building>
          return false;
 
       final Building oo = (Building) o;
-      if (id != oo.id || !name.equals(oo.name) || !description.equals(oo.description))
+      if (id != oo.id || !name.equals(oo.name))
          return false;
-      return rooms.equals(oo.rooms);
+
+      return true;
    }
 
    /**
@@ -232,15 +242,6 @@ public class Building implements Comparable<Building>
          return d;
 
       return id - o.id;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public int hashCode()
-   {
-      return id;
    }
 
    /**

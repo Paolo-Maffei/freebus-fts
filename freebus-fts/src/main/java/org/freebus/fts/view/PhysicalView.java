@@ -36,7 +36,6 @@ import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.RoomType;
-import org.freebus.fts.project.service.ProjectController;
 import org.freebus.fts.project.service.ProjectListener;
 
 /**
@@ -119,7 +118,9 @@ public class PhysicalView extends AbstractPage
       final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
       tree.setCellRenderer(renderer);
       renderer.setCellTypeIcon(Building.class, ImageCache.getIcon("icons/building"));
+      renderer.setCellTypeIcon(BuildingPartWrapper.class, ImageCache.getIcon("icons/floor"));
       renderer.setCellTypeIcon(Room.class, ImageCache.getIcon("icons/room"));
+      renderer.setCellTypeIcon(CabinetWrapper.class, ImageCache.getIcon("icons/cabinet"));
       renderer.setCellTypeIcon(Device.class, ImageCache.getIcon("icons/device"));
       renderer.setCellTypeIcon(UnassignedDevicesStore.class, ImageCache.getIcon("icons/idea"));
 
@@ -136,12 +137,17 @@ public class PhysicalView extends AbstractPage
             final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
             selectedObject = node != null ? node.getUserObject() : null;
 
-            if (selectedObject instanceof Building || selectedObject instanceof BuildingPartWrapper)
+            if (selectedObject instanceof BuildingPartWrapper)
+               selectedObject = ((BuildingPartWrapper) selectedObject).building;
+            else if (selectedObject instanceof CabinetWrapper)
+               selectedObject = ((CabinetWrapper) selectedObject).room;
+
+            if (selectedObject instanceof Building)
             {
                setButtonsEnabled(true);
                btnAddDevice.setEnabled(false);
             }
-            else if (selectedObject instanceof Room || selectedObject instanceof CabinetWrapper)
+            else if (selectedObject instanceof Room)
             {
                setButtonsEnabled(true);
             }
@@ -319,7 +325,13 @@ public class PhysicalView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-            ProjectManager.getController().remove(getSelectedObject());
+            Object obj = getSelectedObject();
+            if (obj instanceof BuildingPartWrapper)
+               obj = ((BuildingPartWrapper) obj).building;
+            else if (obj instanceof CabinetWrapper)
+               obj = ((CabinetWrapper) obj).room;
+
+            ProjectManager.getController().remove(obj);
          }
       });
       toolBar.add(btnDelete);
@@ -344,8 +356,16 @@ public class PhysicalView extends AbstractPage
     */
    public void addBuilding()
    {
+      final Set<Building> buildings = ProjectManager.getProject().getBuildings();
       final Building building = new Building();
-      building.setName(I18n.getMessage("NewBuilding"));
+
+      for (int i = 1; i < 1000; ++i)
+      {
+         building.setName(I18n.formatMessage("NewBuilding", Integer.toString(i)));
+         if (!buildings.contains(building))
+            break;
+      }
+
       ProjectManager.getController().add(building);
    }
 
@@ -354,11 +374,25 @@ public class PhysicalView extends AbstractPage
     */
    public void addBuildingPart()
    {
-      final Building parent = (Building) getSelectedObject();
+      Object obj = getSelectedObject();
+
+      if (obj instanceof Device)
+         obj = ((Device) obj).getRoom();
+      if (obj instanceof Room)
+         obj = ((Room) obj).getBuilding();
+
+      final Set<Building> buildings = ProjectManager.getProject().getBuildings();
+      final Building parent = (Building) obj;
 
       final Building building = new Building();
-      building.setName(I18n.getMessage("NewBuildingPart"));
       building.setParent(parent);
+
+      for (int i = 1; i < 1000; ++i)
+      {
+         building.setName(I18n.formatMessage("NewBuildingPart", Integer.toString(i)));
+         if (!buildings.contains(building))
+            break;
+      }
 
       ProjectManager.getController().add(building);
    }
@@ -370,11 +404,25 @@ public class PhysicalView extends AbstractPage
     */
    public void addRoom(RoomType type)
    {
-      final Building building = (Building) getSelectedObject();
+      Object obj = getSelectedObject();
+
+      if (obj instanceof Device)
+         obj = ((Device) obj).getRoom();
+      if (obj instanceof Room)
+         obj = ((Room) obj).getBuilding();
+
+      final Building building = (Building) obj;
+      final Set<Room> rooms = building.getRooms();
 
       final Room room = new Room();
-      room.setName(I18n.getMessage("NewRoom"));
       room.setType(type);
+
+      for (int i = 1; i < 1000; ++i)
+      {
+         room.setName(I18n.formatMessage(type == RoomType.ROOM ? "NewRoom" : "NewCabinet", Integer.toString(i)));
+         if (!rooms.contains(room))
+            break;
+      }
 
       ProjectManager.getController().add(building, room);
    }
@@ -419,7 +467,7 @@ public class PhysicalView extends AbstractPage
          return;
 
       // Find devices that are not assigned to a room, and put them
-      // into "unassigned devices".
+      // into "unassigned devices" (the grab bag).
       DefaultMutableTreeNode unassignedDevicesNode = null;
       for (Area area : project.getAreas())
       {
@@ -451,7 +499,12 @@ public class PhysicalView extends AbstractPage
 
          for (Room room : building.getRooms())
          {
-            final DefaultMutableTreeNode roomNode = new DefaultMutableTreeNode(room, true);
+            DefaultMutableTreeNode roomNode;
+
+            if (room.getType() == RoomType.CABINET)
+               roomNode = new DefaultMutableTreeNode(new CabinetWrapper(room), true);
+            else roomNode = new DefaultMutableTreeNode(room, true);
+
             buildingNode.add(roomNode);
 
             for (Device device : room.getDevices())
@@ -470,7 +523,7 @@ public class PhysicalView extends AbstractPage
     * Add all buildings and building parts / floors to the tree.
     * 
     * @param buildings - the buildings to add.
-    * @return A map containing the tree nodes of the added buildings. 
+    * @return A map containing the tree nodes of the added buildings.
     */
    private Map<Building,DefaultMutableTreeNode> addBuildings(final Set<Building> buildings)
    {
