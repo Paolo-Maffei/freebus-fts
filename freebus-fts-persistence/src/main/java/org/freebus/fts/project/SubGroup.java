@@ -43,7 +43,7 @@ public class SubGroup implements Comparable<SubGroup>
    private MidGroup midGroup;
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "subGroup")
-   private Set<SubGroupToObject> subGroupToObjects = new TreeSet<SubGroupToObject>();
+   private final Set<SubGroupToObject> subGroupToObjects = new TreeSet<SubGroupToObject>();
 
    /**
     * Create a new group.
@@ -135,6 +135,15 @@ public class SubGroup implements Comparable<SubGroup>
    public void setMidGroup(MidGroup midGroup)
    {
       this.midGroup = midGroup;
+   }
+
+   /**
+    * Remove the sub-group from its parent.
+    */
+   public void detach()
+   {
+      if (midGroup != null)
+         midGroup.remove(this);
    }
 
    /**

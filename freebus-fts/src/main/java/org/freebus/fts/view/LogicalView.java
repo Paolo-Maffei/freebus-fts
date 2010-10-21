@@ -1,154 +1,77 @@
 package org.freebus.fts.view;
 
 import java.awt.BorderLayout;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JComponent;
-import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.JTree;
 import javax.swing.TransferHandler;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.services.ImageCache;
-import org.freebus.fts.elements.tree.DynamicIconTreeCellRenderer;
+import org.freebus.fts.elements.tree.MutableIconTreeNode;
 import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SubGroup;
-import org.freebus.fts.project.service.ProjectListener;
 
 /**
  * Shows the logical structure of the project. The main- and sub-groups with the
  * devices.
  */
-public class LogicalView extends AbstractPage
+public class LogicalView extends AbstractTreeView
 {
-   private static final long serialVersionUID = 4775024754983180786L;
+   private static final long serialVersionUID = 3943935990729035854L;
 
-   private final JTree tree;
-   private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
-   private final JScrollPane treeView;
+   private final Icon mainGroupIcon = ImageCache.getIcon("icons/main-group");
+   private final Icon midGroupIcon = ImageCache.getIcon("icons/middle-group");
+   private final Icon subGroupIcon = ImageCache.getIcon("icons/sub-group");
+
    private JButton btnAddMainGrp, btnAddMidGrp, btnAddSubGrp, btnDelete, btnProperties;
-   private Object selectedObject;
 
    /**
     * Create a page that shows the topological structure of the project.
     */
    public LogicalView()
    {
-      setLayout(new BorderLayout());
       setName(I18n.getMessage("LogicalView.Title"));
-
-      tree = new JTree(rootNode);
-      tree.setRootVisible(false);
-      tree.setDragEnabled(true);
-      tree.setTransferHandler(new ObjectTransferHandler());
-
-      final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
-      tree.setCellRenderer(renderer);
-      renderer.setCellTypeIcon(MainGroup.class, ImageCache.getIcon("icons/main-group"));
-      renderer.setCellTypeIcon(MidGroup.class, ImageCache.getIcon("icons/middle-group"));
-      renderer.setCellTypeIcon(SubGroup.class, ImageCache.getIcon("icons/sub-group"));
-
-      treeView = new JScrollPane(tree);
-      add(treeView, BorderLayout.CENTER);
-
       initToolBar();
 
-      tree.addTreeSelectionListener(new TreeSelectionListener()
+      enableTreeDragDrop(true, DnDConstants.ACTION_MOVE);
+      getTree().setTransferHandler(new ObjectTransferHandler(TransferHandler.MOVE)
       {
-         @Override
-         public void valueChanged(TreeSelectionEvent e)
-         {
-            final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            final Object selectedObject = node != null ? node.getUserObject() : null;
+         private static final long serialVersionUID = 1L;
 
-            setIconEnabledFromSelected(selectedObject);
+         @Override
+         public boolean isDragable(Object obj)
+         {
+            return !(obj instanceof MainGroup);
          }
       });
 
-      tree.addMouseListener(new MouseAdapter()
-      {
-         @Override
-         public void mousePressed(MouseEvent e)
-         {
-            final JComponent component = (JComponent) e.getSource();
-            final TransferHandler handler = component.getTransferHandler();
-            handler.exportAsDrag(component, e, TransferHandler.COPY);
-         }
-
-         @Override
-         public void mouseClicked(MouseEvent e)
-         {
-            if (e.getClickCount() == 2)
-            {
-               ProjectManager.getController().edit(selectedObject);
-               e.consume();
-            }
-         }
-      });
-
-      ProjectManager.addListener(projectListener);
-
-      setIconEnabledFromSelected(null);
+      objectSelected(null);
    }
 
    /**
-    * {@inheritDoc}
+    * Test if an object is relevant for this view. Used e.g. for event handlers.
+    * 
+    * @param obj - the object to test.
+    * @return true if the object is relevant.
     */
    @Override
-   protected void closeEvent()
+   protected boolean isRelevant(final Object obj)
    {
-      ProjectManager.removeListener(projectListener);
+      return obj instanceof MainGroup || obj instanceof MidGroup || obj instanceof SubGroup;
    }
-
-   /*
-    * Listener for project changes
-    */
-   private final ProjectListener projectListener = new ProjectListener()
-   {
-      @Override
-      public void projectComponentRemoved(Object obj)
-      {
-         if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectComponentModified(Object obj)
-      {
-         if (isRelevant(obj))
-            tree.updateUI();
-      }
-
-      @Override
-      public void projectComponentAdded(Object obj)
-      {
-         if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectChanged(Project project)
-      {
-         updateContents();
-      }
-   };
 
    /**
     * Initialize the tool-bar.
@@ -221,7 +144,7 @@ public class LogicalView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent e)
          {
-            deleteGrp();
+            ProjectManager.getController().remove(getSelectedObject());
          }
 
       });
@@ -231,24 +154,14 @@ public class LogicalView extends AbstractPage
    }
 
    /**
-    * Test if an object is relevant for this view. Used e.g. for event handlers.
-    * 
-    * @param obj - the object to test.
-    * @return true if the object is relevant.
-    */
-   private boolean isRelevant(final Object obj)
-   {
-      return obj instanceof MainGroup || obj instanceof MidGroup || obj instanceof SubGroup;
-   }
-
-   /**
     * Modify the toolbar's icons when an object is selected.
     * 
-    * @param userObject - the selected object.
+    * @param obj - the selected object.
     */
-   private void setIconEnabledFromSelected(Object userObject)
+   @Override
+   protected void objectSelected(Object obj)
    {
-      if (userObject instanceof MainGroup)
+      if (obj instanceof MainGroup)
       {
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(true);
@@ -256,7 +169,7 @@ public class LogicalView extends AbstractPage
          btnProperties.setEnabled(true);
          btnDelete.setEnabled(true);
       }
-      else if (userObject instanceof MidGroup)
+      else if (obj instanceof MidGroup)
       {
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(true);
@@ -264,7 +177,7 @@ public class LogicalView extends AbstractPage
          btnProperties.setEnabled(true);
          btnDelete.setEnabled(true);
       }
-      else if (userObject instanceof SubGroup)
+      else if (obj instanceof SubGroup)
       {
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(true);
@@ -300,43 +213,10 @@ public class LogicalView extends AbstractPage
 
    }
 
-   private void deleteGrp()
-   {
-      // TODO Auto-generated method stub
-
-   }
-
    private void editProperties()
    {
       // TODO Auto-generated method stub
 
-   }
-
-   /**
-    * @return the user-object of the currently selected tree node, or null if
-    *         nothing is selected.
-    */
-   public Object getSelectedObject()
-   {
-      return selectedObject;
-   }
-
-   /**
-    * @return the preferred position of the page: {@link PagePosition#LEFT}.
-    */
-   @Override
-   public PagePosition getPagePosition()
-   {
-      return PagePosition.LEFT;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setObject(Object o)
-   {
-      updateContents();
    }
 
    /**
@@ -345,6 +225,7 @@ public class LogicalView extends AbstractPage
    @Override
    public void updateContents()
    {
+      final MutableIconTreeNode rootNode = getRootNode();
       rootNode.removeAllChildren();
 
       final Project project = ProjectManager.getProject();
@@ -353,23 +234,88 @@ public class LogicalView extends AbstractPage
 
       for (MainGroup mainGroup : project.getMainGroups())
       {
-         final DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(mainGroup, true);
-         rootNode.add(areaNode);
+         final MutableIconTreeNode mainGroupNode = new MutableIconTreeNode(mainGroup, true);
+         mainGroupNode.setIcon(mainGroupIcon);
+         rootNode.add(mainGroupNode);
 
          for (MidGroup midGroup : mainGroup.getMidGroups())
          {
-            final DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(midGroup, true);
-            areaNode.add(lineNode);
+            final MutableIconTreeNode midGroupNode = new MutableIconTreeNode(midGroup, true);
+            midGroupNode.setIcon(midGroupIcon);
+            mainGroupNode.add(midGroupNode);
 
-            for (SubGroup group : midGroup.getSubGroups())
+            for (SubGroup subGroup : midGroup.getSubGroups())
             {
-               final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(group, true);
-               lineNode.add(deviceNode);
+               final MutableIconTreeNode subGroupNode = new MutableIconTreeNode(subGroup, true);
+               subGroupNode.setIcon(subGroupIcon);
+               midGroupNode.add(subGroupNode);
             }
          }
       }
 
-      ((DefaultTreeModel) tree.getModel()).reload();
-      TreeUtils.expandAll(tree);
+      getTreeModel().reload();
+      TreeUtils.expandAll(getTree());
+   }
+
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected boolean acceptsDrop(Object target, Transferable trans)
+   {
+      final List<Object> objs = getTransferableObjects(trans);
+
+      for (final Object obj : objs)
+         if (obj == target)
+            return true;
+
+      if (target instanceof MidGroup)
+      {
+         for (final Object obj : objs)
+            if (obj instanceof SubGroup)
+               return true;
+      }
+      else if (target instanceof MainGroup)
+      {
+         for (final Object obj : objs)
+            if (obj instanceof MidGroup)
+               return true;
+      }
+
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected boolean handleDrop(Object target, Transferable trans)
+   {
+      final List<Object> objs = getTransferableObjects(trans);
+      boolean dropped = false;
+
+      for (final Object obj : objs)
+      {
+         if (obj == target)
+         {
+            dropped = true;
+            continue;
+         }
+
+         if (target instanceof MidGroup && obj instanceof SubGroup)
+            ((MidGroup) target).add((SubGroup) obj);
+         else if (target instanceof MainGroup && obj instanceof MidGroup)
+            ((MainGroup) target).add((MidGroup) obj);
+         else continue;
+
+         ProjectManager.fireComponentModified(obj);
+         ProjectManager.fireComponentModified(target);
+      }
+
+      if (dropped)
+         ProjectManager.fireComponentModified(target);
+
+      return dropped;
    }
 }

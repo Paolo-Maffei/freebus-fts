@@ -22,6 +22,9 @@ import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
+import org.freebus.fts.project.MainGroup;
+import org.freebus.fts.project.MidGroup;
+import org.freebus.fts.project.SubGroup;
 
 /**
  * An editor for the communication objects of a device.
@@ -65,6 +68,7 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
    /**
     * Set the edited device.
     */
+   @Override
    public void setDevice(Device device, DeviceController adapter)
    {
       this.device = device;
@@ -95,7 +99,7 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
       final DeviceObject[] sortedDeviceObjects = new DeviceObject[deviceObjects.size()];
       deviceObjects.toArray(sortedDeviceObjects);
       Arrays.sort(sortedDeviceObjects, new Comparator<DeviceObject>()
-      {
+            {
          @Override
          public int compare(DeviceObject a, DeviceObject b)
          {
@@ -107,7 +111,7 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
 
             return keyA - keyB;
          }
-      });
+            });
 
       int gridy = -1;
       for (final DeviceObject deviceObject: sortedDeviceObjects)
@@ -129,5 +133,7 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
    @Override
    public void componentChanged(Object obj)
    {
+      if (obj instanceof MainGroup || obj instanceof MidGroup || obj instanceof SubGroup)
+         updateContents();
    }
 }

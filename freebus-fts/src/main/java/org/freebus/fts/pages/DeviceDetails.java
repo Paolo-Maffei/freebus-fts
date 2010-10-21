@@ -211,6 +211,7 @@ public class DeviceDetails extends AbstractPage
          adapter.deviceChanged();
 
       generalPanel.componentChanged(obj);
+      deviceObjectsPanel.componentChanged(obj);
       memoryPanel.updateContents();
       tablesPanel.updateContents();
    }

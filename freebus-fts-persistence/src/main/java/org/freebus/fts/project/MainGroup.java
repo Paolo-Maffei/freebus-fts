@@ -94,6 +94,15 @@ public class MainGroup implements Comparable<MainGroup>
    }
 
    /**
+    * Remove the main-group from its project.
+    */
+   public void detach()
+   {
+      if (project != null)
+         project.remove(this);
+   }
+
+   /**
     * @return the name
     */
    public String getName()

@@ -127,6 +127,15 @@ public class MidGroup implements Comparable<MidGroup>
    }
 
    /**
+    * Remove the mid-group from its parent.
+    */
+   public void detach()
+   {
+      if (mainGroup != null)
+         mainGroup.remove(this);
+   }
+
+   /**
     * Add a sub-group to the mid-group.
     *
     * @param group - the sub-group to add

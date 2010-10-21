@@ -11,9 +11,12 @@ import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
+import org.freebus.fts.project.MainGroup;
+import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.service.ProjectController;
 
 /**
@@ -89,6 +92,12 @@ public final class ProjectControllerImpl implements ProjectController
          remove((Line) obj);
       else if (obj instanceof Room)
          remove((Room) obj);
+      else if (obj instanceof MainGroup)
+         remove((MainGroup) obj);
+      else if (obj instanceof MidGroup)
+         remove((MidGroup) obj);
+      else if (obj instanceof SubGroup)
+         remove((SubGroup) obj);
       else return false;
 
       return true;
@@ -154,6 +163,45 @@ public final class ProjectControllerImpl implements ProjectController
          remove((Device) device);
 
       ProjectManager.fireComponentRemoved(room);
+   }
+
+   /**
+    * Remove a main group.
+    */
+   public void remove(MainGroup mainGroup)
+   {
+      mainGroup.detach();
+
+      for (final Object obj : mainGroup.getMidGroups().toArray())
+         remove((MidGroup) obj);
+
+      ProjectManager.fireComponentRemoved(mainGroup);
+   }
+
+   /**
+    * Remove a mid group.
+    */
+   public void remove(MidGroup midGroup)
+   {
+      midGroup.detach();
+
+      for (final Object obj : midGroup.getSubGroups().toArray())
+         remove((SubGroup) obj);
+
+      ProjectManager.fireComponentRemoved(midGroup);
+   }
+
+   /**
+    * Remove a sub group.
+    */
+   public void remove(SubGroup subGroup)
+   {
+      subGroup.detach();
+
+      for (final Object obj : subGroup.getSubGroupToObjects().toArray())
+         remove(obj);
+
+      ProjectManager.fireComponentRemoved(subGroup);
    }
 
    /**
