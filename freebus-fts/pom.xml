@@ -23,13 +23,22 @@
  </issueManagement>
  <build>
   <plugins>
+
    <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>buildnumber-maven-plugin</artifactId>
     <version>1.0-beta-4</version>
     <executions>
      <execution>
-      <phase>validate</phase>
+      <id>buildnumber (install phase)</id>
+      <phase>install</phase>
+      <goals>
+       <goal>create</goal>
+      </goals>
+     </execution>
+     <execution>
+      <id>buildnumber (package phase)</id>
+      <phase>package</phase>
       <goals>
        <goal>create</goal>
       </goals>
@@ -38,6 +47,8 @@
     <configuration>
      <doCheck>false</doCheck>
      <doUpdate>false</doUpdate>
+     <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
+     <revisionOnScmFailure>0</revisionOnScmFailure>
     </configuration>
    </plugin>
 
@@ -66,10 +77,10 @@
     <executions>
      <execution>
       <id>make shared resources</id>
+      <phase>package</phase>
       <goals>
        <goal>single</goal>
       </goals>
-      <phase>package</phase>
      </execution>
     </executions>
     <configuration>
@@ -100,19 +111,6 @@
       <argument>--wipe</argument>
       <argument>target/freebus-fts-${project.version}-*.zip</argument>
      </arguments>
-    </configuration>
-   </plugin>
-
-   <plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>cobertura-maven-plugin</artifactId>
-    <version>2.4</version>
-    <configuration>
-     <instrumentation>
-      <excludes>
-       <exclude>**/*.class</exclude>
-      </excludes>
-     </instrumentation>
     </configuration>
    </plugin>
 

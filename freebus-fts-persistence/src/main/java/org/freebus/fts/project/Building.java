@@ -97,7 +97,7 @@ public class Building implements Comparable<Building>
 
    /**
     * Set the parent building.
-    *
+    * 
     * @param parent - the parent building to set.
     */
    public void setParent(Building parent)
@@ -122,6 +122,8 @@ public class Building implements Comparable<Building>
    }
 
    /**
+    * Get the name of the building.
+    * 
     * @return the name of the building.
     */
    public String getName()
@@ -131,10 +133,21 @@ public class Building implements Comparable<Building>
 
    /**
     * Set the name of the building.
+    * 
+    * @param name - the name to set.
     */
    public void setName(String name)
    {
       this.name = name == null ? "" : name;
+   }
+
+   /**
+    * Get the full name of the building, including the name of the parent
+    * buildings (if any).
+    */
+   public String getPathName()
+   {
+      return parent == null ? name : parent.getPathName() + " - " + name;
    }
 
    /**
@@ -155,10 +168,11 @@ public class Building implements Comparable<Building>
 
    /**
     * Add a room to the building.
-    *
+    * 
     * @param room - the room to add.
-    *
-    * @throws IllegalArgumentException - If the room was already added to the building.
+    * 
+    * @throws IllegalArgumentException - If the room was already added to the
+    *            building.
     */
    public void add(Room room)
    {
@@ -175,7 +189,7 @@ public class Building implements Comparable<Building>
 
    /**
     * Remove a room from the building.
-    *
+    * 
     * @param room - the room to remove.
     */
    public void remove(Room room)

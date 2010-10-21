@@ -85,6 +85,8 @@ public class Room implements Comparable<Room>
    }
 
    /**
+    * Get the name of the room.
+    *
     * @return the name
     */
    public String getName()
@@ -93,7 +95,18 @@ public class Room implements Comparable<Room>
    }
 
    /**
-    * @param name the name to set
+    * Get the full name of the room, including the name of the building
+    * and building parts (if any).
+    */
+   public String getPathName()
+   {
+      return building == null ? name : building.getPathName() + " - " + name;
+   }
+
+   /**
+    * Set the name of the room.
+    *
+    * @param name - the name to set
     */
    public void setName(String name)
    {
@@ -239,7 +252,7 @@ public class Room implements Comparable<Room>
       int d = name.compareTo(o.name);
       if (d != 0)
          return d;
-      
+
       return id - o.id;
    }
 

@@ -1,4 +1,4 @@
-package org.freebus.fts.elements.renderers;
+package org.freebus.fts.elements.tree;
 
 import java.awt.Component;
 import java.util.HashMap;

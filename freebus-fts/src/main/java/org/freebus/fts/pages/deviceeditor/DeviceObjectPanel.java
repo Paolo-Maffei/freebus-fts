@@ -4,10 +4,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.dnd.DropTarget;
+import java.awt.dnd.DropTargetAdapter;
 import java.awt.dnd.DropTargetDragEvent;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.dnd.DropTargetEvent;
-import java.awt.dnd.DropTargetListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -129,13 +128,8 @@ public class DeviceObjectPanel extends JPanel
       // GridBagConstraints.NORTHWEST, GridBagConstraints.HORIZONTAL, noInsets,
       // 0, 0));
 
-      setDropTarget(new DropTarget(this, new DropTargetListener()
+      setDropTarget(new DropTarget(this, new DropTargetAdapter()
       {
-         @Override
-         public void dropActionChanged(DropTargetDragEvent dtde)
-         {
-         }
-
          @Override
          public void drop(DropTargetDropEvent dtde)
          {
@@ -156,17 +150,6 @@ public class DeviceObjectPanel extends JPanel
                }
             }
             else dtde.rejectDrop();
-
-         }
-
-         @Override
-         public void dragOver(DropTargetDragEvent dtde)
-         {
-         }
-
-         @Override
-         public void dragExit(DropTargetEvent dte)
-         {
          }
 
          @Override

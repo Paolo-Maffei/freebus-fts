@@ -24,7 +24,9 @@ import org.freebus.fts.pages.deviceeditor.DeviceObjectsPanel;
 import org.freebus.fts.pages.deviceeditor.GeneralPanel;
 import org.freebus.fts.pages.deviceeditor.MemoryPanel;
 import org.freebus.fts.pages.deviceeditor.TablesPanel;
+import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectListener;
@@ -202,11 +204,11 @@ public class DeviceDetails extends AbstractPage
 
    public void componentChanged(Object obj)
    {
-      if (obj == device)
-      {
-         adapter.deviceChanged();
+      if (obj instanceof Device || obj instanceof Line || obj instanceof Area)
          setName(device.getPhysicalAddress().toString());
-      }
+
+      if (obj == device)
+         adapter.deviceChanged();
 
       generalPanel.componentChanged(obj);
       memoryPanel.updateContents();

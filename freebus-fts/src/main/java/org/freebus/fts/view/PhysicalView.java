@@ -1,32 +1,29 @@
 package org.freebus.fts.view;
 
 import java.awt.BorderLayout;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
+import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
+import javax.swing.TransferHandler;
 
 import org.freebus.fts.I18n;
 import org.freebus.fts.actions.Actions;
-import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.components.PagePosition;
+import org.freebus.fts.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.components.ToolBarButton;
-import org.freebus.fts.elements.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.tree.MutableIconTreeNode;
 import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
@@ -36,22 +33,24 @@ import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.RoomType;
-import org.freebus.fts.project.service.ProjectListener;
 
 /**
  * A page that shows the physical components of the project (buildings, floors,
  * rooms).
  */
-public class PhysicalView extends AbstractPage
+public class PhysicalView extends AbstractTreeView
 {
    private static final long serialVersionUID = 8538623742260660512L;
 
-   private final JTree tree;
-   private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
-   private final JScrollPane treeView;
+   private final Icon buildingIcon = ImageCache.getIcon("icons/building");
+   private final Icon buildingPartIcon = ImageCache.getIcon("icons/floor");
+   private final Icon roomIcon = ImageCache.getIcon("icons/room");
+   private final Icon cabinetIcon = ImageCache.getIcon("icons/cabinet");
+   private final Icon deviceIcon = ImageCache.getIcon("icons/device");
+   private final Icon unassignedDevicesStoreIcon = ImageCache.getIcon("icons/idea");
+
    private JButton btnAddBuilding, btnAddBuildingPart, btnAddCabinet, btnAddRoom, btnAddDevice;
    private JButton btnEdit, btnDelete;
-   private Object selectedObject;
 
    /**
     * Internal class for marking the tree node that contains devices that are
@@ -67,124 +66,27 @@ public class PhysicalView extends AbstractPage
    }
 
    /**
-    * Internal class that encapsulates bulding parts / floors.
-    */
-   static class BuildingPartWrapper
-   {
-      public final Building building;
-
-      public BuildingPartWrapper(Building building)
-      {
-         this.building = building;
-      }
-
-      @Override
-      public String toString()
-      {
-         return building.toString();
-      }
-   }
-
-   /**
-    * Internal class that encapsulates rooms of type cabinet.
-    */
-   static class CabinetWrapper
-   {
-      public final Room room;
-
-      public CabinetWrapper(Room room)
-      {
-         this.room = room;
-      }
-
-      @Override
-      public String toString()
-      {
-         return room.toString();
-      }
-   }
-
-   /**
     * Create a page that shows the topological structure of the project.
     */
    public PhysicalView()
    {
-      setLayout(new BorderLayout());
       setName(I18n.getMessage("PhysicalView.Title"));
-
-      tree = new JTree(rootNode);
-      tree.setRootVisible(false);
-
-      final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
-      tree.setCellRenderer(renderer);
-      renderer.setCellTypeIcon(Building.class, ImageCache.getIcon("icons/building"));
-      renderer.setCellTypeIcon(BuildingPartWrapper.class, ImageCache.getIcon("icons/floor"));
-      renderer.setCellTypeIcon(Room.class, ImageCache.getIcon("icons/room"));
-      renderer.setCellTypeIcon(CabinetWrapper.class, ImageCache.getIcon("icons/cabinet"));
-      renderer.setCellTypeIcon(Device.class, ImageCache.getIcon("icons/device"));
-      renderer.setCellTypeIcon(UnassignedDevicesStore.class, ImageCache.getIcon("icons/idea"));
-
-      treeView = new JScrollPane(tree);
-      add(treeView, BorderLayout.CENTER);
-
       initToolBar();
 
-      tree.addTreeSelectionListener(new TreeSelectionListener()
+      enableTreeDragDrop(true, DnDConstants.ACTION_MOVE);
+      getTree().setTransferHandler(new ObjectTransferHandler(TransferHandler.MOVE)
       {
+         private static final long serialVersionUID = -7656708845168119823L;
+
          @Override
-         public void valueChanged(TreeSelectionEvent e)
+         public boolean isDragable(Object obj)
          {
-            final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            selectedObject = node != null ? node.getUserObject() : null;
+            if (obj instanceof Building)
+               return ((Building) obj).getParent() != null;
 
-            if (selectedObject instanceof BuildingPartWrapper)
-               selectedObject = ((BuildingPartWrapper) selectedObject).building;
-            else if (selectedObject instanceof CabinetWrapper)
-               selectedObject = ((CabinetWrapper) selectedObject).room;
-
-            if (selectedObject instanceof Building)
-            {
-               setButtonsEnabled(true);
-               btnAddDevice.setEnabled(false);
-            }
-            else if (selectedObject instanceof Room)
-            {
-               setButtonsEnabled(true);
-            }
-            else if (selectedObject instanceof Device)
-            {
-               setButtonsEnabled(true);
-            }
-            else
-            {
-               setButtonsEnabled(false);
-            }
+            return true;
          }
       });
-
-      tree.addMouseListener(new MouseAdapter()
-      {
-         @Override
-         public void mouseClicked(MouseEvent e)
-         {
-            if (e.getClickCount() == 2)
-            {
-               ProjectManager.getController().edit(selectedObject);
-               e.consume();
-            }
-         }
-      });
-
-      ProjectManager.addListener(projectListener);
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void closeEvent()
-   {
-      ProjectManager.removeListener(projectListener);
    }
 
    /**
@@ -201,41 +103,6 @@ public class PhysicalView extends AbstractPage
       btnEdit.setEnabled(b);
       btnDelete.setEnabled(b);
    }
-
-   /*
-    * Listener for project changes
-    */
-   private final ProjectListener projectListener = new ProjectListener()
-   {
-      @Override
-      public void projectComponentRemoved(Object obj)
-      {
-         if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectComponentModified(Object obj)
-      {
-         if (obj instanceof Device)
-            tree.updateUI();
-         else if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectComponentAdded(Object obj)
-      {
-         if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectChanged(Project project)
-      {
-         updateContents();
-      }
-   };
 
    /**
     * Initialize the tool-bar.
@@ -325,30 +192,13 @@ public class PhysicalView extends AbstractPage
          @Override
          public void actionPerformed(ActionEvent arg0)
          {
-            Object obj = getSelectedObject();
-            if (obj instanceof BuildingPartWrapper)
-               obj = ((BuildingPartWrapper) obj).building;
-            else if (obj instanceof CabinetWrapper)
-               obj = ((CabinetWrapper) obj).room;
-
-            ProjectManager.getController().remove(obj);
+            ProjectManager.getController().remove(getSelectedObject());
          }
       });
       toolBar.add(btnDelete);
       btnDelete.setEnabled(false);
       btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
       btnDelete.setToolTipText(I18n.getMessage("PhysicalView.DeleteItemTip"));
-   }
-
-   /**
-    * Test if an object is relevant for this view. Used e.g. for event handlers.
-    * 
-    * @param obj - the object to test.
-    * @return true if the object is relevant.
-    */
-   private boolean isRelevant(final Object obj)
-   {
-      return obj instanceof Building || obj instanceof Room || obj instanceof Device;
    }
 
    /**
@@ -428,39 +278,12 @@ public class PhysicalView extends AbstractPage
    }
 
    /**
-    * @return the user-object of the currently selected tree node, or null if
-    *         nothing is selected.
-    */
-   public Object getSelectedObject()
-   {
-      return selectedObject;
-   }
-
-   /**
-    * @return the preferred position of the page: {@link PagePosition#LEFT}.
-    */
-   @Override
-   public PagePosition getPagePosition()
-   {
-      return PagePosition.LEFT;
-   }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   public void setObject(Object o)
-   {
-      updateContents();
-   }
-
-   /**
     * Update the page's contents.
     */
    @Override
    public void updateContents()
    {
-      rootNode.removeAllChildren();
+      getRootNode().removeAllChildren();
 
       final Project project = ProjectManager.getProject();
       if (project == null)
@@ -468,7 +291,7 @@ public class PhysicalView extends AbstractPage
 
       // Find devices that are not assigned to a room, and put them
       // into "unassigned devices" (the grab bag).
-      DefaultMutableTreeNode unassignedDevicesNode = null;
+      MutableIconTreeNode unassignedDevicesNode = null;
       for (Area area : project.getAreas())
       {
          for (Line line : area.getLines())
@@ -479,88 +302,160 @@ public class PhysicalView extends AbstractPage
                {
                   if (unassignedDevicesNode == null)
                   {
-                     unassignedDevicesNode = new DefaultMutableTreeNode(new UnassignedDevicesStore(), true);
-                     rootNode.add(unassignedDevicesNode);
+                     unassignedDevicesNode = new MutableIconTreeNode(new UnassignedDevicesStore(), true);
+                     unassignedDevicesNode.setIcon(unassignedDevicesStoreIcon);
+                     getRootNode().add(unassignedDevicesNode);
                   }
 
-                  final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
+                  final MutableIconTreeNode deviceNode = new MutableIconTreeNode(device, true);
+                  deviceNode.setIcon(deviceIcon);
                   unassignedDevicesNode.add(deviceNode);
                }
             }
          }
       }
 
-      final Set<Building> buldings = project.getBuildings();
-      final Map<Building,DefaultMutableTreeNode> buildingNodes = addBuildings(buldings);
-
-      for (Building building : buldings)
+      // Add all rooms and devices and create the building and building part
+      // tree nodes. The tree nodes for buildings and building parts are
+      // added later, to make the building parts appear in the tree after
+      // the rooms of a building.
+      final Map<Building, MutableIconTreeNode> buildingNodes = new TreeMap<Building, MutableIconTreeNode>();
+      for (final Building building : project.getBuildings())
       {
-         final DefaultMutableTreeNode buildingNode = buildingNodes.get(building);
+         final Building parentBuilding = building.getParent();
+
+         final MutableIconTreeNode buildingNode = new MutableIconTreeNode(building, true);
+         buildingNode.setIcon(parentBuilding == null ? buildingIcon : buildingPartIcon);
+         buildingNodes.put(building, buildingNode);
 
          for (Room room : building.getRooms())
          {
-            DefaultMutableTreeNode roomNode;
+            final MutableIconTreeNode roomNode = new MutableIconTreeNode(room, true);
 
             if (room.getType() == RoomType.CABINET)
-               roomNode = new DefaultMutableTreeNode(new CabinetWrapper(room), true);
-            else roomNode = new DefaultMutableTreeNode(room, true);
+               roomNode.setIcon(cabinetIcon);
+            else roomNode.setIcon(roomIcon);
 
             buildingNode.add(roomNode);
 
             for (Device device : room.getDevices())
             {
-               final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
+               final MutableIconTreeNode deviceNode = new MutableIconTreeNode(device, true);
+               deviceNode.setIcon(deviceIcon);
                roomNode.add(deviceNode);
             }
          }
       }
 
-      ((DefaultTreeModel) tree.getModel()).reload();
-      TreeUtils.expandAll(tree);
+      // Add all buildings and building parts to the tree
+      for (final Entry<Building, MutableIconTreeNode> e : buildingNodes.entrySet())
+      {
+         final MutableIconTreeNode buildingNode = e.getValue();
+         final Building parentBuilding = e.getKey().getParent();
+
+         final MutableIconTreeNode parentNode = parentBuilding == null ? getRootNode() : buildingNodes.get(parentBuilding);
+         parentNode.add(buildingNode);
+      }
+
+      getTreeModel().reload();
+      TreeUtils.expandAll(getTree());
    }
 
    /**
-    * Add all buildings and building parts / floors to the tree.
-    * 
-    * @param buildings - the buildings to add.
-    * @return A map containing the tree nodes of the added buildings.
+    * {@inheritDoc}
     */
-   private Map<Building,DefaultMutableTreeNode> addBuildings(final Set<Building> buildings)
+   @Override
+   protected boolean isRelevant(final Object obj)
    {
-      final Map<Building,DefaultMutableTreeNode> buildingNodes = new HashMap<Building,DefaultMutableTreeNode>();
+      return obj instanceof Building || obj instanceof Room || obj instanceof Device;
+   }
 
-      for (boolean found = true; found;)
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected void objectSelected(Object obj)
+   {
+      if (obj instanceof Building)
       {
-         found = false;
+         setButtonsEnabled(true);
+         btnAddDevice.setEnabled(false);
+      }
+      else if (obj instanceof Room)
+      {
+         setButtonsEnabled(true);
+      }
+      else if (obj instanceof Device)
+      {
+         setButtonsEnabled(true);
+      }
+      else
+      {
+         setButtonsEnabled(false);
+      }
+   }
 
-         for (Building building : buildings)
-         {
-            if (buildingNodes.containsKey(building))
-               continue;
 
-            final Building parentBuilding = building.getParent();
-            DefaultMutableTreeNode buildingNode = null;
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected boolean acceptsDrop(Object target, Transferable trans)
+   {
+      final List<Object> objs = getTransferableObjects(trans);
 
-            if (parentBuilding == null)
-            {
-               buildingNode = new DefaultMutableTreeNode(building, true);
-               rootNode.add(buildingNode);
-            }
-            else
-            {
-               final DefaultMutableTreeNode parentNode = buildingNodes.get(parentBuilding);
-               if (parentNode == null)
-                  continue;
+      for (final Object obj : objs)
+         if (obj == target)
+            return true;
 
-               buildingNode = new DefaultMutableTreeNode(new BuildingPartWrapper(building), true);
-               parentNode.add(buildingNode);
-            }
-
-            buildingNodes.put(building, buildingNode);
-            found = true;
-         }
+      if (target instanceof Room || target instanceof Device)
+      {
+         for (final Object obj : objs)
+            if (obj instanceof Device)
+               return true;
+      }
+      else if (target instanceof Building)
+      {
+         for (final Object obj : objs)
+            if (obj instanceof Room || obj instanceof Building)
+               return true;
       }
 
-      return buildingNodes;
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected boolean handleDrop(Object target, Transferable trans)
+   {
+      final List<Object> objs = getTransferableObjects(trans);
+      boolean dropped = false;
+
+      for (final Object obj : objs)
+      {
+         if (obj == target)
+         {
+            dropped = true;
+            continue;
+         }
+
+         if (target instanceof Room && obj instanceof Device)
+            ((Room) target).add((Device) obj);
+         else if (target instanceof Building && obj instanceof Building)
+            ((Building) obj).setParent((Building) target);
+         else if (target instanceof Building && obj instanceof Room)
+            ((Building) target).add((Room) obj);
+         else continue;
+
+         ProjectManager.fireComponentModified(obj);
+         ProjectManager.fireComponentModified(target);
+      }
+
+      if (dropped)
+         ProjectManager.fireComponentModified(target);
+
+      return dropped;
    }
 }

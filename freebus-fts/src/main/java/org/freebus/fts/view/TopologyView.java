@@ -1,174 +1,74 @@
 package org.freebus.fts.view;
 
 import java.awt.BorderLayout;
+import java.awt.datatransfer.Transferable;
+import java.awt.dnd.DnDConstants;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Icon;
 import javax.swing.JButton;
-import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
-import javax.swing.JTree;
-import javax.swing.event.TreeSelectionEvent;
-import javax.swing.event.TreeSelectionListener;
+import javax.swing.TransferHandler;
 import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
 import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.actions.Actions;
-import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.components.PagePosition;
 import org.freebus.fts.dialogs.AreaProperties;
 import org.freebus.fts.dialogs.LineProperties;
+import org.freebus.fts.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.components.ToolBarButton;
-import org.freebus.fts.elements.renderers.DynamicIconTreeCellRenderer;
 import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.elements.tree.MutableIconTreeNode;
 import org.freebus.fts.elements.utils.TreeUtils;
 import org.freebus.fts.project.Area;
+import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
-import org.freebus.fts.project.service.ProjectListener;
 
 /**
  * Shows the topological structure of the project.
  */
-public class TopologyView extends AbstractPage
+public class TopologyView extends AbstractTreeView
 {
    private static final long serialVersionUID = 4442753739761863742L;
 
-   private final JTree tree;
-   private final DefaultMutableTreeNode rootNode = new DefaultMutableTreeNode("Project");
-   private final JScrollPane treeView;
+   private final Icon areaIcon = ImageCache.getIcon("icons/area");
+   private final Icon lineIcon = ImageCache.getIcon("icons/line");
+   private final Icon deviceIcon = ImageCache.getIcon("icons/device");
+
    private JButton btnAddArea, btnAddLine, btnAddDevice, btnEdit, btnDelete;
-   private Object selectedObject;
 
    /**
     * Create a page that shows the topological structure of the project.
     */
    public TopologyView()
    {
-      setLayout(new BorderLayout());
       setName(I18n.getMessage("TopologyView.Title"));
-
-      tree = new JTree(rootNode);
-      tree.setRootVisible(false);
-
-      final DynamicIconTreeCellRenderer renderer = new DynamicIconTreeCellRenderer();
-      tree.setCellRenderer(renderer);
-      renderer.setCellTypeIcon(Area.class, ImageCache.getIcon("icons/area"));
-      renderer.setCellTypeIcon(Line.class, ImageCache.getIcon("icons/line"));
-      renderer.setCellTypeIcon(Device.class, ImageCache.getIcon("icons/device"));
-
-      treeView = new JScrollPane(tree);
-      add(treeView, BorderLayout.CENTER);
-
       initToolBar();
 
-      tree.addTreeSelectionListener(new TreeSelectionListener()
+      enableTreeDragDrop(true, DnDConstants.ACTION_MOVE);
+      getTree().setTransferHandler(new ObjectTransferHandler(TransferHandler.MOVE)
       {
-         @Override
-         public void valueChanged(TreeSelectionEvent e)
-         {
-            final DefaultMutableTreeNode node = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-            selectedObject = node != null ? node.getUserObject() : null;
+         private static final long serialVersionUID = -4792770729250636640L;
 
-            if (selectedObject instanceof Area)
-            {
-               btnAddLine.setEnabled(true);
-               btnAddDevice.setEnabled(false);
-               btnEdit.setEnabled(true);
-               btnDelete.setEnabled(true);
-            }
-            else if (selectedObject instanceof Line)
-            {
-               btnAddLine.setEnabled(true);
-               btnAddDevice.setEnabled(true);
-               btnEdit.setEnabled(true);
-               btnDelete.setEnabled(true);
-            }
-            else if (selectedObject instanceof Device)
-            {
-               btnAddLine.setEnabled(true);
-               btnAddDevice.setEnabled(true);
-               btnEdit.setEnabled(true);
-               btnDelete.setEnabled(true);
-            }
-            else
-            {
-               btnAddLine.setEnabled(false);
-               btnAddDevice.setEnabled(false);
-               btnEdit.setEnabled(false);
-               btnDelete.setEnabled(false);
-            }
+         @Override
+         public boolean isDragable(Object obj)
+         {
+            if (obj instanceof Building)
+               return ((Building) obj).getParent() != null;
+
+            return true;
          }
       });
-
-      tree.addMouseListener(new MouseAdapter()
-      {
-         @Override
-         public void mouseClicked(MouseEvent e)
-         {
-            if (e.getClickCount() == 2)
-            {
-               ProjectManager.getController().edit(selectedObject);
-               e.consume();
-            }
-         }
-      });
-
-      ProjectManager.addListener(projectListener);
    }
-
-   /**
-    * {@inheritDoc}
-    */
-   @Override
-   protected void closeEvent()
-   {
-      ProjectManager.removeListener(projectListener);
-   }
-
-   /*
-    * Listener for project changes
-    */
-   private final ProjectListener projectListener = new ProjectListener()
-   {
-      @Override
-      public void projectComponentRemoved(Object obj)
-      {
-         if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectComponentModified(Object obj)
-      {
-         if (obj instanceof Device)
-            tree.updateUI();
-         else if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectComponentAdded(Object obj)
-      {
-         if (isRelevant(obj))
-            updateContents();
-      }
-
-      @Override
-      public void projectChanged(Project project)
-      {
-         updateContents();
-      }
-   };
 
    /**
     * Initialize the tool-bar.
@@ -245,7 +145,8 @@ public class TopologyView extends AbstractPage
     * @param obj - the object to test.
     * @return true if the object is relevant.
     */
-   private boolean isRelevant(final Object obj)
+   @Override
+   protected boolean isRelevant(final Object obj)
    {
       return obj instanceof Device || obj instanceof Line || obj instanceof Area;
    }
@@ -270,11 +171,10 @@ public class TopologyView extends AbstractPage
       final Area area = project.addArea(dlg.getAreaName());
       area.setAddress(dlg.getAddress());
 
-      final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
       final DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(area, true);
 
-      treeModel.insertNodeInto(areaNode, rootNode, 0);
-      tree.expandPath(new TreePath(rootNode));
+      getTreeModel().insertNodeInto(areaNode, getRootNode(), 0);
+      getTree().expandPath(new TreePath(getRootNode()));
 
       updateContents();
    }
@@ -311,7 +211,7 @@ public class TopologyView extends AbstractPage
       if (project == null)
          return;
 
-      DefaultMutableTreeNode areaNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
+      DefaultMutableTreeNode areaNode = (DefaultMutableTreeNode) getTree().getLastSelectedPathComponent();
       if (areaNode == null)
          return;
 
@@ -345,12 +245,10 @@ public class TopologyView extends AbstractPage
       // line.setArea(area); // wird in area.add erledigt.
       area.add(line);
 
-      final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
-
       final DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(line, true);
-      treeModel.insertNodeInto(lineNode, areaNode, 0);
+      getTreeModel().insertNodeInto(lineNode, areaNode, 0);
 
-      tree.expandPath(new TreePath(areaNode));
+      getTree().expandPath(new TreePath(areaNode));
 
       // updateContents();
    }
@@ -378,79 +276,40 @@ public class TopologyView extends AbstractPage
       updateContents();
    }
 
-//   /**
-//    * Add a device to the selected line.
-//    */
-//   public void addDevice(Device device)
-//   {
-//      DefaultMutableTreeNode lineNode = (DefaultMutableTreeNode) tree.getLastSelectedPathComponent();
-//      final Object selectedObject = lineNode == null ? null : lineNode.getUserObject();
-//      Line line = null;
-//
-//      if (selectedObject instanceof Line)
-//      {
-//         line = (Line) selectedObject;
-//      }
-//      else if (selectedObject instanceof Device)
-//      {
-//         line = ((Device) selectedObject).getLine();
-//         lineNode = (DefaultMutableTreeNode) lineNode.getParent();
-//      }
-//
-//      if (line == null)
-//      {
-//         JOptionPane.showMessageDialog(MainWindow.getInstance(), I18n.getMessage("TopologyView.ErrNoLineSelected"),
-//               I18n.getMessage("TopologyView.ErrTitle"), JOptionPane.ERROR_MESSAGE);
-//         return;
-//      }
-//
-//      int freeAddr = 0;
-//      try
-//      {
-//         freeAddr = line.getFreeAddress();
-//      }
-//      catch (RuntimeException e)
-//      {
-//         // TODO Error dialog
-//         return;
-//      }
-//
-//      device.setAddress(freeAddr);
-//      line.add(device);
-//
-//      final DefaultTreeModel treeModel = (DefaultTreeModel) tree.getModel();
-//
-//      final DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
-//      treeModel.insertNodeInto(deviceNode, lineNode, 0);
-//
-//      tree.expandPath(new TreePath(lineNode));
-//   }
-
-   /**
-    * @return the user-object of the currently selected tree node, or null if
-    *         nothing is selected.
-    */
-   public Object getSelectedObject()
-   {
-      return selectedObject;
-   }
-
-   /**
-    * @return the preferred position of the page: {@link PagePosition#LEFT}.
-    */
-   @Override
-   public PagePosition getPagePosition()
-   {
-      return PagePosition.LEFT;
-   }
-
    /**
     * {@inheritDoc}
     */
    @Override
-   public void setObject(Object o)
+   protected void objectSelected(Object obj)
    {
-      updateContents();
+      if (obj instanceof Area)
+      {
+         btnAddLine.setEnabled(true);
+         btnAddDevice.setEnabled(false);
+         btnEdit.setEnabled(true);
+         btnDelete.setEnabled(true);
+      }
+      else if (obj instanceof Line)
+      {
+         btnAddLine.setEnabled(true);
+         btnAddDevice.setEnabled(true);
+         btnEdit.setEnabled(true);
+         btnDelete.setEnabled(true);
+      }
+      else if (obj instanceof Device)
+      {
+         btnAddLine.setEnabled(true);
+         btnAddDevice.setEnabled(true);
+         btnEdit.setEnabled(true);
+         btnDelete.setEnabled(true);
+      }
+      else
+      {
+         btnAddLine.setEnabled(false);
+         btnAddDevice.setEnabled(false);
+         btnEdit.setEnabled(false);
+         btnDelete.setEnabled(false);
+      }
    }
 
    /**
@@ -459,6 +318,8 @@ public class TopologyView extends AbstractPage
    @Override
    public void updateContents()
    {
+      final MutableIconTreeNode rootNode = getRootNode();
+
       rootNode.removeAllChildren();
 
       final Project project = ProjectManager.getProject();
@@ -467,23 +328,87 @@ public class TopologyView extends AbstractPage
 
       for (Area area : project.getAreas())
       {
-         DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(area, true);
+         MutableIconTreeNode areaNode = new MutableIconTreeNode(area, true);
+         areaNode.setIcon(areaIcon);
          rootNode.add(areaNode);
 
          for (Line line : area.getLines())
          {
-            DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(line, true);
+            MutableIconTreeNode lineNode = new MutableIconTreeNode(line, true);
+            lineNode.setIcon(lineIcon);
             areaNode.add(lineNode);
 
             for (Device device : line.getDevices())
             {
-               DefaultMutableTreeNode deviceNode = new DefaultMutableTreeNode(device, true);
+               MutableIconTreeNode deviceNode = new MutableIconTreeNode(device, true);
+               deviceNode.setIcon(deviceIcon);
                lineNode.add(deviceNode);
             }
          }
       }
 
-      ((DefaultTreeModel) tree.getModel()).reload();
-      TreeUtils.expandAll(tree);
+      getTreeModel().reload();
+      TreeUtils.expandAll(getTree());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected boolean acceptsDrop(Object target, Transferable trans)
+   {
+      final List<Object> objs = getTransferableObjects(trans);
+
+      for (final Object obj : objs)
+         if (obj == target)
+            return true;
+
+      if (target instanceof Line)
+      {
+         for (final Object obj : objs)
+            if (obj instanceof Device)
+               return true;
+      }
+      else if (target instanceof Area)
+      {
+         for (final Object obj : objs)
+            if (obj instanceof Line)
+               return true;
+      }
+
+      return false;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   protected boolean handleDrop(Object target, Transferable trans)
+   {
+      final List<Object> objs = getTransferableObjects(trans);
+      boolean dropped = false;
+
+      for (final Object obj : objs)
+      {
+         if (obj == target)
+         {
+            dropped = true;
+            continue;
+         }
+
+         if (target instanceof Line && obj instanceof Device)
+            ((Line) target).add((Device) obj);
+         else if (target instanceof Area && obj instanceof Line)
+            ((Area) target).add((Line) obj);
+         else continue;
+
+         ProjectManager.fireComponentModified(obj);
+         ProjectManager.fireComponentModified(target);
+      }
+
+      if (dropped)
+         ProjectManager.fireComponentModified(target);
+
+      return dropped;
    }
 }

@@ -10,8 +10,9 @@ import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComboBox;
@@ -27,6 +28,7 @@ import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.CatalogEntryDetails;
 import org.freebus.fts.components.DeviceProgrammingPanel;
+import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
@@ -68,7 +70,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       {
          if (room == null)
             return I18n.getMessage("AddDeviceDialog.NoRoom");
-         return room.getBuilding().getName() + " - " + room.getName();
+         return room.getPathName();
       }
    }
 
@@ -229,6 +231,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    /**
     * Set the edited device.
     */
+   @Override
    public void setDevice(Device device, DeviceController adapter)
    {
       this.device = device;
@@ -240,9 +243,6 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       edtName.setText(device.getName());
       catEntryDetails.setCatalogEntry(device.getCatalogEntry());
       programmingPanel.setDevice(device);
-      
-      final PhysicalAddress addr = device.getPhysicalAddress();
-      lblLineAddr.setText(Integer.toString(addr.getZone()) + '.' + Integer.toString(addr.getLine()) + '.');
 
       updateDeviceAddresses();
       updateRooms();
@@ -258,7 +258,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    {
       updating = true;
 
-      if (obj instanceof Device)
+      if (obj instanceof Device || obj instanceof Line || obj instanceof Area)
       {
          updateDeviceAddresses();
          programmingPanel.updateContents();
@@ -269,7 +269,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    }
 
    /**
-    * Update the combobox with the available device addresses.
+    * Update the combo-box with the available device addresses.
     */
    private void updateDeviceAddresses()
    {
@@ -278,6 +278,9 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       final Line line = device.getLine();
       if (line == null)
          return;
+
+      final PhysicalAddress physicalAddr = device.getPhysicalAddress();
+      lblLineAddr.setText(Integer.toString(physicalAddr.getZone()) + '.' + Integer.toString(physicalAddr.getLine()) + '.');
 
       final Set<Integer> usedAddrs = new HashSet<Integer>(257);
       for (final Device dev: line.getDevices())
@@ -296,30 +299,29 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
          if (addr == deviceAddr)
             cboAddr.setSelectedIndex(cboAddr.getItemCount() - 1);
       }
-      
+
       if (cboAddr.getSelectedIndex() == -1)
          cboAddr.setSelectedIndex(0);
    }
 
    /**
-    * Update the combobox with the available rooms.
+    * Update the combo-box with the available rooms.
     */
    private void updateRooms()
    {
-      Object selected = cboRoom.getSelectedItem();
-      if (selected != null)
-         selected = ((RoomItem) selected).room;
-      else if (device != null)
-         selected = device.getRoom();
+      Object selected = device == null ? null : device.getRoom();
 
       cboRoom.removeAllItems();
       cboRoom.addItem(new RoomItem(null));
 
-      final Set<Room> rooms = new TreeSet<Room>();
+      final Map<String,Room> rooms = new TreeMap<String,Room>();
       for (final Building building : ProjectManager.getProject().getBuildings())
-         rooms.addAll(building.getRooms());
+      {
+         for (final Room room : building.getRooms())
+            rooms.put(room.getPathName(), room);
+      }
 
-      for (final Room room : rooms)
+      for (final Room room : rooms.values())
       {
          cboRoom.addItem(new RoomItem(room));
 
@@ -327,4 +329,8 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
             cboRoom.setSelectedIndex(cboRoom.getItemCount() - 1);
       }
    }
+
+   /**
+    * 
+    */
 }
