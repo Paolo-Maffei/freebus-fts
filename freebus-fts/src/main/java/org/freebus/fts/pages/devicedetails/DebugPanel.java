@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.deviceeditor;
+package org.freebus.fts.pages.devicedetails;
 
 import java.awt.BorderLayout;
 import java.awt.Font;
@@ -20,7 +20,6 @@ import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.I18n;
 import org.freebus.fts.backend.DeviceController;
-import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;

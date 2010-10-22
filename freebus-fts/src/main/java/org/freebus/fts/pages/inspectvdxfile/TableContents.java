@@ -1,6 +1,5 @@
 package org.freebus.fts.pages.inspectvdxfile;
 
-import org.freebus.fts.pages.InspectVdxFile;
 import org.freebus.fts.persistence.vdx.VdxSection;
 
 /**

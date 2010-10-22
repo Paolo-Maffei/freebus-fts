@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.deviceeditor;
+package org.freebus.fts.pages.devicedetails;
 
 import java.awt.BorderLayout;
 import java.awt.GridBagConstraints;
@@ -18,7 +18,6 @@ import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.backend.DeviceController;
-import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;

@@ -14,7 +14,6 @@ import org.freebus.fts.I18n;
 import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.models.SortedListModel;
 import org.freebus.fts.elements.utils.TableUtils;
-import org.freebus.fts.pages.InspectVdxFile;
 import org.freebus.fts.persistence.vdx.VdxFieldType;
 import org.freebus.fts.persistence.vdx.VdxSection;
 import org.freebus.fts.persistence.vdx.VdxSectionHeader;

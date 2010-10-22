@@ -12,7 +12,7 @@ import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.filter.VdxFileFilter;
-import org.freebus.fts.pages.InspectVdxFile;
+import org.freebus.fts.pages.inspectvdxfile.InspectVdxFile;
 
 /**
  * Inspect the contents of a VD_ file.

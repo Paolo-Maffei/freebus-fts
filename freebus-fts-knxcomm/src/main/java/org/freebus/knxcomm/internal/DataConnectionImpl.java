@@ -360,7 +360,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          ((Memory) application).setAddressMapper(memoryAddressMapper);
       Logger.getLogger(getClass()).debug("query - sending: " + application);
 
-      final long start = System.currentTimeMillis();
+//      final long start = System.currentTimeMillis();
       send(application);
 
       final int timeout = (int) (/*System.currentTimeMillis() - start + */ 6000);
@@ -458,5 +458,17 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       }
 
       memoryAddressMapper = MemoryAddressMapperFactory.getMemoryAddressMapper(deviceDescriptorMaskVersion);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public MemoryAddressMapper getMemoryAddressMapper()
+   {
+      if (memoryAddressMapper == null)
+         installMemoryAddressMapper();
+
+      return memoryAddressMapper;
    }
 }

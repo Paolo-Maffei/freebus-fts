@@ -3,7 +3,6 @@ package org.freebus.fts.pages.busmonitor;
 import java.util.Calendar;
 import java.util.Date;
 
-import org.freebus.fts.pages.BusMonitor;
 import org.freebus.knxcomm.emi.EmiFrame;
 
 /**

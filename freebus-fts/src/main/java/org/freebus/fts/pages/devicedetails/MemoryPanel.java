@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.deviceeditor;
+package org.freebus.fts.pages.devicedetails;
 
 import java.awt.BorderLayout;
 import java.awt.event.ComponentAdapter;
@@ -18,7 +18,6 @@ import org.freebus.fts.backend.DeviceController;
 import org.freebus.fts.components.memorytable.DeviceMemoryTableModel;
 import org.freebus.fts.components.memorytable.MemoryCell;
 import org.freebus.fts.components.memorytable.MemoryCellRenderer;
-import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;

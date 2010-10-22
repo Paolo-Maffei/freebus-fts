@@ -12,6 +12,7 @@ import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.dialogs.AddDeviceDialog;
 import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.pages.productsbrowser.ProductsBrowser;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.VirtualDevice;
 

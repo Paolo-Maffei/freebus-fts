@@ -19,7 +19,7 @@ import org.freebus.fts.project.DeviceProgramming;
 import org.freebus.fts.project.SubGroupToObject;
 
 /**
- * Base class for device adapters that handles the creation of the various
+ * Base class for device controllers that handle the creation of the various
  * device tables.
  */
 public abstract class AbstractDeviceController implements DeviceController
@@ -31,7 +31,7 @@ public abstract class AbstractDeviceController implements DeviceController
    private AssociationTableEntry[] associationTable;
 
    /**
-    * Create a basic device adapter.
+    * Create a basic device controller.
     * 
     * @param device - the device to handle.
     */

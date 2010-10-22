@@ -30,7 +30,7 @@ public class TestMemoryResponse
    @Test
    public final void testMemoryResponseIntIntArray()
    {
-      final int data[] = new int[] { 1, 2, 3 };
+      final byte[] data = HexString.valueOf("01 02 03");
       final MemoryResponse app = new MemoryResponse(1230, data);
 
       assertNotNull(app.toString());
@@ -38,10 +38,10 @@ public class TestMemoryResponse
 
       assertEquals(1230, app.getAddress());
       assertEquals(3, app.getCount());
-      assertArrayEquals(new int[] { 1, 2, 3 }, app.getData());
+      assertArrayEquals(new byte[] { 1, 2, 3 }, app.getData());
 
       data[0] = 0;
-      assertArrayEquals(new int[] { 1, 2, 3 }, app.getData());
+      assertArrayEquals(new byte[] { 1, 2, 3 }, app.getData());
 
       new MemoryResponse(10900, null);
    }
@@ -49,27 +49,27 @@ public class TestMemoryResponse
    @Test(expected = IllegalArgumentException.class)
    public final void testMemoryResponseIntIntArrayTooLarge()
    {
-      new MemoryResponse(4000, new int[64]);
+      new MemoryResponse(4000, new byte[64]);
    }
 
    @Test
    public final void testEqualsObject()
    {
-      final MemoryResponse app1 = new MemoryResponse(1230, new int[] { 1, 2, 3 });
-      final MemoryResponse app2 = new MemoryResponse(1230, new int[] { 1, 2, 3 });
+      final MemoryResponse app1 = new MemoryResponse(1230, new byte[] { 1, 2, 3 });
+      final MemoryResponse app2 = new MemoryResponse(1230, new byte[] { 1, 2, 3 });
 
       assertFalse(app1.equals(null));
       assertFalse(app1.equals(new Object()));
       assertTrue(app1.equals(app1));
       assertTrue(app1.equals(app2));
 
-      app2.setData(new int[] { 1, 2, 3, 4 });
+      app2.setData(new byte[] { 1, 2, 3, 4 });
       assertFalse(app1.equals(app2));
 
       app1.setData(null);
       assertFalse(app1.equals(app2));
 
-      app1.setData(new int[] { 1, 2, 3, 4 });
+      app1.setData(new byte[] { 1, 2, 3, 4 });
       app2.setData(null);
       assertFalse(app1.equals(app2));
 
@@ -83,22 +83,22 @@ public class TestMemoryResponse
    @Test
    public final void testGetSetData()
    {
-      final int data[] = new int[] { 1, 2, 3 };
+      final byte data[] = new byte[] { 1, 2, 3 };
       final MemoryResponse app = new MemoryResponse();
 
       app.setData(data);
       assertEquals(3, app.getCount());
-      assertArrayEquals(new int[] { 1, 2, 3 }, app.getData());
+      assertArrayEquals(new byte[] { 1, 2, 3 }, app.getData());
 
       data[0] = 0;
-      assertArrayEquals(new int[] { 1, 2, 3 }, app.getData());
+      assertArrayEquals(new byte[] { 1, 2, 3 }, app.getData());
    }
 
    @Test(expected = IllegalArgumentException.class)
    public final void testSetDataTooLarge()
    {
       final MemoryResponse app = new MemoryResponse();
-      app.setData(new int[64]);
+      app.setData(new byte[64]);
    }
 
    @Test
@@ -113,13 +113,13 @@ public class TestMemoryResponse
 
       assertEquals(3, app.getCount());
       assertEquals(0x1020, app.getAddress());
-      assertArrayEquals(new int[] { 0x11, 0x12, 0x13 }, app.getData());
+      assertArrayEquals(new byte[] { 0x11, 0x12, 0x13 }, app.getData());
    }
 
    @Test
    public final void testToRawData()
    {
-      final Application app = new MemoryResponse(0x1020, new int[] { 0x11, 0x12, 0x13 });
+      final Application app = new MemoryResponse(0x1020, new byte[] { 0x11, 0x12, 0x13 });
 
       final byte[] expected = HexString.valueOf("02 43 10 20 11 12 13");
       final byte[] rawData = app.toByteArray();

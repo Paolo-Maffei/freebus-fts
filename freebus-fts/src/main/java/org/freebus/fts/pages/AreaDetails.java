@@ -122,6 +122,25 @@ public final class AreaDetails extends AbstractPage
       final JScrollPane scpNotes = new JScrollPane(notesEdit);
       add(scpNotes, new GridBagConstraints(0, ++gridy, gridWidth, 1, 1, 1, nw, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
       scpNotes.setPreferredSize(new Dimension(100, 100));
+      notesEdit.addFocusListener(new FocusListener()
+      {
+         private String prevValue;
+
+         @Override
+         public void focusLost(FocusEvent e)
+         {
+            if (notesEdit.getText().equals(prevValue))
+               return;
+
+            area.setDescription(notesEdit.getText());
+         }
+
+         @Override
+         public void focusGained(FocusEvent e)
+         {
+            prevValue = notesEdit.getText();
+         }
+      });
 
       //
       // Page filler
@@ -218,7 +237,7 @@ public final class AreaDetails extends AbstractPage
       setName(title);
 
       nameEdit.setText(area.getName());
-      // TODO notesEdit.setText(line.getNotes());
+      notesEdit.setText(area.getDescription());
 
       updateAreaAddresses();
 
@@ -226,7 +245,7 @@ public final class AreaDetails extends AbstractPage
    }
 
    /**
-    * Update the combobox with the available line addresses.
+    * Update the combo-box with the available line addresses.
     */
    private void updateAreaAddresses()
    {

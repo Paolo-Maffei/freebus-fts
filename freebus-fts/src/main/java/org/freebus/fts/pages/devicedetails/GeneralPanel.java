@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.deviceeditor;
+package org.freebus.fts.pages.devicedetails;
 
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
@@ -45,11 +45,11 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    private boolean updating = false;
    private Device device;
 
-   private final JLabel lblLineAddr = new JLabel();
-   private final JComboBox cboAddr = new JComboBox();
-   private final JComboBox cboRoom = new JComboBox();
-   private final JTextField edtName = new JTextField();
-   private final JTextArea edtNotes = new JTextArea();
+   private final JLabel lineAddrLabel = new JLabel();
+   private final JComboBox addrCombo = new JComboBox();
+   private final JComboBox roomCombo = new JComboBox();
+   private final JTextField nameEdit = new JTextField();
+   private final JTextArea notesEdit = new JTextArea();
    private final DeviceProgrammingPanel programmingPanel = new DeviceProgrammingPanel();
    private final CatalogEntryDetails catEntryDetails = new CatalogEntryDetails();
 
@@ -97,25 +97,25 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       //
       lbl = new JLabel(I18n.getMessage("DeviceEditor.GeneralPanel.Name") + ": ");
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
-      add(edtName, new GridBagConstraints(1, gridy, 3, 1, 1, 1, w, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
-      edtName.addFocusListener(new FocusListener()
+      add(nameEdit, new GridBagConstraints(1, gridy, 3, 1, 1, 1, w, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
+      nameEdit.addFocusListener(new FocusListener()
       {
          private String prevValue;
 
          @Override
          public void focusLost(FocusEvent e)
          {
-            if (edtName.getText().equals(prevValue))
+            if (nameEdit.getText().equals(prevValue))
                return;
 
-            device.setName(edtName.getText());
+            device.setName(nameEdit.getText());
             fireModified(device);
          }
 
          @Override
          public void focusGained(FocusEvent e)
          {
-            prevValue = edtName.getText();
+            prevValue = nameEdit.getText();
          }
       });
 
@@ -124,16 +124,16 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       //
       lbl = new JLabel(I18n.getMessage("DeviceEditor.GeneralPanel.PhysicalAddress") + ": ");
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
-      add(lblLineAddr, new GridBagConstraints(1, gridy, 1, 1, 1, 1, e, GridBagConstraints.NONE, stdInsets, 0, 0));
+      add(lineAddrLabel, new GridBagConstraints(1, gridy, 1, 1, 1, 1, e, GridBagConstraints.NONE, stdInsets, 0, 0));
 
-      add(cboAddr, new GridBagConstraints(2, gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
-      cboAddr.setMaximumRowCount(20);
-      cboAddr.addActionListener(new ActionListener()
+      add(addrCombo, new GridBagConstraints(2, gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
+      addrCombo.setMaximumRowCount(20);
+      addrCombo.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent e)
          {
-            final Object sel = cboAddr.getSelectedItem();
+            final Object sel = addrCombo.getSelectedItem();
             if (sel == null)
                return;
 
@@ -154,14 +154,14 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       lbl = new JLabel(I18n.getMessage("DeviceEditor.GeneralPanel.Room") + ": ");
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
 
-      add(cboRoom, new GridBagConstraints(1, gridy, 3, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
-      cboRoom.setMaximumRowCount(20);
-      cboRoom.addActionListener(new ActionListener()
+      add(roomCombo, new GridBagConstraints(1, gridy, 3, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
+      roomCombo.setMaximumRowCount(20);
+      roomCombo.addActionListener(new ActionListener()
       {
          @Override
          public void actionPerformed(ActionEvent e)
          {
-            final Object sel = cboRoom.getSelectedItem();
+            final Object sel = roomCombo.getSelectedItem();
             if (!(sel instanceof RoomItem))
                return;
 
@@ -187,9 +187,29 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
       lbl = new JLabel(I18n.getMessage("DeviceEditor.GeneralPanel.Notes"));
       add(lbl, new GridBagConstraints(0, ++gridy, 3, 1, 1, 1, w, GridBagConstraints.NONE, blkInsets, 0, 0));
 
-      final JScrollPane scpNotes = new JScrollPane(edtNotes);
-      add(scpNotes, new GridBagConstraints(0, ++gridy, gridWidth - 1, 1, 1, 1, nw, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
-      scpNotes.setPreferredSize(new Dimension(100, 100));
+      final JScrollPane notesScrollPane = new JScrollPane(notesEdit);
+      notesScrollPane.setPreferredSize(new Dimension(100, 100));
+      add(notesScrollPane, new GridBagConstraints(0, ++gridy, gridWidth - 1, 1, 1, 1, nw, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
+
+      notesEdit.addFocusListener(new FocusListener()
+      {
+         private String prevValue;
+
+         @Override
+         public void focusLost(FocusEvent e)
+         {
+            if (notesEdit.getText().equals(prevValue))
+               return;
+
+            device.setDescription(notesEdit.getText());
+         }
+
+         @Override
+         public void focusGained(FocusEvent e)
+         {
+            prevValue = notesEdit.getText();
+         }
+      });
 
       //
       // Programming details
@@ -240,7 +260,8 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
          return;
 
       updating = true;
-      edtName.setText(device.getName());
+      nameEdit.setText(device.getName());
+      notesEdit.setText(device.getDescription());
       catEntryDetails.setCatalogEntry(device.getCatalogEntry());
       programmingPanel.setDevice(device);
 
@@ -273,14 +294,14 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
     */
    private void updateDeviceAddresses()
    {
-      cboAddr.removeAllItems();
+      addrCombo.removeAllItems();
 
       final Line line = device.getLine();
       if (line == null)
          return;
 
       final PhysicalAddress physicalAddr = device.getPhysicalAddress();
-      lblLineAddr.setText(Integer.toString(physicalAddr.getZone()) + '.' + Integer.toString(physicalAddr.getLine()) + '.');
+      lineAddrLabel.setText(Integer.toString(physicalAddr.getZone()) + '.' + Integer.toString(physicalAddr.getLine()) + '.');
 
       final Set<Integer> usedAddrs = new HashSet<Integer>(257);
       for (final Device dev: line.getDevices())
@@ -295,13 +316,13 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
          if (usedAddrs.contains(addr))
             continue;
 
-         cboAddr.addItem(" " + Integer.toString(addr) + " ");
+         addrCombo.addItem(" " + Integer.toString(addr) + " ");
          if (addr == deviceAddr)
-            cboAddr.setSelectedIndex(cboAddr.getItemCount() - 1);
+            addrCombo.setSelectedIndex(addrCombo.getItemCount() - 1);
       }
 
-      if (cboAddr.getSelectedIndex() == -1)
-         cboAddr.setSelectedIndex(0);
+      if (addrCombo.getSelectedIndex() == -1)
+         addrCombo.setSelectedIndex(0);
    }
 
    /**
@@ -311,8 +332,8 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
    {
       Object selected = device == null ? null : device.getRoom();
 
-      cboRoom.removeAllItems();
-      cboRoom.addItem(new RoomItem(null));
+      roomCombo.removeAllItems();
+      roomCombo.addItem(new RoomItem(null));
 
       final Map<String,Room> rooms = new TreeMap<String,Room>();
       for (final Building building : ProjectManager.getProject().getBuildings())
@@ -323,14 +344,10 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
 
       for (final Room room : rooms.values())
       {
-         cboRoom.addItem(new RoomItem(room));
+         roomCombo.addItem(new RoomItem(room));
 
          if (room == selected)
-            cboRoom.setSelectedIndex(cboRoom.getItemCount() - 1);
+            roomCombo.setSelectedIndex(roomCombo.getItemCount() - 1);
       }
    }
-
-   /**
-    * 
-    */
 }

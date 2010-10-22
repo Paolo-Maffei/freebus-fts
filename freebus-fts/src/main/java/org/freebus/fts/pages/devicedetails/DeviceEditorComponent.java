@@ -1,7 +1,6 @@
-package org.freebus.fts.pages.deviceeditor;
+package org.freebus.fts.pages.devicedetails;
 
 import org.freebus.fts.backend.DeviceController;
-import org.freebus.fts.pages.DeviceDetails;
 import org.freebus.fts.project.Device;
 
 /**

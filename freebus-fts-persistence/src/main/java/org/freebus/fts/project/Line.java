@@ -39,6 +39,9 @@ public class Line implements Comparable<Line>
    @Column(name = "line_address")
    private int address;
 
+   @Column(name = "line_description")
+   private String description;
+
    @ManyToOne(optional = false)
    @JoinColumn(name = "area_id")
    private Area area;
@@ -104,6 +107,24 @@ public class Line implements Comparable<Line>
    public void setName(String name)
    {
       this.name = name == null ? "" : name;
+   }
+
+   /**
+    * @return The description.
+    */
+   public String getDescription()
+   {
+      return description;
+   }
+
+   /**
+    * Set the description.
+    *
+    * @param description - the description to set
+    */
+   public void setDescription(String description)
+   {
+      this.description = description;
    }
 
    /**

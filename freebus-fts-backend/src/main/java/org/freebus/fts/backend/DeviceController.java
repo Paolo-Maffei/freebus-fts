@@ -12,6 +12,10 @@ import org.freebus.fts.project.Device;
 /**
  * Interface for controllers that work with specific (hardware) devices on the
  * KNX bus.
+ * <p>
+ * The controller is used for programming the device (application program,
+ * parameters, communication objects, etc), for querying details of the device,
+ * and for other similar tasks.
  */
 public interface DeviceController
 {
@@ -50,14 +54,14 @@ public interface DeviceController
    AssociationTableEntry[] getAssociationTable();
 
    /**
+    * Get all programmers that are required to fully update the device.
+    */
+   List<DeviceProgrammer> getRequiredProgrammers();
+
+   /**
     * Get a device programmer for programming an aspect of the device.
     * 
     * @param type - the type of the requested device programmer.
     */
    DeviceProgrammer getProgrammer(DeviceProgrammerType type);
-
-   /**
-    * Get all programmers that are required to fully update the device.
-    */
-   List<DeviceProgrammer> getRequiredProgrammers();
 }

@@ -24,7 +24,7 @@ public class MemoryResponse extends MemoryData
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   protected MemoryResponse(int address, int[] data)
+   protected MemoryResponse(int address, byte[] data)
    {
       super(address, data);
    }
@@ -38,7 +38,7 @@ public class MemoryResponse extends MemoryData
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   protected MemoryResponse(MemoryLocation location, int[] data)
+   protected MemoryResponse(MemoryLocation location, byte[] data)
    {
       super(location, data);
    }

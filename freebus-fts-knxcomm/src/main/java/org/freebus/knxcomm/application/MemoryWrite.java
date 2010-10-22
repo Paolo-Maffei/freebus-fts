@@ -3,7 +3,8 @@ package org.freebus.knxcomm.application;
 import org.freebus.knxcomm.application.memory.MemoryLocation;
 
 /**
- * Write up to 63 bytes into device memory.
+ * Write up to 63 bytes into device memory. Depending on the type of
+ * the (your) bus connection, only 12 bytes can be transfered.
  */
 public class MemoryWrite extends MemoryData
 {
@@ -24,7 +25,7 @@ public class MemoryWrite extends MemoryData
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   protected MemoryWrite(int address, int[] data)
+   public MemoryWrite(int address, byte[] data)
    {
       super(address, data);
    }
@@ -38,7 +39,7 @@ public class MemoryWrite extends MemoryData
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   protected MemoryWrite(MemoryLocation location, int[] data)
+   public MemoryWrite(MemoryLocation location, byte[] data)
    {
       super(location, data);
    }

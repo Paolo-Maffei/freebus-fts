@@ -289,4 +289,18 @@
   </addColumn>
  </changeSet>
 
+ <changeSet author="stefant" id="0.1.4-21">
+  <addColumn tableName="area">
+   <column name="area_description" type="VARCHAR(256)" />
+  </addColumn>
+  <addColumn tableName="line">
+   <column name="line_description" type="VARCHAR(256)" />
+  </addColumn>
+ </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-22">
+  <addColumn tableName="device">
+   <column name="device_description" type="VARCHAR(256)" />
+  </addColumn>
+ </changeSet>
 </databaseChangeLog>

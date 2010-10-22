@@ -12,7 +12,7 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
  */
 public abstract class MemoryData extends Memory
 {
-   private int[] data;
+   private byte[] data;
 
    /**
     * Create a memory data object.
@@ -23,7 +23,7 @@ public abstract class MemoryData extends Memory
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   protected MemoryData(int address, int[] data)
+   protected MemoryData(int address, byte[] data)
    {
       super(address);
       setData(data);
@@ -38,7 +38,7 @@ public abstract class MemoryData extends Memory
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   protected MemoryData(MemoryLocation location, int[] data)
+   protected MemoryData(MemoryLocation location, byte[] data)
    {
       super(location, 0);
       setData(data);
@@ -47,7 +47,7 @@ public abstract class MemoryData extends Memory
    /**
     * @return The memory data
     */
-   public final int[] getData()
+   public final byte[] getData()
    {
       return data;
    }
@@ -68,7 +68,7 @@ public abstract class MemoryData extends Memory
     * @throws IllegalArgumentException if the supplied memory data has more than
     *            63 bytes.
     */
-   public final void setData(int[] data)
+   public final void setData(byte[] data)
    {
       if (data == null)
       {
@@ -103,9 +103,8 @@ public abstract class MemoryData extends Memory
 
       if (count > 0)
       {
-         data = new int[count];
-         for (int i = 0; i < count; ++i)
-            data[i] = in.readUnsignedByte();
+         data = new byte[count];
+         in.readFully(data);
       }
       else data = null;
    }
@@ -118,8 +117,8 @@ public abstract class MemoryData extends Memory
    {
       out.writeShort(getAddress());
 
-      for (int i = 0; i < data.length; ++i)
-         out.write(data[i]);
+      if (data != null)
+         out.write(data);
    }
 
    /**
@@ -160,7 +159,7 @@ public abstract class MemoryData extends Memory
       {
          sb.append(':');
          for (int i = 0; i < data.length; ++i)
-            sb.append(String.format(" %02X", data[i]));
+            sb.append(String.format(" %02X", data[i] & 255));
       }
 
       return sb.toString();

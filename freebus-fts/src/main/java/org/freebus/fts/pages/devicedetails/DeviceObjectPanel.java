@@ -1,4 +1,4 @@
-package org.freebus.fts.pages.deviceeditor;
+package org.freebus.fts.pages.devicedetails;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;

@@ -7,7 +7,9 @@ import java.io.IOException;
 import org.freebus.knxcomm.application.memory.MemoryLocation;
 
 /**
- * Read a block of bytes from the memory of a remote device.
+ * Read a block of bytes from the memory of a remote device. Up to 63 bytes can
+ * be read. Depending on the type of the (your) bus connection, only 12 bytes
+ * can be read.
  */
 public class MemoryRead extends Memory
 {
@@ -48,8 +50,8 @@ public class MemoryRead extends Memory
    }
 
    /**
-    * Create a memory read object that reads count bytes from a
-    * memory address which is specified by a location and an offset.
+    * Create a memory read object that reads count bytes from a memory address
+    * which is specified by a location and an offset.
     * 
     * @param location - the memory location.
     * @param offset - the offset relative to the location.

@@ -8,6 +8,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.Memory;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
 
 /**
  * A direct connection to a device on the KNX/EIB bus. Use
@@ -124,4 +125,11 @@ public interface DataConnection
     * {@link Memory memory applications}.
     */
    public void installMemoryAddressMapper();
+
+   /**
+    * Get the memory address mapper. A mapper is installed if required.
+    * 
+    * @return The memory address mapper.
+    */
+   public MemoryAddressMapper getMemoryAddressMapper();
 }

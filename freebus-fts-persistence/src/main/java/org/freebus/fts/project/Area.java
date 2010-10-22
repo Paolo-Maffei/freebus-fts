@@ -43,6 +43,9 @@ public class Area implements Comparable<Area>
    @Column(name = "area_address", nullable = false)
    private int address;
 
+   @Column(name = "area_description")
+   private String description;
+
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "area")
    private TreeSet<Line> lines = new TreeSet<Line>();
 
@@ -120,6 +123,24 @@ public class Area implements Comparable<Area>
    public void setName(String name)
    {
       this.name = name == null ? "" : name;
+   }
+
+   /**
+    * Set the description.
+    *
+    * @param description - the description to set
+    */
+   public void setDescription(String description)
+   {
+      this.description = description;
+   }
+
+   /**
+    * @return The description.
+    */
+   public String getDescription()
+   {
+      return description;
    }
 
    /**

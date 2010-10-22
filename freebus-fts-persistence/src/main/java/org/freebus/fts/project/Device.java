@@ -47,6 +47,9 @@ public final class Device implements Comparable<Device>
    @Column(name = "name", nullable = true)
    private String name;
 
+   @Column(name = "device_description", nullable = true)
+   private String description;
+
    @Column(name = "device_address", nullable = false)
    private int address;
 
@@ -315,6 +318,24 @@ public final class Device implements Comparable<Device>
    public void setName(String name)
    {
       this.name = name;
+   }
+
+   /**
+    * Set the description.
+    *
+    * @param description - the description to set
+    */
+   public void setDescription(String description)
+   {
+      this.description = description;
+   }
+
+   /**
+    * @return The description.
+    */
+   public String getDescription()
+   {
+      return description;
    }
 
    /**
