@@ -15,9 +15,9 @@ import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 public interface DeviceDescriptor
 {
    /**
-    * @return the numerical descriptor type.
+    * @return The numerical device descriptor type.
     */
-   public int getTypeCode();
+   int getTypeCode();
 
    /**
     * Initialize the device descriptor from a {@link DataInput data input}

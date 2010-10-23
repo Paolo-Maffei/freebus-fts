@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
@@ -21,6 +23,7 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.common.HexString;
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.components.Dialogs;
@@ -33,8 +36,19 @@ import org.freebus.fts.pages.busmonitor.BusMonitorItemFilter;
 import org.freebus.fts.pages.busmonitor.BusMonitorListCellRenderer;
 import org.freebus.fts.pages.busmonitor.FilterDialog;
 import org.freebus.fts.pages.busmonitor.FrameFilter;
+import org.freebus.knxcomm.application.Application;
+import org.freebus.knxcomm.application.DeviceDescriptorResponse;
+import org.freebus.knxcomm.application.Memory;
+import org.freebus.knxcomm.application.MemoryRead;
+import org.freebus.knxcomm.application.MemoryResponse;
+import org.freebus.knxcomm.application.MemoryWrite;
+import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
+import org.freebus.knxcomm.application.memory.MemoryAddressMapperFactory;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
+import org.freebus.knxcomm.emi.EmiTelegramFrame;
+import org.freebus.knxcomm.telegram.Telegram;
 
 /**
  * A page that displays the contents of a KNX/EIB bus trace file.
@@ -48,7 +62,8 @@ public class BusTraceViewer extends AbstractPage
 
    private final FrameFilter filter = new FrameFilter();
    private final DefaultListModel model = new DefaultListModel();
-   private final FilteredListModel filteredModel = new  FilteredListModel(model, new BusMonitorItemFilter(filter));
+   private final FilteredListModel filteredModel = new FilteredListModel(model, new BusMonitorItemFilter(filter));
+   private final Map<PhysicalAddress, MemoryAddressMapper> addrMappers = new HashMap<PhysicalAddress, MemoryAddressMapper>();
 
    /**
     * Create a bus trace viewer.
@@ -114,7 +129,7 @@ public class BusTraceViewer extends AbstractPage
                   Dialogs.showExceptionDialog(e, I18n.getMessage("BusMonitor.ErrSaveFilter"));
                }
             }
-          }
+         }
       });
    }
 
@@ -137,8 +152,46 @@ public class BusTraceViewer extends AbstractPage
    }
 
    /**
+    * Create a frame from the trace line string.
+    * 
+    * @param line - the trace line to convert.
+    * @return The frame of the trace line.
+    * @throws IOException
+    */
+   public EmiFrame createFrame(final String line) throws IOException
+   {
+      final EmiFrame frame = EmiFrameFactory.createFrame(HexString.valueOf(line));
+
+      if (frame instanceof EmiTelegramFrame)
+      {
+         final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
+         final Application app = telegram.getApplication();
+
+         if (app instanceof DeviceDescriptorResponse)
+         {
+            final DeviceDescriptorResponse ddr = (DeviceDescriptorResponse) app;
+            if (ddr.getDescriptorType() == 0 && !addrMappers.containsKey(telegram.getFrom()))
+            {
+               final DeviceDescriptor0 dd = (DeviceDescriptor0) ddr.getDescriptor();
+               addrMappers.put(telegram.getFrom(), MemoryAddressMapperFactory.getMemoryAddressMapper(dd.getMaskVersion()));
+            }
+         }
+         else if (app instanceof MemoryRead || app instanceof MemoryWrite)
+         {
+            ((Memory) app).setAddressMapper(addrMappers.get(telegram.getDest()));
+         }
+         else if (app instanceof MemoryResponse)
+         {
+            ((Memory) app).setAddressMapper(addrMappers.get(telegram.getFrom()));
+         }
+      }
+
+      return frame;
+   }
+
+   /**
     * Read the file and display it's contents.
-    *
+    * 
     * @param file - the file to open
     * @throws IOException
     */
@@ -150,8 +203,9 @@ public class BusTraceViewer extends AbstractPage
       Date when;
 
       model.clear();
+      addrMappers.clear();
 
-      for (int id = 1; ; ++id)
+      for (int id = 1;; ++id)
       {
          final String line = in.readLine();
          if (line == null)
@@ -171,7 +225,7 @@ public class BusTraceViewer extends AbstractPage
             when = null;
          }
 
-         frame = EmiFrameFactory.createFrame(HexString.valueOf(line.substring(pos + 1)));
+         frame = createFrame(line.substring(pos + 1));
          model.addElement(new BusMonitorItem(id, when, frame));
       }
 
