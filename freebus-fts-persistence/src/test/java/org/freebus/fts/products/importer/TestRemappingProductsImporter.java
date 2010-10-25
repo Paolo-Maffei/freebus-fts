@@ -17,7 +17,6 @@ import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 import org.freebus.fts.products.Manufacturer;
-import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.ProgramDescription;

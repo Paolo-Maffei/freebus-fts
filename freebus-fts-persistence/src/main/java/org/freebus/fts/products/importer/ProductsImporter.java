@@ -1,7 +1,8 @@
-package org.freebus.fts.products;
+package org.freebus.fts.products.importer;
 
 import java.util.List;
 
+import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.ProductsFactory;
 
 /**

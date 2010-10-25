@@ -9,7 +9,6 @@ import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Product;
-import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.BcuTypeService;

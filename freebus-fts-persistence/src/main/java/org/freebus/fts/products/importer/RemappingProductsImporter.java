@@ -20,7 +20,6 @@ import org.freebus.fts.products.ParameterType;
 import org.freebus.fts.products.ParameterValue;
 import org.freebus.fts.products.Product;
 import org.freebus.fts.products.ProductDescription;
-import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.ProgramDescription;
 import org.freebus.fts.products.S19Block;
@@ -70,7 +69,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          sb.append(funcEntity.getNumber() == null ? "--" : funcEntity.getNumber());
          sb.append(':').append(funcEntity.getManufacturer().getId());
          funcEntity = funcEntity.getParent();
-         
+
          if (funcEntity != null)
             sb.append('/');
       }
@@ -100,7 +99,7 @@ public final class RemappingProductsImporter implements ProductsImporter
    public String getFingerPrint(VirtualDevice device)
    {
       return device.getCatalogEntry().getManufacturer().getId() + ":" + device.getProductTypeId() + ":"
-            + device.getName();
+      + getFingerPrint(device.getProgram()) + ":" + device.getName();
    }
 
    /**
@@ -116,7 +115,7 @@ public final class RemappingProductsImporter implements ProductsImporter
     */
    public String getFingerPrint(Program program)
    {
-      return program.getManufacturer().getId() + ":" + program.getDeviceType();
+      return program.getManufacturer().getId() + ":" + program.getDeviceType() + ":" + program.getVersion();
    }
 
    /**
@@ -348,12 +347,12 @@ public final class RemappingProductsImporter implements ProductsImporter
       {
          final ProgramDescriptionService srcProgDescService = ctx.sourceFactory.getProgramDescriptionService();
          final ProgramDescription desc = srcProgDescService.getProgramDescription(prog);
-         
+
          if (desc != null)
          {
             desc.setProgram(prog);
             progDescsToStore.add(desc);
-            
+
          }
       }
       catch (DAOException e)
@@ -427,11 +426,11 @@ public final class RemappingProductsImporter implements ProductsImporter
 
             persist(prog);
          }
-         else if (prog.getVersion().compareToIgnoreCase(knownProg.getVersion()) > 0)
-         {
-            logger.info("Newer version of program: " + prog);
-            persist(prog);
-         }
+         //         else if (prog.getVersion().compareToIgnoreCase(knownProg.getVersion()) > 0)
+         //         {
+         //            logger.info("Newer version of program: " + prog);
+         //            persist(prog);
+         //         }
          else
          {
             device.setProgram(knownProg);
@@ -531,7 +530,9 @@ public final class RemappingProductsImporter implements ProductsImporter
          final ProductDescription desc = e.getValue();
 
          catEntry.setDescription(desc);
-         prodDescService.persist(desc);
+
+         if (desc != null)
+            prodDescService.persist(desc);
       }
    }
 
@@ -566,7 +567,7 @@ public final class RemappingProductsImporter implements ProductsImporter
       // - (Application) programs that no virtual device or device references
       // - Orphaned ProductDescription and ProgramDescription entries
 
-      // Cleanup (Hardware) products that no catalog entry references 
+      // Cleanup (Hardware) products that no catalog entry references
       num = ctx.destFactory.getProductService().removeOrphanedProducts();
       logger.info("Cleanup: " + num + " orphaned hardware products deleted");
    }

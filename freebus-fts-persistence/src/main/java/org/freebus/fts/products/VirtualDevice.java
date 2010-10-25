@@ -207,7 +207,8 @@ public class VirtualDevice
       if (!(o instanceof VirtualDevice))
          return false;
       final VirtualDevice oo = (VirtualDevice) o;
-      return id == oo.id && (catalogEntry == null ? oo.catalogEntry == null : catalogEntry.equals(oo.catalogEntry));
+      return id == oo.id && (catalogEntry == null ? oo.catalogEntry == null : catalogEntry.equals(oo.catalogEntry))
+      && (program == null ? oo.program == null : program.equals(oo.program));
    }
 
    /**

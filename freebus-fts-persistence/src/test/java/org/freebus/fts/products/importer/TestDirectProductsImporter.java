@@ -22,7 +22,6 @@ import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.ParameterType;
 import org.freebus.fts.products.ParameterValue;
-import org.freebus.fts.products.ProductsImporter;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.importer.DirectProductsImporter;

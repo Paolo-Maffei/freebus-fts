@@ -2,6 +2,7 @@ package org.freebus.fts.products;
 
 import java.io.File;
 
+import org.freebus.fts.products.importer.ProductsImporter;
 import org.freebus.fts.products.importer.RemappingProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.jpa.JpaProductsFactory;

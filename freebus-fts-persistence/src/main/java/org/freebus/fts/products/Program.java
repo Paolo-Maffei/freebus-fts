@@ -110,7 +110,7 @@ public class Program
 
    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
    @JoinColumn(name = "program_id")
-   private Set<S19Block> s19Blocks = new HashSet<S19Block>();
+   private final Set<S19Block> s19Blocks = new HashSet<S19Block>();
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "program")
    private ProgramDescription description;
@@ -182,7 +182,12 @@ public class Program
    }
 
    /**
-    * @return the version
+    * Get the version of the program. The name is a bit misleading,
+    * as higher version numbers do not mean newer revisions of the
+    * program. The version is used to distinguish different application
+    * program types for the same physical device.
+    * 
+    * @return The version
     */
    public String getVersion()
    {
@@ -190,7 +195,10 @@ public class Program
    }
 
    /**
-    * Set the version.
+    * Set the version. See {@link #getVersion()} for details about
+    * a version.
+    * 
+    * @param version - the version to set.
     */
    public void setVersion(String version)
    {
@@ -488,10 +496,10 @@ public class Program
    }
 
    /**
-    * Get the program type. The program type is a 16 bit number that
-    * is unique for a specific manufacturer. It can be used to identify
-    * the program that is running in a BCU.
-    *
+    * Get the program type. The program type is a 16 bit number that is unique
+    * for a specific manufacturer. It can be used to identify the program that
+    * is running in a BCU.
+    * 
     * @return The program type
     */
    public int getProgramType()
@@ -589,7 +597,7 @@ public class Program
 
    /**
     * Set the program description.
-    *
+    * 
     * @param description
     */
    public void setDescription(ProgramDescription description)
@@ -636,10 +644,9 @@ public class Program
 
       final Program oo = (Program) o;
 
-      if (mask == null && oo.mask != null)
-         return false;
-
-      return id == oo.id && (mask == oo.mask || mask.equals(oo.mask)) && peiType == oo.peiType && name.equals(oo.name);
+      return id == oo.id && peiType == oo.peiType
+      && (version == null ? oo.version == null : version.equals(oo.version))
+      && (mask == null ? oo.mask == null : mask.equals(oo.mask));
    }
 
    /**
