@@ -1,9 +1,12 @@
 package org.freebus.fts.products;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
-import org.freebus.fts.products.Manufacturer;
-import org.freebus.fts.products.Program;
 import org.junit.Test;
 
 public class TestProgram
@@ -386,10 +389,10 @@ public class TestProgram
       assertTrue(prog1.equals(prog2));
       assertFalse(prog1.equals(prog3));
 
-      prog1.setName("prog");
+      prog1.setDeviceType(1234);
       assertFalse(prog1.equals(prog2));
 
-      prog2.setName("prog");
+      prog2.setDeviceType(1234);
       assertTrue(prog1.equals(prog2));
    }
 }

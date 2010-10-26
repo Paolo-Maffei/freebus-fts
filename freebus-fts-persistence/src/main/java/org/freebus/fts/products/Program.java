@@ -644,7 +644,7 @@ public class Program
 
       final Program oo = (Program) o;
 
-      return id == oo.id && peiType == oo.peiType
+      return id == oo.id && peiType == oo.peiType && deviceType == oo.deviceType
       && (version == null ? oo.version == null : version.equals(oo.version))
       && (mask == null ? oo.mask == null : mask.equals(oo.mask));
    }

@@ -44,7 +44,7 @@ public class StartupIndicator
       size = splash.getSize();
 
       progressBounds = new Rectangle(28, size.height - 40, size.width - 56, 15);
-      textPos = new Point(progressBounds.x, progressBounds.y - 20);
+      setTextPos(progressBounds.x, progressBounds.y - 20);
 
       textFont = graphics.getFont();
       versionTextFont = textFont.deriveFont(textFont.getSize2D() * 0.8f);

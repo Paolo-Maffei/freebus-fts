@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.freebus.fts.backend.devicecontroller.DeviceProgrammer;
 import org.freebus.fts.backend.devicecontroller.DeviceProgrammerType;
+import org.freebus.fts.backend.exception.DeviceControllerException;
 import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -25,6 +26,14 @@ public interface DeviceController
     * @return The device.
     */
    Device getDevice();
+
+   /**
+    * Test if the hardware device is compatible to the {@link Device device}.
+    * Programming must not be done if the hardware is not compatible.
+    * 
+    * @return True if the hardware is compatible
+    */
+   boolean isCompatible();
 
    /**
     * Update the calculated data. Call when the device was changed.
@@ -55,13 +64,15 @@ public interface DeviceController
 
    /**
     * Get all programmers that are required to fully update the device.
+    * @throws DeviceControllerException
     */
-   List<DeviceProgrammer> getRequiredProgrammers();
+   List<DeviceProgrammer> getRequiredProgrammers() throws DeviceControllerException;
 
    /**
     * Get a device programmer for programming an aspect of the device.
     * 
     * @param type - the type of the requested device programmer.
+    * @throws DeviceControllerException
     */
-   DeviceProgrammer getProgrammer(DeviceProgrammerType type);
+   DeviceProgrammer getProgrammer(DeviceProgrammerType type) throws DeviceControllerException;
 }

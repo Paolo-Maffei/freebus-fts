@@ -1,6 +1,6 @@
 package org.freebus.fts.common.types;
 
-import org.freebus.fts.common.I18n;
+import org.freebus.fts.common.internal.I18n;
 
 /**
  * Types of communication objects.

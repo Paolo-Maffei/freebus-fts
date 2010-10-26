@@ -1,4 +1,4 @@
-package org.freebus.fts.common;
+package org.freebus.fts.backend.internal;
 
 import java.text.MessageFormat;
 import java.util.MissingResourceException;
@@ -6,7 +6,7 @@ import java.util.ResourceBundle;
 
 public final class I18n
 {
-   private static final String bundleName = "common-messages";
+   private static final String bundleName = "backend-messages";
    private static final ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
 
    private I18n()

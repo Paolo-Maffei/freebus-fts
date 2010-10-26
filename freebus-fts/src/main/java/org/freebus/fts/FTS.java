@@ -1,6 +1,7 @@
 package org.freebus.fts;
 
 import java.awt.Cursor;
+import java.awt.Point;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.File;
@@ -180,7 +181,8 @@ public final class FTS extends Application
             version += " r" + revision;
 
          final String versionText = I18n.formatMessage("FTS.StartupVersion", version, revision);
-         startupIndicator.setVersionText(startupIndicator.getTextPos().x, 135, versionText);
+         final Point textPos = startupIndicator.getTextPos();
+         startupIndicator.setVersionText(textPos == null ? 10 : textPos.x, 135, versionText);
       }
    }
 
