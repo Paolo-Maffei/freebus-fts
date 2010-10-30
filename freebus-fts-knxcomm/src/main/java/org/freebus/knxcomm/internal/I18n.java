@@ -6,7 +6,6 @@ import java.util.ResourceBundle;
 
 public class I18n
 {
-//   private static final String bundleName = "org.freebus.fts.project.messages";
    private static final ResourceBundle bundle = ResourceBundle.getBundle("knxcomm-messages");
 
    private I18n()
