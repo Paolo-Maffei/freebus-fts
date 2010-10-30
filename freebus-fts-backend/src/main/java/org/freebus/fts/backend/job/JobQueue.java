@@ -7,11 +7,12 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.backend.exception.JobFailedException;
+import org.freebus.fts.backend.internal.I18n;
 import org.freebus.fts.backend.job.event.JobQueueErrorEvent;
 import org.freebus.fts.backend.job.event.JobQueueEvent;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.internal.I18n;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
@@ -207,6 +208,7 @@ public class JobQueue implements JobListener
 
       active = true;
       setLinkMode(LinkMode.LinkLayer);
+      Logger.getLogger(getClass()).debug("job queue active");
    }
 
    /**
@@ -225,9 +227,13 @@ public class JobQueue implements JobListener
       {
       }
 
+      if (!active)
+         return;
+
       active = false;
       notifyListeners(new JobQueueEvent(null));
       setLinkMode(LinkMode.BusMonitor);
+      Logger.getLogger(getClass()).debug("job queue idle");
    }
 
    /**

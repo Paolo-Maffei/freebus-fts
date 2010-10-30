@@ -7,7 +7,7 @@ import java.awt.event.WindowEvent;
 import org.freebus.fts.I18n;
 import org.freebus.fts.MainWindow;
 import org.freebus.fts.backend.job.JobQueue;
-import org.freebus.fts.backend.job.SetPhysicalAddressJob;
+import org.freebus.fts.backend.job.device.SetPhysicalAddressJob;
 import org.freebus.fts.dialogs.SetPhysicalAddress;
 import org.freebus.fts.elements.services.ImageCache;
 

@@ -3,7 +3,7 @@ package example;
 import org.apache.log4j.Logger;
 import org.freebus.fts.backend.job.Job;
 import org.freebus.fts.backend.job.JobListener;
-import org.freebus.fts.backend.job.SetPhysicalAddressJob;
+import org.freebus.fts.backend.job.device.SetPhysicalAddressJob;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;

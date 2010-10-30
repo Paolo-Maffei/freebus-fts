@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeoutException;
 
+import org.freebus.fts.backend.exception.JobFailedException;
 import org.freebus.knxcomm.BusInterface;
 
 /**
@@ -37,8 +38,9 @@ public abstract class ListenableJob implements Job
     * 
     * @throws IOException
     * @throws TimeoutException
+    * @throws JobFailedException
     */
-   public abstract void main(BusInterface bus) throws IOException, TimeoutException;
+   public abstract void main(BusInterface bus) throws IOException, TimeoutException, JobFailedException;
 
    /**
     * Do cleanup. The default implementation is empty. Called by
@@ -58,10 +60,10 @@ public abstract class ListenableJob implements Job
     * exception is thrown in {@link #main(BusInterface)} - but not if an
     * exception is thrown in {@link #init(BusInterface)}.
     * 
-    * @throws IOException
+    * @throws JobFailedException
     */
    @Override
-   public final void run(BusInterface bus) throws IOException
+   public final void run(BusInterface bus) throws JobFailedException
    {
       boolean initDone = false;
 
@@ -74,10 +76,15 @@ public abstract class ListenableJob implements Job
 
          main(bus);
       }
-      catch (Exception e)
+      catch (IOException e)
       {
          notifyListener(100, null);
-         throw new IOException(e);
+         throw new JobFailedException(e);
+      }
+      catch (TimeoutException e)
+      {
+         notifyListener(100, null);
+         throw new JobFailedException(e);
       }
       finally
       {
@@ -91,6 +98,7 @@ public abstract class ListenableJob implements Job
    /**
     * {@inheritDoc}
     */
+   @Override
    public final void cancel()
    {
       active = false;
@@ -120,6 +128,7 @@ public abstract class ListenableJob implements Job
    /**
     * {@inheritDoc}
     */
+   @Override
    public final void addListener(JobListener listener)
    {
       listeners.add(listener);
@@ -128,6 +137,7 @@ public abstract class ListenableJob implements Job
    /**
     * {@inheritDoc}
     */
+   @Override
    public final void removeListener(JobListener listener)
    {
       listeners.remove(listener);

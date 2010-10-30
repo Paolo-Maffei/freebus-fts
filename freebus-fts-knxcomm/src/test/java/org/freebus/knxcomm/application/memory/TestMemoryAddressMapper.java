@@ -15,9 +15,9 @@ public class TestMemoryAddressMapper
       final MemoryAddressMapper mapper = new MemoryAddressMapper(0x0010);
       assertNotNull(mapper);
 
-      assertEquals(0x4e, mapper.getAddress(MemoryLocation.Masktype, 0));
+      assertEquals(0x4e, mapper.getAddress(MemoryLocation.MaskType, 0));
       assertEquals(0x5100, mapper.getAddress(MemoryLocation.SystemROM, 0x100));
-      assertEquals(MemoryLocation.Masktype, mapper.getMapping(MemoryLocation.Masktype).getLocation());
+      assertEquals(MemoryLocation.MaskType, mapper.getMapping(MemoryLocation.MaskType).getLocation());
    }
 
    @Test(expected = IOException.class)
@@ -39,6 +39,6 @@ public class TestMemoryAddressMapper
    {
       final MemoryAddressMapper mapper = new MemoryAddressMapper(0x0010);
       assertNotNull(mapper);
-      mapper.getAddress(MemoryLocation.Masktype, 2);
+      mapper.getAddress(MemoryLocation.MaskType, 2);
    }
 }

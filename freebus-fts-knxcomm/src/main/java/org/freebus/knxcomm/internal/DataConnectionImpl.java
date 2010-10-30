@@ -28,6 +28,8 @@ import org.freebus.knxcomm.telegram.Transport;
  */
 public class DataConnectionImpl implements DataConnection, TelegramListener
 {
+   private static final Logger LOGGER = Logger.getLogger(DataConnectionImpl.class);
+
    /**
     * The state of the connection.
     */
@@ -62,7 +64,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final Telegram sendTelegram = new Telegram();
    private final Telegram ackTelegram = new Telegram();
    private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
-   private Semaphore recvSemaphore = new Semaphore(0);
+   private final Semaphore recvSemaphore = new Semaphore(0);
    private int sequence = -1;
    private int deviceDescriptorMaskVersion;
    private MemoryAddressMapper memoryAddressMapper;
@@ -91,6 +93,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    /**
     * {@inheritDoc}
     */
+   @Override
    public synchronized void open() throws IOException
    {
       if (isOpened())
@@ -139,7 +142,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          }
          catch (IOException e)
          {
-            e.printStackTrace();
+            LOGGER.error(e);
          }
          finally
          {
@@ -209,7 +212,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    public Application receive(int timeout) throws IOException
    {
       final Telegram telegram = receiveTelegram(timeout);
-//      Logger.getLogger(getClass()).debug("::: receive: " + telegram);
+      //      logger.debug("::: receive: " + telegram);
 
       if (telegram != null)
          return telegram.getApplication();
@@ -258,7 +261,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       }
       catch (InterruptedException e)
       {
-         e.printStackTrace();
+         LOGGER.error(e);
          return null;
       }
 
@@ -271,6 +274,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    /**
     * {@inheritDoc}
     */
+   @Override
    public List<Application> receiveMultiple(int timeout) throws IOException
    {
       if (timeout > 0)
@@ -358,15 +362,15 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       // sending.
       if (application instanceof Memory && memoryAddressMapper != null)
          ((Memory) application).setAddressMapper(memoryAddressMapper);
-      Logger.getLogger(getClass()).debug("query - sending: " + application);
+      LOGGER.debug("query - sending: " + application);
 
-//      final long start = System.currentTimeMillis();
+      //      final long start = System.currentTimeMillis();
       send(application);
 
-      final int timeout = (int) (/*System.currentTimeMillis() - start + */ 6000);
+      final int timeout = (/*System.currentTimeMillis() - start + */ 6000);
       final Application reply = receive(timeout);
 
-      Logger.getLogger(getClass()).debug("query - reply: " + reply);
+      LOGGER.debug("query - reply: " + reply);
       return reply;
    }
 
@@ -376,7 +380,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      Logger.getLogger(getClass()).debug("++ Recv: " + telegram);
+      LOGGER.debug("++ Recv: " + telegram);
 
       if (!telegram.getFrom().equals(addr))
          return;
@@ -393,7 +397,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
             deviceDescriptorMaskVersion = ((DeviceDescriptor0) ddapp.getDescriptor()).getMaskVersion();
       }
 
-      Logger.getLogger(getClass()).debug("++ Telegram received: " + telegram);
+      LOGGER.debug("++ Telegram received: " + telegram);
 
       synchronized (recvQueue)
       {
@@ -409,12 +413,12 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
             try
             {
-               Logger.getLogger(getClass()).debug("++ Send: " + ackTelegram.getTransport());
+               LOGGER.debug("++ Send: " + ackTelegram.getTransport());
                busInterface.send(ackTelegram);
             }
             catch (IOException e)
             {
-               Logger.getLogger(getClass()).warn("Failed to send acknowledge", e);
+               LOGGER.warn("Failed to send acknowledge", e);
             }
          }
       }
@@ -428,7 +432,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
-      Logger.getLogger(getClass()).debug("++ Sent: " + telegram);
+      LOGGER.debug("++ Sent: " + telegram);
    }
 
    /**
@@ -445,15 +449,18 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          try
          {
             final DeviceDescriptorResponse reply = (DeviceDescriptorResponse) query(new DeviceDescriptorRead(0));
+            if (reply == null)
+               throw new RuntimeException("failed to read device descriptor from " + addr);
+
             deviceDescriptorMaskVersion = ((DeviceDescriptor0) reply.getDescriptor()).getMaskVersion();
          }
          catch (TimeoutException e)
          {
-            throw new RuntimeException("failed to get device descriptor from " + addr, e);
+            throw new RuntimeException("failed to read device descriptor from " + addr, e);
          }
          catch (IOException e)
          {
-            throw new RuntimeException("failed to get device descriptor from " + addr, e);
+            throw new RuntimeException("failed to read device descriptor from " + addr, e);
          }
       }
 

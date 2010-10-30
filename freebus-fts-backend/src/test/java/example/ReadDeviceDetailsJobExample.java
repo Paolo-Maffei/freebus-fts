@@ -3,6 +3,7 @@ package example;
 import java.io.IOException;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.backend.exception.JobFailedException;
 import org.freebus.fts.backend.job.JobListener;
 import org.freebus.fts.backend.job.ReadDeviceDetailsJob;
 import org.freebus.fts.common.Environment;
@@ -26,7 +27,7 @@ import org.freebus.knxcomm.types.LinkMode;
 public class ReadDeviceDetailsJobExample extends TelegramAdapter
 {
    // Physical address of the device to read details from
-   private final PhysicalAddress target = new PhysicalAddress(1, 1, 13);
+   private final PhysicalAddress target = new PhysicalAddress(1, 1, 12);
 
    private final BusInterface bus;
 
@@ -52,7 +53,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
     * 
     * @throws IOException
     */
-   public void run() throws IOException
+   public void run() throws JobFailedException
    {
       final ReadDeviceDetailsJob job = new ReadDeviceDetailsJob(target);
 

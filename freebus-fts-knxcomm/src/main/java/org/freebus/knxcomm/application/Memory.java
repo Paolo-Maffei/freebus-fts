@@ -137,13 +137,16 @@ public abstract class Memory extends AbstractApplication
          throw new RuntimeException("no memory address mapper installed");
 
       if (address < 0)
+      {
          address = mapper.getAddress(location, offset);
+      }
       else if (location == null)
       {
          final MemoryAddressMapping am = mapper.getMapping(address);
          if (am != null)
          {
             location = am.getLocation();
+            offset = address - am.getAdress();
          }
       }
    }

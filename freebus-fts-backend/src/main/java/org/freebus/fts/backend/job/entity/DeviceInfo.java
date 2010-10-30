@@ -12,6 +12,8 @@ public class DeviceInfo implements Comparable<DeviceInfo>
 {
    private final PhysicalAddress address;
    private DeviceDescriptor descriptor;
+   private int deviceType;
+   private int manufacturerId;
 
    /**
     * Create a device info object.
@@ -47,6 +49,42 @@ public class DeviceInfo implements Comparable<DeviceInfo>
    public void setDescriptor(DeviceDescriptor descriptor)
    {
       this.descriptor = descriptor;
+   }
+
+   /**
+    * @return The device type.
+    */
+   public int getDeviceType()
+   {
+      return deviceType;
+   }
+
+   /**
+    * Set the device type.
+    * 
+    * @param deviceType - the device type to set
+    */
+   public void setDeviceType(int deviceType)
+   {
+      this.deviceType = deviceType;
+   }
+
+   /**
+    * @return The manufacturer ID.
+    */
+   public int getManufacturerId()
+   {
+      return manufacturerId;
+   }
+
+   /**
+    * Set the manufacturer ID.
+    *
+    * @param manufacturerId - the manufacturer ID to set.
+    */
+   public void setManufacturerId(int manufacturerId)
+   {
+      this.manufacturerId = manufacturerId;
    }
 
    /**

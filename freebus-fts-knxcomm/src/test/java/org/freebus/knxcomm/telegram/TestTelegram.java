@@ -185,6 +185,14 @@ public class TestTelegram
       assertEquals(new DeviceDescriptor0(0x0012), app.getDescriptor());
    }
 
+   @Test(expected = InvalidDataException.class)
+   public final void testFromRawData4() throws IOException
+   {
+      final byte[] data = HexString.valueOf("B0 11 FF 11 FE F3 C0 80 33 20");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
+      System.out.println(telegram);
+   }
+
    @Test
    public void testFromRawDataDisconnect() throws IOException
    {

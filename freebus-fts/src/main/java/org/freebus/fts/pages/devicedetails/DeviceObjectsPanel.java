@@ -17,7 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.backend.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;

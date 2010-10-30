@@ -28,7 +28,7 @@ public final class BusTraceViewerAction extends BasicAction
    BusTraceViewerAction()
    {
       super(I18n.getMessage("BusTraceViewerAction.Name"), I18n.getMessage("BusTraceViewerAction.ToolTip"),
-            ImageCache.getIcon("icons/filefind"));
+            ImageCache.getIcon("icons/view-bus-trace"));
    }
 
    /**

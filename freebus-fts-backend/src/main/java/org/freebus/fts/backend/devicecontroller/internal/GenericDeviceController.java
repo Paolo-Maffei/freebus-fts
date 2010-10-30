@@ -1,4 +1,4 @@
-package org.freebus.fts.backend.devicecontroller;
+package org.freebus.fts.backend.devicecontroller.internal;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -7,12 +7,7 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.freebus.fts.backend.DeviceController;
-import org.freebus.fts.backend.devicecontroller.internal.CommunicationsProgrammer;
-import org.freebus.fts.backend.devicecontroller.internal.ParametersProgrammer;
-import org.freebus.fts.backend.devicecontroller.internal.PhysicalAddressProgrammer;
-import org.freebus.fts.backend.devicecontroller.internal.ProgramProgrammer;
-import org.freebus.fts.backend.exception.DeviceControllerException;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -20,9 +15,7 @@ import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
-import org.freebus.fts.project.DeviceProgramming;
 import org.freebus.fts.project.SubGroupToObject;
-import org.freebus.knxcomm.internal.I18n;
 
 /**
  * A device controller with methods for most BCU types.
@@ -34,7 +27,7 @@ public abstract class GenericDeviceController implements DeviceController
    private ObjectDescriptor[] objectDescriptors;
    private GroupAddress[] groupAddresses;
    private AssociationTableEntry[] associationTable;
-   private Boolean deviceCompatible;
+   private boolean deviceCompatible;
 
    /**
     * Create a basic device controller.
@@ -221,73 +214,20 @@ public abstract class GenericDeviceController implements DeviceController
    }
 
    /**
-    * Ensure that the hardware device is compatible.
-    * Throw an exception if not.
-    *
-    * @throws DeviceControllerException if the hardware device is not compatible.
-    */
-   protected final void ensureCompatible() throws DeviceControllerException
-   {
-      if (!isCompatible())
-         throw new DeviceControllerException(I18n.getMessage("GenericDeviceController.DeviceNotCompatible"));
-   }
-
-   /**
     * {@inheritDoc}
     */
    @Override
    public boolean isCompatible()
    {
-      if (deviceCompatible == null)
-      {
-
-      }
-
       return deviceCompatible;
    }
 
    /**
     * {@inheritDoc}
-    * @throws DeviceControllerException
     */
    @Override
-   public List<DeviceProgrammer> getRequiredProgrammers() throws DeviceControllerException
+   public void setCompatible(boolean deviceCompatible)
    {
-      ensureCompatible();
-
-      final List<DeviceProgrammer> programmers = new Vector<DeviceProgrammer>();
-      final DeviceProgramming progr = device.getProgramming();
-
-      if (!progr.isPhysicalAddressValid())
-         programmers.add(getProgrammer(DeviceProgrammerType.PHYSICAL_ADDRESS));
-      if (!progr.isProgramValid())
-         programmers.add(getProgrammer(DeviceProgrammerType.PROGRAM));
-      if (!progr.isParametersValid())
-         programmers.add(getProgrammer(DeviceProgrammerType.PARAMETERS));
-      if (!progr.isCommunicationValid())
-         programmers.add(getProgrammer(DeviceProgrammerType.COMMUNICATIONS));
-
-      return programmers;
-   }
-
-   /**
-    * {@inheritDoc}
-    * @throws DeviceControllerException
-    */
-   @Override
-   public DeviceProgrammer getProgrammer(DeviceProgrammerType type) throws DeviceControllerException
-   {
-      ensureCompatible();
-
-      if (type == DeviceProgrammerType.PROGRAM)
-         return new ProgramProgrammer(this);
-      else if (type == DeviceProgrammerType.COMMUNICATIONS)
-         return new CommunicationsProgrammer(this);
-      else if (type == DeviceProgrammerType.PARAMETERS)
-         return new ParametersProgrammer(this);
-      else if (type == DeviceProgrammerType.PHYSICAL_ADDRESS)
-         return new PhysicalAddressProgrammer(this);
-
-      throw new IllegalArgumentException("No device programmer available for: " + type);
+      this.deviceCompatible = deviceCompatible;
    }
 }

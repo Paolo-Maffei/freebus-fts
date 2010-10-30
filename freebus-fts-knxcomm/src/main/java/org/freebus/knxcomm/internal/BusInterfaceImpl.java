@@ -23,7 +23,6 @@ import org.freebus.knxcomm.event.CloseEvent;
 import org.freebus.knxcomm.event.FrameEvent;
 import org.freebus.knxcomm.link.Link;
 import org.freebus.knxcomm.link.LinkListener;
-import org.freebus.knxcomm.link.serial.Ft12SerialLink;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
@@ -35,10 +34,11 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class BusInterfaceImpl implements BusInterface
 {
+   private final static Logger LOGGER = Logger.getLogger(BusInterfaceImpl.class);
+
    protected final CopyOnWriteArraySet<TelegramListener> listeners = new CopyOnWriteArraySet<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
    private final Semaphore replySemaphore = new Semaphore(0);
-   private final Logger logger = Logger.getLogger(getClass());
    private Telegram waitConTelegram;
    private final Link link;
    private Receiver receiver;
@@ -88,13 +88,13 @@ public class BusInterfaceImpl implements BusInterface
 
    /**
     * Close the connection.
-    * 
+    *
     * @param normal
     * @param reason
     */
    private void close(boolean normal, String reason)
    {
-      logger.info("closing bus interface - " + reason);
+      LOGGER.info("closing bus interface - " + reason);
 
       link.removeListener(receiver);
       receiver.quit();
@@ -104,15 +104,17 @@ public class BusInterfaceImpl implements BusInterface
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setLinkMode(LinkMode mode) throws IOException
    {
-      logger.debug("Switching to " + mode + " link mode");
+      LOGGER.debug("Switching to " + mode + " link mode");
       link.setLinkMode(mode);
    }
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public LinkMode getLinkMode()
    {
       return link.getLinkMode();
@@ -207,6 +209,8 @@ public class BusInterfaceImpl implements BusInterface
       if (from == null || PhysicalAddress.NULL.equals(from))
          telegram.setFrom(getPhysicalAddress());
 
+      // LOGGER.debug("SEND: " + telegram);
+
       replySemaphore.drainPermits();
       waitConTelegram = telegram;
 
@@ -220,26 +224,24 @@ public class BusInterfaceImpl implements BusInterface
       }
       catch (InterruptedException e)
       {
-         logger.warn("Interrupted while waiting for send confirmation", e);
+         LOGGER.warn("Interrupted while waiting for send confirmation", e);
       }
       finally
       {
          waitConTelegram = null;
       }
 
-      logger.error("Sent telegram was not confirmed within " + waitTimeMS + "ms");
+      LOGGER.error("Sent telegram was not confirmed by the link / BAU within " + waitTimeMS + "ms");
       throw new IOException("Sent telegram was not confirmed: " + telegram);
    }
 
    /**
-    * FT1.2 receiver thread for the {@link Ft12SerialLink FT1.2 serial
-    * communication link}.
+    * Telegram receiver thread.
     */
    private final class Receiver extends Thread implements LinkListener
    {
-      private final Logger logger = Logger.getLogger(getClass());
       private final Queue<FrameEvent> receiveQueue = new ConcurrentLinkedQueue<FrameEvent>();
-      private final Semaphore received = new Semaphore(0);
+      private final Semaphore received = new Semaphore(0, true);
       private volatile boolean active;
 
       Receiver()
@@ -267,7 +269,7 @@ public class BusInterfaceImpl implements BusInterface
                catch (InterruptedException e)
                {
                   if (active)
-                     logger.warn("interrupted", e);
+                     LOGGER.warn("interrupted", e);
                }
 
                if (active)
@@ -283,7 +285,7 @@ public class BusInterfaceImpl implements BusInterface
 
       /**
        * Process a frame event.
-       * 
+       *
        * @param e - the frame event to process.
        * @return true if the frame was valid, false if not.
        */
@@ -299,7 +301,7 @@ public class BusInterfaceImpl implements BusInterface
             catch (IOException ex)
             {
                final byte[] data = e.getData();
-               logger.warn("invalid EMI frame, discarding " + data.length + " bytes:" + HexString.toString(data));
+               LOGGER.warn("invalid EMI frame, discarding " + data.length + " bytes:" + HexString.toString(data));
                return false;
             }
          }
@@ -312,6 +314,8 @@ public class BusInterfaceImpl implements BusInterface
             {
                if (replySemaphore.hasQueuedThreads() && telegram.isSimilar(waitConTelegram))
                   replySemaphore.release();
+
+//               LOGGER.debug("RECV CON: " + telegram);
 
                notifyListenersSent(telegram);
             }

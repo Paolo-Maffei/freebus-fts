@@ -74,7 +74,7 @@ public final class Device implements Comparable<Device>
    private Map<Parameter, DeviceParameter> parameterValues = new HashMap<Parameter, DeviceParameter>();
 
    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true, mappedBy = "device")
-   private List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
+   private final List<DeviceObject> deviceObjects = new Vector<DeviceObject>();
 
    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "device")
    private DeviceProgramming programming;
@@ -167,7 +167,13 @@ public final class Device implements Comparable<Device>
     */
    public void setAddress(int address)
    {
-      this.address = address;
+      if (this.address != address)
+      {
+         this.address = address;
+
+         getProgramming().setPhysicalAddressValid(false);
+         getProgramming().setLastModifiedNow();
+      }
    }
 
    /**
@@ -322,7 +328,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Set the description.
-    *
+    * 
     * @param description - the description to set
     */
    public void setDescription(String description)
@@ -366,7 +372,7 @@ public final class Device implements Comparable<Device>
    /**
     * Get the device programming details object. A new programming details
     * object is created if none exists.
-    *
+    * 
     * @return The programming details object.
     */
    public synchronized DeviceProgramming getProgramming()
@@ -385,6 +391,17 @@ public final class Device implements Comparable<Device>
    public boolean hasProgramming()
    {
       return programming != null;
+   }
+
+   /**
+    * Test if the (hardware) device requires programming.
+    * 
+    * @return True if the device requires programming, false if the device is up
+    *         to date.
+    */
+   public boolean isProgrammingRequired()
+   {
+      return programming != null && !programming.isValid();
    }
 
    /**
@@ -462,7 +479,7 @@ public final class Device implements Comparable<Device>
     */
    public void updateDeviceObjects()
    {
-//      Logger.getLogger(getClass()).debug("updateDeviceObjects");
+      // Logger.getLogger(getClass()).debug("updateDeviceObjects");
 
       if (program == null)
       {
@@ -480,7 +497,7 @@ public final class Device implements Comparable<Device>
             {
                Logger.getLogger(getClass()).error(
                      "Inconsistency detected: com-objects #" + visibleComObjects.get(number).getId() + " and #"
-                           + comObject.getId() + " are visible and have the same unique com-object number " + number);
+                     + comObject.getId() + " are visible and have the same unique com-object number " + number);
             }
             visibleComObjects.put(number, comObject);
          }
@@ -524,22 +541,20 @@ public final class Device implements Comparable<Device>
          deviceObjects.add(devObject);
       }
 
-//      for (final DeviceObject devObject : deviceObjects)
-//         Logger.getLogger(getClass()).debug(
-//               "  visible device object #" + devObject.getId() + " (com-object #" + devObject.getComObject().getId()
-//                     + ")");
+      // for (final DeviceObject devObject : deviceObjects)
+      // Logger.getLogger(getClass()).debug(
+      // "  visible device object #" + devObject.getId() + " (com-object #" +
+      // devObject.getComObject().getId()
+      // + ")");
    }
 
    /**
     * Update the device parameters. Call when the parameters of the device
     * changed.
-    * 
-    * @deprecated probably not used?
     */
-   @Deprecated
    public void updateDeviceParameters()
    {
-      throw new RuntimeException("not implemented");
+      // TODO
    }
 
    /**

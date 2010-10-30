@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.AbstractAction;
+import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
@@ -44,7 +45,7 @@ public class TopologyView extends AbstractTreeView
    private final Icon lineIcon = ImageCache.getIcon("icons/line");
    private final Icon deviceIcon = ImageCache.getIcon("icons/device");
 
-   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEdit, btnDelete;
+   private JButton btnAddArea, btnAddLine, btnAddDevice, btnEdit, btnDelete, btnProgram;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -110,18 +111,7 @@ public class TopologyView extends AbstractTreeView
       btnAddDevice.setIcon(ImageCache.getIcon("icons/device-new"));
       btnAddDevice.setToolTipText(I18n.getMessage("TopologyView.AddDeviceTip"));
 
-      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
-      toolBar.add(btnEdit);
-      btnEdit.setEnabled(false);
-      btnEdit.setToolTipText(I18n.getMessage("TopologyView.EditItemTip"));
-      btnEdit.addActionListener(new ActionListener()
-      {
-         @Override
-         public void actionPerformed(ActionEvent arg0)
-         {
-            ProjectManager.getController().edit(getSelectedObject());
-         }
-      });
+      toolBar.add(Box.createHorizontalStrut(4));
 
       btnDelete = toolBar.add(new AbstractAction()
       {
@@ -136,7 +126,35 @@ public class TopologyView extends AbstractTreeView
       toolBar.add(btnDelete);
       btnDelete.setEnabled(false);
       btnDelete.setIcon(ImageCache.getIcon("icons/delete"));
-      btnDelete.setToolTipText(I18n.getMessage("TopologyView.DeleteItemTip"));
+      btnDelete.setToolTipText(I18n.getMessage("TopologyView.DeleteTip"));
+
+      toolBar.add(Box.createHorizontalStrut(4));
+
+      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
+      toolBar.add(btnEdit);
+      btnEdit.setEnabled(false);
+      btnEdit.setToolTipText(I18n.getMessage("TopologyView.EditTip"));
+      btnEdit.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent arg0)
+         {
+            ProjectManager.getController().edit(getSelectedObject());
+         }
+      });
+
+      btnProgram = new ToolBarButton(ImageCache.getIcon("icons/launch"));
+      toolBar.add(btnProgram);
+      btnProgram.setEnabled(false);
+      btnProgram.setToolTipText(I18n.getMessage("TopologyView.ProgramTip"));
+      btnProgram.addActionListener(new ActionListener()
+      {
+         @Override
+         public void actionPerformed(ActionEvent arg0)
+         {
+            ProjectManager.getController().program(getSelectedObject());
+         }
+      });
    }
 
    /**
@@ -288,6 +306,7 @@ public class TopologyView extends AbstractTreeView
          btnAddDevice.setEnabled(false);
          btnEdit.setEnabled(true);
          btnDelete.setEnabled(true);
+         btnProgram.setEnabled(false);
       }
       else if (obj instanceof Line)
       {
@@ -295,6 +314,7 @@ public class TopologyView extends AbstractTreeView
          btnAddDevice.setEnabled(true);
          btnEdit.setEnabled(true);
          btnDelete.setEnabled(true);
+         btnProgram.setEnabled(false);
       }
       else if (obj instanceof Device)
       {
@@ -302,6 +322,8 @@ public class TopologyView extends AbstractTreeView
          btnAddDevice.setEnabled(true);
          btnEdit.setEnabled(true);
          btnDelete.setEnabled(true);
+         //         btnProgram.setEnabled(((Device) obj).isProgrammingRequired());
+         btnProgram.setEnabled(true);
       }
       else
       {
@@ -309,6 +331,7 @@ public class TopologyView extends AbstractTreeView
          btnAddDevice.setEnabled(false);
          btnEdit.setEnabled(false);
          btnDelete.setEnabled(false);
+         btnProgram.setEnabled(false);
       }
    }
 

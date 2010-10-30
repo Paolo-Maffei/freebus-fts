@@ -178,6 +178,21 @@ public class TestMemoryRead
       assertEquals(1, app.getCount());
    }
 
+   @Test
+   public final void testLocationToString() throws Exception
+   {
+      final MemoryRead app = new MemoryRead(MemoryLocation.ApplicationID, 0, 1);
+
+      assertEquals(MemoryLocation.ApplicationID, app.getLocation());
+      assertEquals(0, app.getOffset());
+      assertEquals(1, app.getCount());
+
+      final MemoryAddressMapper mapper = MemoryAddressMapperFactory.getMemoryAddressMapper(0x12);
+      assertNotNull(mapper);
+
+      assertNotNull(app.toString());
+   }
+
    @Test(expected = RuntimeException.class)
    public final void testLocationNoMapper() throws Exception
    {

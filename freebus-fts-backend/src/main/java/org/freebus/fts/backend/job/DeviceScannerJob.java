@@ -5,13 +5,15 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.backend.internal.I18n;
 import org.freebus.fts.backend.job.entity.DeviceInfo;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.application.ApplicationType;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
-import org.freebus.knxcomm.internal.I18n;
+import org.freebus.knxcomm.application.MemoryRead;
+import org.freebus.knxcomm.application.MemoryResponse;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramReceiver;
@@ -19,14 +21,18 @@ import org.freebus.knxcomm.telegram.Transport;
 
 /**
  * Scan for devices on a KNX/EIB network line.
- * 
+ *
  * Use a {@link DeviceScannerJobListener} listener to get informed about the
  * progress of this job.
  */
 public final class DeviceScannerJob extends ListenableJob
 {
+   private final static Logger LOGGER = Logger.getLogger(DeviceScannerJob.class);
+
    final Map<PhysicalAddress, DeviceInfo> deviceDescriptors = new TreeMap<PhysicalAddress, DeviceInfo>();
    final Telegram dataTelegram = new Telegram();
+   final Telegram memReadTelegram = new Telegram();
+   private BusInterface bus;
    private TelegramReceiver receiver;
    private final int area, line;
    private int minAddress = 0;
@@ -35,7 +41,7 @@ public final class DeviceScannerJob extends ListenableJob
    /**
     * Create a device scanner job that will scan for devices in a specific area
     * and line.
-    * 
+    *
     * @param area - the area address (0..15) to scan
     * @param line - the line address (0..15) to scan
     */
@@ -47,6 +53,12 @@ public final class DeviceScannerJob extends ListenableJob
       dataTelegram.setFrom(PhysicalAddress.NULL);
       dataTelegram.setPriority(Priority.SYSTEM);
       dataTelegram.setTransport(Transport.Connect);
+
+      memReadTelegram.setFrom(PhysicalAddress.NULL);
+      memReadTelegram.setPriority(Priority.SYSTEM);
+      memReadTelegram.setTransport(Transport.Connected);
+      memReadTelegram.setApplication(new MemoryRead(0x104, 4));
+      memReadTelegram.setSequence(1);
    }
 
    /**
@@ -59,7 +71,7 @@ public final class DeviceScannerJob extends ListenableJob
 
    /**
     * Set the minimum address that is scanned.
-    * 
+    *
     * @param minAddress - the minimum address to set (0..255)
     * @throws IllegalArgumentException if the address is out of range.
     */
@@ -81,7 +93,7 @@ public final class DeviceScannerJob extends ListenableJob
 
    /**
     * Set the maximum address that is scanned.
-    * 
+    *
     * @param maxAddress - the maximum address to set (0..255)
     * @throws IllegalArgumentException if the address is out of range.
     */
@@ -99,17 +111,19 @@ public final class DeviceScannerJob extends ListenableJob
    @Override
    public String getLabel()
    {
-      return I18n.formatMessage("DeviceScannerJob.Label", new Object[] { area + "." + line });
+      return I18n.formatMessage("DeviceScannerJob.Label", area + "." + line);
    }
 
    /**
     * {@inheritDoc}
-    * 
+    *
     * @throws IOException
     */
    @Override
    public void main(BusInterface bus) throws IOException
    {
+      this.bus = bus;
+
       receiver = new TelegramReceiver(bus);
       receiver.setDest(null);
 
@@ -126,13 +140,13 @@ public final class DeviceScannerJob extends ListenableJob
       final int addressRange = maxAddress - minAddress + 1;
       for (int address = minAddress; address <= maxAddress && isActive(); ++address)
       {
-         Logger.getLogger(getClass()).info("Probing " + area + "." + line + "." + address);
+         LOGGER.info("Probing " + area + "." + line + "." + address);
 
          dataTelegram.setDest(new PhysicalAddress(area, line, address));
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
-         msleep(50);
+         msleep(10);
 
          // Freebus LPC controllers currently (2010/03) need an extra telegram
          // to be detected. We want to read the device descriptor anyways, so it
@@ -144,15 +158,16 @@ public final class DeviceScannerJob extends ListenableJob
          dataTelegram.setSequence(0);
          dataTelegram.setApplication(new DeviceDescriptorRead(0));
          bus.send(dataTelegram);
-         msleep(50);
+         msleep(10);
 
          final int donePerc = (address - minAddress) * 80 / addressRange;
          notifyListener(donePerc, I18n.getMessage("DeviceScannerJob.Scanning"));
          processAnswers(100);
       }
 
-      // Wait 6+ seconds for answers at the end.
-      for (int wait = 0; wait < 120 && isActive(); wait += 5)
+      // Wait some seconds for answers at the end. Default: 6
+      final int waitSec = 2;
+      for (int wait = 0; wait < waitSec*20 && isActive(); wait += 5)
       {
          notifyListener(85 + wait / 10, I18n.getMessage("DeviceScannerJob.WaitAnswers"));
          if (!processAnswers(500) && wait > 60)
@@ -163,7 +178,7 @@ public final class DeviceScannerJob extends ListenableJob
    /**
     * Get a device info for a physical address. If no device info exists, one is
     * created.
-    * 
+    *
     * @param address - the physical address to search for.
     * @return The device info.
     */
@@ -172,6 +187,8 @@ public final class DeviceScannerJob extends ListenableJob
       DeviceInfo info = deviceDescriptors.get(address);
       if (info == null)
       {
+         LOGGER.info("Found device: " + address);
+
          info = new DeviceInfo(address);
          deviceDescriptors.put(address, info);
       }
@@ -181,9 +198,9 @@ public final class DeviceScannerJob extends ListenableJob
 
    /**
     * Receive answer telegrams
-    * 
+    *
     * @param waitTime - how long to wait for telegrams, in milliseconds
-    * 
+    *
     * @return true if answers were processed, false if not
     */
    public boolean processAnswers(int waitTime)
@@ -202,12 +219,36 @@ public final class DeviceScannerJob extends ListenableJob
          {
             gotAnswers = true;
 
-            Logger.getLogger(getClass()).info("Found device: " + telegram.getFrom());
-
             final DeviceDescriptorResponse ddApp = (DeviceDescriptorResponse) telegram.getApplication();
 
             final DeviceInfo info = getDeviceInfo(telegram.getFrom());
             info.setDescriptor(ddApp.getDescriptor());
+
+            fireDeviceInfo(info);
+
+            synchronized (memReadTelegram)
+            {
+               memReadTelegram.setDest(telegram.getFrom());
+               try
+               {
+                  bus.send(memReadTelegram);
+               }
+               catch (IOException e)
+               {
+                  LOGGER.warn(e);
+               }
+            }
+         }
+         else if (telegram.getApplicationType() == ApplicationType.Memory_Response)
+         {
+            gotAnswers = true;
+            // LOGGER.info("+++ Device memory from " + telegram.getFrom() + ": " + telegram.getApplication());
+
+            final byte[] mem = ((MemoryResponse) telegram.getApplication()).getData();
+
+            final DeviceInfo info = getDeviceInfo(telegram.getFrom());
+            info.setManufacturerId(mem[0] & 255);
+            info.setDeviceType(((mem[1] & 255) << 8) | (mem[2] & 255));
 
             fireDeviceInfo(info);
          }
@@ -218,7 +259,7 @@ public final class DeviceScannerJob extends ListenableJob
 
    /**
     * Inform all listeners about new device informations.
-    * 
+    *
     * @param info - the device information.
     */
    protected void fireDeviceInfo(DeviceInfo info)

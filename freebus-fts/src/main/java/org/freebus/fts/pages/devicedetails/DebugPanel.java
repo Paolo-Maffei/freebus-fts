@@ -19,7 +19,7 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.backend.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;

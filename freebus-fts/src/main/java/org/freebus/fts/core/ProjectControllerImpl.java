@@ -1,7 +1,13 @@
 package org.freebus.fts.core;
 
 import org.freebus.fts.MainWindow;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceControllerFactory;
+import org.freebus.fts.backend.exception.DeviceControllerException;
+import org.freebus.fts.backend.job.JobQueue;
+import org.freebus.fts.backend.job.device.DeviceProgrammerJob;
 import org.freebus.fts.dialogs.AddDeviceDialog;
+import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.pages.AreaDetails;
 import org.freebus.fts.pages.BuildingDetails;
 import org.freebus.fts.pages.LineDetails;
@@ -202,6 +208,33 @@ public final class ProjectControllerImpl implements ProjectController
          remove(obj);
 
       ProjectManager.fireComponentRemoved(subGroup);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public void program(Object obj)
+   {
+      if (obj instanceof Device)
+         program((Device) obj);
+   }
+
+   /**
+    * Program a device
+    */
+   public void program(Device device)
+   {
+      try
+      {
+         final DeviceController controller = DeviceControllerFactory.getDeviceController(device);
+         for (DeviceProgrammerJob job: controller.getRequiredProgrammerJobs())
+            JobQueue.getDefaultJobQueue().add(job);
+      }
+      catch (DeviceControllerException e)
+      {
+         Dialogs.showExceptionDialog(e, null);
+      }
    }
 
    /**

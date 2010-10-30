@@ -14,8 +14,8 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.backend.DeviceController;
-import org.freebus.fts.backend.DeviceControllerFactory;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceControllerFactory;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.elements.services.ImageCache;

@@ -23,8 +23,7 @@ public interface ProjectController
    void add(VirtualDevice dev);
 
    /**
-    * Add a building to the project. The building may
-    * have a parent building.
+    * Add a building to the project. The building may have a parent building.
     * 
     * @param building - the building to add.
     */
@@ -32,7 +31,7 @@ public interface ProjectController
 
    /**
     * Add a room to a building.
-    *
+    * 
     * @param building - the building to add the room to.
     * @param room - the room to add.
     */
@@ -52,12 +51,20 @@ public interface ProjectController
 
    /**
     * Remove an object. Calls the proper remove method to do the job (e.g.
-    * {@link #remove(Device)}). Does nothing and returns false if <code>obj</code>
-    * is null or has an unsupported type.
+    * {@link #remove(Device)}). Does nothing and returns false if
+    * <code>obj</code> is null or has an unsupported type.
     * 
     * @param obj - the object to remove from the project.
     */
    boolean remove(Object obj);
+
+   /**
+    * Program an object. Programs the device, or the devices that the object
+    * contains if the object is no device.
+    * 
+    * @param obj - the object to program.
+    */
+   void program(Object obj);
 
    /**
     * The project has changed. Call after the new project has been loaded or

@@ -166,6 +166,6 @@ public class MemoryRead extends Memory
    @Override
    public String toString()
    {
-      return super.toString() + " " + getCount() + " bytes";
+      return super.toString() + ", " + getCount() + " bytes";
    }
 }

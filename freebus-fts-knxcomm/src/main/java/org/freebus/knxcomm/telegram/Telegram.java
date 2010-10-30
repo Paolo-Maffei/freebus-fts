@@ -355,9 +355,9 @@ public class Telegram implements Cloneable
       final int destAddr = in.readUnsignedShort();
 
       /*
-       * DRL byte (DRL means: destination address, routing, length). bit 7:
-       * destination is 0=physical address, 1=group address bit 6..4: routing
-       * hop count: 0=never route, 1..6=number of routings, 7=always route bit
+       * DRL byte (DRL means: destination address, routing, length).
+       * bit 7: destination is 0=physical address, 1=group address bit
+       * 6..4: routing hop count: 0=never route, 1..6=number of routings, 7=always route bit
        * 3..0: data length minus 2: 0 means 2 bytes, 15 means 17 bytes
        */
       final int drl = in.readUnsignedByte();
@@ -583,7 +583,7 @@ public class Telegram implements Cloneable
       final Telegram oo = (Telegram) o;
 
       return from.equals(oo.from) && dest.equals(oo.dest) && transport == oo.transport && sequence == oo.sequence
-            && (application == null ? oo.application == null : application.equals(oo.application));
+      && (application == null ? oo.application == null : application.equals(oo.application));
    }
 
    /**
@@ -596,9 +596,9 @@ public class Telegram implements Cloneable
    public boolean isSimilar(Telegram o)
    {
       return (dest == null ? o.dest == null : dest.equals(o.dest))
-            && transport.mask == o.transport.mask && transport.value == o.transport.value
-            && (transport != Transport.Connected || sequence == o.sequence)
-            && (!transport.hasApplication || application.getType() == o.application.getType());
+      && transport.mask == o.transport.mask && transport.value == o.transport.value
+      && (transport != Transport.Connected || sequence == o.sequence)
+      && (!transport.hasApplication || application.getType() == o.application.getType());
    }
 
    /**

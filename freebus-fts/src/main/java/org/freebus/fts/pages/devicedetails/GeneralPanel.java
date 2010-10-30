@@ -24,7 +24,7 @@ import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.backend.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.CatalogEntryDetails;
 import org.freebus.fts.components.DeviceProgrammingPanel;
@@ -134,7 +134,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
          public void actionPerformed(ActionEvent e)
          {
             final Object sel = addrCombo.getSelectedItem();
-            if (sel == null)
+            if (updating || sel == null)
                return;
 
             final int newNodeAddr = Integer.parseInt(sel.toString().trim());
@@ -162,7 +162,7 @@ public class GeneralPanel extends JPanel implements DeviceEditorComponent
          public void actionPerformed(ActionEvent e)
          {
             final Object sel = roomCombo.getSelectedItem();
-            if (!(sel instanceof RoomItem))
+            if (updating || !(sel instanceof RoomItem))
                return;
 
             Room room = ((RoomItem) sel).room;

@@ -14,7 +14,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.freebus.fts.I18n;
-import org.freebus.fts.backend.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.components.memorytable.DeviceMemoryTableModel;
 import org.freebus.fts.components.memorytable.MemoryCell;
 import org.freebus.fts.components.memorytable.MemoryCellRenderer;

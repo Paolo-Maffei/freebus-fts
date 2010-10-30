@@ -68,8 +68,8 @@ public class MemoryConnectionAdapter
    }
 
    /**
-    * Read count bytes from the count bytes from a memory address which is
-    * specified by a location and an offset.
+    * Read count bytes from a memory address which is specified by a location
+    * and an offset.
     * 
     * @param location - the memory location.
     * @param offset - the offset relative to the location.

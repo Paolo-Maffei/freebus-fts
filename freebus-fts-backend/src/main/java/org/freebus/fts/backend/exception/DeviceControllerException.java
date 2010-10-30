@@ -1,6 +1,6 @@
 package org.freebus.fts.backend.exception;
 
-import org.freebus.fts.backend.DeviceController;
+import org.freebus.fts.backend.devicecontroller.DeviceController;
 
 /**
  * An exception that occurs in {@link DeviceController}s.

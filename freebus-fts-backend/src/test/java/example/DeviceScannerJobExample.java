@@ -32,16 +32,16 @@ public class DeviceScannerJobExample implements TelegramListener
       //
       // Bus connection
       //
-//      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      //      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
       bus = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
-//      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
+      //      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.addListener(this);
       bus.open(LinkMode.LinkLayer);
 
       final DeviceScannerJob job = new DeviceScannerJob(zone, line);
       job.setMinAddress(1);
-      job.setMaxAddress(40);
+      job.setMaxAddress(12);
       job.run(bus);
    }
 

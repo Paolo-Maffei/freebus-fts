@@ -1,7 +1,6 @@
 package org.freebus.fts.backend.job;
 
-import java.io.IOException;
-
+import org.freebus.fts.backend.exception.JobFailedException;
 import org.freebus.knxcomm.BusInterface;
 
 /**
@@ -12,9 +11,9 @@ public interface Job
 {
    /**
     * Do the work, using the given {@link BusInterface} bus-interface.
-    * @throws IOException 
+    * @throws JobFailedException
     */
-   public void run(BusInterface bus) throws IOException;
+   public void run(BusInterface bus) throws JobFailedException;
 
    /**
     * Cancel the job. The job shall exit when it is running.
