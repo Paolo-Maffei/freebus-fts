@@ -30,6 +30,20 @@ public class BcuType
    }
 
    /**
+    * Create a BCU-type object.
+    *
+    * @param id - the id.
+    * @param name - the name of the BCU type.
+    * @param cpuName - the name of the CPU.
+    */
+   public BcuType(int id, String name, String cpuName)
+   {
+      this.id = id;
+      this.name = name;
+      this.cpuName = cpuName;
+   }
+
+   /**
     * @return the ID of the BCU type
     */
    public int getId()

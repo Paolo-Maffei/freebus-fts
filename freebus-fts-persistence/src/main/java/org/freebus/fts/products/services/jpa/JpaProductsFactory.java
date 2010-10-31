@@ -8,6 +8,7 @@ import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
+import org.freebus.fts.products.services.MaskService;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -120,5 +121,14 @@ public final class JpaProductsFactory implements ProductsFactory
    public ProgramDescriptionService getProgramDescriptionService()
    {
       return new JpaProgramDescriptionService(entityManager);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public MaskService getMaskService()
+   {
+      return new JpaMaskService(entityManager);
    }
 }

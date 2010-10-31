@@ -39,7 +39,7 @@ public final class SetPhysicalAddressJob extends ListenableJob implements Device
 
    /**
     * Create a physical address setter job.
-    * 
+    *
     * @param newAddress - the address to set.
     */
    public SetPhysicalAddressJob(PhysicalAddress newAddress)
@@ -50,7 +50,7 @@ public final class SetPhysicalAddressJob extends ListenableJob implements Device
    /**
     * Create a physical address setter job. The device's programming
     * state is updated after successful programming.
-    * 
+    *
     * @param device - the device to program.
     */
    public SetPhysicalAddressJob(Device device)
@@ -84,7 +84,7 @@ public final class SetPhysicalAddressJob extends ListenableJob implements Device
 
    /**
     * {@inheritDoc}
-    * 
+    *
     * @throws IOException
     * @throws JobFailedException
     */
@@ -192,7 +192,7 @@ public final class SetPhysicalAddressJob extends ListenableJob implements Device
       {
          final DeviceProgramming progr = device.getProgramming();
 
-         progr.setPhysicalAddressValid(true);
+         progr.setPhysicalAddress(newAddress);
          progr.setLastUploadNow();
       }
    }

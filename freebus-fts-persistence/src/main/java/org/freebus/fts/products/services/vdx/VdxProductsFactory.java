@@ -10,6 +10,7 @@ import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.ManufacturerService;
+import org.freebus.fts.products.services.MaskService;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -20,13 +21,13 @@ import org.freebus.fts.products.services.VirtualDeviceService;
 /**
  * Factory for accessing data access objects for the org.freebus.fts.products
  * database that are stored in a vd_ file.
- * 
+ *
  * The access is read-only for now.
  */
 public final class VdxProductsFactory implements ProductsFactory
 {
    private final VdxEntityManager manager;
-   private VdxEntityTransaction transaction = new VdxEntityTransaction();
+   private final VdxEntityTransaction transaction = new VdxEntityTransaction();
 
    private CatalogEntryService catalogEntryService;
    private FunctionalEntityService functionalEntityService;
@@ -57,10 +58,10 @@ public final class VdxProductsFactory implements ProductsFactory
 
    /**
     * Create a factory for the file fileName.
-    * 
+    *
     * @param file - the vd_ file that is processed.
     * @param persistenceUnitName - the name of the persistence unit.
-    * 
+    *
     * @throws PersistenceException
     */
    public VdxProductsFactory(File file, String persistenceUnitName) throws PersistenceException
@@ -174,5 +175,14 @@ public final class VdxProductsFactory implements ProductsFactory
       if (programDescriptionService == null)
          programDescriptionService = new VdxProgramDescriptionService(manager.getReader());
       return programDescriptionService;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public MaskService getMaskService()
+   {
+      return null;
    }
 }

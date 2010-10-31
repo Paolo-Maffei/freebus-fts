@@ -31,7 +31,7 @@ public abstract class PersistenceTestCase
    protected final ConnectionDetails conDetails;
 
    /**
-    * The name of the HSQL database.
+    * The name of the H2 / HSQL database.
     */
    protected final String databaseName = getClass().getSimpleName();
 

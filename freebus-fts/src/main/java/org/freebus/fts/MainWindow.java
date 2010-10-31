@@ -13,7 +13,6 @@ import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.actions.Actions;
 import org.freebus.fts.backend.job.JobQueue;
 import org.freebus.fts.backend.job.JobQueueListener;
@@ -181,8 +180,8 @@ public final class MainWindow extends WorkBench implements JobQueueListener
          if (!jobQueueView.isVisible())
             jobQueueView.setVisible(true);
 
-         if (event.message != null)
-            Logger.getLogger(getClass()).info(event.job.getLabel() + ": " + event.message);
+//         if (event.message != null)
+//            Logger.getLogger(getClass()).info(event.job.getLabel() + ": " + event.message);
       }
 
       jobQueueView.jobQueueEvent(event);

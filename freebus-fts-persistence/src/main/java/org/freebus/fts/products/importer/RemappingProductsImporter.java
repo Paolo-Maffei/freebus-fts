@@ -28,6 +28,7 @@ import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
 import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;
+import org.freebus.fts.products.services.MaskService;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductService;
 import org.freebus.fts.products.services.ProductsFactory;
@@ -48,7 +49,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create a products importer that remaps IDs to be unique during import.
-    * 
+    *
     * @param sourceFactory
     * @param destFactory
     */
@@ -99,7 +100,7 @@ public final class RemappingProductsImporter implements ProductsImporter
    public String getFingerPrint(VirtualDevice device)
    {
       return device.getCatalogEntry().getManufacturer().getId() + ":" + device.getProductTypeId() + ":"
-      + getFingerPrint(device.getProgram()) + ":" + device.getName();
+            + getFingerPrint(device.getProgram()) + ":" + device.getName();
    }
 
    /**
@@ -389,6 +390,36 @@ public final class RemappingProductsImporter implements ProductsImporter
    }
 
    /**
+    * Copy a specific program.
+    *
+    * @param program - the program to copy
+    */
+   public void copyProgram(Program program)
+   {
+      final MaskService maskService = ctx.destFactory.getMaskService();
+
+      final Mask mask = program.getMask();
+//      mask.setId(0);
+      maskService.persist(mask);
+
+      for (final S19Block block : program.getS19Blocks())
+         block.setId(0);
+
+      for (final Parameter param : program.getParameters())
+         param.setId(0);
+
+      for (final ParameterType paramType : program.getParameterTypes())
+      {
+         paramType.setId(0);
+
+         for (final ParameterValue paramValue : paramType.getValues())
+            paramValue.setId(0);
+      }
+
+      persist(program);
+   }
+
+   /**
     * Process the application programs.
     */
    public void copyPrograms(List<VirtualDevice> devices)
@@ -412,8 +443,6 @@ public final class RemappingProductsImporter implements ProductsImporter
          if (prog == null)
             continue;
 
-         prog.getMask().setId(0);
-
          final String fingerPrint = getFingerPrint(prog);
          final Program knownProg = knownPrograms.get(fingerPrint);
 
@@ -421,16 +450,14 @@ public final class RemappingProductsImporter implements ProductsImporter
          {
             logger.info("New program: " + prog);
 
-            for (final S19Block block : prog.getS19Blocks())
-               block.setId(0);
-
-            persist(prog);
+            copyProgram(prog);
          }
-         //         else if (prog.getVersion().compareToIgnoreCase(knownProg.getVersion()) > 0)
-         //         {
-         //            logger.info("Newer version of program: " + prog);
-         //            persist(prog);
-         //         }
+         // else if
+         // (prog.getVersion().compareToIgnoreCase(knownProg.getVersion()) > 0)
+         // {
+         // logger.info("Newer version of program: " + prog);
+         // persist(prog);
+         // }
          else
          {
             device.setProgram(knownProg);
@@ -440,7 +467,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Import the virtual devices.
-    * 
+    *
     * @param devices
     */
    public void copyVirtualDevices(List<VirtualDevice> devices)
@@ -487,7 +514,7 @@ public final class RemappingProductsImporter implements ProductsImporter
    /**
     * Import all BCU types of the {@link Product hardware products} and
     * {@link Program application programs} of the virtual devices.
-    * 
+    *
     * @param devices - the virtual devices to process.
     */
    public void copyBcuTypes(List<VirtualDevice> devices)
@@ -501,7 +528,8 @@ public final class RemappingProductsImporter implements ProductsImporter
          if (bcuType != null)
          {
             final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
-            if (bt == null) bcuTypeService.persist(bcuType);
+            if (bt == null)
+               bcuTypeService.persist(bcuType);
             else product.setBcuType(bt);
          }
 
@@ -511,7 +539,8 @@ public final class RemappingProductsImporter implements ProductsImporter
          if (bcuType != null)
          {
             final BcuType bt = bcuTypeService.getBcuType(bcuType.getId());
-            if (bt == null) bcuTypeService.persist(bcuType);
+            if (bt == null)
+               bcuTypeService.persist(bcuType);
             else mask.setBcuType(bt);
          }
       }

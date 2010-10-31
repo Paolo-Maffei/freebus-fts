@@ -54,8 +54,13 @@ public interface ProductsFactory
    public BcuTypeService getBcuTypeService();
 
    /**
-    * Return the resource-level <code>EntityTransaction</code> object. 
-    * The <code>EntityTransaction</code> instance may be used serially to 
+    * @return the service for mask queries.
+    */
+   public MaskService getMaskService();
+
+   /**
+    * Return the resource-level <code>EntityTransaction</code> object.
+    * The <code>EntityTransaction</code> instance may be used serially to
     * begin and commit multiple transactions.
     * @return EntityTransaction instance
     * @throws IllegalStateException if invoked on a JTA

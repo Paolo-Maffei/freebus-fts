@@ -7,6 +7,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,11 +31,13 @@ public class TestRemappingProductsImporter
 {
    private static final File productsFile = new File("src/test/resources/test-device.vd_");
    private static final File productsFile2 = new File("src/test/resources/test-device-2.vd_");
+   private static final File productsFile3 = new File("src/test/resources/test-2092.vd_");
 
    @Test
    public final void importVirtualDevices() throws DAOException
    {
-      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.HSQL_MEM, "TestProductsImporter.importTwice");
+      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.H2_MEM,
+            "TestProductsImporter.importTwice");
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-full", conDetails);
       DatabaseResources.setEntityManagerFactory(emf);
 
@@ -86,15 +89,46 @@ public class TestRemappingProductsImporter
       DatabaseResources.close();
    }
 
+   @Test
+   public final void importTwoPrograms() throws SQLException, ClassNotFoundException
+   {
+      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.H2_MEM,
+            "TestProductsImporter.importTwice");
+      final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-full", conDetails);
+      DatabaseResources.setEntityManagerFactory(emf);
+
+      final EntityTransaction trans = DatabaseResources.getEntityManager().getTransaction();
+      trans.begin();
+
+      final ProductsFactory vdxFactory = ProductsManager.getFactory(productsFile3, "test-full");
+      assertNotNull(vdxFactory);
+
+      final ProductsFactory jpaFactory = ProductsManager.getFactory();
+      assertNotNull(jpaFactory);
+
+      final ProductsImporter importer = new RemappingProductsImporter(vdxFactory, jpaFactory);
+      assertNotNull(importer);
+
+      // Do the import
+      List<VirtualDevice> vdxDevs = vdxFactory.getVirtualDeviceService().getVirtualDevices();
+      importer.copy(vdxDevs);
+      DatabaseResources.getEntityManager().flush();
+
+      trans.rollback();
+      DatabaseResources.close();
+   }
+
    // Test never worked
    @Ignore
    @Test
    public final void importTwice() throws Exception
    {
       final String persistenceUnitName = "test-full-keep-tables";
-      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.HSQL_MEM, "TestProductsImporter.importTwice");
+      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.H2_MEM,
+            "TestProductsImporter.importTwice");
 
-      // Create a database connection so that the database does not get deleted within the
+      // Create a database connection so that the database does not get deleted
+      // within the
       // test steps
       final Connection con = DatabaseResources.createConnection(conDetails);
 
@@ -140,7 +174,8 @@ public class TestRemappingProductsImporter
          final ProductsFactory vdxFactory = ProductsManager.getFactory(productsFile2, persistenceUnitName);
          final ProductsImporter importer = new RemappingProductsImporter(vdxFactory, jpaFactory);
 
-         // Ensure that the device from the previous part of the test is still in the
+         // Ensure that the device from the previous part of the test is still
+         // in the
          // database
          final Manufacturer jpaDevManu = jpaFactory.getManufacturerService().getManufacturer(vdxDevManu.getId());
          assertNotNull(jpaFactory.getVirtualDeviceService().getVirtualDevice(jpaDevManu, vdxDevName));

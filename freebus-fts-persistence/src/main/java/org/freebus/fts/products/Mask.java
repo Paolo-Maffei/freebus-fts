@@ -1,5 +1,6 @@
 package org.freebus.fts.products;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -21,7 +22,7 @@ import javax.persistence.TableGenerator;
 public class Mask
 {
    @Id
-   @TableGenerator(name = "Mask", initialValue = 1, allocationSize = 10)
+   @TableGenerator(name = "Mask", initialValue = 1, allocationSize = 1)
    @GeneratedValue(strategy = GenerationType.TABLE, generator = "Mask")
    @Column(name = "mask_id", nullable = false)
    private int id;
@@ -117,7 +118,7 @@ public class Mask
    @Column(name = "medium_type_number2")
    private Integer mediumTypeNumber2;
 
-   @ManyToOne(optional = false, fetch = FetchType.LAZY)
+   @ManyToOne(optional = false, fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
    @JoinColumn(name = "bcu_type_number", nullable = true, referencedColumnName = "bcu_type_number")
    private BcuType bcuType;
 

@@ -12,12 +12,12 @@ public class DeviceInfo implements Comparable<DeviceInfo>
 {
    private final PhysicalAddress address;
    private DeviceDescriptor descriptor;
-   private int deviceType;
-   private int manufacturerId;
+   private int deviceType = -1;
+   private int manufacturerId = -1;
 
    /**
     * Create a device info object.
-    * 
+    *
     * @param address - the physical address of the device.
     */
    public DeviceInfo(PhysicalAddress address)
@@ -61,7 +61,7 @@ public class DeviceInfo implements Comparable<DeviceInfo>
 
    /**
     * Set the device type.
-    * 
+    *
     * @param deviceType - the device type to set
     */
    public void setDeviceType(int deviceType)

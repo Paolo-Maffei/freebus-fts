@@ -22,10 +22,10 @@ import org.freebus.fts.persistence.vdx.VdxField;
 /**
  * The type of a program's parameter. The parameter type is used to group
  * parameters of the same type that can have the same range of values.
- * 
+ *
  * The parameter type holds e.g. the possible values for a parameter and
  * minimum/maximum values for numbers.
- * 
+ *
  * What one would expect here, which type a parameter is, contains the class
  * {@link ParameterAtomicType}, which can be access with
  * {@link #getAtomicType()}.
@@ -35,7 +35,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
 public class ParameterType
 {
    @Id
-   @TableGenerator(name = "ParameterType", initialValue = 1, allocationSize = 100)
+   @TableGenerator(name = "ParameterType", initialValue = 1, allocationSize = 50)
    @GeneratedValue(strategy = GenerationType.TABLE, generator = "ParameterType")
    @Column(name = "parameter_type_id", nullable = false)
    private int id;
@@ -90,7 +90,7 @@ public class ParameterType
 
    /**
     * Create a parameter type.
-    * 
+    *
     * @param atomicType - the parameter's atomic type.
     */
    public ParameterType(ParameterAtomicType atomicType)
@@ -284,7 +284,7 @@ public class ParameterType
 
    /**
     * Set the size of the parameter in bits.
-    * 
+    *
     * @param size the size to set
     */
    public void setSize(int size)

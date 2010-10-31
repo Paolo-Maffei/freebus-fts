@@ -315,7 +315,7 @@ public class BusInterfaceImpl implements BusInterface
                if (replySemaphore.hasQueuedThreads() && telegram.isSimilar(waitConTelegram))
                   replySemaphore.release();
 
-//               LOGGER.debug("RECV CON: " + telegram);
+               LOGGER.debug("SENT: " + telegram);
 
                notifyListenersSent(telegram);
             }

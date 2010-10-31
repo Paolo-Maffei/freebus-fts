@@ -146,7 +146,7 @@ public final class DeviceScannerJob extends ListenableJob
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
-         msleep(10);
+         msleep(100); // wait a little between connect and the first request telegram
 
          // Freebus LPC controllers currently (2010/03) need an extra telegram
          // to be detected. We want to read the device descriptor anyways, so it
@@ -158,16 +158,15 @@ public final class DeviceScannerJob extends ListenableJob
          dataTelegram.setSequence(0);
          dataTelegram.setApplication(new DeviceDescriptorRead(0));
          bus.send(dataTelegram);
-         msleep(10);
 
          final int donePerc = (address - minAddress) * 80 / addressRange;
          notifyListener(donePerc, I18n.getMessage("DeviceScannerJob.Scanning"));
-         processAnswers(100);
+         processAnswers(150);
       }
 
       // Wait some seconds for answers at the end. Default: 6
-      final int waitSec = 2;
-      for (int wait = 0; wait < waitSec*20 && isActive(); wait += 5)
+      final int waitSec = 3;
+      for (int wait = 0; wait < waitSec * 20 && isActive(); wait += 5)
       {
          notifyListener(85 + wait / 10, I18n.getMessage("DeviceScannerJob.WaitAnswers"));
          if (!processAnswers(500) && wait > 60)
@@ -222,27 +221,32 @@ public final class DeviceScannerJob extends ListenableJob
             final DeviceDescriptorResponse ddApp = (DeviceDescriptorResponse) telegram.getApplication();
 
             final DeviceInfo info = getDeviceInfo(telegram.getFrom());
-            info.setDescriptor(ddApp.getDescriptor());
+            final boolean newlyFound = info.getDescriptor() != null;
 
+            info.setDescriptor(ddApp.getDescriptor());
             fireDeviceInfo(info);
 
-            synchronized (memReadTelegram)
+            if (!newlyFound)
             {
-               memReadTelegram.setDest(telegram.getFrom());
-               try
+               synchronized (memReadTelegram)
                {
-                  bus.send(memReadTelegram);
-               }
-               catch (IOException e)
-               {
-                  LOGGER.warn(e);
+                  memReadTelegram.setDest(telegram.getFrom());
+                  try
+                  {
+                     bus.send(memReadTelegram);
+                  }
+                  catch (IOException e)
+                  {
+                     LOGGER.warn(e);
+                  }
                }
             }
          }
          else if (telegram.getApplicationType() == ApplicationType.Memory_Response)
          {
             gotAnswers = true;
-            // LOGGER.info("+++ Device memory from " + telegram.getFrom() + ": " + telegram.getApplication());
+            // LOGGER.info("+++ Device memory from " + telegram.getFrom() + ": "
+            // + telegram.getApplication());
 
             final byte[] mem = ((MemoryResponse) telegram.getApplication()).getData();
 

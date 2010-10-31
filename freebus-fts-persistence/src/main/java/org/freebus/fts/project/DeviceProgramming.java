@@ -11,6 +11,7 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.persistence.vdx.VdxEntity;
 
 /**
@@ -26,6 +27,9 @@ public class DeviceProgramming
    @OneToOne(optional = false)
    private Device device;
 
+   @Column(name = "physical_address")
+   private int physicalAddress;
+
    @Column(name = "last_modified")
    @Temporal(TemporalType.TIMESTAMP)
    private Date lastModified;
@@ -40,9 +44,6 @@ public class DeviceProgramming
    @Column(name = "parameters_valid", nullable = false)
    private boolean parametersValid;
 
-   @Column(name = "physical_address_valid", nullable = false)
-   private boolean physicalAddressValid;
-
    @Column(name = "program", nullable = false)
    private boolean programValid;
 
@@ -55,7 +56,7 @@ public class DeviceProgramming
 
    /**
     * Create a program description object.
-    * 
+    *
     * @param device - the device to which the programming object belongs.
     */
    public DeviceProgramming(Device device)
@@ -73,7 +74,7 @@ public class DeviceProgramming
 
    /**
     * Set the device to which the object belongs.
-    * 
+    *
     * @param device - the device to set.
     */
    public void setDevice(Device device)
@@ -83,7 +84,7 @@ public class DeviceProgramming
 
    /**
     * Get the timestamp when the {@link #getDevice() device} was last modified.
-    * 
+    *
     * @return the last modified timestamp
     */
    public Date getLastModified()
@@ -93,7 +94,7 @@ public class DeviceProgramming
 
    /**
     * Set the timestamp when the {@link #getDevice() device} was last modified.
-    * 
+    *
     * @param lastModified - the last modified timestamp to set
     */
    public void setLastModified(Date lastModified)
@@ -113,7 +114,7 @@ public class DeviceProgramming
    /**
     * Get the timestamp when the device was last programmed. This does not imply
     * that everything in the device is up to date.
-    * 
+    *
     * @return the last upload timestamp.
     */
    public Date getLastUpload()
@@ -132,7 +133,7 @@ public class DeviceProgramming
 
    /**
     * Set the timestamp when the device was last programmed.
-    * 
+    *
     * @param lastUpload - the last upload timestamp.
     */
    public void setLastUpload(Date lastUpload)
@@ -141,16 +142,34 @@ public class DeviceProgramming
    }
 
    /**
+    * @return The physical address that was programmed last.
+    */
+   public PhysicalAddress getPhysicalAddress()
+   {
+      return PhysicalAddress.valueOf(physicalAddress);
+   }
+
+   /**
+    * Set the physical address that was programmed last.
+    *
+    * @param physicalAddress - the physical address to set.
+    */
+   public void setPhysicalAddress(PhysicalAddress physicalAddress)
+   {
+      this.physicalAddress = physicalAddress.getAddr();
+   }
+
+   /**
     * Test if everything in the device is up to date.
     */
    public boolean isValid()
    {
-      return communicationValid && parametersValid && physicalAddressValid && programValid;
+      return communicationValid && parametersValid && programValid && isPhysicalAddressValid();
    }
 
    /**
     * Test if the communication objects in the device are up to date.
-    * 
+    *
     * @return the communication valid flag.
     */
    public boolean isCommunicationValid()
@@ -160,7 +179,7 @@ public class DeviceProgramming
 
    /**
     * Set if the communication objects in the device are up to date.
-    * 
+    *
     * @param communicationValid - the communication valid flag to set
     */
    public void setCommunicationValid(boolean communicationValid)
@@ -170,7 +189,7 @@ public class DeviceProgramming
 
    /**
     * Test if the parameters in the device are up to date.
-    * 
+    *
     * @return the parameters valid flag.
     */
    public boolean isParametersValid()
@@ -180,7 +199,7 @@ public class DeviceProgramming
 
    /**
     * Set if the parameters in the device are up to date.
-    * 
+    *
     * @param parametersValid - the parameters valid flag to set
     */
    public void setParametersValid(boolean parametersValid)
@@ -190,27 +209,17 @@ public class DeviceProgramming
 
    /**
     * Test if the physical address of the device is up to date.
-    * 
-    * @return the physical address valid flag.
+    *
+    * @return True if the physical address is valid.
     */
    public boolean isPhysicalAddressValid()
    {
-      return physicalAddressValid;
-   }
-
-   /**
-    * Set if the physical address of the device is up to date.
-    * 
-    * @param physicalAddressValid - the physical address valid flag to set.
-    */
-   public void setPhysicalAddressValid(boolean physicalAddressValid)
-   {
-      this.physicalAddressValid = physicalAddressValid;
+      return device == null || device.getPhysicalAddress().equals(getPhysicalAddress());
    }
 
    /**
     * Test if the application program of the device is up to date.
-    * 
+    *
     * @return the program valid flag.
     */
    public boolean isProgramValid()
@@ -220,7 +229,7 @@ public class DeviceProgramming
 
    /**
     * Set if the application program of the device is up to date.
-    * 
+    *
     * @param programValid - the program valid flag to set.
     */
    public void setProgramValid(boolean programValid)

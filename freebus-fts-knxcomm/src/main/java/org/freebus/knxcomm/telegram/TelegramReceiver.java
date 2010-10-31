@@ -27,6 +27,8 @@ import org.freebus.knxcomm.application.ApplicationType;
  */
 public class TelegramReceiver extends TelegramAdapter
 {
+   private final static Logger LOGGER = Logger.getLogger(TelegramReceiver.class);
+
    private final LinkedList<Telegram> telegrams = new LinkedList<Telegram>();
    private final Semaphore waitSem = new Semaphore(0);
    private final WeakReference<BusInterface> busInterface;
@@ -181,7 +183,7 @@ public class TelegramReceiver extends TelegramAdapter
 
       synchronized (telegrams)
       {
-//         Logger.getLogger(getClass()).debug("receiveMultiple: " + telegrams.size() + " telegrams received");
+//         LOGGER.debug("receiveMultiple: " + telegrams.size() + " telegrams received");
 
          if (!waitSem.tryAcquire(telegrams.size()))
             throw new RuntimeException("internal error");
@@ -292,7 +294,10 @@ public class TelegramReceiver extends TelegramAdapter
       if (!filter(telegram, isConfirmation))
          return;
 
-      Logger.getLogger(getClass()).debug("RECV filtered: " + telegram);
+      if (isConfirmation)
+         LOGGER.debug("SENT filtered: " + telegram);
+      else LOGGER.debug("RECV filtered: " + telegram);
+
       synchronized (telegrams)
       {
          telegrams.add(telegram);

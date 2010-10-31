@@ -25,6 +25,8 @@ import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.ProductsManager;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 
 /**
@@ -37,7 +39,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
    private DeviceScannerJob job;
 
-   private DefaultTableModel devicesModel = new DefaultTableModel();
+   private final DefaultTableModel devicesModel = new DefaultTableModel();
    private final JTable devicesTable = new ReadOnlyTable(devicesModel);
    private final JScrollPane devicesScrollPane = new JScrollPane(devicesTable);
 
@@ -67,8 +69,9 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
       areaAddrCombo = createNumbersComboBox(0, 15);
       areaAddrCombo.setMaximumRowCount(16);
-      areaAddrCombo.setSelectedItem((Integer) cfg.getIntValue("DeviceScanner.areaAddr", 0));
-      add(areaAddrCombo, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets, 0, 0));
+      areaAddrCombo.setSelectedItem(cfg.getIntValue("DeviceScanner.areaAddr", 0));
+      add(areaAddrCombo,
+            new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets, 0, 0));
       areaAddrCombo.addActionListener(new ActionListener()
       {
          @Override
@@ -83,8 +86,9 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
       lineAddrCombo = createNumbersComboBox(0, 15);
       lineAddrCombo.setMaximumRowCount(16);
-      lineAddrCombo.setSelectedItem((Integer) cfg.getIntValue("DeviceScanner.lineAddr", 0));
-      add(lineAddrCombo, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets, 0, 0));
+      lineAddrCombo.setSelectedItem(cfg.getIntValue("DeviceScanner.lineAddr", 0));
+      add(lineAddrCombo,
+            new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets, 0, 0));
       lineAddrCombo.addActionListener(new ActionListener()
       {
          @Override
@@ -95,12 +99,14 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
       });
 
       lbl = new JLabel(I18n.getMessage("DeviceScanner.FromAddr"));
-      add(lbl, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, new Insets(2, 20, 2, 2), 0, 0));
+      add(lbl, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, new Insets(2, 20, 2, 2),
+            0, 0));
 
       minDeviceAddrCombo = createNumbersComboBox(0, 255);
       minDeviceAddrCombo.setMaximumRowCount(32);
-      minDeviceAddrCombo.setSelectedItem((Integer) cfg.getIntValue("DeviceScanner.deviceMinAddr", 0));
-      add(minDeviceAddrCombo, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets, 0, 0));
+      minDeviceAddrCombo.setSelectedItem(cfg.getIntValue("DeviceScanner.deviceMinAddr", 0));
+      add(minDeviceAddrCombo, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets,
+            0, 0));
       minDeviceAddrCombo.addActionListener(new ActionListener()
       {
          @Override
@@ -119,8 +125,9 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
       maxDeviceAddrCombo = createNumbersComboBox(0, 255);
       maxDeviceAddrCombo.setMaximumRowCount(32);
-      maxDeviceAddrCombo.setSelectedItem((Integer) cfg.getIntValue("DeviceScanner.deviceMaxAddr", 255));
-      add(maxDeviceAddrCombo, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets, 0, 0));
+      maxDeviceAddrCombo.setSelectedItem(cfg.getIntValue("DeviceScanner.deviceMaxAddr", 255));
+      add(maxDeviceAddrCombo, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, stdInsets,
+            0, 0));
       maxDeviceAddrCombo.addActionListener(new ActionListener()
       {
          @Override
@@ -134,7 +141,8 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
          }
       });
 
-      add(startStopButton, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, new Insets(2, 40, 2, 2), 0, 0));
+      add(startStopButton, new GridBagConstraints(++col, 0, 1, 1, 1, 1, anchorW, GridBagConstraints.NONE, new Insets(2,
+            40, 2, 2), 0, 0));
       startStopButton.addActionListener(new ActionListener()
       {
          @Override
@@ -151,21 +159,24 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
          }
       });
 
-      add(Box.createHorizontalGlue(), new GridBagConstraints(++col, 0, 1, 1, 100, 1, anchorW, GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
+      add(Box.createHorizontalGlue(), new GridBagConstraints(++col, 0, 1, 1, 100, 1, anchorW,
+            GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
 
       final int cols = col + 1;
 
       devicesModel.setColumnIdentifiers(new String[] { I18n.getMessage("DeviceScanner.ColAddress"),
+            I18n.getMessage("DeviceScanner.ColManufacturer"), I18n.getMessage("DeviceScanner.ColDeviceType"),
             I18n.getMessage("DeviceScanner.ColInfo") });
       devicesTable.setFillsViewportHeight(true);
 
-      add(devicesScrollPane, new GridBagConstraints(0, 2, cols, 1, 1, 100, anchorW, GridBagConstraints.BOTH, stdInsets, 0, 0));
+      add(devicesScrollPane, new GridBagConstraints(0, 2, cols, 1, 1, 100, anchorW, GridBagConstraints.BOTH, stdInsets,
+            0, 0));
    }
 
    /**
     * Create a combo-box with numbers from minValue to maxValue (including
     * minValue and maxValue).
-    * 
+    *
     * @param minValue - the minimum value.
     * @param maxValue - the maximum value.
     *
@@ -184,6 +195,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    /**
     * {@inheritDoc}
     */
+   @Override
    protected void closeEvent()
    {
       Config.getInstance().save();
@@ -204,7 +216,8 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
    {
       if (job == null)
       {
-         job = new DeviceScannerJob((Integer) areaAddrCombo.getSelectedItem(), (Integer) lineAddrCombo.getSelectedItem());
+         job = new DeviceScannerJob((Integer) areaAddrCombo.getSelectedItem(),
+               (Integer) lineAddrCombo.getSelectedItem());
          job.setMinAddress((Integer) minDeviceAddrCombo.getSelectedItem());
          job.setMaxAddress((Integer) maxDeviceAddrCombo.getSelectedItem());
          job.addListener(this);
@@ -219,7 +232,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
          startStopButton.setText(I18n.getMessage("DeviceScanner.Start"));
       }
    }
-   
+
    /**
     * {@inheritDoc}
     */
@@ -235,7 +248,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
    /**
     * Find the table model row where the device info for the address is stored.
-    * 
+    *
     * @param address - the address to find.
     * @return The row index of the address, or -1 if not found.
     */
@@ -252,22 +265,34 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
    /**
     * Update a device information
-    * 
+    *
     * @param info - the device information.
     */
    public void updateDeviceInfo(DeviceInfo info)
    {
-      final int row = getRowIndex(info.getAddress());
+      int row = getRowIndex(info.getAddress());
       final DeviceDescriptor descriptor = info.getDescriptor();
 
       if (row < 0)
       {
-         devicesModel.addRow(new Object[] { info.getAddress(), descriptor });
+         row = devicesModel.getRowCount();
+         devicesModel.addRow(new Object[] { info.getAddress(), "", "", descriptor });
       }
       else
       {
-         devicesModel.setValueAt(descriptor, row, 1);
+         devicesModel.setValueAt(descriptor, row, 3);
       }
+
+      final int manufacturerId = info.getManufacturerId();
+      if (manufacturerId >= 0)
+      {
+         final Manufacturer manufacturer = ProductsManager.getFactory().getManufacturerService().getManufacturer(manufacturerId);
+         devicesModel.setValueAt(manufacturer == null ? ("#" + manufacturerId) : manufacturer.getName(), row, 1);
+      }
+
+      final int deviceType = info.getDeviceType();
+      if (deviceType >= 0)
+         devicesModel.setValueAt(deviceType, row, 2);
 
       devicesTable.revalidate();
    }
@@ -276,7 +301,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
     * {@inheritDoc}
     */
    @Override
-   public void deviceInfo(final DeviceInfo info)
+   public final void deviceInfo(final DeviceInfo info)
    {
       SwingUtilities.invokeLater(new Runnable()
       {

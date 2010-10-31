@@ -19,12 +19,6 @@
    <scope>compile</scope>
   </dependency>
   <dependency>
-   <groupId>hsqldb</groupId>
-   <artifactId>hsqldb</artifactId>
-   <version>1.8.0.10</version>
-   <scope>test</scope>
-  </dependency>
-  <dependency>
   	<groupId>org.eclipse.persistence</groupId>
   	<artifactId>javax.persistence</artifactId>
   	<version>2.0.0</version>
@@ -41,6 +35,12 @@
   	<groupId>org.liquibase</groupId>
   	<artifactId>liquibase-core</artifactId>
   	<version>1.9.5</version>
+  </dependency>
+  <dependency>
+   <groupId>hsqldb</groupId>
+   <artifactId>hsqldb</artifactId>
+   <version>1.8.0.10</version>
+   <scope>test</scope>
   </dependency>
   <dependency>
   	<groupId>com.h2database</groupId>

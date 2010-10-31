@@ -109,7 +109,7 @@ public final class Device implements Comparable<Device>
    /**
     * Create a device object by using {@link CatalogEntry} and {@link Program}
     * of a given {@link VirtualDevice}.
-    * 
+    *
     * @param virtualDevice the virtual device, from which the
     *           {@link CatalogEntry} and {@link Program} are taken.
     */
@@ -121,7 +121,7 @@ public final class Device implements Comparable<Device>
    /**
     * Create a device object by using {@link CatalogEntry} and {@link Program}
     * of a given {@link VirtualDevice}.
-    * 
+    *
     * @param id the id of the object
     * @param virtualDevice the virtual device, from which the
     *           {@link CatalogEntry} and {@link Program} are taken.
@@ -162,7 +162,7 @@ public final class Device implements Comparable<Device>
    /**
     * Set the address of the device. This is the last number of a physical
     * address (e.g. 12 for 1.3.12)
-    * 
+    *
     * @param address the address to set
     */
    public void setAddress(int address)
@@ -170,8 +170,6 @@ public final class Device implements Comparable<Device>
       if (this.address != address)
       {
          this.address = address;
-
-         getProgramming().setPhysicalAddressValid(false);
          getProgramming().setLastModifiedNow();
       }
    }
@@ -186,7 +184,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Get the physical address of the device.
-    * 
+    *
     * @return the physical address of the device.
     */
    public PhysicalAddress getPhysicalAddress()
@@ -210,7 +208,7 @@ public final class Device implements Comparable<Device>
    /**
     * Set the line to which the device belongs. To add a device to a line, use
     * {@link Line#add(Device)} and not this method.
-    * 
+    *
     * @param line - the line to set.
     */
    public void setLine(Line line)
@@ -221,7 +219,7 @@ public final class Device implements Comparable<Device>
    /**
     * Set the room in which the device is physically installed. To add a device
     * to a room, use {@link Room#add(Device)} and not this method.
-    * 
+    *
     * @param room - the room to set.
     */
    public void setRoom(Room room)
@@ -278,7 +276,7 @@ public final class Device implements Comparable<Device>
     * Get a device parameter. If no device parameter exists, one is created with
     * the parameter's default value as value. Use {@link #getDeviceParameters()}
     * to access the device parameters.
-    * 
+    *
     * @param param - the parameter for which the device parameter is searched.
     * @return The requested device parameter.
     */
@@ -318,7 +316,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Set the name of the device.
-    * 
+    *
     * @param name - the name to set.
     */
    public void setName(String name)
@@ -328,7 +326,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Set the description.
-    * 
+    *
     * @param description - the description to set
     */
    public void setDescription(String description)
@@ -346,7 +344,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Remove the device object from the device.
-    * 
+    *
     * @param deviceObject - the device object to remove.
     * @see DeviceObject#dispose()
     */
@@ -358,7 +356,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Get the map of parameter values of the device. This is an internal method.
-    * 
+    *
     * @return the parameter values of the device.
     */
    synchronized Map<Parameter, DeviceParameter> getParameterValues()
@@ -372,7 +370,7 @@ public final class Device implements Comparable<Device>
    /**
     * Get the device programming details object. A new programming details
     * object is created if none exists.
-    * 
+    *
     * @return The programming details object.
     */
    public synchronized DeviceProgramming getProgramming()
@@ -385,7 +383,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Test if programming details exist for the device.
-    * 
+    *
     * @return True if programming details exist.
     */
    public boolean hasProgramming()
@@ -395,7 +393,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Test if the (hardware) device requires programming.
-    * 
+    *
     * @return True if the device requires programming, false if the device is up
     *         to date.
     */
@@ -406,7 +404,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Test if a specific communication object is visible for this device.
-    * 
+    *
     * @param comObject - the communication object to test.
     * @return true if the communication object is visible.
     */
@@ -429,7 +427,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Find all active / visible device objects.
-    * 
+    *
     * @return An array of all visible device objects.
     */
    public DeviceObject[] getVisibleDeviceObjects()
@@ -451,7 +449,7 @@ public final class Device implements Comparable<Device>
 
    /**
     * Find all active / visible communication objects.
-    * 
+    *
     * @return An array of all visible communication objects.
     * @see #getVisibleDeviceObjects()
     */

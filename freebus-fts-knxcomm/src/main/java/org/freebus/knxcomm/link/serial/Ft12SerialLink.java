@@ -28,11 +28,16 @@ import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A link to the KNX bus via serial port with FT1.2 protocol.
- * 
+ *
  * @see BusInterfaceFactory#newSerialInterface(String)
  */
 public class Ft12SerialLink extends ListenableLink
 {
+   private static final Logger LOGGER = Logger.getLogger(Ft12SerialLink.class);
+
+   // Log sent and received FT1.2 messages
+   private static final boolean LOG_FT12_MESSAGES = true;
+
    // timeout for end of frame exchange in bits
    private static final int EXCHANGE_TIMEOUT = 512;
 
@@ -75,7 +80,7 @@ public class Ft12SerialLink extends ListenableLink
 
    /**
     * Create a connection for the serial port
-    * 
+    *
     * @param portName - the name of the serial port to open
     */
    public Ft12SerialLink(String portName)
@@ -133,7 +138,7 @@ public class Ft12SerialLink extends ListenableLink
          }
          catch (InterruptedException e)
          {
-            logger.error("interrupted waiting for PEI_Identify reply from the BCU", e);
+            LOGGER.error("interrupted waiting for PEI_Identify reply from the BCU", e);
          }
       }
 
@@ -141,7 +146,7 @@ public class Ft12SerialLink extends ListenableLink
       setLinkMode(mode);
       msleep(500);
 
-      logger.debug("FT1.2 link opened");
+      LOGGER.debug("FT1.2 link opened");
    }
 
    /**
@@ -159,7 +164,7 @@ public class Ft12SerialLink extends ListenableLink
     * All registered event listeners get notified. The close event is the last
     * event the listeners receive. If this link is already closed, no action is
     * performed.
-    * 
+    *
     * @param normal - true if it was an intended close.
     * @param reason - a message describing the reason of the close.
     */
@@ -168,7 +173,7 @@ public class Ft12SerialLink extends ListenableLink
       if (state == Ft12State.CLOSED)
          return;
 
-      logger.info("Closing serial port " + portName + " - " + reason);
+      LOGGER.info("Closing serial port " + portName + " - " + reason);
       try
       {
          send(new PEI_Switch_req(PEISwitchMode.NORMAL), false);
@@ -190,7 +195,7 @@ public class Ft12SerialLink extends ListenableLink
       }
       catch (final Exception e)
       {
-         logger.warn("failed to close all serial I/O resources", e);
+         LOGGER.warn("failed to close all serial I/O resources", e);
       }
 
       fireLinkClosed(new CloseEvent(this));
@@ -208,6 +213,7 @@ public class Ft12SerialLink extends ListenableLink
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setLinkMode(LinkMode mode) throws IOException
    {
       PEISwitchMode switchMode;
@@ -244,10 +250,10 @@ public class Ft12SerialLink extends ListenableLink
    /**
     * Send a byte buffer to the BCU. The data is wrapped into a variable length
     * FT1.2 frame.
-    * 
+    *
     * @param data - the data to send
     * @param blocking - shall we wait for an acknowledge from the BCU?
-    * 
+    *
     * @throws KNXAckTimeoutException
     * @throws KNXPortClosedException
     */
@@ -258,7 +264,12 @@ public class Ft12SerialLink extends ListenableLink
       {
          for (int i = 0; i <= REPEAT_LIMIT; ++i)
          {
-            logger.trace("sending FT1.2 frame, " + (blocking ? "" : "non-") + "blocking, attempt " + (i + 1));
+            if (LOG_FT12_MESSAGES)
+            {
+               LOGGER.debug("FT1.2 sent (" + (blocking ? "" : "non-") + "blocking, attempt " + (i + 1) + "): "
+                     + HexString.toString(data));
+            }
+
             sendData(data);
             if (!blocking || waitForAck())
             {
@@ -285,9 +296,9 @@ public class Ft12SerialLink extends ListenableLink
     * Send a fixed-length FT1.2 frame of the type {@link Ft12FrameFormat#FIXED}.
     * The message is sent 3 times before sending fails if it is not
     * acknowledged.
-    * 
+    *
     * @param func - the function of the frame, see {@link Ft12Function}.
-    * 
+    *
     * @throws IOException
     */
    public void send(final Ft12Function func) throws IOException
@@ -298,21 +309,25 @@ public class Ft12SerialLink extends ListenableLink
       buf[2] = buf[1];
       buf[3] = (byte) FT12_END;
 
-      logger.debug("FT1.2 frame sent: " + func.toString());
+      if (LOG_FT12_MESSAGES)
+         LOGGER.debug("FT1.2 sent: " + func.toString());
 
       state = Ft12State.ACK_PENDING;
 
-      outputStream.write(buf);
-      outputStream.flush();
+      synchronized (outputStream)
+      {
+         outputStream.write(buf);
+         outputStream.flush();
+      }
 
       waitForAck();
    }
 
    /**
     * Send data to the BCU and wait for an {@link #waitForAck() acknowledge}.
-    * 
+    *
     * @param data - the data to send.
-    * 
+    *
     * @throws IllegalArgumentException if the data is longer than 255 bytes.
     * @throws KNXPortClosedException if the port is closed.
     * @throws IOException on any I/O related problems.
@@ -339,24 +354,33 @@ public class Ft12SerialLink extends ListenableLink
 
       state = Ft12State.ACK_PENDING;
 
-      outputStream.write(buf);
-      outputStream.flush();
+      synchronized (outputStream)
+      {
+         outputStream.write(buf);
+         outputStream.flush();
+      }
    }
 
    /**
     * Send a FT1.2 acknowledge frame.
-    * 
+    *
     * @throws IOException
     */
    private void sendAck() throws IOException
    {
-      outputStream.write(FT12_ACK);
-      outputStream.flush();
+      synchronized (outputStream)
+      {
+         outputStream.write(FT12_ACK);
+         outputStream.flush();
+      }
+
+      if (LOG_FT12_MESSAGES)
+         LOGGER.debug("FT1.2 ACK sent");
    }
 
    /**
     * Wait for a FT1.2 acknowledge frame.
-    * 
+    *
     * @return true if the acknowledge was received, false if no acknowledge was
     *         received within the timeout.
     */
@@ -396,7 +420,7 @@ public class Ft12SerialLink extends ListenableLink
 
    /**
     * Set the timeouts for the communication.
-    * 
+    *
     * @param baudrate - the baud rate of the serial communication.
     */
    private void setTimeouts(int baudrate)
@@ -412,7 +436,7 @@ public class Ft12SerialLink extends ListenableLink
 
    /**
     * Calculate the FT1.2 checksum for the given data.
-    * 
+    *
     * @param data - the data to process
     * @param offset - the offset within data to start with
     * @param length - the number of bytes to process.
@@ -428,7 +452,7 @@ public class Ft12SerialLink extends ListenableLink
 
    /**
     * Sleep a moment.
-    * 
+    *
     * @param msec - time in milliseconds to sleep.
     */
    private void msleep(int msec)
@@ -444,7 +468,7 @@ public class Ft12SerialLink extends ListenableLink
 
    /**
     * A PEI-Identify.con frame was received.
-    * 
+    *
     * @param data - the raw data of the frame.
     */
    private void peiIdentifyCon(byte[] data)
@@ -453,7 +477,7 @@ public class Ft12SerialLink extends ListenableLink
       {
          final PEI_Identify_con frame = (PEI_Identify_con) EmiFrameFactory.createFrame(data);
          bcuAddress = frame.getAddr();
-         logger.debug("BCU address is " + bcuAddress);
+         LOGGER.debug("BCU address is " + bcuAddress);
 
          if (openLock != null)
          {
@@ -486,6 +510,7 @@ public class Ft12SerialLink extends ListenableLink
       /**
        * The main loop of the receiver thread.
        */
+      @Override
       public void run()
       {
          active = true;
@@ -516,7 +541,7 @@ public class Ft12SerialLink extends ListenableLink
                   {
                      readFixedFrame();
                   }
-                  else logger.trace("received unexpected start byte 0x" + Integer.toHexString(c) + " (ignored)");
+                  else LOGGER.trace("received unexpected start byte 0x" + Integer.toHexString(c) + " (ignored)");
                }
             }
          }
@@ -529,7 +554,7 @@ public class Ft12SerialLink extends ListenableLink
 
       /**
        * Read a fixed length FT1.2 frame
-       * 
+       *
        * @return true if the FT1.2 frame was valid, false if the frame had bit
        *         errors.
        * @throws IOException
@@ -542,7 +567,10 @@ public class Ft12SerialLink extends ListenableLink
          {
             final int funcCode = buf[0] & 255;
             final Ft12Function func = Ft12Function.valueOf(funcCode & 15);
-            logger.trace("FT1.2: received " + (func == null ? "0x" + Integer.toHexString(funcCode) : func.toString()));
+
+            if (LOG_FT12_MESSAGES)
+               LOGGER.trace("FT1.2: received "
+                     + (func == null ? "0x" + Integer.toHexString(funcCode) : func.toString()));
 
             if ((funcCode & 0x30) == 0)
             {
@@ -556,7 +584,7 @@ public class Ft12SerialLink extends ListenableLink
 
       /**
        * Receive a variable length FT1.2 frame
-       * 
+       *
        * @return true if the FT1.2 frame was valid, false if the frame had bit
        *         errors.
        * @throws IOException
@@ -579,13 +607,13 @@ public class Ft12SerialLink extends ListenableLink
             final byte chk = buf[buf.length - 2];
             if (!checkCtrlField(buf[2] & 0xff, chk))
             {
-               logger.warn("... in received frame: "
+               LOGGER.warn("... in received frame: "
                      + HexString.toString(new byte[] { FT12_START_VARIABLE, (byte) len }) + ' '
                      + HexString.toString(buf));
             }
             else if (calcChecksum(buf, 2, len) != chk)
             {
-               logger.warn("FT1.2 invalid checksum in frame: "
+               LOGGER.warn("FT1.2 invalid checksum in frame: "
                      + HexString.toString(new byte[] { FT12_START_VARIABLE, (byte) len }) + ' '
                      + HexString.toString(buf));
             }
@@ -601,7 +629,9 @@ public class Ft12SerialLink extends ListenableLink
                   data[i] = buf[3 + i];
 
                final FrameEvent e = new FrameEvent(this, data);
-               logger.debug("frame received: " + HexString.toString(data));
+
+               if (LOG_FT12_MESSAGES)
+                  LOGGER.debug("FT1.2 received: " + HexString.toString(data));
 
                if ((data[0] & 255) == EmiFrameType.PEI_IDENTIFY_CON.code)
                   peiIdentifyCon(data);
@@ -613,7 +643,7 @@ public class Ft12SerialLink extends ListenableLink
          }
          else
          {
-            logger.warn("FT1.2 invalid frame, discarded " + (read + 2) + " bytes: "
+            LOGGER.warn("FT1.2 invalid frame, discarded " + (read + 2) + " bytes: "
                   + HexString.toString(new byte[] { FT12_START_VARIABLE, (byte) len }) + ' ' + HexString.toString(buf));
          }
 
@@ -622,7 +652,7 @@ public class Ft12SerialLink extends ListenableLink
 
       /**
        * Check the control field of a variable FT1.2 frame
-       * 
+       *
        * @param c - the control field
        * @param chk - the checksum
        * @return true if the frame shall be further processed.
@@ -631,7 +661,7 @@ public class Ft12SerialLink extends ListenableLink
       {
          if ((c & (DIR_FROM_BAU | INITIATOR)) != (DIR_FROM_BAU | INITIATOR))
          {
-            logger.warn("FT1.2 unexpected control field 0x" + Integer.toHexString(c));
+            LOGGER.warn("FT1.2 unexpected control field 0x" + Integer.toHexString(c));
             return false;
          }
          if ((c & FRAMECOUNT_VALID) == FRAMECOUNT_VALID)
@@ -641,11 +671,11 @@ public class Ft12SerialLink extends ListenableLink
                // ignore repeated frame
                if (chk == lastChecksum)
                {
-                  logger.trace("FT1.2 framecount and checksum indicate a repeated " + "frame - ignored");
+                  LOGGER.trace("FT1.2 framecount and checksum indicate a repeated " + "frame - ignored");
                   return false;
                }
                // protocol discrepancy (merten instabus coupler)
-               logger.warn("FT1.2 toggle frame count bit");
+               LOGGER.warn("FT1.2 toggle frame count bit");
                rcvFrameCount ^= FRAMECOUNT_BIT;
             }
          }

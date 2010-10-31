@@ -11,6 +11,7 @@ import org.freebus.fts.backend.devicecontroller.DeviceProgrammerType;
 import org.freebus.fts.backend.exception.JobFailedException;
 import org.freebus.fts.backend.internal.I18n;
 import org.freebus.fts.backend.job.ListenableJob;
+import org.freebus.fts.common.ByteUtils;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceProgramming;
 import org.freebus.knxcomm.BusInterface;
@@ -32,7 +33,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Create a BCU-1 device programmer job.
-    * 
+    *
     * @param controller - the device controller.
     * @param type - the type of programming that shall be done.
     */
@@ -44,7 +45,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Create a BCU-1 device programmer job.
-    * 
+    *
     * @param controller - the device controller.
     * @param types - the types of programming that shall be done.
     */
@@ -86,19 +87,21 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Ensure that the hardware device is compatible and can be programmed.
-    * 
+    *
     * @param memCon - the memory connection to use for accessing the device.
-    * 
+    *
     * @throws JobFailedException if the device is not compatible
     * @throws TimeoutException
     * @throws IOException
     */
    void verifyDevice(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException, JobFailedException
    {
-      byte[] mem = memCon.read(0x104, 1);
+      final int manufacturerIdAddr = device.getProgram().getMask().getManufacturerDataAddress();
+      final int manufacturerIdSize = device.getProgram().getMask().getManufacturerDataSize();
+      byte[] mem = memCon.read(manufacturerIdAddr, manufacturerIdSize);
 
-      // Verify the manufacturer
-      final int manufacturerId = mem[0] & 255;
+      // Verify the manufacturer ID
+      final int manufacturerId = ByteUtils.toInteger(mem, 0, manufacturerIdSize);
       if (manufacturerId != device.getProgram().getManufacturer().getId())
          throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrWrongManufacturer", device
                .getPhysicalAddress().toString()));
@@ -106,9 +109,9 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Prepare device programming.
-    * 
+    *
     * @param memCon - the memory connection to use for accessing the device.
-    * 
+    *
     * @throws TimeoutException
     * @throws IOException
     */
@@ -120,9 +123,9 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Finish device programming.
-    * 
+    *
     * @param memCon - the memory connection to use for accessing the device.
-    * 
+    *
     * @throws TimeoutException
     * @throws IOException
     */

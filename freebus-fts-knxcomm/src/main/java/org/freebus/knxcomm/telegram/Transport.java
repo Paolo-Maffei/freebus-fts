@@ -94,7 +94,7 @@ public enum Transport
    @Override
    public String toString()
    {
-      return name() + String.format(" [%02x]", value);
+      return name();
    }
 
    /*

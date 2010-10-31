@@ -14,7 +14,6 @@ import org.freebus.knxcomm.link.LinkListener;
 public abstract class ListenableLink implements Link
 {
    private final CopyOnWriteArrayList<LinkListener> listeners = new CopyOnWriteArrayList<LinkListener>();
-   protected final Logger logger = Logger.getLogger(getClass());
 
    /**
     * {@inheritDoc}

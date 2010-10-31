@@ -303,4 +303,14 @@
    <column name="device_description" type="VARCHAR(256)" />
   </addColumn>
  </changeSet>
+
+ <changeSet author="stefant" id="0.1.4-23">
+  <addColumn tableName="device_programming">
+   <column name="physical_address" type="INT" defaultValueNumeric="0">
+    <constraints nullable="false" />
+   </column>
+  </addColumn>
+
+  <dropColumn tableName="device_programming" columnName="physical_address_valid" />
+ </changeSet>
 </databaseChangeLog>
