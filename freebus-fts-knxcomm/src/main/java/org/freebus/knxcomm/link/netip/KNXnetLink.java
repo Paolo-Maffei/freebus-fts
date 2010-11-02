@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ConnectException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.SocketException;
 import java.util.concurrent.Semaphore;
@@ -49,13 +50,14 @@ public final class KNXnetLink extends ListenableLink implements Link
     */
    public static final int defaultPortTCP = 6720;
 
+   private final static Logger LOGGER = Logger.getLogger(KNXnetLink.class);
+
    // Enable to get debug output of the KNXnet/IP communication data
-   private boolean debugData = true;
+   private final boolean debugData = true;
 
    // Enable to get debug output of the KNXnet/IP communication protocol
-   private boolean debugProto = false;
+   private final boolean debugProto = false;
 
-   private final Logger logger = Logger.getLogger(getClass());
    private final InetSocketAddress addr;
    private InetSocketAddress dataAddr;
    private PhysicalAddress busAddr = PhysicalAddress.NULL;
@@ -78,7 +80,7 @@ public final class KNXnetLink extends ListenableLink implements Link
 
    /**
     * Create a new connection to a KNXnet/IP server listening on a custom port.
-    * 
+    *
     * @param host - the name or IP address of the host that is running the
     *           KNXnet/IP server.
     * @param port - the UDP port of the KNXnet/IP server on the host. Usually
@@ -93,7 +95,7 @@ public final class KNXnetLink extends ListenableLink implements Link
          socket = new DatagramSocket();
          socket.setSendBufferSize(sendBufferSize);
          socket.setReceiveBufferSize(recvBufferSize);
-         logger.info("Opening UDP socket " + socket.getLocalAddress() + " port " + socket.getLocalPort());
+         LOGGER.info("Opening UDP socket " + socket.getLocalAddress() + " port " + socket.getLocalPort());
       }
       catch (SocketException e)
       {
@@ -107,7 +109,7 @@ public final class KNXnetLink extends ListenableLink implements Link
    /**
     * Create a new connection to a KNXnet/IP server listening on the default UDP
     * port (3671).
-    * 
+    *
     * @param host - the name or IP address of the host that is running the
     *           KNXnet/IP server.
     */
@@ -142,12 +144,14 @@ public final class KNXnetLink extends ListenableLink implements Link
 
       Frame frame;
 
-      send(addr, new SearchRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort()), false);
+      LOGGER.info("Local address is " + InetAddress.getLocalHost().toString() + ", port " + socket.getLocalPort());
+
+      send(addr, new SearchRequest(TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort()), false);
       frame = receive(1000);
       if (!(frame instanceof SearchResponse))
          throw new ConnectException("no response to KNXnet/IP search request");
       final SearchResponse searchResponse = (SearchResponse) frame;
-      logger.info("Found KNXnet/IP server: " + searchResponse.getHardwareInfo().getName());
+      LOGGER.info("Found KNXnet/IP server: " + searchResponse.getHardwareInfo().getName());
 
       StatusCode status = connectRequest(mode);
       if (status != StatusCode.OK)
@@ -159,7 +163,7 @@ public final class KNXnetLink extends ListenableLink implements Link
             status = connectRequest(mode);
             if (status == StatusCode.OK)
             {
-               logger.warn("KNXnet/IP server does not support bus monitor mode, falling back to link layer mode");
+               LOGGER.warn("KNXnet/IP server does not support bus monitor mode, falling back to link layer mode");
                busMonitorModeSupported = false;
             }
          }
@@ -168,7 +172,7 @@ public final class KNXnetLink extends ListenableLink implements Link
             throw new ConnectException("KNXnet/IP connect to " + addr + " failed: " + status);
       }
 
-      send(addr, new DescriptionRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort()), false);
+      send(addr, new DescriptionRequest(TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort()), false);
       frame = receive(3500);
 
       if (!(frame instanceof DescriptionResponse))
@@ -178,7 +182,7 @@ public final class KNXnetLink extends ListenableLink implements Link
 
       this.mode = mode;
       busAddr = descResp.getHardwareInfo().getBusAddress();
-      logger.info("Connection to KNXnet/IP server " + busAddr + " established");
+      LOGGER.info("Connection to KNXnet/IP server " + busAddr + " established");
 
       if (PhysicalAddress.NULL.equals(busAddr))
          busAddr = new PhysicalAddress(0, 0, 254);
@@ -189,18 +193,18 @@ public final class KNXnetLink extends ListenableLink implements Link
     * ID and the data endpoint information is stored and {@link StatusCode#OK}
     * is returned. On failure, the {@link StatusCode status code} of the
     * response is returned.
-    * 
+    *
     * @param mode - the link mode to request
-    * 
+    *
     * @return the {@link StatusCode status} of the the connection response.
-    * 
+    *
     * @throws IOException
     */
    private StatusCode connectRequest(LinkMode mode) throws IOException
    {
 
-      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, socket.getLocalAddress(),
-            socket.getLocalPort(), TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort());
+      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, InetAddress.getLocalHost(),
+            socket.getLocalPort(), TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort());
       conReq.setLayer(mode);
 
       Frame frame = null;
@@ -236,7 +240,7 @@ public final class KNXnetLink extends ListenableLink implements Link
       try
       {
          send(addr,
-               new DisconnectRequest(TransportType.UDP, socket.getLocalAddress(), socket.getLocalPort(), channelId),
+               new DisconnectRequest(TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort(), channelId),
                false);
 
          final Frame frame = receive(1000);
@@ -249,7 +253,7 @@ public final class KNXnetLink extends ListenableLink implements Link
       }
       catch (IOException e)
       {
-         logger.error("Failed to disconnect from the KNXnet/IP server", e);
+         LOGGER.error("Failed to disconnect from the KNXnet/IP server", e);
       }
       finally
       {
@@ -270,6 +274,7 @@ public final class KNXnetLink extends ListenableLink implements Link
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setLinkMode(LinkMode mode) throws IOException
    {
       if (!busMonitorModeSupported)
@@ -285,6 +290,7 @@ public final class KNXnetLink extends ListenableLink implements Link
    /**
     * {@inheritDoc}
     */
+   @Override
    public LinkMode getLinkMode()
    {
       return mode;
@@ -293,9 +299,9 @@ public final class KNXnetLink extends ListenableLink implements Link
    /**
     * Receive a frame. Up to <code>timeout</code> milliseconds is waited for a
     * frame to arrive.
-    * 
+    *
     * @param timeout - wait up to timeout milliseconds, -1 waits infinitely.
-    * 
+    *
     * @return the received KNXnet/IP frame, or null of no frame was received
     *         within the timeout.
     */
@@ -331,7 +337,7 @@ public final class KNXnetLink extends ListenableLink implements Link
 
    /**
     * Send a KNXnet/IP frame to an address.
-    * 
+    *
     * @param address - the address (IP number + port) to send to
     * @param frame - the frame to send
     * @param blocking - enable to wait for an acknowledge
@@ -341,11 +347,11 @@ public final class KNXnetLink extends ListenableLink implements Link
       final ServiceType serviceType = frame.getServiceType();
 
       if (debugProto)
-         logger.debug("Send: " + serviceType + " (seq " + sequence + ")");
+         LOGGER.debug("Send: " + serviceType + " (seq " + sequence + ")");
 
       final byte[] data = frame.toByteArray();
-      if (debugData && logger.isDebugEnabled())
-         logger.debug("IP-SEND: " + HexString.toString(data));
+      if (debugData && LOGGER.isDebugEnabled())
+         LOGGER.debug("IP-SEND: " + HexString.toString(data));
 
       final DatagramPacket dp = new DatagramPacket(data, data.length);
       dp.setSocketAddress(address);
@@ -354,10 +360,10 @@ public final class KNXnetLink extends ListenableLink implements Link
 
    /**
     * Process the received data
-    * 
+    *
     * @param data - the received data.
     * @param len - number of bytes in data that are valid.
-    * 
+    *
     * @throws IOException
     */
    public void processData(final byte[] data, int len) throws IOException
@@ -365,20 +371,20 @@ public final class KNXnetLink extends ListenableLink implements Link
       if (len < 6)
          return;
 
-      if (debugData && logger.isDebugEnabled())
-         logger.debug("IP-RECV: " + HexString.toString(data, 0, len));
+      if (debugData && LOGGER.isDebugEnabled())
+         LOGGER.debug("IP-RECV: " + HexString.toString(data, 0, len));
 
       final Frame frame = FrameFactory.createFrame(data);
       if (frame == null)
       {
          int serviceTypeCode = ((data[2] << 8) | data[3]) & 0xffff;
          final ServiceType serviceType = ServiceType.valueOf(serviceTypeCode);
-         logger.debug("Recv: " + serviceType + " (ignored)");
+         LOGGER.debug("Recv: " + serviceType + " (ignored)");
          return;
       }
 
       if (debugProto)
-         logger.debug("Recv: " + frame.getServiceType());
+         LOGGER.debug("Recv: " + frame.getServiceType());
 
       if (receiveSemaphore.hasQueuedThreads())
       {
@@ -391,7 +397,7 @@ public final class KNXnetLink extends ListenableLink implements Link
          final int recvSequence = tunnelFrame.getSequence();
 
          if (debugData)
-            logger.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + recvSequence + ")");
+            LOGGER.debug("Recv: " + tunnelFrame.getFrame() + " (seq " + recvSequence + ")");
 
          send(dataAddr, new TunnelingAck(channelId, recvSequence, StatusCode.OK), false);
 
@@ -409,7 +415,7 @@ public final class KNXnetLink extends ListenableLink implements Link
          @Override
          public void run()
          {
-            logger.debug("Starting KNXnet/IP listener thread");
+            LOGGER.debug("Starting KNXnet/IP listener thread");
             final DatagramPacket p = new DatagramPacket(recvBuffer, recvBuffer.length);
 
             while (true)
