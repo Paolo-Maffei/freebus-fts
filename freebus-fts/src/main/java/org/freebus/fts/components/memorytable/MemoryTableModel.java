@@ -11,7 +11,7 @@ import javax.swing.table.TableModel;
 import org.freebus.fts.I18n;
 
 /**
- * A table model that represents a memory range. Every memory cell can have a
+ * A table model that represents a memory range. Each memory cell can have a
  * value, a name, and an area type.
  */
 public class MemoryTableModel implements TableModel
@@ -22,7 +22,7 @@ public class MemoryTableModel implements TableModel
 
    /**
     * Create a memory table model.
-    * 
+    *
     * @param startAddr - the start address of the memory range.
     * @param size - the size of the shown memory range, in bytes.
     */
@@ -100,10 +100,10 @@ public class MemoryTableModel implements TableModel
 
    /**
     * Returns the memory cell value at rowIndex / columnIndex.
-    * 
+    *
     * @param rowIndex - the index of the row
     * @param columnIndex - the index of the column (1..16)
-    *  
+    *
     * @return the cell value.
     */
    @Override
@@ -118,7 +118,7 @@ public class MemoryTableModel implements TableModel
 
    /**
     * @return the memory cell at a specific address.
-    * 
+    *
     * @param addr - the requested address
     * @return The memory cell at the address.
     */
@@ -181,7 +181,7 @@ public class MemoryTableModel implements TableModel
 
    /**
     * Notify the listeners that the table has changed in a specific row.
-    * 
+    *
     * @param row - the row that has changed.
     */
    public void fireTableChanged(int row)
@@ -191,7 +191,7 @@ public class MemoryTableModel implements TableModel
 
    /**
     * Notify the listeners that the table has changed in a specific row.
-    * 
+    *
     * @param firstRow - the first row that has changed.
     * @param lastRow - the last row that has changed.
     */

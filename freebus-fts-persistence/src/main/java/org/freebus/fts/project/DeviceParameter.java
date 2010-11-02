@@ -38,11 +38,6 @@ public class DeviceParameter
    @Column(name = "parameter_value")
    private String stringValue;
 
-//   @Deprecated
-//   @VdxField(name = "device_parameter_visible")
-//   @Column(name = "visible", nullable = false)
-//   private boolean visible = true;
-
    /**
     * Create an empty device parameter object.
     */
@@ -125,7 +120,7 @@ public class DeviceParameter
 
    /**
     * @return the value as integer. Returns zero if the value is not set.
-    * 
+    *
     * @throws ClassCastException if the value cannot be cast to an
     *            {@link Integer}.
     */
@@ -152,7 +147,7 @@ public class DeviceParameter
 
    /**
     * Test if the parameter is visible.
-    * 
+    *
     * @return true if the parameter is visible.
     */
    public boolean isVisible()
@@ -185,7 +180,7 @@ public class DeviceParameter
 
    /**
     * Test if the parameter shall be stored in the eeprom.
-    * 
+    *
     * @return true if the parameter shall be stored in the eeprom.
     */
    public boolean isUsed()

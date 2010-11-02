@@ -5,7 +5,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import org.freebus.fts.backend.devicecontroller.internal.Bcu1DeviceController;
-import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.project.Device;

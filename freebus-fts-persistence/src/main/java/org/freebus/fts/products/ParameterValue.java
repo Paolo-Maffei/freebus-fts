@@ -7,6 +7,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
@@ -37,8 +38,9 @@ public class ParameterValue
    @Column(name = "real_value")
    private int intValue;
 
+   @Lob
    @Column(name = "binary_value")
-   private String binaryValue;
+   private byte[] binaryValue;
 
    @Column(name = "double_value")
    private double doubleValue;
@@ -108,7 +110,7 @@ public class ParameterValue
    }
 
    /**
-    * @return the intValue
+    * @return The integer value that will be loaded into the BCU's memory.
     */
    public int getIntValue()
    {
@@ -116,6 +118,8 @@ public class ParameterValue
    }
 
    /**
+    * Set the integer value that will be loaded into the BCU's memory.
+    *
     * @param intValue the intValue to set
     */
    public void setIntValue(int intValue)
@@ -124,23 +128,27 @@ public class ParameterValue
    }
 
    /**
-    * @return the binaryValue
+    * @return The binary value that will be loaded into the BCU's memory. May be
+    *         null.
     */
-   public String getBinaryValue()
+   public byte[] getBinaryValue()
    {
       return binaryValue;
    }
 
    /**
-    * @param binaryValue the binaryValue to set
+    * Set the binary value that will be loaded into the BCU's memory. May be
+    * null.
+    *
+    * @param binaryValue - the binary value to set
     */
-   public void setBinaryValue(String binaryValue)
+   public void setBinaryValue(byte[] binaryValue)
    {
       this.binaryValue = binaryValue;
    }
 
    /**
-    * @return the doubleValue
+    * @return The double value that will be loaded into the BCU's memory.
     */
    public double getDoubleValue()
    {
@@ -148,7 +156,9 @@ public class ParameterValue
    }
 
    /**
-    * @param doubleValue the doubleValue to set
+    * Set the double value that will be loaded into the BCU's memory.
+    *
+    * @param doubleValue - the double value to set.
     */
    public void setDoubleValue(double doubleValue)
    {

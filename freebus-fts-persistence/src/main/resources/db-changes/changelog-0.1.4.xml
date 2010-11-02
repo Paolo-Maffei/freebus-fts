@@ -313,4 +313,12 @@
 
   <dropColumn tableName="device_programming" columnName="physical_address_valid" />
  </changeSet>
+ 
+ <changeSet author="stefant" id="0.1.4-24">
+  <dropColumn tableName="parameter_list_of_values" columnName="binary_value" />
+  <addColumn tableName="parameter_list_of_values">
+   <column name="binary_value" type="BLOB" />
+  </addColumn>
+ </changeSet>
+
 </databaseChangeLog>

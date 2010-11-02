@@ -96,8 +96,8 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    void verifyDevice(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException, JobFailedException
    {
-      final int manufacturerIdAddr = device.getProgram().getMask().getManufacturerDataAddress();
-      final int manufacturerIdSize = device.getProgram().getMask().getManufacturerDataSize();
+      final int manufacturerIdAddr = device.getProgram().getMask().getManufacturerIdAddress();
+      final int manufacturerIdSize = 1;
       byte[] mem = memCon.read(manufacturerIdAddr, manufacturerIdSize);
 
       // Verify the manufacturer ID

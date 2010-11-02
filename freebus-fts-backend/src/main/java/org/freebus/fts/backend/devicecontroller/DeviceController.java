@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.freebus.fts.backend.exception.DeviceControllerException;
 import org.freebus.fts.backend.job.device.DeviceProgrammerJob;
-import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.project.Device;

@@ -11,8 +11,8 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
 import org.freebus.fts.I18n;
+import org.freebus.fts.backend.devicecontroller.AssociationTableEntry;
 import org.freebus.fts.backend.devicecontroller.DeviceController;
-import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.elements.components.ReadOnlyTable;

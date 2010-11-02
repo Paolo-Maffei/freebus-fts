@@ -1,4 +1,4 @@
-package org.freebus.fts.backend.memory;
+package org.freebus.fts.backend.devicecontroller;
 
 /**
  * An entry for the device association table.

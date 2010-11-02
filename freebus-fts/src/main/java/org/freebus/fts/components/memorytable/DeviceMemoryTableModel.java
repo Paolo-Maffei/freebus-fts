@@ -32,7 +32,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
    /**
     * Create a device memory-table model.
-    * 
+    *
     * @param startAddr - the start address of the memory range.
     * @param size - the size of the shown memory range, in bytes.
     * @param backgroundColor - the default background color for memory cells.
@@ -45,7 +45,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
    /**
     * Set the device to display. Calls {@link #updateContents()}.
-    * 
+    *
     * @param device - the device to set.
     */
    public void setDevice(Device device)
@@ -74,7 +74,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
    /**
     * Add a memory range.
-    * 
+    *
     * @param range - the range to add.
     */
    public void addRange(MemoryRange range)
@@ -84,7 +84,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
    /**
     * Create a memory range and add it to the memory ranges.
-    * 
+    *
     * @param start - the start address of the range.
     * @param size - the size of the range.
     * @param name - the name of the range.
@@ -123,9 +123,9 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
    /**
     * Find the memory range that the given address belongs to.
-    * 
+    *
     * @param addr - the memory address to search the range for.
-    * 
+    *
     * @return The memory range for the address, or null if not found.
     */
    public MemoryRange getRange(int addr)
@@ -193,7 +193,7 @@ public class DeviceMemoryTableModel extends MemoryTableModel
             I18n.getMessage("DeviceMemoryTableModel.CommunicationsTable"));
       createRange(program.getAssocTabAddr(), program.getAssocTabSize(),
             I18n.getMessage("DeviceMemoryTableModel.AssociationTable"));
-      createRange(mask.getManufacturerIdAddress(), 2, I18n.getMessage("DeviceMemoryTableModel.ManufacturerId"));
+      createRange(mask.getManufacturerIdAddress(), 1, I18n.getMessage("DeviceMemoryTableModel.ManufacturerId"));
       createRange(mask.getRouteCountAddress(), 1, I18n.getMessage("DeviceMemoryTableModel.RouteCount"));
       createRange(mask.getRunErrorAddress(), 1, I18n.getMessage("DeviceMemoryTableModel.RunError"));
 
@@ -257,17 +257,17 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
    /**
     * Set a value and remember the old value.
-    * 
+    *
     * @param addr - the address to set the value into.
     * @param value - the value to set.
-    * 
+    *
     * @return true if the value differs from the current value
     */
    public boolean setValue(int addr, int value)
    {
       final MemoryCell cell = getValueAt(addr);
-
       int oldValue = cell.getValue();
+
       boolean undefinedValue = false;
 
       if (oldValue == -1)

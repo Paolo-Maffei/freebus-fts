@@ -7,8 +7,8 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
+import org.freebus.fts.backend.devicecontroller.AssociationTableEntry;
 import org.freebus.fts.backend.devicecontroller.DeviceController;
-import org.freebus.fts.backend.memory.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.products.CommunicationObject;
