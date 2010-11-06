@@ -225,7 +225,7 @@ public class LogLine extends JPanel
             {
                LogLine.this.append(level, message);
 
-               if (level.isGreaterOrEqual(Level.ERROR))
+               if (level.isGreaterOrEqual(Level.FATAL))
                {
                   final StringBuffer sb = new StringBuffer();
 

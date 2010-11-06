@@ -292,7 +292,7 @@ public class DeviceScanner extends AbstractPage implements DeviceScannerJobListe
 
       final int deviceType = info.getDeviceType();
       if (deviceType >= 0)
-         devicesModel.setValueAt(deviceType, row, 2);
+         devicesModel.setValueAt("$" + Integer.toHexString(deviceType), row, 2);
 
       devicesTable.revalidate();
    }

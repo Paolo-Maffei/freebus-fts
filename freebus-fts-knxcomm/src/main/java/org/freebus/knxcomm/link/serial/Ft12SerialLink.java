@@ -38,14 +38,14 @@ public class Ft12SerialLink extends ListenableLink
    // Log sent and received FT1.2 messages
    private static final boolean LOG_FT12_MESSAGES = true;
 
-   // timeout for end of frame exchange in bits
+   // Timeout for end of frame exchange in bits
    private static final int EXCHANGE_TIMEOUT = 512;
 
-   // maximum time between two frame characters, minimum time to indicate error
+   // Maximum time between two frame characters, minimum time to indicate error
    // in bits
    private static final int IDLE_TIMEOUT = 33;
 
-   // limit for retransmissions of discarded frames
+   // Limit for retransmissions of discarded frames
    private static final int REPEAT_LIMIT = 3;
 
    // FT1.2 acknowledgment
@@ -283,7 +283,7 @@ public class Ft12SerialLink extends ListenableLink
             state = Ft12State.OK;
 
          if (!ack)
-            throw new KNXAckTimeoutException("no acknowledge reply received");
+            throw new KNXAckTimeoutException("no acknowledge reply received within " + Integer.toString(exchangeTimeout) + " msec");
       }
       catch (final IOException e)
       {
@@ -386,9 +386,8 @@ public class Ft12SerialLink extends ListenableLink
     */
    private boolean waitForAck()
    {
+      final long end = System.currentTimeMillis() + exchangeTimeout;
       long remaining = exchangeTimeout;
-      final long now = System.currentTimeMillis();
-      final long end = now + remaining;
 
       synchronized (ackLock)
       {
@@ -499,11 +498,11 @@ public class Ft12SerialLink extends ListenableLink
    private final class Receiver extends Thread
    {
       private volatile boolean active;
-      private int lastChecksum;
+      private int lastChecksum = -1;
 
       Receiver()
       {
-         super("FT1.2 receiver");
+         super("FT1.2-Receiver");
          setDaemon(true);
       }
 
@@ -526,6 +525,9 @@ public class Ft12SerialLink extends ListenableLink
                   {
                      if (state == Ft12State.ACK_PENDING)
                      {
+                        if (LOG_FT12_MESSAGES)
+                           LOGGER.debug("FT1.2 ACK received");
+
                         synchronized (ackLock)
                         {
                            state = Ft12State.OK;
@@ -619,8 +621,6 @@ public class Ft12SerialLink extends ListenableLink
             }
             else
             {
-               sendAck();
-
                lastChecksum = chk;
                rcvFrameCount ^= FRAMECOUNT_BIT;
 
@@ -628,10 +628,12 @@ public class Ft12SerialLink extends ListenableLink
                for (int i = 0; i < data.length; ++i)
                   data[i] = buf[3 + i];
 
-               final FrameEvent e = new FrameEvent(this, data);
-
                if (LOG_FT12_MESSAGES)
                   LOGGER.debug("FT1.2 received: " + HexString.toString(data));
+
+               sendAck();
+
+               final FrameEvent e = new FrameEvent(this, data);
 
                if ((data[0] & 255) == EmiFrameType.PEI_IDENTIFY_CON.code)
                   peiIdentifyCon(data);
@@ -671,7 +673,7 @@ public class Ft12SerialLink extends ListenableLink
                // ignore repeated frame
                if (chk == lastChecksum)
                {
-                  LOGGER.trace("FT1.2 framecount and checksum indicate a repeated " + "frame - ignored");
+                  LOGGER.debug("FT1.2 framecount and checksum indicate a repeated " + "frame - ignored");
                   return false;
                }
                // protocol discrepancy (merten instabus coupler)
@@ -682,7 +684,10 @@ public class Ft12SerialLink extends ListenableLink
 
          final Ft12Function func = Ft12Function.valueOf(c & 15);
          if (func == Ft12Function.DATA && (c & FRAMECOUNT_VALID) == 0)
+         {
+            LOGGER.warn("FT1.2 data, framecount not valid");
             return false;
+         }
 
          return true;
       }

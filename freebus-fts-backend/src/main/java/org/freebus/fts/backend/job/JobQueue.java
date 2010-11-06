@@ -67,8 +67,20 @@ public class JobQueue implements JobListener
                Job job = jobs.poll();
                runJob(job);
 
+               msleep(500);
                if (jobs.isEmpty())
                   idle();
+            }
+         }
+
+         private void msleep(int millis)
+         {
+            try
+            {
+               Thread.sleep(millis);
+            }
+            catch (InterruptedException e)
+            {
             }
          }
       });
@@ -95,7 +107,7 @@ public class JobQueue implements JobListener
 
    /**
     * Add a job to the end of the queue.
-    * 
+    *
     * @param job - the job to add.
     */
    public void add(Job job)
@@ -110,7 +122,7 @@ public class JobQueue implements JobListener
     * Cancel a job. Removes the job from the job queue. The job is
     * {@link Job#cancel() canceled}. If canceling a running job
     * succeeds depends on the specific job implementation.
-    * 
+    *
     * @param job - the job to cancel.
     */
    public void cancel(Job job)
@@ -165,7 +177,7 @@ public class JobQueue implements JobListener
 
    /**
     * Execute the given job.
-    * 
+    *
     * @throws JobFailedException
     */
    protected void runJob(Job job)
@@ -181,7 +193,9 @@ public class JobQueue implements JobListener
          final BusInterface bus = BusInterfaceFactory.getBusInterface();
 
          if (bus != null)
+         {
             job.run(bus);
+         }
 
          masterEvent.progress = 100;
          notifyListeners(masterEvent);
@@ -239,7 +253,7 @@ public class JobQueue implements JobListener
    /**
     * Switch the bus interface to a specific link mode. Does nothing if the bus
     * interface is undefined.
-    * 
+    *
     * @param mode - the bus link mode to activate.
     */
    private void setLinkMode(LinkMode mode)

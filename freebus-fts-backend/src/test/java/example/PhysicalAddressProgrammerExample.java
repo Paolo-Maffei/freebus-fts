@@ -14,8 +14,8 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
- * Starts the device scanner job.
- * 
+ * Program a device.
+ *
  * You can change the bus connection in {@link #DeviceScannerJobExample()}, the
  * constructor.
  */
@@ -28,7 +28,7 @@ public class PhysicalAddressProgrammerExample
 
    /**
     * Create the bus monitor.
-    * 
+    *
     * @throws Exception
     */
    public PhysicalAddressProgrammerExample() throws Exception
@@ -72,7 +72,7 @@ public class PhysicalAddressProgrammerExample
 
    /**
     * Start the application.
-    * 
+    *
     * @throws Exception
     */
    public static void main(String[] args) throws Exception

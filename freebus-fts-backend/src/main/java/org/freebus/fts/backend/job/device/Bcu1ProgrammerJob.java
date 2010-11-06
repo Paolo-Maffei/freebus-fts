@@ -76,9 +76,9 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    }
 
    /**
-    * Inform the programmer job that the physical address of the device will
-    * be programmed too. This is to avoid an error dialog when programming
-    * the physical address fails.
+    * Inform the programmer job that the physical address of the device will be
+    * programmed too. This is to avoid an error dialog when programming the
+    * physical address fails.
     */
    public void setPhysicalAddressJobQueued()
    {
@@ -96,15 +96,26 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    void verifyDevice(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException, JobFailedException
    {
-      final int manufacturerIdAddr = device.getProgram().getMask().getManufacturerIdAddress();
-      final int manufacturerIdSize = 1;
-      byte[] mem = memCon.read(manufacturerIdAddr, manufacturerIdSize);
+      byte[] mem = memCon.read(device.getProgram().getMask().getManufacturerIdAddress(), 1);
 
       // Verify the manufacturer ID
-      final int manufacturerId = ByteUtils.toInteger(mem, 0, manufacturerIdSize);
+      final int manufacturerId = ByteUtils.toInteger(mem, 0, 1);
       if (manufacturerId != device.getProgram().getManufacturer().getId())
+      {
          throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrWrongManufacturer", device
                .getPhysicalAddress().toString()));
+      }
+
+      // Verify the mask version
+      final int maskVersion = memCon.getConnection().getDeviceDescriptor0().getVersion();
+      final int maskVersionMajor = maskVersion >> 4;
+      final int progMaskVersion = device.getProgram().getMask().getVersion();
+      final int progMaskVersionMajor = progMaskVersion >> 4;
+      if (progMaskVersionMajor != maskVersionMajor || progMaskVersion > maskVersion)
+      {
+         throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrIncompatibleMaskVersion", device
+               .getPhysicalAddress().toString(), Integer.toHexString(maskVersion), Integer.toHexString(progMaskVersion)));
+      }
    }
 
    /**
@@ -137,9 +148,13 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Upload the application program to the device.
+    *
+    * @throws TimeoutException
+    * @throws IOException
     */
-   void uploadProgram(final MemoryConnectionAdapter memCon)
+   void uploadProgram(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
    {
+      final byte[] appInfo = memCon.read(MemoryLocation.ApplicationID);
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setProgramValid(true);
@@ -179,7 +194,8 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       {
          if (physicalAddressJobQueued)
          {
-            // If we come here, programming the physical address failed, and the user
+            // If we come here, programming the physical address failed, and the
+            // user
             // already got an error message. No need to report another error.
             return;
          }

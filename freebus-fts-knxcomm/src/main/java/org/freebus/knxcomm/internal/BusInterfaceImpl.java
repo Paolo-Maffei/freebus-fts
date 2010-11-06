@@ -36,9 +36,19 @@ public class BusInterfaceImpl implements BusInterface
 {
    private final static Logger LOGGER = Logger.getLogger(BusInterfaceImpl.class);
 
+   // Timeout for telegram confirmation in milliseconds
+   private static final int CONFIRM_TIMEOUT_MS = 3000;
+
+   // Minimum link idle time in milliseconds.
+   private static final long MIN_IDLE_TIME_MS = 100;
+
+   // Wait time in milliseconds if the minimum link idle time does not hold
+   private static final long IDLE_WAIT_MS = 100;
+
    protected final CopyOnWriteArraySet<TelegramListener> listeners = new CopyOnWriteArraySet<TelegramListener>();
    protected final Map<PhysicalAddress, DataConnection> connections = new ConcurrentHashMap<PhysicalAddress, DataConnection>();
    private final Semaphore replySemaphore = new Semaphore(0);
+   private volatile long lastFrameReceive;
    private Telegram waitConTelegram;
    private final Link link;
    private Receiver receiver;
@@ -205,6 +215,18 @@ public class BusInterfaceImpl implements BusInterface
       if (getLinkMode() == LinkMode.BusMonitor)
          throw new IOException("bus monitor link mode is read only");
 
+      if (System.currentTimeMillis() - lastFrameReceive < MIN_IDLE_TIME_MS)
+      {
+         try
+         {
+            Thread.sleep(IDLE_WAIT_MS);
+         }
+         catch (InterruptedException e)
+         {
+            LOGGER.error(e);
+         }
+      }
+
       final PhysicalAddress from = telegram.getFrom();
       if (from == null || PhysicalAddress.NULL.equals(from))
          telegram.setFrom(getPhysicalAddress());
@@ -214,7 +236,7 @@ public class BusInterfaceImpl implements BusInterface
       replySemaphore.drainPermits();
       waitConTelegram = telegram;
 
-      final int waitTimeMS = 1500;
+      final int waitTimeMS = CONFIRM_TIMEOUT_MS;
       try
       {
          link.send(new L_Data_req(telegram), true);
@@ -246,7 +268,7 @@ public class BusInterfaceImpl implements BusInterface
 
       Receiver()
       {
-         super("bus interface receiver");
+         super("BusInterface-Receiver");
          setDaemon(true);
       }
 
@@ -284,27 +306,15 @@ public class BusInterfaceImpl implements BusInterface
       }
 
       /**
-       * Process a frame event.
+       * Process a frame-event.
        *
        * @param e - the frame event to process.
        * @return true if the frame was valid, false if not.
        */
       boolean processFrameEvent(FrameEvent e)
       {
-         EmiFrame frame = e.getFrame();
-         if (frame == null)
-         {
-            try
-            {
-               frame = EmiFrameFactory.createFrame(e.getData());
-            }
-            catch (IOException ex)
-            {
-               final byte[] data = e.getData();
-               LOGGER.warn("invalid EMI frame, discarding " + data.length + " bytes:" + HexString.toString(data));
-               return false;
-            }
-         }
+         lastFrameReceive = System.currentTimeMillis();
+         final EmiFrame frame = e.getFrame();
 
          if (frame instanceof EmiTelegramFrame)
          {
@@ -312,15 +322,12 @@ public class BusInterfaceImpl implements BusInterface
 
             if (frame.getType().isConfirmation())
             {
-               if (replySemaphore.hasQueuedThreads() && telegram.isSimilar(waitConTelegram))
-                  replySemaphore.release();
-
                LOGGER.debug("SENT: " + telegram);
-
                notifyListenersSent(telegram);
             }
             else
             {
+               LOGGER.debug("RECEIVED: " + telegram);
                notifyListenersReceived(telegram);
             }
          }
@@ -343,7 +350,7 @@ public class BusInterfaceImpl implements BusInterface
 
          try
          {
-            join(100);
+            join(1000);
          }
          catch (final InterruptedException e)
          {
@@ -351,11 +358,39 @@ public class BusInterfaceImpl implements BusInterface
       }
 
       /**
-       * {@inheritDoc}
+       * A frame-event is received. This method is called by the link's thread
+       * and must not contain expensive code.
        */
       @Override
       public void frameReceived(FrameEvent e)
       {
+         EmiFrame frame = e.getFrame();
+         if (frame == null)
+         {
+            try
+            {
+               frame = EmiFrameFactory.createFrame(e.getData());
+               e.setFrame(frame);
+            }
+            catch (IOException ex)
+            {
+               final byte[] data = e.getData();
+               LOGGER.warn("invalid EMI frame, discarding " + data.length + " bytes:" + HexString.toString(data), ex);
+               return;
+            }
+         }
+
+         if (frame instanceof EmiTelegramFrame)
+         {
+            final Telegram telegram = ((EmiTelegramFrame) frame).getTelegram();
+
+            if (frame.getType().isConfirmation() && replySemaphore.hasQueuedThreads()
+                  && telegram.isSimilar(waitConTelegram))
+            {
+               replySemaphore.release();
+            }
+         }
+
          receiveQueue.add(e);
          received.release();
       }

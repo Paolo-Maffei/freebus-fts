@@ -1,6 +1,7 @@
 package org.freebus.fts.backend.job;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -29,9 +30,10 @@ public final class DeviceScannerJob extends ListenableJob
 {
    private final static Logger LOGGER = Logger.getLogger(DeviceScannerJob.class);
 
-   final Map<PhysicalAddress, DeviceInfo> deviceDescriptors = new TreeMap<PhysicalAddress, DeviceInfo>();
+   final Map<PhysicalAddress, DeviceInfo> deviceInfos = new TreeMap<PhysicalAddress, DeviceInfo>();
    final Telegram dataTelegram = new Telegram();
    final Telegram memReadTelegram = new Telegram();
+   final Telegram ackTelegram = new Telegram();
    private BusInterface bus;
    private TelegramReceiver receiver;
    private final int area, line;
@@ -59,6 +61,10 @@ public final class DeviceScannerJob extends ListenableJob
       memReadTelegram.setTransport(Transport.Connected);
       memReadTelegram.setApplication(new MemoryRead(0x104, 4));
       memReadTelegram.setSequence(1);
+
+      ackTelegram.setFrom(PhysicalAddress.NULL);
+      ackTelegram.setPriority(Priority.SYSTEM);
+      ackTelegram.setTransport(Transport.ConnectedAck);
    }
 
    /**
@@ -131,7 +137,7 @@ public final class DeviceScannerJob extends ListenableJob
       // Step 1: scan the bus for devices
       //
       notifyListener(1, I18n.getMessage("DeviceScannerJob.Scanning"));
-      deviceDescriptors.clear();
+      deviceInfos.clear();
 
       // receiver.setApplicationType(ApplicationType.DeviceDescriptor_Response);
       // receiver.setDest(bus.getPhysicalAddress());
@@ -146,7 +152,8 @@ public final class DeviceScannerJob extends ListenableJob
 
          dataTelegram.setTransport(Transport.Connect);
          bus.send(dataTelegram);
-         msleep(100); // wait a little between connect and the first request telegram
+         msleep(100); // wait a little between connect and the first request
+                      // telegram
 
          // Freebus LPC controllers currently (2010/03) need an extra telegram
          // to be detected. We want to read the device descriptor anyways, so it
@@ -175,6 +182,16 @@ public final class DeviceScannerJob extends ListenableJob
    }
 
    /**
+    * Get all device infos that were gathered up to now.
+    *
+    * @return A collection with all device infos.
+    */
+   public Collection<DeviceInfo> getDeviceInfos()
+   {
+      return deviceInfos.values();
+   }
+
+   /**
     * Get a device info for a physical address. If no device info exists, one is
     * created.
     *
@@ -183,13 +200,13 @@ public final class DeviceScannerJob extends ListenableJob
     */
    private DeviceInfo getDeviceInfo(PhysicalAddress address)
    {
-      DeviceInfo info = deviceDescriptors.get(address);
+      DeviceInfo info = deviceInfos.get(address);
       if (info == null)
       {
          LOGGER.info("Found device: " + address);
 
          info = new DeviceInfo(address);
-         deviceDescriptors.put(address, info);
+         deviceInfos.put(address, info);
       }
 
       return info;
@@ -221,12 +238,27 @@ public final class DeviceScannerJob extends ListenableJob
             final DeviceDescriptorResponse ddApp = (DeviceDescriptorResponse) telegram.getApplication();
 
             final DeviceInfo info = getDeviceInfo(telegram.getFrom());
-            final boolean newlyFound = info.getDescriptor() != null;
+            final boolean newlyFound = info.getDescriptor() == null;
 
             info.setDescriptor(ddApp.getDescriptor());
             fireDeviceInfo(info);
 
-            if (!newlyFound)
+            synchronized (ackTelegram)
+            {
+               ackTelegram.setSequence(telegram.getSequence());
+               ackTelegram.setDest(telegram.getFrom());
+               try
+               {
+                  bus.send(ackTelegram);
+               }
+               catch (IOException e)
+               {
+                  LOGGER.warn(e);
+               }
+               msleep(50);
+            }
+
+            if (newlyFound)
             {
                synchronized (memReadTelegram)
                {
@@ -240,6 +272,7 @@ public final class DeviceScannerJob extends ListenableJob
                      LOGGER.warn(e);
                   }
                }
+               msleep(50);
             }
          }
          else if (telegram.getApplicationType() == ApplicationType.Memory_Response)

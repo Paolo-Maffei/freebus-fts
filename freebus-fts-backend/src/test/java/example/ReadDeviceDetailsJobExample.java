@@ -10,17 +10,16 @@ import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
-import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * Starts a {@link ReadDeviceDetailsJob} job for a specific device.
- * 
+ *
  * You can change the bus connection in {@link #ReadDeviceDetailsJobExample()},
  * the constructor.
- * 
+ *
  * You can change the physical address of the target device by changing
  * {@link #target} just below here.
  */
@@ -33,7 +32,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
 
    /**
     * Create the example.
-    * 
+    *
     * @throws Exception
     */
    public ReadDeviceDetailsJobExample() throws Exception
@@ -41,7 +40,8 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       //
       // Bus connection
       //
-      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      //bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      bus = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
       //bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.addListener(this);
@@ -50,7 +50,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
 
    /**
     * Run the example
-    * 
+    *
     * @throws IOException
     */
    public void run() throws JobFailedException
@@ -92,7 +92,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
 
    /**
     * Start the application.
-    * 
+    *
     * @throws Exception
     */
    public static void main(String[] args) throws Exception

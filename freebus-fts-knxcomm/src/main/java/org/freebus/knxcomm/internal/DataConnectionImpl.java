@@ -66,13 +66,13 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
    private final Semaphore recvSemaphore = new Semaphore(0);
    private int sequence = -1;
-   private int deviceDescriptorMaskVersion;
+   private DeviceDescriptor0 deviceDescriptor0;
    private MemoryAddressMapper memoryAddressMapper;
 
    /**
     * Create a connection to the device with the given physical address. Use
     * {@link BusInterface#connect} to get a connection.
-    * 
+    *
     * @param addr - the physical address to which the connection will happen.
     * @param priority - the priority of the telegrams.
     * @param busInterface - the bus interface to use.
@@ -222,7 +222,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    /**
     * Receive an {@link Transport#ConnectedAck acknowledge} from the remote
     * device. Waits 3 seconds for the acknowledge to be received.
-    * 
+    *
     * @throws IOException if a NACK (not-acknowledged) was received.
     * @throws TimeoutException if no acknowledge was received within the timeout
     */
@@ -243,11 +243,11 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    /**
     * Receive a telegram from the remote device.
-    * 
+    *
     * @param timeout - how long to wait, in milliseconds, -1 waits infinitely.
-    * 
+    *
     * @return the received telegram
-    * 
+    *
     * @throws IOException
     */
    private Telegram receiveTelegram(int timeout) throws IOException
@@ -307,7 +307,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    /**
     * {@inheritDoc}
-    * 
+    *
     * @throws TimeoutException
     */
    @Override
@@ -351,7 +351,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
    /**
     * {@inheritDoc}
-    * 
+    *
     * @throws TimeoutException
     */
    @Override
@@ -367,8 +367,16 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       //      final long start = System.currentTimeMillis();
       send(application);
 
-      final int timeout = (/*System.currentTimeMillis() - start + */ 6000);
-      final Application reply = receive(timeout);
+      final int replyTimeout = 6000;
+      final long end = System.currentTimeMillis() + replyTimeout;
+      int remaining = replyTimeout;
+      Application reply = null;
+
+      while (reply == null && remaining > 0)
+      {
+         reply = receive(remaining);
+         remaining = (int) (end - System.currentTimeMillis());
+      }
 
       LOGGER.debug("query - reply: " + reply);
       return reply;
@@ -390,11 +398,11 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       {
          ((Memory) app).setAddressMapper(memoryAddressMapper);
       }
-      else if (deviceDescriptorMaskVersion == 0 && app instanceof DeviceDescriptorResponse)
+      else if (deviceDescriptor0 == null && app instanceof DeviceDescriptorResponse)
       {
          final DeviceDescriptorResponse ddapp = (DeviceDescriptorResponse) app;
          if (ddapp.getDescriptorType() == 0)
-            deviceDescriptorMaskVersion = ((DeviceDescriptor0) ddapp.getDescriptor()).getMaskVersion();
+            deviceDescriptor0 = (DeviceDescriptor0) ddapp.getDescriptor();
       }
 
       LOGGER.debug("++ Telegram received: " + telegram);
@@ -444,27 +452,46 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       if (memoryAddressMapper != null)
          return;
 
-      if (deviceDescriptorMaskVersion == 0)
+      if (deviceDescriptor0 == null)
+         readDeviceDescriptor0();
+
+      memoryAddressMapper = MemoryAddressMapperFactory.getMemoryAddressMapper(deviceDescriptor0.getMaskVersion());
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public DeviceDescriptor0 getDeviceDescriptor0()
+   {
+      if (deviceDescriptor0 == null)
+         readDeviceDescriptor0();
+
+      return deviceDescriptor0;
+   }
+
+   /**
+    * Read the device descriptor #0 from the device and store the mask version in
+    * {@link #deviceDescriptorMaskVersion}
+    */
+   private void readDeviceDescriptor0()
+   {
+      try
       {
-         try
-         {
-            final DeviceDescriptorResponse reply = (DeviceDescriptorResponse) query(new DeviceDescriptorRead(0));
-            if (reply == null)
-               throw new RuntimeException("failed to read device descriptor from " + addr);
+         final DeviceDescriptorResponse reply = (DeviceDescriptorResponse) query(new DeviceDescriptorRead(0));
+         if (reply == null)
+            throw new RuntimeException("failed to read device descriptor from " + addr);
 
-            deviceDescriptorMaskVersion = ((DeviceDescriptor0) reply.getDescriptor()).getMaskVersion();
-         }
-         catch (TimeoutException e)
-         {
-            throw new RuntimeException("failed to read device descriptor from " + addr, e);
-         }
-         catch (IOException e)
-         {
-            throw new RuntimeException("failed to read device descriptor from " + addr, e);
-         }
+         deviceDescriptor0 = (DeviceDescriptor0) reply.getDescriptor();
       }
-
-      memoryAddressMapper = MemoryAddressMapperFactory.getMemoryAddressMapper(deviceDescriptorMaskVersion);
+      catch (TimeoutException e)
+      {
+         throw new RuntimeException("failed to read device descriptor from " + addr, e);
+      }
+      catch (IOException e)
+      {
+         throw new RuntimeException("failed to read device descriptor from " + addr, e);
+      }
    }
 
    /**
