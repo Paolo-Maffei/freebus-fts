@@ -6,7 +6,12 @@ import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.InterfaceAddress;
+import java.net.NetworkInterface;
 import java.net.SocketException;
+import java.net.UnknownHostException;
+import java.util.Arrays;
+import java.util.Enumeration;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
@@ -40,6 +45,8 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public final class KNXnetLink extends ListenableLink implements Link
 {
+   private final static Logger LOGGER = Logger.getLogger(KNXnetLink.class);
+
    /**
     * The default KNXnet/IP UDP port
     */
@@ -50,8 +57,6 @@ public final class KNXnetLink extends ListenableLink implements Link
     */
    public static final int defaultPortTCP = 6720;
 
-   private final static Logger LOGGER = Logger.getLogger(KNXnetLink.class);
-
    // Enable to get debug output of the KNXnet/IP communication data
    private final boolean debugData = true;
 
@@ -59,6 +64,7 @@ public final class KNXnetLink extends ListenableLink implements Link
    private final boolean debugProto = false;
 
    private final InetSocketAddress addr;
+   private final InetAddress localAddr;
    private InetSocketAddress dataAddr;
    private PhysicalAddress busAddr = PhysicalAddress.NULL;
 
@@ -80,7 +86,7 @@ public final class KNXnetLink extends ListenableLink implements Link
 
    /**
     * Create a new connection to a KNXnet/IP server listening on a custom port.
-    *
+    * 
     * @param host - the name or IP address of the host that is running the
     *           KNXnet/IP server.
     * @param port - the UDP port of the KNXnet/IP server on the host. Usually
@@ -89,13 +95,14 @@ public final class KNXnetLink extends ListenableLink implements Link
    public KNXnetLink(String host, int port)
    {
       addr = new InetSocketAddress(host, port);
+      localAddr = getLocalIpAddressFor(addr.getAddress());
 
       try
       {
-         socket = new DatagramSocket();
+         socket = new DatagramSocket(0, localAddr);
          socket.setSendBufferSize(sendBufferSize);
          socket.setReceiveBufferSize(recvBufferSize);
-         LOGGER.info("Opening UDP socket " + socket.getLocalAddress() + " port " + socket.getLocalPort());
+         LOGGER.info("Opening UDP socket " + localAddr + " port " + socket.getLocalPort());
       }
       catch (SocketException e)
       {
@@ -109,7 +116,7 @@ public final class KNXnetLink extends ListenableLink implements Link
    /**
     * Create a new connection to a KNXnet/IP server listening on the default UDP
     * port (3671).
-    *
+    * 
     * @param host - the name or IP address of the host that is running the
     *           KNXnet/IP server.
     */
@@ -144,9 +151,9 @@ public final class KNXnetLink extends ListenableLink implements Link
 
       Frame frame;
 
-      LOGGER.info("Local address is " + InetAddress.getLocalHost().toString() + ", port " + socket.getLocalPort());
+      LOGGER.info("Local address is " + localAddr.toString() + ", port " + socket.getLocalPort());
 
-      send(addr, new SearchRequest(TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort()), false);
+      send(addr, new SearchRequest(TransportType.UDP, localAddr, socket.getLocalPort()), false);
       frame = receive(1000);
       if (!(frame instanceof SearchResponse))
          throw new ConnectException("no response to KNXnet/IP search request");
@@ -172,7 +179,7 @@ public final class KNXnetLink extends ListenableLink implements Link
             throw new ConnectException("KNXnet/IP connect to " + addr + " failed: " + status);
       }
 
-      send(addr, new DescriptionRequest(TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort()), false);
+      send(addr, new DescriptionRequest(TransportType.UDP, localAddr, socket.getLocalPort()), false);
       frame = receive(3500);
 
       if (!(frame instanceof DescriptionResponse))
@@ -193,18 +200,18 @@ public final class KNXnetLink extends ListenableLink implements Link
     * ID and the data endpoint information is stored and {@link StatusCode#OK}
     * is returned. On failure, the {@link StatusCode status code} of the
     * response is returned.
-    *
+    * 
     * @param mode - the link mode to request
-    *
+    * 
     * @return the {@link StatusCode status} of the the connection response.
-    *
+    * 
     * @throws IOException
     */
    private StatusCode connectRequest(LinkMode mode) throws IOException
    {
 
-      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, InetAddress.getLocalHost(),
-            socket.getLocalPort(), TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort());
+      final ConnectRequest conReq = new ConnectRequest(TransportType.UDP, localAddr,
+            socket.getLocalPort(), TransportType.UDP, localAddr, socket.getLocalPort());
       conReq.setLayer(mode);
 
       Frame frame = null;
@@ -239,9 +246,8 @@ public final class KNXnetLink extends ListenableLink implements Link
 
       try
       {
-         send(addr,
-               new DisconnectRequest(TransportType.UDP, InetAddress.getLocalHost(), socket.getLocalPort(), channelId),
-               false);
+         send(addr, new DisconnectRequest(TransportType.UDP, localAddr, socket.getLocalPort(),
+               channelId), false);
 
          final Frame frame = receive(1000);
          if (!(frame instanceof DisconnectResponse))
@@ -299,9 +305,9 @@ public final class KNXnetLink extends ListenableLink implements Link
    /**
     * Receive a frame. Up to <code>timeout</code> milliseconds is waited for a
     * frame to arrive.
-    *
+    * 
     * @param timeout - wait up to timeout milliseconds, -1 waits infinitely.
-    *
+    * 
     * @return the received KNXnet/IP frame, or null of no frame was received
     *         within the timeout.
     */
@@ -337,7 +343,7 @@ public final class KNXnetLink extends ListenableLink implements Link
 
    /**
     * Send a KNXnet/IP frame to an address.
-    *
+    * 
     * @param address - the address (IP number + port) to send to
     * @param frame - the frame to send
     * @param blocking - enable to wait for an acknowledge
@@ -360,10 +366,10 @@ public final class KNXnetLink extends ListenableLink implements Link
 
    /**
     * Process the received data
-    *
+    * 
     * @param data - the received data.
     * @param len - number of bytes in data that are valid.
-    *
+    * 
     * @throws IOException
     */
    public void processData(final byte[] data, int len) throws IOException
@@ -445,5 +451,75 @@ public final class KNXnetLink extends ListenableLink implements Link
    public PhysicalAddress getPhysicalAddress()
    {
       return busAddr;
+   }
+
+   /**
+    * Get the raw bytes of the network address of the given address.
+    * 
+    * @param addr - the address to process
+    * @param maskLength - the length of the network mask in bits
+    * 
+    * @return The raw bytes of the address
+    */
+   static byte[] getNetworkAddressOf(InetAddress addr, int maskLength)
+   {
+      final byte[] raw = addr.getAddress();
+
+      int pos = maskLength >> 3;
+      int restBits = maskLength & 7;
+         
+      if (restBits != 0)
+      {
+         final int mask = new int[] { 0x80, 0xc0, 0xe0, 0xf0, 0xf8, 0xfc, 0xfe } [restBits - 1];
+         raw[pos++] &= mask;
+      }
+
+      while (pos < raw.length)
+         raw[pos++] = 0;
+      
+      return raw;
+   }
+   
+   /**
+    * Select the local IP address for connecting the given remote IP address.
+    * 
+    * @param remoteIP - the IP address of the remote host.
+    */
+   static InetAddress getLocalIpAddressFor(InetAddress remoteIP)
+   {
+      try
+      {
+         final Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();
+         while (en.hasMoreElements())
+         {
+            final NetworkInterface iface = en.nextElement();
+
+            for (final InterfaceAddress ifaceAddr: iface.getInterfaceAddresses())
+            {
+               final int maskLength = ifaceAddr.getNetworkPrefixLength();
+
+               final byte[] remoteRaw = getNetworkAddressOf(remoteIP, maskLength);
+               final byte[] localRaw = getNetworkAddressOf(ifaceAddr.getAddress(), maskLength);
+
+               if (Arrays.equals(remoteRaw, localRaw))
+                  return ifaceAddr.getAddress();
+            }
+         }
+
+         LOGGER.warn("Did not find a matching network interface, using default local IP");
+      }
+      catch (SocketException e)
+      {
+         LOGGER.error("failed to get list of network interfaces, using default local IP", e);
+      }
+
+      try
+      {
+         return InetAddress.getLocalHost();
+      }
+      catch (UnknownHostException e1)
+      {
+         throw new RuntimeException("failed to get IP address of local host", e1);
+      }
    }
 }
