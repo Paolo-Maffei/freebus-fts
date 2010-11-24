@@ -7,9 +7,9 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.core.Config;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.SimpleConfig;
-import org.freebus.fts.core.Config;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
 
 /**

@@ -79,10 +79,8 @@ public final class KNXnetLink extends ListenableLink implements Link
    private final DatagramSocket socket;
    private final Thread listenerThread;
 
-   private final int sendBufferSize = 8192;
-   private final int recvBufferSize = 8192;
-
-   private final byte[] recvBuffer = new byte[recvBufferSize];
+   private final int sendBufferSize = 4096;
+   private final int recvBufferSize = 4096;
 
    /**
     * Create a new connection to a KNXnet/IP server listening on a custom port.
@@ -359,9 +357,7 @@ public final class KNXnetLink extends ListenableLink implements Link
       if (debugData && LOGGER.isDebugEnabled())
          LOGGER.debug("IP-SEND: " + HexString.toString(data));
 
-      final DatagramPacket dp = new DatagramPacket(data, data.length);
-      dp.setSocketAddress(address);
-      socket.send(dp);
+      socket.send(new DatagramPacket(data, data.length, address));
    }
 
    /**
@@ -422,6 +418,8 @@ public final class KNXnetLink extends ListenableLink implements Link
          public void run()
          {
             LOGGER.debug("Starting KNXnet/IP listener thread");
+
+            final byte[] recvBuffer = new byte[recvBufferSize];
             final DatagramPacket p = new DatagramPacket(recvBuffer, recvBuffer.length);
 
             while (true)

@@ -15,18 +15,18 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.backend.job.DeviceScannerJob;
-import org.freebus.fts.backend.job.DeviceScannerJobListener;
-import org.freebus.fts.backend.job.JobQueue;
-import org.freebus.fts.backend.job.entity.DeviceInfo;
+import org.freebus.fts.client.core.Config;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductsManager;
+import org.freebus.fts.service.job.DeviceScannerJob;
+import org.freebus.fts.service.job.DeviceScannerJobListener;
+import org.freebus.fts.service.job.JobQueue;
+import org.freebus.fts.service.job.entity.DeviceInfo;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 
 /**

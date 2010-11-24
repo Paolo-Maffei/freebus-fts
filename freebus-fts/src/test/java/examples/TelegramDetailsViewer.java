@@ -15,10 +15,10 @@ import javax.swing.JLabel;
 import javax.swing.JTextField;
 import javax.swing.border.EtchedBorder;
 
+import org.freebus.fts.client.core.Config;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.components.TelegramDetails;
-import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.elements.services.LookAndFeelManager;
 

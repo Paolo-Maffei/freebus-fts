@@ -17,8 +17,8 @@ import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.TransferHandler;
 
-import org.freebus.fts.I18n;
 import org.freebus.fts.actions.Actions;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.components.ToolBarButton;

@@ -16,9 +16,9 @@ import javax.swing.TransferHandler;
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreePath;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.MainWindow;
 import org.freebus.fts.actions.Actions;
+import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.dialogs.AreaProperties;
 import org.freebus.fts.dialogs.LineProperties;
 import org.freebus.fts.dragdrop.ObjectTransferHandler;

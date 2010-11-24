@@ -3,7 +3,7 @@ package org.freebus.fts.actions;
 import java.awt.event.ActionEvent;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;

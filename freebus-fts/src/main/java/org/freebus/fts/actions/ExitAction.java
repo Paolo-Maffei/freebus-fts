@@ -5,8 +5,8 @@ import java.awt.event.InputEvent;
 
 import javax.swing.KeyStroke;
 
-import org.freebus.fts.FTS;
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.FTS;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.elements.services.ImageCache;
 
 /**

@@ -15,8 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.freebus.fts.I18n;
 import org.freebus.fts.actions.SetPhysicalAddressAction;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.elements.components.Dialog;
 

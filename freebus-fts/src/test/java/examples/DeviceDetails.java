@@ -12,9 +12,9 @@ import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
+import org.freebus.fts.client.core.Config;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.components.ParameterEditor;
-import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.elements.services.LookAndFeelManager;

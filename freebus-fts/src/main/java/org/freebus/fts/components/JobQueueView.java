@@ -9,11 +9,11 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.border.EtchedBorder;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.backend.job.JobQueue;
-import org.freebus.fts.backend.job.JobQueueListener;
-import org.freebus.fts.backend.job.event.JobQueueErrorEvent;
-import org.freebus.fts.backend.job.event.JobQueueEvent;
+import org.freebus.fts.client.core.I18n;
+import org.freebus.fts.service.job.JobQueue;
+import org.freebus.fts.service.job.JobQueueListener;
+import org.freebus.fts.service.job.event.JobQueueErrorEvent;
+import org.freebus.fts.service.job.event.JobQueueEvent;
 
 /**
  * A widget that displays the state of the {@link JobQueue}.

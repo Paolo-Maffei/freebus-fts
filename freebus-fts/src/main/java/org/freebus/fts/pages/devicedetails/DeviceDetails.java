@@ -13,9 +13,7 @@ import javax.swing.JTabbedPane;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.backend.devicecontroller.DeviceController;
-import org.freebus.fts.backend.devicecontroller.DeviceControllerFactory;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.components.AbstractPage;
 import org.freebus.fts.components.ParameterEditor;
 import org.freebus.fts.elements.services.ImageCache;
@@ -25,6 +23,8 @@ import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectListener;
+import org.freebus.fts.service.devicecontroller.DeviceController;
+import org.freebus.fts.service.devicecontroller.DeviceControllerFactory;
 
 /**
  * An editor for the details of a device: description, name, physical address,

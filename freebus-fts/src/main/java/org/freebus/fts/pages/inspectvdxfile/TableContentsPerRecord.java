@@ -10,7 +10,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.models.SortedListModel;
 import org.freebus.fts.elements.utils.TableUtils;

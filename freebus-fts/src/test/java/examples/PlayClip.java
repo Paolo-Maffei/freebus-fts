@@ -1,7 +1,7 @@
 package examples;
 
+import org.freebus.fts.client.core.Config;
 import org.freebus.fts.common.Environment;
-import org.freebus.fts.core.Config;
 import org.freebus.fts.elements.audio.AudioClip;
 import org.freebus.fts.elements.services.LookAndFeelManager;
 

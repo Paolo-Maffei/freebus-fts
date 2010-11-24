@@ -22,7 +22,7 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.types.ObjectPriority;
 import org.freebus.fts.dragdrop.TransferableObject;
 import org.freebus.fts.elements.components.Dialogs;

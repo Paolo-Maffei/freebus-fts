@@ -143,7 +143,7 @@
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
-   <artifactId>freebus-fts-backend</artifactId>
+   <artifactId>freebus-fts-service</artifactId>
    <version>0.1-SNAPSHOT</version>
    <type>jar</type>
    <scope>compile</scope>

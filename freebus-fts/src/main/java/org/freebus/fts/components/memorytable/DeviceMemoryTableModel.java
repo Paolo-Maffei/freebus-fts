@@ -8,8 +8,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import org.freebus.fts.I18n;
 import org.freebus.fts.bus.DeviceMemoryAdapter;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;

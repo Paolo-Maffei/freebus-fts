@@ -6,4 +6,4 @@ if [ -n "$topDir" ]; then
 fi
 
 set -x
-java -cp 'libs/*' -splash:libs/splash.png org.freebus.fts.FTS $*
+java -cp 'libs/*' -splash:libs/splash.png org.freebus.fts.client.FTS $*

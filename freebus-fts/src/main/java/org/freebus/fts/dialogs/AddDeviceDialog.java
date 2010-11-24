@@ -15,8 +15,8 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.MainWindow;
+import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.VirtualDevice;

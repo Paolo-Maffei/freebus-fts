@@ -18,8 +18,8 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.core.WorkBenchPageId;
+import org.freebus.fts.client.core.I18n;
+import org.freebus.fts.client.core.WorkBenchPageId;
 import org.freebus.fts.elements.ApplicationWindow;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.ExtTabbedPane;

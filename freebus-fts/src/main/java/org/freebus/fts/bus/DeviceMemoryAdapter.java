@@ -6,7 +6,6 @@ import java.util.TreeSet;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.backend.devicecontroller.AssociationTableEntry;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.types.ObjectType;
@@ -16,6 +15,7 @@ import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
 import org.freebus.fts.project.SubGroupToObject;
+import org.freebus.fts.service.devicecontroller.AssociationTableEntry;
 
 /**
  * An adapter for a {@link Device} that creates the EEPROM memory tables and

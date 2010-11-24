@@ -17,13 +17,13 @@ import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
 import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.SubGroup;
+import org.freebus.fts.service.devicecontroller.DeviceController;
 
 /**
  * An editor for the communication objects of a device.

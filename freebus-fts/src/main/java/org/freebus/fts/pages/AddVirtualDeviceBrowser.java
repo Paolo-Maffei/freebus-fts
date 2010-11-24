@@ -8,8 +8,8 @@ import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.JButton;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.MainWindow;
+import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.dialogs.AddDeviceDialog;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.pages.productsbrowser.ProductsBrowser;

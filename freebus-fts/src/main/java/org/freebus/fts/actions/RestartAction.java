@@ -2,8 +2,8 @@ package org.freebus.fts.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.FTS;
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.FTS;
+import org.freebus.fts.client.core.I18n;
 
 /**
  * Restart the application.

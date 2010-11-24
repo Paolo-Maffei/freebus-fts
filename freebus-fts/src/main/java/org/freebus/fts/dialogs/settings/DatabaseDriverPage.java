@@ -15,7 +15,7 @@ import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.LineBorder;
 
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.persistence.db.DriverType;
 
 /**

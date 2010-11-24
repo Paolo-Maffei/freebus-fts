@@ -9,8 +9,8 @@ import java.awt.event.WindowEvent;
 import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.I18n;
-import org.freebus.fts.MainWindow;
+import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.dialogs.ProjectSelector;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.project.Project;

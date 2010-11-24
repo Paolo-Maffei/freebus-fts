@@ -14,8 +14,8 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JTabbedPane;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.core.Config;
+import org.freebus.fts.client.core.Config;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.dialogs.settings.BusInterfacePage;
 import org.freebus.fts.dialogs.settings.DatabasePage;
 import org.freebus.fts.dialogs.settings.SettingsPage;

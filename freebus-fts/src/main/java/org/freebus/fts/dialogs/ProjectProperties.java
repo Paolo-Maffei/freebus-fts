@@ -16,7 +16,7 @@ import javax.swing.border.EtchedBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
-import org.freebus.fts.I18n;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.project.Project;
 

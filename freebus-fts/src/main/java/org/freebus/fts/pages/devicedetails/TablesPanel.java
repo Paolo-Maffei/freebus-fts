@@ -9,10 +9,10 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
-import org.freebus.fts.I18n;
-import org.freebus.fts.backend.devicecontroller.DeviceController;
+import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.components.DeviceTables;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.service.devicecontroller.DeviceController;
 
 /**
  * Displays the tables of the edited {@link Device}: the group addresses, the

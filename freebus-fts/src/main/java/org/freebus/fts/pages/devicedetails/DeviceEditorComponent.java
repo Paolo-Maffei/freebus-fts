@@ -1,7 +1,7 @@
 package org.freebus.fts.pages.devicedetails;
 
-import org.freebus.fts.backend.devicecontroller.DeviceController;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.service.devicecontroller.DeviceController;
 
 /**
  * Interface for parts of the {@link DeviceDetails} that need to know about the
