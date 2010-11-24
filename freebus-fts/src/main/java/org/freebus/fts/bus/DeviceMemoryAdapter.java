@@ -48,7 +48,7 @@ public final class DeviceMemoryAdapter
 
    /**
     * Create a device-memory adapter.
-    * 
+    *
     * @param device - the device to process.
     */
    public DeviceMemoryAdapter(Device device)
@@ -66,7 +66,7 @@ public final class DeviceMemoryAdapter
 
    /**
     * Set the device to process. Calls {@link #update()}.
-    * 
+    *
     * @param device - the device to set.
     */
    public void setDevice(Device device)
@@ -78,7 +78,7 @@ public final class DeviceMemoryAdapter
    /**
     * Get all group addresses that the device uses. The returned list is sorted
     * by group address.
-    * 
+    *
     * @return A sorted collection of group addresses.
     */
    public List<GroupAddress> getGroupAddresses()
@@ -97,7 +97,7 @@ public final class DeviceMemoryAdapter
    /**
     * Returns the pointer to the ram-flag table. The ram-flag table allocates
     * one byte per 2 device objects.
-    * 
+    *
     * @return The pointer to the ram-flag table.
     */
    public int getRamFlagTablePtr()
@@ -128,7 +128,7 @@ public final class DeviceMemoryAdapter
 
    /**
     * Get the next free user RAM address for count bytes.
-    * 
+    *
     * @param count - the number of bytes that shall be allocated.
     * @return The start address of the allocated memory. Zero is returned if
     *         count is zero.
@@ -156,7 +156,7 @@ public final class DeviceMemoryAdapter
 
    /**
     * Get the next free user EEPROM address for count bytes.
-    * 
+    *
     * @param count - the number of bytes that shall be allocated.
     * @return The start address of the allocated memory.
     */
@@ -198,7 +198,7 @@ public final class DeviceMemoryAdapter
 
    /**
     * Update all group addresses that the device uses.
-    * 
+    *
     * @return A sorted collection of group addresses.
     */
    private void updateGroupAddresses()
@@ -217,7 +217,7 @@ public final class DeviceMemoryAdapter
 
    /**
     * Get the maximum sizes of the communication objects.
-    * 
+    *
     * @return A vector with the maximum sizes of the communication objects.
     *         Index is the {@link CommunicationObject#getNumber() communication
     *         object number}, value is the maximum size in bits.
@@ -288,7 +288,7 @@ public final class DeviceMemoryAdapter
       for (int i = 0; i < numComObjects; ++i)
       {
          final ObjectDescriptor od = objectDescriptors.get(i);
-         final int numBytes = (maxSizes.get(i) + 7) >> 3; 
+         final int numBytes = (maxSizes.get(i) + 7) >> 3;
 
          if (od.isEepromDataPointer())
             od.setDataPointer(allocateEeprom(numBytes), true);

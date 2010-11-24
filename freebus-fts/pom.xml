@@ -130,6 +130,11 @@
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
+   <artifactId>freebus-fts-service</artifactId>
+   <version>0.1-SNAPSHOT</version>
+  </dependency>
+  <dependency>
+   <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-knxcomm</artifactId>
    <version>0.1-SNAPSHOT</version>
    <scope>compile</scope>

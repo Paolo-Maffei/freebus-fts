@@ -53,8 +53,8 @@
   <module>freebus-fts-common</module>
   <module>freebus-fts-knxcomm</module>
   <module>freebus-fts-persistence</module>
-  <module>freebus-fts-elements</module>
   <module>freebus-fts-service</module>
+  <module>freebus-fts-elements</module>
   <module>freebus-fts</module>
  </modules>
  <dependencyManagement>
