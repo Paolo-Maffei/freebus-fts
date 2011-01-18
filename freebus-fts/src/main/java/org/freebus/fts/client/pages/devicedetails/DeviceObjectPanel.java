@@ -22,8 +22,10 @@ import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.client.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dragdrop.TransferableObject;
+import org.freebus.fts.client.view.LogicalView;
 import org.freebus.fts.common.types.ObjectPriority;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
@@ -121,6 +123,7 @@ public class DeviceObjectPanel extends JPanel
       // addGroupButton.setBorderPainted(false);
       addGroupButton.setFocusPainted(false);
       addGroupButton.setToolTipText(I18n.getMessage("DeviceObjectPanel.AddGroupButtonTip"));
+      addGroupButton.addActionListener(addGroupListener);
       add(addGroupButton, new GridBagConstraints(1, ++gridy, 1, 1, 1, 1, GridBagConstraints.NORTHWEST,
             GridBagConstraints.NONE, noInsets, 0, 0));
 
@@ -164,6 +167,26 @@ public class DeviceObjectPanel extends JPanel
    }
 
    /**
+    * Action listener for the add-group button.
+    */
+   private final ActionListener addGroupListener = new ActionListener()
+   {
+      @Override
+      public void actionPerformed(ActionEvent e)
+      {
+         final LogicalView logicalView = (LogicalView) MainWindow.getInstance().getPage(LogicalView.class, null);
+         if (logicalView == null)
+            return;
+
+         final Object obj = logicalView.getSelectedObject();
+         if (obj instanceof SubGroup)
+         {
+            addSubGroup((SubGroup) obj, true);
+         }
+      }
+   };
+
+   /**
     * Action listener that sets the communication flags of the device object.
     */
    private final ActionListener flagsButtonListener = new ActionListener()
@@ -199,17 +222,8 @@ public class DeviceObjectPanel extends JPanel
       {
          if (obj instanceof SubGroup)
          {
-            final SubGroup subGroup = (SubGroup) obj;
-
-            if (deviceObject.contains(subGroup))
+            if (addSubGroup((SubGroup) obj, false))
             {
-               Logger.getLogger(getClass()).warn(
-                     I18n.formatMessage("DeviceObjectPanel.GroupAlreadyAdded", subGroup.getGroupAddress().toString()));
-            }
-            else
-            {
-               groupsModelAdd(deviceObject.add(subGroup));
-               ProjectManager.fireComponentModified(subGroup);
                modified = true;
                ++num;
             }
@@ -223,6 +237,34 @@ public class DeviceObjectPanel extends JPanel
       }
 
       return num;
+   }
+
+   /**
+    * Add a sub-group to the device object.
+    * 
+    * @param subGroup - the sub-group to add
+    * @param update - shall the device object be updated?
+    * @return True if the sub-group was added, false if there was an error.
+    */
+   private boolean addSubGroup(final SubGroup subGroup, boolean update)
+   {
+      if (deviceObject.contains(subGroup))
+      {
+         Logger.getLogger(getClass()).warn(
+               I18n.formatMessage("DeviceObjectPanel.GroupAlreadyAdded", subGroup.getGroupAddress().toString()));
+         return false;
+      }
+
+      groupsModelAdd(deviceObject.add(subGroup));
+      ProjectManager.fireComponentModified(subGroup);
+
+      if (update)
+      {
+         groupsModel.fireTableDataChanged();
+         ProjectManager.fireComponentModified(deviceObject);
+      }
+
+      return true;
    }
 
    /**
