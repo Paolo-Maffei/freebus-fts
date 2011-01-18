@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.freebus.fts.client.components.parametereditor.ParamData;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ProductsManager;

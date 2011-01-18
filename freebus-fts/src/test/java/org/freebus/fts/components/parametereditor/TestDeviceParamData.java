@@ -8,6 +8,8 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.freebus.fts.client.components.parametereditor.DeviceParamData;
+import org.freebus.fts.client.components.parametereditor.ParamData;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;

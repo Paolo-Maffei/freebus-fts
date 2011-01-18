@@ -1,12 +1,12 @@
 package org.freebus.fts.client.core;
 
 import org.freebus.fts.client.MainWindow;
-import org.freebus.fts.dialogs.AddDeviceDialog;
+import org.freebus.fts.client.dialogs.AddDeviceDialog;
+import org.freebus.fts.client.pages.AreaDetails;
+import org.freebus.fts.client.pages.BuildingDetails;
+import org.freebus.fts.client.pages.LineDetails;
+import org.freebus.fts.client.pages.devicedetails.DeviceDetails;
 import org.freebus.fts.elements.components.Dialogs;
-import org.freebus.fts.pages.AreaDetails;
-import org.freebus.fts.pages.BuildingDetails;
-import org.freebus.fts.pages.LineDetails;
-import org.freebus.fts.pages.devicedetails.DeviceDetails;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;

@@ -14,12 +14,15 @@ import javax.swing.JMenu;
 import javax.swing.JToolBar;
 import javax.swing.SwingUtilities;
 
-import org.freebus.fts.actions.Actions;
+import org.freebus.fts.client.actions.Actions;
 import org.freebus.fts.client.app.Application;
+import org.freebus.fts.client.components.AbstractPage;
+import org.freebus.fts.client.components.JobQueueView;
+import org.freebus.fts.client.components.WorkBench;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.components.JobQueueView;
-import org.freebus.fts.components.WorkBench;
+import org.freebus.fts.client.view.LogicalView;
+import org.freebus.fts.client.view.PhysicalView;
+import org.freebus.fts.client.view.TopologyView;
 import org.freebus.fts.elements.ApplicationWindow;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.LogLine;
@@ -32,9 +35,6 @@ import org.freebus.fts.service.job.JobQueue;
 import org.freebus.fts.service.job.JobQueueListener;
 import org.freebus.fts.service.job.event.JobQueueErrorEvent;
 import org.freebus.fts.service.job.event.JobQueueEvent;
-import org.freebus.fts.view.LogicalView;
-import org.freebus.fts.view.PhysicalView;
-import org.freebus.fts.view.TopologyView;
 import org.springframework.stereotype.Component;
 
 /**

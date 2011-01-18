@@ -1,7 +1,7 @@
 package org.freebus.fts.client.core;
 
-import org.freebus.fts.components.AbstractPage;
-import org.freebus.fts.components.WorkBench;
+import org.freebus.fts.client.components.AbstractPage;
+import org.freebus.fts.client.components.WorkBench;
 
 /**
  * Class for IDs of pages of a {@link WorkBench}.

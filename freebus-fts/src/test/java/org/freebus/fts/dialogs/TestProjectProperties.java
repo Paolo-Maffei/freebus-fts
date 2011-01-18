@@ -12,6 +12,7 @@ import junit.extensions.jfcunit.WindowMonitor;
 import junit.extensions.jfcunit.eventdata.MouseEventData;
 import junit.extensions.jfcunit.finder.NamedComponentFinder;
 
+import org.freebus.fts.client.dialogs.ProjectProperties;
 import org.freebus.fts.project.Project;
 import org.junit.Ignore;
 import org.junit.Test;
