@@ -1,11 +1,11 @@
 package org.freebus.fts.client.core;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.dialogs.AddDeviceDialog;
-import org.freebus.fts.client.pages.AreaDetails;
-import org.freebus.fts.client.pages.BuildingDetails;
-import org.freebus.fts.client.pages.LineDetails;
-import org.freebus.fts.client.pages.devicedetails.DeviceDetails;
+import org.freebus.fts.client.editors.AreaDetails;
+import org.freebus.fts.client.editors.BuildingDetails;
+import org.freebus.fts.client.editors.LineDetails;
+import org.freebus.fts.client.editors.devicedetails.DeviceDetails;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
@@ -67,16 +67,14 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public boolean edit(Object obj)
    {
-      final MainWindow mainWin = MainWindow.getInstance();
-
       if (obj instanceof Area)
-         mainWin.showPage(AreaDetails.class, obj);
+         new AreaDetails((Area) obj);
       else if (obj instanceof Line)
-         mainWin.showPage(LineDetails.class, obj);
+         new LineDetails((Line) obj);
       else if (obj instanceof Device)
-         mainWin.showPage(DeviceDetails.class, obj);
+         new DeviceDetails((Device) obj);
       else if (obj instanceof Building)
-         mainWin.showPage(BuildingDetails.class, obj);
+         new BuildingDetails((Building) obj);
       else return false;
 
       return true;

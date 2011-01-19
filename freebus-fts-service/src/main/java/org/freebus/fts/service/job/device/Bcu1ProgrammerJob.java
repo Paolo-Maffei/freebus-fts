@@ -27,7 +27,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 {
    private final Set<DeviceProgrammerType> types = new HashSet<DeviceProgrammerType>();
    private boolean physicalAddressJobQueued;
-   private final DeviceController controller;
+//   private final DeviceController controller;
    private final Device device;
    private final String label;
 
@@ -60,7 +60,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    protected Bcu1ProgrammerJob(DeviceController controller)
    {
-      this.controller = controller;
+//      this.controller = controller;
       this.device = controller.getDevice();
 
       label = I18n.formatMessage("Bcu1ProgrammerJob.Label", device.getPhysicalAddress().toString());
@@ -154,7 +154,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    void uploadProgram(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
    {
-      final byte[] appInfo = memCon.read(MemoryLocation.ApplicationID);
+      /*final byte[] appInfo =*/ memCon.read(MemoryLocation.ApplicationID);
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setProgramValid(true);

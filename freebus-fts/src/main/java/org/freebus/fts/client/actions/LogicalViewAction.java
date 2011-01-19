@@ -2,9 +2,9 @@ package org.freebus.fts.client.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.view.LogicalView;
+import org.freebus.fts.client.views.LogicalView;
 
 /**
  * Show the logical view
@@ -27,6 +27,6 @@ public final class LogicalViewAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showPage(LogicalView.class, null);
+      MainWindow.getInstance().showUniquePanel(LogicalView.class);
    }
 }

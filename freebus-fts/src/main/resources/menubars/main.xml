@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<menubar id="MainMenu">
+ <menu id="File">
+  <action id="newProjectAction" />
+  <action id="openProjectAction" />
+  <action id="saveProjectAction" />
+  <separator />
+  <action id="projectPropertiesAction" />
+  <separator />
+  <action id="restartAction" />
+  <action id="exitAction" />
+ </menu>
+ <menu id="Products">
+  <action id="importProductsAction" />
+  <separator />
+  <action id="browseProductsVdxAction" />
+  <action id="inspectVdxFileAction" />
+ </menu>
+ <menu id="View">
+  <action id="logicalViewAction" />
+  <action id="physicalViewAction" />
+  <action id="topologyViewAction" />
+ </menu>
+ <menu id="Tools">
+  <action id="busMonitorAction" />
+  <action id="busTraceViewerAction" />
+  <separator />
+  <action id="setPhysicalAddressAction" />
+  <action id="deviceScannerAction" />
+ </menu>
+ <menu id="Settings">
+  <action id="settingsAction" />
+ </menu>
+ <menu id="Help">
+  <action id="aboutAction" />
+ </menu>
+</menubar>

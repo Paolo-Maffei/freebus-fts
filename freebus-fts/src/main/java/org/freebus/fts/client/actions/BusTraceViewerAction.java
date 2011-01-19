@@ -6,11 +6,11 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.filter.TrxFileFilter;
-import org.freebus.fts.client.pages.BusTraceViewer;
+import org.freebus.fts.client.editors.BusTraceViewer;
+import org.freebus.fts.client.filters.TrxFileFilter;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 
@@ -59,7 +59,7 @@ public final class BusTraceViewerAction extends BasicAction
          cfg.put("busTraces.lastDir", file.getAbsolutePath());
          cfg.save();
 
-         MainWindow.getInstance().addPage(new BusTraceViewer(), file);
+         MainWindow.getInstance().showUniqueEditor(BusTraceViewer.class, file);
       }
       catch (Exception e)
       {

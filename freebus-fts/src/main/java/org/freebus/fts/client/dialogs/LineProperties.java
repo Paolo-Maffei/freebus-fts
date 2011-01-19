@@ -119,7 +119,7 @@ public class LineProperties extends Dialog
       final int usedAddr[] = parentArea.getUsedLineAddresses();
 
       //we want a list with all free addresses
-      String freeAddr[] = new String[(Line.MAX_ADDR - usedAddr.length + 1 + 1)];
+      String freeAddr[] = new String[Line.MAX_ADDR - usedAddr.length + 2];
 
       int pos = 0;
       if (address == -1)
@@ -135,6 +135,7 @@ public class LineProperties extends Dialog
          {
             cnt++;
          }
+
          // store it
          if (pos < freeAddr.length)
          {

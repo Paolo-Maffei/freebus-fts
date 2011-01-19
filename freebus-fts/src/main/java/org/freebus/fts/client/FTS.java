@@ -1,7 +1,8 @@
 package org.freebus.fts.client;
 
-import org.freebus.fts.client.app.Application;
-import org.freebus.fts.client.app.ApplicationFactory;
+import org.freebus.fts.client.application.Application;
+import org.freebus.fts.client.application.ApplicationFactory;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.common.Environment;
 import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
@@ -22,7 +23,7 @@ public final class FTS
       Environment.setAppName("fts");
       APPLICATION_CONTEXT = new ClassPathXmlApplicationContext("classpath:META-INF/applicationContext.xml");
    }
-   
+
    /**
     * @return the instance of the FTS application.
     */

@@ -9,7 +9,7 @@ import java.awt.event.WindowEvent;
 import javax.swing.KeyStroke;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dialogs.ProjectSelector;
 import org.freebus.fts.elements.services.ImageCache;

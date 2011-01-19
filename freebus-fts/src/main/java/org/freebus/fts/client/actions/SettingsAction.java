@@ -3,7 +3,7 @@ package org.freebus.fts.client.actions;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dialogs.Settings;
 import org.freebus.fts.elements.services.ImageCache;

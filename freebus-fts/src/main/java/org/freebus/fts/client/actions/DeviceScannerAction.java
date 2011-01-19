@@ -2,9 +2,9 @@ package org.freebus.fts.client.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.pages.DeviceScanner;
+import org.freebus.fts.client.editors.DeviceScanner;
 import org.freebus.fts.elements.services.ImageCache;
 
 /**
@@ -28,6 +28,6 @@ public final class DeviceScannerAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showPage(DeviceScanner.class, null);
+      MainWindow.getInstance().showUniquePanel(DeviceScanner.class);
    }
 }

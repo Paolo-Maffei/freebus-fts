@@ -9,6 +9,8 @@ import javax.swing.Icon;
 /**
  * An abstract action class that extracts the mnemonic from the action's name.
  * E.g. "E&xit" will result in the name "Exit" and the mnemonic "x".
+ * 
+ * @see ActionFactory
  */
 public abstract class BasicAction extends AbstractAction
 {

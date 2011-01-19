@@ -1,5 +1,7 @@
 package org.freebus.fts.client.components;
 
+import org.freebus.fts.client.workbench.WorkBench;
+
 /**
  * Position of a page on the {@link WorkBench}.
  */

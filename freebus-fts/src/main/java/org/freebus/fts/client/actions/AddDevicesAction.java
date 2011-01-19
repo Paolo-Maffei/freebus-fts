@@ -2,9 +2,9 @@ package org.freebus.fts.client.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.pages.AddVirtualDeviceBrowser;
+import org.freebus.fts.client.editors.AddVirtualDeviceBrowser;
 import org.freebus.fts.elements.services.ImageCache;
 
 /**
@@ -28,7 +28,6 @@ public final class AddDevicesAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent event)
    {
-      final MainWindow mainWin = MainWindow.getInstance();
-      mainWin.showPage(AddVirtualDeviceBrowser.class, null);
+      MainWindow.getInstance().showUniquePanel(AddVirtualDeviceBrowser.class);
    }
 }

@@ -2,9 +2,9 @@ package org.freebus.fts.client.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.view.PhysicalView;
+import org.freebus.fts.client.views.PhysicalView;
 
 /**
  * Show the physical view
@@ -27,6 +27,6 @@ public final class PhysicalViewAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showPage(PhysicalView.class, null);
+      MainWindow.getInstance().showUniquePanel(PhysicalView.class);
    }
 }

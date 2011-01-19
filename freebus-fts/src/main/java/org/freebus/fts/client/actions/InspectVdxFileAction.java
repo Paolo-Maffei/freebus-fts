@@ -6,11 +6,11 @@ import java.io.File;
 import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.filter.VdxFileFilter;
-import org.freebus.fts.client.pages.inspectvdxfile.InspectVdxFile;
+import org.freebus.fts.client.editors.inspectvdxfile.InspectVdxFile;
+import org.freebus.fts.client.filters.VdxFileFilter;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 
@@ -57,7 +57,7 @@ public final class InspectVdxFileAction extends BasicAction
          cfg.put("VdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 
-         MainWindow.getInstance().addPage(new InspectVdxFile(), file);
+         MainWindow.getInstance().showUniqueEditor(InspectVdxFile.class, file);
       }
       catch (Exception e)
       {

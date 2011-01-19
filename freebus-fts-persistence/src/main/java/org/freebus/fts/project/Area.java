@@ -49,7 +49,12 @@ public class Area implements Comparable<Area>
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "area")
    private TreeSet<Line> lines = new TreeSet<Line>();
 
-   public final static int MAX_ADDR = 0x0F;        // The highest number valid for address 
+   /**
+    * The highest valid number of an area address
+    */
+   public final static int MAX_ADDR = 15;
+
+   @Deprecated
    public final static int MIN_NAME_LENGTH = 2;    //TODO Define minimum accepted length for an Area Name
    
    /**

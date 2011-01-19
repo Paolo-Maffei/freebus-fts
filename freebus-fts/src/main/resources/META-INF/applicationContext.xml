@@ -9,12 +9,12 @@
 
  <import resource="spring-service.xml" />
 
- <context:component-scan base-package="org.freebus.fts.client" />
+ <context:component-scan base-package="org.freebus.fts.client.application" />
  <!-- <context:mbean-export /> -->
 
- <bean id="applicationFactory" class="org.freebus.fts.client.app.ApplicationFactory" />
+ <bean id="applicationFactory" class="org.freebus.fts.client.application.ApplicationFactory" />
  <bean id="application" factory-bean="applicationFactory" factory-method="createApplication" />
 
- <bean id="mainWindow" class="org.freebus.fts.client.MainWindow" lazy-init="true" />
+ <bean id="mainWindow" class="org.freebus.fts.client.application.MainWindow" lazy-init="true" />
 
 </beans>

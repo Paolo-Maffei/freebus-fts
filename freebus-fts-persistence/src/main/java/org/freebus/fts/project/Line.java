@@ -49,9 +49,10 @@ public class Line implements Comparable<Line>
    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, orphanRemoval = true, mappedBy = "line")
    private Set<Device> devices = new TreeSet<Device>();
 
-   @Deprecated
-   public final static int MAX_ADDR = 0x0F; // The highest number valid for
-                                            // address
+   /**
+    * The highest valid number of a line address
+    */
+   public final static int MAX_ADDR = 15;
 
    @Deprecated
    public final static int MIN_NAME_LENGTH = 2; // minimum accepted length for a

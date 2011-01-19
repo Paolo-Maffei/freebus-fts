@@ -2,7 +2,6 @@ package org.freebus.knxcomm.link.netip;
 
 import static org.junit.Assert.assertArrayEquals;
 
-import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 

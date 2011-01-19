@@ -2,9 +2,9 @@ package org.freebus.fts.client.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.view.TopologyView;
+import org.freebus.fts.client.views.TopologyView;
 
 /**
  * Open the bus monitor.
@@ -27,6 +27,6 @@ public final class TopologyViewAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showPage(TopologyView.class, null);
+      MainWindow.getInstance().showUniquePanel(TopologyView.class);
    }
 }

@@ -5,11 +5,11 @@ import java.io.File;
 
 import javax.swing.JFileChooser;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.filter.VdxFileFilter;
-import org.freebus.fts.client.pages.productsbrowser.ProductsBrowser;
+import org.freebus.fts.client.editors.productsbrowser.ProductsBrowser;
+import org.freebus.fts.client.filters.VdxFileFilter;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 
@@ -53,7 +53,7 @@ public final class BrowseProductsVdxAction extends BasicAction
          cfg.put("vdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 
-         MainWindow.getInstance().addPage(new ProductsBrowser(), file);
+         MainWindow.getInstance().addPanel(new ProductsBrowser(file));
       }
       catch (Exception e)
       {

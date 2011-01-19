@@ -3,9 +3,9 @@ package org.freebus.fts.client.actions;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.pages.busmonitor.BusMonitor;
+import org.freebus.fts.client.editors.busmonitor.BusMonitor;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -45,6 +45,6 @@ public final class BusMonitorAction extends BasicAction
       }
 
       if (bus != null)
-         mainWin.showPage(BusMonitor.class, bus);
+         mainWin.showUniqueEditor(BusMonitor.class, bus);
    }
 }

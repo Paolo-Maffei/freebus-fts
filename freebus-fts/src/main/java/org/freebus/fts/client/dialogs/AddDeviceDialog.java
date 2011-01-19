@@ -15,10 +15,10 @@ import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
 
-import org.freebus.fts.client.MainWindow;
+import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.view.PhysicalView;
-import org.freebus.fts.client.view.TopologyView;
+import org.freebus.fts.client.views.PhysicalView;
+import org.freebus.fts.client.views.TopologyView;
 import org.freebus.fts.elements.components.Dialog;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.VirtualDevice;
@@ -136,7 +136,7 @@ public class AddDeviceDialog extends Dialog
     */
    private Line getDefaultLine()
    {
-      final TopologyView topologyView = (TopologyView) MainWindow.getInstance().getPage(TopologyView.class, null);
+      final TopologyView topologyView = (TopologyView) MainWindow.getInstance().findPanel(TopologyView.class);
       if (topologyView == null)
          return null;
 
@@ -167,7 +167,7 @@ public class AddDeviceDialog extends Dialog
     */
    private Room getDefaultRoom()
    {
-      final PhysicalView physicalView = (PhysicalView) MainWindow.getInstance().getPage(PhysicalView.class, null);
+      final PhysicalView physicalView = (PhysicalView) MainWindow.getInstance().findPanel(PhysicalView.class);
       if (physicalView == null)
          return null;
 

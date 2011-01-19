@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<toolbars id="MainToolBars">
+ <toolbar id="File">
+  <action id="exitAction" />
+  <separator />
+  <action id="openProjectAction" />
+  <action id="saveProjectAction" />
+ </toolbar>
+ <toolbar id="Tools">
+  <action id="busMonitorAction" />
+  <action id="busTraceViewerAction" />
+ </toolbar>
+ <toolbar id="Add">
+  <action id="addDevicesAction" />
+ </toolbar>
+ <toolbar id="Settings">
+  <action id="settingsAction" />
+ </toolbar>
+</toolbars>
