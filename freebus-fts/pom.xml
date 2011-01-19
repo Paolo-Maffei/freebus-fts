@@ -63,7 +63,7 @@
        <mainClass>org.freebus.fts.FTS</mainClass>
       </manifest>
       <manifestEntries>
-       <SplashScreen-Image>splash.png</SplashScreen-Image>
+       <SplashScreen-Image>images/misc/splash.png</SplashScreen-Image>
        <SCM-Revision>${buildNumber}</SCM-Revision>
        <Version>${project.version}</Version>
       </manifestEntries>

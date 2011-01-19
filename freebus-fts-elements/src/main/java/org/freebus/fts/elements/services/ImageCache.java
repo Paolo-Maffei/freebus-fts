@@ -34,7 +34,7 @@ public final class ImageCache
       {
          final ClassLoader classLoader = ImageCache.class.getClassLoader();
 
-         final URL imgURL = classLoader.getResource(iconName + ".png");
+         final URL imgURL = classLoader.getResource("images/" + iconName + ".png");
          if (imgURL != null)
          {
             icon = new ImageIcon(imgURL);

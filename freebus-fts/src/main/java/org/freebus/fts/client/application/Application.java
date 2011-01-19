@@ -65,7 +65,8 @@ public final class Application extends org.jdesktop.application.Application
 
    @Inject
    private AbstractApplicationContext appContext;
-   
+
+   // Inject here means Look&Feel is initialized too late for the window
    private MainWindow mainWin;
 
    /**

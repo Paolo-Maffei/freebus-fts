@@ -62,14 +62,12 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
    /**
     * Create a main window. Calls {@link #setInstance}.
-    * @throws IOException 
     */
-   public MainWindow() throws IOException
+   public MainWindow()
    {
       super();
-      setInstance(this);
 
-//      setTitle(application.getName());
+      setInstance(this);
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
    }
 
@@ -79,9 +77,11 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    @PostConstruct
    protected void postConstruct()
    {
-      final ImageIcon appIcon = ImageCache.getIcon("app-icon");
+      final ImageIcon appIcon = ImageCache.getIcon("misc/app-icon");
       if (appIcon != null)
          setIconImage(appIcon.getImage());
+
+//    setTitle(application.getName());
 
       createMenuBar();
       createToolBar();
