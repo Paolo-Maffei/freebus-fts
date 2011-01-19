@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.annotation.PostConstruct;
 import javax.inject.Inject;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -32,6 +33,7 @@ import org.freebus.fts.service.job.JobQueue;
 import org.freebus.fts.service.job.JobQueueListener;
 import org.freebus.fts.service.job.event.JobQueueErrorEvent;
 import org.freebus.fts.service.job.event.JobQueueEvent;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Component;
 
@@ -39,11 +41,12 @@ import org.springframework.stereotype.Component;
  * The main application window.
  */
 @Component
+@Lazy
 public final class MainWindow extends WorkBench implements JobQueueListener
 {
    private static final long serialVersionUID = 4384074439505445519L;
 
-   private final JobQueueView jobQueueView;
+   private JobQueueView jobQueueView;
    private Timer tmrJobQueueView;
 
    @Inject
@@ -68,7 +71,14 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
 //      setTitle(application.getName());
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+   }
 
+   /**
+    * Setup the object.
+    */
+   @PostConstruct
+   protected void postConstruct()
+   {
       final ImageIcon appIcon = ImageCache.getIcon("app-icon");
       if (appIcon != null)
          setIconImage(appIcon.getImage());

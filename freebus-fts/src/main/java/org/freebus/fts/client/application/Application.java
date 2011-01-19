@@ -41,6 +41,7 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.freebus.knxcomm.types.LinkMode;
 import org.jdesktop.application.SessionStorage;
+import org.springframework.context.support.AbstractApplicationContext;
 import org.springframework.stereotype.Component;
 
 /**
@@ -63,6 +64,8 @@ public final class Application extends org.jdesktop.application.Application
    private int exitCode = 0;
 
    @Inject
+   private AbstractApplicationContext appContext;
+   
    private MainWindow mainWin;
 
    /**
@@ -445,7 +448,8 @@ public final class Application extends org.jdesktop.application.Application
    {
       startupIndicator.setProgress(90, I18n.getMessage("FTS.StartupMainWindow"));
 
-//      mainWin = new MainWindow();  // ... now created by Spring
+//      mainWin = new MainWindow();
+      mainWin = appContext.getBean(MainWindow.class);
       mainWin.setName("mainWindow-0");
       mainWin.addWindowListener(new WindowAdapter()
       {
