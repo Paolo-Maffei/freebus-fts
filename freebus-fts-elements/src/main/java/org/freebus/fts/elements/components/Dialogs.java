@@ -56,8 +56,8 @@ public final class Dialogs
       {
       }
 
-      JOptionPane.showMessageDialog(appWin, message, title, JOptionPane.ERROR_MESSAGE, ImageCache
-            .getIcon("icons-large/error-dialog"));
+      JOptionPane.showMessageDialog(appWin, message, title, JOptionPane.ERROR_MESSAGE,
+            ImageCache.getIcon("error-dialog"));
    }
 
    /**

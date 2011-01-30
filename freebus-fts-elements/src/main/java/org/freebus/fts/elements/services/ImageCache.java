@@ -41,7 +41,7 @@ public final class ImageCache
          }
          else
          {
-            Logger.getLogger(ImageCache.class).error("Could not find icon: " + iconName);
+            Logger.getLogger(ImageCache.class).error("Could not find icon: " + iconName + ".png");
          }
          iconCache.put(iconName, icon);
       }
