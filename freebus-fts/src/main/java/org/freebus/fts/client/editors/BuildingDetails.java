@@ -37,17 +37,6 @@ public final class BuildingDetails extends WorkBenchEditor
    private Building building;
 
    /**
-    * Create a building details editor and show the line object in it.
-    * 
-    * @param building - the building object to edit.
-    */
-   public BuildingDetails(Building building)
-   {
-      this();
-      setObject(building);
-   }
-
-   /**
     * Create an building details page.
     */
    public BuildingDetails()

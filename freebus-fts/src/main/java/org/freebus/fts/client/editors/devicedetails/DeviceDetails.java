@@ -48,18 +48,7 @@ public class DeviceDetails extends WorkBenchEditor
    private DeviceController adapter;
 
    /**
-    * Create a device details editor and show the line object in it.
-    * 
-    * @param device - the device object to edit.
-    */
-   public DeviceDetails(Device device)
-   {
-      this();
-      setObject(device);
-   }
-
-   /**
-    * Create a device-editor.
+    * Create a device-details editor.
     */
    public DeviceDetails()
    {

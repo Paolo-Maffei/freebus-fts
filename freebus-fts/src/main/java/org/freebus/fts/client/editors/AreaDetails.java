@@ -42,17 +42,6 @@ public final class AreaDetails extends WorkBenchEditor
    private Area area;
 
    /**
-    * Create an area details editor and show the area object in it.
-    * 
-    * @param area - the area object to edit.
-    */
-   public AreaDetails(Area area)
-   {
-      this();
-      setObject(area);
-   }
-
-   /**
     * Create an area details page.
     */
    public AreaDetails()

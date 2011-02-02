@@ -11,7 +11,8 @@ import javax.swing.SwingUtilities;
 public abstract class WorkBenchEditor extends WorkBenchPanel
 {
    private static final long serialVersionUID = 1792996292582082779L;
-
+   private Object obj;
+   
    /**
     * Create a workbench editor.
     */
@@ -32,6 +33,8 @@ public abstract class WorkBenchEditor extends WorkBenchPanel
     */
    public final void setObject(final Object obj)
    {
+      this.obj = obj;
+
       SwingUtilities.invokeLater(new Runnable()
       {
          @Override
@@ -43,6 +46,14 @@ public abstract class WorkBenchEditor extends WorkBenchPanel
             getWorkBench().showPanel(WorkBenchEditor.this);
          }
       });
+   }
+
+   /**
+    * @return The object that is edited / viewed.
+    */
+   public Object getObject()
+   {
+      return obj;
    }
 
    /**

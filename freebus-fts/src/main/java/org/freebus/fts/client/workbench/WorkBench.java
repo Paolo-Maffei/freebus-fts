@@ -3,6 +3,8 @@ package org.freebus.fts.client.workbench;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Dimension;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.JMenu;
@@ -12,6 +14,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import org.freebus.fts.client.core.I18n;
+import org.freebus.fts.client.core.ProjectControllerImpl;
 import org.freebus.fts.elements.ApplicationWindow;
 import org.freebus.fts.elements.components.ExtTabbedPane;
 
@@ -28,9 +31,18 @@ public class WorkBench extends ApplicationWindow
    private final JSplitPane leftCenterSplit;
    private final JPanel bottomLeftPanel;
    private final StatusBar statusBar = new StatusBar();
+   private final Map<EditorKey, WorkBenchEditor> editors = new HashMap<EditorKey, WorkBenchEditor>();
 
    // private final Map<WorkBenchPageId, WorkBenchPanel> pages = new
    // HashMap<WorkBenchPageId, WorkBenchPanel>();
+
+   /**
+    * @return the global {@link WorkBench} instance.
+    */
+   public static WorkBench getInstance()
+   {
+      return (WorkBench) ApplicationWindow.getInstance();
+   }
 
    /**
     * Create a workbench window.
@@ -204,6 +216,20 @@ public class WorkBench extends ApplicationWindow
       }
    }
 
+   /**
+    * Callback. Called by a {@link WorkBenchPanel} when the panel is closed.
+    * 
+    * @param panel - the panel that was closed.
+    */
+   synchronized void panelClosed(WorkBenchPanel panel)
+   {
+      if (panel instanceof WorkBenchEditor)
+      {
+         final WorkBenchEditor editor = (WorkBenchEditor) panel;
+         editors.remove(new EditorKey(editor.getClass(), editor.getObject()));
+      }
+   }
+
    // /**
    // * Add a page to the work-bench and show it.
    // *
@@ -307,22 +333,6 @@ public class WorkBench extends ApplicationWindow
       return statusBar;
    }
 
-   // /**
-   // * Lookup a page.
-   // *
-   // * @param pageClass - the class of the page that is searched.
-   // * @param obj - the object of the page that is searched.
-   // *
-   // * @return The page object for the given class/object, or null if the page
-   // is
-   // * currently not opened.
-   // */
-   // public WorkBenchPanel getPage(final Class<? extends WorkBenchPanel>
-   // pageClass, final Object obj)
-   // {
-   // return pages.get(new WorkBenchPageId(pageClass, obj));
-   // }
-
    /**
     * Set the panel that is shown in the south/west (bottom-left) corner of the
     * workbench.
@@ -333,52 +343,9 @@ public class WorkBench extends ApplicationWindow
       bottomLeftPanel.add(panel, BorderLayout.CENTER);
    }
 
-   // /**
-   // * Set the page-object of the given page. The actual setting of the object
-   // * happens after all pending Swing events are processed.
-   // *
-   // * @param page - the page to process.
-   // * @param obj - the object to set.
-   // */
-   // private synchronized void setPageObject(final WorkBenchPanel page, final
-   // Object obj)
-   // {
-   // SwingUtilities.invokeLater(new Runnable()
-   // {
-   // @Override
-   // public void run()
-   // {
-   // try
-   // {
-   // setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-   // page.setObject(obj);
-   // }
-   // catch (Exception e)
-   // {
-   // Dialogs.showExceptionDialog(e, "");
-   // }
-   // finally
-   // {
-   // setCursor(Cursor.getDefaultCursor());
-   // }
-   // }
-   // });
-   // }
-
-   // /**
-   // * Raise the page so that it is visible.
-   // */
-   // public void setSelectedPage(WorkBenchPanel page)
-   // {
-   // if (leftTabbedPane.indexOfComponent(page) >= 0)
-   // leftTabbedPane.setSelectedComponent(page);
-   // else if (centerTabbedPane.indexOfComponent(page) >= 0)
-   // centerTabbedPane.setSelectedComponent(page);
-   // }
-
    /**
-    * Create or show the unique editor of the given class. Set the object that
-    * the editor shall display to the object displayedObject.
+    * Create or show the editor of the given class. Set the object that the
+    * editor shall display to the object obj.
     * 
     * @param clazz - the class of the editor to show.
     * @param obj - the object that is displayed in the editor. May be null.
@@ -387,12 +354,59 @@ public class WorkBench extends ApplicationWindow
     * 
     * @see #showUniquePanel(Class)
     */
-   public synchronized WorkBenchEditor showUniqueEditor(Class<? extends WorkBenchEditor> clazz, final Object obj)
+   public WorkBenchEditor showEditor(Class<? extends WorkBenchEditor> clazz, final Object obj)
    {
-      final WorkBenchEditor editor = (WorkBenchEditor) showUniquePanel(clazz);
+      return showEditor(new EditorKey(clazz, obj), obj);
+   }
 
-      editor.setObject(obj);
-      showPanel(editor);
+   /**
+    * Create or show the unique editor of the given class. Set the object that
+    * the editor shall display to the object obj.
+    * 
+    * @param clazz - the class of the editor to show.
+    * @param obj - the object that is displayed in the editor. May be null.
+    * 
+    * @return the shown editor.
+    * 
+    * @see #showUniquePanel(Class)
+    */
+   public WorkBenchEditor showUniqueEditor(Class<? extends WorkBenchEditor> clazz, final Object obj)
+   {
+      return showEditor(new EditorKey(clazz, null), obj);
+   }
+
+   /**
+    * Show the editor with the given key and set the object obj to be displayed.
+    * 
+    * @param key - the key of the requested editor
+    * @param obj - the object to show
+    * @return The editor.
+    */
+   protected synchronized WorkBenchEditor showEditor(final EditorKey key, final Object obj)
+   {
+      WorkBenchEditor editor = editors.get(key);
+
+      if (editor == null)
+      {
+         final Class<? extends WorkBenchEditor> clazz = key.getClazz();
+
+         try
+         {
+            editor = clazz.newInstance();
+         }
+         catch (Exception e)
+         {
+            throw new RuntimeException(I18n.formatMessage("WorkBench.errCreatePage", clazz.getName()), e);
+         }
+
+         editors.put(key, editor);
+         editor.setObject(obj);
+         addPanel(editor);
+      }
+      else
+      {
+         showPanel(editor);
+      }
 
       return editor;
    }
@@ -423,6 +437,23 @@ public class WorkBench extends ApplicationWindow
 
       showPanel(panel);
       return panel;
+   }
+
+   /**
+    * Called by the {@link ProjectControllerImpl#remove(Object) project controller}
+    * when an object is removed.
+    * 
+    * @param obj - the removed object
+    */
+   public synchronized void objectRemoved(Object obj)
+   {
+      for (EditorKey key : editors.keySet())
+      {
+         if (obj == null ? key.getObj() == null : obj.equals(key.getObj()))
+         {
+            editors.get(key).close();
+         }
+      }
    }
 
    // ...

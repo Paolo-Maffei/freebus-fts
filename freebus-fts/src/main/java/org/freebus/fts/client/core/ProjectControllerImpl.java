@@ -6,6 +6,7 @@ import org.freebus.fts.client.editors.AreaDetails;
 import org.freebus.fts.client.editors.BuildingDetails;
 import org.freebus.fts.client.editors.LineDetails;
 import org.freebus.fts.client.editors.devicedetails.DeviceDetails;
+import org.freebus.fts.client.workbench.WorkBench;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
@@ -67,14 +68,24 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public boolean edit(Object obj)
    {
+      final WorkBench workBench = WorkBench.getInstance();
+
       if (obj instanceof Area)
-         new AreaDetails((Area) obj);
+      {
+         workBench.showEditor(AreaDetails.class, obj);
+      }
       else if (obj instanceof Line)
-         new LineDetails((Line) obj);
+      {
+         workBench.showEditor(LineDetails.class, obj);
+      }
       else if (obj instanceof Device)
-         new DeviceDetails((Device) obj);
+      {
+         workBench.showEditor(DeviceDetails.class, obj);
+      }
       else if (obj instanceof Building)
-         new BuildingDetails((Building) obj);
+      {
+         workBench.showEditor(BuildingDetails.class, obj);
+      }
       else return false;
 
       return true;

@@ -109,6 +109,12 @@ public final class MainWindow extends WorkBench implements JobQueueListener
                setTitle(application.getName());
             else setTitle(project.getName() + " - " + application.getName());
          }
+
+         @Override
+         public void projectComponentRemoved(Object obj)
+         {
+            objectRemoved(obj);
+         }
       });
 
       final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -132,40 +138,6 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       {
          throw new FtsRuntimeException(e);
       }
-      
-//      final JMenu fileMenu = createJMenu(I18n.getMessage("MainWindow.FileMenu"));
-//      Actions.NEW_PROJECT.addTo(fileMenu);
-//      Actions.OPEN_PROJECT.addTo(fileMenu);
-//      Actions.SAVE_PROJECT.addTo(fileMenu);
-//      fileMenu.addSeparator();
-//      Actions.PROJECT_PROPERTIES.addTo(fileMenu);
-//      fileMenu.addSeparator();
-//      Actions.RESTART.addTo(fileMenu);
-//      Actions.EXIT.addTo(fileMenu);
-//
-//      final JMenu productsMenu = createJMenu(I18n.getMessage("MainWindow.ProductsMenu"));
-//      Actions.IMPORT_PRODUCTS.addTo(productsMenu);
-//      productsMenu.addSeparator();
-//      Actions.BROWSE_PRODUCTS_VDX.addTo(productsMenu);
-//      Actions.INSPECT_VDX_FILE.addTo(productsMenu);
-//
-//      final JMenu viewMenu = createJMenu(I18n.getMessage("MainWindow.ViewMenu"));
-//      Actions.LOGICAL_VIEW.addTo(viewMenu);
-//      Actions.PHYSICAL_VIEW.addTo(viewMenu);
-//      Actions.TOPOLOGY_VIEW.addTo(viewMenu);
-//
-//      final JMenu toolsMenu = createJMenu(I18n.getMessage("MainWindow.ToolsMenu"));
-//      Actions.BUS_MONITOR.addTo(toolsMenu);
-//      Actions.BUS_TRACE_VIEWER.addTo(toolsMenu);
-//      viewMenu.addSeparator();
-//      Actions.SET_PHYSICAL_ADDRESS.addTo(toolsMenu);
-//      Actions.DEVICE_SCANNER.addTo(toolsMenu);
-//
-//      final JMenu settingsMenu = createJMenu(I18n.getMessage("MainWindow.SettingsMenu"));
-//      Actions.SETTINGS.addTo(settingsMenu);
-//
-//      final JMenu helpMenu = createJMenu(I18n.getMessage("MainWindow.HelpMenu"));
-//      Actions.ABOUT.addTo(helpMenu);
    }
 
    /**
@@ -185,23 +157,6 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       {
          throw new FtsRuntimeException(e);
       }
-//
-//      final Container content = getContentPane();
-//      final JToolBar toolBar = new ToolBar();
-//      content.add(toolBar, BorderLayout.NORTH);
-//
-//      Actions.EXIT.addTo(toolBar);
-//      toolBar.addSeparator();
-//
-//      Actions.NEW_PROJECT.addTo(toolBar);
-//      Actions.OPEN_PROJECT.addTo(toolBar);
-//      Actions.SAVE_PROJECT.addTo(toolBar);
-//      toolBar.addSeparator();
-//
-//      Actions.BUS_MONITOR.addTo(toolBar);
-//      Actions.BUS_TRACE_VIEWER.addTo(toolBar);
-//      Actions.ADD_DEVICES.addTo(toolBar);
-//      Actions.SETTINGS.addTo(toolBar);
    }
 
    /**

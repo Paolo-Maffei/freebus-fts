@@ -46,6 +46,7 @@ public abstract class WorkBenchPanel extends JPanel implements Closeable
     */
    protected void closeEvent()
    {
+      getWorkBench().panelClosed(this);
    }
 
    /**

@@ -29,7 +29,7 @@ import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectListener;
 
 /**
- * An editor page for a {@link Line line}. 
+ * An editor page for a {@link Line line}.
  */
 public final class LineDetails extends WorkBenchEditor
 {
@@ -42,17 +42,6 @@ public final class LineDetails extends WorkBenchEditor
 
    private boolean updating;
    private Line line;
-
-   /**
-    * Create a line details editor and show the line object in it.
-    * 
-    * @param line - the line object to edit.
-    */
-   public LineDetails(Line line)
-   {
-      this();
-      setObject(line);
-   }
 
    /**
     * Create a line page.

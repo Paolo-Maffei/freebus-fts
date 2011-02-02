@@ -57,7 +57,7 @@ public final class ImportProductsAction extends BasicAction
          cfg.put("VdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 
-         MainWindow.getInstance().showUniqueEditor(ProductsImportBrowser.class, file);
+         MainWindow.getInstance().showEditor(ProductsImportBrowser.class, file);
       }
       catch (Exception e)
       {

@@ -57,7 +57,7 @@ public final class InspectVdxFileAction extends BasicAction
          cfg.put("VdxFile.lastDir", file.getAbsolutePath());
          cfg.save();
 
-         MainWindow.getInstance().showUniqueEditor(InspectVdxFile.class, file);
+         MainWindow.getInstance().showEditor(InspectVdxFile.class, file);
       }
       catch (Exception e)
       {
