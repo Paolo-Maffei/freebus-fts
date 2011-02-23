@@ -2,6 +2,9 @@ package org.freebus.fts.service.devicecontroller;
 
 /**
  * An entry for the device association table.
+ * <p>
+ * The device association table contains indexes that map between the group
+ * addresses that the device knows of and the object descriptors of the device.
  */
 public class AssociationTableEntry
 {

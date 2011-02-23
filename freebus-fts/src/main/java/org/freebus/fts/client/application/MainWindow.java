@@ -5,11 +5,11 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import javax.annotation.PostConstruct;
-import javax.inject.Inject;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
@@ -21,7 +21,6 @@ import org.freebus.fts.client.views.LogicalView;
 import org.freebus.fts.client.views.PhysicalView;
 import org.freebus.fts.client.views.TopologyView;
 import org.freebus.fts.client.workbench.WorkBench;
-import org.freebus.fts.common.exception.FtsRuntimeException;
 import org.freebus.fts.elements.ApplicationWindow;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.LogLine;
@@ -33,15 +32,12 @@ import org.freebus.fts.service.job.JobQueue;
 import org.freebus.fts.service.job.JobQueueListener;
 import org.freebus.fts.service.job.event.JobQueueErrorEvent;
 import org.freebus.fts.service.job.event.JobQueueEvent;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.stereotype.Component;
 
 /**
  * The main application window.
  */
-@Component
-@Lazy
+//@Component
+//@Lazy
 public final class MainWindow extends WorkBench implements JobQueueListener
 {
    private static final long serialVersionUID = 4384074439505445519L;
@@ -49,8 +45,8 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    private JobQueueView jobQueueView;
    private Timer tmrJobQueueView;
 
-   @Inject
-   Application application;
+//   @Inject
+//   Application application;
    
    /**
     * @return the global {@link MainWindow} instance.
@@ -69,6 +65,8 @@ public final class MainWindow extends WorkBench implements JobQueueListener
 
       setInstance(this);
       setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+      postConstruct();
    }
 
    /**
@@ -81,6 +79,8 @@ public final class MainWindow extends WorkBench implements JobQueueListener
       if (appIcon != null)
          setIconImage(appIcon.getImage());
 
+      final Application application = Application.getInstance();
+      
 //    setTitle(application.getName());
 
       createMenuBar();
@@ -128,16 +128,18 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    private void createMenuBar()
    {
       final XmlMenuFactory menuFactory = new XmlMenuFactory();
-      final ClassPathResource menuResource = new ClassPathResource("menubars/main.xml");
+//      final ClassPathResource menuResource = new ClassPathResource("menubars/main.xml");
+      final InputStream in = getClass().getClassLoader().getResourceAsStream("menubars/main.xml");
 
-      try
-      {
-         setJMenuBar(menuFactory.createMenuBar(menuResource.getFile()));
-      }
-      catch (IOException e)
-      {
-         throw new FtsRuntimeException(e);
-      }
+//      try
+//      {
+//         setJMenuBar(menuFactory.createMenuBar(menuResource.getFile()));
+         setJMenuBar(menuFactory.createMenuBar(in));
+//      }
+//      catch (IOException e)
+//      {
+//         throw new FtsRuntimeException(e);
+//      }
    }
 
    /**
@@ -146,17 +148,19 @@ public final class MainWindow extends WorkBench implements JobQueueListener
    private void createToolBar()
    {
       final XmlToolBarFactory toolBarFactory = new XmlToolBarFactory();
-      final ClassPathResource toolBarResource = new ClassPathResource("toolbars/main.xml");
+//      final ClassPathResource toolBarResource = new ClassPathResource("toolbars/main.xml");
+      final InputStream in = getClass().getClassLoader().getResourceAsStream("toolbars/main.xml");
 
-      try
-      {
+//      try
+//      {
          final Container content = getContentPane();
-         content.add(toolBarFactory.createToolBar(toolBarResource.getFile()), BorderLayout.NORTH);
-      }
-      catch (IOException e)
-      {
-         throw new FtsRuntimeException(e);
-      }
+//         content.add(toolBarFactory.createToolBar(toolBarResource.getFile()), BorderLayout.NORTH);
+         content.add(toolBarFactory.createToolBar(in), BorderLayout.NORTH);
+//      }
+//      catch (IOException e)
+//      {
+//         throw new FtsRuntimeException(e);
+//      }
    }
 
    /**

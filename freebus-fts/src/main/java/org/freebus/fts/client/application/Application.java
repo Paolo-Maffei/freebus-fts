@@ -14,7 +14,6 @@ import java.util.Properties;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
-import javax.inject.Inject;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceException;
 import javax.swing.JOptionPane;
@@ -41,8 +40,6 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.freebus.knxcomm.types.LinkMode;
 import org.jdesktop.application.SessionStorage;
-import org.springframework.context.support.AbstractApplicationContext;
-import org.springframework.stereotype.Component;
 
 /**
  * The FTS application class. This class is responsible for starting the
@@ -51,7 +48,7 @@ import org.springframework.stereotype.Component;
  * <p>
  * This class also contains the {@link #main} of FTS.
  */
-@Component
+//@Component
 public final class Application extends org.jdesktop.application.Application
 {
    private final static Logger LOGGER = Logger.getLogger(Application.class);
@@ -63,8 +60,8 @@ public final class Application extends org.jdesktop.application.Application
    private Config config;
    private int exitCode = 0;
 
-   @Inject
-   private AbstractApplicationContext appContext;
+//   @Inject
+//   private AbstractApplicationContext appContext;
 
    // Inject here means Look&Feel is initialized too late for the window
    private MainWindow mainWin;
@@ -449,8 +446,8 @@ public final class Application extends org.jdesktop.application.Application
    {
       startupIndicator.setProgress(90, I18n.getMessage("FTS.StartupMainWindow"));
 
-//      mainWin = new MainWindow();
-      mainWin = appContext.getBean(MainWindow.class);
+      mainWin = new MainWindow();
+//      mainWin = appContext.getBean(MainWindow.class);
       mainWin.setName("mainWindow-0");
       mainWin.addWindowListener(new WindowAdapter()
       {

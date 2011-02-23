@@ -16,8 +16,6 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.client.actions.ActionFactory;
 import org.freebus.fts.common.exception.FtsRuntimeException;
 import org.freebus.fts.elements.components.ToolBar;
-import org.springframework.beans.factory.NoSuchBeanDefinitionException;
-import org.springframework.stereotype.Component;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,7 +25,7 @@ import org.xml.sax.SAXException;
  * Factory class that creates {@link JToolBar tool bars} from XML
  * configurations.
  */
-@Component
+//@Component
 public class XmlToolBarFactory
 {   
    private static final Logger LOGGER = Logger.getLogger(XmlToolBarFactory.class);
@@ -113,7 +111,7 @@ public class XmlToolBarFactory
                {
                   mainToolBar.add(ActionFactory.getInstance().getAction(actionId));
                }
-               catch (NoSuchBeanDefinitionException e)
+               catch (FtsRuntimeException e)
                {
                   LOGGER.error("Failed to lookup action " + actionId, e);
 

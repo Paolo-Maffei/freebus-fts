@@ -156,6 +156,8 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    {
       /*final byte[] appInfo =*/ memCon.read(MemoryLocation.ApplicationID);
 
+      // TODO
+
       final DeviceProgramming progr = device.getProgramming();
       progr.setProgramValid(true);
       progr.setLastUploadNow();
@@ -166,11 +168,11 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    void uploadParameters(final MemoryConnectionAdapter memCon)
    {
+      // TODO
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setParametersValid(true);
       progr.setLastUploadNow();
-
    }
 
    /**
@@ -178,6 +180,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    void uploadCommunications(final MemoryConnectionAdapter memCon)
    {
+      // TODO
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setCommunicationValid(true);

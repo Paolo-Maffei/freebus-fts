@@ -240,7 +240,7 @@ public final class KNXnetLink extends ListenableLink implements Link
    @Override
    public void close()
    {
-      // logger.debug("Closing KNXnet/IP connection");
+      LOGGER.debug("Closing KNXnet/IP connection");
 
       try
       {

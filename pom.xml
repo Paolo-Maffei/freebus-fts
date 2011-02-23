@@ -24,22 +24,6 @@
    <organizationUrl>http://www.freebus.org</organizationUrl>
    <timezone>1</timezone>
   </developer>
-  <developer>
-   <id>micha</id>
-   <name>Michael Mason</name>
-   <email>stefan.taferner@gmx.at</email>
-   <organization>The Freebus Project</organization>
-   <organizationUrl>http://www.freebus.org</organizationUrl>
-   <timezone>1</timezone>
-  </developer>
-  <developer>
-   <id>juergens</id>
-   <name>Jürgen Sachs</name>
-   <email>juergen-sachs@gmx.de</email>
-   <organization>The Freebus Project</organization>
-   <organizationUrl>http://www.freebus.org</organizationUrl>
-   <timezone>1</timezone>
-  </developer>
  </developers>
  <scm>
   <connection>scm:svn:svn+ssh://svn.freebus.org/usr/local/svn/freebus/trunk/software_fts</connection>
@@ -65,6 +49,7 @@
     <version>4.8.1</version>
     <scope>test</scope>
    </dependency>
+   <!-- 
    <dependency>
    	<groupId>springframework</groupId>
    	<artifactId>spring-core</artifactId>
@@ -93,6 +78,7 @@
    	<type>jar</type>
    	<scope>test</scope>
    </dependency>
+    -->
   </dependencies>
  </dependencyManagement>
  <distributionManagement>
@@ -117,6 +103,7 @@
    <version>4.8.1</version>
    <scope>test</scope>
   </dependency>
+  <!--
   <dependency>
   	<groupId>org.springframework</groupId>
   	<artifactId>spring-core</artifactId>
@@ -145,6 +132,7 @@
   	<type>jar</type>
   	<scope>compile</scope>
   </dependency>
+  -->
  </dependencies>
  <build>
   <plugins>

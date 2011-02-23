@@ -35,6 +35,8 @@ public interface DeviceController
 
    /**
     * Set the compatibility flag.
+    * 
+    * @see #isCompatible()
     */
    void setCompatible(boolean f);
 

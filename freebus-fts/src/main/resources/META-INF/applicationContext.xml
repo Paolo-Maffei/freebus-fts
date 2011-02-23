@@ -7,10 +7,9 @@
   http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
  ">
 
- <import resource="spring-service.xml" />
+ <!-- import resource="spring-service.xml" /> -->
 
  <context:component-scan base-package="org.freebus.fts.client.application" />
- <!-- <context:mbean-export /> -->
 
  <bean id="applicationFactory" class="org.freebus.fts.client.application.ApplicationFactory" />
  <bean id="application" factory-bean="applicationFactory" factory-method="createApplication" />

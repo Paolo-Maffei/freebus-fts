@@ -4,7 +4,8 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
 
 /**
  * Write up to 63 bytes into device memory. Depending on the type of
- * the (your) bus connection, only 12 bytes can be transfered.
+ * the (your/the) bus connection, probably only 12 bytes can be transfered
+ * with one MemoryWrite telegram.
  */
 public class MemoryWrite extends MemoryData
 {
