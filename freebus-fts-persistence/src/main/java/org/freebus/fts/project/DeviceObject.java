@@ -94,7 +94,7 @@ public class DeviceObject implements Comparable<DeviceObject>
     */
    public DeviceObject(CommunicationObject comObject)
    {
-      this.comObject = comObject;
+      setComObject(comObject);
       copyComObjectFlags();
    }
 
@@ -157,7 +157,9 @@ public class DeviceObject implements Comparable<DeviceObject>
    }
 
    /**
-    * Set the communication object.
+    * Set the communication object. Copies the communication object flags
+    * from the communication object. Also sets the {@link #setType(ObjectType) type} if
+    * the type is unset.
     * 
     * @param comObject - the communication object to set
     */
@@ -165,6 +167,9 @@ public class DeviceObject implements Comparable<DeviceObject>
    {
       this.comObject = comObject;
       copyComObjectFlags();
+
+      if (type == null)
+         type = comObject.getType();
    }
 
    /**

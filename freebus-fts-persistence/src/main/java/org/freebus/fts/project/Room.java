@@ -43,7 +43,7 @@ public class Room implements Comparable<Room>
 
    @Column(name = "type")
    @Enumerated(EnumType.ORDINAL)
-   private RoomType type;
+   private RoomType type = RoomType.ROOM;
 
    @ManyToOne(optional = false)
    @JoinColumn(name = "building_id")

@@ -536,6 +536,7 @@ public final class Device implements Comparable<Device>
 
          final DeviceObject devObject = new DeviceObject(comObject);
          devObject.setDevice(this);
+         devObject.setType(comObject.getType());
          deviceObjects.add(devObject);
       }
 

@@ -7,6 +7,7 @@ import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import org.freebus.fts.common.ByteUtils;
+import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceProgramming;
 import org.freebus.fts.service.devicecontroller.DeviceController;
@@ -27,7 +28,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 {
    private final Set<DeviceProgrammerType> types = new HashSet<DeviceProgrammerType>();
    private boolean physicalAddressJobQueued;
-//   private final DeviceController controller;
+   private final DeviceController controller;
    private final Device device;
    private final String label;
 
@@ -60,7 +61,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    protected Bcu1ProgrammerJob(DeviceController controller)
    {
-//      this.controller = controller;
+      this.controller = controller;
       this.device = controller.getDevice();
 
       label = I18n.formatMessage("Bcu1ProgrammerJob.Label", device.getPhysicalAddress().toString());
@@ -177,10 +178,20 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Upload the communication tables to the device.
+    *
+    * @throws TimeoutException 
+    * @throws IOException 
     */
-   void uploadCommunications(final MemoryConnectionAdapter memCon)
+   void uploadCommunications(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
    {
       // TODO
+      final GroupAddress[] groupAddrs = controller.getGroupAddresses();
+      final int commsTabAddr = device.getProgram().getCommsTabAddr();
+      final int commsTabSize = device.getProgram().getCommsTabSize();
+
+      final byte[] data = new byte[(groupAddrs.length << 1) + 1];
+
+      memCon.write(commsTabAddr, data);
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setCommunicationValid(true);
@@ -198,8 +209,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
          if (physicalAddressJobQueued)
          {
             // If we come here, programming the physical address failed, and the
-            // user
-            // already got an error message. No need to report another error.
+            // user already got an error message. No need to report another error.
             return;
          }
 

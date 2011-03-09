@@ -304,7 +304,7 @@ public class Program
    }
 
    /**
-    * @return the commsTabAddr
+    * @return The address of the communications table
     */
    public int getCommsTabAddr()
    {
@@ -312,7 +312,9 @@ public class Program
    }
 
    /**
-    * @param commsTabAddr the commsTabAddr to set
+    * Set the address of the communications table.
+    * 
+    * @param commsTabAddr - the address to set
     */
    public void setCommsTabAddr(int commsTabAddr)
    {
@@ -320,7 +322,7 @@ public class Program
    }
 
    /**
-    * @return the commsTabSize
+    * @return The size of the communications table.
     */
    public int getCommsTabSize()
    {
@@ -328,7 +330,9 @@ public class Program
    }
 
    /**
-    * @param commsTabSize the commsTabSize to set
+    * Set the size of the communications table.
+    * 
+    * @param commsTabSize - the size to set
     */
    public void setCommsTabSize(int commsTabSize)
    {
