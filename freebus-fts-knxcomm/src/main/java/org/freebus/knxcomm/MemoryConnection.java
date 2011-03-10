@@ -13,7 +13,7 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
  * An adapter for a {@link DataConnection} that handles reading and writing of
  * memory of a device (BCU) on the KNX bus.
  */
-public class MemoryConnection
+public class MemoryConnection implements MemoryConnectionInterface
 {
    private final DataConnection connection;
 
@@ -32,53 +32,36 @@ public class MemoryConnection
    }
 
    /**
-    * @return The data connection.
+    * {@inheritDoc}
     */
+   @Override
    public DataConnection getConnection()
    {
       return connection;
    }
 
    /**
-    * Read bytes from an absolute memory address.
-    * 
-    * @param address - the memory address.
-    * @param count - the number of bytes to read/write, in the range 0..63
-    * 
-    * @throws TimeoutException if there is no reply from the remote device.
-    * @throws IOException if there is a communication error.
-    * @throws IllegalArgumentException if count is not in the range 0..63
+    * {@inheritDoc}
     */
+   @Override
    public byte[] read(int address, int count) throws IOException, TimeoutException
    {
       return read(new MemoryRead(address, count));
    }
 
    /**
-    * Read bytes from the entire memory range of the location.
-    * 
-    * @param location - the memory location.
-    * 
-    * @throws TimeoutException if there is no reply from the remote device.
-    * @throws IOException if there is a communication error.
+    * {@inheritDoc}
     */
+   @Override
    public byte[] read(MemoryLocation location) throws IOException, TimeoutException
    {
       return read(new MemoryRead(location));
    }
 
    /**
-    * Read count bytes from a memory address which is specified by a location
-    * and an offset.
-    * 
-    * @param location - the memory location.
-    * @param offset - the offset relative to the location.
-    * @param count - the number of bytes to read/write, in the range 1..63
-    * 
-    * @throws IllegalArgumentException if count is not in the range 1..63
-    * @throws TimeoutException if there is no reply from the remote device.
-    * @throws IOException if there is a communication error.
+    * {@inheritDoc}
     */
+   @Override
    public byte[] read(MemoryLocation location, int offset, int count) throws IOException, TimeoutException
    {
       return read(new MemoryRead(location, offset, count));
@@ -100,14 +83,9 @@ public class MemoryConnection
    }
 
    /**
-    * Write bytes to an absolute memory address. The written bytes are verified.
-    * 
-    * @param address - the memory address.
-    * @param data - the bytes to write.
-    * 
-    * @throws TimeoutException if there is no reply from the remote device.
-    * @throws IOException if there is a communication error.
+    * {@inheritDoc}
     */
+   @Override
    public void write(int address, byte[] data) throws IOException, TimeoutException
    {
       final int endAddress = address + data.length;
@@ -133,14 +111,9 @@ public class MemoryConnection
    }
 
    /**
-    * Write bytes to a location. The written bytes are verified.
-    * 
-    * @param location - the memory location.
-    * @param data - the bytes to write.
-    * 
-    * @throws TimeoutException if there is no reply from the remote device.
-    * @throws IOException if there is a communication error.
+    * {@inheritDoc}
     */
+   @Override
    public void write(MemoryLocation location, byte[] data) throws IOException, TimeoutException
    {
       write(connection.getMemoryAddressMapper().getMapping(location).getAdress(), data);

@@ -171,6 +171,26 @@ public class ObjectDescriptor
    }
 
    /**
+    * Get the control byte.
+    */
+   public byte getControlByte()
+   {
+      int control = (1 << 7) | priority.ordinal();
+      if (transmitEnabled)
+         control |= TRANSMIT_ENABLED;
+      if (eepromDataPointer)
+         control |= EEPROM_DATAPOINTER;
+      if (writeEnabled)
+         control |= WRITE_ENABLED;
+      if (readEnabled)
+         control |= READ_ENABLED;
+      if (commEnabled)
+         control |= COMM_ENABLED;
+
+      return (byte) control;
+   }
+   
+   /**
     * Initialize the object descriptor from a 3 byte array.
     * 
     * @param data - the raw data to use.
@@ -198,20 +218,8 @@ public class ObjectDescriptor
    {
       final byte[] data = new byte[3];
 
-      int control = (1 << 7) | priority.ordinal();
-      if (transmitEnabled)
-         control |= TRANSMIT_ENABLED;
-      if (eepromDataPointer)
-         control |= EEPROM_DATAPOINTER;
-      if (writeEnabled)
-         control |= WRITE_ENABLED;
-      if (readEnabled)
-         control |= READ_ENABLED;
-      if (commEnabled)
-         control |= COMM_ENABLED;
-
       data[0] = (byte) dataPointer;
-      data[1] = (byte) control;
+      data[1] = (byte) getControlByte();
       data[2] = (byte) type.ordinal();
 
       return data;

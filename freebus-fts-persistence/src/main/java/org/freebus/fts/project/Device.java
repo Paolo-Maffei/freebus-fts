@@ -175,7 +175,8 @@ public final class Device implements Comparable<Device>
    }
 
    /**
-    * @return the address of the device.
+    * @return the address of the device. This is the last number of a physical
+    * address (e.g. 12 for 1.3.12)
     */
    public int getAddress()
    {

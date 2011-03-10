@@ -7,7 +7,10 @@ import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
 import org.freebus.fts.common.ByteUtils;
+import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.products.Mask;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceProgramming;
 import org.freebus.fts.service.devicecontroller.DeviceController;
@@ -18,6 +21,7 @@ import org.freebus.fts.service.job.ListenableJob;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.MemoryConnection;
+import org.freebus.knxcomm.MemoryConnectionInterface;
 import org.freebus.knxcomm.application.memory.MemoryLocation;
 import org.freebus.knxcomm.telegram.Priority;
 
@@ -34,7 +38,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Create a BCU-1 device programmer job.
-    *
+    * 
     * @param controller - the device controller.
     * @param type - the type of programming that shall be done.
     */
@@ -46,7 +50,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Create a BCU-1 device programmer job.
-    *
+    * 
     * @param controller - the device controller.
     * @param types - the types of programming that shall be done.
     */
@@ -88,14 +92,14 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Ensure that the hardware device is compatible and can be programmed.
-    *
+    * 
     * @param memCon - the memory connection to use for accessing the device.
-    *
+    * 
     * @throws JobFailedException if the device is not compatible
     * @throws TimeoutException
     * @throws IOException
     */
-   void verifyDevice(final MemoryConnection memCon) throws IOException, TimeoutException, JobFailedException
+   void verifyDevice(final MemoryConnectionInterface memCon) throws IOException, TimeoutException, JobFailedException
    {
       byte[] mem = memCon.read(device.getProgram().getMask().getManufacturerIdAddress(), 1);
 
@@ -114,20 +118,21 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       final int progMaskVersionMajor = progMaskVersion >> 4;
       if (progMaskVersionMajor != maskVersionMajor || progMaskVersion > maskVersion)
       {
-         throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrIncompatibleMaskVersion", device
-               .getPhysicalAddress().toString(), Integer.toHexString(maskVersion), Integer.toHexString(progMaskVersion)));
+         throw new JobFailedException(
+               I18n.formatMessage("Bcu1ProgrammerJob.ErrIncompatibleMaskVersion", device.getPhysicalAddress()
+                     .toString(), Integer.toHexString(maskVersion), Integer.toHexString(progMaskVersion)));
       }
    }
 
    /**
     * Prepare device programming.
-    *
+    * 
     * @param memCon - the memory connection to use for accessing the device.
-    *
+    * 
     * @throws TimeoutException
     * @throws IOException
     */
-   void prepareUpload(final MemoryConnection memCon) throws IOException, TimeoutException
+   void prepareUpload(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
    {
       // Stop the BCU's application program by setting the runtime-error flags
       memCon.write(MemoryLocation.RunError, new byte[] { 0 });
@@ -135,13 +140,13 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Finish device programming.
-    *
+    * 
     * @param memCon - the memory connection to use for accessing the device.
-    *
+    * 
     * @throws TimeoutException
     * @throws IOException
     */
-   void finishUpload(final MemoryConnection memCon) throws IOException, TimeoutException
+   void finishUpload(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
    {
       // Clear the BCU's runtime-error flags
       memCon.write(MemoryLocation.RunError, new byte[] { (byte) 255 });
@@ -149,13 +154,13 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
 
    /**
     * Upload the application program to the device.
-    *
+    * 
     * @throws TimeoutException
     * @throws IOException
     */
-   void uploadProgram(final MemoryConnection memCon) throws IOException, TimeoutException
+   void uploadProgram(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
    {
-      /*final byte[] appInfo =*/ memCon.read(MemoryLocation.ApplicationID);
+      /* final byte[] appInfo = */memCon.read(MemoryLocation.ApplicationID);
 
       // TODO
 
@@ -167,7 +172,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    /**
     * Upload the parameters to the device.
     */
-   void uploadParameters(final MemoryConnection memCon)
+   void uploadParameters(final MemoryConnectionInterface memCon)
    {
       // TODO
 
@@ -177,27 +182,124 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    }
 
    /**
-    * Upload the communication tables to the device.
-    *
-    * @throws TimeoutException 
-    * @throws IOException 
+    * Upload the address table to the device.
+    * 
+    * @param memCon - the memory connection to use for the upload
+    * 
+    * @throws TimeoutException
+    * @throws IOException
     */
-   void uploadCommunications(final MemoryConnection memCon) throws IOException, TimeoutException
+   void uploadAddrTab(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
    {
-      // TODO
       final GroupAddress[] groupAddrs = controller.getGroupAddresses();
+
+      final int addrTabAddr = device.getProgram().getMask().getAddressTabAddress();
+      final int addrTabSize = device.getProgram().getAddrTabSize();
+
+      final int maxEntries = (addrTabSize - 1) >> 1;
+      if (groupAddrs.length > maxEntries - 1)
+      {
+         throw new RuntimeException("The Address table of the device can only hold up to " + maxEntries
+               + " addresses, including the device's address");
+      }
+
+      final byte[] data = new byte[((groupAddrs.length + 1) << 1) + 1];
+      int idx = -1;
+      data[++idx] = (byte) (groupAddrs.length + 1); // number of addresses
+
+      int addr = device.getPhysicalAddress().getAddr();
+      data[++idx] = (byte) (addr >> 8);
+      data[++idx] = (byte) (addr & 255);
+
+      for (int i = 0; i < groupAddrs.length; ++i)
+      {
+         addr = groupAddrs[i].getAddr();
+         data[++idx] = (byte) (addr >> 8);
+         data[++idx] = (byte) (addr & 255);
+      }
+
+      memCon.write(addrTabAddr, data);
+   }
+
+   /**
+    * Upload the communication objects to the device.
+    * 
+    * @param memCon - the memory connection to use for the upload
+    * 
+    * @throws TimeoutException
+    * @throws IOException
+    */
+   void uploadCommObjsTab(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
+   {
+      final ObjectDescriptor[] objDescs = controller.getObjectDescriptors();
+
       final int commsTabAddr = device.getProgram().getCommsTabAddr();
       final int commsTabSize = device.getProgram().getCommsTabSize();
 
-      final byte[] data = new byte[(groupAddrs.length << 1) + 1];
+      final int maxEntries = (commsTabSize - 2) / 3;
+      if (objDescs.length > maxEntries)
+      {
+         throw new RuntimeException("The communications table of the device can only hold up to " + maxEntries
+               + " communication objects");
+      }
+
+      final byte[] data = new byte[objDescs.length * 3 + 2];
+      int idx = -1;
+      data[++idx] = (byte) objDescs.length; // number of com-objects
+      data[++idx] = (byte) getEepromByte(commsTabAddr + 1); // pointer to RAM flag table
+
+      for (final ObjectDescriptor objDesc : objDescs)
+      {
+         byte[] objDescBytes = objDesc.toByteArray();
+
+         data[++idx] = (byte) getEepromByte(commsTabAddr + idx);
+         data[++idx] = objDescBytes[1];
+         data[++idx] = objDescBytes[2];
+      }
 
       memCon.write(commsTabAddr, data);
+   }
+
+   /**
+    * Upload the communication tables to the device.
+    * 
+    * @param memCon - the memory connection to use for the upload
+    * 
+    * @throws TimeoutException
+    * @throws IOException
+    */
+   void uploadCommunications(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
+   {
+      uploadAddrTab(memCon);
+      uploadCommObjsTab(memCon);
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setCommunicationValid(true);
       progr.setLastUploadNow();
    }
 
+   /**
+    * Get a byte from the {@link Program#getEepromData() EEPROM data of the program} of
+    * the device. If the program contains no EEPROM data, the byte is read from the
+    * {@link Mask#getMaskEepromData() mask's EEPROM data}.
+    * 
+    * @param address - the address to read
+    */
+   byte getEepromByte(int address)
+   {
+      final Program program = device.getProgram();
+      final Mask mask = program.getMask();
+
+      byte[] data = program.getEepromData();
+      if (data == null)
+      {
+         data = mask.getMaskEepromData();
+         if (data == null) throw new RuntimeException("Program / mask contain no EEPROM data"); 
+      }
+
+      return data[address - mask.getUserEepromStart()];
+   }
+   
    /**
     * {@inheritDoc}
     */
@@ -209,7 +311,8 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
          if (physicalAddressJobQueued)
          {
             // If we come here, programming the physical address failed, and the
-            // user already got an error message. No need to report another error.
+            // user already got an error message. No need to report another
+            // error.
             return;
          }
 
@@ -220,7 +323,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       final DataConnection con = bus.connect(device.getPhysicalAddress(), Priority.SYSTEM);
       con.installMemoryAddressMapper();
 
-      final MemoryConnection memCon = new MemoryConnection(con);
+      final MemoryConnectionInterface memCon = new MemoryConnection(con);
 
       verifyDevice(memCon);
       prepareUpload(memCon);
