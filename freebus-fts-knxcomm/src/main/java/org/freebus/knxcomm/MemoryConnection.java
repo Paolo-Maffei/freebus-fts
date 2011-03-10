@@ -13,17 +13,17 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
  * An adapter for a {@link DataConnection} that handles reading and writing of
  * memory of a device (BCU) on the KNX bus.
  */
-public class MemoryConnectionAdapter
+public class MemoryConnection
 {
    private final DataConnection connection;
 
    /**
-    * Create a memory adapter.
+    * Create a memory connection.
     * 
     * @param connection - the data connection to use.
     * @throws NullPointerException if the connection is null.
     */
-   public MemoryConnectionAdapter(DataConnection connection)
+   public MemoryConnection(DataConnection connection)
    {
       if (connection == null)
          throw new NullPointerException("connection is null");

@@ -1,4 +1,4 @@
-package org.freebus.fts.backend.devicecontroller;
+package org.freebus.fts.service.devicecontroller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

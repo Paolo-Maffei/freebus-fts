@@ -17,7 +17,7 @@ import org.freebus.fts.service.internal.I18n;
 import org.freebus.fts.service.job.ListenableJob;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
-import org.freebus.knxcomm.MemoryConnectionAdapter;
+import org.freebus.knxcomm.MemoryConnection;
 import org.freebus.knxcomm.application.memory.MemoryLocation;
 import org.freebus.knxcomm.telegram.Priority;
 
@@ -95,7 +95,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     * @throws TimeoutException
     * @throws IOException
     */
-   void verifyDevice(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException, JobFailedException
+   void verifyDevice(final MemoryConnection memCon) throws IOException, TimeoutException, JobFailedException
    {
       byte[] mem = memCon.read(device.getProgram().getMask().getManufacturerIdAddress(), 1);
 
@@ -127,7 +127,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     * @throws TimeoutException
     * @throws IOException
     */
-   void prepareUpload(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
+   void prepareUpload(final MemoryConnection memCon) throws IOException, TimeoutException
    {
       // Stop the BCU's application program by setting the runtime-error flags
       memCon.write(MemoryLocation.RunError, new byte[] { 0 });
@@ -141,7 +141,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     * @throws TimeoutException
     * @throws IOException
     */
-   void finishUpload(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
+   void finishUpload(final MemoryConnection memCon) throws IOException, TimeoutException
    {
       // Clear the BCU's runtime-error flags
       memCon.write(MemoryLocation.RunError, new byte[] { (byte) 255 });
@@ -153,7 +153,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     * @throws TimeoutException
     * @throws IOException
     */
-   void uploadProgram(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
+   void uploadProgram(final MemoryConnection memCon) throws IOException, TimeoutException
    {
       /*final byte[] appInfo =*/ memCon.read(MemoryLocation.ApplicationID);
 
@@ -167,7 +167,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    /**
     * Upload the parameters to the device.
     */
-   void uploadParameters(final MemoryConnectionAdapter memCon)
+   void uploadParameters(final MemoryConnection memCon)
    {
       // TODO
 
@@ -182,7 +182,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     * @throws TimeoutException 
     * @throws IOException 
     */
-   void uploadCommunications(final MemoryConnectionAdapter memCon) throws IOException, TimeoutException
+   void uploadCommunications(final MemoryConnection memCon) throws IOException, TimeoutException
    {
       // TODO
       final GroupAddress[] groupAddrs = controller.getGroupAddresses();
@@ -220,7 +220,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       final DataConnection con = bus.connect(device.getPhysicalAddress(), Priority.SYSTEM);
       con.installMemoryAddressMapper();
 
-      final MemoryConnectionAdapter memCon = new MemoryConnectionAdapter(con);
+      final MemoryConnection memCon = new MemoryConnection(con);
 
       verifyDevice(memCon);
       prepareUpload(memCon);

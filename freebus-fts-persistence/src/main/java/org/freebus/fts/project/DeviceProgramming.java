@@ -44,7 +44,7 @@ public class DeviceProgramming
    @Column(name = "parameters_valid", nullable = false)
    private boolean parametersValid;
 
-   @Column(name = "program", nullable = false)
+   @Column(name = "program_valid", nullable = false)
    private boolean programValid;
 
    /**

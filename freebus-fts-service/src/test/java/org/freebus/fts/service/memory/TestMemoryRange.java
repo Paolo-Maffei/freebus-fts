@@ -1,4 +1,4 @@
-package org.freebus.fts.backend.memory;
+package org.freebus.fts.service.memory;
 
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertEquals;
