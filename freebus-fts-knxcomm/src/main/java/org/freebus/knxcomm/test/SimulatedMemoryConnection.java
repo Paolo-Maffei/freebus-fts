@@ -2,6 +2,8 @@ package org.freebus.knxcomm.test;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
 import org.freebus.knxcomm.DataConnection;
@@ -16,6 +18,20 @@ public final class SimulatedMemoryConnection implements MemoryConnectionInterfac
 {
    private final byte[] mem;
    private final int startAddress;
+
+   static public class MemoryBlock
+   {
+      public final int startAddress;
+      public final byte[] data;
+
+      MemoryBlock(int startAddress, byte[] data)
+      {
+         this.startAddress = startAddress;
+         this.data = data;
+      }
+   }
+   
+   private final Vector<MemoryBlock> written = new Vector<MemoryBlock>();
 
    /**
     * Create a simulated memory connection.
@@ -38,11 +54,21 @@ public final class SimulatedMemoryConnection implements MemoryConnectionInterfac
    }
 
    /**
-    * Clear the memory area with zeroes.
+    * @return The list of written memory blocks.
+    */
+   public Vector<MemoryBlock> getWritten()
+   {
+      return written;
+   }
+
+   /**
+    * Clear the memory area with zeroes and clear the list of written
+    * memory blocks.
     */
    public void clear()
    {
       Arrays.fill(mem, (byte)0);
+      written.clear();
    }
 
    /**
@@ -89,6 +115,8 @@ public final class SimulatedMemoryConnection implements MemoryConnectionInterfac
                + "] is outside the memory range [" + startAddress + ".." + (startAddress + mem.length) + "]");
       }
 
+      written.add(new MemoryBlock(address, data));
+      
       final int offs = address - startAddress;
       for (int i = 0; i < data.length; ++i)
          mem[offs + i] = data[i];

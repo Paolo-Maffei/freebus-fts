@@ -3,8 +3,11 @@ package org.freebus.fts.service.job.device;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
+import java.util.Vector;
 import java.util.concurrent.TimeoutException;
 
+import org.freebus.fts.common.types.ObjectType;
+import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Program;
@@ -17,6 +20,7 @@ import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.service.devicecontroller.internal.Bcu1DeviceController;
 import org.freebus.knxcomm.test.SimulatedMemoryConnection;
+import org.freebus.knxcomm.test.SimulatedMemoryConnection.MemoryBlock;
 import org.junit.Test;
 
 public class TestBcu1ProgrammerJob
@@ -36,6 +40,16 @@ public class TestBcu1ProgrammerJob
       program.setCommsTabAddr(410);
       program.setCommsTabSize(50);
 
+      final CommunicationObject comObject1 = new CommunicationObject(1);
+      comObject1.setNumber(1);
+      comObject1.setType(ObjectType.BITS_1);
+      program.getCommunicationObjects().add(comObject1);
+
+      final CommunicationObject comObject2 = new CommunicationObject(2);
+      comObject2.setNumber(0);
+      comObject2.setType(ObjectType.BYTES_1);
+      program.getCommunicationObjects().add(comObject2);
+
       final Mask mask = new Mask();
       program.setMask(mask);
       mask.setAddressTabAddress(278);
@@ -50,8 +64,12 @@ public class TestBcu1ProgrammerJob
       mask.setUserEepromStart(256);
       mask.setUserEepromEnd(510);
 
+      final int start = mask.getUserEepromStart();
       final byte[] eepromData = new byte[256];
-      eepromData[411 - mask.getUserEepromStart()] = (byte) 206;
+      eepromData[411 - start] = (byte) 206;
+      eepromData[412 - start] = (byte) 206;
+      eepromData[415 - start] = (byte) 207;
+      eepromData[418 - start] = (byte) 208;
       program.setEepromData(eepromData);
 
       final Device device = new Device();
@@ -115,10 +133,15 @@ public class TestBcu1ProgrammerJob
       final Bcu1ProgrammerJob job = new Bcu1ProgrammerJob(controller);
       job.uploadAddrTab(memCon);
 
-      final byte[] mem = memCon.getMem();
-      assertEquals(1, mem[278]);
-      assertEquals(0x24, mem[279]);
-      assertEquals(0x09, mem[280]);
+      final Vector<MemoryBlock> written = memCon.getWritten();
+      assertEquals(1, written.size());
+
+      final MemoryBlock block = written.get(0);
+      assertEquals(278, block.startAddress);
+      assertEquals(3, block.data.length);
+      assertEquals(1, block.data[0]);
+      assertEquals(0x24, block.data[1]);
+      assertEquals(0x09, block.data[2]);
    }
 
    /*
@@ -151,17 +174,38 @@ public class TestBcu1ProgrammerJob
    /*
     * Upload an empty device objects table
     */
-   //@Test
+   @Test
    public void uploadCommObjsTabEmpty() throws IOException, TimeoutException
    {
       final Bcu1DeviceController controller = getBcu1DeviceController();
 
+      // Remove the device- and com-objects that getBcu1DeviceController created
+      controller.getDevice().getProgram().getCommunicationObjects().clear();
+      controller.getDevice().getDeviceObjects().clear();
+      
       final SimulatedMemoryConnection memCon = new SimulatedMemoryConnection(0, 510);
       final Bcu1ProgrammerJob job = new Bcu1ProgrammerJob(controller);
       job.uploadCommObjsTab(memCon);
 
       final byte[] mem = memCon.getMem();
       assertEquals(0, mem[410]);
+      assertEquals((byte) 206, mem[411]);
+   }
+
+   /*
+    * Upload a device objects table
+    */
+   @Test
+   public void uploadCommObjsTab() throws IOException, TimeoutException
+   {
+      final Bcu1DeviceController controller = getBcu1DeviceController();
+      
+      final SimulatedMemoryConnection memCon = new SimulatedMemoryConnection(0, 510);
+      final Bcu1ProgrammerJob job = new Bcu1ProgrammerJob(controller);
+      job.uploadCommObjsTab(memCon);
+
+      final byte[] mem = memCon.getMem();
+      assertEquals(2, mem[410]);
       assertEquals((byte) 206, mem[411]);
    }
 }

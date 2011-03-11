@@ -79,11 +79,28 @@ public class CommunicationObject implements Comparable<CommunicationObject>
 
    @Enumerated(EnumType.ORDINAL)
    @Column(name = "object_priority", nullable = false)
-   private ObjectPriority priority;
+   private ObjectPriority priority = ObjectPriority.LOW;
 
    @Column(name = "object_updateenabled", nullable = false)
    private boolean updateEnabled;
 
+   /**
+    * Create an empty communication object.
+    */
+   public CommunicationObject()
+   {
+   }
+
+   /**
+    * Create a communication object.
+    * 
+    * @param id - the id of the object
+    */
+   public CommunicationObject(int id)
+   {
+      this.id = id;
+   }
+   
    /**
     * @return the id
     */

@@ -192,13 +192,13 @@ public abstract class GenericDeviceController implements DeviceController
    }
 
    /**
-    * @return The number of communication objects that the device has. Returns 0
-    *         if the device has no {@link Program application program}.
+    * @return The highest communication object number that the device has plus 1.
+    *         Returns 0 if the device has no {@link Program application program}.
     */
    private int countComObjects()
    {
       final Program prog = device.getProgram();
-      int maxNum = 0;
+      int maxNum = -1;
 
       if (prog == null)
          return 0;
