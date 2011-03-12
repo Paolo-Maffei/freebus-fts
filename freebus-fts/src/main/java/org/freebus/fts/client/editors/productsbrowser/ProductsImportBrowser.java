@@ -3,6 +3,7 @@ package org.freebus.fts.client.editors.productsbrowser;
 import java.awt.Cursor;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -34,7 +35,18 @@ public class ProductsImportBrowser extends ProductsBrowser
    private final Set<VirtualDevice> importDevices = new HashSet<VirtualDevice>();
 
    /**
-    * Create a import-org.freebus.fts.products browser page.
+    * Create a products import browser page.
+    * 
+    * @param file - the file to browse.
+    */
+   public ProductsImportBrowser(File file)
+   {
+      this();
+      setObject(file);
+   }
+
+   /**
+    * Create a import-products browser page.
     */
    public ProductsImportBrowser()
    {
@@ -79,7 +91,7 @@ public class ProductsImportBrowser extends ProductsBrowser
    public void objectChanged(Object obj)
    {
       importDevices.clear();
-      super.setObject(obj);
+      super.objectChanged(obj);
    }
 
    /**

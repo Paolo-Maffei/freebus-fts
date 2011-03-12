@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.persistence.PersistenceException;
 
+import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Program;
 
 /**
@@ -23,6 +24,16 @@ public interface ProgramService
     */
    public List<Program> getPrograms() throws PersistenceException;
 
+   /**
+    * Find a program by manufacturer and device type.
+    * 
+    * @param manufacturer - the manufacturer of the program
+    * @param deviceType - the device type id
+    * 
+    * @return A list of matching programs
+    */
+   public List<Program> findProgram(Manufacturer manufacturer, int deviceType);
+   
    /**
     * Persist the given program.
     */

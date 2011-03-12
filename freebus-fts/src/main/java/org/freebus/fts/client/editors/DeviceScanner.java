@@ -5,6 +5,8 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import java.util.Vector;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -23,6 +25,8 @@ import org.freebus.fts.elements.components.ReadOnlyTable;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductsManager;
+import org.freebus.fts.products.Program;
+import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.service.job.DeviceScannerJob;
 import org.freebus.fts.service.job.DeviceScannerJobListener;
 import org.freebus.fts.service.job.JobQueue;
@@ -284,15 +288,31 @@ public class DeviceScanner extends WorkBenchEditor implements DeviceScannerJobLi
       }
 
       final int manufacturerId = info.getManufacturerId();
+      Manufacturer manufacturer = null;
       if (manufacturerId >= 0)
       {
-         final Manufacturer manufacturer = ProductsManager.getFactory().getManufacturerService().getManufacturer(manufacturerId);
-         devicesModel.setValueAt(manufacturer == null ? ("#" + manufacturerId) : manufacturer.getName(), row, 1);
+         manufacturer = ProductsManager.getFactory().getManufacturerService().getManufacturer(manufacturerId);
+
+         if (manufacturer == null)
+            devicesModel.setValueAt("#" + manufacturerId, row, 1);
+         else devicesModel.setValueAt(manufacturer.getName(), row, 1);
       }
 
       final int deviceType = info.getDeviceType();
       if (deviceType >= 0)
-         devicesModel.setValueAt("$" + Integer.toHexString(deviceType), row, 2);
+      {
+         List<Program> programs = new Vector<Program>(0);
+
+         if (manufacturer != null)
+         {
+            final ProgramService programService = ProductsManager.getFactory().getProgramService();
+            programs = programService.findProgram(manufacturer, deviceType);
+         }
+
+         if (programs.isEmpty())
+            devicesModel.setValueAt("$" + Integer.toHexString(deviceType), row, 2);
+         else devicesModel.setValueAt(programs.get(0).getName(), row, 2);
+      }
 
       devicesTable.revalidate();
    }

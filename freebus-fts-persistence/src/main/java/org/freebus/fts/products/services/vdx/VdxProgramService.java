@@ -9,6 +9,7 @@ import java.util.List;
 import javax.persistence.PersistenceException;
 
 import org.freebus.fts.persistence.vdx.VdxFileReader;
+import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.services.ProgramService;
 
@@ -76,6 +77,12 @@ public final class VdxProgramService implements ProgramService
 
    @Override
    public Program merge(Program program)
+   {
+      throw new PersistenceException("Sorry, not implemented");
+   }
+
+   @Override
+   public List<Program> findProgram(Manufacturer manufacturer, int deviceType)
    {
       throw new PersistenceException("Sorry, not implemented");
    }

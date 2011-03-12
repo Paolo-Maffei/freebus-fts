@@ -23,6 +23,11 @@ public class DeviceScannerJobExample implements TelegramListener
    // Bus zone and line to scan
    private final static int zone = 1;
    private final static int line = 1;
+   
+   // Min and max device address to scan
+   private final static int minAddress = 50;
+   private final static int maxAddress = 52;
+   
 
    /**
     * Create the bus monitor.
@@ -42,8 +47,8 @@ public class DeviceScannerJobExample implements TelegramListener
       bus.open(LinkMode.LinkLayer);
 
       job = new DeviceScannerJob(zone, line);
-      job.setMinAddress(1);
-      job.setMaxAddress(110);
+      job.setMinAddress(minAddress);
+      job.setMaxAddress(maxAddress);
       job.run(bus);
    }
 
@@ -108,7 +113,7 @@ public class DeviceScannerJobExample implements TelegramListener
                System.out.print(info.getManufacturerId());
                if (info.getDeviceType() != -1)
                {
-                  System.out.print(", device-type 0x");
+                  System.out.print(", device-type $");
                   System.out.print(Integer.toHexString(info.getDeviceType()));
                }
                System.out.print(", ");

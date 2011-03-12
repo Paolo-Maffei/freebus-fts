@@ -14,6 +14,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Vector;
 
 import javax.persistence.PersistenceException;
 import javax.swing.BorderFactory;
@@ -332,7 +333,15 @@ public class ProductsBrowser extends WorkBenchEditor
          final FunctionalEntityService dao = productsFactory.getFunctionalEntityService();
          if (dao != null)
          {
-            final List<FunctionalEntity> cats = dao.getFunctionalEntities(getSelectedManufacturer());
+            List<FunctionalEntity> cats = dao.getFunctionalEntities(getSelectedManufacturer());
+            final FunctionalEntity[] catsArray = new FunctionalEntity[cats.size()];
+            cats.toArray(catsArray);
+            Arrays.sort(catsArray);
+            final Vector<FunctionalEntity> catsVector = new Vector<FunctionalEntity>(cats.size());
+            for (FunctionalEntity cat : catsArray)
+               catsVector.add(cat);
+            cats = catsVector;
+
             final Map<FunctionalEntity, DefaultMutableTreeNode> parentNodes = new HashMap<FunctionalEntity, DefaultMutableTreeNode>();
 
             for (int tries = 20; tries > 0 && !cats.isEmpty(); --tries)
@@ -369,6 +378,7 @@ public class ProductsBrowser extends WorkBenchEditor
       finally
       {
          trmCategories.reload();
+         TreeUtils.sort(treCategories);
          TreeUtils.expandAll(treCategories);
       }
    }

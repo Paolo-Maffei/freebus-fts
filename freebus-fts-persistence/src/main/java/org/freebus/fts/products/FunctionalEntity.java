@@ -18,7 +18,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
  */
 @Entity
 @Table(name = "functional_entity")
-public class FunctionalEntity
+public class FunctionalEntity implements Comparable<FunctionalEntity>
 {
    @Id
    @TableGenerator(name = "FunctionalEntity", initialValue = 1, allocationSize = 10)
@@ -163,6 +163,15 @@ public class FunctionalEntity
    public int hashCode()
    {
       return id;
+   }
+
+   /**
+    * Compare two objects by name.
+    */
+   @Override
+   public int compareTo(FunctionalEntity o)
+   {
+      return name.compareTo(o.name);
    }
 
    /**
