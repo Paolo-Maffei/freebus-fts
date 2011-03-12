@@ -378,7 +378,6 @@ public class ProductsBrowser extends WorkBenchEditor
       finally
       {
          trmCategories.reload();
-         TreeUtils.sort(treCategories);
          TreeUtils.expandAll(treCategories);
       }
    }
