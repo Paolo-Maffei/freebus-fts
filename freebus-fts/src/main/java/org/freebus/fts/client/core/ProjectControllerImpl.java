@@ -17,6 +17,7 @@ import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.ProjectUtils;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.service.ProjectController;
@@ -60,6 +61,50 @@ public final class ProjectControllerImpl implements ProjectController
    {
       building.add(room);
       ProjectManager.fireComponentAdded(room);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Area createArea()
+   {
+      final Project project = ProjectManager.getProject();
+
+      final int address = ProjectUtils.getFreeAddress(project.getAreas(), 0, 15);
+      if (address < 0)
+         throw new RuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxAreas"));
+
+      final Area area = new Area();
+      area.setAddress(address);
+      area.setName(I18n.formatMessage("ProjectControllerImpl.NewAreaName", Integer.toString(address)));
+      project.add(area);
+
+      ProjectManager.fireComponentAdded(area);
+      edit(area);
+      
+      return area;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Line createLine(Area area)
+   {
+      final int address = ProjectUtils.getFreeAddress(area.getLines(), 0, 15);
+      if (address < 0)
+         throw new RuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxLines"));
+
+      final Line line = new Line();
+      line.setAddress(address);
+      line.setName(I18n.formatMessage("ProjectControllerImpl.NewLineName", Integer.toString(address)));
+      area.add(line);
+
+      ProjectManager.fireComponentAdded(line);
+      edit(line);
+      
+      return line;
    }
 
    /**

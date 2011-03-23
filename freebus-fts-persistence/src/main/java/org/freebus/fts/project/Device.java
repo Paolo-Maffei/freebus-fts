@@ -36,7 +36,7 @@ import org.freebus.fts.products.VirtualDevice;
  */
 @Entity
 @Table(name = "device")
-public final class Device implements Comparable<Device>
+public final class Device implements Comparable<Device>, Addressable
 {
    @Id
    @TableGenerator(name = "Device", initialValue = 1, allocationSize = 10)
@@ -178,6 +178,7 @@ public final class Device implements Comparable<Device>
     * @return the address of the device. This is the last number of a physical
     * address (e.g. 12 for 1.3.12)
     */
+   @Override
    public int getAddress()
    {
       return address;

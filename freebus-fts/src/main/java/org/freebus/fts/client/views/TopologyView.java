@@ -13,14 +13,9 @@ import javax.swing.Icon;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
 import javax.swing.TransferHandler;
-import javax.swing.tree.DefaultMutableTreeNode;
-import javax.swing.tree.TreePath;
 
 import org.freebus.fts.client.actions.ActionFactory;
-import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.dialogs.AreaProperties;
-import org.freebus.fts.client.dialogs.LineProperties;
 import org.freebus.fts.client.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.components.ToolBarButton;
@@ -174,50 +169,7 @@ public class TopologyView extends AbstractTreeView
     */
    protected void addArea()
    {
-      final Project project = ProjectManager.getProject();
-      if (project == null)
-         return;
-
-      // Request name first
-      final AreaProperties dlg = new AreaProperties(MainWindow.getInstance());
-      dlg.setVisible(true); // this dialog is modal
-      if (dlg.isAccepted() == false)
-      {
-         return;
-      }
-
-      final Area area = project.addArea(dlg.getAreaName());
-      area.setAddress(dlg.getAddress());
-
-      final DefaultMutableTreeNode areaNode = new DefaultMutableTreeNode(area, true);
-
-      getTreeModel().insertNodeInto(areaNode, getRootNode(), 0);
-      getTree().expandPath(new TreePath(getRootNode()));
-
-      updateContents();
-   }
-
-   /**
-    * open the dialog to edit the properties of the area
-    * 
-    * @param area to edit
-    */
-   protected void editAreaProperties(Area area)
-   {
-      if (area == null)
-         return;
-
-      final AreaProperties dlg = new AreaProperties(MainWindow.getInstance(), area.getName(), area.getAddress());
-
-      dlg.setVisible(true); // this dialog is modal
-      if (dlg.isAccepted() == false)
-      {
-         return;
-      }
-      area.setName(dlg.getAreaName());
-      area.setAddress(dlg.getAddress());
-
-      updateContents();
+      ProjectManager.getController().createArea();
    }
 
    /**
@@ -225,73 +177,13 @@ public class TopologyView extends AbstractTreeView
     */
    protected void addLine()
    {
-      final Project project = ProjectManager.getProject();
-      if (project == null)
-         return;
-
-      DefaultMutableTreeNode areaNode = (DefaultMutableTreeNode) getTree().getLastSelectedPathComponent();
-      if (areaNode == null)
-         return;
-
-      final Object selectedObject = areaNode.getUserObject();
-      Area area = null;
-
-      if (selectedObject instanceof Area)
-      {
-         area = (Area) selectedObject;
-      }
-      else if (selectedObject instanceof Line)
-      {
-         area = ((Line) selectedObject).getArea();
-         areaNode = (DefaultMutableTreeNode) areaNode.getParent();
-      }
-
-      if (area == null)
-         return;
-
-      // Request name first
-      final LineProperties dlg = new LineProperties(MainWindow.getInstance(), area);
-      dlg.setVisible(true); // this dialog is modal
-      if (dlg.isAccepted() == false)
-      {
-         return;
-      }
-
-      final Line line = new Line();
-      line.setName(dlg.getLineName());
-      line.setAddress(dlg.getAddress());
-      // line.setArea(area); // wird in area.add erledigt.
-      area.add(line);
-
-      final DefaultMutableTreeNode lineNode = new DefaultMutableTreeNode(line, true);
-      getTreeModel().insertNodeInto(lineNode, areaNode, 0);
-
-      getTree().expandPath(new TreePath(areaNode));
-
-      // updateContents();
-   }
-
-   /**
-    * open the dialog to edit the properties of the line
-    * 
-    * @param line to edit
-    */
-   protected void editLineProperties(Line line)
-   {
-      if (line == null)
-         return;
-
-      final LineProperties dlg = new LineProperties(MainWindow.getInstance(), line);
-
-      dlg.setVisible(true); // this dialog is modal
-      if (dlg.isAccepted() == false)
-      {
-         return;
-      }
-      line.setName(dlg.getLineName());
-      line.setAddress(dlg.getAddress());
-
-      updateContents();
+      Object obj = getSelectedObject();
+      if (obj instanceof Device)
+         obj = ((Device) obj).getLine();
+      if (obj instanceof Line)
+         obj = ((Line) obj).getArea();
+      if (obj instanceof Area)
+         ProjectManager.getController().createLine((Area) obj);
    }
 
    /**

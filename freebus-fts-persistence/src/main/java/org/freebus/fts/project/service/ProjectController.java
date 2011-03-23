@@ -1,8 +1,10 @@
 package org.freebus.fts.project.service;
 
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
+import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
@@ -21,7 +23,7 @@ public interface ProjectController
     * @param dev - the device to add.
     */
    void add(VirtualDevice dev);
-
+   
    /**
     * Add a building to the project. The building may have a parent building.
     * 
@@ -36,6 +38,22 @@ public interface ProjectController
     * @param room - the room to add.
     */
    void add(Building building, Room room);
+
+   /**
+    * Create an area and add it to the project.
+    *
+    * @return The created area.
+    */
+   Area createArea();
+
+   /**
+    * Create a line and add it to the given area.
+    *
+    * @param area - the area to which the line will be added
+    *
+    * @return The created line.
+    */
+   Line createLine(Area area);
 
    /**
     * Edit an object. Calls the proper edit method to do the job (e.g.

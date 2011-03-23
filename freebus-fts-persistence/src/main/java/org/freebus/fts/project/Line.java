@@ -25,7 +25,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "line")
-public class Line implements Comparable<Line>
+public class Line implements Comparable<Line>, Addressable
 {
    @Id
    @TableGenerator(name = "Line", initialValue = 1, allocationSize = 10)
@@ -131,6 +131,7 @@ public class Line implements Comparable<Line>
    /**
     * @return the KNX bus address of the line (0..255).
     */
+   @Override
    public int getAddress()
    {
       return address;

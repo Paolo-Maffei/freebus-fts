@@ -25,7 +25,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "area")
-public class Area implements Comparable<Area>
+public class Area implements Comparable<Area>, Addressable
 {
    @Id
    @TableGenerator(name = "Area", initialValue = 1, allocationSize = 10)
@@ -151,6 +151,7 @@ public class Area implements Comparable<Area>
    /**
     * @return the address
     */
+   @Override
    public int getAddress()
    {
       return address;
