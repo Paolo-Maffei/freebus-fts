@@ -9,7 +9,6 @@ import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.editors.productsbrowser.ProductsBrowser;
-import org.freebus.fts.client.editors.productsbrowser.ProductsImportBrowser;
 import org.freebus.fts.client.filters.VdxFileFilter;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;

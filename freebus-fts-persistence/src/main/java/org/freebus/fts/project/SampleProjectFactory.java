@@ -1,16 +1,8 @@
 package org.freebus.fts.project;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
-import org.freebus.fts.products.importer.ProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.project.internal.I18n;
@@ -33,64 +25,7 @@ public final class SampleProjectFactory
    public synchronized static void importSampleDevices(final String persistenceUnitName)
    {
       Logger.getLogger(SampleProjectFactory.class).info("Importing sample org.freebus.fts.products");
-
-      final InputStream inStream = SampleProjectFactory.class.getClassLoader()
-            .getResourceAsStream(sampleImportFileName);
-      if (inStream == null)
-         throw new RuntimeException("Could not find example products file \"" + sampleImportFileName
-               + "\" in class path");
-
-      File tempFile = null;
-      try
-      {
-         tempFile = File.createTempFile("fts-sample-import", ".vd_");
-         tempFile.deleteOnExit();
-         final OutputStream outStream = new FileOutputStream(tempFile);
-
-         final byte[] buffer = new byte[8192];
-         int rlen;
-         while (true)
-         {
-            rlen = inStream.read(buffer, 0, buffer.length);
-            if (rlen <= 0)
-               break;
-            outStream.write(buffer, 0, rlen);
-         }
-
-         outStream.close();
-         inStream.close();
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException("Could not create temp file for sample org.freebus.fts.products import");
-      }
-
-      final ProductsFactory vdxFactory = ProductsManager.getFactory(tempFile, persistenceUnitName);
-      final ProductsFactory productsFactory = ProductsManager.getFactory();
-      final ProductsImporter importer = ProductsManager.getProductsImporter(vdxFactory, productsFactory);
-
-      final List<VirtualDevice> devs = vdxFactory.getVirtualDeviceService().getVirtualDevices();
-
-      final boolean ownTransaction = !productsFactory.getTransaction().isActive();
-
-      try
-      {
-         if (ownTransaction)
-            productsFactory.getTransaction().begin();
-
-         importer.copy(devs);
-
-         if (ownTransaction)
-            productsFactory.getTransaction().commit();
-      }
-      finally
-      {
-         if (ownTransaction && productsFactory.getTransaction().isActive())
-            productsFactory.getTransaction().rollback();
-
-         if (tempFile != null)
-            tempFile.delete();
-      }
+      ProductsManager.importResource(sampleImportFileName, persistenceUnitName, ProductsManager.getFactory());
    }
 
    /**
@@ -147,7 +82,7 @@ public final class SampleProjectFactory
       VirtualDevice virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
       if (virtDev == null)
       {
-         importSampleDevices(persistenceUnitName);
+         ProductsManager.importResource(sampleImportFileName, persistenceUnitName, ProductsManager.getFactory());
 
          virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
          if (virtDev == null)

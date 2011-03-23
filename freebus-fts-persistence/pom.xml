@@ -11,6 +11,57 @@
  <artifactId>freebus-fts-persistence</artifactId>
  <packaging>jar</packaging>
  <name>freebus-fts-persistence</name>
+ <build>
+  <plugins>
+   <plugin>
+ 	<groupId>org.jvnet.jaxb2.maven2</groupId>
+ 	<artifactId>maven-jaxb2-plugin</artifactId>
+    <executions>
+     <execution>
+      <phase>generate-sources</phase>
+      <goals>
+       <goal>generate</goal>
+      </goals>
+     </execution>
+    </executions>
+    <configuration>
+     <generatePackage>org.freebus.fts.project.integration.generated</generatePackage>
+     <includeSchemas>
+      <includeSchema>project.xsd</includeSchema>
+     </includeSchemas>
+     <strict>true</strict>
+    </configuration>
+   </plugin>
+   <plugin>
+   	<groupId>org.codehaus.groovy.maven</groupId>
+   	<artifactId>gmaven-plugin</artifactId>
+    <executions>
+     <execution>
+      <phase>generate-resources</phase>
+      <goals>
+       <goal>execute</goal>
+      </goals>
+      <configuration>
+       <!-- Create an index file containing the list of the products files -->
+       <source>
+        def outFile = new File("${project.build.directory}/classes/products/files.list");
+        outFile.getParentFile().mkdirs();
+        println "Creating " + outFile.toString();
+        def out = new PrintStream(new FileOutputStream(outFile));
+        def dir = new File("${pom.basedir}/src/main/resources/products");
+        for (f in dir.listFiles())
+        {
+           def nm = f.getName();
+           if (nm.toLowerCase().endsWith(".vd_"))
+              out.println(nm);
+        }
+       </source>
+      </configuration>
+     </execution>
+    </executions>
+   </plugin>
+  </plugins>
+ </build>
  <dependencies>
   <dependency>
    <groupId>org.freebus.fts</groupId>

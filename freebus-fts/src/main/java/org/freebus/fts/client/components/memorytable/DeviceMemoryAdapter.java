@@ -309,9 +309,9 @@ public final class DeviceMemoryAdapter
       associationTable.clear();
       associationTable.setSize(devObjects.size());
 
-      for (DeviceObject devObject : devObjects)
-      {
-         // TODO
-      }
+//      for (DeviceObject devObject : devObjects)
+//      {
+//         // TODO
+//      }
    }
 }

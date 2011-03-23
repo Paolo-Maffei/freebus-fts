@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!-- Required VDs: freebus-8in.vd_, freebus-8out.vd_ -->
+<project name="Example Project 1">
+ <description>This is example project #1</description>
+ <areas>
+  <area name="Home Area" address="1">
+   <line name="Main Line" address="0">
+    <device address="1" name="8-in">
+     <catalogEntry name="Binaereingang 8fach REG" manufacturer="Albrecht Jung" />
+     <program name="Universal Eingang 705402" manufacturer="INSTA ELEKTRO" deviceType="28756" />
+    </device>
+    <device address="2" name="8-out">
+     <catalogEntry name="Schaltaktor 8fach REG" manufacturer="Albrecht Jung" />
+     <program name="Schalten RM, VK, ZF 206001" manufacturer="Albrecht Jung" deviceType="8288" />
+    </device>
+   </line>
+  </area>
+ </areas>
+ <groups>
+  <mainGroup address="3">
+   <midGroup address="2">
+   </midGroup>
+  </mainGroup>
+ </groups>
+</project>

@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+ <xs:element name="project" type="ProjectType" />
+
+ <xs:complexType name="ProjectType">
+  <xs:sequence>
+   <xs:element name="description" type="xs:string" minOccurs="0" maxOccurs="1" />
+   <xs:element name="areas" type="AreasType" minOccurs="0" />
+   <xs:element name="buildings" type="BuildingsType" minOccurs="0" />
+   <xs:element name="groups" type="MainGroupsType" minOccurs="0" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+ </xs:complexType>
+
+ <xs:complexType name="AreasType">
+  <xs:sequence>
+   <xs:element name="area" type="AreaType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="AreaType">
+  <xs:sequence>
+   <xs:element name="line" type="LineType" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+  <xs:attribute name="address" type="xs:int" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="LineType">
+  <xs:sequence>
+   <xs:element name="device" type="DeviceType" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+  <xs:attribute name="address" type="xs:int" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="DeviceType">
+  <xs:sequence>
+   <xs:element name="catalogEntry" type="CatalogEntryRef" minOccurs="1" maxOccurs="1" />
+   <xs:element name="program" type="ProgramRef" minOccurs="0" maxOccurs="1" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+  <xs:attribute name="address" type="xs:int" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="CatalogEntryRef">
+  <xs:attribute name="name" type="xs:string" use="required" />
+  <xs:attribute name="manufacturer" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="ProgramRef">
+  <xs:attribute name="name" type="xs:string" use="required" />
+  <xs:attribute name="version" type="xs:string" />
+  <xs:attribute name="deviceType" type="xs:int" use="required" />
+  <xs:attribute name="manufacturer" type="xs:string" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="BuildingsType">
+  <xs:sequence>
+   <xs:element name="building" type="BuildingType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="BuildingType">
+  <xs:sequence>
+   <xs:element name="parts" type="BuildingsType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+ </xs:complexType>
+
+ <xs:complexType name="MainGroupsType">
+  <xs:sequence>
+   <xs:element name="mainGroup" type="MainGroupType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+ </xs:complexType>
+
+ <xs:complexType name="MainGroupType">
+  <xs:sequence>
+   <xs:element name="midGroup" type="MidGroupType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+  <xs:attribute name="address" type="xs:int" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="MidGroupType">
+  <xs:sequence>
+   <xs:element name="subGroup" type="SubGroupType" minOccurs="0" maxOccurs="unbounded" />
+  </xs:sequence>
+  <xs:attribute name="name" type="xs:string" />
+  <xs:attribute name="address" type="xs:int" use="required" />
+ </xs:complexType>
+
+ <xs:complexType name="SubGroupType">
+  <xs:attribute name="name" type="xs:string" />
+  <xs:attribute name="address" type="xs:int" use="required" />
+ </xs:complexType>
+
+</xs:schema>
