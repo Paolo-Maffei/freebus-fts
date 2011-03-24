@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.datatransfer.Transferable;
 import java.awt.dnd.DnDConstants;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -15,6 +16,7 @@ import javax.swing.TransferHandler;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.elements.components.ToolBar;
+import org.freebus.fts.elements.components.ToolBarButton;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.elements.tree.MutableIconTreeNode;
 import org.freebus.fts.elements.utils.TreeUtils;
@@ -36,7 +38,7 @@ public class LogicalView extends AbstractTreeView
    private final Icon midGroupIcon = ImageCache.getIcon("icons/middle-group");
    private final Icon subGroupIcon = ImageCache.getIcon("icons/sub-group");
 
-   private JButton btnAddMainGrp, btnAddMidGrp, btnAddSubGrp, btnDelete, btnProperties;
+   private JButton btnAddMainGrp, btnAddMidGrp, btnAddSubGrp, btnDelete, btnEdit;
 
    /**
     * Create a page that shows the topological structure of the project.
@@ -123,19 +125,18 @@ public class LogicalView extends AbstractTreeView
       btnAddSubGrp.setIcon(ImageCache.getIcon("icons/sub-group-new"));
       btnAddSubGrp.setToolTipText(I18n.getMessage("LogicalView.AddSubGroup"));
 
-      btnProperties = toolBar.add(new AbstractAction()
+      btnEdit = new ToolBarButton(ImageCache.getIcon("icons/configure"));
+      toolBar.add(btnEdit);
+      btnEdit.setEnabled(false);
+      btnEdit.setToolTipText(I18n.getMessage("TopologyView.EditTip"));
+      btnEdit.addActionListener(new ActionListener()
       {
-         private static final long serialVersionUID = 1L;
-
          @Override
-         public void actionPerformed(ActionEvent e)
+         public void actionPerformed(ActionEvent arg0)
          {
-            editProperties();
+            ProjectManager.getController().edit(getSelectedObject());
          }
-
       });
-      btnProperties.setIcon(ImageCache.getIcon("icons/edit-properties"));
-      btnProperties.setToolTipText(I18n.getMessage("LogicalView.EditProperties"));
 
       btnDelete = toolBar.add(new AbstractAction()
       {
@@ -166,7 +167,7 @@ public class LogicalView extends AbstractTreeView
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(true);
          btnAddSubGrp.setEnabled(false);
-         btnProperties.setEnabled(true);
+         btnEdit.setEnabled(true);
          btnDelete.setEnabled(true);
       }
       else if (obj instanceof MidGroup)
@@ -174,7 +175,7 @@ public class LogicalView extends AbstractTreeView
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(true);
          btnAddSubGrp.setEnabled(true);
-         btnProperties.setEnabled(true);
+         btnEdit.setEnabled(true);
          btnDelete.setEnabled(true);
       }
       else if (obj instanceof SubGroup)
@@ -182,7 +183,7 @@ public class LogicalView extends AbstractTreeView
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(true);
          btnAddSubGrp.setEnabled(true);
-         btnProperties.setEnabled(true);
+         btnEdit.setEnabled(true);
          btnDelete.setEnabled(true);
       }
       else
@@ -190,33 +191,34 @@ public class LogicalView extends AbstractTreeView
          btnAddMainGrp.setEnabled(true);
          btnAddMidGrp.setEnabled(false);
          btnAddSubGrp.setEnabled(false);
-         btnProperties.setEnabled(false);
+         btnEdit.setEnabled(false);
          btnDelete.setEnabled(false);
       }
    }
 
    private void addMainGrp()
    {
-      // TODO Auto-generated method stub
-
+      ProjectManager.getController().createMainGroup();
    }
 
    private void addMidGrp()
    {
-      // TODO Auto-generated method stub
+      Object obj = getSelectedObject();
+      if (obj instanceof SubGroup)
+         obj = ((SubGroup) obj).getMidGroup();
+      if (obj instanceof MidGroup)
+         obj = ((MidGroup) obj).getMainGroup();
 
+      ProjectManager.getController().createMidGroup((MainGroup) obj);
    }
 
    private void addSubGrp()
    {
-      // TODO Auto-generated method stub
+      Object obj = getSelectedObject();
+      if (obj instanceof SubGroup)
+         obj = ((SubGroup) obj).getMidGroup();
 
-   }
-
-   private void editProperties()
-   {
-      // TODO Auto-generated method stub
-
+      ProjectManager.getController().createSubGroup((MidGroup) obj);
    }
 
    /**

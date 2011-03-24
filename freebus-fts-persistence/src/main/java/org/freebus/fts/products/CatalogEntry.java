@@ -13,6 +13,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * Catalog entries name the variations of a virtual device, as it can be bought
  * from a catalog or web-shop. Catalog entries of the same virtual device
@@ -20,7 +22,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "catalog_entry")
-public class CatalogEntry
+public class CatalogEntry implements Named
 {
    @Id
    @TableGenerator(name = "CatalogEntry", initialValue = 1, allocationSize = 10)
@@ -69,6 +71,8 @@ public class CatalogEntry
 
    /**
     * Create an empty catalog-entry object with an id.
+    * 
+    * @param id - the database ID of the object.
     */
    public CatalogEntry(int id)
    {
@@ -77,6 +81,11 @@ public class CatalogEntry
 
    /**
     * Create a catalog-entry object.
+    * 
+    * @param id - the database ID of the object.
+    * @param name - the name of the object.
+    * @param manufacturer - the manufacturer.
+    * @param product - the product.
     */
    public CatalogEntry(int id, String name, Manufacturer manufacturer, Product product)
    {
@@ -88,6 +97,9 @@ public class CatalogEntry
 
    /**
     * Create a catalog-entry object.
+    *
+    * @param name - the name of the object.
+    * @param manufacturer - the manufacturer.
     */
    public CatalogEntry(String name, Manufacturer manufacturer)
    {
@@ -104,6 +116,8 @@ public class CatalogEntry
 
    /**
     * Set the id of the catalog-entry.
+    * 
+    * @param id - the ID to set.
     */
    public void setId(int id)
    {
@@ -113,6 +127,7 @@ public class CatalogEntry
    /**
     * @return the name of the catalog-entry.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -120,6 +135,8 @@ public class CatalogEntry
 
    /**
     * Set the name of the catalog-entry.
+    * 
+    * @param name - the name to set.
     */
    public void setName(String name)
    {
@@ -172,6 +189,8 @@ public class CatalogEntry
 
    /**
     * Set the with in module-units.
+    * 
+    * @param widthModules - the width to set.
     */
    public void setWidthModules(int widthModules)
    {
@@ -188,6 +207,8 @@ public class CatalogEntry
 
    /**
     * Set the width in millimeters.
+    * 
+    * @param widthMM - the width to set.
     */
    public void setWidthMM(int widthMM)
    {
@@ -196,6 +217,8 @@ public class CatalogEntry
 
    /**
     * Test if the device can be mounted on DIN rails.
+    * 
+    * @return True if the device is DIN mountable.
     */
    public boolean getDIN()
    {
@@ -204,6 +227,8 @@ public class CatalogEntry
 
    /**
     * Set if the device can be mounted on DIN rails.
+    * 
+    * @param din - true if the device is DIN mountable.
     */
    public void setDIN(boolean din)
    {
@@ -220,6 +245,8 @@ public class CatalogEntry
 
    /**
     * Set the order-number.
+    * 
+    * @param orderNumber - the order number to set.
     */
    public void setOrderNumber(String orderNumber)
    {
@@ -236,6 +263,8 @@ public class CatalogEntry
 
    /**
     * Set the color of the device.
+    * 
+    * @param color - the color of the device.
     */
    public void setColor(String color)
    {
@@ -252,6 +281,8 @@ public class CatalogEntry
 
    /**
     * Set the series.
+    * 
+    * @param series - the series to set.
     */
    public void setSeries(String series)
    {
@@ -277,7 +308,7 @@ public class CatalogEntry
    }
 
    /**
-    * Returns a hash-code for the object.
+    * {@inheritDoc}
     */
    @Override
    public int hashCode()
@@ -286,7 +317,7 @@ public class CatalogEntry
    }
 
    /**
-    * Compare two objects.
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(final Object o)
@@ -314,7 +345,7 @@ public class CatalogEntry
    }
 
    /**
-    * Returns a human readable representation of the object.
+    * {@inheritDoc}
     */
    @Override
    public String toString()

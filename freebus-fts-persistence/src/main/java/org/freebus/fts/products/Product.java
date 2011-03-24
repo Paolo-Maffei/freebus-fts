@@ -11,6 +11,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A Product contains the hardware details about a device, taken from a .VD_
  * specification file (HW_PRODUCTS section). This is not a device that gets
@@ -18,7 +20,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "hw_product")
-public class Product
+public class Product implements Named
 {
    public final static Product NONE = new Product(0, "NONE", null);
 
@@ -57,6 +59,10 @@ public class Product
 
    /**
     * Create a product.
+    * 
+    * @param id - the database ID of the product.
+    * @param name - the name of the product.
+    * @param manufacturer - the manufacturer.
     */
    public Product(int id, String name, Manufacturer manufacturer)
    {
@@ -82,7 +88,7 @@ public class Product
    }
 
    /**
-    * Return the current that the product requires, in milli-ampere.
+    * @return The current that the product requires, in milliampere.
     */
    public int getBusCurrent()
    {
@@ -108,6 +114,7 @@ public class Product
    /**
     * @return the name of the product.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -121,6 +128,9 @@ public class Product
       return serial;
    }
 
+   /**
+    * @return The version.
+    */
    public int getVersion()
    {
       return version;
@@ -137,6 +147,8 @@ public class Product
 
    /**
     * Set the current that the product requires, in milli-ampere.
+    * 
+    * @param busCurrent - the bus current to set.
     */
    public void setBusCurrent(int busCurrent)
    {
@@ -145,6 +157,8 @@ public class Product
 
    /**
     * Set the product id.
+    * 
+    * @param id - the id to set.
     */
    public void setId(int id)
    {
@@ -163,12 +177,19 @@ public class Product
 
    /**
     * Set the serial-number that the manufacturer assigned.
+    * 
+    * @param serial - the serial to set.
     */
    public void setSerial(String serial)
    {
       this.serial = serial;
    }
 
+   /**
+    * Set the version.
+    *
+    * @param version - the version to set.
+    */
    public void setVersion(int version)
    {
       this.version = version;

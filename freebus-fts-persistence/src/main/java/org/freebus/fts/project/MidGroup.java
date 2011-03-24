@@ -16,6 +16,8 @@ import javax.persistence.OrderBy;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.project.internal.I18n;
 
 /**
@@ -25,7 +27,7 @@ import org.freebus.fts.project.internal.I18n;
  */
 @Entity
 @Table(name = "mid_group")
-public class MidGroup implements Comparable<MidGroup>
+public class MidGroup implements Comparable<MidGroup>, Addressable, Named
 {
    @Id
    @TableGenerator(name = "MidGroup", initialValue = 1, allocationSize = 10)
@@ -81,13 +83,16 @@ public class MidGroup implements Comparable<MidGroup>
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;
    }
 
    /**
-    * @param name the name to set
+    * Set the name.
+    *
+    * @param name - the name to set
     */
    public void setName(String name)
    {
@@ -95,14 +100,17 @@ public class MidGroup implements Comparable<MidGroup>
    }
 
    /**
-    * @return the address
+    * @return the address.
     */
+   @Override
    public int getAddress()
    {
       return address;
    }
 
    /**
+    * Set the address (0..7).
+    *
     * @param address the address to set
     */
    public void setAddress(int address)

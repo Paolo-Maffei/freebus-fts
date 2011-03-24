@@ -30,7 +30,9 @@ public final class FileBlockReader
     * Create a new reader that works on the {@link RandomAccessFile} file in
     * and has a default internal buffer size of 32KB.
     * 
-    * @throws IOException
+    * @param in - the file to read.
+    * 
+    * @throws IOException in case of I/O problems.
     */
    public FileBlockReader(RandomAccessFile in) throws IOException
    {
@@ -40,10 +42,10 @@ public final class FileBlockReader
    /**
     * Create a new reader that works on the {@link RandomAccessFile} file in.
     *
-    * @param in is the {@link RandomAccessFile} that will be used
-    * @param bufferSize is the size of the internal read buffer
+    * @param in - the {@link RandomAccessFile} that will be used
+    * @param bufferSize - the size of the internal read buffer
     * 
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    public FileBlockReader(RandomAccessFile in, int bufferSize) throws IOException
    {
@@ -74,7 +76,7 @@ public final class FileBlockReader
 
    /**
     * @return the size of the file in bytes
-    * @throws IOException 
+    * @throws IOException in case of I/O problems.
     */
    public long getFileSize() throws IOException
    {
@@ -83,7 +85,10 @@ public final class FileBlockReader
 
    /**
     * Position the reader at the offset within the file.
-    * @throws IOException 
+    * 
+    * @param offset - the offset.
+    * 
+    * @throws IOException in case of I/O problems.
     */
    public void seek(long offset) throws IOException
    {
@@ -104,7 +109,7 @@ public final class FileBlockReader
     * Read the next character.
     * 
     * @return the read character, or '\0' if the end-of-file is reached.
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     * @see #atEnd()
     */
    public char read() throws IOException
@@ -133,7 +138,7 @@ public final class FileBlockReader
     * The end of the word is a white-space, or the end of the file.
     * 
     * @return the read word, or null if the end of the file is reached.
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    public String readWord() throws IOException
    {
@@ -163,7 +168,7 @@ public final class FileBlockReader
     * CR and/or LF at the end of the line are discarded.
     * 
     * @return the read line, or null if the end of the file is reached.
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    public String readLine() throws IOException
    {
@@ -183,9 +188,11 @@ public final class FileBlockReader
 
    /**
     * Read until the character 'find' is read or end-of-file is reached.
+    * 
+    * @param find - the character to read until.
     *
     * @return true if the character is found, false if end-of-file was reached.
-    * @throws IOException 
+    * @throws IOException in case of I/O problems.
     */
    public boolean readUntil(char find) throws IOException
    {
@@ -204,7 +211,7 @@ public final class FileBlockReader
    /**
     * Read the next block from the file into the internal buffer.
     * 
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    protected void underrun() throws IOException
    {

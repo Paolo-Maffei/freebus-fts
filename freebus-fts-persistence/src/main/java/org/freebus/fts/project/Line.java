@@ -18,6 +18,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A line in an {@link Area}. A line is the mid-level group for the topological
  * structure of an EIB bus. Every line belongs to an {@link Area area}, and can
@@ -25,7 +28,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "line")
-public class Line implements Comparable<Line>, Addressable
+public class Line implements Comparable<Line>, Addressable, Named
 {
    @Id
    @TableGenerator(name = "Line", initialValue = 1, allocationSize = 10)
@@ -95,6 +98,7 @@ public class Line implements Comparable<Line>, Addressable
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;

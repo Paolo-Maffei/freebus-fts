@@ -15,10 +15,14 @@ import liquibase.ClassLoaderFileOpener;
 import liquibase.Liquibase;
 import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
+import liquibase.exception.JDBCException;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.SimpleConfig;
 
+/**
+ * Factory for database resources.
+ */
 public class DatabaseResources
 {
    static private EntityManagerFactory entityManagerFactory;
@@ -95,6 +99,8 @@ public class DatabaseResources
    /**
     * Set the default entity manager factory. Must be called before
     * {@link #getEntityManager} can be used.
+    * 
+    * @param entityManagerFactory - the entity manager factory to set.
     *
     * @see #createEntityManagerFactory(String, ConnectionDetails)
     */
@@ -141,10 +147,11 @@ public class DatabaseResources
     * @param con - the database connection that is used for migration.
     *
     * @return The created {@link Liquibase} object.
+    * @throws JDBCException if there are problems with the database connection
     *
     * @see #createConnection(ConnectionDetails)
     */
-   public static Liquibase createMigrator(String changeLogFile, Connection con) throws Exception
+   public static Liquibase createMigrator(String changeLogFile, Connection con) throws JDBCException
    {
       final Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(con);
 
@@ -189,8 +196,12 @@ public class DatabaseResources
    }
 
    /**
+    * Get database properties from the given connection-details object.
+    * 
+    * @param conDetails - the connection details.
+    * 
     * @return a {@link Properties database properties} object filled from the
-    *         given connection-details object
+    *         given connection-details object.
     */
    public static Properties getPropertiesFor(final ConnectionDetails conDetails)
    {

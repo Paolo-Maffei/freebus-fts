@@ -38,14 +38,23 @@ public class VdxEntityInfo
    // that are annotated with @OneToMany, @ManyToOne, etc.
    private final Vector<VdxAssociation> associations = new Vector<VdxAssociation>();
 
+   /**
+    * Create an entity info object with default values.
+    */
+   public VdxEntityInfo()
+   {
+   }
+
+   /**
+    * Create an entity info object.
+    *
+    * @param name - the name of the object.
+    * @param clazz - the class of the entity.
+    */
    public VdxEntityInfo(String name, Class<?> clazz)
    {
       this.name = name;
       this.clazz = clazz;
-   }
-
-   public VdxEntityInfo()
-   {
    }
 
    /**
@@ -75,68 +84,121 @@ public class VdxEntityInfo
    }
 
    /**
-    * Set the name of the VDX section
+    * Set the name of the VDX section.
+    * 
+    * @param name - the name of the section.
     */
    public void setName(String name)
    {
       this.name = name;
    }
 
+   /**
+    * @return The class of the entity.
+    */
    public Class<?> getClazz()
    {
       return clazz;
    }
 
+   /**
+    * Set the class of the entity.
+    * 
+    * @param clazz - the class to set.
+    */
    public void setClazz(Class<?> clazz)
    {
       this.clazz = clazz;
    }
 
+   /**
+    * @return The {@link @Id} field, may be null.
+    */
    public Field getId()
    {
       return id;
    }
 
+   /**
+    * Set the {@link @Id} field.
+    *
+    * @param id - the field to set, may be null.
+    */
    public void setId(Field id)
    {
       this.id = id;
    }
 
+   /**
+    * @return The objects.
+    */
    public Vector<Object> getObjs()
    {
       return objs;
    }
 
+   /**
+    * Set the objects.
+    *
+    * @param objs - the vector of objects to set.
+    */
    public void setObjs(Vector<Object> objs)
    {
       this.objs = objs;
    }
 
+   /**
+    * @return The IDs.
+    */
    public Map<String, Object> getIds()
    {
       return ids;
    }
 
+   /**
+    * Set the IDs.
+    *
+    * @param ids - the IDs to set.
+    */
    public void setIds(Map<String, Object> ids)
    {
       this.ids = ids;
    }
 
+   /**
+    * @return The fields.
+    */
    public Map<String, Field> getFields()
    {
       return fields;
    }
 
+   /**
+    * Get a specific field.
+    *
+    * @param name - the name of the field to get.
+    *
+    * @return The field.
+    */
    public Field getField(String name)
    {
       return fields.get(name);
    }
 
+   /**
+    * Add a field.
+    * 
+    * @param name - the name of the field.
+    * @param field - the field.
+    */
    public void addField(String name, Field field)
    {
       fields.put(name, field);
    }
 
+   /**
+    * @return The associations.
+    */
    public Vector<VdxAssociation> getAssociations()
    {
       return associations;
@@ -144,6 +206,8 @@ public class VdxEntityInfo
 
    /**
     * Add an association.
+    * 
+    * @param association - the association to add.
     */
    public void addAssociation(VdxAssociation association)
    {

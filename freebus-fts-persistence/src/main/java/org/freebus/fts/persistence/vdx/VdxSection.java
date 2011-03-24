@@ -37,7 +37,9 @@ public class VdxSection
    }
 
    /**
-    * Add the fields to the list of section element values.
+    * Add the field values to the list of section element values.
+    * 
+    * @param values - the values to add.
     */
    public void addElementValues(String[] values)
    {
@@ -45,6 +47,10 @@ public class VdxSection
    }
 
    /**
+    * Get the element values of a specific element.
+    * 
+    * @param idx - the index of the element.
+    * 
     * @return the field's values of the idx-th section element.
     */
    public String[] getElementValues(int idx)
@@ -53,6 +59,11 @@ public class VdxSection
    }
 
    /**
+    * Get the value of a single field.
+    * 
+    * @param idx - the index of the element.
+    * @param fieldIdx - the index of the field within the element.
+    * 
     * @return the fieldIdx-th field of the idx-th section element.
     */
    public String getValue(int idx, int fieldIdx)
@@ -61,6 +72,11 @@ public class VdxSection
    }
 
    /**
+    * Get the integer value of a single field.
+    * 
+    * @param idx - the index of the element.
+    * @param fieldIdx - the index of the field within the element.
+
     * @return the fieldIdx-th field of the idx-th section element as an integer.
     *         Zero is returned if the field is empty.
     */
@@ -72,6 +88,11 @@ public class VdxSection
    }
 
    /**
+    * Get the value of a single field.
+    * 
+    * @param idx - the index of the element.
+    * @param fieldName - the name of the field.
+    * 
     * @return the fieldIdx-th field of the section element with the name fieldName.
     */
    public String getValue(int idx, String fieldName)
@@ -81,6 +102,11 @@ public class VdxSection
    }
 
    /**
+    * Get the integer value of a single field.
+    * 
+    * @param idx - the index of the element.
+    * @param fieldName - the name of the field.
+
     * @return the fieldIdx-th field of the section element with the name fieldName
     *         as an integer. Zero is returned if the field is empty.
     */

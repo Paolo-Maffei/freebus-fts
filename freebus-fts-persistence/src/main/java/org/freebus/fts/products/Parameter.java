@@ -12,12 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A parameter of a program.
  */
 @Entity(name = "parameter")
 @Table(name = "\"parameter\"")
-public class Parameter
+public class Parameter implements Named
 {
    @Id
    @TableGenerator(name = "Parameter", initialValue = 1, allocationSize = 100)
@@ -125,6 +127,7 @@ public class Parameter
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;
@@ -180,6 +183,8 @@ public class Parameter
 
    /**
     * Set the program to which the parameter belongs.
+    * 
+    * @param program - the program to set.
     */
    public void setProgram(Program program)
    {
@@ -320,6 +325,8 @@ public class Parameter
 
    /**
     * Set the expected parent parameter's value. May be null, if undefined.
+    * 
+    * @param parentValue - the parent value to set.
     */
    public void setParentValue(Integer parentValue)
    {
@@ -327,9 +334,7 @@ public class Parameter
    }
 
    /**
-    * Returns the size of the parameter in bits (?)
-    * 
-    * @return The size of the parameter.
+    * @return The size of the parameter in bits (?).
     */
    public int getSize()
    {
@@ -347,7 +352,7 @@ public class Parameter
    }
 
    /**
-    * @return the function
+    * @return the function.
     */
    public String getFunction()
    {

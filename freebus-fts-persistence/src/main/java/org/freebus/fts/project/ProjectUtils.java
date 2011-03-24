@@ -3,13 +3,16 @@ package org.freebus.fts.project;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
+
 /**
  * Project utility functions.
  */
 public final class ProjectUtils
 {
    /**
-    * Get a set containing all addresses of the given objects.
+    * Get a set containing all addresses of the given {@link Addressable} objects.
     * 
     * @param objs - the objects to get the addresses from.
     * 
@@ -48,6 +51,23 @@ public final class ProjectUtils
       return minAddress - 1;
    }
 
+   /**
+    * Get a set containing all names of the given {@link Named} objects.
+    * 
+    * @param objs - the objects to get the addresses from.
+    * 
+    * @return A set with the addresses.
+    */
+   public static Set<String> getNames(final Set<? extends Named> objs)
+   {
+      final Set<String> result = new HashSet<String>();
+
+      for (final Named obj : objs)
+         result.add(obj.getName());
+
+      return result;
+   }
+   
    /*
     * Disabled
     */

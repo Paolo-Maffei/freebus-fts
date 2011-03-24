@@ -17,6 +17,9 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
+
 
 /**
  * An area in a {@link Project}. An area is the top-level
@@ -25,7 +28,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "area")
-public class Area implements Comparable<Area>, Addressable
+public class Area implements Comparable<Area>, Addressable, Named
 {
    @Id
    @TableGenerator(name = "Area", initialValue = 1, allocationSize = 10)
@@ -116,6 +119,7 @@ public class Area implements Comparable<Area>, Addressable
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       if (name == null) return "";

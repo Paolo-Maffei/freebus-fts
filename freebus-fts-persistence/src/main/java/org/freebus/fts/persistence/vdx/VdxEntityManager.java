@@ -27,9 +27,9 @@ import org.freebus.fts.persistence.vdx.internal.VdxEntityInspector;
  * A simple entity manager that holds the entities of a VD_ file. Access methods
  * are {@link #fetch(Class, Object)} to fetch a single entity by key, and
  * {@link #fetchAll(Class)} to fetch all entities of one type.
- *
+ * 
  * Restrictions:
- *
+ * 
  * Currently only field annotations are supported. Method annotations will not
  * be processed.
  */
@@ -39,13 +39,13 @@ public final class VdxEntityManager
    private final VdxEntityInspector inspector;
 
    /**
-    * Create an entity-manager object that works on the VD_ file fileName
-    *
+    * Create an entity-manager object that works on the VD_ file fileName.
+    * 
     * @param file - The VD_ file that is processed.
     * @param persistenceUnitName -The name of the persistence unit in
     *           persistence.xml
-    *
-    * @throws PersistenceException
+    * 
+    * @throws PersistenceException if there are persistence problems.
     */
    public VdxEntityManager(File file, String persistenceUnitName) throws PersistenceException
    {
@@ -63,10 +63,10 @@ public final class VdxEntityManager
    /**
     * Create an entity-manager object that works on the VD_ file fileName and
     * uses the default persistence-unit of persistence.xml.
-    *
+    * 
     * @param file - The VD_ file that is processed.
-    *
-    * @throws PersistenceException
+    * 
+    * @throws PersistenceException if there are persistence problems.
     */
    public VdxEntityManager(File file) throws PersistenceException
    {
@@ -74,13 +74,13 @@ public final class VdxEntityManager
    }
 
    /**
-    * Create an entity-manager object that works on the VD_ file fileName
-    *
+    * Create an entity-manager object that works on the VD_ file fileName.
+    * 
     * @param fileName - The name of the VD_ file that is processed.
     * @param persistenceUnitName -The name of the persistence unit in
     *           persistence.xml
-    *
-    * @throws PersistenceException
+    * 
+    * @throws PersistenceException if there are persistence problems.
     */
    public VdxEntityManager(String fileName, String persistenceUnitName) throws PersistenceException
    {
@@ -90,10 +90,10 @@ public final class VdxEntityManager
    /**
     * Create an entity-manager object that works on the VD_ file fileName and
     * uses the default persistence-unit of persistence.xml.
-    *
+    * 
     * @param fileName - The name of the VD_ file that is processed.
-    *
-    * @throws PersistenceException
+    * 
+    * @throws PersistenceException if there are persistence problems.
     */
    public VdxEntityManager(String fileName) throws PersistenceException
    {
@@ -111,9 +111,13 @@ public final class VdxEntityManager
    /**
     * Fetch all entities of the class entityClass from the VD_ file. The
     * returned list is unsorted.
-    *
+    * 
+    * @param entityClass - the class of the searched entities.
+    * 
     * @return The found entities, or null if the VD_ file contains no matching
     *         section.
+    * 
+    * @throws PersistenceException if there are persistence problems.
     */
    public List<?> fetchAll(Class<?> entityClass) throws PersistenceException
    {
@@ -127,12 +131,13 @@ public final class VdxEntityManager
 
    /**
     * Fetch an entity object by it's key.
-    *
-    * @param entityClass - The class of the searched entity.
-    * @param id - The key for the entities' @{@link Id} annotated field.
-    *
+    * 
+    * @param entityClass - the class of the searched entity.
+    * @param id - the key for the entities' @{@link Id} annotated field.
+    * @param <T> .
+    * 
     * @return The found object, or null if the object was not found.
-    * @throws PersistenceException
+    * @throws PersistenceException in case of persistence problems.
     */
    public <T extends Object> T fetch(Class<T> entityClass, Object id) throws PersistenceException
    {
@@ -154,9 +159,9 @@ public final class VdxEntityManager
    /**
     * Load all entities for the entity-info info from the VD_ file and store
     * them in the entity-info's objects vector.
-    *
+    * 
     * @param info - The entity-info for which the entities are loaded.
-    * @throws PersistenceException
+    * @throws PersistenceException in case of persistence problems.
     */
    private void loadEntities(final VdxEntityInfo info) throws PersistenceException
    {
@@ -246,7 +251,8 @@ public final class VdxEntityManager
                   {
                      final Field f = assoc.getField();
                      final boolean accessible = f.isAccessible();
-                     if (!accessible) f.setAccessible(true);
+                     if (!accessible)
+                        f.setAccessible(true);
 
                      @SuppressWarnings("unchecked")
                      Collection<Object> coll = (Collection<Object>) f.get(obj);
@@ -258,8 +264,8 @@ public final class VdxEntityManager
                            coll = new HashSet<Object>();
                         else if (List.class.isAssignableFrom(type))
                            coll = new LinkedList<Object>();
-                        else
-                           throw new PersistenceException("Sorry, but the collection type is not implemented: " + type);
+                        else throw new PersistenceException("Sorry, but the collection type is not implemented: "
+                              + type);
 
                         f.set(obj, coll);
                      }
@@ -275,12 +281,14 @@ public final class VdxEntityManager
                         {
                            final Field targetField = assoc.getTargetField();
                            final boolean targetAccessible = targetField.isAccessible();
-                           if (!targetAccessible) targetField.setAccessible(true);
+                           if (!targetAccessible)
+                              targetField.setAccessible(true);
 
                            if (targetField.get(assocObj) == obj)
                               coll.add(assocObj);
 
-                           if (!targetAccessible) targetField.setAccessible(false);
+                           if (!targetAccessible)
+                              targetField.setAccessible(false);
                         }
                      }
 
@@ -305,12 +313,16 @@ public final class VdxEntityManager
     * Set the fields of the object obj with the idx-th record of the given
     * section. The fields that are entity objects or OneToMany/ManyToOne/...
     * associations are not set by this method.
-    *
+    * 
+    * @param obj - the object to set.
+    * @param info - the entity info.
+    * @param section - the section.
+    * @param idx - the index.
+    * 
     * @return The contents of the object's @{@link Id} field as {@link String}.
-    * @throws PersistenceException
+    * @throws PersistenceException in case of persistence problems.
     */
-   private String materializeObject(Object obj, VdxEntityInfo info, VdxSection section, int idx)
-         throws PersistenceException
+   private String materializeObject(Object obj, VdxEntityInfo info, VdxSection section, int idx) throws PersistenceException
    {
       final String[] fieldNames = section.getHeader().fields;
       String fieldName = null;
@@ -400,8 +412,7 @@ public final class VdxEntityManager
                      final int ordinal = Integer.parseInt(value);
                      Enum<?> enumVal = null;
 
-
-                     for (Enum<?> e: enumClass.getEnumConstants())
+                     for (Enum<?> e : enumClass.getEnumConstants())
                      {
                         if (e.ordinal() == ordinal)
                         {
@@ -412,7 +423,8 @@ public final class VdxEntityManager
 
                      if (enumVal != null)
                         field.set(obj, enumVal);
-                     else throw new IllegalArgumentException("Could not initialize enum of type " + type + " with value: " + value);
+                     else throw new IllegalArgumentException("Could not initialize enum of type " + type
+                           + " with value: " + value);
                   }
                   else
                   {

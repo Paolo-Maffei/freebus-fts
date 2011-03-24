@@ -6,6 +6,8 @@ import java.lang.reflect.Field;
 import javax.persistence.OneToMany;
 
 /**
+ * JPA associations between entity classes.
+ * <p>
  * Information about a JPA association of one entity class to another entity
  * class, usually annotated with @{@link OneToMany},
  * 
@@ -22,6 +24,12 @@ public final class VdxAssociation
 
    /**
     * Create an association object.
+    * 
+    * @param type - the type of the annotation.
+    * @param field - the field.
+    * @param vdxFieldName - the VDX field name.
+    * @param targetClass - the target class.
+    * @param nullable - true if the field is nullable.
     */
    public VdxAssociation(Annotation type, Field field, String vdxFieldName, Class<?> targetClass, boolean nullable)
    {
@@ -42,6 +50,8 @@ public final class VdxAssociation
 
    /**
     * Set the annotation that the originating class has.
+    * 
+    * @param type - the type of the annotation.
     */
    public void setType(Annotation type)
    {
@@ -58,6 +68,8 @@ public final class VdxAssociation
 
    /**
     * Set the field of the entity which starts the association.
+    * 
+    * @param field - the field of the entity.
     */
    public void setField(Field field)
    {
@@ -66,6 +78,8 @@ public final class VdxAssociation
 
    /**
     * Set the name of the VD_ table field.
+    * 
+    * @param vdxFieldName - the name of the VD_ field.
     */
    public void setVdxFieldName(String vdxFieldName)
    {
@@ -90,6 +104,8 @@ public final class VdxAssociation
 
    /**
     * Set the class of the target of the association.
+    * 
+    * @param targetClass - the target class.
     */
    public void setTargetClass(Class<?> targetClass)
    {
@@ -99,6 +115,8 @@ public final class VdxAssociation
    /**
     * Set the field in the target class that is used for lookup of the entity
     * object by xToMany annotations.
+    * 
+    * @param targetField - the target field.
     */
    public void setTargetField(Field targetField)
    {

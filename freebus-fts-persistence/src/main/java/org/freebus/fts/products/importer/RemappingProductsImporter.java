@@ -50,8 +50,8 @@ public final class RemappingProductsImporter implements ProductsImporter
    /**
     * Create a products importer that remaps IDs to be unique during import.
     *
-    * @param sourceFactory
-    * @param destFactory
+    * @param sourceFactory - the source factory.
+    * @param destFactory - the destination factory.
     */
    public RemappingProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {
@@ -60,6 +60,9 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create a fingerprint for the given functional entity.
+    * 
+    * @param funcEntity - the entity to process.
+    * @return The fingerprint.
     */
    public String getFingerPrint(FunctionalEntity funcEntity)
    {
@@ -80,6 +83,9 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create an alternative fingerprint for the given functional entity.
+    *
+    * @param funcEntity - the entity to process.
+    * @return The fingerprint.
     */
    public String getAltFingerPrint(FunctionalEntity funcEntity)
    {
@@ -88,6 +94,9 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create a fingerprint for the given catalog entry.
+    *
+    * @param catEntry - the entity to process.
+    * @return The fingerprint.
     */
    public String getFingerPrint(CatalogEntry catEntry)
    {
@@ -96,6 +105,9 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create a fingerprint for the given virtual device.
+    *
+    * @param device - the device to process.
+    * @return The fingerprint.
     */
    public String getFingerPrint(VirtualDevice device)
    {
@@ -105,6 +117,9 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create a fingerprint for the given product.
+    *
+    * @param product - the product to process.
+    * @return The fingerprint.
     */
    public String getFingerPrint(Product product)
    {
@@ -113,6 +128,9 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Create a fingerprint for the given application program.
+    *
+    * @param program - the program to process.
+    * @return The fingerprint.
     */
    public String getFingerPrint(Program program)
    {
@@ -124,6 +142,8 @@ public final class RemappingProductsImporter implements ProductsImporter
     * connected to one of the devices. The manufacturers are collected and added
     * to the {@link ProductsImporterContext context} where they are added to the
     * destination persistence context.
+    * 
+    * @param devices - the devices of which the manufacturers are copied.
     */
    public void copyManufacturers(final List<VirtualDevice> devices)
    {
@@ -189,6 +209,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Process all functional entities.
+    *
+    * @param devices - the devices to process their functional entities.
     */
    public void copyFunctionalEntities(final List<VirtualDevice> devices)
    {
@@ -219,6 +241,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Process all catalog entries.
+    *
+    * @param devices - the devices to process their catalog entries.
     */
    public void copyCatalogEntries(final List<VirtualDevice> devices)
    {
@@ -279,6 +303,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Process all hardware products.
+    *
+    * @param devices - the devices to process their hardware products.
     */
    public void copyProducts(final List<VirtualDevice> devices)
    {
@@ -341,6 +367,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Persist a application program.
+    *
+    * @param prog - the program to persist.
     */
    public void persist(Program prog)
    {
@@ -421,6 +449,8 @@ public final class RemappingProductsImporter implements ProductsImporter
 
    /**
     * Process the application programs.
+    *
+    * @param devices - the devices to process their application programs.
     */
    public void copyPrograms(List<VirtualDevice> devices)
    {
@@ -468,7 +498,7 @@ public final class RemappingProductsImporter implements ProductsImporter
    /**
     * Import the virtual devices.
     *
-    * @param devices
+    * @param devices - the virtual devices to process.
     */
    public void copyVirtualDevices(List<VirtualDevice> devices)
    {

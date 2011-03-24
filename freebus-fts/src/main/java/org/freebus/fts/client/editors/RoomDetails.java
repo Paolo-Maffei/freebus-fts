@@ -18,28 +18,28 @@ import javax.swing.SwingUtilities;
 
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.workbench.WorkBenchEditor;
-import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.freebus.fts.project.Room;
 import org.freebus.fts.project.service.ProjectListener;
 
 /**
- * An editor page for a {@link Building building}. 
+ * An editor page for a {@link Room room}. 
  */
-public final class BuildingDetails extends WorkBenchEditor
+public final class RoomDetails extends WorkBenchEditor
 {
-   private static final long serialVersionUID = -2709220571933275335L;
+   private static final long serialVersionUID = -9201619274083551305L;
 
    private final JTextField nameEdit = new JTextField();
    private final JTextArea notesEdit = new JTextArea();
 
    private boolean updating;
-   private Building building;
+   private Room room;
 
    /**
-    * Create a building details page.
+    * Create a room details page.
     */
-   public BuildingDetails()
+   public RoomDetails()
    {
       setLayout(new GridBagLayout());
       setBorder(BorderFactory.createEmptyBorder(8, 8, 8, 32));
@@ -56,7 +56,7 @@ public final class BuildingDetails extends WorkBenchEditor
       //
       // Building name
       //
-      lbl = new JLabel(I18n.getMessage("BuildingDetails.Name") + ": ");
+      lbl = new JLabel(I18n.getMessage("RoomDetails.Name") + ": ");
       add(lbl, new GridBagConstraints(0, ++gridy, 1, 1, 1, 1, w, GridBagConstraints.NONE, stdInsets, 0, 0));
       add(nameEdit, new GridBagConstraints(1, gridy, 1, 1, 10, 1, w, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
       nameEdit.addFocusListener(new FocusListener()
@@ -69,8 +69,8 @@ public final class BuildingDetails extends WorkBenchEditor
             if (nameEdit.getText().equals(prevValue))
                return;
 
-            building.setName(nameEdit.getText());
-            fireModified(building);
+            room.setName(nameEdit.getText());
+            fireModified(room);
          }
 
          @Override
@@ -85,12 +85,32 @@ public final class BuildingDetails extends WorkBenchEditor
       //
       // Notes
       //
-      lbl = new JLabel(I18n.getMessage("BuildingDetails.Notes"));
+      lbl = new JLabel(I18n.getMessage("RoomDetails.Notes"));
       add(lbl, new GridBagConstraints(0, ++gridy, gridWidth, 1, 1, 1, w, GridBagConstraints.NONE, blkInsets, 0, 0));
 
       final JScrollPane scpNotes = new JScrollPane(notesEdit);
       add(scpNotes, new GridBagConstraints(0, ++gridy, gridWidth, 1, 1, 1, nw, GridBagConstraints.HORIZONTAL, stdInsets, 0, 0));
       scpNotes.setPreferredSize(new Dimension(100, 100));
+      notesEdit.addFocusListener(new FocusListener()
+      {
+         private String prevValue;
+
+         @Override
+         public void focusLost(FocusEvent e)
+         {
+            if (notesEdit.getText().equals(prevValue))
+               return;
+
+            room.setDescription(notesEdit.getText());
+            fireModified(room);
+         }
+
+         @Override
+         public void focusGained(FocusEvent e)
+         {
+            prevValue = notesEdit.getText();
+         }
+      });
 
       //
       // Page filler
@@ -108,7 +128,7 @@ public final class BuildingDetails extends WorkBenchEditor
       @Override
       public void projectComponentRemoved(Object obj)
       {
-         if (obj == building)
+         if (obj == room)
             close();
       }
       
@@ -117,7 +137,7 @@ public final class BuildingDetails extends WorkBenchEditor
       {
          if (!updating)
          {
-            if (obj == building)
+            if (obj == room)
                updateContents();
          }
       }
@@ -149,7 +169,7 @@ public final class BuildingDetails extends WorkBenchEditor
    @Override
    public void objectChanged(Object o)
    {
-      this.building = (Building) o;
+      this.room = (Room) o;
       updateContents();
    }
 
@@ -180,11 +200,11 @@ public final class BuildingDetails extends WorkBenchEditor
    {
       updating = true;
 
-      final String title = building.getName();
+      final String title = room.getName();
       setName(title);
 
-      nameEdit.setText(building.getName());
-      // TODO notesEdit.setText(line.getNotes());
+      nameEdit.setText(room.getName());
+      notesEdit.setText(room.getDescription());
 
       updating = false;
    }

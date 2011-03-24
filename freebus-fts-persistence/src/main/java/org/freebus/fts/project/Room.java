@@ -17,6 +17,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A room in a {@link Building building}. A room is the mid-level group for the
  * physical structure of a {@link Project project}. Every room belongs to a
@@ -24,7 +26,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "room")
-public class Room implements Comparable<Room>
+public class Room implements Comparable<Room>, Named
 {
    @Id
    @TableGenerator(name = "Room", initialValue = 1, allocationSize = 10)
@@ -89,6 +91,7 @@ public class Room implements Comparable<Room>
     *
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;

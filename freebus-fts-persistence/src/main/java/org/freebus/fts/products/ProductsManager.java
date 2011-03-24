@@ -66,6 +66,8 @@ public final class ProductsManager
     * 
     * @param sourceFactory - the products factory to import products from.
     * @param destFactory - the products factory to store products into.
+    *
+    * @return The products importer.
     */
    public static ProductsImporter getProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {

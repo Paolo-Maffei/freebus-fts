@@ -50,6 +50,10 @@ public final class VdxSectionHeader
    }
 
    /**
+    * Get the index of a field.
+    * 
+    * @param name - the name of the searched field.
+    * 
     * @return the index of the field with the given name, or -1 if not found.
     */
    public int getIndexOf(String name)

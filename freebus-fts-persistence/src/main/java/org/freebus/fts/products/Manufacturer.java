@@ -5,12 +5,14 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A manufacturer.
  */
 @Entity
 @Table(name = "manufacturer")
-public class Manufacturer
+public class Manufacturer implements Named
 {
    /**
     * Unset / invalid manufacturer id.
@@ -69,6 +71,7 @@ public class Manufacturer
    /**
     * @return the name of the manufacturer.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -76,6 +79,8 @@ public class Manufacturer
 
    /**
     * Set the name of the manufacturer.
+    * 
+    * @param name - the name to set.
     */
    public void setName(String name)
    {
@@ -83,7 +88,7 @@ public class Manufacturer
    }
 
    /**
-    * Returns a hash-code for the object.
+    * {@inheritDoc}
     */
    @Override
    public int hashCode()
@@ -92,7 +97,7 @@ public class Manufacturer
    }
 
    /**
-    * Compare two manufacturer by id.
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(final Object o)
@@ -108,7 +113,7 @@ public class Manufacturer
    }
 
    /**
-    * Returns a human readable representation of the object.
+    * {@inheritDoc}
     */
    @Override
    public String toString()

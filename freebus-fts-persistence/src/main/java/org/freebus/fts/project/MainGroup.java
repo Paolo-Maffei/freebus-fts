@@ -15,6 +15,8 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.project.internal.I18n;
 
 /**
@@ -24,7 +26,7 @@ import org.freebus.fts.project.internal.I18n;
  */
 @Entity
 @Table(name = "main_group")
-public class MainGroup implements Comparable<MainGroup>
+public class MainGroup implements Comparable<MainGroup>, Addressable, Named
 {
    @Id
    @TableGenerator(name = "MainGroup", initialValue = 1, allocationSize = 10)
@@ -105,6 +107,7 @@ public class MainGroup implements Comparable<MainGroup>
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;
@@ -119,15 +122,18 @@ public class MainGroup implements Comparable<MainGroup>
    }
 
    /**
-    * @return the address
+    * @return The address.
     */
+   @Override
    public int getAddress()
    {
       return address;
    }
 
    /**
-    * Set the address.
+    * Set the address (0..15).
+    * 
+    * @param address - the address to set
     */
    public void setAddress(int address)
    {

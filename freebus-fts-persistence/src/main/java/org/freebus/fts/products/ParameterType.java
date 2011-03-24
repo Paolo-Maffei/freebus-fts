@@ -17,6 +17,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.persistence.vdx.VdxField;
 
 /**
@@ -32,7 +33,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
  */
 @Entity
 @Table(name = "parameter_type")
-public class ParameterType
+public class ParameterType implements Named
 {
    @Id
    @TableGenerator(name = "ParameterType", initialValue = 1, allocationSize = 50)
@@ -108,6 +109,8 @@ public class ParameterType
 
    /**
     * Set the id.
+    * 
+    * @param id - the id to set.
     */
    public void setId(int id)
    {
@@ -124,6 +127,8 @@ public class ParameterType
 
    /**
     * Set the atomic type of the parameter.
+    * 
+    * @param atomicType - the atomic type to set.
     */
    public void setAtomicType(ParameterAtomicType atomicType)
    {
@@ -140,6 +145,8 @@ public class ParameterType
 
    /**
     * Set the program to which the parameter type belongs.
+    * 
+    * @param program - the program to set.
     */
    public void setProgram(Program program)
    {
@@ -149,6 +156,7 @@ public class ParameterType
    /**
     * @return the name of the parameter type.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -156,6 +164,8 @@ public class ParameterType
 
    /**
     * Set the name of the parameter type.
+    * 
+    * @param name - the name to set.
     */
    public void setName(String name)
    {
@@ -172,6 +182,8 @@ public class ParameterType
 
    /**
     * Set the minimum value.
+    * 
+    * @param minValue - the minimum value to set.
     */
    public void setMinValue(int minValue)
    {
@@ -188,6 +200,8 @@ public class ParameterType
 
    /**
     * Set the maximum value.
+    * 
+    * @param maxValue - the maximum value to set.
     */
    public void setMaxValue(int maxValue)
    {
@@ -203,7 +217,9 @@ public class ParameterType
    }
 
    /**
-    * Set the minimum value.
+    * Set the minimum double value.
+    * 
+    * @param minValue - the minimum value to set.
     */
    public void setMinDoubleValue(double minValue)
    {
@@ -211,7 +227,7 @@ public class ParameterType
    }
 
    /**
-    * @return the maximum value.
+    * @return the maximum double value.
     */
    public double getMaxDoubleValue()
    {
@@ -219,7 +235,9 @@ public class ParameterType
    }
 
    /**
-    * Set the maximum value.
+    * Set the maximum double value.
+    * 
+    * @param maxValue - the maximum value to set.
     */
    public void setMaxDoubleValue(double maxValue)
    {
@@ -236,6 +254,8 @@ public class ParameterType
 
    /**
     * Set the allowed values or null if no specific allowed values are set.
+    * 
+    * @param values - the allowed values to set.
     */
    public void setValues(Set<ParameterValue> values)
    {

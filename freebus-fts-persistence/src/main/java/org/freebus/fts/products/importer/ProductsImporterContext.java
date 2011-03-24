@@ -18,6 +18,9 @@ public final class ProductsImporterContext
 
    /**
     * Create a products importer context object.
+    * 
+    * @param sourceFactory - the source factory.
+    * @param destFactory - the destination factory.
     */
    public ProductsImporterContext(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {

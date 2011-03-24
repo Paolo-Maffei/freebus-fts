@@ -33,6 +33,9 @@ public final class DirectProductsImporter implements ProductsImporter
    /**
     * Create an importer that will import using sourceFactory and save the
     * objects using destFactory.
+    * 
+    * @param sourceFactory - the source factory.
+    * @param destFactory - the destination factory.
     */
    public DirectProductsImporter(ProductsFactory sourceFactory, ProductsFactory destFactory)
    {
@@ -80,6 +83,8 @@ public final class DirectProductsImporter implements ProductsImporter
 
    /**
     * Copy a catalog entry.
+    * 
+    * @param catalogEntry - the catalog entry to copy.
     */
    public void copy(CatalogEntry catalogEntry)
    {

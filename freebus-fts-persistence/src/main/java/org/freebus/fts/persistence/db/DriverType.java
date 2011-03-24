@@ -64,7 +64,11 @@ public enum DriverType
    }
 
    /**
-    * @return a connect URL for the given location.
+    * Get the connection URL for the given location.
+    * 
+    * @param location - the location of the connection.
+    * 
+    * @return The connection URL.
     */
    public String getConnectURL(final String location)
    {
@@ -80,8 +84,13 @@ public enum DriverType
       return "database" + toString();
    }
 
-   /*
-    * Internal constructor
+   /**
+    * Internal constructor.
+    * 
+    * @param className - the name of the class.
+    * @param urlPrefix - the URL prefix.
+    * @param urlArgs - the URL arguments.
+    * @param driverClass - the driver class.
     */
    private DriverType(String className, String urlPrefix, String urlArgs, DriverClass driverClass)
    {

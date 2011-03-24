@@ -71,6 +71,8 @@ public class ParameterValue
 
    /**
     * Set the parameter type to which this object belongs.
+    * 
+    * @param parameterType - the parameter type to set.
     */
    public void setParameterType(ParameterType parameterType)
    {

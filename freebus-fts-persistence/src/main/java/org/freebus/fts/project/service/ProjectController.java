@@ -5,10 +5,13 @@ import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
+import org.freebus.fts.project.MainGroup;
+import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.RoomType;
+import org.freebus.fts.project.SubGroup;
 
 /**
  * Interface for project controllers. Project controllers manipulate the
@@ -83,6 +86,31 @@ public interface ProjectController
     * @return The created room.
     */
    Room createRoom(Building building, RoomType type);
+
+   /**
+    * Create a {@link MainGroup main group} and add it to the project.
+    * 
+    * @return The created main group.
+    */
+   MainGroup createMainGroup();
+
+   /**
+    * Create a {@link MidGroup mid group} and add it to the main group.
+    * 
+    * @param mainGroup - the main group to add to.
+    * 
+    * @return The created main group.
+    */
+   MidGroup createMidGroup(MainGroup mainGroup);
+
+   /**
+    * Create a {@link SubGroup sub group} and add it to the mid group.
+    * 
+    * @param midGroup - the mid group to add to.
+    * 
+    * @return The created main group.
+    */
+    SubGroup createSubGroup(MidGroup midGroup);
 
    /**
     * Edit an object. Calls the proper edit method to do the job (e.g.

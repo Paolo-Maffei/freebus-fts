@@ -92,6 +92,10 @@ public final class VdxEntityInspector
    }
 
    /**
+    * Test if information about a class is available.
+    * 
+    * @param clazz - the class to test.
+    *
     * @return True if information about the given class is available.
     */
    public boolean hasClass(Class<?> clazz)
@@ -271,7 +275,7 @@ public final class VdxEntityInspector
    }
 
    /**
-    * Create an entity info object for the given class
+    * Create an entity info object for the given class.
     *
     * @param clazz - the class to process.
     * @return The new {@link VdxEntityInfo entity info} object.

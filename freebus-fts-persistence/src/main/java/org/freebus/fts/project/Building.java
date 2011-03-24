@@ -15,13 +15,15 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A building in a {@link Project}. A building is the top-level group for the
  * physical structure of a project.
  */
 @Entity
 @Table(name = "building")
-public class Building implements Comparable<Building>
+public class Building implements Comparable<Building>, Named
 {
    @Id
    @TableGenerator(name = "Building", initialValue = 1, allocationSize = 10)
@@ -126,6 +128,7 @@ public class Building implements Comparable<Building>
     * 
     * @return the name of the building.
     */
+   @Override
    public String getName()
    {
       return name;

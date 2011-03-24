@@ -18,6 +18,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * An application program.
  * 
@@ -25,7 +27,7 @@ import javax.persistence.TableGenerator;
  */
 @Entity
 @Table(name = "application_program")
-public class Program
+public class Program implements Named
 {
    @Id
    @TableGenerator(name = "Program", initialValue = 1, allocationSize = 10)
@@ -124,6 +126,11 @@ public class Program
 
    /**
     * Create a program object.
+    * 
+    * @param id - the database ID of the object.
+    * @param name - the name of the object.
+    * @param manufacturer - the manufacturer.
+    * @param mask - the mask.
     */
    public Program(int id, String name, Manufacturer manufacturer, Mask mask)
    {
@@ -143,6 +150,8 @@ public class Program
 
    /**
     * Set the program id.
+    * 
+    * @param id - the id to set.
     */
    public void setId(int id)
    {
@@ -159,6 +168,8 @@ public class Program
 
    /**
     * Set the mask.
+    * 
+    * @param mask - the mask to set.
     */
    public void setMask(Mask mask)
    {
@@ -168,6 +179,7 @@ public class Program
    /**
     * @return the name of the program.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -175,6 +187,8 @@ public class Program
 
    /**
     * Set the name of the program.
+    * 
+    * @param name - the name to set.
     */
    public void setName(String name)
    {
@@ -233,6 +247,8 @@ public class Program
 
    /**
     * Set the device type.
+    * 
+    * @param deviceType - the device type to set.
     */
    public void setDeviceType(int deviceType)
    {
@@ -249,6 +265,8 @@ public class Program
 
    /**
     * Set the type of the physical external interface (PEI).
+    * 
+    * @param peiType - the PEI type to set.
     */
    public void setPeiType(int peiType)
    {
@@ -265,6 +283,8 @@ public class Program
 
    /**
     * Set the address-tab size.
+    * 
+    * @param addrTabSize - the address-tab size to set.
     */
    public void setAddrTabSize(int addrTabSize)
    {
@@ -281,6 +301,8 @@ public class Program
 
    /**
     * Set the association-tab address.
+    * 
+    * @param assocTabAddr - the association-tab address to set.
     */
    public void setAssocTabAddr(int assocTabAddr)
    {
@@ -297,6 +319,8 @@ public class Program
 
    /**
     * Set the association-tab size.
+    * 
+    * @param assocTabSize - the association-tab size.
     */
    public void setAssocTabSize(int assocTabSize)
    {
@@ -304,7 +328,7 @@ public class Program
    }
 
    /**
-    * @return The address of the communications table
+    * @return The address of the communications table.
     */
    public int getCommsTabAddr()
    {
@@ -314,7 +338,7 @@ public class Program
    /**
     * Set the address of the communications table.
     * 
-    * @param commsTabAddr - the address to set
+    * @param commsTabAddr - the address to set.
     */
    public void setCommsTabAddr(int commsTabAddr)
    {
@@ -365,6 +389,8 @@ public class Program
 
    /**
     * Set the manufacturer.
+    * 
+    * @param manufacturer - the manufacturer to set.
     */
    public void setManufacturer(Manufacturer manufacturer)
    {
@@ -372,7 +398,7 @@ public class Program
    }
 
    /**
-    * Get a parameter by parameter-id
+    * Get a parameter by parameter-id.
     * 
     * @param id - the parameter id
     * 
@@ -435,6 +461,8 @@ public class Program
 
    /**
     * Set the parameters of the program.
+    * 
+    * @param parameters - the parameters to set.
     */
    public void setParameters(Set<Parameter> parameters)
    {
@@ -602,7 +630,7 @@ public class Program
    /**
     * Set the program description.
     * 
-    * @param description
+    * @param description - the program description to set.
     */
    public void setDescription(ProgramDescription description)
    {
@@ -649,8 +677,8 @@ public class Program
       final Program oo = (Program) o;
 
       return id == oo.id && peiType == oo.peiType && deviceType == oo.deviceType
-      && (version == null ? oo.version == null : version.equals(oo.version))
-      && (mask == null ? oo.mask == null : mask.equals(oo.mask));
+            && (version == null ? oo.version == null : version.equals(oo.version))
+            && (mask == null ? oo.mask == null : mask.equals(oo.mask));
    }
 
    /**

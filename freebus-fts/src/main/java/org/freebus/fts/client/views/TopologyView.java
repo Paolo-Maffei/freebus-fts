@@ -182,8 +182,8 @@ public class TopologyView extends AbstractTreeView
          obj = ((Device) obj).getLine();
       if (obj instanceof Line)
          obj = ((Line) obj).getArea();
-      if (obj instanceof Area)
-         ProjectManager.getController().createLine((Area) obj);
+
+      ProjectManager.getController().createLine((Area) obj);
    }
 
    /**

@@ -16,6 +16,8 @@ import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.project.internal.I18n;
 
 /**
@@ -24,7 +26,7 @@ import org.freebus.fts.project.internal.I18n;
  */
 @Entity
 @Table(name = "sub_group")
-public class SubGroup implements Comparable<SubGroup>
+public class SubGroup implements Comparable<SubGroup>, Addressable, Named
 {
    @Id
    @TableGenerator(name = "SubGroup", initialValue = 1, allocationSize = 10)
@@ -79,6 +81,7 @@ public class SubGroup implements Comparable<SubGroup>
    /**
     * @return the name of the group.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -95,13 +98,16 @@ public class SubGroup implements Comparable<SubGroup>
    /**
     * @return the address of the group.
     */
+   @Override
    public int getAddress()
    {
       return address;
    }
 
    /**
-    * Set the address of the group.
+    * Set the address of the group (0..255).
+    * 
+    * @param address - the address to set.
     */
    public void setAddress(int address)
    {

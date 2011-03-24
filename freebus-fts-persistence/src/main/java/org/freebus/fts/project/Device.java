@@ -24,6 +24,8 @@ import javax.persistence.TableGenerator;
 
 import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
+import org.freebus.fts.interfaces.Addressable;
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
@@ -36,7 +38,7 @@ import org.freebus.fts.products.VirtualDevice;
  */
 @Entity
 @Table(name = "device")
-public final class Device implements Comparable<Device>, Addressable
+public final class Device implements Comparable<Device>, Addressable, Named
 {
    @Id
    @TableGenerator(name = "Device", initialValue = 1, allocationSize = 10)
@@ -305,6 +307,7 @@ public final class Device implements Comparable<Device>, Addressable
    /**
     * @return The name of the device
     */
+   @Override
    public String getName()
    {
       if (name != null)

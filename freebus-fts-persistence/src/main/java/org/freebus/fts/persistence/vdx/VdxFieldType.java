@@ -32,7 +32,7 @@ public enum VdxFieldType
    FLOAT(5, float.class),
 
    /**
-    * A 8-bit integer
+    * A 8-bit integer.
     */
    BYTE(6, short.class),
 
@@ -58,6 +58,10 @@ public enum VdxFieldType
    public final boolean isArray;
 
    /**
+    * Get the field type for the given VD_ type.
+    * 
+    * @param id - the VD_ type.
+    * 
     * @return the field type for the VD_ type id.
     * @throws IllegalArgumentException if the given id is unknown.
     */

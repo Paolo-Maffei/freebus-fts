@@ -1,4 +1,4 @@
-package org.freebus.fts.project;
+package org.freebus.fts.interfaces;
 
 /**
  * Interface for objects that have an integer address.

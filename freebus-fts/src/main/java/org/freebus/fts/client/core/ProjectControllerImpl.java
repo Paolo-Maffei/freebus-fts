@@ -7,6 +7,7 @@ import org.freebus.fts.client.dialogs.AddDeviceDialog;
 import org.freebus.fts.client.editors.AreaDetails;
 import org.freebus.fts.client.editors.BuildingDetails;
 import org.freebus.fts.client.editors.LineDetails;
+import org.freebus.fts.client.editors.RoomDetails;
 import org.freebus.fts.client.editors.devicedetails.DeviceDetails;
 import org.freebus.fts.client.workbench.WorkBench;
 import org.freebus.fts.common.exception.FtsRuntimeException;
@@ -94,6 +95,27 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
+   public Line createLine(Area area)
+   {
+      final int address = ProjectUtils.getFreeAddress(area.getLines(), 0, 15);
+      if (address < 0)
+         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxLines"));
+
+      final Line line = new Line();
+      line.setAddress(address);
+      line.setName(I18n.formatMessage("ProjectControllerImpl.NewLineName", Integer.toString(address)));
+      area.add(line);
+
+      ProjectManager.fireComponentAdded(line);
+      edit(line);
+      
+      return line;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public Building createBuilding()
    {
       return createBuilding(null);
@@ -105,6 +127,24 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public Building createBuilding(Building parent)
    {
+      final Project project = ProjectManager.getProject();
+      final Set<String> names = ProjectUtils.getNames(project.getBuildings());
+
+      String name = "";
+      for (int i = 1; i < 1000; ++i)
+      {
+         name = I18n.formatMessage(parent == null ? "NewBuilding" : "NewBuildingPart", Integer.toString(i));
+         if (!names.contains(name))
+            break;
+      }
+
+      final Building building = new Building();
+      building.setName(name);
+      project.add(building);
+
+      ProjectManager.fireComponentAdded(building);
+      edit(building);
+
       return null;
    }
 
@@ -137,21 +177,65 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
-   public Line createLine(Area area)
+   public MainGroup createMainGroup()
    {
-      final int address = ProjectUtils.getFreeAddress(area.getLines(), 0, 15);
+      final Project project = ProjectManager.getProject();
+
+      final int address = ProjectUtils.getFreeAddress(project.getMainGroups(), 0, 15);
       if (address < 0)
-         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxLines"));
+         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxGroups"));
 
-      final Line line = new Line();
-      line.setAddress(address);
-      line.setName(I18n.formatMessage("ProjectControllerImpl.NewLineName", Integer.toString(address)));
-      area.add(line);
+      final MainGroup grp = new MainGroup();
+      grp.setAddress(address);
+      grp.setName(I18n.formatMessage("ProjectControllerImpl.NewMainGroupName", Integer.toString(address)));
+      project.add(grp);
 
-      ProjectManager.fireComponentAdded(line);
-      edit(line);
+      ProjectManager.fireComponentAdded(grp);
+      edit(grp);
       
-      return line;
+      return grp;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public MidGroup createMidGroup(MainGroup mainGroup)
+   {
+      final int address = ProjectUtils.getFreeAddress(mainGroup.getMidGroups(), 0, 7);
+      if (address < 0)
+         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxGroups"));
+
+      final MidGroup grp = new MidGroup();
+      grp.setAddress(address);
+      grp.setName(I18n.formatMessage("ProjectControllerImpl.NewMidGroupName", Integer.toString(address)));
+      mainGroup.add(grp);
+
+      ProjectManager.fireComponentAdded(grp);
+      edit(grp);
+      
+      return grp;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public SubGroup createSubGroup(MidGroup midGroup)
+   {
+      final int address = ProjectUtils.getFreeAddress(midGroup.getSubGroups(), 0, 7);
+      if (address < 0)
+         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxGroups"));
+
+      final SubGroup grp = new SubGroup();
+      grp.setAddress(address);
+      grp.setName(I18n.formatMessage("ProjectControllerImpl.NewSubGroupName", Integer.toString(address)));
+      midGroup.add(grp);
+
+      ProjectManager.fireComponentAdded(grp);
+      edit(grp);
+      
+      return grp;
    }
 
    /**
@@ -177,6 +261,10 @@ public final class ProjectControllerImpl implements ProjectController
       else if (obj instanceof Building)
       {
          workBench.showEditor(BuildingDetails.class, obj);
+      }
+      else if (obj instanceof Room)
+      {
+         workBench.showEditor(RoomDetails.class, obj);
       }
       else return false;
 

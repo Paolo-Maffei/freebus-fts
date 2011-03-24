@@ -14,7 +14,7 @@ public final class ConnectionDetails
     * The {@link SimpleConfig configuration} key where the database driver type
     * is stored by the {@link ConnectionDetails} methods.
     */
-   public static final String driverTypeConfigKey = "databaseDriverType";
+   public static final String DRIVER_TYPE_CONFIG_KEY = "databaseDriverType";
 
    private DriverType type;
    private String dbName = "";
@@ -121,7 +121,7 @@ public final class ConnectionDetails
     */
    public boolean fromConfig(final SimpleConfig config)
    {
-      final String driverTypeStr = config.get(driverTypeConfigKey);
+      final String driverTypeStr = config.get(DRIVER_TYPE_CONFIG_KEY);
       if (driverTypeStr == null)
       {
          setDefaults(DriverType.getDefault());
@@ -159,11 +159,13 @@ public final class ConnectionDetails
    /**
     * Store the object's contents in the configuration <code>config</code>.
     *
+    * @param config - the config to read from.
+    *
     * @see #fromConfig(SimpleConfig)
     */
    public void toConfig(final SimpleConfig config)
    {
-      config.put(driverTypeConfigKey, type.toString());
+      config.put(DRIVER_TYPE_CONFIG_KEY, type.toString());
 
       final String pfx = getType().getConfigPrefix();
       config.put(pfx + ".database", getDbName());
@@ -181,7 +183,9 @@ public final class ConnectionDetails
    }
 
    /**
-    * Set the type of the database engine.
+    * Set the type of the database driver.
+    * 
+    * @param type - the database driver type.
     */
    public void setType(DriverType type)
    {
@@ -200,6 +204,8 @@ public final class ConnectionDetails
    /**
     * Set the name of the database, or the name of the file for file based
     * databases.
+    * 
+    * @param dbName - the database name.
     */
    public void setDbName(String dbName)
    {
@@ -218,6 +224,8 @@ public final class ConnectionDetails
    /**
     * Set the host name of the database server, or null for file based
     * databases.
+    * 
+    * @param host - the host name.
     */
    public void setHost(String host)
    {
@@ -234,6 +242,8 @@ public final class ConnectionDetails
 
    /**
     * Set the user that is used to connect to the database.
+    * 
+    * @param user - the user to set.
     */
    public void setUser(String user)
    {
@@ -250,6 +260,8 @@ public final class ConnectionDetails
 
    /**
     * Set the password that is used to connect to the database.
+    * 
+    * @param passwd - the password to set.
     */
    public void setPassword(String passwd)
    {

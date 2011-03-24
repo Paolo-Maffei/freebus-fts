@@ -16,12 +16,14 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * A block of memory, used for non-BCU1 devices.
  */
 @Entity
 @Table(name = "s19_block")
-public class S19Block
+public class S19Block implements Named
 {
    @Id
    @TableGenerator(name = "S19Block", initialValue = 1, allocationSize = 10)
@@ -146,6 +148,7 @@ public class S19Block
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;
@@ -344,7 +347,7 @@ public class S19Block
    }
 
    /**
-    * Added in ETS4
+    * Added in ETS4.
     *
     * @return the record
     */
@@ -362,7 +365,7 @@ public class S19Block
    }
 
    /**
-    * Added in ETS4
+    * Added in ETS4.
     *
     * @return the mergeId
     */
@@ -380,9 +383,9 @@ public class S19Block
    }
 
    /**
-    * Added in ETS4
+    * Added in ETS4.
     *
-    * @return the procMask
+    * @return the proc mask
     */
    public int getProcMask()
    {

@@ -174,7 +174,7 @@ public final class DatabasePage extends SettingsPage
       for (int i = cfgPages.size() - 1; i >= 0; --i)
          cfgPages.get(i).apply();
 
-      Config.getInstance().put(ConnectionDetails.driverTypeConfigKey, getSelectedDriverType().toString());
+      Config.getInstance().put(ConnectionDetails.DRIVER_TYPE_CONFIG_KEY, getSelectedDriverType().toString());
    }
 
    /**

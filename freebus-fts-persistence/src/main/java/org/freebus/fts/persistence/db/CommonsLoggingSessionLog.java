@@ -14,7 +14,7 @@ import org.eclipse.persistence.logging.SessionLogEntry;
  */
 public final class CommonsLoggingSessionLog extends AbstractSessionLog
 {
-   private static final Map<Integer, Level> levelMap = new HashMap<Integer, Level>();
+   private static final Map<Integer, Level> LEVEL_MAP = new HashMap<Integer, Level>();
    private Logger lastLogger;
 
    /*
@@ -22,15 +22,15 @@ public final class CommonsLoggingSessionLog extends AbstractSessionLog
     */
    static
    {
-      levelMap.put(SessionLog.OFF, Level.OFF);
-      levelMap.put(SessionLog.SEVERE, Level.ERROR);
-      levelMap.put(SessionLog.WARNING, Level.WARN);
-      levelMap.put(SessionLog.INFO, Level.INFO);
-      levelMap.put(SessionLog.CONFIG, Level.INFO);
-      levelMap.put(SessionLog.FINE, Level.DEBUG);
-      levelMap.put(SessionLog.FINER, Level.TRACE);
-      levelMap.put(SessionLog.FINEST, Level.TRACE);
-      levelMap.put(SessionLog.ALL, Level.ALL);
+      LEVEL_MAP.put(SessionLog.OFF, Level.OFF);
+      LEVEL_MAP.put(SessionLog.SEVERE, Level.ERROR);
+      LEVEL_MAP.put(SessionLog.WARNING, Level.WARN);
+      LEVEL_MAP.put(SessionLog.INFO, Level.INFO);
+      LEVEL_MAP.put(SessionLog.CONFIG, Level.INFO);
+      LEVEL_MAP.put(SessionLog.FINE, Level.DEBUG);
+      LEVEL_MAP.put(SessionLog.FINER, Level.TRACE);
+      LEVEL_MAP.put(SessionLog.FINEST, Level.TRACE);
+      LEVEL_MAP.put(SessionLog.ALL, Level.ALL);
    }
 
    /**
@@ -51,6 +51,10 @@ public final class CommonsLoggingSessionLog extends AbstractSessionLog
    }
 
    /**
+    * Get a logger for a session log entry.
+    * 
+    * @param entry - the session log entry
+    * 
     * @return a suitable logger
     */
    private Logger getLogger(SessionLogEntry entry)
@@ -71,11 +75,14 @@ public final class CommonsLoggingSessionLog extends AbstractSessionLog
    }
 
    /**
-    * Map the log-level to log4j log levels.
+    * Map the log-level to Log4j log levels.
+    * 
+    * @param sessionLogLevel - the session log level.
+    * @return The Log4j log level.
     */
    private Level mapLogLevel(int sessionLogLevel)
    {
-      Level level = levelMap.get(sessionLogLevel);
+      Level level = LEVEL_MAP.get(sessionLogLevel);
       if (level == null)
          level = Level.DEBUG;
       return level;

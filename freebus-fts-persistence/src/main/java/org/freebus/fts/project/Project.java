@@ -17,6 +17,8 @@ import javax.persistence.TableGenerator;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
  * Main class for a FTS project.
  *
@@ -26,7 +28,7 @@ import javax.persistence.TemporalType;
  */
 @Entity
 @Table(name = "project")
-public class Project
+public class Project implements Named
 {
    @Id
    @TableGenerator(name = "Project", initialValue = 1, allocationSize = 1)
@@ -90,6 +92,7 @@ public class Project
    /**
     * @return the name of the project
     */
+   @Override
    public String getName()
    {
       return name;

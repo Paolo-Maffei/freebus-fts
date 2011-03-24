@@ -65,7 +65,12 @@ public enum ParameterAtomicType
    }
 
    /**
-    * @return the object for the given ordinal.
+    * Get the {@link ParameterAtomicType} for a specific ordinal.
+    * 
+    * @param ordinal - the ordinal to lookup.
+    * 
+    * @return the object for the given ordinal, or null if the ordinal
+    *         is unknown.
     */
    public static ParameterAtomicType valueOf(int ordinal)
    {

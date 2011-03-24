@@ -5,7 +5,7 @@
     This configuration file was written by the eclipse-cs plugin configuration editor
 -->
 <!--
-    Checkstyle-Configuration: FTS Checkstyle 0.1
+    Checkstyle-Configuration: FTS Checkstyle
     Description: none
 -->
 <module name="Checker">
@@ -15,6 +15,7 @@
     <module name="AnnotationUseStyle"/>
     <module name="MissingOverride"/>
     <module name="JavadocMethod">
+      <property name="scope" value="protected"/>
       <property name="allowUndeclaredRTE" value="true"/>
       <property name="suppressLoadErrors" value="true"/>
     </module>

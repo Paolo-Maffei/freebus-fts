@@ -23,7 +23,7 @@ import org.freebus.fts.persistence.FileBlockReader;
  */
 public final class VdxFileReader
 {
-   private static final String sectionSeparator = "---------------------------";
+   private static final String SECTION_SEPARATOR = "---------------------------";
    private final String fileName;
    private String format = null;
    private String version = null;
@@ -138,6 +138,10 @@ public final class VdxFileReader
    }
 
    /**
+    * Get a header section.
+    * 
+    * @param name - the name of the header section.
+    * 
     * @return the header of the section with the given name.
     */
    public VdxSectionHeader getSectionHeader(String name)
@@ -146,6 +150,10 @@ public final class VdxFileReader
    }
 
    /**
+    * Test if a header section exists.
+    * 
+    * @param name - the name of the header section.
+    *
     * @return true if the section with the given name exists.
     */
    public boolean hasSection(String name)
@@ -156,9 +164,12 @@ public final class VdxFileReader
    /**
     * Get a specific section of the file. The section is read, if required.
     *
+    * @param name - the name of the section.
+    *
     * @return the section with the given name or null if no such section exists
     *         or if the section contains no records.
-    * @throws IOException
+    *
+    * @throws IOException in case of I/O problems.
     */
    public VdxSection getSection(String name) throws IOException
    {
@@ -187,7 +198,7 @@ public final class VdxFileReader
       }
 
       // Read the entries of the section
-      while (line != null && !line.startsWith(sectionSeparator) && !line.equals("XXX"))
+      while (line != null && !line.startsWith(SECTION_SEPARATOR) && !line.equals("XXX"))
       {
          final String[] values = new String[numFields];
          for (int i = 0; i <= numFields; ++i)
@@ -224,8 +235,10 @@ public final class VdxFileReader
     *
     * @param sectionName - the name of the VDX section to process.
     * @param entryClass - the class for the entries.
+    * 
     * @return the list of created entries.
-    * @throws IOException
+    *
+    * @throws IOException in case of I/O problems.
     */
    public Object[] getSectionEntries(String sectionName, Class<?> entryClass) throws IOException
    {
@@ -392,6 +405,8 @@ public final class VdxFileReader
     *
     * You can call this method free some memory, which is recommended when
     * working with large files.
+    * 
+    * @param name - the name of the section.
     */
    public void removeSectionContents(String name)
    {
@@ -402,7 +417,7 @@ public final class VdxFileReader
     * Read the vdx file header. The read-pointer stands on the T line of the
     * first section afterwards.
     *
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    private void scanHeader() throws IOException
    {
@@ -426,7 +441,7 @@ public final class VdxFileReader
          if (line == null)
             break;
          lineType = line.charAt(0);
-         if (lineType == '-' && line.startsWith(sectionSeparator))
+         if (lineType == '-' && line.startsWith(SECTION_SEPARATOR))
             break;
          if (lineType == 'K')
          {
@@ -530,7 +545,7 @@ public final class VdxFileReader
             if (!reader.readUntil('-'))
                break;
             line = reader.readLine();
-            if (line == null || line.startsWith(sectionSeparator))
+            if (line == null || line.startsWith(SECTION_SEPARATOR))
                break;
          }
       }
@@ -556,6 +571,8 @@ public final class VdxFileReader
     * Set the language that shall be used for multi-lingual texts. Use
     * {@link #getLanguages()} to obtain the list of available languages in a VD_
     * file.
+    * 
+    * @param language - the language to set.
     */
    public synchronized void setLanguage(String language)
    {
@@ -570,6 +587,8 @@ public final class VdxFileReader
    /**
     * Set the language-id of the language that shall be used for multi-lingual
     * texts.
+    * 
+    * @param languageId - the language ID to set.
     *
     * @see #setLanguage(String)
     */

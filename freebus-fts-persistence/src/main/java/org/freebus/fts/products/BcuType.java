@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
- * The BCU type
+ * The BCU type.
  */
 @Entity
 @Table(name = "bcu_type")

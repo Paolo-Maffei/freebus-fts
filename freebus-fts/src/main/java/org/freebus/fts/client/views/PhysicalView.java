@@ -8,7 +8,6 @@ import java.awt.event.ActionListener;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.TreeMap;
 
 import javax.swing.AbstractAction;
@@ -119,7 +118,7 @@ public class PhysicalView extends AbstractTreeView
          @Override
          public void actionPerformed(ActionEvent e)
          {
-            addBuilding();
+            ProjectManager.getController().createBuilding();
          }
       });
       btnAddBuilding.setIcon(ImageCache.getIcon("icons/building", "icons/new-overlay"));
@@ -202,24 +201,6 @@ public class PhysicalView extends AbstractTreeView
    }
 
    /**
-    * Add a building
-    */
-   public void addBuilding()
-   {
-      final Set<Building> buildings = ProjectManager.getProject().getBuildings();
-      final Building building = new Building();
-
-      for (int i = 1; i < 1000; ++i)
-      {
-         building.setName(I18n.formatMessage("NewBuilding", Integer.toString(i)));
-         if (!buildings.contains(building))
-            break;
-      }
-
-      ProjectManager.getController().add(building);
-   }
-
-   /**
     * Add a building part / floor
     */
    public void addBuildingPart()
@@ -231,20 +212,7 @@ public class PhysicalView extends AbstractTreeView
       if (obj instanceof Room)
          obj = ((Room) obj).getBuilding();
 
-      final Set<Building> buildings = ProjectManager.getProject().getBuildings();
-      final Building parent = (Building) obj;
-
-      final Building building = new Building();
-      building.setParent(parent);
-
-      for (int i = 1; i < 1000; ++i)
-      {
-         building.setName(I18n.formatMessage("NewBuildingPart", Integer.toString(i)));
-         if (!buildings.contains(building))
-            break;
-      }
-
-      ProjectManager.getController().add(building);
+      ProjectManager.getController().createBuilding((Building) obj);
    }
 
    /**

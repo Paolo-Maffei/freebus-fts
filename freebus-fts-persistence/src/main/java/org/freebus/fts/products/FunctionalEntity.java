@@ -11,6 +11,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.persistence.vdx.VdxField;
 
 /**
@@ -18,7 +19,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
  */
 @Entity
 @Table(name = "functional_entity")
-public class FunctionalEntity implements Comparable<FunctionalEntity>
+public class FunctionalEntity implements Comparable<FunctionalEntity>, Named
 {
    @Id
    @TableGenerator(name = "FunctionalEntity", initialValue = 1, allocationSize = 10)
@@ -78,6 +79,8 @@ public class FunctionalEntity implements Comparable<FunctionalEntity>
 
    /**
     * Set the id.
+    * 
+    * @param id - the ID to set.
     */
    public void setId(int id)
    {
@@ -105,6 +108,7 @@ public class FunctionalEntity implements Comparable<FunctionalEntity>
    /**
     * @return the name.
     */
+   @Override
    public String getName()
    {
       return name;
@@ -142,6 +146,8 @@ public class FunctionalEntity implements Comparable<FunctionalEntity>
 
    /**
     * Set the parent functional entity.
+    * 
+    * @param parent - the parent to set.
     */
    public void setParent(FunctionalEntity parent)
    {
@@ -166,7 +172,7 @@ public class FunctionalEntity implements Comparable<FunctionalEntity>
    }
 
    /**
-    * Compare two objects by name.
+    * {@inheritDoc}
     */
    @Override
    public int compareTo(FunctionalEntity o)
@@ -175,7 +181,7 @@ public class FunctionalEntity implements Comparable<FunctionalEntity>
    }
 
    /**
-    * Compare two objects.
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(final Object o)
@@ -191,7 +197,7 @@ public class FunctionalEntity implements Comparable<FunctionalEntity>
    }
 
    /**
-    * Returns a human readable representation of the object.
+    * {@inheritDoc}
     */
    @Override
    public String toString()

@@ -9,14 +9,14 @@ import javax.persistence.Table;
 
 import org.freebus.fts.persistence.vdx.VdxField;
 
+/*
+ * Note for developers: this class cannot be in a JPA @OneToMany relation with
+ * CatalogEntry, as this class has a two-column key.
+ */
 /**
  * Description for a product description. A better name would probably be
  * "catalog entry description", as this description depends on a {@link CatalogEntry}
  * and not on a (hardware) {@link Product}.
- */
-/*
- * Note for developers: this class cannot be in a JPA @OneToMany relation with
- * CatalogEntry, as this class has a two-column key.
  */
 @Entity
 @Table(name = "product_description")

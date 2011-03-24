@@ -12,12 +12,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
+import org.freebus.fts.interfaces.Named;
+
 /**
- * A virtual device.
+ * A virtual device. This is a device as it could be added to a project.
  */
 @Entity
 @Table(name = "virtual_device")
-public class VirtualDevice
+public class VirtualDevice implements Named
 {
    @Id
    @TableGenerator(name = "VirtualDevice", initialValue = 1, allocationSize = 10)
@@ -58,6 +60,12 @@ public class VirtualDevice
 
    /**
     * Create a virtual-device object.
+    * 
+    * @param id - the database ID of the object.
+    * @param name - the name of the object.
+    * @param description - the description.
+    * @param functionalEntity - the functional entity.
+    * @param catalogEntry - the catalog entry.
     */
    public VirtualDevice(int id, String name, String description, FunctionalEntity functionalEntity,
          CatalogEntry catalogEntry)
@@ -108,6 +116,7 @@ public class VirtualDevice
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;
@@ -122,7 +131,9 @@ public class VirtualDevice
    }
 
    /**
-    * Set the catalog entry
+    * Set the catalog entry.
+    * 
+    * @param catalogEntry - the catalog entry to set.
     */
    public void setCatalogEntry(CatalogEntry catalogEntry)
    {
@@ -139,6 +150,8 @@ public class VirtualDevice
 
    /**
     * Set the program.
+    * 
+    * @param program - the program to set.
     */
    public void setProgram(Program program)
    {
@@ -177,18 +190,26 @@ public class VirtualDevice
       return number;
    }
 
+   /**
+    * Set the product type ID.
+    *
+    * @param productTypeId - the id to set.
+    */
    public void setProductTypeId(int productTypeId)
    {
       this.productTypeId = productTypeId;
    }
 
+   /**
+    * @return The product type ID.
+    */
    public int getProductTypeId()
    {
       return productTypeId;
    }
 
    /**
-    * Returns a hash-code for the object.
+    * {@inheritDoc}
     */
    @Override
    public int hashCode()
@@ -197,7 +218,7 @@ public class VirtualDevice
    }
 
    /**
-    * Compare two objects.
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(final Object o)
@@ -208,11 +229,11 @@ public class VirtualDevice
          return false;
       final VirtualDevice oo = (VirtualDevice) o;
       return id == oo.id && (catalogEntry == null ? oo.catalogEntry == null : catalogEntry.equals(oo.catalogEntry))
-      && (program == null ? oo.program == null : program.equals(oo.program));
+            && (program == null ? oo.program == null : program.equals(oo.program));
    }
 
    /**
-    * Returns a human readable representation of the object.
+    * {@inheritDoc}
     */
    @Override
    public String toString()

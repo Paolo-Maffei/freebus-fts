@@ -44,12 +44,12 @@ public class TestConnectionDetails
    public final void testToFromConfig()
    {
       final SimpleConfig cfg = new SimpleConfig();
-      assertEquals("", cfg.getStringValue(ConnectionDetails.driverTypeConfigKey));
+      assertEquals("", cfg.getStringValue(ConnectionDetails.DRIVER_TYPE_CONFIG_KEY));
 
       final ConnectionDetails cd = new ConnectionDetails();
       cd.toConfig(cfg);
 
-      assertEquals(DriverType.getDefault().toString(), cfg.getStringValue(ConnectionDetails.driverTypeConfigKey));
+      assertEquals(DriverType.getDefault().toString(), cfg.getStringValue(ConnectionDetails.DRIVER_TYPE_CONFIG_KEY));
       assertEquals(cd.getUser(), cfg.getStringValue(cd.getType().getConfigPrefix() + ".user"));
 
       final ConnectionDetails cd2 = new ConnectionDetails();

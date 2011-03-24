@@ -10,12 +10,12 @@ import javax.persistence.Table;
 import org.freebus.fts.persistence.vdx.VdxEntity;
 import org.freebus.fts.persistence.vdx.VdxField;
 
-/**
- * A program description.
- */
 /*
  * Note for developers: this class cannot be in a JPA @OneToMany relation with
  * CatalogEntry, as this class has a two-column key.
+ */
+/**
+ * A program description.
  */
 @Entity
 @Table(name = "program_description")

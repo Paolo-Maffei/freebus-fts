@@ -14,6 +14,7 @@ import javax.persistence.TableGenerator;
 
 import org.freebus.fts.common.types.ObjectPriority;
 import org.freebus.fts.common.types.ObjectType;
+import org.freebus.fts.interfaces.Named;
 import org.freebus.fts.persistence.vdx.VdxField;
 
 /**
@@ -23,7 +24,7 @@ import org.freebus.fts.persistence.vdx.VdxField;
  */
 @Entity
 @Table(name = "communication_object")
-public class CommunicationObject implements Comparable<CommunicationObject>
+public class CommunicationObject implements Comparable<CommunicationObject>, Named
 {
    @Id
    @TableGenerator(name = "CommunicationObject", initialValue = 1, allocationSize = 10)
@@ -120,6 +121,7 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    /**
     * @return the name
     */
+   @Override
    public String getName()
    {
       return name;
@@ -143,6 +145,8 @@ public class CommunicationObject implements Comparable<CommunicationObject>
 
    /**
     * Set the program.
+    * 
+    * @param program - the program to set.
     */
    public void setProgram(Program program)
    {
@@ -159,6 +163,8 @@ public class CommunicationObject implements Comparable<CommunicationObject>
 
    /**
     * Set the parameter.
+    * 
+    * @param parameter - the parameter to set.
     */
    public void setParameter(Parameter parameter)
    {
@@ -175,6 +181,8 @@ public class CommunicationObject implements Comparable<CommunicationObject>
 
    /**
     * Set the descriptive function name.
+    * 
+    * @param function - the function name to set.
     */
    public void setFunction(String function)
    {
@@ -184,7 +192,7 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    /**
     * Set the unique number.
     * 
-    * @param number - The unique number to set.
+    * @param uniqueNumber - The unique number to set.
     * 
     * @see #getUniqueNumber()
     */
@@ -194,8 +202,7 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    }
 
    /**
-    * The unique number is unique within the {@link Program application program}
-    * .
+    * The unique number is unique within the {@link Program application program}.
     * 
     * @return The unique number.
     */
@@ -404,7 +411,7 @@ public class CommunicationObject implements Comparable<CommunicationObject>
    }
 
    /**
-    * Compare two Objects by display order.
+    * {@inheritDoc}
     */
    @Override
    public int compareTo(CommunicationObject o)
