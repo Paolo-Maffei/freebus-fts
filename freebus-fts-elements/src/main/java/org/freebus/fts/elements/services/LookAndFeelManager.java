@@ -21,8 +21,11 @@ public final class LookAndFeelManager
     */
    static public void setDefaultLookAndFeel()
    {
-      for (String lafName : new String[] { "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
-            "com.sun.java.swing.plaf.windows.WindowsLookAndFeel" })
+      for (String lafName : new String[]
+      { 
+         "com.sun.java.swing.plaf.gtk.GTKLookAndFeel",
+         "com.sun.java.swing.plaf.windows.WindowsLookAndFeel"
+      })
       {
          try
          {
@@ -46,7 +49,9 @@ public final class LookAndFeelManager
 
    /**
     * Add a look&feel by it's class-name.
-    *
+    * 
+    * @param lookAndFeelClassName - the name of the look&feel class to add.
+    * 
     * @throws ClassNotFoundException if the look&feel class cannot be loaded
     */
    @SuppressWarnings("unchecked")

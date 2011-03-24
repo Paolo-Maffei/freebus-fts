@@ -25,7 +25,7 @@ import javax.swing.event.ListDataListener;
  * You can create a SortedListModel from models you already have. Place the
  * SortedListModel into a JList, for example, to provide a sorted view of your
  * underlying model.
- *
+ * 
  * @author John O'Conner
  */
 @SuppressWarnings("unchecked")
@@ -33,6 +33,9 @@ public class SortedListModel extends AbstractListModel
 {
    private static final long serialVersionUID = -4801105186054638868L;
 
+   /**
+    * Disabled constructor.
+    */
    @SuppressWarnings("unused")
    private SortedListModel()
    {
@@ -41,7 +44,7 @@ public class SortedListModel extends AbstractListModel
    /**
     * Create a SortedListModel from an existing model using a default text
     * comparator for the default Locale. Sort in ascending order.
-    *
+    * 
     * @param model the underlying, unsorted ListModel
     */
    public SortedListModel(ListModel model)
@@ -52,9 +55,9 @@ public class SortedListModel extends AbstractListModel
    /**
     * Create a SortedListModel from an existing model using a specific
     * comparator and sort order. Use a default text comparator.
-    *
-    *@param model the unsorted list model
-    *@param sortOrder that should be used
+    * 
+    * @param model the unsorted list model
+    * @param sortOrder that should be used
     */
    public SortedListModel(ListModel model, SortOrder sortOrder)
    {
@@ -64,11 +67,11 @@ public class SortedListModel extends AbstractListModel
    /**
     * Create a SortedListModel from an existing model. Sort the model in the
     * specified sort order using the given comparator.
-    *
-    *@param model
-    *@param sortOrder
-    *@param comp
-    *
+    * 
+    * @param model - the model to work with.
+    * @param sortOrder - the sorting order.
+    * @param comp - the comparator.
+    * 
     */
    public SortedListModel(ListModel model, SortOrder sortOrder, Comparator<?> comp)
    {
@@ -113,10 +116,12 @@ public class SortedListModel extends AbstractListModel
    }
 
    /**
-    * Retrieve the sorted entry from the original model
-    *
-    * @param index index of an entry in the sorted model
-    * @return element in the original model to which our entry points
+    * Retrieve the sorted entry from the original model.
+    * 
+    * @param index index of an entry in the sorted model.
+    * @return element in the original model to which our entry points.
+    * 
+    * @throws IndexOutOfBoundsException if the index is out of bounds.
     */
    public Object getElementAt(int index) throws IndexOutOfBoundsException
    {
@@ -126,8 +131,8 @@ public class SortedListModel extends AbstractListModel
    }
 
    /**
-    * Retrieve the size of the underlying model
-    *
+    * Retrieve the size of the underlying model.
+    * 
     * @return size of the model
     */
    public int getSize()
@@ -138,10 +143,11 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Convert sorted model index to an unsorted model index.
-    *
-    *@param index an index in the sorted model
-    *@return modelIndex an index in the unsorted model
-    *
+    * 
+    * @param index an index in the sorted model
+    * @return modelIndex an index in the unsorted model
+    * 
+    * @throws IndexOutOfBoundsException if the index is out of bounds.
     */
    public int toUnsortedModelIndex(int index) throws IndexOutOfBoundsException
    {
@@ -155,10 +161,10 @@ public class SortedListModel extends AbstractListModel
    /**
     * Convert an array of sorted model indices to their unsorted model indices.
     * Sort the resulting set of indices.
-    *
-    *@param sortedSelectedIndices indices of selected elements in the sorted
-    *           model or sorted view
-    *@return unsortedSelectedIndices selected indices in the unsorted model
+    * 
+    * @param sortedSelectedIndices indices of selected elements in the sorted
+    *        model or sorted view.
+    * @return unsortedSelectedIndices selected indices in the unsorted model.
     */
    public int[] toUnsortedModelIndices(int[] sortedSelectedIndices)
    {
@@ -176,7 +182,7 @@ public class SortedListModel extends AbstractListModel
 
    /**
     * Convert an unsorted model index to a sorted model index.
-    *
+    * 
     * @param unsortedIndex an element index in the unsorted model
     * @return sortedIndex an element index in the sorted model
     */
@@ -200,8 +206,8 @@ public class SortedListModel extends AbstractListModel
     * Convert an array of unsorted model selection indices to indices in the
     * sorted model. Sort the model indices from low to high to duplicate JList's
     * getSelectedIndices method
-    *
-    * @param unsortedModelIndices
+    * 
+    * @param unsortedModelIndices - the model indices to sort.
     * @return an array of selected indices in the sorted model
     */
    public int[] toSortedModelIndices(int[] unsortedModelIndices)
@@ -216,6 +222,9 @@ public class SortedListModel extends AbstractListModel
       return sortedModelIndices;
    }
 
+   /**
+    * Reset the model data.
+    */
    private void resetModelData()
    {
       int index = 0;
@@ -225,6 +234,11 @@ public class SortedListModel extends AbstractListModel
       }
    }
 
+   /**
+    * Set the comparator.
+    * 
+    * @param comp - the comparator to set.
+    */
    @SuppressWarnings("rawtypes")
    public void setComparator(Comparator comp)
    {
@@ -243,9 +257,9 @@ public class SortedListModel extends AbstractListModel
    }
 
    /**
-    * Change the sort order of the model at runtime
-    *
-    * @param sortOrder
+    * Change the sort order of the model at runtime.
+    * 
+    * @param sortOrder - the sort order.
     */
    public void setSortOrder(SortOrder sortOrder)
    {
@@ -267,7 +281,8 @@ public class SortedListModel extends AbstractListModel
    /**
     * Update the sorted model whenever new items are added to the
     * original/decorated model.
-    *
+    * 
+    * @param e - the event to process.
     */
    private void unsortedIntervalAdded(ListDataEvent e)
    {
@@ -304,6 +319,8 @@ public class SortedListModel extends AbstractListModel
    /**
     * Update this model when items are removed from the original/decorated
     * model. Also, let our listeners know that we've removed items.
+    * 
+    * @param e - the event to process.
     */
    private void unsortedIntervalRemoved(ListDataEvent e)
    {
@@ -348,6 +365,8 @@ public class SortedListModel extends AbstractListModel
     * Resort the sorted model if there are changes in the original unsorted
     * model. Let any listeners know about changes. Since I don't track specific
     * changes, sort everywhere and redisplay all items.
+    * 
+    * @param e - the event to process.
     */
    private void unsortedContentsChanged(ListDataEvent e)
    {
@@ -358,6 +377,9 @@ public class SortedListModel extends AbstractListModel
    /**
     * Internal helper method to find the insertion point for a new entry in the
     * sorted model.
+    *
+    * @param entry - the entry to search.
+    * @return The insertion point.
     */
    @SuppressWarnings("rawtypes")
    private int findInsertionPoint(SortedListEntry entry)
@@ -381,36 +403,61 @@ public class SortedListModel extends AbstractListModel
    private ListModel unsortedModel;
    private SortOrder sortOrder;
 
+   /**
+    * The sorting order.
+    */
    public enum SortOrder
    {
       UNORDERED, ASCENDING, DESCENDING;
    }
 
+   /**
+    * A sorted list entry.
+    */
    @SuppressWarnings("rawtypes")
    class SortedListEntry implements Comparable
    {
       private int index;
 
+      /**
+       * Create a sorted list entry.
+       */
       @SuppressWarnings("unused")
       private SortedListEntry()
       {
       }
 
+      /**
+       * Create a sorted list entry.
+       *
+       * @param index - the index of the entry.
+       */
       public SortedListEntry(int index)
       {
          this.index = index;
       }
 
+      /**
+       * @return The index.
+       */
       public int getIndex()
       {
          return index;
       }
 
+      /**
+       * Set the index.
+       *
+       * @param index - the index to set.
+       */
       public void setIndex(int index)
       {
          this.index = index;
       }
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       public int compareTo(Object o)
       {
@@ -442,12 +489,18 @@ public class SortedListModel extends AbstractListModel
          return comparison;
       }
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       public boolean equals(Object o)
       {
          return compareTo(o) == 0;
       }
 
+      /**
+       * {@inheritDoc}
+       */
       @Override
       public int hashCode()
       {

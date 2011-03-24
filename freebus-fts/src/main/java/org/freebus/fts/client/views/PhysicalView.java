@@ -261,20 +261,7 @@ public class PhysicalView extends AbstractTreeView
       if (obj instanceof Room)
          obj = ((Room) obj).getBuilding();
 
-      final Building building = (Building) obj;
-      final Set<Room> rooms = building.getRooms();
-
-      final Room room = new Room();
-      room.setType(type);
-
-      for (int i = 1; i < 1000; ++i)
-      {
-         room.setName(I18n.formatMessage(type == RoomType.ROOM ? "NewRoom" : "NewCabinet", Integer.toString(i)));
-         if (!rooms.contains(room))
-            break;
-      }
-
-      ProjectManager.getController().add(building, room);
+      ProjectManager.getController().createRoom((Building) obj, type);
    }
 
    /**

@@ -99,6 +99,8 @@ public class Dialog extends JDialog
 
    /**
     * Add a button to the dialog's buttons.
+    * 
+    * @param button - the button to add.
     */
    public void addButton(JButton button)
    {
@@ -183,6 +185,8 @@ public class Dialog extends JDialog
 
    /**
     * Set the accepted flag. Called automatically.
+    * 
+    * @param accepted - true if accepted
     *
     * @See isAccepted
     */

@@ -40,9 +40,9 @@ import org.freebus.fts.elements.services.ImageCache;
 public class LogLine extends JPanel
 {
    private static final long serialVersionUID = 3863672762089494126L;
-   private static final int messageTimeoutMS = 5000;
-   private static final Map<Level, Color> levelColors = new HashMap<Level, Color>();
-   private static final int maxHistoryEvents = 30;
+   private static final int MAX_HISTORY_EVENTS = 30;
+   private static final int MESSAGE_TIMEOUT_MS = 5000;
+   private static final Map<Level, Color> LEVEL_COLORS = new HashMap<Level, Color>();
 
    private final LinkedList<LogEvent> logEventsHistory = new LinkedList<LogEvent>();
    private final Color defaultColor = getForeground();
@@ -56,9 +56,9 @@ public class LogLine extends JPanel
     */
    static
    {
-      levelColors.put(Level.INFO, new Color(16, 16, 254));
-      levelColors.put(Level.WARN, new Color(254, 128, 0));
-      levelColors.put(Level.ERROR, new Color(254, 48, 16));
+      LEVEL_COLORS.put(Level.INFO, new Color(16, 16, 254));
+      LEVEL_COLORS.put(Level.WARN, new Color(254, 128, 0));
+      LEVEL_COLORS.put(Level.ERROR, new Color(254, 48, 16));
    }
 
    /**
@@ -124,17 +124,23 @@ public class LogLine extends JPanel
    }
 
    /**
-    * Return the foreground color for a message of the given log level.
+    * Get the foreground color for a message of the given log level.
+    * 
+    * @param level - the log level to get the color for.
+    * @return The color for the log level.
     */
    private Color getLevelColor(final Level level)
    {
-      final Color c = levelColors.get(level);
+      final Color c = LEVEL_COLORS.get(level);
       return c == null ? defaultColor : c;
    }
 
    /**
     * Append a log event. Automatically called by the internal log appender when
     * a new log event arrives.
+    * 
+    * @param level - the log level of the message.
+    * @param message - the message to append.
     */
    public void append(Level level, String message)
    {
@@ -162,7 +168,7 @@ public class LogLine extends JPanel
                }
             });
          }
-      }, messageTimeoutMS);
+      }, MESSAGE_TIMEOUT_MS);
 
       logEventsHistory.add(new LogEvent(level, message));
 
@@ -174,7 +180,7 @@ public class LogLine extends JPanel
          pmnHistory.add(item);
       }
 
-      for (int numHistoryEvents = logEventsHistory.size(); numHistoryEvents > maxHistoryEvents; --numHistoryEvents)
+      for (int numHistoryEvents = logEventsHistory.size(); numHistoryEvents > MAX_HISTORY_EVENTS; --numHistoryEvents)
       {
          logEventsHistory.pop();
          if (historyVisible)
@@ -248,6 +254,12 @@ public class LogLine extends JPanel
       final public Level level;
       final public String message;
 
+      /**
+       * Create a log event. Internal class of {@link LogLine}.
+       *
+       * @param level - the log level.
+       * @param message - the log message.
+       */
       public LogEvent(Level level, String message)
       {
          this.level = level;

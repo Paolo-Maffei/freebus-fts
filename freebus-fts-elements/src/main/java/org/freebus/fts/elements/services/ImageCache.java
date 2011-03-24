@@ -16,7 +16,7 @@ import org.apache.log4j.Logger;
  */
 public final class ImageCache
 {
-   private static final Map<String, ImageIcon> iconCache = new HashMap<String, ImageIcon>();
+   private static final Map<String, ImageIcon> ICON_CACHE = new HashMap<String, ImageIcon>();
 
    /**
     * Loads the icon with the given name.
@@ -29,7 +29,7 @@ public final class ImageCache
     */
    public static synchronized ImageIcon getIcon(String iconName)
    {
-      ImageIcon icon = iconCache.get(iconName);
+      ImageIcon icon = ICON_CACHE.get(iconName);
       if (icon == null)
       {
          final ClassLoader classLoader = ImageCache.class.getClassLoader();
@@ -43,7 +43,7 @@ public final class ImageCache
          {
             Logger.getLogger(ImageCache.class).error("Could not find icon: " + iconName + ".png");
          }
-         iconCache.put(iconName, icon);
+         ICON_CACHE.put(iconName, icon);
       }
       return icon;
    }
@@ -64,7 +64,7 @@ public final class ImageCache
    public static synchronized ImageIcon getIcon(String imageName, String overlayName)
    {
       final String cacheKey = imageName + '|' + overlayName;
-      ImageIcon icon = iconCache.get(cacheKey);
+      ImageIcon icon = ICON_CACHE.get(cacheKey);
       if (icon != null)
          return icon;
 
@@ -90,7 +90,7 @@ public final class ImageCache
       g2d.drawImage(overlayIcon.getImage(), null, null);
 
       icon = new ImageIcon(img);
-      iconCache.put(cacheKey, icon);
+      ICON_CACHE.put(cacheKey, icon);
       return icon;
    }
 }

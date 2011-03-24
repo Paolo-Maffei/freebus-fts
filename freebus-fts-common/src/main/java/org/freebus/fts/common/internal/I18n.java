@@ -4,14 +4,13 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * Message catalog access methods.
+ */
 public final class I18n
 {
-   private static final String bundleName = "common-messages";
-   private static final ResourceBundle bundle = ResourceBundle.getBundle(bundleName);
-
-   private I18n()
-   {
-   }
+   private static final String BUNDLE_NAME = "common-messages";
+   private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
    /**
     * Returns the message string for the given message-id for the active
@@ -24,8 +23,8 @@ public final class I18n
    {
       try
       {
-         if (bundle != null)
-            return bundle.getString(msgid);
+         if (BUNDLE != null)
+            return BUNDLE.getString(msgid);
       }
       catch (MissingResourceException e)
       {
@@ -51,5 +50,12 @@ public final class I18n
       final StringBuffer sb = new StringBuffer();
       (new MessageFormat(getMessage(msgid))).format(args, sb, null);
       return sb.toString();
+   }
+
+   /**
+    * Disabled constructor.
+    */
+   private I18n()
+   {
    }
 }

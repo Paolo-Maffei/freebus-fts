@@ -15,14 +15,14 @@ import javax.swing.JTabbedPane;
 
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.core.ProjectControllerImpl;
-import org.freebus.fts.elements.ApplicationWindow;
+import org.freebus.fts.elements.AbstractApplicationWindow;
 import org.freebus.fts.elements.components.ExtTabbedPane;
 
 /**
  * A class for main application windows. This class contains no FTS specific
  * code. This class is meant to be sub-classed.
  */
-public class WorkBench extends ApplicationWindow
+public class WorkBench extends AbstractApplicationWindow
 {
    private static final long serialVersionUID = 6080914627731378282L;
 
@@ -41,7 +41,7 @@ public class WorkBench extends ApplicationWindow
     */
    public static WorkBench getInstance()
    {
-      return (WorkBench) ApplicationWindow.getInstance();
+      return (WorkBench) AbstractApplicationWindow.getInstance();
    }
 
    /**

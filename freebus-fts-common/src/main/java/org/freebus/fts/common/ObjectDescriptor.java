@@ -171,7 +171,7 @@ public class ObjectDescriptor
    }
 
    /**
-    * Get the control byte.
+    * @return The control byte.
     */
    public byte getControlByte()
    {

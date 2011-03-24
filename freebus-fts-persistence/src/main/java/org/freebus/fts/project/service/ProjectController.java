@@ -8,6 +8,7 @@ import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.project.RoomType;
 
 /**
  * Interface for project controllers. Project controllers manipulate the
@@ -29,6 +30,7 @@ public interface ProjectController
     * 
     * @param building - the building to add.
     */
+   @Deprecated
    void add(Building building);
 
    /**
@@ -37,6 +39,7 @@ public interface ProjectController
     * @param building - the building to add the room to.
     * @param room - the room to add.
     */
+   @Deprecated
    void add(Building building, Room room);
 
    /**
@@ -54,6 +57,32 @@ public interface ProjectController
     * @return The created line.
     */
    Line createLine(Area area);
+
+   /**
+    * Create a building and add it to the project.
+    * 
+    * @return The created building.
+    */
+   Building createBuilding();
+
+   /**
+    * Create a building and add it to the given parent building.
+    * 
+    * @param parent - the parent building
+    * 
+    * @return The created building.
+    */
+   Building createBuilding(Building parent);
+
+   /**
+    * Create a room and add it to the given building.
+    *
+    * @param building - the building that will contain the room.
+    * @param type - the {@link RoomType type} of the room.
+    *
+    * @return The created room.
+    */
+   Room createRoom(Building building, RoomType type);
 
    /**
     * Edit an object. Calls the proper edit method to do the job (e.g.

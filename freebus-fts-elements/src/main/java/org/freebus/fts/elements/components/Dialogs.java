@@ -5,7 +5,7 @@ import java.awt.Cursor;
 import javax.swing.JOptionPane;
 
 import org.apache.log4j.Logger;
-import org.freebus.fts.elements.ApplicationWindow;
+import org.freebus.fts.elements.AbstractApplicationWindow;
 import org.freebus.fts.elements.audio.AudioClip;
 import org.freebus.fts.elements.internal.I18n;
 import org.freebus.fts.elements.services.ImageCache;
@@ -39,7 +39,7 @@ public final class Dialogs
     */
    public static void showErrorDialog(String title, String message)
    {
-      final ApplicationWindow appWin = ApplicationWindow.getInstance();
+      final AbstractApplicationWindow appWin = AbstractApplicationWindow.getInstance();
 
       if (appWin != null)
          appWin.setCursor(Cursor.getDefaultCursor());
@@ -80,6 +80,8 @@ public final class Dialogs
     * @param e - the exception.
     * @param message - some human readable message (not
     *           {@link Exception#getMessage}!)
+    *
+    * @return The formatted exception.
     */
    public static String formatExceptionMessage(Exception e, String message)
    {

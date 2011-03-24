@@ -21,7 +21,7 @@ import org.freebus.fts.client.views.LogicalView;
 import org.freebus.fts.client.views.PhysicalView;
 import org.freebus.fts.client.views.TopologyView;
 import org.freebus.fts.client.workbench.WorkBench;
-import org.freebus.fts.elements.ApplicationWindow;
+import org.freebus.fts.elements.AbstractApplicationWindow;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.components.LogLine;
 import org.freebus.fts.elements.services.ImageCache;
@@ -53,7 +53,7 @@ public final class MainWindow extends WorkBench implements JobQueueListener
     */
    public static MainWindow getInstance()
    {
-      return (MainWindow) ApplicationWindow.getInstance();
+      return (MainWindow) AbstractApplicationWindow.getInstance();
    }
 
    /**

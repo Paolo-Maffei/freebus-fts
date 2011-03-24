@@ -133,6 +133,8 @@ public final class Environment
     *
     * Creates the user-data directory if it does not exist.
     *
+    * @param appName - the name of the application.
+    *
     * @see #getAppDir()
     */
    public static void setAppName(String appName)

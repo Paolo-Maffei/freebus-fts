@@ -92,6 +92,7 @@ public class FilteredListModel extends AbstractListModel
     *
     * @param index index of an entry in the filtered model
     * @return the element
+    * @throws IndexOutOfBoundsException if the index is out of bounds.
     */
    public Object getElementAt(int index) throws IndexOutOfBoundsException
    {
@@ -99,7 +100,7 @@ public class FilteredListModel extends AbstractListModel
    }
 
    /**
-    * Retrieve the size of the underlying model
+    * Retrieve the size of the underlying model.
     *
     * @return size of the model
     */

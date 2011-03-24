@@ -65,8 +65,8 @@ public final class HexString
       return sb.toString();
    }
 
-   /*
-    * Disabled
+   /**
+    * Disabled constructor.
     */
    private HexString()
    {

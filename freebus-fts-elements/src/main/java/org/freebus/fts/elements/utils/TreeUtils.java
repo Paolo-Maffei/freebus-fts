@@ -15,6 +15,8 @@ public final class TreeUtils
 {
    /**
     * Expand all nodes of a tree.
+    * 
+    * @param tree - the tree to process.
     */
    public static void expandAll(JTree tree)
    {
@@ -26,6 +28,8 @@ public final class TreeUtils
 
    /**
     * Collapse all nodes of a tree.
+    * 
+    * @param tree - the tree to process.
     */
    public static void collapseAll(JTree tree)
    {
@@ -37,6 +41,10 @@ public final class TreeUtils
 
    /**
     * Internal worker method.
+    * 
+    * @param tree - the tree to process.
+    * @param parent - the parent tree path.
+    * @param expand - true if expand, false if collapse.
     */
    private static void expandOrCollapse(JTree tree, TreePath parent, boolean expand)
    {
@@ -73,6 +81,9 @@ public final class TreeUtils
 
    /**
     * Internal worker of {@link getTreeNodeChildren}.
+    * 
+    * @param node - the tree node to process.
+    * @param result - the list for the nodes.
     */
    @SuppressWarnings("unchecked")
    private static void collectTreeNodeChildren(TreeNode node, List<TreeNode> result)

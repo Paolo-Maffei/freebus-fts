@@ -29,13 +29,17 @@ public enum ObjectPriority
    LOW;
 
    /**
-    * @return the object for the given ordinal.
+    * @param ordinal - the ordinal to lookup.
+    * @return The object for the given ordinal, or null if not found.
     */
    public static ObjectPriority valueOf(int ordinal)
    {
       for (ObjectPriority o : values())
+      {
          if (o.ordinal() == ordinal)
             return o;
+      }
+
       return null;
    }
 }

@@ -29,8 +29,8 @@ public final class AddressFactory
       return PhysicalAddress.valueOf(str);
    }
 
-   /*
-    * Disabled
+   /**
+    * Disabled constructor.
     */
    private AddressFactory()
    {

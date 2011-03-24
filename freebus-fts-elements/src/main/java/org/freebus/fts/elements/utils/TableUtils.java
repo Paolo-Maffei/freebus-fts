@@ -16,6 +16,9 @@ public final class TableUtils
    /**
     * Pack the table such that all columns are just as wide as their contents
     * requires.
+    * 
+    * @param table - the table to pack.
+    * @param margin - the extra space to add to both sides of every column.
     */
    public static void pack(JTable table, int margin)
    {
@@ -91,8 +94,8 @@ public final class TableUtils
       }
    }
 
-   /*
-    * Disabled.
+   /**
+    * Disabled constructor.
     */
    private TableUtils()
    {

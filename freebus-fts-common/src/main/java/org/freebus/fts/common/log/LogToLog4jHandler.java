@@ -29,7 +29,7 @@ public class LogToLog4jHandler extends Handler
    }
 
    /**
-    * Create a log4j log message from a java.util.logging log record
+    * Create a log4j log message from a java.util.logging log record.
     * 
     * @param record - the log record to process
     * @return a log4j log message

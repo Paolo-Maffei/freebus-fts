@@ -1,5 +1,7 @@
 package org.freebus.fts.client.core;
 
+import java.util.Set;
+
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.dialogs.AddDeviceDialog;
 import org.freebus.fts.client.editors.AreaDetails;
@@ -7,6 +9,7 @@ import org.freebus.fts.client.editors.BuildingDetails;
 import org.freebus.fts.client.editors.LineDetails;
 import org.freebus.fts.client.editors.devicedetails.DeviceDetails;
 import org.freebus.fts.client.workbench.WorkBench;
+import org.freebus.fts.common.exception.FtsRuntimeException;
 import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
@@ -19,6 +22,7 @@ import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.ProjectUtils;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.project.RoomType;
 import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.service.ProjectController;
 import org.freebus.fts.service.devicecontroller.DeviceController;
@@ -73,7 +77,7 @@ public final class ProjectControllerImpl implements ProjectController
 
       final int address = ProjectUtils.getFreeAddress(project.getAreas(), 0, 15);
       if (address < 0)
-         throw new RuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxAreas"));
+         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxAreas"));
 
       final Area area = new Area();
       area.setAddress(address);
@@ -90,11 +94,54 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
+   public Building createBuilding()
+   {
+      return createBuilding(null);
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Building createBuilding(Building parent)
+   {
+      return null;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public Room createRoom(Building building, RoomType type)
+   {
+      final Set<Room> rooms = building.getRooms();
+
+      final Room room = new Room();
+      room.setType(type);
+
+      for (int i = 1; i < 1000; ++i)
+      {
+         room.setName(I18n.formatMessage(type == RoomType.ROOM ? "NewRoom" : "NewCabinet", Integer.toString(i)));
+         if (!rooms.contains(room))
+            break;
+      }
+
+      building.add(room);
+      ProjectManager.fireComponentAdded(room);
+      edit(room);
+      
+      return room;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
    public Line createLine(Area area)
    {
       final int address = ProjectUtils.getFreeAddress(area.getLines(), 0, 15);
       if (address < 0)
-         throw new RuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxLines"));
+         throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxLines"));
 
       final Line line = new Line();
       line.setAddress(address);

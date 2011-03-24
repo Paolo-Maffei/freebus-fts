@@ -28,8 +28,8 @@ public final class ByteUtils
       return result;
    }
 
-   /*
-    * Disabled
+   /**
+    * Disabled constructor.
     */
    private ByteUtils()
    {

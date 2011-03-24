@@ -8,12 +8,12 @@ public final class PhysicalAddress implements Address, Comparable<PhysicalAddres
    private final int addr;
 
    /**
-    * A null address (0.0.0)
+    * A null address (0.0.0).
     */
    public static final PhysicalAddress NULL = new PhysicalAddress();
 
    /**
-    * The first regular address (1.1.1)
+    * The first regular address (1.1.1).
     */
    public static final PhysicalAddress ONE = new PhysicalAddress(1, 1, 1);
 
@@ -106,6 +106,8 @@ public final class PhysicalAddress implements Address, Comparable<PhysicalAddres
     * @param zone - the zone address (0..15)
     * @param line - the line address (0..15)
     * @param node - the node address (0..255)
+    * 
+    * @return The address as 16-bit integer.
     */
    public static int createAddr(int zone, int line, int node)
    {
@@ -115,10 +117,11 @@ public final class PhysicalAddress implements Address, Comparable<PhysicalAddres
    /**
     * Test if the address components are within their allowed range.
     *
-    * @return true if all components are valid.
     * @param zone - the zone address (0..15)
     * @param line - the line address (0..15)
     * @param node - the node address (0..255)
+    *
+    * @return true if all components are valid.
     */
    public static boolean isValid(int zone, int line, int node)
    {
@@ -135,7 +138,7 @@ public final class PhysicalAddress implements Address, Comparable<PhysicalAddres
    }
 
    /**
-    * Compare two addresses.
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(Object o)
@@ -201,6 +204,8 @@ public final class PhysicalAddress implements Address, Comparable<PhysicalAddres
     * number.
     *
     * @param addr - the 16-bit address number to process
+    * 
+    * @return The created physical address.
     */
    public static PhysicalAddress valueOf(int addr)
    {

@@ -22,6 +22,8 @@ public class ToolBarButton extends JButton
 
    /**
     * Creates a button with an icon.
+    * 
+    * @param icon - the icon of the button.
     */
    public ToolBarButton(Icon icon)
    {
@@ -31,6 +33,8 @@ public class ToolBarButton extends JButton
 
    /**
     * Creates a button with a text.
+    * 
+    * @param text - the text that is displayed in the button.
     */
    public ToolBarButton(String text)
    {
@@ -40,6 +44,8 @@ public class ToolBarButton extends JButton
 
    /**
     * Creates a button from an action.
+    * 
+    * @param a - the action to create the button from.
     */
    public ToolBarButton(Action a)
    {
@@ -49,6 +55,9 @@ public class ToolBarButton extends JButton
 
    /**
     * Creates a button with an icon and a text.
+    *
+    * @param icon - the icon of the button.
+    * @param text - the text that is displayed in the button.
     */
    public ToolBarButton(String text, Icon icon)
    {
@@ -57,12 +66,14 @@ public class ToolBarButton extends JButton
    }
 
    /**
-    * Adapt the style of the button to fit for tool-bars.
+    * Change the style of the given button to fit for tool-bars.
+    *
+    * @param button - the button to change.
     */
-   public static void useToolBarStyle(JButton btn)
+   public static void useToolBarStyle(JButton button)
    {
-      btn.setFocusable(false);
-      btn.setBorderPainted(false);
-      btn.setOpaque(false);
+      button.setFocusable(false);
+      button.setBorderPainted(false);
+      button.setOpaque(false);
    }
 }

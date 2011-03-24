@@ -22,8 +22,8 @@ import org.freebus.fts.elements.services.ImageCache;
 class ExtTab extends JPanel
 {
    private static final long serialVersionUID = 600126632738870853L;
-   private static final Icon closeButtonHighliteIcon = ImageCache.getIcon("tab-close-highlite");
-   private static final Icon closeButtonDimmedIcon = ImageCache.getIcon("tab-close-dimmed");
+   private static final Icon CLOSE_BUTTON_HIGHLIGHT_ICON = ImageCache.getIcon("tab-close-highlite");
+   private static final Icon CLOSE_BUTTON_DIMMED_ICON = ImageCache.getIcon("tab-close-dimmed");
 
    private final CloseButton closeButton;
    private final JLabel lblTitle;
@@ -81,6 +81,8 @@ class ExtTab extends JPanel
    /**
     * Add a close button {@link ActionListener action listener} that gets called
     * when the close button is clicked.
+    * 
+    * @param l - the action listener.
     */
    public void addCloseListener(ActionListener l)
    {
@@ -89,6 +91,8 @@ class ExtTab extends JPanel
 
    /**
     * Remove a close button {@link ActionListener action listener} from the tab.
+    * 
+    * @param l - the action listener.
     */
    public void removeCloseListener(ActionListener l)
    {
@@ -98,6 +102,8 @@ class ExtTab extends JPanel
    /**
     * Notifies all listeners that have registered interest for notification on
     * when the close button is clicked.
+    * 
+    * @param e - the action event.
     */
    protected void fireCloseButtonClicked(ActionEvent e)
    {
@@ -115,6 +121,8 @@ class ExtTab extends JPanel
 
    /**
     * Set the name of the tab. This is also the displayed label.
+    * 
+    * @param name - the name of the tab.
     */
    @Override
    public void setName(String name)
@@ -130,7 +138,10 @@ class ExtTab extends JPanel
    {
       private static final long serialVersionUID = -1335643238071282239L;
 
-      public CloseButton()
+      /**
+       * Create a close button.
+       */
+      CloseButton()
       {
          int size = 17;
          setPreferredSize(new Dimension(size, size));
@@ -139,7 +150,7 @@ class ExtTab extends JPanel
          setContentAreaFilled(false);
          setFocusable(false);
          setBorderPainted(false);
-         setIcon(closeButtonDimmedIcon);
+         setIcon(CLOSE_BUTTON_DIMMED_ICON);
          setRolloverEnabled(true);
 
          addMouseListener(new MouseAdapter()
@@ -147,13 +158,13 @@ class ExtTab extends JPanel
             @Override
             public void mouseEntered(MouseEvent e)
             {
-               closeButton.setIcon(closeButtonHighliteIcon);
+               closeButton.setIcon(CLOSE_BUTTON_HIGHLIGHT_ICON);
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-               closeButton.setIcon(closeButtonDimmedIcon);
+               closeButton.setIcon(CLOSE_BUTTON_DIMMED_ICON);
             }
          });
       }

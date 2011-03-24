@@ -8,7 +8,7 @@ public final class GroupAddress implements Address, Comparable<GroupAddress>
    private final int addr;
 
    /**
-    * The broadcast group address (0/0/0)
+    * The broadcast group address (0/0/0).
     */
    public static final GroupAddress BROADCAST = new GroupAddress();
 
@@ -101,6 +101,8 @@ public final class GroupAddress implements Address, Comparable<GroupAddress>
     * @param main - the main-group address (0..15)
     * @param middle - the middle-group address (0..7)
     * @param sub - the sub-group address (0..255)
+    * 
+    * @return The group address as 16-bit number.
     */
    static public int createAddr(int main, int middle, int sub)
    {
@@ -110,10 +112,11 @@ public final class GroupAddress implements Address, Comparable<GroupAddress>
    /**
     * Test if the address components are within their allowed range.
     *
-    * @return true if all components are valid.
     * @param main - the main-group address (0..15)
     * @param middle - the middle-group address (0..7)
     * @param sub - the sub-group address (0..255)
+    *
+    * @return true if all components are valid.
     */
    public static boolean isValid(int main, int middle, int sub)
    {
@@ -130,7 +133,7 @@ public final class GroupAddress implements Address, Comparable<GroupAddress>
    }
 
    /**
-    * Compare two addresses.
+    * {@inheritDoc}
     */
    @Override
    public boolean equals(Object o)
@@ -153,7 +156,7 @@ public final class GroupAddress implements Address, Comparable<GroupAddress>
    }
 
    /**
-    * @return the object in human readable form: "xx/x/xxx"
+    * @return The object in human readable form: "xx/x/xxx".
     */
    @Override
    public String toString()

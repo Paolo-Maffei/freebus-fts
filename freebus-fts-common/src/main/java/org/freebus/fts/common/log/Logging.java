@@ -51,6 +51,8 @@ public final class Logging
     * java.util.logging log handlers are removed.
     *
     * Called by {@link #setup()}.
+    * 
+    * @param logLevel - the log level
     */
    public static void activateLogBridge(Level logLevel)
    {
@@ -67,8 +69,8 @@ public final class Logging
       rootLogger.setLevel(Level.INFO);
    }
 
-   /*
-    * No need to create objects from this class.
+   /**
+    * Disabled constructor.
     */
    private Logging()
    {
