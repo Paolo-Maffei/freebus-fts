@@ -23,6 +23,8 @@ public class IndividualAddressWrite extends AbstractApplication
 
    /**
     * Create an empty instance, with the given address.
+    * 
+    * @param address - the physical address.
     */
    public IndividualAddressWrite(PhysicalAddress address)
    {
@@ -41,6 +43,8 @@ public class IndividualAddressWrite extends AbstractApplication
 
    /**
     * Set the physical address.
+    * 
+    * @param address - the physical address.
     */
    public void setAddress(PhysicalAddress address)
    {

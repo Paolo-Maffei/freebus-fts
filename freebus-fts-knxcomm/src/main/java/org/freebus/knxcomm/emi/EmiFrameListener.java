@@ -11,6 +11,8 @@ public interface EmiFrameListener extends EventListener
    /**
     * An EMI frame was received.
     * The called object must not change the frame.
+    * 
+    * @param frame - the received frame.
     */
    public void frameReceived(EmiFrame frame);
 }

@@ -37,8 +37,7 @@ public final class VdxCatalogEntryService implements CatalogEntryService
    }
 
    @Override
-   public List<CatalogEntry> getCatalogEntries(Manufacturer m, FunctionalEntity[] functionalEntities)
-         throws PersistenceException
+   public List<CatalogEntry> getCatalogEntries(Manufacturer m, FunctionalEntity[] functionalEntities) throws PersistenceException
    {
       @SuppressWarnings("unchecked")
       List<CatalogEntry> entries = (List<CatalogEntry>) manager.fetchAll(CatalogEntry.class);

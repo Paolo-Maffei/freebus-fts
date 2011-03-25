@@ -47,5 +47,16 @@
       <property name="basicOffset" value="3"/>
       <property name="caseIndent" value="3"/>
     </module>
+    <module name="GenericWhitespace"/>
+    <module name="CyclomaticComplexity">
+      <property name="max" value="16"/>
+    </module>
+    <module name="ArrayTypeStyle"/>
+    <module name="Indentation">
+      <property name="basicOffset" value="3"/>
+      <property name="caseIndent" value="3"/>
+    </module>
+    <module name="UpperEll"/>
   </module>
+  <module name="Translation"/>
 </module>

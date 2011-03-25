@@ -10,6 +10,9 @@ import javax.persistence.Query;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.ManufacturerService;
 
+/**
+ * JPA {@link Manufacturer} service.
+ */
 public final class JpaManufacturerService implements ManufacturerService
 {
    private final EntityManager entityManager;

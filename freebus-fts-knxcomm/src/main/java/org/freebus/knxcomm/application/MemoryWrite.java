@@ -7,7 +7,7 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
  * the (your/the) bus connection, probably only 12 bytes can be transfered
  * with one MemoryWrite telegram.
  */
-public class MemoryWrite extends MemoryData
+public class MemoryWrite extends AbstractMemoryData
 {
    /**
     * Create a memory write object with address 0 and no data.

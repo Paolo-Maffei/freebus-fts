@@ -18,6 +18,9 @@ public abstract class EmiTelegramFrame extends AbstractEmiFrame
 
    /**
     * Create a frame object with the given telegram.
+    * 
+    * @param type - the frame type.
+    * @param telegram - the telegram.
     */
    protected EmiTelegramFrame(EmiFrameType type, Telegram telegram)
    {
@@ -27,6 +30,8 @@ public abstract class EmiTelegramFrame extends AbstractEmiFrame
 
    /**
     * Create an empty frame object.
+    *
+    * @param type - the frame type.
     */
    protected EmiTelegramFrame(EmiFrameType type)
    {

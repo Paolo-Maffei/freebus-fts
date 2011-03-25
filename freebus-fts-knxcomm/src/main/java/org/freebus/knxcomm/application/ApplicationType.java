@@ -463,8 +463,7 @@ public enum ApplicationType
    private final Class<? extends Application> applicationClass;
 
    // The bit-masks for the values of the APCI-bits
-   private static final int[] apciMasks = new int[] { 0, 0x200, 0x300, 0x380, 0x3c0, 0x3e0, 0x3f0, 0x3f8, 0x3fc, 0x3fe,
-         0x3ff };
+   private static final int[] ACPI_MASK = new int[] { 0, 0x200, 0x300, 0x380, 0x3c0, 0x3e0, 0x3f0, 0x3f8, 0x3fc, 0x3fe, 0x3ff };
 
    /**
     * Get the contents of the APCI field. This is the type identifier of an
@@ -512,7 +511,7 @@ public enum ApplicationType
     */
    public int getMask()
    {
-      return apciMasks[bits];
+      return ACPI_MASK[bits];
    }
 
    /**
@@ -521,7 +520,7 @@ public enum ApplicationType
     */
    public int getDataMask()
    {
-      return 0x3ff & ~apciMasks[bits];
+      return 0x3ff & ~ACPI_MASK[bits];
    }
 
    /**
@@ -554,14 +553,18 @@ public enum ApplicationType
    }
 
    /**
+    * Get the application type for the given APCI value.
+    * 
+    * @param apci - the ACPI value.
+    * 
     * @return the application type for the given APCI field.
-    * @throws InvalidDataException
+    * @throws InvalidDataException if the APCI value is unknown.
     */
    public static ApplicationType valueOf(int apci) throws InvalidDataException
    {
       for (ApplicationType a : values())
       {
-         if ((apci & apciMasks[a.bits]) == a.apci)
+         if ((apci & ACPI_MASK[a.bits]) == a.apci)
             return a;
       }
 

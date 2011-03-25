@@ -134,12 +134,12 @@ public enum EmiFrameType
    PEI_SWITCH_REQ(0xa9, EmiFrameClass.SEND, PEI_Switch_req.class),
 
    /**
-    * Timer
+    * Timer.
     */
    TM_TIMER_IND(0xc1, EmiFrameClass.RECEIVE),
 
    /**
-    * An unknown message (this is an internal type)
+    * An unknown message (this is an internal type).
     */
    UNKNOWN(0x00, null);
 

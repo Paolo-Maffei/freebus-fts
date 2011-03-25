@@ -20,6 +20,8 @@ public interface BusInterface
     * settings, taken from the application's configuration.
     * 
     * @param mode - the link mode to open the connection with.
+    *
+    * @throws IOException in case of I/O problems.
     */
    public void open(LinkMode mode) throws IOException;
 
@@ -37,6 +39,8 @@ public interface BusInterface
     * Switch the link mode.
     * 
     * @param mode - the link mode to switch to
+    *
+    * @throws IOException in case of I/O problems.
     */
    public void setLinkMode(LinkMode mode) throws IOException;
 
@@ -49,7 +53,9 @@ public interface BusInterface
     * Send a telegram to the bus. Sending is not available in
     * {@link LinkMode#BusMonitor bus monitor} link mode.
     * 
-    * @throws IOException
+    * @param telegram - the telegram to send.
+    * 
+    * @throws IOException in case of I/O problems.
     */
    public void send(Telegram telegram) throws IOException;
 
@@ -68,7 +74,7 @@ public interface BusInterface
     * 
     * @return The new, {@link DataConnection#open() opened} connection.
     * 
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    public DataConnection connect(PhysicalAddress addr, Priority priority) throws IOException;
 

@@ -19,7 +19,7 @@ public enum MemoryLocation
    ApplicationID,
 
    /**
-    * Pointer to association table
+    * Pointer to association table.
     */
    AssocTabPtr,
 
@@ -64,7 +64,7 @@ public enum MemoryLocation
    IregB_N,
 
    /**
-    * Manufacturer data
+    * Manufacturer data.
     */
    ManData,
 
@@ -74,7 +74,7 @@ public enum MemoryLocation
    MaskType,
 
    /**
-    * Mask version
+    * Mask version.
     */
    MaskVersion,
 
@@ -134,12 +134,12 @@ public enum MemoryLocation
    PEI_Type,
 
    /**
-    * Port-A data direction register
+    * Port-A data direction register.
     */
    PortADDR,
 
    /**
-    * Port-C data direction register
+    * Port-C data direction register.
     */
    PortCDDR,
 

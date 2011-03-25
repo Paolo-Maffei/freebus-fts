@@ -11,7 +11,7 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
  * be read. Depending on the type of the (your) bus connection, only 12 bytes
  * can be read.
  */
-public class MemoryRead extends Memory
+public class MemoryRead extends AbstractMemory
 {
    private int count;
 

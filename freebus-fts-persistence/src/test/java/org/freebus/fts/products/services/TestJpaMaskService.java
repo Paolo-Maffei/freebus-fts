@@ -1,6 +1,7 @@
 package org.freebus.fts.products.services;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.products.BcuType;
 import org.freebus.fts.products.Mask;
 import org.freebus.fts.test_utils.ProductsTestCase;

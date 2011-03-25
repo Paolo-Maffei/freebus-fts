@@ -13,10 +13,10 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 
 import org.freebus.fts.client.core.I18n;
+import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.ProductDescription;
 import org.freebus.fts.products.ProductsManager;
-import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductDescriptionService;
 import org.freebus.fts.products.services.ProductsFactory;
 

@@ -152,12 +152,12 @@ public enum PropertyIdentifier
     */
 
    /**
-    * Extended frame format
+    * Extended frame format.
     */
    ExtendedFrameFormat(51),
 
    /**
-    * Address Table Format 1
+    * Address Table Format 1.
     */
    AddrTab1(52),
 

@@ -107,7 +107,7 @@ public class Mask
    private Integer peiProgramRCS;
 
    @Column(name = "port_a_ddr")
-   private Integer portA_ddr;
+   private Integer portAddr;
 
    @Column(name = "port_address_protected", nullable = false)
    private boolean portAddressProtected;
@@ -555,19 +555,21 @@ public class Mask
    }
 
    /**
-    * @return the portA_ddr
+    * @return the port A DDR.
     */
-   public Integer getPortA_ddr()
+   public Integer getPortAddr()
    {
-      return portA_ddr;
+      return portAddr;
    }
 
    /**
-    * @param portA_ddr the portA_ddr to set
+    * Set the port A DDR.
+    *
+    * @param portAddr the port A DDR to set
     */
-   public void setPortA_ddr(Integer portA_ddr)
+   public void setPortAddr(Integer portAddr)
    {
-      this.portA_ddr = portA_ddr;
+      this.portAddr = portAddr;
    }
 
    /**

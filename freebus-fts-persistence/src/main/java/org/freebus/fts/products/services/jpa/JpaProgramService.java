@@ -10,6 +10,9 @@ import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.services.ProgramService;
 
+/**
+ * JPA {@link Program} service.
+ */
 public final class JpaProgramService implements ProgramService
 {
    private final EntityManager entityManager;

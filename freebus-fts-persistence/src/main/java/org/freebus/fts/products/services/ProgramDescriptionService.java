@@ -2,6 +2,7 @@ package org.freebus.fts.products.services;
 
 import javax.persistence.PersistenceException;
 
+import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.ProgramDescription;
 

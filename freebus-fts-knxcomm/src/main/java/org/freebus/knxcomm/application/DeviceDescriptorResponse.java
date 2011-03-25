@@ -75,7 +75,7 @@ public class DeviceDescriptorResponse extends AbstractApplication
    }
 
    /**
-    * @return 
+    * {@inheritDoc}
     */
    @Override
    public final int getApciValue()

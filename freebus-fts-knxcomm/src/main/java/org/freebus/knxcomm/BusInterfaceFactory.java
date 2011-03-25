@@ -106,11 +106,11 @@ public final class BusInterfaceFactory
    /**
     * Create a new KNX/EIB bus interface that connects to a serial port.
     *
-    * @param portName - the name of the serial port, e.g. "COM1:" or
-    *           "/dev/ttyS0"
-    * @throws Exception
+    * @param portName - the name of the serial port, e.g. "COM1:" or "/dev/ttyS0".
+    *
+    * @return The created bus interface.
     */
-   public static BusInterface newSerialInterface(String portName) throws Exception
+   public static BusInterface newSerialInterface(String portName)
    {
       SerialPortUtil.loadSerialPortLib();
 
@@ -121,10 +121,10 @@ public final class BusInterfaceFactory
    /**
     * Create a new KNXnet/IP bus interface that connects e.g. to an eibd.
     *
-    * @param host - the name or IP address of the host that is running the
-    *           KNXnet/IP server.
-    * @param port - the UDP port of the KNXnet/IP server on the host. Default:
-    *           3671.
+    * @param host - the name or IP address of the host that is running the KNXnet/IP server.
+    * @param port - the UDP port of the KNXnet/IP server on the host. Default: 3671.
+    *
+    * @return The created bus interface.
     */
    public static BusInterface newKNXnetInterface(String host, int port)
    {
@@ -134,6 +134,8 @@ public final class BusInterfaceFactory
    /**
     * Set the default {@link LinkMode link mode} that is used when a bus
     * interface is created. Does not change existing bus interfaces.
+    * 
+    * @param mode - the link mode to set.
     */
    public static void setDefaultLinkMode(LinkMode mode)
    {

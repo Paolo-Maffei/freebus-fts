@@ -9,6 +9,9 @@ import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.FunctionalEntityService;
 
+/**
+ * JPA {@link FunctionalEntity} service.
+ */
 public final class JpaFunctionalEntityService implements FunctionalEntityService
 {
    private final EntityManager entityManager;

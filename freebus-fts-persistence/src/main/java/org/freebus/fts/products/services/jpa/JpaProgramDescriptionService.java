@@ -8,6 +8,9 @@ import org.freebus.fts.products.Program;
 import org.freebus.fts.products.ProgramDescription;
 import org.freebus.fts.products.services.ProgramDescriptionService;
 
+/**
+ * JPA {@link ProgramDescription} service.
+ */
 public final class JpaProgramDescriptionService implements ProgramDescriptionService
 {
    private final EntityManager entityManager;

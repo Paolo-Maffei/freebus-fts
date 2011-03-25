@@ -1,6 +1,5 @@
 package org.freebus.knxcomm.application.memory;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
@@ -8,6 +7,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
+import org.freebus.fts.common.exception.FtsRuntimeException;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 
 /**
@@ -31,16 +31,7 @@ public final class MemoryAddressMapper
     */
    MemoryAddressMapper(int maskVersion)
    {
-      Properties props;
-
-      try
-      {
-         props = getProperties(maskVersion);
-      }
-      catch (IOException e)
-      {
-         throw new RuntimeException(e);
-      }
+      final Properties props = getProperties(maskVersion);
 
       for (MemoryLocation type : MemoryLocation.values())
       {
@@ -133,16 +124,16 @@ public final class MemoryAddressMapper
     * 
     * @param maskVersion - the mask version.
     * @return The resource bundle, or null if the bundle could not be loaded.
-    * @throws IOException
+    *
+    * @throws FtsRuntimeException if the memory address mapping file could not be loaded.
     */
-   public static Properties getProperties(int maskVersion) throws IOException
+   public static Properties getProperties(int maskVersion)
    {
       final int type = (maskVersion >> 8) & 255;
       final int version = (maskVersion >> 4) & 15;
       final int subVersion = maskVersion & 15;
 
-      final String name = String.format("memory-addresses-%1$d-%2$d.%3$d.properties", new Object[] { type, version,
-            subVersion });
+      final String name = String.format("memory-addresses-%1$d-%2$d.%3$d.properties", new Object[] { type, version, subVersion });
       final ClassLoader loader = MemoryAddressMapper.class.getClassLoader();
 
       InputStream in = loader.getResourceAsStream(name);
@@ -151,11 +142,18 @@ public final class MemoryAddressMapper
          in = loader.getResourceAsStream("src/main/resources/" + name);
 
          if (in == null)
-            throw new FileNotFoundException("No memory address mapping file \"" + name + "\" found");
+            throw new FtsRuntimeException("No memory address mapping file \"" + name + "\" found");
       }
 
       final Properties props = new Properties();
-      props.load(in);
+      try
+      {
+         props.load(in);
+      }
+      catch (IOException e)
+      {
+         throw new FtsRuntimeException("Failed to load address mapping file \"" + name + "\"", e);
+      }
 
       return props;
    }

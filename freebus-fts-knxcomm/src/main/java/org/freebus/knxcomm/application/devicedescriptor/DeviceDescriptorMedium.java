@@ -92,7 +92,7 @@ public enum DeviceDescriptorMedium
    public final int code;
 
    /**
-    * Returns the medium type for a specific code
+    * Returns the medium type for a specific code.
     *
     * @param code - the code to lookup
     * @return the medium type.

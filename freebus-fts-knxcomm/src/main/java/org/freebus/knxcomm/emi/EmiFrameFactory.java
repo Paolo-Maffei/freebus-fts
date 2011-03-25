@@ -6,7 +6,6 @@ import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.freebus.knxcomm.emi.types.EmiFrameType;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Factory class that creates {@link EmiFrame EMI frame} objects from raw data
@@ -51,8 +50,7 @@ public final class EmiFrameFactory
     * @return the created frame, or null if the frame type is valid, but there
     *         exists no frame class for the frame type.
     * 
-    * @throws IOException
-    * @throws InvalidDataException
+    * @throws IOException if the frame could not be read from in.
     */
    static public EmiFrame createFrame(final DataInput in) throws IOException
    {
@@ -74,8 +72,7 @@ public final class EmiFrameFactory
     * @return the created frame (body), or null if the frame type is valid, but
     *         there exists no frame class for the frame type.
     * 
-    * @throws IOException
-    * @throws InvalidDataException
+    * @throws IOException if the frame could not be read from data.
     */
    static public EmiFrame createFrame(final byte[] data) throws IOException
    {

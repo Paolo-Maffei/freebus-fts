@@ -63,7 +63,7 @@ public interface Application
     * @param in - the input stream to read.
     * @param length - the number of bytes that the application shall read
     *
-    * @throws IOException
+    * @throws IOException if the stream could not be read.
     */
    public void readData(DataInput in, int length) throws IOException;
 
@@ -75,7 +75,7 @@ public interface Application
     *
     * @param out - the output stream to write the object to.
     *
-    * @throws IOException
+    * @throws IOException if the stream could not be written.
     */
    public void writeData(DataOutput out) throws IOException;
 }

@@ -15,6 +15,7 @@ public abstract class AbstractApplication implements Application
    /**
     * {@inheritDoc}
     */
+   @Override
    public int getApciValue()
    {
       return apciValue;
@@ -23,6 +24,7 @@ public abstract class AbstractApplication implements Application
    /**
     * {@inheritDoc}
     */
+   @Override
    public void setApciValue(int value)
    {
       this.apciValue = value;
@@ -31,6 +33,7 @@ public abstract class AbstractApplication implements Application
    /**
     * {@inheritDoc}
     */
+   @Override
    public final byte[] toByteArray()
    {
       try

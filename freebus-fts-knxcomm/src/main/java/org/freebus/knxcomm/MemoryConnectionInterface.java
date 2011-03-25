@@ -21,6 +21,8 @@ public interface MemoryConnectionInterface
     * @param address - the memory address.
     * @param count - the number of bytes to read/write, in the range 0..63
     * 
+    * @return The read bytes.
+    * 
     * @throws TimeoutException if there is no reply from the remote device.
     * @throws IOException if there is a communication error.
     * @throws IllegalArgumentException if count is not in the range 0..63
@@ -31,6 +33,8 @@ public interface MemoryConnectionInterface
     * Read bytes from the entire memory range of the location.
     * 
     * @param location - the memory location.
+    * 
+    * @return The read bytes.
     * 
     * @throws TimeoutException if there is no reply from the remote device.
     * @throws IOException if there is a communication error.
@@ -44,6 +48,8 @@ public interface MemoryConnectionInterface
     * @param location - the memory location.
     * @param offset - the offset relative to the location.
     * @param count - the number of bytes to read/write, in the range 1..63
+    * 
+    * @return The read bytes.
     * 
     * @throws IllegalArgumentException if count is not in the range 1..63
     * @throws TimeoutException if there is no reply from the remote device.

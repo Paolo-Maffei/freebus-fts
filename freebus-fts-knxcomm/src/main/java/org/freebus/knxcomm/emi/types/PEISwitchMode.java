@@ -18,7 +18,7 @@ public enum PEISwitchMode
    APP_LAYER(0x00, new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 8 }),
 
    /**
-    * Transport layer
+    * Transport layer.
     */
    TRANS_LAYER(0x00, new int[] { 1, 2, 3, 4, 4, 8, 8, 8, 0 }),
 

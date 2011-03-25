@@ -26,7 +26,7 @@ public interface DeviceDescriptor
     * @param in - the input stream to read.
     * @param length - the number of bytes that the application shall read
     * 
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    void readData(DataInput in, int length) throws IOException;
 
@@ -35,7 +35,7 @@ public interface DeviceDescriptor
     * 
     * @param out - the output stream to write to.
     *
-    * @throws IOException
+    * @throws IOException in case of I/O problems.
     */
    void writeData(DataOutput out) throws IOException;
 }

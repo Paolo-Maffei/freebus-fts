@@ -279,7 +279,7 @@ public final class VdxFileReader
          for (int i = 0; i < num; ++i)
          {
             final Object obj = entryClass.newInstance();
-            final String values[] = section.getElementValues(i);
+            final String[] values = section.getElementValues(i);
 
             if (languageIdx >= 0 && languageId > 0)
             {

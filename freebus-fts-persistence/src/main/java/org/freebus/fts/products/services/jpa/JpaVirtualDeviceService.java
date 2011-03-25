@@ -12,6 +12,9 @@ import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
+/**
+ * JPA {@link VirtualDevice} service.
+ */
 public final class JpaVirtualDeviceService implements VirtualDeviceService
 {
    private final EntityManager entityManager;

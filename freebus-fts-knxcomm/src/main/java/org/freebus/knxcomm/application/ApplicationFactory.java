@@ -60,7 +60,7 @@ public final class ApplicationFactory
     * @param data - the data to process.
     * 
     * @return the created application object.
-    * @throws IOException
+    * @throws IOException if the data cannot be read.
     */
    public static Application createApplication(final byte[] data) throws IOException
    {
@@ -76,7 +76,7 @@ public final class ApplicationFactory
     * @param data - the data to process.
     * 
     * @return the created application object.
-    * @throws IOException
+    * @throws IOException if the data cannot be read.
     */
    public static Application createApplication(int apciHighBits, byte[] data) throws IOException
    {

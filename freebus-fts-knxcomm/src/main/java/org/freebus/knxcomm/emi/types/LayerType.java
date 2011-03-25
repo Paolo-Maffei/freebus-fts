@@ -1,7 +1,7 @@
 package org.freebus.knxcomm.emi.types;
 
 /**
- * PEI Layer types
+ * PEI Layer types.
  */
 public enum LayerType
 {
@@ -80,6 +80,10 @@ public enum LayerType
    }
 
    /**
+    * Get the layer type for a layer id.
+    * 
+    * @param id - the layer id to lookup.
+    * 
     * @return the layer type for the given layer id.
     *
     * @throws IllegalArgumentException if the layer id is invalid.

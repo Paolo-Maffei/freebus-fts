@@ -93,12 +93,12 @@ public enum DataPointType
    Date(24),
 
    /**
-    * Unsigned long value (4 bytes)
+    * Unsigned long value (4 bytes).
     */
    UnsignedLong(32),
 
    /**
-    * Signed long value (4 bytes)
+    * Signed long value (4 bytes).
     */
    SignedLong(32),
 
@@ -125,7 +125,7 @@ public enum DataPointType
    SceneNumber(8),
 
    /**
-    * Scene control (1 byte)
+    * Scene control (1 byte).
     * <p>
     * Bit 7: control - 0 to activate the scene, 1 - to learn the scene <br>
     * Bit 6: reserved <br>
@@ -134,7 +134,7 @@ public enum DataPointType
    SceneControl(8),
 
    /**
-    * Date time (8 bytes)
+    * Date time (8 bytes).
     *
     * Byte 0: year <br>
     * Byte 1: month <br>
@@ -175,7 +175,7 @@ public enum DataPointType
    DeviceControl(8),
 
    /**
-    * 2 bit enum
+    * 2 bit enum.
     */
    ShortEnum(2),
 
@@ -186,7 +186,7 @@ public enum DataPointType
    VarString(-1),
 
    /**
-    * Scene info (1 byte)
+    * Scene info (1 byte).
     * <p>
     * Bit 7: reserved <br>
     * Bit 6: scene is active flag <br>

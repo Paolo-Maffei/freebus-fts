@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.persistence.EntityTransaction;
 
 import org.apache.log4j.Logger;
+import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.products.BcuType;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.CommunicationObject;
@@ -26,7 +27,6 @@ import org.freebus.fts.products.S19Block;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.BcuTypeService;
 import org.freebus.fts.products.services.CatalogEntryService;
-import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.FunctionalEntityService;
 import org.freebus.fts.products.services.MaskService;
 import org.freebus.fts.products.services.ProductDescriptionService;

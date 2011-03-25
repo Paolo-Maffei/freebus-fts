@@ -9,12 +9,12 @@ import java.util.TreeMap;
 
 import javax.persistence.PersistenceException;
 
+import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.persistence.vdx.VdxSection;
 import org.freebus.fts.persistence.vdx.VdxSectionHeader;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.ProductDescription;
-import org.freebus.fts.products.services.DAOException;
 import org.freebus.fts.products.services.ProductDescriptionService;
 
 /**

@@ -36,9 +36,9 @@ import org.freebus.fts.elements.components.ToolBar;
 import org.freebus.fts.elements.components.ToolBarButton;
 import org.freebus.fts.elements.models.FilteredListModel;
 import org.freebus.fts.elements.services.ImageCache;
+import org.freebus.knxcomm.application.AbstractMemory;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
-import org.freebus.knxcomm.application.Memory;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.application.MemoryResponse;
 import org.freebus.knxcomm.application.MemoryWrite;
@@ -178,11 +178,11 @@ public class BusTraceViewer extends WorkBenchEditor
          }
          else if (app instanceof MemoryRead || app instanceof MemoryWrite)
          {
-            ((Memory) app).setAddressMapper(addrMappers.get(telegram.getDest()));
+            ((AbstractMemory) app).setAddressMapper(addrMappers.get(telegram.getDest()));
          }
          else if (app instanceof MemoryResponse)
          {
-            ((Memory) app).setAddressMapper(addrMappers.get(telegram.getFrom()));
+            ((AbstractMemory) app).setAddressMapper(addrMappers.get(telegram.getFrom()));
          }
       }
 

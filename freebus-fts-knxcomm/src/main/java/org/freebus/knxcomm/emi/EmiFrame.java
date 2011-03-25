@@ -5,7 +5,6 @@ import java.io.DataOutput;
 import java.io.IOException;
 
 import org.freebus.knxcomm.emi.types.EmiFrameType;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
 /**
  * Interface for "External Message Interface" (EMI) frames.
@@ -24,7 +23,7 @@ public interface EmiFrame
     *
     * @param in - the input stream to read.
     *
-    * @throws InvalidDataException
+    * @throws IOException in case of read problems.
     */
    public void readData(DataInput in) throws IOException;
 
@@ -35,7 +34,7 @@ public interface EmiFrame
     *
     * @param out - the output stream to write the object to.
     *
-    * @throws IOException
+    * @throws IOException in case of write problems.
     */
    public void writeData(DataOutput out) throws IOException;
 

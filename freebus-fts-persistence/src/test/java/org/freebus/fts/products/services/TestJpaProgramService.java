@@ -8,6 +8,7 @@ import static org.junit.Assert.assertNotSame;
 import java.util.List;
 
 import org.freebus.fts.persistence.db.DatabaseResources;
+import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Program;

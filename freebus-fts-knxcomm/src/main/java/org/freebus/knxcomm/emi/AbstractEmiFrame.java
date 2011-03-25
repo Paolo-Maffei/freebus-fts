@@ -27,15 +27,18 @@ public abstract class AbstractEmiFrame implements EmiFrame
    /**
     * Create a new message and set the message type.
     * Internal constructor for subclasses.
+    * 
+    * @param type - the frame type.
     */
    protected AbstractEmiFrame(EmiFrameType type)
    {
       this.type = type;
    }
 
-   /* (non-Javadoc)
-    * @see org.freebus.fts.eib.EmiMessageInterface#getType()
+   /**
+    * {@inheritDoc}
     */
+   @Override
    public final EmiFrameType getType()
    {
       return type;
@@ -56,16 +59,19 @@ public abstract class AbstractEmiFrame implements EmiFrame
    /**
     * {@inheritDoc}
     */
+   @Override
    public abstract void readData(DataInput in) throws IOException;
 
    /**
     * {@inheritDoc}
     */
+   @Override
    public abstract void writeData(DataOutput out) throws IOException;
 
    /**
     * {@inheritDoc}
     */
+   @Override
    final public byte[] toByteArray()
    {
       final ByteArrayOutputStream outByteStream = new ByteArrayOutputStream(1024);
@@ -82,16 +88,6 @@ public abstract class AbstractEmiFrame implements EmiFrame
       {
          throw new RuntimeException();
       }
-   }
-
-   /**
-    * @return the address as a string: "xx.xx.xx" for a physical address,
-    * "xx/xx/xx" for a group address.
-    */
-   protected String addrToString(int addr, boolean isGroup)
-   {
-      if (isGroup) return String.format("%d/%d/%d", (addr>>11)&15, (addr>>7)&15, addr&127);
-      return String.format("%d.%d.%d", (addr>>12)&15, (addr>>8)&15, addr&255);
    }
 
    /**

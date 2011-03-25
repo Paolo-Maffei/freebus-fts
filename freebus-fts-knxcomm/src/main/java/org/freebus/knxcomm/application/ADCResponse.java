@@ -43,6 +43,8 @@ public class ADCResponse extends ADCRead
 
    /**
     * Set the sum of the {@link #getCount count} samples.
+    * 
+    * @param value - the value to set.
     */
    public void setValue(int value)
    {

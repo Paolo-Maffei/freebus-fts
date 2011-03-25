@@ -13,27 +13,39 @@ public interface BcuTypeService
 {
    /**
     * Get a BCU type by id.
-    *
+    * 
+    * @param id - the id to get.
+    * @return The BCU type.
+    * 
     * @throws PersistenceException if the object does not exist
     */
-   public BcuType getBcuType(int id) throws PersistenceException;
+   BcuType getBcuType(int id) throws PersistenceException;
 
    /**
     * Get all BCU types.
+    * 
+    * @return A list with all BCU types.
+    * @throws PersistenceException if the objects cannot be read.
     */
-   public List<BcuType> getBcuTypes() throws PersistenceException;
+   List<BcuType> getBcuTypes() throws PersistenceException;
 
    /**
     * Persist the given BCU type.
+    * 
+    * @param bcuType - the BCU type to persist.
+    * @throws PersistenceException if the object cannot be persisted.
     */
-   public void persist(BcuType bcuType) throws PersistenceException;
+   void persist(BcuType bcuType) throws PersistenceException;
 
    /**
     * Merge the state of the given BCU type into the current persistence
     * context.
     * 
-    * @return the BCU type. The returned object may be different from the
-    *         given object.
+    * @param bcuType - the BCU type to merge.
+    * 
+    * @return the BCU type. The returned object may be different from the given
+    *         object.
+    * @throws PersistenceException if the object cannot be merged.
     */
-   public BcuType merge(BcuType bcuType) throws PersistenceException;
+   BcuType merge(BcuType bcuType) throws PersistenceException;
 }

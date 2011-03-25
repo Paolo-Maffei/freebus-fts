@@ -7,7 +7,6 @@ import java.util.concurrent.TimeoutException;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.ApplicationType;
-import org.freebus.knxcomm.application.Memory;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
 
@@ -99,7 +98,7 @@ public interface DataConnection
     *
     * @return the received application
     *
-    * @throws IOException
+    * @throws IOException in case of receive problems.
     */
    public Application receive(int timeout) throws IOException;
 
@@ -112,7 +111,7 @@ public interface DataConnection
     *
     * @return a list with the received applications.
     *
-    * @throws IOException
+    * @throws IOException in case of receive problems.
     */
    public List<Application> receiveMultiple(int timeout) throws IOException;
 

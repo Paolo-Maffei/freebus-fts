@@ -62,7 +62,7 @@ public final class VdxProductsFactory implements ProductsFactory
     * @param file - the vd_ file that is processed.
     * @param persistenceUnitName - the name of the persistence unit.
     *
-    * @throws PersistenceException
+    * @throws PersistenceException if the file could not be read.
     */
    public VdxProductsFactory(File file, String persistenceUnitName) throws PersistenceException
    {

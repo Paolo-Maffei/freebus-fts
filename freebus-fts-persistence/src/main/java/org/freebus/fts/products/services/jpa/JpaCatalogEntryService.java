@@ -12,6 +12,9 @@ import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.services.CatalogEntryService;
 
+/**
+ * JPA {@link CatalogEntry} service.
+ */
 public final class JpaCatalogEntryService implements CatalogEntryService
 {
    private final EntityManager entityManager;
@@ -33,8 +36,7 @@ public final class JpaCatalogEntryService implements CatalogEntryService
    }
 
    @Override
-   public List<CatalogEntry> getCatalogEntries(Manufacturer m, FunctionalEntity[] functionalEntities)
-         throws PersistenceException
+   public List<CatalogEntry> getCatalogEntries(Manufacturer m, FunctionalEntity[] functionalEntities) throws PersistenceException
    {
       if (functionalEntities == null || functionalEntities.length < 1 || m == null)
          return new LinkedList<CatalogEntry>();

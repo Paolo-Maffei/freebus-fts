@@ -6,6 +6,9 @@ import javax.persistence.PersistenceException;
 import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.services.MaskService;
 
+/**
+ * JPA {@link Mask} service.
+ */
 public final class JpaMaskService implements MaskService
 {
    private final EntityManager entityManager;

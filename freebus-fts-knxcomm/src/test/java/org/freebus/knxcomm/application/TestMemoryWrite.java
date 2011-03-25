@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 /**
- * Reduced tests, as testing of {@link MemoryData} is done in
+ * Reduced tests, as testing of {@link AbstractMemoryData} is done in
  * {@link TestMemoryResponse}.
  */
 public class TestMemoryWrite

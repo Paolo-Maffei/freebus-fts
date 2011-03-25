@@ -13,7 +13,7 @@ import org.freebus.fts.common.address.GroupAddress;
 public final class GroupValueRead extends AbstractApplication
 {
    /**
-    * Create an empty group-value read object
+    * Create an empty group-value read object.
     */
    public GroupValueRead()
    {

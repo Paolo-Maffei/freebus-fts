@@ -5,7 +5,7 @@ import org.freebus.knxcomm.application.memory.MemoryLocation;
 /**
  * Response to a {@link MemoryRead memory read} request.
  */
-public class MemoryResponse extends MemoryData
+public class MemoryResponse extends AbstractMemoryData
 {
    /**
     * Create a memory response object with address 0 and no data.

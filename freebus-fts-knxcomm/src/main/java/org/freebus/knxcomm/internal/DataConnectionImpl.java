@@ -11,10 +11,10 @@ import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
+import org.freebus.knxcomm.application.AbstractMemory;
 import org.freebus.knxcomm.application.Application;
 import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
-import org.freebus.knxcomm.application.Memory;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor0;
 import org.freebus.knxcomm.application.memory.MemoryAddressMapper;
 import org.freebus.knxcomm.application.memory.MemoryAddressMapperFactory;
@@ -313,8 +313,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void send(Application application) throws IOException, TimeoutException
    {
-      if (application instanceof Memory && memoryAddressMapper != null)
-         ((Memory) application).setAddressMapper(memoryAddressMapper);
+      if (application instanceof AbstractMemory && memoryAddressMapper != null)
+         ((AbstractMemory) application).setAddressMapper(memoryAddressMapper);
 
       synchronized (sendTelegram)
       {
@@ -335,8 +335,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public void sendUnconfirmed(Application application) throws IOException
    {
-      if (application instanceof Memory && memoryAddressMapper != null)
-         ((Memory) application).setAddressMapper(memoryAddressMapper);
+      if (application instanceof AbstractMemory && memoryAddressMapper != null)
+         ((AbstractMemory) application).setAddressMapper(memoryAddressMapper);
 
       synchronized (sendTelegram)
       {
@@ -360,8 +360,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       // To install the mapper here is only required if the log output below
       // is enabled. #send(Application) installs the mapper anyways before
       // sending.
-      if (application instanceof Memory && memoryAddressMapper != null)
-         ((Memory) application).setAddressMapper(memoryAddressMapper);
+      if (application instanceof AbstractMemory && memoryAddressMapper != null)
+         ((AbstractMemory) application).setAddressMapper(memoryAddressMapper);
       LOGGER.debug("query - sending: " + application);
 
       //      final long start = System.currentTimeMillis();
@@ -394,9 +394,9 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          return;
 
       final Application app = telegram.getApplication();
-      if (app instanceof Memory && memoryAddressMapper != null)
+      if (app instanceof AbstractMemory && memoryAddressMapper != null)
       {
-         ((Memory) app).setAddressMapper(memoryAddressMapper);
+         ((AbstractMemory) app).setAddressMapper(memoryAddressMapper);
       }
       else if (deviceDescriptor0 == null && app instanceof DeviceDescriptorResponse)
       {
@@ -471,8 +471,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    }
 
    /**
-    * Read the device descriptor #0 from the device and store the mask version in
-    * {@link #deviceDescriptorMaskVersion}
+    * Read the device descriptor #0 from the device. Store the mask version in
+    * {@link #deviceDescriptorMaskVersion}.
     */
    private void readDeviceDescriptor0()
    {

@@ -9,6 +9,9 @@ import javax.persistence.Query;
 import org.freebus.fts.products.BcuType;
 import org.freebus.fts.products.services.BcuTypeService;
 
+/**
+ * JPA {@link BcuType} service.
+ */
 public final class JpaBcuTypeService implements BcuTypeService
 {
    private final EntityManager entityManager;
