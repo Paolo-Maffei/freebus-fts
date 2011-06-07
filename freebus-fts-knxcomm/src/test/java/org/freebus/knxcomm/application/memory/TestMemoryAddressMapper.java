@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
 
+import org.freebus.fts.common.exception.FtsRuntimeException;
 import org.junit.Test;
 
 public class TestMemoryAddressMapper
@@ -20,7 +21,7 @@ public class TestMemoryAddressMapper
       assertEquals(MemoryLocation.MaskType, mapper.getMapping(MemoryLocation.MaskType).getLocation());
    }
 
-   @Test(expected = IOException.class)
+   @Test(expected = FtsRuntimeException.class)
    public void testMemoryAddressMapperNotFound() throws IOException
    {
       MemoryAddressMapper.getProperties(0xffff);
