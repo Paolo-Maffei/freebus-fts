@@ -1,6 +1,5 @@
 package org.freebus.fts.products.services.jpa;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -26,6 +25,21 @@ public final class JpaManufacturerService implements ManufacturerService
    public Manufacturer getManufacturer(int id) throws PersistenceException
    {
       return entityManager.find(Manufacturer.class, id);
+   }
+
+   @Override
+   public Manufacturer getManufacturer(String name) throws PersistenceException
+   {
+      final Query query = entityManager.createQuery("select m from Manufacturer m where m.name = ?1");
+      query.setParameter(1, name);
+      try
+      {
+         return (Manufacturer) query.getSingleResult();
+      }
+      catch (PersistenceException e)
+      {
+         throw new PersistenceException("Failed to load manufacturer \"" + name +"\"", e);
+      }
    }
 
    @SuppressWarnings("unchecked")
@@ -68,12 +82,5 @@ public final class JpaManufacturerService implements ManufacturerService
    public Manufacturer merge(Manufacturer manufacturer) throws PersistenceException
    {
       return entityManager.merge(manufacturer);
-   }
-
-   @Override
-   public void save(Collection<Manufacturer> manufacturers) throws PersistenceException
-   {
-      for (Manufacturer manufacturer: manufacturers)
-         entityManager.persist(manufacturer);
    }
 }

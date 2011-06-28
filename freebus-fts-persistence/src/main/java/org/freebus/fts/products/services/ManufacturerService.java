@@ -1,6 +1,5 @@
 package org.freebus.fts.products.services;
 
-import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.PersistenceException;
@@ -15,48 +14,71 @@ public interface ManufacturerService
    /**
     * Get a manufacturer by id.
     * 
+    * @param id - the ID of the manufacturer to get.
+    * 
+    * @return The manufacturer
     * @throws PersistenceException if the object does not exist
     */
-   public Manufacturer getManufacturer(int manufacturerId) throws PersistenceException;
+   Manufacturer getManufacturer(int id) throws PersistenceException;
 
    /**
-    * Get all manufacturers.
+    * Get a manufacturer by name.
+    * 
+    * @param name - the name of the manufacturer to get.
+    * 
+    * @return The manufacturer
+    * @throws PersistenceException if the object does not exist
     */
-   public List<Manufacturer> getManufacturers() throws PersistenceException;
+   Manufacturer getManufacturer(String name) throws PersistenceException;
 
    /**
-    * Get all manufacturers that own at least one functional entity.
+    * @return Get all manufacturers.
+    * @throws PersistenceException in case of problems.
     */
-   public List<Manufacturer> getActiveManufacturers() throws PersistenceException;
+   List<Manufacturer> getManufacturers() throws PersistenceException;
+
+   /**
+    * @return Get all manufacturers that own at least one functional entity.
+    * @throws PersistenceException in case of problems.
+    */
+   List<Manufacturer> getActiveManufacturers() throws PersistenceException;
 
    /**
     * Save the manufacturer if no manufacturer with the same manufacturer-id
     * exists in the database.
+    * 
+    * @param manufacturer - the manufacturer to save.
+    * 
+    * @throws PersistenceException in case of problems.
     */
-   public void saveIfMissing(Manufacturer manufacturer) throws PersistenceException;
+   void saveIfMissing(Manufacturer manufacturer) throws PersistenceException;
 
    /**
     * Persist the given manufacturer.
     * 
-    * @return the manufacturer. The returned object may be different from the
-    *         given object.
+    * @param manufacturer - the manufacturer to persist.
+    * 
+    * @throws PersistenceException in case of problems.
     */
-   public void persist(Manufacturer manufacturer) throws PersistenceException;
+   void persist(Manufacturer manufacturer) throws PersistenceException;
 
    /**
     * Merge the state of the given manufacturer into the current persistence
     * context.
+    * 
+    * @param manufacturer - the manufacturer to merge.
+    * 
+    * @return The manufacturer. The returned object may be different from the
+    *         given object.
+    * @throws PersistenceException in case of problems.
     */
    public Manufacturer merge(Manufacturer manufacturer) throws PersistenceException;
 
    /**
-    * Save multiple manufacturers.
-    */
-   @Deprecated
-   public void save(Collection<Manufacturer> manufacturers) throws PersistenceException;
-
-   /**
     * Delete a manufacturer.
+    * 
+    * @param manufacturer - the manufacturer to delete.
+    * @throws PersistenceException in case of problems.
     */
    public void remove(Manufacturer manufacturer) throws PersistenceException;
 }

@@ -13,7 +13,7 @@ import org.junit.Before;
 /**
  * Base class for persistence test cases that require an entity manager.
  */
-public abstract class PersistenceTestCase
+public abstract class OldPersistenceTestCase
 {
    static
    {
@@ -23,22 +23,27 @@ public abstract class PersistenceTestCase
    /**
     * The name of the persistence unit, as given in the constructor.
     */
-   static protected String persistenceUnitName;
+   protected final String persistenceUnitName;
 
    /**
     * The connection details for the test connection.
     */
-   static protected ConnectionDetails conDetails;
+   protected final ConnectionDetails conDetails;
+
+   /**
+    * The name of the H2 / HSQL database.
+    */
+   protected final String databaseName = getClass().getSimpleName();
 
    /**
     * Create a persistence test case.
     *
     * @param persistenceUnitName - the name of the persistence unit to use.
     */
-   public PersistenceTestCase(final String persistenceUnitName)
+   public OldPersistenceTestCase(final String persistenceUnitName)
    {
       this.persistenceUnitName = persistenceUnitName;
-      conDetails = new ConnectionDetails(DriverType.H2_MEM, persistenceUnitName);
+      conDetails = new ConnectionDetails(DriverType.H2_MEM, databaseName);
    }
 
    /**

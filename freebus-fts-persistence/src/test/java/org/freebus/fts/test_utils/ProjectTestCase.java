@@ -1,11 +1,14 @@
 package org.freebus.fts.test_utils;
 
+import org.freebus.fts.products.ProductsManager;
+import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectFactory;
 
-public abstract class ProjectTestCase extends PersistenceTestCase
+public abstract class ProjectTestCase extends OldPersistenceTestCase
 {
    private ProjectFactory projectFactory;
+   private ProductsFactory productsFactory;
 
    public ProjectTestCase(final String persistenceUnitName)
    {
@@ -26,5 +29,16 @@ public abstract class ProjectTestCase extends PersistenceTestCase
          projectFactory = ProjectManager.getProjectFactory();
 
       return projectFactory;
+   }
+
+   /**
+    * @return the unit-test products factory
+    */
+   public ProductsFactory getProductsFactory()
+   {
+      if (productsFactory == null)
+         productsFactory = ProductsManager.getFactory();
+
+      return productsFactory;
    }
 }

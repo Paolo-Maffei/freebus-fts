@@ -22,6 +22,8 @@ public interface Link
     * Open the connection to the bus.
     * 
     * @param mode - the link mode to set for the connection.
+    * 
+    * @throws IOException if the open fails
     */
    public void open(LinkMode mode) throws IOException;
 

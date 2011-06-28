@@ -7,7 +7,7 @@ import org.freebus.fts.products.services.ProductsFactory;
 import org.junit.After;
 import org.junit.Before;
 
-public abstract class ProductsTestCase extends PersistenceTestCase
+public abstract class ProductsTestCase extends OldPersistenceTestCase
 {
    private ProductsFactory jpaProductsFactory;
    private ProductsFactory vdxProductsFactory;

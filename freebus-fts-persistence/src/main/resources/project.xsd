@@ -36,14 +36,14 @@
 
  <xs:complexType name="DeviceType">
   <xs:sequence>
-   <xs:element name="catalogEntry" type="CatalogEntryRef" minOccurs="1" maxOccurs="1" />
+   <xs:element name="virtualDevice" type="VirtualDeviceRef" minOccurs="1" maxOccurs="1" />
    <xs:element name="program" type="ProgramRef" minOccurs="0" maxOccurs="1" />
   </xs:sequence>
   <xs:attribute name="name" type="xs:string" />
   <xs:attribute name="address" type="xs:int" use="required" />
  </xs:complexType>
 
- <xs:complexType name="CatalogEntryRef">
+ <xs:complexType name="VirtualDeviceRef">
   <xs:attribute name="name" type="xs:string" use="required" />
   <xs:attribute name="manufacturer" type="xs:string" use="required" />
  </xs:complexType>
@@ -52,7 +52,7 @@
   <xs:attribute name="name" type="xs:string" use="required" />
   <xs:attribute name="version" type="xs:string" />
   <xs:attribute name="deviceType" type="xs:int" use="required" />
-  <xs:attribute name="manufacturer" type="xs:string" use="required" />
+  <xs:attribute name="manufacturer" type="xs:string" use="optional" />
  </xs:complexType>
 
  <xs:complexType name="BuildingsType">

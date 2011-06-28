@@ -1,6 +1,5 @@
 package org.freebus.fts.products.services.vdx;
 
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,6 +29,19 @@ public final class VdxManufacturerService implements ManufacturerService
    public Manufacturer getManufacturer(int id) throws PersistenceException
    {
       return manager.fetch(Manufacturer.class, id);
+   }
+
+   @SuppressWarnings("unchecked")
+   @Override
+   public Manufacturer getManufacturer(String name) throws PersistenceException
+   {
+      for (Manufacturer m : (List<Manufacturer>) manager.fetchAll(Manufacturer.class))
+      {
+         if (name.equals(m.getName()))
+            return m;
+      }
+
+      return null;
    }
 
    @SuppressWarnings("unchecked")
@@ -77,12 +89,6 @@ public final class VdxManufacturerService implements ManufacturerService
 
    @Override
    public void persist(Manufacturer manufacturer) throws PersistenceException
-   {
-      throw new PersistenceException("Sorry, not implemented");
-   }
-
-   @Override
-   public void save(Collection<Manufacturer> manufacturers) throws PersistenceException
    {
       throw new PersistenceException("Sorry, not implemented");
    }

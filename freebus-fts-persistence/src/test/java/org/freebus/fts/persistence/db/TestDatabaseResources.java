@@ -12,10 +12,10 @@ import liquibase.Liquibase;
 
 import org.freebus.fts.common.log.Logging;
 import org.freebus.fts.persistence.test_entities.SampleFunctionalEntity;
-import org.freebus.fts.test_utils.PersistenceTestCase;
+import org.freebus.fts.test_utils.OldPersistenceTestCase;
 import org.junit.Test;
 
-public class TestDatabaseResources extends PersistenceTestCase
+public class TestDatabaseResources extends OldPersistenceTestCase
 {
    static
    {

@@ -13,6 +13,12 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.SchemaFactory;
 
+import org.apache.commons.lang.Validate;
+import org.freebus.fts.common.internal.I18n;
+import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.ProductsManager;
+import org.freebus.fts.products.services.ManufacturerService;
+import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
@@ -21,6 +27,7 @@ import org.freebus.fts.project.integration.generated.AreaType;
 import org.freebus.fts.project.integration.generated.DeviceType;
 import org.freebus.fts.project.integration.generated.LineType;
 import org.freebus.fts.project.integration.generated.ProjectType;
+import org.freebus.fts.project.integration.generated.VirtualDeviceRef;
 import org.xml.sax.SAXException;
 
 /**
@@ -28,6 +35,36 @@ import org.xml.sax.SAXException;
  */
 public class ProjectImporter
 {
+   private final ProductsFactory productsFactory;
+
+   /**
+    * Create a project importer that uses the {@link ProductsManager#getFactory()
+    * default products factory}.
+    */
+   public ProjectImporter()
+   {
+      productsFactory = ProductsManager.getFactory();
+   }
+
+   /**
+    * Create a project importer that uses a specific products factory.
+    * 
+    * @param productsFactory - the products factory to use for imports.
+    */
+   public ProjectImporter(ProductsFactory productsFactory)
+   {
+      Validate.notNull(productsFactory);
+      this.productsFactory = productsFactory;
+   }
+
+   /**
+    * @return The products factory that the importer uses.
+    */
+   public ProductsFactory getProductsFactory()
+   {
+      return productsFactory;
+   }
+
    /**
     * Read the file and create the project it contains.
     * 
@@ -55,7 +92,8 @@ public class ProjectImporter
          final JAXBContext context = JAXBContext.newInstance("org.freebus.fts.project.integration.generated");
 
          final URL schemaUrl = getClass().getClassLoader().getResource("project.xsd");
-         if (schemaUrl == null) throw new RuntimeException("Schema file not found in class path: " + "project.xsd");
+         if (schemaUrl == null)
+            throw new RuntimeException("Schema file not found in class path: " + "project.xsd");
 
          final Unmarshaller unmarshaller = context.createUnmarshaller();
          unmarshaller.setSchema(SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI).newSchema(schemaUrl));
@@ -91,7 +129,7 @@ public class ProjectImporter
             project.add(createArea(xmlArea));
          }
       }
-      
+
       return project;
    }
 
@@ -114,7 +152,7 @@ public class ProjectImporter
             area.add(createLine(xmlLine));
          }
       }
-      
+
       return area;
    }
 
@@ -149,6 +187,12 @@ public class ProjectImporter
     */
    private Device createDevice(DeviceType xmlDevice)
    {
+      final ManufacturerService manuService = productsFactory.getManufacturerService();
+
+      final VirtualDeviceRef xmlVirtDevice = xmlDevice.getVirtualDevice();
+      final Manufacturer virtDeviceManu = manuService.getManufacturer(xmlVirtDevice.getManufacturer());
+      Validate.notNull(virtDeviceManu, I18n.formatMessage("ProjectImporter.ErrNoManufacturer", xmlVirtDevice.getName()));
+
       final Device device = new Device();
       device.setName(xmlDevice.getName());
       device.setAddress(xmlDevice.getAddress());
