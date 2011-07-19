@@ -12,6 +12,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import org.freebus.fts.client.core.I18n;
+import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceProgramming;
 
@@ -108,14 +109,15 @@ public class DeviceProgrammingPanel extends JPanel
 
       final DeviceProgramming progr = device.getProgramming();
       final DateFormat dateFmt = DateFormat.getDateTimeInstance();
-
+      final Color cnever = mixColor(getForeground(), colorNever);
+      
       Date date = progr.getLastModified();
       lastModifiedLabel.setText(date != null ? dateFmt.format(date) : I18n.getMessage("DeviceProgrammingPanel.Unknown"));
-      lastModifiedLabel.setForeground(date != null ? getForeground() : colorNever);
+      lastModifiedLabel.setForeground(date != null ? getForeground() : cnever);
 
       date = progr.getLastUpload();
       lastUploadLabel.setText(date != null ? dateFmt.format(date) : I18n.getMessage("DeviceProgrammingPanel.Unknown"));
-      lastUploadLabel.setForeground(date != null ? getForeground() : colorNever);
+      lastUploadLabel.setForeground(date != null ? getForeground() : cnever);
 
       updateLabel(progr.isCommunicationValid(), communicationLabel);
       updateLabel(progr.isParametersValid(), parametersLabel);
@@ -124,7 +126,7 @@ public class DeviceProgrammingPanel extends JPanel
    }
 
    /**
-    * Update a is-valid label.
+    * Update an "is-valid" label.
     * 
     * @param valid - the valid flag.
     * @param label - the label to update.
@@ -133,18 +135,37 @@ public class DeviceProgrammingPanel extends JPanel
    {
       if (valid == null)
       {
-         label.setForeground(colorNever);
+         label.setIcon(ImageCache.getIcon("icons-small/yellowled"));
+         label.setForeground(mixColor(getForeground(), colorNever));
          label.setText(I18n.getMessage("DeviceProgrammingPanel.Unknown"));
       }
       else if (valid)
       {
-         label.setForeground(colorValid);
+         label.setIcon(ImageCache.getIcon("icons-small/apply"));
+         label.setForeground(mixColor(getForeground(), colorValid));
          label.setText(I18n.getMessage("DeviceProgrammingPanel.Valid"));
       }
       else
       {
-         label.setForeground(colorInvalid);
+         label.setIcon(ImageCache.getIcon("icons-small/quick_restart"));
+         label.setForeground(mixColor(getForeground(), colorInvalid));
          label.setText(I18n.getMessage("DeviceProgrammingPanel.Invalid"));
       }
+   }
+
+   /**
+    * Mix two colors 
+    * 
+    * @param color
+    * @param mixColor
+    * 
+    * @return The mixed color
+    */
+   private Color mixColor(Color color, Color mixColor)
+   {
+      int r = color.getRed() + mixColor.getRed();
+      int g = color.getGreen() + mixColor.getGreen();
+      int b = color.getBlue() + mixColor.getBlue();
+      return new Color(r >> 1, g >> 1, b >> 1);
    }
 }

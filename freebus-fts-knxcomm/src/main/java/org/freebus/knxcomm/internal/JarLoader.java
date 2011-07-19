@@ -11,6 +11,9 @@ public final class JarLoader
 {
    /**
     * Load JARs by dynamically extending the class-path.
+    * 
+    * @param pathNames - the paths of the JARs to load.
+    * @throws Exception on error
     */
    public static void loadJar(String[] pathNames) throws Exception
    {

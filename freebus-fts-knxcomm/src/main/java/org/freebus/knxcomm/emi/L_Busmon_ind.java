@@ -28,6 +28,8 @@ public class L_Busmon_ind extends EmiTelegramFrame
 
    /**
     * Create a L_Busmon.ind message with the given encapsulated telegram.
+    * 
+    * @param telegram - the contained telegram.
     */
    protected L_Busmon_ind(Telegram telegram)
    {
@@ -44,6 +46,8 @@ public class L_Busmon_ind extends EmiTelegramFrame
 
    /**
     * Set the message status byte.
+    * 
+    * @param status - the status byte.
     *
     * @see #getStatus()
     */

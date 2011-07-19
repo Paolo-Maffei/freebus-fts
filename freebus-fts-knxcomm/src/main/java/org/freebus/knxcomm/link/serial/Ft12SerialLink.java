@@ -23,7 +23,7 @@ import org.freebus.knxcomm.event.CloseEvent;
 import org.freebus.knxcomm.event.FrameEvent;
 import org.freebus.knxcomm.exception.KNXAckTimeoutException;
 import org.freebus.knxcomm.exception.KNXPortClosedException;
-import org.freebus.knxcomm.internal.ListenableLink;
+import org.freebus.knxcomm.internal.AbstractListenableLink;
 import org.freebus.knxcomm.types.LinkMode;
 
 /**
@@ -31,7 +31,7 @@ import org.freebus.knxcomm.types.LinkMode;
  *
  * @see BusInterfaceFactory#newSerialInterface(String)
  */
-public class Ft12SerialLink extends ListenableLink
+public class Ft12SerialLink extends AbstractListenableLink
 {
    private static final Logger LOGGER = Logger.getLogger(Ft12SerialLink.class);
 

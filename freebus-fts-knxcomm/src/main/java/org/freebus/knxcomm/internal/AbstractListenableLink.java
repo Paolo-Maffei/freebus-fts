@@ -11,7 +11,7 @@ import org.freebus.knxcomm.link.LinkListener;
 /**
  * An abstract {@link Link} class that has methods for handling listeners.
  */
-public abstract class ListenableLink implements Link
+public abstract class AbstractListenableLink implements Link
 {
    private final CopyOnWriteArrayList<LinkListener> listeners = new CopyOnWriteArrayList<LinkListener>();
 

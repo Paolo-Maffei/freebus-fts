@@ -58,7 +58,13 @@ public final class EmiFrameFactory
       final EmiFrame frame = createFrame(type);
 
       if (frame != null)
+      {
          frame.readData(in);
+      }
+      else
+      {
+    	  
+      }
 
       return frame;
    }

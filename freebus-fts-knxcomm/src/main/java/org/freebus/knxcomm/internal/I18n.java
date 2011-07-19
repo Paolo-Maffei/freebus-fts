@@ -4,19 +4,28 @@ import java.text.MessageFormat;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * Message translator.
+ */
 public class I18n
 {
-   private static final ResourceBundle bundle = ResourceBundle.getBundle("knxcomm-messages");
+   private static final ResourceBundle BUNDLE = ResourceBundle.getBundle("knxcomm-messages");
 
    private I18n()
    {
    }
 
+   /**
+    * Get a translated message from a key.
+    *  
+    * @param key - the message key.
+    * @return The translated message.
+    */
    public static String getMessage(String key)
    {
       try
       {
-         return bundle.getString(key);
+         return BUNDLE.getString(key);
       }
       catch (MissingResourceException e)
       {

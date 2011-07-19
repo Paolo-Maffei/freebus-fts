@@ -56,6 +56,8 @@ public class BusInterfaceImpl implements BusInterface
    /**
     * Create a bus-interface object that uses the given connection for the bus
     * communication.
+    * 
+    * @param con - the connection to use.
     */
    public BusInterfaceImpl(Link con)
    {
@@ -178,6 +180,8 @@ public class BusInterfaceImpl implements BusInterface
 
    /**
     * Notify all listeners that the given telegram was received.
+    * 
+    * @param telegram - the telegram that was received.
     */
    protected void notifyListenersReceived(final Telegram telegram)
    {
@@ -187,6 +191,8 @@ public class BusInterfaceImpl implements BusInterface
 
    /**
     * Notify all listeners that the given telegram was sent.
+    * 
+    * @param telegram - the telegram that was sent.
     */
    protected void notifyListenersSent(final Telegram telegram)
    {
@@ -273,7 +279,7 @@ public class BusInterfaceImpl implements BusInterface
       }
 
       /**
-       * The receiver's main loop
+       * The receiver's main loop.
        */
       @Override
       public void run()

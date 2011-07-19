@@ -21,7 +21,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.event.CloseEvent;
 import org.freebus.knxcomm.event.FrameEvent;
-import org.freebus.knxcomm.internal.ListenableLink;
+import org.freebus.knxcomm.internal.AbstractListenableLink;
 import org.freebus.knxcomm.link.Link;
 import org.freebus.knxcomm.link.netip.frames.ConnectRequest;
 import org.freebus.knxcomm.link.netip.frames.ConnectResponse;
@@ -43,7 +43,7 @@ import org.freebus.knxcomm.types.LinkMode;
 /**
  * A KNXnet/IP connection.
  */
-public final class KNXnetLink extends ListenableLink implements Link
+public final class KNXnetLink extends AbstractListenableLink implements Link
 {
    private final static Logger LOGGER = Logger.getLogger(KNXnetLink.class);
 

@@ -17,9 +17,8 @@ public final class SystemPathLoader
     * {@link System#loadLibrary}.
     * 
     * @param libPath - the path to the library that shall be loaded.
-    * @param libName - the name of the library, without system specific
-    *           extensions like ".dll"
-    * @throws Exception
+    * @param libName - the name of the library, without system specific extensions like ".dll"
+    * @throws Exception on error
     */
    public static void loadLibrary(String libPath, String libName) throws Exception
    {

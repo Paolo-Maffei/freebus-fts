@@ -3,12 +3,15 @@ package org.freebus.fts.test_utils;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 
 /**
  * Base class for persistence test cases that require an entity manager.
@@ -45,12 +48,12 @@ public abstract class OldPersistenceTestCase
       this.persistenceUnitName = persistenceUnitName;
       conDetails = new ConnectionDetails(DriverType.H2_MEM, databaseName);
    }
-
+   
    /**
     * Start a transaction and prepare for rollback only.
     */
    @Before
-   public final void setUpPersistenceTestCase()
+   public final void setupTransaction()
    {
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName, conDetails);
       DatabaseResources.setEntityManagerFactory(emf);
@@ -64,9 +67,17 @@ public abstract class OldPersistenceTestCase
     * Rollback the database transaction.
     */
    @After
-   public final void tearDownPersistenceTestCase()
+   public final void tearDownTransaction()
    {
       DatabaseResources.getEntityManager().getTransaction().rollback();
+   }
+
+   /**
+    * Close the database connection.
+    */
+   @AfterClass
+   public static final void closeDatabase()
+   {
       DatabaseResources.close();
    }
 }
