@@ -7,7 +7,6 @@
   <version>0.1-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
- <groupId>org.freebus.fts</groupId>
  <artifactId>freebus-fts-elements</artifactId>
  <name>freebus-fts-elements</name>
  <description>Components that come with FTS but do not contain FTS specific code.</description>

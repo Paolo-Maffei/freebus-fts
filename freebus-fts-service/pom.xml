@@ -7,7 +7,6 @@
   <version>0.1-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
- <groupId>org.freebus.fts</groupId>
  <artifactId>freebus-fts-service</artifactId>
  <name>freebus-fts-service</name>
  <description>Service/backend classes that have access to the KNX bus and the FTS project / products</description>

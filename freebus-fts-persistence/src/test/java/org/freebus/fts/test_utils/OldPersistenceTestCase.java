@@ -3,7 +3,6 @@ package org.freebus.fts.test_utils;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
@@ -11,7 +10,6 @@ import org.freebus.fts.persistence.db.DriverType;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 
 /**
  * Base class for persistence test cases that require an entity manager.

@@ -77,13 +77,13 @@
   <dependency>
    <groupId>junit</groupId>
    <artifactId>junit</artifactId>
-   <version>4.8.1</version>
+   <!-- <version>4.8.1</version> -->
    <scope>test</scope>
   </dependency>
   <dependency>
    <groupId>commons-lang</groupId>
    <artifactId>commons-lang</artifactId>
-   <version>2.6</version>
+   <!-- <version>2.6</version> -->
    <type>jar</type>
    <scope>compile</scope>
   </dependency>
@@ -94,12 +94,12 @@
    <plugin>
     <groupId>org.apache.maven.plugins</groupId>
     <artifactId>maven-compiler-plugin</artifactId>
-    <version>2.3.2</version>
+    <!-- <version>2.3.2</version> -->
    </plugin>
    <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>cobertura-maven-plugin</artifactId>
-    <version>2.4</version>
+    <!-- <version>2.4</version> -->
    </plugin>
 
   </plugins>
