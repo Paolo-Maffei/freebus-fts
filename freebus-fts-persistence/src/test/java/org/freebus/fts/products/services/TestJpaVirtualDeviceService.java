@@ -59,7 +59,7 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
    {
       List<VirtualDevice> virtDevs = virtDevService.getVirtualDevices();
       assertNotNull(virtDevs);
-      assertEquals(2, virtDevs.size());
+      assertEquals(3, virtDevs.size());
       assertTrue(virtDevs.contains(virtDev1));
    }
 
