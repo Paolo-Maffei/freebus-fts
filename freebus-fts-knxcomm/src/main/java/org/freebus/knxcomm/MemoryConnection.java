@@ -46,7 +46,28 @@ public class MemoryConnection implements MemoryConnectionInterface
    @Override
    public byte[] read(int address, int count) throws IOException, TimeoutException
    {
-      return read(new MemoryRead(address, count));
+      final MemoryRead memoryRead = new MemoryRead();
+      MemoryResponse memoryResponse;
+
+      final int endAddress = address + count;
+      final int maxBlockSize = 12;
+      final byte[] data = new byte[count];
+      int rlen;
+
+      for (int idx = -1; address < endAddress; address += rlen, count -= rlen)
+      {
+         rlen = count > maxBlockSize ? maxBlockSize : count;
+
+         memoryRead.setAddress(address);
+         memoryRead.setCount(rlen);
+         memoryResponse = (MemoryResponse) connection.query(memoryRead);
+
+         final byte[] dataBlock = memoryResponse.getData();
+         for (int i = 0; i < rlen; ++i)
+            data[++idx] = dataBlock[i];
+      }
+
+      return data;
    }
 
    /**
@@ -55,7 +76,8 @@ public class MemoryConnection implements MemoryConnectionInterface
    @Override
    public byte[] read(MemoryLocation location) throws IOException, TimeoutException
    {
-      return read(new MemoryRead(location));
+      final MemoryRead memRead = new MemoryRead(location);
+      return read(memRead.getAddress(), memRead.getCount());
    }
 
    /**
@@ -64,7 +86,8 @@ public class MemoryConnection implements MemoryConnectionInterface
    @Override
    public byte[] read(MemoryLocation location, int offset, int count) throws IOException, TimeoutException
    {
-      return read(new MemoryRead(location, offset, count));
+      final MemoryRead memRead = new MemoryRead(location, offset, count);
+      return read(memRead.getAddress(), memRead.getCount());
    }
 
    /**
