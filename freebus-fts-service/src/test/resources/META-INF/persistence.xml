@@ -2,7 +2,7 @@
 <persistence xmlns="http://java.sun.com/xml/ns/persistence"
  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
  xsi:schemaLocation="http://java.sun.com/xml/ns/persistence persistence_2_0.xsd"
- version="2.0">
+ version="1.0">
 
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
@@ -38,10 +38,21 @@
   <class>org.freebus.fts.project.SubGroup</class>
   <class>org.freebus.fts.project.SubGroupToObject</class>
   <properties>
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
    <property name="eclipselink.logging.level" value="INFO" />
-   <property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
    <property name="eclipselink.ddl-generation.output-mode" value="database" />
+   <property name="eclipselink.ddl-generation" value="none" />
+   <!-- property name="eclipselink.ddl-generation" value="create-tables" /-->
+   <!-- property name="eclipselink.ddl-generation" value="drop-and-create-tables" /-->
+   <!-- property name="eclipselink.ddl-generation.output-mode" value="database" /-->
+
+   <property name="hsqldb.default_table_type" value="cached" />
   </properties>
+ </persistence-unit>
+
+ <persistence-unit name="connect-test">
+   <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
+   <property name="eclipselink.logging.level" value="FINE" />
  </persistence-unit>
 
 </persistence>

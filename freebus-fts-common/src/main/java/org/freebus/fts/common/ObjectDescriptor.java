@@ -191,7 +191,8 @@ public class ObjectDescriptor
    }
    
    /**
-    * Initialize the object descriptor from a 3 byte array.
+    * Initialize the object descriptor from a 3 byte array starting at a
+    * specific offset.
     * 
     * @param data - the raw data to use.
     * @param offset - the offset within data.

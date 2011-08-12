@@ -78,18 +78,19 @@ public abstract class ListenableJob implements Job
       }
       catch (IOException e)
       {
-         notifyListener(100, null);
          throw new JobFailedException(e);
       }
       catch (TimeoutException e)
       {
-         notifyListener(100, null);
          throw new JobFailedException(e);
       }
       finally
       {
          if (initDone)
+         {
+            notifyListener(100, null);
             cleanup(bus);
+         }
 
          active = false;
       }

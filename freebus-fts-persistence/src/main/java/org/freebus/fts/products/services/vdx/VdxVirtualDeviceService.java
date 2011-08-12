@@ -10,6 +10,7 @@ import javax.persistence.PersistenceException;
 import org.freebus.fts.persistence.vdx.VdxEntityManager;
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
@@ -63,6 +64,12 @@ public final class VdxVirtualDeviceService implements VirtualDeviceService
       }
 
       return results;
+   }
+
+   @Override
+   public List<VirtualDevice> findVirtualDevices(Program program)
+   {
+      throw new PersistenceException("Sorry, not implemented");
    }
 
    @Override

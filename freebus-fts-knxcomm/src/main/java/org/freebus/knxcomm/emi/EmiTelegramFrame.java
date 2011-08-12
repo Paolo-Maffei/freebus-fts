@@ -2,18 +2,19 @@ package org.freebus.knxcomm.emi;
 
 import java.io.DataInput;
 import java.io.DataOutput;
+import java.io.FilterInputStream;
 import java.io.IOException;
 
 import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.telegram.Telegram;
 
 /**
- *  Base class for EMI frames that contain a {@link Telegram} telegram.
- *  Used for e.g. {@link L_Data_ind},  {@link L_Busmon_ind}.
+ * Base class for EMI frames that contain a {@link Telegram} telegram. Used for
+ * e.g. {@link L_Data_ind}, {@link L_Busmon_ind}.
  */
 public abstract class EmiTelegramFrame extends AbstractEmiFrame
 {
-   protected final Telegram telegram;
+   protected Telegram telegram;
    protected boolean forceExtTelegram;
 
    /**
@@ -30,7 +31,7 @@ public abstract class EmiTelegramFrame extends AbstractEmiFrame
 
    /**
     * Create an empty frame object.
-    *
+    * 
     * @param type - the frame type.
     */
    protected EmiTelegramFrame(EmiFrameType type)
@@ -39,13 +40,14 @@ public abstract class EmiTelegramFrame extends AbstractEmiFrame
    }
 
    /**
-    * @return the contained telegram.
+    * @return the contained telegram, or null if the frame is a confirmation
+    *         frame.
     */
    public Telegram getTelegram()
    {
       return telegram;
    }
-
+   
    /**
     * @return true if enforcing long telegrams is enabled.
     */
@@ -55,11 +57,11 @@ public abstract class EmiTelegramFrame extends AbstractEmiFrame
    }
 
    /**
-    * Set if extended telegrams shall be enforced. If enabled, telegrams
-    * read are always expected to be extended frame format, and telegrams
-    * written will always be in extended frame format. Default is to
-    * depend on the telegram's frame format bit.
-    *
+    * Set if extended telegrams shall be enforced. If enabled, telegrams read
+    * are always expected to be extended frame format, and telegrams written
+    * will always be in extended frame format. Default is to depend on the
+    * telegram's frame format bit.
+    * 
     * @param enable - enforce long telegram format
     */
    public void setForceExtTelegram(boolean enable)

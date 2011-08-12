@@ -67,7 +67,7 @@ public final class ProjectUtils
 
       return result;
    }
-   
+
    /*
     * Disabled
     */

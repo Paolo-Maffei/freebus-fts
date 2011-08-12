@@ -3,8 +3,8 @@ package org.freebus.fts.service.devicecontroller;
 /**
  * An entry for the device association table.
  * <p>
- * The device association table contains indexes that map between the group
- * addresses that the device knows of and the object descriptors of the device.
+ * The device association table contains mappings from the device's group
+ * addresses and the device's object descriptors.
  */
 public class AssociationTableEntry
 {
@@ -89,5 +89,14 @@ public class AssociationTableEntry
 
       final AssociationTableEntry oo = (AssociationTableEntry) o;
       return deviceObjectIndex == oo.deviceObjectIndex && connectionIndex == oo.connectionIndex;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   @Override
+   public String toString()
+   {
+      return "group #" + connectionIndex + " to device obj #" + deviceObjectIndex;
    }
 }

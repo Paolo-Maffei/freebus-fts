@@ -27,7 +27,7 @@ import liquibase.lock.LockHandler;
 import org.apache.log4j.Logger;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.core.ProjectControllerImpl;
+import org.freebus.fts.client.core.InteractiveProjectController;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.elements.StartupIndicator;
 import org.freebus.fts.elements.components.Dialogs;
@@ -475,7 +475,7 @@ public final class Application extends org.jdesktop.application.Application
     */
    private void startupPostMainWindowCreate(int progress)
    {
-      ProjectManager.setController(new ProjectControllerImpl());
+      ProjectManager.setController(new InteractiveProjectController());
    }
 
    /**

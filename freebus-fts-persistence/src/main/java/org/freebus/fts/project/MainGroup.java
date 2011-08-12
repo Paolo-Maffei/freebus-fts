@@ -183,6 +183,24 @@ public class MainGroup implements Comparable<MainGroup>, Addressable, Named
    }
 
    /**
+    * Get a specific {@link MidGroup mid-group} by it's address.
+    * 
+    * @param addr - the address of the mid-group.
+    * 
+    * @return the mid-group or null if no mid-group is found with this address.
+    */
+   public MidGroup findMidGroupByAddr(int addr)
+   {
+      for (final MidGroup grp : midGroups)
+      {
+         if (grp.getAddress() == addr)
+            return grp;
+      }
+
+      return null;
+   }
+
+   /**
     * Set the mid-groups container.
     */
    void setMidGroups(Set<MidGroup> midGroups)

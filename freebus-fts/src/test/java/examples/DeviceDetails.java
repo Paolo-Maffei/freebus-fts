@@ -50,7 +50,7 @@ public class DeviceDetails
       frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
       frame.setTitle(appTitle);
       frame.setLayout(new BorderLayout());
-      frame.setIconImage(ImageCache.getIcon("app-icon").getImage());
+      frame.setIconImage(ImageCache.getIcon("icons-large/device").getImage());
 
       final JLabel lbl = new JLabel("<html><h3>Device Editor</h3><p>This is a standalone test program to test the parameter editor of FTS.</p></html>");
       lbl.setBorder(BorderFactory.createEmptyBorder(10, 10, 20, 10));

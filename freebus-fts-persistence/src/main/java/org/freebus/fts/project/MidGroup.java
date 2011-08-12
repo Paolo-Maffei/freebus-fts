@@ -194,6 +194,24 @@ public class MidGroup implements Comparable<MidGroup>, Addressable, Named
    }
 
    /**
+    * Get a specific {@link SubGroup sub-group} by it's address.
+    * 
+    * @param addr - the address of the sub-group.
+    * 
+    * @return the sub-group or null if no sub-group is found with this address.
+    */
+   public SubGroup findSubGroupByAddr(int addr)
+   {
+      for (final SubGroup grp : subGroups)
+      {
+         if (grp.getAddress() == addr)
+            return grp;
+      }
+
+      return null;
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override

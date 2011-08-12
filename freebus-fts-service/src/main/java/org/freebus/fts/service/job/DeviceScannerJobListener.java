@@ -9,9 +9,9 @@ import org.freebus.fts.service.job.entity.DeviceInfo;
 public interface DeviceScannerJobListener extends JobListener
 {
    /**
-    * Information about a device. May be a new device, or
-    * the update to an already found device.
-    *
+    * Called with new information about a device. May be a new device, or the
+    * update of an already found device.
+    * 
     * @param info - the device information.
     */
    void deviceInfo(DeviceInfo info);

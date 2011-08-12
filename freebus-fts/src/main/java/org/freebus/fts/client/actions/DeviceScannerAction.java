@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.editors.DeviceScanner;
+import org.freebus.fts.client.editors.scanner.Scanner;
 import org.freebus.fts.elements.services.ImageCache;
 
 /**
@@ -28,6 +28,6 @@ public final class DeviceScannerAction extends BasicAction
    @Override
    public void actionPerformed(ActionEvent e)
    {
-      MainWindow.getInstance().showUniquePanel(DeviceScanner.class);
+      MainWindow.getInstance().showUniquePanel(Scanner.class);
    }
 }

@@ -9,6 +9,7 @@ import javax.persistence.Query;
 
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.products.services.VirtualDeviceService;
 
@@ -40,15 +41,16 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
       return (VirtualDevice) query.getSingleResult();
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public List<VirtualDevice> getVirtualDevices() throws PersistenceException
    {
       final Query query = entityManager.createQuery("select v from VirtualDevice v");
-      return query.getResultList();
+
+      @SuppressWarnings("unchecked")
+      final List<VirtualDevice> result = query.getResultList();
+      return result;
    }
 
-   @SuppressWarnings("unchecked")
    @Override
    public List<VirtualDevice> getVirtualDevices(FunctionalEntity[] functionalEntities) throws PersistenceException
    {
@@ -65,7 +67,10 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
 
       final Query query = entityManager.createQuery("select vd from VirtualDevice vd, FunctionalEntity fe "
             + "where vd.functionalEntity = fe and fe.id in (" + funcsStr.toString() + ") order by vd.name");
-      return query.getResultList();
+
+      @SuppressWarnings("unchecked")
+      final List<VirtualDevice> result = query.getResultList();
+      return result;
    }
 
    @Override
@@ -78,5 +83,15 @@ public final class JpaVirtualDeviceService implements VirtualDeviceService
    public VirtualDevice merge(VirtualDevice device) throws PersistenceException
    {
       return entityManager.merge(device);
+   }
+
+   @Override
+   public List<VirtualDevice> findVirtualDevices(Program program)
+   {
+      final Query query = entityManager.createQuery("select v from VirtualDevice v where v.program.id = " + program.getId());
+
+      @SuppressWarnings("unchecked")
+      final List<VirtualDevice> result = query.getResultList();
+      return result;
    }
 }

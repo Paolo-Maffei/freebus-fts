@@ -284,6 +284,24 @@ public class Project implements Named
    }
 
    /**
+    * Get a specific {@link MainGroup main-group} by it's address.
+    * 
+    * @param addr - the address of the main-group.
+    * 
+    * @return the main-group or null if no main-group is found with the address.
+    */
+   public MainGroup findMainGroupByAddr(int addr)
+   {
+      for (final MainGroup grp : mainGroups)
+      {
+         if (grp.getAddress() == addr)
+            return grp;
+      }
+
+      return null;
+   }
+
+   /**
     * {@inheritDoc}
     */
    @Override

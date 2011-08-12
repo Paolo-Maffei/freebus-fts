@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
-import org.freebus.fts.elements.components.ReadOnlyTable;
+import org.freebus.fts.elements.table.ReadOnlyTable;
 import org.freebus.fts.elements.utils.TableUtils;
 import org.freebus.fts.service.devicecontroller.AssociationTableEntry;
 import org.freebus.fts.service.devicecontroller.DeviceController;

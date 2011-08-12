@@ -1,17 +1,9 @@
-package org.freebus.fts.client.core;
+package org.freebus.fts.service.project;
 
 import java.util.Set;
 
-import org.freebus.fts.client.application.MainWindow;
-import org.freebus.fts.client.dialogs.AddDeviceDialog;
-import org.freebus.fts.client.editors.AreaDetails;
-import org.freebus.fts.client.editors.BuildingDetails;
-import org.freebus.fts.client.editors.LineDetails;
-import org.freebus.fts.client.editors.RoomDetails;
-import org.freebus.fts.client.editors.devicedetails.DeviceDetails;
-import org.freebus.fts.client.workbench.WorkBench;
+import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.exception.FtsRuntimeException;
-import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
@@ -25,6 +17,7 @@ import org.freebus.fts.project.ProjectUtils;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.RoomType;
 import org.freebus.fts.project.SubGroup;
+import org.freebus.fts.project.internal.I18n;
 import org.freebus.fts.project.service.ProjectController;
 import org.freebus.fts.service.devicecontroller.DeviceController;
 import org.freebus.fts.service.devicecontroller.DeviceControllerFactory;
@@ -33,9 +26,12 @@ import org.freebus.fts.service.job.JobQueue;
 import org.freebus.fts.service.job.device.DeviceProgrammerJob;
 
 /**
- * Implementation of the project controller.
+ * Project controller implementation.
+ *
+ * All non-GUI stuff of a project controller is in this class.
+ * All GUI handling stuff is in the InteractiveProjectController of the FTS client.
  */
-public final class ProjectControllerImpl implements ProjectController
+public class BasicProjectController implements ProjectController
 {
    /**
     * {@inheritDoc}
@@ -43,9 +39,6 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public void add(VirtualDevice virtualDevice)
    {
-      final MainWindow mainWin = MainWindow.getInstance();
-      final AddDeviceDialog dlg = new AddDeviceDialog(virtualDevice, mainWin);
-      dlg.setVisible(true);
    }
 
    /**
@@ -82,7 +75,7 @@ public final class ProjectControllerImpl implements ProjectController
 
       final Area area = new Area();
       area.setAddress(address);
-      area.setName(I18n.formatMessage("ProjectControllerImpl.NewAreaName", Integer.toString(address)));
+      area.setName(I18n.formatMessage("BasicProjectController.NewAreaName", Integer.toString(address)));
       project.add(area);
 
       ProjectManager.fireComponentAdded(area);
@@ -185,6 +178,21 @@ public final class ProjectControllerImpl implements ProjectController
       if (address < 0)
          throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxGroups"));
 
+      return createMainGroup(address);
+   }
+
+   /**
+    * Create a main-group with a specific group address. It is not ensured
+    * that the address is unique.
+    * 
+    * @param address - the group address.
+    * 
+    * @return The created main-group.
+    */
+   public MainGroup createMainGroup(int address)
+   {
+      final Project project = ProjectManager.getProject();
+
       final MainGroup grp = new MainGroup();
       grp.setAddress(address);
       grp.setName(I18n.formatMessage("ProjectControllerImpl.NewMainGroupName", Integer.toString(address)));
@@ -200,16 +208,30 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
-   public MidGroup createMidGroup(MainGroup mainGroup)
+   public MidGroup createMidGroup(MainGroup parent)
    {
-      final int address = ProjectUtils.getFreeAddress(mainGroup.getMidGroups(), 0, 7);
+      final int address = ProjectUtils.getFreeAddress(parent.getMidGroups(), 0, 7);
       if (address < 0)
          throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxGroups"));
 
+      return createMidGroup(parent, address);
+   }
+
+   /**
+    * Create a mid-group with a specific group address. It is not ensured
+    * that the address is unique.
+    * 
+    * @param parent - the parent main-group.
+    * @param address - the mid-group address.
+    * 
+    * @return The created mid-group.
+    */
+   public MidGroup createMidGroup(MainGroup parent, int address)
+   {
       final MidGroup grp = new MidGroup();
       grp.setAddress(address);
       grp.setName(I18n.formatMessage("ProjectControllerImpl.NewMidGroupName", Integer.toString(address)));
-      mainGroup.add(grp);
+      parent.add(grp);
 
       ProjectManager.fireComponentAdded(grp);
       edit(grp);
@@ -221,21 +243,66 @@ public final class ProjectControllerImpl implements ProjectController
     * {@inheritDoc}
     */
    @Override
-   public SubGroup createSubGroup(MidGroup midGroup)
+   public SubGroup createSubGroup(MidGroup parent)
    {
-      final int address = ProjectUtils.getFreeAddress(midGroup.getSubGroups(), 0, 7);
+      final int address = ProjectUtils.getFreeAddress(parent.getSubGroups(), 0, 7);
       if (address < 0)
          throw new FtsRuntimeException(I18n.getMessage("ProjectControllerImpl.ErrMaxGroups"));
+      
+      return createSubGroup(parent, address);
+   }
 
+   /**
+    * Create a sub-group with a specific group address. It is not ensured
+    * that the address is unique.
+    * 
+    * @param parent - the parent mid-group.
+    * @param address - the group address.
+    * 
+    * @return The created mid-group.
+    */
+   public SubGroup createSubGroup(MidGroup parent, int address)
+   {
       final SubGroup grp = new SubGroup();
       grp.setAddress(address);
       grp.setName(I18n.formatMessage("ProjectControllerImpl.NewSubGroupName", Integer.toString(address)));
-      midGroup.add(grp);
+      parent.add(grp);
 
       ProjectManager.fireComponentAdded(grp);
       edit(grp);
       
       return grp;
+   }
+
+   /**
+    * {@inheritDoc}
+    */
+   public SubGroup findOrCreateSubGroup(GroupAddress addr)
+   {
+      final Project project = ProjectManager.getProject();
+
+      final int mainAddr = addr.getMain();
+      MainGroup mainGroup = project.findMainGroupByAddr(mainAddr);
+      if (mainGroup == null)
+      {
+         mainGroup = createMainGroup(mainAddr);
+      }
+
+      final int midAddr = addr.getMiddle();
+      MidGroup midGroup = mainGroup.findMidGroupByAddr(midAddr);
+      if (midGroup == null)
+      {
+         midGroup = createMidGroup(mainGroup, midAddr);
+      }
+
+      final int subAddr = addr.getSub();
+      SubGroup subGroup = midGroup.findSubGroupByAddr(subAddr);
+      if (subGroup == null)
+      {
+         subGroup = createSubGroup(midGroup, subAddr);
+      }
+
+      return subGroup;
    }
 
    /**
@@ -244,30 +311,6 @@ public final class ProjectControllerImpl implements ProjectController
    @Override
    public boolean edit(Object obj)
    {
-      final WorkBench workBench = WorkBench.getInstance();
-
-      if (obj instanceof Area)
-      {
-         workBench.showEditor(AreaDetails.class, obj);
-      }
-      else if (obj instanceof Line)
-      {
-         workBench.showEditor(LineDetails.class, obj);
-      }
-      else if (obj instanceof Device)
-      {
-         workBench.showEditor(DeviceDetails.class, obj);
-      }
-      else if (obj instanceof Building)
-      {
-         workBench.showEditor(BuildingDetails.class, obj);
-      }
-      else if (obj instanceof Room)
-      {
-         workBench.showEditor(RoomDetails.class, obj);
-      }
-      else return false;
-
       return true;
    }
 
@@ -422,7 +465,7 @@ public final class ProjectControllerImpl implements ProjectController
       }
       catch (DeviceControllerException e)
       {
-         Dialogs.showExceptionDialog(e, null);
+         showException(e);
       }
    }
 
@@ -442,5 +485,15 @@ public final class ProjectControllerImpl implements ProjectController
    {
       device.updateDeviceParameters();
       device.updateDeviceObjects();
+   }
+
+   /**
+    * Show an exception.
+    * 
+    * @param e - the exception to show.
+    */
+   protected void showException(Exception e)
+   {
+      e.printStackTrace();
    }
 }

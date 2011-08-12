@@ -12,6 +12,10 @@
  <name>freebus-fts-persistence</name>
  <build>
   <plugins>
+  <!--
+    If m2eclipse complains about this plugin, you probably have to install the "m2e Connector for JAXB"
+    from https://github.com/hwellmann/m2eclipse-extras/raw/master/p2
+   -->
    <plugin>
  	<groupId>org.jvnet.jaxb2.maven2</groupId>
  	<artifactId>maven-jaxb2-plugin</artifactId>

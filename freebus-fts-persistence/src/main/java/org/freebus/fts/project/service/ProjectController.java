@@ -1,5 +1,6 @@
 package org.freebus.fts.project.service;
 
+import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.project.Area;
 import org.freebus.fts.project.Building;
@@ -15,7 +16,9 @@ import org.freebus.fts.project.SubGroup;
 
 /**
  * Interface for project controllers. Project controllers manipulate the
- * project, and shall be used for the more complex tasks.
+ * project, and shall be used for the more complex tasks and for comfort
+ * functions. The {@link Project project} shall contain the low level
+ * functionality.
  * 
  * @see ProjectManager#getController()
  */
@@ -27,7 +30,7 @@ public interface ProjectController
     * @param dev - the device to add.
     */
    void add(VirtualDevice dev);
-   
+
    /**
     * Add a building to the project. The building may have a parent building.
     * 
@@ -47,16 +50,16 @@ public interface ProjectController
 
    /**
     * Create an area and add it to the project.
-    *
+    * 
     * @return The created area.
     */
    Area createArea();
 
    /**
     * Create a line and add it to the given area.
-    *
+    * 
     * @param area - the area to which the line will be added
-    *
+    * 
     * @return The created line.
     */
    Line createLine(Area area);
@@ -79,10 +82,10 @@ public interface ProjectController
 
    /**
     * Create a room and add it to the given building.
-    *
+    * 
     * @param building - the building that will contain the room.
     * @param type - the {@link RoomType type} of the room.
-    *
+    * 
     * @return The created room.
     */
    Room createRoom(Building building, RoomType type);
@@ -95,22 +98,33 @@ public interface ProjectController
    MainGroup createMainGroup();
 
    /**
-    * Create a {@link MidGroup mid group} and add it to the main group.
+    * Create a {@link MidGroup mid-group} and add it to the main group.
     * 
-    * @param mainGroup - the main group to add to.
+    * @param parent - the parent main group to add to.
     * 
-    * @return The created main group.
+    * @return The created mid-group.
     */
-   MidGroup createMidGroup(MainGroup mainGroup);
+   MidGroup createMidGroup(MainGroup parent);
 
    /**
-    * Create a {@link SubGroup sub group} and add it to the mid group.
+    * Create a {@link SubGroup sub-group} and add it to the mid group.
     * 
-    * @param midGroup - the mid group to add to.
+    * @param midGroup - the parent mid-group to add to.
     * 
-    * @return The created main group.
+    * @return The created sub-group.
     */
-    SubGroup createSubGroup(MidGroup midGroup);
+   SubGroup createSubGroup(MidGroup parent);
+
+   /**
+    * Find or create all groups down to a {@link SubGroup sub-group} such that
+    * the given {@link GroupAddress group address} exists in the project
+    * afterwards. Does nothing if the group address already exists.
+    * 
+    * @param addr - the group address to process.
+    * 
+    * @return The sub group for the given address.
+    */
+   SubGroup findOrCreateSubGroup(GroupAddress addr);
 
    /**
     * Edit an object. Calls the proper edit method to do the job (e.g.

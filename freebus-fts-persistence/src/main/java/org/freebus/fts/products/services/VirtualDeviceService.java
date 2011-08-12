@@ -6,6 +6,7 @@ import javax.persistence.PersistenceException;
 
 import org.freebus.fts.products.FunctionalEntity;
 import org.freebus.fts.products.Manufacturer;
+import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
 
 /**
@@ -52,6 +53,15 @@ public interface VirtualDeviceService
     * @return A list with all known virtual devices.
     */
    public List<VirtualDevice> getVirtualDevices(FunctionalEntity[] functionalEntities) throws PersistenceException;
+
+   /**
+    * Find all virtual devices that reference the given application program.
+    *
+    * @param program - the application program that the devices shall use.
+    *
+    * @return A list with all found virtual devices.
+    */
+   public List<VirtualDevice> findVirtualDevices(Program program);
 
    /**
     * Persist a virtual device.

@@ -16,7 +16,7 @@ import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 
 import org.freebus.fts.client.core.Config;
-import org.freebus.fts.elements.components.ReadOnlyTable;
+import org.freebus.fts.elements.table.ReadOnlyTable;
 import org.freebus.fts.elements.utils.TableUtils;
 import org.freebus.fts.persistence.vdx.VdxFieldType;
 import org.freebus.fts.persistence.vdx.VdxSection;

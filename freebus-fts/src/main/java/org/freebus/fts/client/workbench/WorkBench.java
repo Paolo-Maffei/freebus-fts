@@ -14,7 +14,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTabbedPane;
 
 import org.freebus.fts.client.core.I18n;
-import org.freebus.fts.client.core.ProjectControllerImpl;
+import org.freebus.fts.client.core.InteractiveProjectController;
 import org.freebus.fts.elements.AbstractApplicationWindow;
 import org.freebus.fts.elements.components.ExtTabbedPane;
 
@@ -440,7 +440,7 @@ public class WorkBench extends AbstractApplicationWindow
    }
 
    /**
-    * Called by the {@link ProjectControllerImpl#remove(Object) project controller}
+    * Called by the {@link InteractiveProjectController#remove(Object) project controller}
     * when an object is removed.
     * 
     * @param obj - the removed object

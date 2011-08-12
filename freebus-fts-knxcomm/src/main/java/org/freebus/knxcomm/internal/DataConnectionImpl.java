@@ -242,6 +242,45 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    }
 
    /**
+    * Receive an {@link Transport#ConnectedAck acknowledge} from the remote
+    * device. Waits 3 seconds for the acknowledge to be received.
+    *
+    * @throws IOException if a NACK (not-acknowledged) was received.
+    * @throws TimeoutException if no acknowledge was received within the timeout
+    */
+   private void receiveAcknowledge_TEST() throws IOException, TimeoutException
+   {
+      final long endTime = System.nanoTime() + 3000000000L;  // +3 sek
+
+      while (true)
+      {
+         final long now = System.nanoTime();
+         final int waitMS = (int) ((endTime - now) / 1000000);
+         if (waitMS <= 0)
+         {
+            break;
+         }
+
+         LOGGER.debug("wait " + waitMS + " msec for an ACK");
+         final Telegram telegram = receiveTelegram(waitMS);
+         if (telegram == null)
+         {
+            break;
+         }
+         
+         final Transport transport = telegram.getTransport();
+         if (transport == Transport.ConnectedAck)
+            return;
+         if (transport == Transport.ConnectedNak)
+            throw new IOException("NACK received");
+
+         LOGGER.debug("waiting for ACK or NACK, received: " + telegram);
+      }
+
+      throw new TimeoutException("timeout while waiting for an acknowledge from the remote device");
+   }
+
+   /**
     * Receive a telegram from the remote device.
     *
     * @param timeout - how long to wait, in milliseconds, -1 waits infinitely.

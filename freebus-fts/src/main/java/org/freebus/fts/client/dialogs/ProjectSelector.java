@@ -16,7 +16,7 @@ import javax.swing.table.AbstractTableModel;
 
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.elements.components.Dialog;
-import org.freebus.fts.elements.components.ReadOnlyTable;
+import org.freebus.fts.elements.table.ReadOnlyTable;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 

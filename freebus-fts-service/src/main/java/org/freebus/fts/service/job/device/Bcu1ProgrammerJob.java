@@ -261,6 +261,19 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    }
 
    /**
+    * Upload the association table to the device.
+    * 
+    * @param memCon - the memory connection to use for the upload
+    * 
+    * @throws TimeoutException
+    * @throws IOException
+    */
+   void uploadAssocTab(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
+   {
+      // TODO
+   }
+   
+   /**
     * Upload the communication tables to the device.
     * 
     * @param memCon - the memory connection to use for the upload
@@ -272,6 +285,7 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    {
       uploadAddrTab(memCon);
       uploadCommObjsTab(memCon);
+      uploadAssocTab(memCon);
 
       final DeviceProgramming progr = device.getProgramming();
       progr.setCommunicationValid(true);

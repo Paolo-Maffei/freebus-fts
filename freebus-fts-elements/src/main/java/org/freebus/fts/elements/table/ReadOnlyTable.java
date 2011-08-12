@@ -1,4 +1,4 @@
-package org.freebus.fts.elements.components;
+package org.freebus.fts.elements.table;
 
 import java.util.Vector;
 

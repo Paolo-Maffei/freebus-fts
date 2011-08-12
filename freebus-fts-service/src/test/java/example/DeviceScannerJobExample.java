@@ -25,8 +25,8 @@ public class DeviceScannerJobExample implements TelegramListener
    private final static int line = 1;
    
    // Min and max device address to scan
-   private final static int minAddress = 50;
-   private final static int maxAddress = 52;
+   private final static int minAddress = 95;
+   private final static int maxAddress = 110;
    
 
    /**
@@ -40,7 +40,7 @@ public class DeviceScannerJobExample implements TelegramListener
       // Bus connection
       //
       //      bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
-      bus = BusInterfaceFactory.newSerialInterface("/dev/ttyS0");
+      bus = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
       //      bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.addListener(this);

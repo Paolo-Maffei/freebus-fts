@@ -52,7 +52,7 @@ public class DeviceInfo implements Comparable<DeviceInfo>
    }
 
    /**
-    * @return The device type.
+    * @return The device type, or -1 if unknown.
     */
    public int getDeviceType()
    {
@@ -62,7 +62,7 @@ public class DeviceInfo implements Comparable<DeviceInfo>
    /**
     * Set the device type.
     *
-    * @param deviceType - the device type to set
+    * @param deviceType - the device type to set, -1 for unknown.
     */
    public void setDeviceType(int deviceType)
    {
@@ -70,7 +70,7 @@ public class DeviceInfo implements Comparable<DeviceInfo>
    }
 
    /**
-    * @return The manufacturer ID.
+    * @return The manufacturer ID, or -1 if unknown.
     */
    public int getManufacturerId()
    {
@@ -80,7 +80,7 @@ public class DeviceInfo implements Comparable<DeviceInfo>
    /**
     * Set the manufacturer ID.
     *
-    * @param manufacturerId - the manufacturer ID to set.
+    * @param manufacturerId - the manufacturer ID to set, -1 for unknown.
     */
    public void setManufacturerId(int manufacturerId)
    {
@@ -118,5 +118,13 @@ public class DeviceInfo implements Comparable<DeviceInfo>
    public int compareTo(DeviceInfo o)
    {
       return address.getAddr() - o.address.getAddr();
+   }
+
+   /**
+    * @return True if the info is complete.
+    */
+   public boolean isComplete()
+   {
+      return address != null && descriptor != null && deviceType != -1 && manufacturerId != -1;
    }
 }

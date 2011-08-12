@@ -36,11 +36,9 @@ public class PhysicalAddressProgrammerExample
       //
       // Bus connection
       //
-      // bus =
-      // BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      // bus = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
       bus = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
-      // bus = BusInterfaceFactory.newKNXnetInterface("localhost",
-      // KNXnetLink.defaultPortUDP);
+      // bus = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
 
       bus.open(LinkMode.LinkLayer);
 
