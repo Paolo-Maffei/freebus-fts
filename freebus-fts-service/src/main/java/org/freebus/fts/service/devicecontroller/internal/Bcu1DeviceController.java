@@ -38,8 +38,8 @@ public final class Bcu1DeviceController extends GenericDeviceController
       final DeviceProgramming progr = getDevice().getProgramming();
       final List<DeviceProgrammerType> types = new Vector<DeviceProgrammerType>(10);
 
-      if (!progr.isPhysicalAddressValid())
-         programmers.add(new SetPhysicalAddressJob(getDevice()));
+//      if (!progr.isPhysicalAddressValid())
+//         programmers.add(new SetPhysicalAddressJob(getDevice()));
 
       if (!progr.isProgramValid())
          types.add(DeviceProgrammerType.PROGRAM);

@@ -182,8 +182,9 @@ public final class SetPhysicalAddressJob extends ListenableJob implements Device
          con.dispose();
       }
 
-      // (At least) the Freebus LPC controller seems to require this unconnected
+      // (At least) the Freebus LPC controller seem to require this unconnected
       // restart to reset properly (06/2010)
+      msleep(250);
       dataTelegram.setDest(newAddress);
       bus.send(dataTelegram);
 
@@ -195,6 +196,8 @@ public final class SetPhysicalAddressJob extends ListenableJob implements Device
          progr.setPhysicalAddress(newAddress);
          progr.setLastUploadNow();
       }
+
+      msleep(1000);
    }
 
    /**

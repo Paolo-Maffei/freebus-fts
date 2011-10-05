@@ -512,7 +512,8 @@ public final class Application extends org.jdesktop.application.Application
       try
       {
          LOGGER.info("Creating an example project");
-         ProjectManager.setProject(SampleProjectFactory.newProject());
+         final SampleProjectFactory projectFactory = new SampleProjectFactory();
+         ProjectManager.setProject(projectFactory.newProject());
       }
       catch (Exception e)
       {

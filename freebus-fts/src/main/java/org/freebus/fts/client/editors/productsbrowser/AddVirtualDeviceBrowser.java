@@ -1,4 +1,4 @@
-package org.freebus.fts.client.editors;
+package org.freebus.fts.client.editors.productsbrowser;
 
 import java.awt.Font;
 import java.awt.event.ActionEvent;
@@ -11,7 +11,6 @@ import javax.swing.JButton;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dialogs.AddDeviceDialog;
-import org.freebus.fts.client.editors.productsbrowser.ProductsBrowser;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.VirtualDevice;
@@ -54,6 +53,8 @@ public class AddVirtualDeviceBrowser extends ProductsBrowser
             addSelectedDevice();
          }
       });
+
+      setObject(null);
    }
 
    /**

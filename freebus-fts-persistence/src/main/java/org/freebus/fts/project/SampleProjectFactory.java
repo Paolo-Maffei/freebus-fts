@@ -1,8 +1,12 @@
 package org.freebus.fts.project;
 
+import javax.persistence.PersistenceException;
+
 import org.apache.log4j.Logger;
+import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
+import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.project.internal.I18n;
@@ -17,38 +21,48 @@ public final class SampleProjectFactory
     */
    public static final int sampleVirtualDeviceId = 1;
 
-   private static String sampleImportFileName = "sample-products.vd_";
+   private final String persistenceUnitName;
+   private final ProductsFactory productsFactory = ProductsManager.getFactory();
+   private final VirtualDeviceService virtDevService = productsFactory.getVirtualDeviceService();
+   private final ManufacturerService manuService = productsFactory.getManufacturerService();
 
    /**
-    * Import the example products. Called by {@link #newProject} if required.
+    * Import the example products.
     */
    public synchronized static void importSampleDevices(final String persistenceUnitName)
    {
-      Logger.getLogger(SampleProjectFactory.class).info("Importing sample org.freebus.fts.products");
-      ProductsManager.importResource(sampleImportFileName, persistenceUnitName, ProductsManager.getFactory());
+      Logger.getLogger(SampleProjectFactory.class).info("Importing sample products");
+      ProductsManager.importResource("products/freebus-ap254.vd_", persistenceUnitName, ProductsManager.getFactory());
+      ProductsManager.importResource("products/freebus-8out.vd_", persistenceUnitName, ProductsManager.getFactory());
+      ProductsManager.importResource("products/freebus-8in.vd_", persistenceUnitName, ProductsManager.getFactory());
    }
 
    /**
-    * Creates a project that gets initialized with example values, using the
-    * persistence unit "default".
+    * Create a sample project factory with the persistence unit named "default".
+    * 
+    * persistenceUnitName - the name of the persistence unit.
     */
-   public static Project newProject()
+   public SampleProjectFactory()
    {
-      return newProject("default");
+      this("default");
+   }
+
+   /**
+    * Create a sample project factory.
+    * 
+    * persistenceUnitName - the name of the persistence unit.
+    */
+   public SampleProjectFactory(final String persistenceUnitName)
+   {
+      this.persistenceUnitName = persistenceUnitName;
    }
 
    /**
     * Creates a project that gets initialized with example values. Calls
     * {@link #importSampleDevices} if required.
-    * 
-    * @param persistenceUnitName - the name of the persistence unit that is used
-    *           for the import.
     */
-   public static Project newProject(final String persistenceUnitName)
+   public Project newProject()
    {
-      final ProductsFactory productsFactory = ProductsManager.getFactory();
-      final VirtualDeviceService virtDevService = productsFactory.getVirtualDeviceService();
-
       final Project project = new Project();
       project.setName(I18n.getMessage("SampleProjectFactory.ProjectName"));
 
@@ -79,18 +93,17 @@ public final class SampleProjectFactory
       room2.setName(I18n.getMessage("SampleProjectFactory.Room2"));
       building.add(room2);
 
-      VirtualDevice virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
+      VirtualDevice virtDev = getVirtualDevice("Siemens", "Kombisensor AP 254, Helligkeit/Temperatur/Schalten");
       if (virtDev == null)
       {
-         ProductsManager.importResource(sampleImportFileName, persistenceUnitName, ProductsManager.getFactory());
+         importSampleDevices(persistenceUnitName);
+         productsFactory.flushEntityManager();
 
-         virtDev = virtDevService.getVirtualDevice(sampleVirtualDeviceId);
+         virtDev = getVirtualDevice("Siemens", "Kombisensor AP 254, Helligkeit/Temperatur/Schalten");
          if (virtDev == null)
          {
-            // Should not happen, as importSampleDevices() imports the
-            // device(s).
-            throw new RuntimeException("Internal error: example device #" + sampleVirtualDeviceId
-                  + " not found in database after import");
+            // Should not happen, as importSampleDevices() imports the device(s).
+            throw new RuntimeException("Internal error: example device not found in database after import");
          }
       }
 
@@ -99,11 +112,13 @@ public final class SampleProjectFactory
       line1.add(device1);
       room1.add(device1);
 
+      virtDev = getVirtualDevice("Albrecht Jung", "Binaereingang 8fach REG");
       final Device device2 = new Device(0, virtDev);
       device2.setAddress(32);
       line1.add(device2);
       room2.add(device2);
 
+      virtDev = getVirtualDevice("Albrecht Jung", "Schaltaktor 8fach REG");
       final Device device3 = new Device(0, virtDev);
       device3.setAddress(33);
       line2.add(device3);
@@ -135,11 +150,29 @@ public final class SampleProjectFactory
 
       return project;
    }
-
-   //
-   // It is not allowed to create objects of this class
-   //
-   private SampleProjectFactory()
+   
+   /**
+    * Fetch a specific virtual device.
+    * 
+    * @param manufacturerName - the name of the manufacturer
+    * @param deviceName - the name of the virtual device
+    * 
+    * @return The virtual device, or null if not found.
+    */
+   VirtualDevice getVirtualDevice(String manufacturerName, String deviceName)
    {
+      Manufacturer manufacturer = null;
+
+      try
+      {
+         manufacturer = manuService.getManufacturer(manufacturerName);
+         if (manufacturer == null) return null;
+      }
+      catch (PersistenceException e)
+      {
+         return null;
+      }
+
+      return virtDevService.getVirtualDevice(manufacturer, deviceName);
    }
 }

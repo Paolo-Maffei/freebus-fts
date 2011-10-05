@@ -332,10 +332,8 @@ public class DeviceMemoryTableModel extends MemoryTableModel
 
          if (setValue(addr, newValue))
          {
-            // Logger.getLogger(getClass()).debug(
-            // "@" + addr + ": " + oldValue + "->" + newValue + " (param #" +
-            // param.getId() + " value " + paramValue
-            // + ", " + bits + " bits, offset " + bitOffset + ")");
+            // Logger.getLogger(getClass()).debug("@" + addr + ": " + oldValue + "->" + newValue + " (param #" +
+            //    param.getId() + " value " + paramValue + ", " + bits + " bits, offset " + bitOffset + ")");
          }
       }
 

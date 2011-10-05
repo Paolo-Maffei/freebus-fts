@@ -10,12 +10,15 @@ import java.util.Vector;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.products.CommunicationObject;
+import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
+import org.freebus.fts.project.DeviceParameter;
 import org.freebus.fts.project.SubGroupToObject;
 import org.freebus.fts.service.devicecontroller.AssociationTableEntry;
 import org.freebus.fts.service.devicecontroller.DeviceController;
+import org.freebus.fts.service.memory.MemoryRange;
 
 /**
  * A device controller with methods for most BCU types.
@@ -23,6 +26,7 @@ import org.freebus.fts.service.devicecontroller.DeviceController;
 public abstract class GenericDeviceController implements DeviceController
 {
    private final Device device;
+   private MemoryRange memory = null;
 
    private ObjectDescriptor[] objectDescriptors;
    private GroupAddress[] groupAddresses;
@@ -81,6 +85,15 @@ public abstract class GenericDeviceController implements DeviceController
          updateAssociationTable();
 
       return associationTable;
+   }
+
+   @Override
+   public MemoryRange getDeviceMemory()
+   {
+      if (memory == null)
+         updateMemory();
+
+      return memory;
    }
 
    /**
@@ -170,6 +183,43 @@ public abstract class GenericDeviceController implements DeviceController
             });
    }
 
+   /**
+    * Update the device's memory.
+    */
+   private void updateMemory()
+   {
+      final Program prog = device.getProgram();
+//      final Mask mask = prog.getMask();
+
+      final MemoryRange mem = new MemoryRange(0, prog.getEepromData());
+
+      for (final Parameter param : device.getProgram().getParameters())
+      {
+         final DeviceParameter devParam = device.getDeviceParameter(param);
+         if (!devParam.isUsed())
+            continue;
+
+         final Integer addr = param.getAddress();
+         if (addr == null || addr == 0)
+            continue;
+
+         final int bits = param.getSize();
+         final int bitOffset = param.getBitOffset();
+
+         int bitMask = (1 << bits) - 1;
+         bitMask <<= bitOffset;
+         
+         int oldValue = mem.getValue(addr) & 255;
+
+         final int paramValue = devParam.getIntValue() & 255;
+         final int newValue = (oldValue & ~bitMask) | ((paramValue << bitOffset) & bitMask);
+
+         mem.setValue(addr, (byte) newValue);
+      }
+
+      memory = mem;
+   }
+   
    /**
     * Lookup the group address in the group address table.
     * 

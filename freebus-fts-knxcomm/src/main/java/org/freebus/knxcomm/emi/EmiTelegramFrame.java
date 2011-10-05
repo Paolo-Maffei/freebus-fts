@@ -2,7 +2,6 @@ package org.freebus.knxcomm.emi;
 
 import java.io.DataInput;
 import java.io.DataOutput;
-import java.io.FilterInputStream;
 import java.io.IOException;
 
 import org.freebus.knxcomm.emi.types.EmiFrameType;

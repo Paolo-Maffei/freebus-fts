@@ -12,17 +12,13 @@ import org.junit.Test;
 
 public class TestJpaProjectService extends ProjectTestCase
 {
-   public TestJpaProjectService()
-   {
-      super("test-full");
-   }
-
    @Test
    public final void testPersist()
    {
       final ProjectService projectService = getProjectFactory().getProjectService();
+      final SampleProjectFactory projectFactory = new SampleProjectFactory(persistenceUnitName);
 
-      final Project project = SampleProjectFactory.newProject(persistenceUnitName);
+      final Project project = projectFactory.newProject();
       assertNotNull(project);
 
       projectService.persist(project);

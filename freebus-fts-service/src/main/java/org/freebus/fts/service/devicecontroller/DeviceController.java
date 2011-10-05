@@ -7,6 +7,7 @@ import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.service.exception.DeviceControllerException;
 import org.freebus.fts.service.job.device.DeviceProgrammerJob;
+import org.freebus.fts.service.memory.MemoryRange;
 
 /**
  * Interface for controllers that work with specific (hardware) devices on the
@@ -67,6 +68,13 @@ public interface DeviceController
     */
    AssociationTableEntry[] getAssociationTable();
 
+   /**
+    * Get the device's memory.
+    * 
+    * @return The memory of the device.
+    */
+   MemoryRange getDeviceMemory();
+   
    /**
     * Get all programmer jobs that are required to fully update the device.
     * @throws DeviceControllerException

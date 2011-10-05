@@ -48,7 +48,8 @@ public class TestDeviceParamData
       final EntityTransaction trans = DatabaseResources.getEntityManager().getTransaction();
       trans.begin();
 
-      final Project project = SampleProjectFactory.newProject(persistenceUnitName);
+      final SampleProjectFactory projectFactory = new SampleProjectFactory(persistenceUnitName);
+      final Project project = projectFactory.newProject();
       assertNotNull(project);
 
       project.setId(projectId);

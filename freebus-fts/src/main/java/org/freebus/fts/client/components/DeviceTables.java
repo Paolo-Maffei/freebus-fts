@@ -38,7 +38,7 @@ public class DeviceTables extends JPanel
    private final JTable objectsTable = new ReadOnlyTable(objectsModel);
    private final JScrollPane objectsScrollPane = new JScrollPane(objectsTable);
 
-   private DeviceController deviceAdapter;
+   private DeviceController controller;
    private boolean updatingSelections;
 
    /**
@@ -115,7 +115,7 @@ public class DeviceTables extends JPanel
     */
    public void setDeviceAdapter(DeviceController deviceAdapter)
    {
-      this.deviceAdapter = deviceAdapter;
+      this.controller = deviceAdapter;
       updateContents();
    }
 
@@ -124,7 +124,7 @@ public class DeviceTables extends JPanel
     */
    public synchronized void updateContents()
    {
-      if (deviceAdapter == null)
+      if (controller == null)
       {
          groupsModel.setNumRows(0);
          associationsModel.setNumRows(0);
@@ -132,9 +132,9 @@ public class DeviceTables extends JPanel
          return;
       }
 
-      deviceAdapter.deviceChanged();
+      controller.deviceChanged();
 
-      final GroupAddress[] groups = deviceAdapter.getGroupAddresses();
+      final GroupAddress[] groups = controller.getGroupAddresses();
       groupsModel.setNumRows(groups.length);
       for (int i = 0; i < groups.length; ++i)
       {
@@ -142,7 +142,7 @@ public class DeviceTables extends JPanel
          groupsModel.setValueAt(groups[i], i, 1);
       }
 
-      final AssociationTableEntry[] associations = deviceAdapter.getAssociationTable();
+      final AssociationTableEntry[] associations = controller.getAssociationTable();
       associationsModel.setNumRows(associations.length);
       for (int i = 0; i < associations.length; ++i)
       {
@@ -151,7 +151,7 @@ public class DeviceTables extends JPanel
          associationsModel.setValueAt(ae == null ? "" : ae.getDeviceObjectIndex(), i, 1);
       }
 
-      final ObjectDescriptor[] descriptors = deviceAdapter.getObjectDescriptors();
+      final ObjectDescriptor[] descriptors = controller.getObjectDescriptors();
       objectsModel.setNumRows(descriptors.length);
       for (int i = 0; i < descriptors.length; ++i)
       {

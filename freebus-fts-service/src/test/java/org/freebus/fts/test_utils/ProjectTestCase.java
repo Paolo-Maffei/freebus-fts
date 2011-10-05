@@ -44,7 +44,8 @@ public abstract class ProjectTestCase extends PersistenceTestCase
    {
       if (project == null)
       {
-         project = SampleProjectFactory.newProject(persistenceUnitName);
+         final SampleProjectFactory projectFactory = new SampleProjectFactory(persistenceUnitName);
+         project = projectFactory.newProject();
          assertNotNull(project);
 
          final Device dev = project.getAreas().iterator().next().getLines().iterator().next().getDevices().iterator().next();

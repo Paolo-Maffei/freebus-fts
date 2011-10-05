@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
+import org.apache.log4j.Logger;
 import org.freebus.fts.common.ByteUtils;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -13,6 +14,7 @@ import org.freebus.fts.products.Mask;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceProgramming;
+import org.freebus.fts.service.devicecontroller.AssociationTableEntry;
 import org.freebus.fts.service.devicecontroller.DeviceController;
 import org.freebus.fts.service.devicecontroller.DeviceProgrammerType;
 import org.freebus.fts.service.exception.JobFailedException;
@@ -30,6 +32,8 @@ import org.freebus.knxcomm.telegram.Priority;
  */
 public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammerJob
 {
+   private static final Logger LOGGER = Logger.getLogger(Bcu1ProgrammerJob.class);
+
    private final Set<DeviceProgrammerType> types = new HashSet<DeviceProgrammerType>();
    private boolean physicalAddressJobQueued;
    private final DeviceController controller;
@@ -118,9 +122,11 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       final int progMaskVersionMajor = progMaskVersion >> 4;
       if (progMaskVersionMajor != maskVersionMajor || progMaskVersion > maskVersion)
       {
-         throw new JobFailedException(
-               I18n.formatMessage("Bcu1ProgrammerJob.ErrIncompatibleMaskVersion", device.getPhysicalAddress()
-                     .toString(), Integer.toHexString(maskVersion), Integer.toHexString(progMaskVersion)));
+         throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrIncompatibleMaskVersion",
+                             Integer.toHexString(maskVersion),
+                             device.getPhysicalAddress().toString(),
+                             Integer.toHexString(progMaskVersion)
+                            ));
       }
    }
 
@@ -270,7 +276,38 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
     */
    void uploadAssocTab(final MemoryConnectionInterface memCon) throws IOException, TimeoutException
    {
-      // TODO
+      final AssociationTableEntry[] associations = controller.getAssociationTable();
+      final byte[] data = new byte[associations.length * 2 + 1];
+      final byte unused = (byte) 0;
+
+      final int assocTabAddr = device.getProgram().getAssocTabAddr();
+      final int assocTabSize = device.getProgram().getAssocTabSize();
+
+      if (data.length > assocTabSize)
+      {
+         throw new RuntimeException("The association table of the device can only hold up to " + assocTabSize
+               + " associations");
+      }
+
+      int idx = -1;
+      data[++idx] = (byte) associations.length;
+
+      for (int i = 0; i < associations.length; ++i)
+      {
+         final AssociationTableEntry ae = associations[i];
+         if (ae == null)
+         {
+            data[++idx] = unused;
+            data[++idx] = unused;
+         }
+         else
+         {
+            data[++idx] = (byte) ae.getConnectionIndex();
+            data[++idx] = (byte) ae.getDeviceObjectIndex();
+         }
+      }
+
+      memCon.write(assocTabAddr, data);
    }
    
    /**
@@ -320,13 +357,18 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
    @Override
    public void main(BusInterface bus) throws JobFailedException, IOException, TimeoutException
    {
-      if (!device.getProgramming().isPhysicalAddressValid())
+      // Wait a little for the device to be available after programming the physical address
+      if (physicalAddressJobQueued)
+         msleep(500);
+
+      if (false && !device.getProgramming().isPhysicalAddressValid())
       {
          if (physicalAddressJobQueued)
          {
             // If we come here, programming the physical address failed, and the
             // user already got an error message. No need to report another
             // error.
+            LOGGER.debug("Physical address not programmed, skipping job");
             return;
          }
 
@@ -343,7 +385,10 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       prepareUpload(memCon);
 
       if (types.contains(DeviceProgrammerType.PROGRAM))
+      {
+         LOGGER.info("uploadProgram");
          uploadProgram(memCon);
+      }
       if (types.contains(DeviceProgrammerType.PARAMETERS))
          uploadParameters(memCon);
       if (types.contains(DeviceProgrammerType.COMMUNICATIONS))

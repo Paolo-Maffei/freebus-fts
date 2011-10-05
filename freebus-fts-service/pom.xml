@@ -14,13 +14,13 @@
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-knxcomm</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>${project.version}</version>
    <scope>compile</scope>
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-persistence</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>${project.version}</version>
    <type>jar</type>
    <scope>compile</scope>
   </dependency>

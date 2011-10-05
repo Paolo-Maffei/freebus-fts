@@ -226,7 +226,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * @throws IOException if a NACK (not-acknowledged) was received.
     * @throws TimeoutException if no acknowledge was received within the timeout
     */
-   private void receiveAcknowledge() throws IOException, TimeoutException
+   private void receiveAcknowledge_SIMPLE() throws IOException, TimeoutException
    {
       final Telegram telegram = receiveTelegram(3000);
       if (telegram != null)
@@ -236,6 +236,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
             return;
          if (transport == Transport.ConnectedNak)
             throw new IOException("NACK received");
+
+         LOGGER.warn("Received out-of-bounds telegram: " + telegram);
       }
 
       throw new TimeoutException("timeout while waiting for an acknowledge from the remote device");
@@ -248,7 +250,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * @throws IOException if a NACK (not-acknowledged) was received.
     * @throws TimeoutException if no acknowledge was received within the timeout
     */
-   private void receiveAcknowledge_TEST() throws IOException, TimeoutException
+   private void receiveAcknowledge() throws IOException, TimeoutException
    {
       final long endTime = System.nanoTime() + 3000000000L;  // +3 sek
 
@@ -274,7 +276,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          if (transport == Transport.ConnectedNak)
             throw new IOException("NACK received");
 
-         LOGGER.debug("waiting for ACK or NACK, received: " + telegram);
+         LOGGER.warn("waiting for ACK or NACK, received: " + telegram);
       }
 
       throw new TimeoutException("timeout while waiting for an acknowledge from the remote device");

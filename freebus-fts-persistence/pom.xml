@@ -12,16 +12,14 @@
  <name>freebus-fts-persistence</name>
  <build>
   <plugins>
-  <!--
-    If m2eclipse complains about this plugin, you probably have to install the "m2e Connector for JAXB"
-    from https://github.com/hwellmann/m2eclipse-extras/raw/master/p2
-   -->
+   <!-- If m2eclipse complains about this plugin, you probably have to install 
+    the "m2e Connector for JAXB" from https://github.com/hwellmann/m2eclipse-extras/raw/master/p2 -->
    <plugin>
- 	<groupId>org.jvnet.jaxb2.maven2</groupId>
- 	<artifactId>maven-jaxb2-plugin</artifactId>
- 	<version>0.8.0</version>
- 	<executions>
- 	 <!-- <phase>generate-sources</phase> -->
+    <groupId>org.jvnet.jaxb2.maven2</groupId>
+    <artifactId>maven-jaxb2-plugin</artifactId>
+    <version>0.8.0</version>
+    <executions>
+     <!-- <phase>generate-sources</phase> -->
      <execution>
       <goals>
        <goal>generate</goal>
@@ -37,10 +35,10 @@
     </configuration>
    </plugin>
    <plugin>
-   	<groupId>org.codehaus.groovy.maven</groupId>
-   	<artifactId>gmaven-plugin</artifactId>
-   	<version>1.0</version>
-   	<executions>
+    <groupId>org.codehaus.groovy.maven</groupId>
+    <artifactId>gmaven-plugin</artifactId>
+    <version>1.0</version>
+    <executions>
      <execution>
       <phase>generate-resources</phase>
       <goals>
@@ -49,16 +47,21 @@
       <configuration>
        <!-- Create an index file containing the list of the products files -->
        <source>
-        def outFile = new File("${project.build.directory}/classes/products/files.list");
+        def outFile = new
+        File("${project.build.directory}/classes/products/files.list");
         outFile.getParentFile().mkdirs();
-        println "Creating " + outFile.toString();
-        def out = new PrintStream(new FileOutputStream(outFile));
-        def dir = new File("${pom.basedir}/src/main/resources/products");
-        for (f in dir.listFiles())
+        println "Creating " +
+        outFile.toString();
+        def out = new PrintStream(new
+        FileOutputStream(outFile));
+        def dir = new
+        File("${pom.basedir}/src/main/resources/products");
+        for (f in
+        dir.listFiles())
         {
-           def nm = f.getName();
-           if (nm.toLowerCase().endsWith(".vd_"))
-              out.println(nm);
+        def nm = f.getName();
+        if (nm.toLowerCase().endsWith(".vd_"))
+        out.println(nm);
         }
        </source>
       </configuration>
@@ -66,56 +69,56 @@
     </executions>
    </plugin>
    <plugin>
-   	<groupId>org.codehaus.mojo</groupId>
-   	<artifactId>jaxb2-maven-plugin</artifactId>
-   	<version>1.3</version>
+    <groupId>org.codehaus.mojo</groupId>
+    <artifactId>jaxb2-maven-plugin</artifactId>
+    <version>1.3</version>
    </plugin>
   </plugins>
   <pluginManagement>
-  	<plugins>
-  		<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-  		<plugin>
-  			<groupId>org.eclipse.m2e</groupId>
-  			<artifactId>lifecycle-mapping</artifactId>
-  			<version>1.0.0</version>
-  			<configuration>
-  				<lifecycleMappingMetadata>
-  					<pluginExecutions>
-  						<pluginExecution>
-  							<pluginExecutionFilter>
-  								<groupId>
-  									org.codehaus.groovy.maven
-  								</groupId>
-  								<artifactId>gmaven-plugin</artifactId>
-  								<versionRange>[1.0,)</versionRange>
-  								<goals>
-  									<goal>execute</goal>
-  								</goals>
-  							</pluginExecutionFilter>
-  							<action>
-  								<ignore></ignore>
-  							</action>
-  						</pluginExecution>
-  					</pluginExecutions>
-  				</lifecycleMappingMetadata>
-  			</configuration>
-  		</plugin>
-  	</plugins>
+   <plugins>
+    <!--This plugin's configuration is used to store Eclipse m2e settings 
+     only. It has no influence on the Maven build itself. -->
+    <plugin>
+     <groupId>org.eclipse.m2e</groupId>
+     <artifactId>lifecycle-mapping</artifactId>
+     <version>1.0.0</version>
+     <configuration>
+      <lifecycleMappingMetadata>
+       <pluginExecutions>
+        <pluginExecution>
+         <pluginExecutionFilter>
+          <groupId>
+           org.codehaus.groovy.maven
+          </groupId>
+          <artifactId>gmaven-plugin</artifactId>
+          <versionRange>[1.0,)</versionRange>
+          <goals>
+           <goal>execute</goal>
+          </goals>
+         </pluginExecutionFilter>
+         <action>
+          <ignore></ignore>
+         </action>
+        </pluginExecution>
+       </pluginExecutions>
+      </lifecycleMappingMetadata>
+     </configuration>
+    </plugin>
+   </plugins>
   </pluginManagement>
  </build>
  <dependencies>
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-common</artifactId>
-   <version>0.1-SNAPSHOT</version>
-   <scope>compile</scope>
+   <version>${project.version}</version>
   </dependency>
   <dependency>
-  	<groupId>org.eclipse.persistence</groupId>
-  	<artifactId>javax.persistence</artifactId>
-  	<version>2.0.0</version>
-  	<type>jar</type>
-  	<scope>compile</scope>
+   <groupId>org.eclipse.persistence</groupId>
+   <artifactId>javax.persistence</artifactId>
+   <version>2.0.0</version>
+   <type>jar</type>
+   <scope>compile</scope>
   </dependency>
   <dependency>
    <groupId>org.eclipse.persistence</groupId>
@@ -124,9 +127,9 @@
    <scope>compile</scope>
   </dependency>
   <dependency>
-  	<groupId>org.liquibase</groupId>
-  	<artifactId>liquibase-core</artifactId>
-  	<version>1.9.5</version>
+   <groupId>org.liquibase</groupId>
+   <artifactId>liquibase-core</artifactId>
+   <version>1.9.5</version>
   </dependency>
   <dependency>
    <groupId>hsqldb</groupId>
@@ -135,11 +138,12 @@
    <scope>test</scope>
   </dependency>
   <dependency>
-  	<groupId>com.h2database</groupId>
-  	<artifactId>h2</artifactId>
-  	<version>1.2.139</version>
-  	<type>jar</type>
-  	<scope>test</scope>
+   <groupId>com.h2database</groupId>
+   <artifactId>h2</artifactId>
+   <version>1.2.139</version>
+   <type>jar</type>
+   <scope>test</scope>
   </dependency>
  </dependencies>
+ <description>FTS persistence components</description>
 </project>

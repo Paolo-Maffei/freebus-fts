@@ -38,8 +38,11 @@ public class TestProjectImporter extends ProjectTestCase
 
       System.err.println("@Before");
       
-      manuService.saveIfMissing(new Manufacturer(1, "Manufacturer-1"));
-      manuService.saveIfMissing(new Manufacturer(2, "Manufacturer-2"));
+      manuService.saveIfMissing(new Manufacturer(101, "Manufacturer-1"));
+      manuService.saveIfMissing(new Manufacturer(102, "Manufacturer-2"));
+      getProductsFactory().flushEntityManager();
+      
+      assertNotNull(manuService.getManufacturer("Manufacturer-1"));
    }
 
    @Test
@@ -55,6 +58,7 @@ public class TestProjectImporter extends ProjectTestCase
    }
 
    // TODO fix @Test
+   @Test
    public void readProject() throws FileNotFoundException
    {
       final String data = XML_HEADER + 

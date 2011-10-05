@@ -20,6 +20,8 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class JobQueue implements JobListener
 {
+   private final static Logger LOGGER = Logger.getLogger(JobQueue.class);
+
    private static JobQueue defaultJobQueue;
    private final Queue<Job> jobs = new ConcurrentLinkedQueue<Job>();
    private final CopyOnWriteArrayList<JobQueueListener> listeners = new CopyOnWriteArrayList<JobQueueListener>();
@@ -182,6 +184,8 @@ public class JobQueue implements JobListener
     */
    protected void runJob(Job job)
    {
+      LOGGER.info("Starting job " + job);
+
       final JobQueueEvent masterEvent = new JobQueueEvent(job, 0, "");
       notifyListeners(masterEvent);
 
