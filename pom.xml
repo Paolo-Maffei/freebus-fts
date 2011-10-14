@@ -56,11 +56,6 @@
     <type>jar</type>
     <scope>compile</scope>
    </dependency>
-   <dependency>
-    <groupId>org.slf4j</groupId>
-    <artifactId>slf4j-log4j12</artifactId>
-    <version>1.6.2</version>
-   </dependency>
   </dependencies>
  </dependencyManagement>
  <distributionManagement>
@@ -72,13 +67,6 @@
   </repository>
  </distributionManagement>
  <dependencies>
-  <dependency>
-   <groupId>log4j</groupId>
-   <artifactId>log4j</artifactId>
-   <version>1.2.16</version>
-   <type>jar</type>
-   <scope>compile</scope>
-  </dependency>
   <dependency>
    <groupId>junit</groupId>
    <artifactId>junit</artifactId>
@@ -94,7 +82,13 @@
   </dependency>
   <dependency>
    <groupId>org.slf4j</groupId>
-   <artifactId>slf4j-log4j12</artifactId>
+   <artifactId>slf4j-api</artifactId>
+   <version>1.6.2</version>
+  </dependency>
+  <dependency>
+   <groupId>ch.qos.logback</groupId>
+   <artifactId>logback-classic</artifactId>
+   <version>0.9.30</version>
   </dependency>
  </dependencies>
  <build>

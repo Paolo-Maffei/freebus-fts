@@ -16,14 +16,14 @@ public abstract class ProjectTestCase extends PersistenceTestCase
    private ProjectFactory projectFactory;
    private Project project;
 
-   public ProjectTestCase(final String persistenceUnitName)
-   {
-      super(persistenceUnitName);
-   }
-
    public ProjectTestCase()
    {
       this("default");
+   }
+
+   public ProjectTestCase(final String persistenceUnitName)
+   {
+      super(persistenceUnitName);
    }
 
    /**

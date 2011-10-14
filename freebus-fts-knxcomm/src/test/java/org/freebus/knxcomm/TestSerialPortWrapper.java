@@ -10,32 +10,31 @@ import gnu.io.SerialPortEventListener;
 import java.io.IOException;
 import java.util.TooManyListenersException;
 
-import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Logger;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.link.serial.SerialPortWrapper;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /*
  * These tests fail if your system has no serial port
  */
 public class TestSerialPortWrapper
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(TestSerialPortWrapper.class);
+
    private static String portName;
    private SerialPortWrapper wrapper;
 
    static
    {
-      // Configure Log4J
-      BasicConfigurator.configure();
-      
       final String[] portNames = SerialPortUtil.getPortNames();
       if (portNames == null || portNames.length == 0)
       {
          portName = null;
-         Logger.getLogger(TestSerialPortWrapper.class).info("Cannot run some unit tests: no serial port found");
+         LOGGER.info("Cannot run some unit tests: no serial port found");
       }
       else
       {
@@ -51,7 +50,7 @@ public class TestSerialPortWrapper
          }
          catch (Exception e)
          {
-            Logger.getLogger(TestSerialPortWrapper.class).info("Cannot run some unit tests: serial port " + portName + " cannot be opened");
+            LOGGER.info("Cannot run some unit tests: serial port " + portName + " cannot be opened");
             portName = null;
          }
       }

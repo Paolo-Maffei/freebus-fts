@@ -6,7 +6,6 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Semaphore;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.service.exception.JobFailedException;
 import org.freebus.fts.service.internal.I18n;
 import org.freebus.fts.service.job.event.JobQueueErrorEvent;
@@ -14,13 +13,15 @@ import org.freebus.fts.service.job.event.JobQueueEvent;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The global job-queue executes the enqueued {@link Job}s one after another.
  */
 public class JobQueue implements JobListener
 {
-   private final static Logger LOGGER = Logger.getLogger(JobQueue.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(JobQueue.class);
 
    private static JobQueue defaultJobQueue;
    private final Queue<Job> jobs = new ConcurrentLinkedQueue<Job>();
@@ -60,7 +61,7 @@ public class JobQueue implements JobListener
                }
                catch (InterruptedException e)
                {
-                  Logger.getLogger(getClass()).warn(e);
+                  LOGGER.warn("semaphore acquire interrupted", e);
                }
 
                if (!active)
@@ -226,7 +227,7 @@ public class JobQueue implements JobListener
 
       active = true;
       setLinkMode(LinkMode.LinkLayer);
-      Logger.getLogger(getClass()).debug("job queue active");
+      LOGGER.debug("job queue active");
    }
 
    /**
@@ -251,7 +252,7 @@ public class JobQueue implements JobListener
       active = false;
       notifyListeners(new JobQueueEvent(null));
       setLinkMode(LinkMode.BusMonitor);
-      Logger.getLogger(getClass()).debug("job queue idle");
+      LOGGER.debug("job queue idle");
    }
 
    /**
@@ -271,7 +272,7 @@ public class JobQueue implements JobListener
          }
          catch (IOException e)
          {
-            Logger.getLogger(getClass()).error(e);
+            LOGGER.error("setting link mode failed", e);
          }
       }
    }

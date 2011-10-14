@@ -7,12 +7,13 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.products.importer.ProductsImporter;
 import org.freebus.fts.products.importer.RemappingProductsImporter;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.jpa.JpaProductsFactory;
 import org.freebus.fts.products.services.vdx.VdxProductsFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Get a DAO factory for org.freebus.fts.products stored in the database or a
@@ -20,7 +21,7 @@ import org.freebus.fts.products.services.vdx.VdxProductsFactory;
  */
 public final class ProductsManager
 {
-   private final static Logger LOGGER = Logger.getLogger(ProductsManager.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(ProductsManager.class);
 
    private ProductsManager()
    {

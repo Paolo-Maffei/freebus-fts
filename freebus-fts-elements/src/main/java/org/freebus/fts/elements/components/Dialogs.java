@@ -4,11 +4,11 @@ import java.awt.Cursor;
 
 import javax.swing.JOptionPane;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.elements.AbstractApplicationWindow;
 import org.freebus.fts.elements.audio.AudioClip;
 import org.freebus.fts.elements.internal.I18n;
 import org.freebus.fts.elements.services.ImageCache;
+import org.slf4j.LoggerFactory;
 
 /**
  * Helper methods for showing custom dialogs.
@@ -24,7 +24,7 @@ public final class Dialogs
     */
    public static void showExceptionDialog(Exception e, String message)
    {
-      Logger.getRootLogger().warn(message, e);
+      LoggerFactory.getLogger(Dialogs.class).warn(message, e);
 
       final String fmtMessage = formatExceptionMessage(e, message);
       showErrorDialog(I18n.getMessage("Dialogs.Exception_Title"), fmtMessage);

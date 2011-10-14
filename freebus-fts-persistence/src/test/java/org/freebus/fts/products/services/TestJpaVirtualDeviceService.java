@@ -9,7 +9,6 @@ import java.util.List;
 
 import javax.persistence.NoResultException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.products.CatalogEntry;
 import org.freebus.fts.products.FunctionalEntity;
@@ -19,6 +18,7 @@ import org.freebus.fts.products.VirtualDevice;
 import org.freebus.fts.test_utils.ProductsTestCase;
 import org.junit.Before;
 import org.junit.Test;
+import org.slf4j.LoggerFactory;
 
 
 public class TestJpaVirtualDeviceService extends ProductsTestCase
@@ -30,7 +30,7 @@ public class TestJpaVirtualDeviceService extends ProductsTestCase
    @Before
    public void setUp() throws Exception
    {
-      Logger.getLogger(getClass()).debug("TestJpaVirtualDeviceService.setUp");
+      LoggerFactory.getLogger(getClass()).debug("TestJpaVirtualDeviceService.setUp");
 
       final ProductsFactory productsFactory = getJpaProductsFactory();
       virtDevService = productsFactory.getVirtualDeviceService();

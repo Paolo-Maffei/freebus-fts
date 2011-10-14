@@ -9,7 +9,7 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A global class that loads and caches the images.
@@ -41,7 +41,7 @@ public final class ImageCache
          }
          else
          {
-            Logger.getLogger(ImageCache.class).error("Could not find icon: " + iconName + ".png");
+            LoggerFactory.getLogger(ImageCache.class).error("Could not find icon: " + iconName + ".png");
          }
          ICON_CACHE.put(iconName, icon);
       }

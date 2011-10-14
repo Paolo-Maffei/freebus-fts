@@ -24,7 +24,6 @@ import liquibase.exception.LiquibaseException;
 import liquibase.exception.LockException;
 import liquibase.lock.LockHandler;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.core.InteractiveProjectController;
@@ -40,6 +39,8 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.internal.JarLoader;
 import org.freebus.knxcomm.types.LinkMode;
 import org.jdesktop.application.SessionStorage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * The FTS application class. This class is responsible for starting the
@@ -51,7 +52,7 @@ import org.jdesktop.application.SessionStorage;
 //@Component
 public final class Application extends org.jdesktop.application.Application
 {
-   private final static Logger LOGGER = Logger.getLogger(Application.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(Application.class);
    private static Application instance;
 
    private Properties manifestProps;
@@ -368,7 +369,7 @@ public final class Application extends org.jdesktop.application.Application
                }
                catch (LiquibaseException le)
                {
-                  LOGGER.warn(le);
+                  LOGGER.warn("failed to drop all database tables", le);
                }
                --tries;
             }
@@ -588,8 +589,6 @@ public final class Application extends org.jdesktop.application.Application
     */
    private void loadPlugins(String pluginsDir)
    {
-      final Logger logger = Logger.getLogger(Application.class);
-
       final File dir = new File(pluginsDir);
       if (!dir.exists())
          return;
@@ -606,7 +605,7 @@ public final class Application extends org.jdesktop.application.Application
 
          try
          {
-            logger.info("Loading plugin " + filePath);
+            LOGGER.info("Loading plugin " + filePath);
             JarLoader.loadJar(new String[] { filePath });
 
             final JarFile jarFile = new JarFile(filePath);

@@ -19,7 +19,6 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.JScrollPane;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
@@ -49,12 +48,15 @@ import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
 import org.freebus.knxcomm.telegram.Telegram;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A page that displays the contents of a KNX/EIB bus trace file.
  */
 public class BusTraceViewer extends WorkBenchEditor
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(BusTraceViewer.class); 
    private static final long serialVersionUID = -7001873554872571938L;
 
    private final JList list;
@@ -221,7 +223,7 @@ public class BusTraceViewer extends WorkBenchEditor
          }
          catch (ParseException e)
          {
-            Logger.getLogger(getClass()).warn(e);
+            LOGGER.warn("failed reading file " + file, e);
             when = null;
          }
 

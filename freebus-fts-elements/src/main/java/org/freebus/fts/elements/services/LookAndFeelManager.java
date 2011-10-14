@@ -6,7 +6,8 @@ import java.util.Set;
 import javax.swing.LookAndFeel;
 import javax.swing.UIManager;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A helper class that gets the class names for a bunch of custom look&feels.
@@ -14,6 +15,7 @@ import org.apache.log4j.Logger;
  */
 public final class LookAndFeelManager
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(LookAndFeelManager.class);
    private final Set<Class<? extends LookAndFeel>> lafClasses = new HashSet<Class<? extends LookAndFeel>>();
 
    /**
@@ -69,13 +71,11 @@ public final class LookAndFeelManager
     */
    public void install()
    {
-      final Logger logger = Logger.getLogger(getClass());
-
       for (Class<? extends LookAndFeel> lafClass : lafClasses)
       {
          try
          {
-            logger.info("Installing look&feel plugin: " + lafClass.getSimpleName());
+            LOGGER.info("Installing look&feel plugin: " + lafClass.getSimpleName());
             UIManager.installLookAndFeel(lafClass.newInstance().getName(), lafClass.getCanonicalName());
          }
          catch (Exception e)

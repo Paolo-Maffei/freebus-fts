@@ -6,14 +6,15 @@ import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Enumeration;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Print all local IP addresses to the console.
  */
 public class PrintIPAddresses
 {
-   final static Logger LOGGER = Logger.getLogger(PrintIPAddresses.class);
+   final static Logger LOGGER = LoggerFactory.getLogger(PrintIPAddresses.class);
 
    public static void main(String[] args)
    {

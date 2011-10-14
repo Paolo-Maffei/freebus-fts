@@ -2,7 +2,6 @@ package org.freebus.fts.project;
 
 import javax.persistence.PersistenceException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.VirtualDevice;
@@ -10,6 +9,7 @@ import org.freebus.fts.products.services.ManufacturerService;
 import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.VirtualDeviceService;
 import org.freebus.fts.project.internal.I18n;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory that creates a project that gets initialized with example values.
@@ -31,7 +31,7 @@ public final class SampleProjectFactory
     */
    public synchronized static void importSampleDevices(final String persistenceUnitName)
    {
-      Logger.getLogger(SampleProjectFactory.class).info("Importing sample products");
+      LoggerFactory.getLogger(SampleProjectFactory.class).info("Importing sample products");
       ProductsManager.importResource("products/freebus-ap254.vd_", persistenceUnitName, ProductsManager.getFactory());
       ProductsManager.importResource("products/freebus-8out.vd_", persistenceUnitName, ProductsManager.getFactory());
       ProductsManager.importResource("products/freebus-8in.vd_", persistenceUnitName, ProductsManager.getFactory());

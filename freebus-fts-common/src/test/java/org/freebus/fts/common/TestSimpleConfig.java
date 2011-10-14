@@ -52,7 +52,7 @@ public class TestSimpleConfig
    @Test
    public final void testGetSetStringValue()
    {
-      final SimpleConfig cfg = SimpleConfig.getInstance();
+      final SimpleConfig cfg = new SimpleConfig();
 
       assertFalse(cfg.containsKey(""));
       assertEquals(null, cfg.get("key-1"));
@@ -63,6 +63,8 @@ public class TestSimpleConfig
       cfg.put("key-1", "val-1");
       assertTrue(cfg.containsKey("key-1"));
       assertEquals("val-1", cfg.getStringValue("key-1"));
+      assertEquals("val-1", cfg.getStringValue("key-1", "default"));
+      assertEquals("default", cfg.getStringValue("key-999", "default"));
       assertFalse(cfg.containsKey("key-2"));
 
       cfg.put("key-2", "val-2");
@@ -84,6 +86,8 @@ public class TestSimpleConfig
       cfg.put("key-1", 1);
       assertTrue(cfg.containsKey("key-1"));
       assertEquals(1, cfg.getIntValue("key-1"));
+      assertEquals(1, cfg.getIntValue("key-1", 123));
+      assertEquals(123, cfg.getIntValue("key-999", 123));
       assertFalse(cfg.containsKey("key-2"));
 
       cfg.put("key-2", 2);

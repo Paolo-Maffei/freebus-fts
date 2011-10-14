@@ -9,7 +9,6 @@ import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
@@ -27,6 +26,8 @@ import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * {@link BusInterface} implementation. Use {@link BusInterfaceFactory} to get a
@@ -34,7 +35,7 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class BusInterfaceImpl implements BusInterface
 {
-   private final static Logger LOGGER = Logger.getLogger(BusInterfaceImpl.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(BusInterfaceImpl.class);
 
    // Timeout for telegram confirmation in milliseconds
    private static final int CONFIRM_TIMEOUT_MS = 3000;
@@ -229,7 +230,7 @@ public class BusInterfaceImpl implements BusInterface
          }
          catch (InterruptedException e)
          {
-            LOGGER.error(e);
+            LOGGER.error("send interrupted", e);
          }
       }
 

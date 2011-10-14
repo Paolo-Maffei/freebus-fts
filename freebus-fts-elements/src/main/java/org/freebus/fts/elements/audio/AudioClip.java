@@ -8,15 +8,18 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.DataLine;
 import javax.sound.sampled.SourceDataLine;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.elements.services.ImageCache;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class for playing an audio clip.
  */
 public class AudioClip
 {
-   private static final int EXTERNAL_BUFFER_SIZE = 8192;
+   private final static Logger LOGGER = LoggerFactory.getLogger(AudioClip.class);
+   private final static int EXTERNAL_BUFFER_SIZE = 8192;
+
    private final java.net.URL clipUrl;
    private SourceDataLine line;
    private Thread playbackThread;
@@ -30,7 +33,7 @@ public class AudioClip
    public AudioClip(final String clipName)
    {
       final String clipFileName = "sounds/" + clipName + ".wav";
-      Logger.getLogger(AudioClip.class).debug("Playing " + clipFileName);
+      LOGGER.debug("Playing " + clipFileName);
 
       final ClassLoader classLoader = ImageCache.class.getClassLoader();
       clipUrl = classLoader.getResource(clipFileName);
@@ -89,7 +92,7 @@ public class AudioClip
       }
       catch (Exception e)
       {
-         Logger.getLogger(getClass()).debug("Failed to play audio clip " + clipUrl, e);
+         LOGGER.warn("Failed to play audio clip " + clipUrl, e);
       }
    }
 }

@@ -47,21 +47,16 @@
       <configuration>
        <!-- Create an index file containing the list of the products files -->
        <source>
-        def outFile = new
-        File("${project.build.directory}/classes/products/files.list");
+        def outFile = new File("${project.build.directory}/classes/products/files.list");
         outFile.getParentFile().mkdirs();
-        println "Creating " +
-        outFile.toString();
-        def out = new PrintStream(new
-        FileOutputStream(outFile));
-        def dir = new
-        File("${pom.basedir}/src/main/resources/products");
-        for (f in
-        dir.listFiles())
+        println "Creating " + outFile.toString();
+        def out = new PrintStream(new FileOutputStream(outFile));
+        def dir = new File("${pom.basedir}/src/main/resources/products");
+        for (f in dir.listFiles())
         {
-        def nm = f.getName();
-        if (nm.toLowerCase().endsWith(".vd_"))
-        out.println(nm);
+           def nm = f.getName();
+           if (nm.toLowerCase().endsWith(".vd_"))
+              out.println(nm);
         }
        </source>
       </configuration>
@@ -87,9 +82,7 @@
        <pluginExecutions>
         <pluginExecution>
          <pluginExecutionFilter>
-          <groupId>
-           org.codehaus.groovy.maven
-          </groupId>
+          <groupId>org.codehaus.groovy.maven</groupId>
           <artifactId>gmaven-plugin</artifactId>
           <versionRange>[1.0,)</versionRange>
           <goals>
@@ -112,6 +105,7 @@
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-common</artifactId>
    <version>${project.version}</version>
+   <scope>provided</scope>
   </dependency>
   <dependency>
    <groupId>org.eclipse.persistence</groupId>
@@ -130,12 +124,6 @@
    <groupId>org.liquibase</groupId>
    <artifactId>liquibase-core</artifactId>
    <version>1.9.5</version>
-  </dependency>
-  <dependency>
-   <groupId>hsqldb</groupId>
-   <artifactId>hsqldb</artifactId>
-   <version>1.8.0.10</version>
-   <scope>test</scope>
   </dependency>
   <dependency>
    <groupId>com.h2database</groupId>

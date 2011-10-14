@@ -37,7 +37,7 @@ public class TestDirectProductsImporter
    @Test
    public final void importVirtualDevices() throws DAOException
    {
-      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.HSQL_MEM, "TestProductsImporter.importTwice");
+      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.H2_MEM, "TestProductsImporter.importTwice");
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-full", conDetails);
       DatabaseResources.setEntityManagerFactory(emf);
 
@@ -96,7 +96,7 @@ public class TestDirectProductsImporter
    public final void importTwice() throws Exception
    {
       final String persistenceUnitName = "test-full-keep-tables";
-      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.HSQL_MEM, "TestProductsImporter.importTwice");
+      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.H2_MEM, "TestProductsImporter.importTwice");
 
       // Create a database connection so that the database does not get deleted within the
       // test steps

@@ -6,11 +6,11 @@ import java.util.List;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.Address;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.application.ApplicationType;
+import org.slf4j.LoggerFactory;
 
 /**
  * A telegram receiver is an object for receiving telegrams from the KNX/EIB
@@ -27,7 +27,7 @@ import org.freebus.knxcomm.application.ApplicationType;
  */
 public class TelegramReceiver extends TelegramAdapter
 {
-   private final static Logger LOGGER = Logger.getLogger(TelegramReceiver.class);
+   private final static org.slf4j.Logger LOGGER = LoggerFactory.getLogger(TelegramReceiver.class);
 
    private final LinkedList<Telegram> telegrams = new LinkedList<Telegram>();
    private final Semaphore waitSem = new Semaphore(0);

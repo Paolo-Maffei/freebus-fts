@@ -7,7 +7,7 @@
  <persistence-unit name="default">
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <properties>
-   <property name="eclipselink.logging.level" value="FINER" />
+   <property name="eclipselink.logging.level" value="INFO" />
   </properties>
  </persistence-unit>
 
@@ -138,7 +138,7 @@
   <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
   <class>org.freebus.fts.persistence.test_entities.SampleEntity</class>
   <properties>
-   <property name="eclipselink.logging.level" value="FINEST" />
+   <property name="eclipselink.logging.level" value="INFO" />
    <property name="eclipselink.ddl-generation" value="none" />
    <property name="eclipselink.ddl-generation.output-mode" value="database" />
   </properties>

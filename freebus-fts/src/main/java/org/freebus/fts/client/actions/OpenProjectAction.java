@@ -8,19 +8,21 @@ import java.awt.event.WindowEvent;
 
 import javax.swing.KeyStroke;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dialogs.ProjectSelector;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Open a project.
  */
 public final class OpenProjectAction extends BasicAction
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(OpenProjectAction.class);
    private static final long serialVersionUID = -3511750343333514078L;
 
    /**
@@ -57,7 +59,7 @@ public final class OpenProjectAction extends BasicAction
                if (project == null) return;
 
                ProjectManager.setProject(project);
-               Logger.getLogger(getClass()).info("Project loaded: " + project.getName());
+               LOGGER.info("Project loaded: " + project.getName());
             }
          });
 

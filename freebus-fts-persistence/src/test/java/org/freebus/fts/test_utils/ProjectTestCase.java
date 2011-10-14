@@ -5,7 +5,7 @@ import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectFactory;
 
-public abstract class ProjectTestCase extends OldPersistenceTestCase
+public abstract class ProjectTestCase extends PersistenceTestCase
 {
    private ProjectFactory projectFactory;
    private ProductsFactory productsFactory;

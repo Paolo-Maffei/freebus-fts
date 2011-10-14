@@ -16,18 +16,20 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.event.EventListenerList;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.components.parametereditor.Page;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceParameter;
 import org.freebus.fts.project.ProjectManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A widget that allows to edit the parameters of a program.
  */
 public class ParameterEditor extends JPanel
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(ParameterEditor.class);
    private static final long serialVersionUID = -2143429348377511397L;
 
    private JTabbedPane paramTabs = new JTabbedPane(JTabbedPane.LEFT);
@@ -187,7 +189,7 @@ public class ParameterEditor extends JPanel
          else
          {
             // Parameter does not belong to a page
-            Logger.getLogger(getClass()).debug("Parameter does not belong to a page: " + param);
+            LOGGER.debug("Parameter does not belong to a page: " + param);
          }
       }
 

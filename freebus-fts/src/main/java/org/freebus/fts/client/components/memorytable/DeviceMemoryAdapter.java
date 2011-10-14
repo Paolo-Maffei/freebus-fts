@@ -5,7 +5,6 @@ import java.util.Set;
 import java.util.TreeSet;
 import java.util.Vector;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.types.ObjectType;
@@ -16,6 +15,8 @@ import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
 import org.freebus.fts.project.SubGroupToObject;
 import org.freebus.fts.service.devicecontroller.AssociationTableEntry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An adapter for a {@link Device} that creates the EEPROM memory tables and
@@ -23,6 +24,8 @@ import org.freebus.fts.service.devicecontroller.AssociationTableEntry;
  */
 public final class DeviceMemoryAdapter
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(DeviceMemoryAdapter.class);
+
    private final Vector<ObjectDescriptor> objectDescriptors = new Vector<ObjectDescriptor>(64);
    private final Vector<GroupAddress> groupAddresses = new Vector<GroupAddress>();
    private final Vector<AssociationTableEntry> associationTable = new Vector<AssociationTableEntry>();
@@ -147,7 +150,7 @@ public final class DeviceMemoryAdapter
       if (userRamAddr > userRamEnd && !outOfRamReported)
       {
          outOfRamReported = true;
-         Logger.getLogger(getClass()).warn("device's user-RAM is exhausted");
+         LOGGER.warn("device's user-RAM is exhausted");
 //         throw new OutOfMemoryError("device's user-RAM is exhausted");
       }
 
@@ -170,7 +173,7 @@ public final class DeviceMemoryAdapter
 
       if (userEepromAddr > userEepromEnd)
       {
-         Logger.getLogger(getClass()).warn("device's user-EEPROM is exhausted");
+         LOGGER.warn("device's user-EEPROM is exhausted");
 //         throw new OutOfMemoryError("device's user-EEPROM is exhausted");
       }
 

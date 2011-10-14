@@ -21,7 +21,6 @@ import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.dragdrop.TransferableObject;
@@ -34,12 +33,15 @@ import org.freebus.fts.project.DeviceObject;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.project.SubGroupToObject;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Displays / edits details about a {@link DeviceObject device object}.
  */
 public class DeviceObjectPanel extends JPanel
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(DeviceObjectPanel.class);
    private static final long serialVersionUID = -4579589068706937561L;
 
    private final JLabel lblName = new JLabel();
@@ -250,8 +252,7 @@ public class DeviceObjectPanel extends JPanel
    {
       if (deviceObject.contains(subGroup))
       {
-         Logger.getLogger(getClass()).warn(
-               I18n.formatMessage("DeviceObjectPanel.GroupAlreadyAdded", subGroup.getGroupAddress().toString()));
+         LOGGER.warn(I18n.formatMessage("DeviceObjectPanel.GroupAlreadyAdded", subGroup.getGroupAddress().toString()));
          return false;
       }
 

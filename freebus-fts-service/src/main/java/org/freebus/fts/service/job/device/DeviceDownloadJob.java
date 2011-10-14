@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
 import org.freebus.fts.common.address.PhysicalAddress;
@@ -32,6 +31,8 @@ import org.freebus.knxcomm.MemoryConnection;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.application.MemoryResponse;
 import org.freebus.knxcomm.telegram.Priority;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A job that downloads details about a specific physical device and populates a
@@ -39,7 +40,7 @@ import org.freebus.knxcomm.telegram.Priority;
  */
 public class DeviceDownloadJob extends ListenableJob
 {
-   private static final Logger LOGGER = Logger.getLogger(DeviceDownloadJob.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(DeviceDownloadJob.class);
 
 //   private boolean createMissingGroups = true;
 

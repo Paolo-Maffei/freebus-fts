@@ -22,7 +22,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.interfaces.Addressable;
 import org.freebus.fts.interfaces.Named;
@@ -31,6 +30,7 @@ import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.VirtualDevice;
+import org.slf4j.LoggerFactory;
 
 /**
  * A KNX/EIB bus device. This is a device that is part of a project, that gets
@@ -498,7 +498,7 @@ public final class Device implements Comparable<Device>, Addressable, Named
             final int number = comObject.getNumber();
             if (visibleComObjects.containsKey(number))
             {
-               Logger.getLogger(getClass()).error(
+               LoggerFactory.getLogger(getClass()).error(
                      "Inconsistency detected: com-objects #" + visibleComObjects.get(number).getId() + " and #"
                      + comObject.getId() + " are visible and have the same unique com-object number " + number);
             }

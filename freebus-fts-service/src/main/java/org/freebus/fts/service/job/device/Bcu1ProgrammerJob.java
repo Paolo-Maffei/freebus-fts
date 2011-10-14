@@ -6,7 +6,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.ByteUtils;
 import org.freebus.fts.common.ObjectDescriptor;
 import org.freebus.fts.common.address.GroupAddress;
@@ -26,13 +25,15 @@ import org.freebus.knxcomm.MemoryConnection;
 import org.freebus.knxcomm.MemoryConnectionInterface;
 import org.freebus.knxcomm.application.memory.MemoryLocation;
 import org.freebus.knxcomm.telegram.Priority;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A device programmer job that using BCU1 programming techniques.
  */
 public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammerJob
 {
-   private static final Logger LOGGER = Logger.getLogger(Bcu1ProgrammerJob.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(Bcu1ProgrammerJob.class);
 
    private final Set<DeviceProgrammerType> types = new HashSet<DeviceProgrammerType>();
    private boolean physicalAddressJobQueued;
@@ -361,20 +362,20 @@ public class Bcu1ProgrammerJob extends ListenableJob implements DeviceProgrammer
       if (physicalAddressJobQueued)
          msleep(500);
 
-      if (false && !device.getProgramming().isPhysicalAddressValid())
-      {
-         if (physicalAddressJobQueued)
-         {
-            // If we come here, programming the physical address failed, and the
-            // user already got an error message. No need to report another
-            // error.
-            LOGGER.debug("Physical address not programmed, skipping job");
-            return;
-         }
-
-         throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrPhysicalAddressNotValid", device
-               .getPhysicalAddress().toString()));
-      }
+//      if (!device.getProgramming().isPhysicalAddressValid())
+//      {
+//         if (physicalAddressJobQueued)
+//         {
+//            // If we come here, programming the physical address failed, and the
+//            // user already got an error message. No need to report another
+//            // error.
+//            LOGGER.debug("Physical address not programmed, skipping job");
+//            return;
+//         }
+//
+//         throw new JobFailedException(I18n.formatMessage("Bcu1ProgrammerJob.ErrPhysicalAddressNotValid", device
+//               .getPhysicalAddress().toString()));
+//      }
 
       final DataConnection con = bus.connect(device.getPhysicalAddress(), Priority.SYSTEM);
       con.installMemoryAddressMapper();

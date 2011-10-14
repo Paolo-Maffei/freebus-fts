@@ -2,11 +2,11 @@ package org.freebus.knxcomm.internal;
 
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import org.apache.log4j.Logger;
 import org.freebus.knxcomm.event.CloseEvent;
 import org.freebus.knxcomm.event.FrameEvent;
 import org.freebus.knxcomm.link.Link;
 import org.freebus.knxcomm.link.LinkListener;
+import org.slf4j.LoggerFactory;
 
 /**
  * An abstract {@link Link} class that has methods for handling listeners.
@@ -49,7 +49,7 @@ public abstract class AbstractListenableLink implements Link
          catch (final RuntimeException ex)
          {
             removeListener(listener);
-            Logger.getLogger(getClass()).error("removed event listener", ex);
+            LoggerFactory.getLogger(AbstractListenableLink.class).error("removed event listener", ex);
          }
       }
    }
@@ -70,7 +70,7 @@ public abstract class AbstractListenableLink implements Link
          catch (final RuntimeException ex)
          {
             removeListener(listener);
-            Logger.getLogger(getClass()).error("removed event listener", ex);
+            LoggerFactory.getLogger(AbstractListenableLink.class).error("removed event listener", ex);
          }
       }
    }

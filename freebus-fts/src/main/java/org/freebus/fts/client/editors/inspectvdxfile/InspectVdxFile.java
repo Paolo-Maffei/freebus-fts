@@ -19,7 +19,6 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
@@ -30,12 +29,15 @@ import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.elements.utils.ButtonUtils;
 import org.freebus.fts.persistence.vdx.VdxFileReader;
 import org.freebus.fts.persistence.vdx.VdxSection;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A page that displays the contents of a VDX file.
  */
 public class InspectVdxFile extends WorkBenchEditor
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(InspectVdxFile.class);
    private static final long serialVersionUID = 244934403536467189L;
 
    private transient VdxFileReader reader;
@@ -237,8 +239,6 @@ public class InspectVdxFile extends WorkBenchEditor
    @Override
    public void updateContents()
    {
-      final Logger logger = Logger.getLogger(getClass());
-
       if (currentContents == null)
          return;
 
@@ -266,12 +266,12 @@ public class InspectVdxFile extends WorkBenchEditor
                final int numRecords = selectedTable.getNumElements();
                if (numRecords >= maxRecords)
                {
-                  logger.warn(I18n.formatMessage("InspectVdxFile.WarnListTruncated",
+                  LOGGER.warn(I18n.formatMessage("InspectVdxFile.WarnListTruncated",
                         Integer.toString(maxRecords), Integer.toString(numRecords)));
                }
                else
                {
-                  logger.info(I18n.formatMessage("InspectVdxFile.RecordsLoaded", Integer.toString(numRecords)));
+                  LOGGER.info(I18n.formatMessage("InspectVdxFile.RecordsLoaded", Integer.toString(numRecords)));
                }
             }
             catch (IOException e)

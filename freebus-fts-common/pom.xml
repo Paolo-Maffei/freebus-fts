@@ -10,4 +10,11 @@
  <artifactId>freebus-fts-common</artifactId>
  <name>freebus-fts-common</name>
  <description>FTS common components</description>
+ <dependencies>
+  <dependency>
+   <groupId>org.slf4j</groupId>
+   <artifactId>jul-to-slf4j</artifactId>
+   <version>1.6.2</version>
+  </dependency>
+ </dependencies>
 </project>

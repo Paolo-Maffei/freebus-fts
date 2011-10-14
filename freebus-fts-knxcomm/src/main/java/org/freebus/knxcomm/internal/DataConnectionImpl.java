@@ -7,7 +7,6 @@ import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
@@ -22,13 +21,15 @@ import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.telegram.Transport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A direct connection to a device on the KNX/EIB bus.
  */
 public class DataConnectionImpl implements DataConnection, TelegramListener
 {
-   private static final Logger LOGGER = Logger.getLogger(DataConnectionImpl.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(DataConnectionImpl.class);
 
    /**
     * The state of the connection.
@@ -142,7 +143,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          }
          catch (IOException e)
          {
-            LOGGER.error(e);
+            LOGGER.error("close interrupted", e);
          }
          finally
          {
@@ -226,22 +227,22 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
     * @throws IOException if a NACK (not-acknowledged) was received.
     * @throws TimeoutException if no acknowledge was received within the timeout
     */
-   private void receiveAcknowledge_SIMPLE() throws IOException, TimeoutException
-   {
-      final Telegram telegram = receiveTelegram(3000);
-      if (telegram != null)
-      {
-         final Transport transport = telegram.getTransport();
-         if (transport == Transport.ConnectedAck)
-            return;
-         if (transport == Transport.ConnectedNak)
-            throw new IOException("NACK received");
-
-         LOGGER.warn("Received out-of-bounds telegram: " + telegram);
-      }
-
-      throw new TimeoutException("timeout while waiting for an acknowledge from the remote device");
-   }
+//   private void receiveAcknowledge_SIMPLE() throws IOException, TimeoutException
+//   {
+//      final Telegram telegram = receiveTelegram(3000);
+//      if (telegram != null)
+//      {
+//         final Transport transport = telegram.getTransport();
+//         if (transport == Transport.ConnectedAck)
+//            return;
+//         if (transport == Transport.ConnectedNak)
+//            throw new IOException("NACK received");
+//
+//         LOGGER.warn("Received out-of-bounds telegram: " + telegram);
+//      }
+//
+//      throw new TimeoutException("timeout while waiting for an acknowledge from the remote device");
+//   }
 
    /**
     * Receive an {@link Transport#ConnectedAck acknowledge} from the remote
@@ -302,7 +303,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
       }
       catch (InterruptedException e)
       {
-         LOGGER.error(e);
+         LOGGER.error("receive interrupted", e);
          return null;
       }
 

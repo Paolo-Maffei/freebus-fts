@@ -21,14 +21,12 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.border.EtchedBorder;
 
-import org.apache.log4j.Appender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.WriterAppender;
-import org.apache.log4j.spi.LoggingEvent;
 import org.freebus.fts.elements.internal.I18n;
 import org.freebus.fts.elements.services.ImageCache;
+
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.core.AppenderBase;
+import ch.qos.logback.core.spi.ContextAwareBase;
 
 /**
  * A component that displays the first line of the latest log event and has a
@@ -89,8 +87,8 @@ public class LogLine extends JPanel
          }
       });
 
-      appender.setLayout(new SimpleLayout());
-      Logger.getRootLogger().addAppender(appender);
+//      appender.setLayout(new SimpleLayout());
+//      Logger.getRootLogger().addAppender(appender);      
    }
 
    /**
@@ -213,16 +211,16 @@ public class LogLine extends JPanel
    /**
     * The internal log-appender of {@link LogLine} that captures the log events.
     */
-   protected final transient Appender appender = new WriterAppender()
+   protected final transient ContextAwareBase appender = new AppenderBase<Object>()
    {
       @Override
-      public void append(final LoggingEvent event)
+      protected void append(Object event)
       {
-         final Level level = event.getLevel();
+         final Level level = Level.INFO; //event.getLevel();
          if (!level.isGreaterOrEqual(Level.INFO))
             return;
 
-         final String message = layout.format(event);
+         final String message = event.toString(); //layout.format(event);
 
          SwingUtilities.invokeLater(new Runnable()
          {
@@ -231,7 +229,7 @@ public class LogLine extends JPanel
             {
                LogLine.this.append(level, message);
 
-               if (level.isGreaterOrEqual(Level.FATAL))
+               if (level.isGreaterOrEqual(Level.ERROR))
                {
                   final StringBuffer sb = new StringBuffer();
 

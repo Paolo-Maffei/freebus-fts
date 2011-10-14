@@ -2,7 +2,6 @@ package example;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
 import org.freebus.knxcomm.event.CloseEvent;
 import org.freebus.knxcomm.event.FrameEvent;
@@ -11,6 +10,8 @@ import org.freebus.knxcomm.link.LinkListener;
 import org.freebus.knxcomm.link.serial.Ft12SerialLink;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Open a serial link, switch to bus monitor mode,
@@ -18,7 +19,7 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public final class SerialLinkExample
 {
-   private final static Logger logger = Logger.getLogger(SerialLinkExample.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(SerialLinkExample.class);
 
    public static void main(String[] args) throws InterruptedException, IOException
    {
@@ -29,14 +30,14 @@ public final class SerialLinkExample
          @Override
          public void linkClosed(CloseEvent e)
          {
-            logger.info("*** exit ***");
+            LOGGER.info("*** exit ***");
             System.exit(0);
          }
          
          @Override
          public void frameReceived(FrameEvent e)
          {
-            logger.debug("received: " + HexString.toString(e.getData()));
+            LOGGER.debug("received: " + HexString.toString(e.getData()));
          }
       });
 

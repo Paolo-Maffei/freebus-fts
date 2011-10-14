@@ -18,7 +18,6 @@ import javax.swing.JScrollPane;
 import javax.swing.SwingUtilities;
 import javax.swing.filechooser.FileFilter;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
@@ -41,12 +40,15 @@ import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.telegram.Transport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A KNX/ETS bus monitor.
  */
 public class BusMonitor extends WorkBenchEditor implements TelegramListener
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(BusMonitor.class);
    private static final long serialVersionUID = -3243196694923284469L;
 
    private JButton btnErase, btnFilter, btnSave;
@@ -291,7 +293,7 @@ public class BusMonitor extends WorkBenchEditor implements TelegramListener
                out.write("\n");
             }
 
-            Logger.getLogger(getClass()).info("Bus trace log saved");
+            LOGGER.info("Bus trace log saved");
 
             out.flush();
          }

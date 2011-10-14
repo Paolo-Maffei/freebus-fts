@@ -3,11 +3,12 @@ package org.freebus.fts.client.components.parametereditor;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.products.Parameter;
 import org.freebus.fts.products.ParameterAtomicType;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.project.Device;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Class that converts the parameter values of a {@link Device} to/from a map of
@@ -15,6 +16,8 @@ import org.freebus.fts.project.Device;
  */
 public final class DeviceParamData
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(DeviceParamData.class);
+
    /**
     * Create {@link ParamData parameter data} objects for all parameters of the
     * given device.
@@ -56,7 +59,7 @@ public final class DeviceParamData
             parentData.addChild(data);
          else
          {
-            Logger.getLogger(DeviceParamData.class).debug("failed to get parentData");
+            LOGGER.debug("failed to get parentData");
             continue;
          }
       }

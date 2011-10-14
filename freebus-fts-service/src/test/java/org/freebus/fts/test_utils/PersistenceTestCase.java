@@ -9,12 +9,16 @@ import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
 import org.junit.After;
 import org.junit.Before;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Base class for persistence test cases that require an entity manager.
  */
 public abstract class PersistenceTestCase
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(PersistenceTestCase.class);
+
    static
    {
       Environment.init();
@@ -52,6 +56,7 @@ public abstract class PersistenceTestCase
    @Before
    public final void setUpPersistenceTestCase()
    {
+      LOGGER.debug("starting database");
       final EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory(persistenceUnitName, conDetails);
       DatabaseResources.setEntityManagerFactory(emf);
 
@@ -66,6 +71,7 @@ public abstract class PersistenceTestCase
    @After
    public final void tearDownPersistenceTestCase()
    {
+      LOGGER.debug("shutting down database");
       DatabaseResources.getEntityManager().getTransaction().rollback();
       DatabaseResources.close();
    }

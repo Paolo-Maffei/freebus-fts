@@ -2,7 +2,6 @@ package org.freebus.fts.client.actions;
 
 import java.awt.event.ActionEvent;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.elements.components.Dialogs;
@@ -13,6 +12,8 @@ import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.Transport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Send a test telegram to the KNX/EIB bus. This is a development / debugging
@@ -21,6 +22,7 @@ import org.freebus.knxcomm.telegram.Transport;
  */
 public final class SendTestTelegramAction extends BasicAction
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(SendTestTelegramAction.class);
    private static final long serialVersionUID = 5690672834708924069L;
 
    /** A connect telegram. */
@@ -110,7 +112,7 @@ public final class SendTestTelegramAction extends BasicAction
       {
          try
          {
-            Logger.getLogger(getClass()).debug("Sending test telegram: " + telegramType);
+            LOGGER.debug("Sending test telegram: " + telegramType);
             bus.send(telegram);
          }
          catch (Exception e)

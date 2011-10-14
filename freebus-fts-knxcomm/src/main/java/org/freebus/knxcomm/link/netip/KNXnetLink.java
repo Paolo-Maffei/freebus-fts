@@ -15,7 +15,6 @@ import java.util.Enumeration;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.EmiFrame;
@@ -39,13 +38,15 @@ import org.freebus.knxcomm.link.netip.types.ServiceType;
 import org.freebus.knxcomm.link.netip.types.StatusCode;
 import org.freebus.knxcomm.link.netip.types.TransportType;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A KNXnet/IP connection.
  */
 public final class KNXnetLink extends AbstractListenableLink implements Link
 {
-   private final static Logger LOGGER = Logger.getLogger(KNXnetLink.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(KNXnetLink.class);
 
    /**
     * The default KNXnet/IP UDP port

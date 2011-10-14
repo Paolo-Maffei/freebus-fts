@@ -9,7 +9,6 @@ import java.util.Set;
 
 import javax.persistence.EntityTransaction;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.persistence.exception.DAOException;
 import org.freebus.fts.products.BcuType;
 import org.freebus.fts.products.CatalogEntry;
@@ -35,17 +34,20 @@ import org.freebus.fts.products.services.ProductsFactory;
 import org.freebus.fts.products.services.ProgramDescriptionService;
 import org.freebus.fts.products.services.ProgramService;
 import org.freebus.fts.products.services.VirtualDeviceService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A products importer that remaps IDs to be unique.
  */
 public final class RemappingProductsImporter implements ProductsImporter
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(RemappingProductsImporter.class);
+
    private final ProductsImporterContext ctx;
    private final Map<String, CatalogEntry> knownCatEntries = new HashMap<String, CatalogEntry>();
    private final Map<CatalogEntry, ProductDescription> prodDescsToStore = new HashMap<CatalogEntry, ProductDescription>();
    private final List<ProgramDescription> progDescsToStore = new LinkedList<ProgramDescription>();
-   private final Logger logger = Logger.getLogger(getClass());
 
    /**
     * Create a products importer that remaps IDs to be unique during import.
@@ -189,7 +191,7 @@ public final class RemappingProductsImporter implements ProductsImporter
       if (knownFuncEntity != null)
          return knownFuncEntity;
 
-      logger.info("New functional entity: " + funcEntity);
+      LOGGER.info("New functional entity: " + funcEntity);
       funcEntity.setId(0);
       funcEntity.setManufacturer(ctx.getManufacturer(funcEntity.getManufacturer().getId()));
 
@@ -276,7 +278,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          CatalogEntry knownCatEntry = knownCatEntries.get(fingerPrint);
          if (knownCatEntry == null)
          {
-            logger.info("New catalog entry: " + catEntry);
+            LOGGER.info("New catalog entry: " + catEntry);
 
             try
             {
@@ -341,7 +343,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          Product knownProduct = knownProducts.get(fingerPrint);
          if (knownProduct == null)
          {
-            logger.info("New hardware product: " + product);
+            LOGGER.info("New hardware product: " + product);
 
             product.setId(0);
             product.setManufacturer(ctx.getManufacturer(catEntry.getManufacturer().getId()));
@@ -350,7 +352,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          }
          else if (product.getVersion() > knownProduct.getVersion())
          {
-            logger.info("Updated hardware product: " + product);
+            LOGGER.info("Updated hardware product: " + product);
 
             product.setId(knownProduct.getId());
             product.setManufacturer(ctx.getManufacturer(catEntry.getManufacturer().getId()));
@@ -478,7 +480,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 
          if (knownProg == null)
          {
-            logger.info("New program: " + prog);
+            LOGGER.info("New program: " + prog);
 
             copyProgram(prog);
          }
@@ -518,7 +520,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 
          if (knownDevice == null)
          {
-            logger.info("New device: " + device);
+            LOGGER.info("New device: " + device);
 
             device.setId(0);
             virtualDeviceService.persist(device);
@@ -526,7 +528,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          }
          else if (device.getNumber() > knownDevice.getNumber())
          {
-            logger.info("Updated device: " + device);
+            LOGGER.info("Updated device: " + device);
 
             device.setId(knownDevice.getId());
             device = virtualDeviceService.merge(device);
@@ -534,7 +536,7 @@ public final class RemappingProductsImporter implements ProductsImporter
          }
          else
          {
-            logger.info("Have same/newer device: " + device);
+            LOGGER.info("Have same/newer device: " + device);
             continue;
 
          }
@@ -617,7 +619,7 @@ public final class RemappingProductsImporter implements ProductsImporter
    {
       int num;
 
-      logger.info("Cleaning up database");
+      LOGGER.info("Cleaning up database");
 
       // TODO
       //
@@ -628,7 +630,7 @@ public final class RemappingProductsImporter implements ProductsImporter
 
       // Cleanup (Hardware) products that no catalog entry references
       num = ctx.destFactory.getProductService().removeOrphanedProducts();
-      logger.info("Cleanup: " + num + " orphaned hardware products deleted");
+      LOGGER.info("Cleanup: " + num + " orphaned hardware products deleted");
    }
 
    /**

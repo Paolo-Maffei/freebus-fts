@@ -11,15 +11,15 @@
  <name>freebus-fts-knxcomm</name>
  <description>Standalone library for KNX/EIB bus communication. Must not depend on other FTS components.</description>
  <dependencies>
-   <dependency>
+  <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-common</artifactId>
    <version>0.1-SNAPSHOT</version>
   </dependency>
   <dependency>
-  	<groupId>org.rxtx</groupId>
-  	<artifactId>rxtx</artifactId>
-  	<version>2.1.7</version>
+   <groupId>org.rxtx</groupId>
+   <artifactId>rxtx</artifactId>
+   <version>2.1.7</version>
   </dependency>
  </dependencies>
 </project>

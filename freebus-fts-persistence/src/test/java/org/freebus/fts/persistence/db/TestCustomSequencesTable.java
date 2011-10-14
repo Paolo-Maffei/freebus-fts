@@ -26,7 +26,7 @@ public class TestCustomSequencesTable
    @Test
    public void testCustomSequencesTable() throws Exception
    {
-      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.HSQL_MEM, "TestCustomSequencesTable");
+      final ConnectionDetails conDetails = new ConnectionDetails(DriverType.H2_MEM, "TestCustomSequencesTable");
 
       final Connection con = DatabaseResources.createConnection(conDetails);
       assertNotNull(con);

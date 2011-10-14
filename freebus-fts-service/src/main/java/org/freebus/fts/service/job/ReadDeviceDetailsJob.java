@@ -3,7 +3,6 @@ package org.freebus.fts.service.job;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
@@ -12,6 +11,8 @@ import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.application.DeviceDescriptorResponse;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 import org.freebus.knxcomm.telegram.Priority;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Gather details about a specific device that is identified by a physical
@@ -19,7 +20,7 @@ import org.freebus.knxcomm.telegram.Priority;
  */
 public final class ReadDeviceDetailsJob extends ListenableJob
 {
-   private final Logger logger = Logger.getLogger(getClass());
+   private final Logger logger = LoggerFactory.getLogger(getClass());
    private final PhysicalAddress addr;
 
    private DeviceDescriptor deviceDescriptor;

@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -25,6 +24,8 @@ import org.freebus.knxcomm.exception.KNXAckTimeoutException;
 import org.freebus.knxcomm.exception.KNXPortClosedException;
 import org.freebus.knxcomm.internal.AbstractListenableLink;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A link to the KNX bus via serial port with FT1.2 protocol.
@@ -33,7 +34,7 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class Ft12SerialLink extends AbstractListenableLink
 {
-   private static final Logger LOGGER = Logger.getLogger(Ft12SerialLink.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(Ft12SerialLink.class);
 
    // Log sent and received FT1.2 messages
    private static final boolean LOG_FT12_MESSAGES = true;
@@ -224,7 +225,7 @@ public class Ft12SerialLink extends AbstractListenableLink
          switchMode = PEISwitchMode.BUSMON;
       else throw new IllegalArgumentException("invalid link mode: " + mode);
 
-      Logger.getLogger(getClass()).debug("Activating " + mode + " link mode");
+      LOGGER.debug("Activating " + mode + " link mode");
       this.mode = mode;
       send((new PEI_Switch_req(switchMode)).toByteArray(), true);
    }

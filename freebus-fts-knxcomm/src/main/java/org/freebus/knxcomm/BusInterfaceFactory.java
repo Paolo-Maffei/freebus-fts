@@ -1,13 +1,14 @@
 package org.freebus.knxcomm;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.knxcomm.internal.BusInterfaceImpl;
+import org.freebus.knxcomm.link.dummy.DummyLink;
 import org.freebus.knxcomm.link.netip.KNXnetLink;
 import org.freebus.knxcomm.link.serial.Ft12SerialLink;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
 import org.freebus.knxcomm.types.KNXConnectionType;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory class for KNX/EIB bus interfaces.
@@ -35,17 +36,7 @@ public final class BusInterfaceFactory
          }
          catch (final Exception e)
          {
-            // SwingUtilities.invokeLater(new Runnable()
-            // {
-            // @Override
-            // public void run()
-            // {
-            // Dialogs.showExceptionDialog(e,
-            // I18n.getMessage("BusInterfaceService.ErrCreateBusInterface"));
-            // }
-            // });
-            Logger.getLogger(BusInterfaceFactory.class).error("Failed to create bus interface: " + e);
-
+            LoggerFactory.getLogger(BusInterfaceFactory.class).error("Failed to create bus interface", e);
             return null;
          }
       }
@@ -129,6 +120,16 @@ public final class BusInterfaceFactory
    public static BusInterface newKNXnetInterface(String host, int port)
    {
       return new BusInterfaceImpl(new KNXnetLink(host, port));
+   }
+
+   /**
+    * Create a new KNXnet/IP bus interface with a {@link DummyLink dummy connection}.
+    *
+    * @return The created bus interface.
+    */
+   public static BusInterface newDummyInterface()
+   {
+      return new BusInterfaceImpl(new DummyLink());
    }
 
    /**

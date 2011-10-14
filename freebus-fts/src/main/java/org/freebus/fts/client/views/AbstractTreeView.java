@@ -23,7 +23,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.TreePath;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.components.PagePosition;
 import org.freebus.fts.client.dragdrop.ObjectTransferHandler;
 import org.freebus.fts.client.dragdrop.TransferableObject;
@@ -33,6 +32,8 @@ import org.freebus.fts.elements.tree.MutableIconTreeNode;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectListener;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for views that contain a {@link JTree tree}
@@ -40,6 +41,7 @@ import org.freebus.fts.project.service.ProjectListener;
  */
 public abstract class AbstractTreeView extends WorkBenchView
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(AbstractTreeView.class);
    private static final long serialVersionUID = -1839540884682454863L;
 
    private final MutableIconTreeNode rootNode = new MutableIconTreeNode("/");
@@ -150,11 +152,11 @@ public abstract class AbstractTreeView extends WorkBenchView
       }
       catch (UnsupportedFlavorException e)
       {
-         Logger.getLogger(getClass()).error(e);
+         LOGGER.error("failed to get transferable objects", e);
       }
       catch (IOException e)
       {
-         Logger.getLogger(getClass()).error(e);
+         LOGGER.error("failed to get transferable objects", e);
       }
 
       return new LinkedList<Object>();

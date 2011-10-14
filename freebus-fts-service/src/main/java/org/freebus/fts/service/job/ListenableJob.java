@@ -4,9 +4,10 @@ import java.io.IOException;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.service.exception.JobFailedException;
 import org.freebus.knxcomm.BusInterface;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Abstract base class for jobs that allow job listeners.
@@ -17,7 +18,7 @@ import org.freebus.knxcomm.BusInterface;
  */
 public abstract class ListenableJob implements Job
 {
-   private final static Logger LOGGER = Logger.getLogger(ListenableJob.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(ListenableJob.class);
 
    private final CopyOnWriteArrayList<JobListener> listeners = new CopyOnWriteArrayList<JobListener>();
    private boolean active;

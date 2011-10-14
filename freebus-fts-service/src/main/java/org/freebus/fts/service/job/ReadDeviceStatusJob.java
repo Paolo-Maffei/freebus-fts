@@ -3,7 +3,6 @@ package org.freebus.fts.service.job;
 import java.io.IOException;
 import java.util.concurrent.TimeoutException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.DataConnection;
@@ -11,12 +10,15 @@ import org.freebus.knxcomm.application.ADCRead;
 import org.freebus.knxcomm.application.MemoryRead;
 import org.freebus.knxcomm.application.memory.MemoryLocation;
 import org.freebus.knxcomm.telegram.Priority;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Currently unused, old, broken job.
  */
 public class ReadDeviceStatusJob extends ListenableJob
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(ReadDeviceStatusJob.class);
    private final PhysicalAddress address;
 
    public ReadDeviceStatusJob(PhysicalAddress address)
@@ -84,11 +86,11 @@ public class ReadDeviceStatusJob extends ListenableJob
       }
       catch (Exception e)
       {
-         Logger.getLogger(getClass()).error("exception in job execution", e);
+         LOGGER.error("exception in job execution", e);
       }
       finally
       {
-         Logger.getLogger(getClass()).info("*** job done, closing connection");
+         LOGGER.info("*** job done, closing connection");
          con.close();
       }
    }

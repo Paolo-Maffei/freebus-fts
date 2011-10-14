@@ -3,7 +3,6 @@ package org.freebus.fts.client.components.parametereditor;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.components.ParameterEditor;
 import org.freebus.fts.products.Parameter;
 
@@ -24,12 +23,6 @@ public class ParamData
    public ParamData(Parameter param)
    {
       this.param = param;
-      if (param.getId() == 162206)
-      {
-         // Debug hook
-         Logger.getLogger(getClass()).debug("Param: " + param);
-      }
-
       value = param.getDefault();
    }
 

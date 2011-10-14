@@ -2,8 +2,6 @@ package org.freebus.fts.common;
 
 import java.io.File;
 
-import org.freebus.fts.common.log.Logging;
-
 /**
  * System specific environment settings.
  */
@@ -49,7 +47,7 @@ public final class Environment
          homeDir = envHomeDir;
       else homeDir = tempDir;
 
-      Logging.setup();
+      //Logging.setup();
    }
 
    /**

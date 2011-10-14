@@ -6,7 +6,6 @@ import java.awt.event.InputEvent;
 
 import javax.swing.KeyStroke;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.elements.components.Dialogs;
@@ -14,12 +13,15 @@ import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.fts.project.Project;
 import org.freebus.fts.project.ProjectManager;
 import org.freebus.fts.project.service.ProjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Save the current project.
  */
 public final class SaveProjectAction extends BasicAction
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(SaveProjectAction.class);
    private static final long serialVersionUID = -2759367485810122303L;
 
    /**
@@ -54,7 +56,7 @@ public final class SaveProjectAction extends BasicAction
 
          projectFactory.getTransaction().commit();
 
-         Logger.getLogger(getClass()).info("Project saved");
+         LOGGER.info("Project saved");
       }
       catch (Exception e)
       {

@@ -2,7 +2,6 @@ package example;
 
 import java.io.IOException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.service.exception.JobFailedException;
@@ -13,6 +12,8 @@ import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramAdapter;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Starts a {@link ReadDeviceDetailsJob} job for a specific device.
@@ -25,6 +26,8 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class ReadDeviceDetailsJobExample extends TelegramAdapter
 {
+   private final static Logger LOGGER = LoggerFactory.getLogger(ReadDeviceDetailsJobExample.class);
+
    // Physical address of the device to read details from
    private final PhysicalAddress target = new PhysicalAddress(1, 1, 12);
 
@@ -65,7 +68,7 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
             if (message == null)
                message = "";
 
-            Logger.getLogger(SetPhysicalAddressExample.class).info("%%% Job " + done + "%: " + message);
+            LOGGER.info("%%% Job " + done + "%: " + message);
          }
       });
 
@@ -107,18 +110,18 @@ public class ReadDeviceDetailsJobExample extends TelegramAdapter
       }
       catch (Exception e)
       {
-         Logger.getLogger(ReadDeviceDetailsJobExample.class).error(e);
+         LOGGER.error("top level exception", e);
       }
       finally
       {
          if (tst != null)
          {
-            Logger.getLogger(ReadDeviceDetailsJobExample.class).debug("closing connection");
+            LOGGER.debug("closing connection");
             tst.dispose();
          }
 
          Thread.sleep(500);
-         Logger.getLogger(ReadDeviceDetailsJobExample.class).debug("done, exit");
+         LOGGER.debug("done, exit");
          System.exit(0);
       }
    }

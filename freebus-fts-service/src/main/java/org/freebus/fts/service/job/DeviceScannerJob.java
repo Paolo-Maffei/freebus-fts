@@ -5,7 +5,6 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.service.internal.I18n;
 import org.freebus.fts.service.job.entity.DeviceInfo;
@@ -19,6 +18,8 @@ import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramReceiver;
 import org.freebus.knxcomm.telegram.Transport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Scan for devices on a KNX/EIB network line.
@@ -28,7 +29,7 @@ import org.freebus.knxcomm.telegram.Transport;
  */
 public final class DeviceScannerJob extends ListenableJob
 {
-   private final static Logger LOGGER = Logger.getLogger(DeviceScannerJob.class);
+   private final static Logger LOGGER = LoggerFactory.getLogger(DeviceScannerJob.class);
 
    final Map<PhysicalAddress, DeviceInfo> deviceInfos = new TreeMap<PhysicalAddress, DeviceInfo>();
    final Telegram dataTelegram = new Telegram();
@@ -253,7 +254,7 @@ public final class DeviceScannerJob extends ListenableJob
                }
                catch (IOException e)
                {
-                  LOGGER.warn(e);
+                  LOGGER.warn("failed to send ACK telegram", e);
                }
                msleep(50);
             }
@@ -269,7 +270,7 @@ public final class DeviceScannerJob extends ListenableJob
                   }
                   catch (IOException e)
                   {
-                     LOGGER.warn(e);
+                     LOGGER.warn("failed to send mem-read telegram", e);
                   }
                }
                msleep(50);

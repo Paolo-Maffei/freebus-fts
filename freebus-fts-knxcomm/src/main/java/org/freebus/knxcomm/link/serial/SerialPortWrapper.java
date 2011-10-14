@@ -10,13 +10,16 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.TooManyListenersException;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A wrapper class for accessing serial ports.
  */
 public class SerialPortWrapper
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(SerialPortWrapper.class);
+
    /**
     * Constants for the number of data bits.
     */
@@ -85,7 +88,7 @@ public class SerialPortWrapper
 
       try
       {
-         Logger.getLogger(getClass()).debug("Opening serial port " + portName);
+         LOGGER.debug("Opening serial port " + portName);
 
          inputStream = null;
          outputStream = null;
@@ -131,7 +134,7 @@ public class SerialPortWrapper
       if (serialPort == null)
          return;
 
-      Logger.getLogger(getClass()).debug("Closing serial port " + portName);
+      LOGGER.debug("Closing serial port " + portName);
 
       try
       {

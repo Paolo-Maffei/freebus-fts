@@ -1,12 +1,13 @@
 package example;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.Environment;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
 import org.freebus.knxcomm.types.LinkMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A simple bus monitor that opens a bus interface, and prints the received
@@ -14,6 +15,7 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class SerialBusMonitor implements TelegramListener
 {
+   final static Logger LOGGER = LoggerFactory.getLogger(SerialBusMonitor.class);
    private final BusInterface iface;
 
    /**
@@ -28,7 +30,7 @@ public class SerialBusMonitor implements TelegramListener
 
       iface.addListener(this);
       iface.open(LinkMode.BusMonitor);
-      Logger.getLogger(getClass()).debug("Bus connection opened");
+      LOGGER.debug("Bus connection opened");
    }
 
    /**

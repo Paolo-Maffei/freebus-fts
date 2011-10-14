@@ -2,21 +2,24 @@ package org.freebus.fts.project;
 
 import java.util.concurrent.CopyOnWriteArraySet;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.project.service.ProjectController;
 import org.freebus.fts.project.service.ProjectFactory;
 import org.freebus.fts.project.service.ProjectListener;
 import org.freebus.fts.project.service.jpa.JpaProjectFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A static manager that holds the global (default) project instance.
  */
 public final class ProjectManager
 {
-   static private Project project = new Project();
-   static private ProjectController controller;
-   static private final CopyOnWriteArraySet<ProjectListener> listeners = new CopyOnWriteArraySet<ProjectListener>();
-   static private ProjectFactory projectFactory = new JpaProjectFactory();
+   private static Logger LOGGER = LoggerFactory.getLogger(ProjectManager.class);
+
+   private static Project project = new Project();
+   private static ProjectController controller;
+   private static final CopyOnWriteArraySet<ProjectListener> listeners = new CopyOnWriteArraySet<ProjectListener>();
+   private static ProjectFactory projectFactory = new JpaProjectFactory();
 
    /**
     * Set the global project instance. Informs all listeners.
@@ -85,7 +88,7 @@ public final class ProjectManager
     */
    static public void fireProjectChanged()
    {
-      Logger.getLogger(ProjectManager.class).debug("fire project changed");
+      LOGGER.debug("fire project changed");
 
       for (ProjectListener listener : listeners)
          listener.projectChanged(project);
@@ -99,7 +102,7 @@ public final class ProjectManager
     */
    static public void fireComponentAdded(Object obj)
    {
-      Logger.getLogger(ProjectManager.class).debug("fire added: " + obj);
+      LOGGER.debug("fire added: " + obj);
 
       for (ProjectListener listener : listeners)
          listener.projectComponentAdded(obj);
@@ -113,7 +116,7 @@ public final class ProjectManager
     */
    static public void fireComponentModified(Object obj)
    {
-      Logger.getLogger(ProjectManager.class).debug("fire modified: " + obj);
+      LOGGER.debug("fire modified: " + obj);
 
       for (ProjectListener listener : listeners)
          listener.projectComponentModified(obj);
@@ -127,7 +130,7 @@ public final class ProjectManager
     */
    static public void fireComponentRemoved(Object obj)
    {
-      Logger.getLogger(ProjectManager.class).debug("fire removed: " + obj);
+      LOGGER.debug("fire removed: " + obj);
 
       for (ProjectListener listener : listeners)
          listener.projectComponentRemoved(obj);

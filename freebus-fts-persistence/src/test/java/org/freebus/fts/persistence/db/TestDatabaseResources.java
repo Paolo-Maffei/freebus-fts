@@ -10,18 +10,12 @@ import javax.persistence.EntityManagerFactory;
 
 import liquibase.Liquibase;
 
-import org.freebus.fts.common.log.Logging;
 import org.freebus.fts.persistence.test_entities.SampleFunctionalEntity;
 import org.freebus.fts.test_utils.OldPersistenceTestCase;
 import org.junit.Test;
 
 public class TestDatabaseResources extends OldPersistenceTestCase
 {
-   static
-   {
-      Logging.setup();
-   }
-
    public TestDatabaseResources()
    {
       super("test-empty");
@@ -30,7 +24,7 @@ public class TestDatabaseResources extends OldPersistenceTestCase
    @Test
    public void testCreateEntityManagerFactory()
    {
-      final ConnectionDetails cd = new ConnectionDetails(DriverType.HSQL_MEM, "test");
+      final ConnectionDetails cd = new ConnectionDetails(DriverType.H2_MEM, "test");
       EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-entities", cd);
       assertNotNull(emf);
 
@@ -41,7 +35,7 @@ public class TestDatabaseResources extends OldPersistenceTestCase
    @Test
    public void testCreateConnection() throws SQLException, ClassNotFoundException
    {
-      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.HSQL_MEM, "testCreateConnection"));
+      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.H2_MEM, "testCreateConnection"));
       con.close();
    }
 
@@ -51,7 +45,7 @@ public class TestDatabaseResources extends OldPersistenceTestCase
    @Test
    public void testCreateMigrator() throws Exception
    {
-      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.HSQL_MEM, "migrator-test", "", "sa", ""));
+      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.H2_MEM, "migrator-test", "", "sa", ""));
       Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml", con);
       assertNotNull(liq);
 
@@ -65,7 +59,7 @@ public class TestDatabaseResources extends OldPersistenceTestCase
    @Test
    public void testCreateMigratorEmptyDatabase() throws Exception
    {
-      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.HSQL_MEM, "migrator-test-empty", "", "sa", ""));
+      final Connection con = DatabaseResources.createConnection(new ConnectionDetails(DriverType.H2_MEM, "migrator-test-empty", "", "sa", ""));
       Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml", con);
       assertNotNull(liq);
 
@@ -80,7 +74,7 @@ public class TestDatabaseResources extends OldPersistenceTestCase
    public void testMigrateOldDatabase() throws Exception
    {
       final String dbName = "migrator-test-exists";
-      final ConnectionDetails cd = new ConnectionDetails(DriverType.HSQL_MEM, dbName);
+      final ConnectionDetails cd = new ConnectionDetails(DriverType.H2_MEM, dbName);
 
       EntityManagerFactory emf = DatabaseResources.createEntityManagerFactory("test-entities", cd);
       assertNotNull(emf);

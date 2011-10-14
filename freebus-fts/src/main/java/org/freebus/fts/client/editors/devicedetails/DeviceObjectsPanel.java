@@ -16,7 +16,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.border.EtchedBorder;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.products.CommunicationObject;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.DeviceObject;
@@ -24,6 +23,8 @@ import org.freebus.fts.project.MainGroup;
 import org.freebus.fts.project.MidGroup;
 import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.service.devicecontroller.DeviceController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An editor for the communication objects of a device.
@@ -31,6 +32,7 @@ import org.freebus.fts.service.devicecontroller.DeviceController;
  */
 public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(DeviceObjectsPanel.class);
    private static final long serialVersionUID = -6987571415817658896L;
 
    private final JPanel contents = new JPanel();
@@ -85,7 +87,7 @@ public class DeviceObjectsPanel extends JPanel implements DeviceEditorComponent
          return;
       }
 
-      Logger.getLogger(getClass()).info("updateContents");
+      LOGGER.info("updateContents");
       dirty = false;
       contents.removeAll();
 

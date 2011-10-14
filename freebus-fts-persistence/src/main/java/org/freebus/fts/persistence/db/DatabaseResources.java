@@ -17,16 +17,19 @@ import liquibase.database.Database;
 import liquibase.database.DatabaseFactory;
 import liquibase.exception.JDBCException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.common.SimpleConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Factory for database resources.
  */
 public class DatabaseResources
 {
-   static private EntityManagerFactory entityManagerFactory;
-   static private EntityManager entityManager;
+   private final static Logger LOGGER = LoggerFactory.getLogger(DatabaseResources.class);
+
+   private static EntityManagerFactory entityManagerFactory;
+   private static EntityManager entityManager;
 
    /**
     * Lazily acquire the global entity manager and cache it.
@@ -80,7 +83,7 @@ public class DatabaseResources
    static public EntityManagerFactory createEntityManagerFactory(String persistenceUnitName,
          ConnectionDetails conDetails)
    {
-      Logger.getLogger(DatabaseResources.class).info("JPA Connecting: " + conDetails.getConnectURL());
+      LOGGER.info("JPA Connecting: " + conDetails.getConnectURL());
 
       try
       {
@@ -89,9 +92,7 @@ public class DatabaseResources
       }
       catch (PersistenceException e)
       {
-         Logger.getLogger(DatabaseResources.class).error(
-               "Cannot create entity manager factory for persistence-unit \"" + persistenceUnitName + "\": "
-                     + e.getMessage());
+         LOGGER.error("Cannot create entity manager factory for persistence-unit \"" + persistenceUnitName + "\": " + e.getMessage());
          throw e;
       }
    }
@@ -176,7 +177,7 @@ public class DatabaseResources
          final Driver dbDriver = (Driver) ClassLoader.getSystemClassLoader().loadClass(type.className).newInstance();
 
          final String url = conDetails.getConnectURL();
-         Logger.getLogger(DatabaseResources.class).info("JDBC Connecting: " + url);
+         LOGGER.info("JDBC Connecting: " + url);
 
          final Properties props = new Properties();
          props.setProperty("user", conDetails.getUser());
@@ -211,7 +212,7 @@ public class DatabaseResources
       props.setProperty("javax.persistence.jdbc.user", conDetails.getUser());
       props.setProperty("javax.persistence.jdbc.password", conDetails.getPassword());
 
-      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
+//      props.setProperty("eclipselink.logging.logger", "org.freebus.fts.persistence.db.CommonsLoggingSessionLog");
 
       final DriverType type = conDetails.getType();
       if (type == DriverType.HSQL || type == DriverType.HSQL_MEM)

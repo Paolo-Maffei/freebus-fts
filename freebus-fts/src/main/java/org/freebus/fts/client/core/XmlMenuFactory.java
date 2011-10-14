@@ -12,9 +12,10 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.log4j.Logger;
 import org.freebus.fts.client.actions.ActionFactory;
 import org.freebus.fts.common.exception.FtsRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -27,7 +28,7 @@ import org.xml.sax.SAXException;
 //@Component
 public class XmlMenuFactory
 {
-   private static final Logger LOGGER = Logger.getLogger(XmlMenuFactory.class);
+   private static final Logger LOGGER = LoggerFactory.getLogger(XmlMenuFactory.class);
 
    /**
     * Create a menu bar from an XML configuration file.
