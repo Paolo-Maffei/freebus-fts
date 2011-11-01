@@ -9,7 +9,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.Table;
 import javax.persistence.TableGenerator;
 
 import org.freebus.fts.interfaces.Named;
@@ -18,7 +17,7 @@ import org.freebus.fts.interfaces.Named;
  * A parameter of a program.
  */
 @Entity(name = "parameter")
-@Table(name = "\"parameter\"")
+//@Table(name = "\"parameter\"")
 public class Parameter implements Named
 {
    @Id

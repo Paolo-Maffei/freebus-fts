@@ -7,20 +7,23 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.eclipse.persistence.annotations.PrimaryKey;
+
 /**
  * These objects connect {@link SubGroup sub groups} with {@link DeviceObject
  * device objects}.
  */
 @Entity
 @Table(name = "sub_group_to_object")
+@PrimaryKey(columns = { @Column(name="sub_group_id"), @Column(name="device_object_id") })
 public class SubGroupToObject implements Comparable<SubGroupToObject>
 {
-   @Id
+//   @Id
    @ManyToOne(optional = false)
    @JoinColumn(name = "sub_group_id", nullable = false)
    private SubGroup subGroup;
 
-   @Id
+//   @Id
    @ManyToOne(optional = false)
    @JoinColumn(name = "device_object_id", nullable = false)
    private DeviceObject deviceObject;

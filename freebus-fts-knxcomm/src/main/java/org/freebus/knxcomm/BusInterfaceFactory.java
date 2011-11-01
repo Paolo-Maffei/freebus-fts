@@ -55,7 +55,8 @@ public final class BusInterfaceFactory
 
    /**
     * Create the default bus interface. Automatically called on demand by
-    * {@link #getBusInterface()}.
+    * {@link #getBusInterface()}. Uses the global {@link SimpleConfig configuration} to get
+    * the configured bus interface.
     *
     * @throws Exception
     *
@@ -68,10 +69,14 @@ public final class BusInterfaceFactory
 
       final KNXConnectionType type = KNXConnectionType.valueOf(cfg.getStringValue("knxConnectionType"));
       if (type == KNXConnectionType.KNXNET_IP)
+      {
          newBusInterface = newKNXnetInterface(cfg.getStringValue("knxConnectionKNXnet.host"), cfg
                .getIntValue("knxConnectionKNXnet.port"));
+      }
       else if (type == KNXConnectionType.SERIAL_FT12)
+      {
          newBusInterface = newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
+      }
       else throw new Exception("No bus interface configured");
 
       newBusInterface.open(defaultLinkMode);

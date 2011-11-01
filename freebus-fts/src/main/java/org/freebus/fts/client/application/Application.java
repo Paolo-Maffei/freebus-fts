@@ -22,7 +22,7 @@ import javax.swing.UIManager;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
 import liquibase.exception.LockException;
-import liquibase.lock.LockHandler;
+import liquibase.lockservice.LockService;
 
 import org.freebus.fts.client.core.Config;
 import org.freebus.fts.client.core.I18n;
@@ -304,7 +304,7 @@ public final class Application extends org.jdesktop.application.Application
       }
 
       int tries = 10;
-      final LockHandler liqLockHandler = LockHandler.getInstance(liq.getDatabase());
+      final LockService liqLockHandler = LockService.getInstance(liq.getDatabase());
       for (; tries > 0; --tries)
       {
          try

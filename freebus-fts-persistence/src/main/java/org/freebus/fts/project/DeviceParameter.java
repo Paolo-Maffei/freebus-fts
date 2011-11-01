@@ -10,6 +10,7 @@ import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import org.eclipse.persistence.annotations.PrimaryKey;
 import org.freebus.fts.products.Parameter;
 
 /**
@@ -19,14 +20,15 @@ import org.freebus.fts.products.Parameter;
  */
 @Entity
 @Table(name = "device_parameter")
+@PrimaryKey(columns = { @Column(name="device_id"), @Column(name="parameter_id") })
 public class DeviceParameter
 {
-   @Id
+//   @Id
    @ManyToOne(optional = false, fetch = FetchType.LAZY)
    @JoinColumn(name = "device_id", nullable = false)
    private Device device;
 
-   @Id
+//   @Id
    @ManyToOne(optional = false, fetch = FetchType.LAZY)
    @JoinColumn(name = "parameter_id", nullable = false)
    private Parameter parameter;

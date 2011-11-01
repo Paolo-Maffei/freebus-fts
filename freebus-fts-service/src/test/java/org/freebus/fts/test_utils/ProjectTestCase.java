@@ -16,16 +16,6 @@ public abstract class ProjectTestCase extends PersistenceTestCase
    private ProjectFactory projectFactory;
    private Project project;
 
-   public ProjectTestCase()
-   {
-      this("default");
-   }
-
-   public ProjectTestCase(final String persistenceUnitName)
-   {
-      super(persistenceUnitName);
-   }
-
    /**
     * @return the unit-test project factory
     */
@@ -44,7 +34,7 @@ public abstract class ProjectTestCase extends PersistenceTestCase
    {
       if (project == null)
       {
-         final SampleProjectFactory projectFactory = new SampleProjectFactory(persistenceUnitName);
+         final SampleProjectFactory projectFactory = new SampleProjectFactory("default");
          project = projectFactory.newProject();
          assertNotNull(project);
 

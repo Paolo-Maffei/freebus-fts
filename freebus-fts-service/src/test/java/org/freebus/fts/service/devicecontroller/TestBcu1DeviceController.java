@@ -15,12 +15,12 @@ import org.junit.Test;
 
 public class TestBcu1DeviceController extends ProjectTestCase
 {
-   @Test
+//   @Test
    public void emptyTest()
    {
    }
-   
-//   @Test
+
+   @Test
    public void testBcu1DeviceController()
    {
       final Project proj = getProject();
@@ -34,7 +34,7 @@ public class TestBcu1DeviceController extends ProjectTestCase
       assertEquals(dev, devController.getDevice());
    }
 
-//   @Test
+   @Test
    public void testGetGroupAddresses()
    {
       final Project proj = getProject();
@@ -47,7 +47,7 @@ public class TestBcu1DeviceController extends ProjectTestCase
       assertTrue(groupAddrs[0].compareTo(groupAddrs[1]) < 0);
    }
 
-//   @Test
+   @Test
    public void testGetObjectDescriptors()
    {
       final Project proj = getProject();

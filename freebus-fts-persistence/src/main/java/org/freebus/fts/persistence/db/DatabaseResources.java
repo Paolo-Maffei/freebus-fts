@@ -11,11 +11,13 @@ import javax.persistence.FlushModeType;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceException;
 
-import liquibase.ClassLoaderFileOpener;
 import liquibase.Liquibase;
 import liquibase.database.Database;
+import liquibase.database.DatabaseConnection;
 import liquibase.database.DatabaseFactory;
-import liquibase.exception.JDBCException;
+import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.LiquibaseException;
+import liquibase.resource.ClassLoaderResourceAccessor;
 
 import org.freebus.fts.common.SimpleConfig;
 import org.slf4j.Logger;
@@ -152,11 +154,12 @@ public class DatabaseResources
     *
     * @see #createConnection(ConnectionDetails)
     */
-   public static Liquibase createMigrator(String changeLogFile, Connection con) throws JDBCException
+   public static Liquibase createMigrator(String changeLogFile, Connection con) throws LiquibaseException
    {
-      final Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(con);
+      final DatabaseConnection liqCon = new JdbcConnection(con);
+      final Database database = DatabaseFactory.getInstance().findCorrectDatabaseImplementation(liqCon);
 
-      return new Liquibase(changeLogFile, new ClassLoaderFileOpener(), database);
+      return new Liquibase(changeLogFile, new ClassLoaderResourceAccessor(), database);
    }
 
    /**

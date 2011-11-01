@@ -97,7 +97,7 @@ public final class SampleProjectFactory
       if (virtDev == null)
       {
          importSampleDevices(persistenceUnitName);
-         productsFactory.flushEntityManager();
+//         productsFactory.flushEntityManager(); // not required anymore, it seems
 
          virtDev = getVirtualDevice("Siemens", "Kombisensor AP 254, Helligkeit/Temperatur/Schalten");
          if (virtDev == null)

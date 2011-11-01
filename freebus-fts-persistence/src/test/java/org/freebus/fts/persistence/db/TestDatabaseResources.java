@@ -63,7 +63,7 @@ public class TestDatabaseResources extends OldPersistenceTestCase
       Liquibase liq = DatabaseResources.createMigrator("db-changes/TestDatabaseResources-1.xml", con);
       assertNotNull(liq);
 
-      liq.checkDatabaseChangeLogTable();
+      //liq.checkDatabaseChangeLogTable();
    }
 
    /**

@@ -39,7 +39,7 @@
   <class>org.freebus.fts.project.SubGroupToObject</class>
   <properties>
    <!-- property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" /-->
-   <property name="eclipselink.logging.level" value="INFO" />
+   <property name="eclipselink.logging.level" value="WARNING" />
    <property name="eclipselink.ddl-generation.output-mode" value="database" />
    <property name="eclipselink.ddl-generation" value="none" />
    <!-- property name="eclipselink.ddl-generation" value="create-tables" /-->
@@ -48,11 +48,6 @@
 
    <property name="hsqldb.default_table_type" value="cached" />
   </properties>
- </persistence-unit>
-
- <persistence-unit name="connect-test">
-   <property name="eclipselink.logging.logger" value="org.freebus.fts.persistence.db.CommonsLoggingSessionLog" />
-   <property name="eclipselink.logging.level" value="FINE" />
  </persistence-unit>
 
 </persistence>
