@@ -9,6 +9,7 @@ import javax.persistence.EntityTransaction;
 import liquibase.Liquibase;
 import liquibase.exception.LiquibaseException;
 
+import org.freebus.fts.common.Environment;
 import org.freebus.fts.persistence.db.ConnectionDetails;
 import org.freebus.fts.persistence.db.DatabaseResources;
 import org.freebus.fts.persistence.db.DriverType;
@@ -29,6 +30,11 @@ public abstract class PersistenceTestCase
    private static final String DATABASE_NAME = "Persistence-Test-Case";
    private static final DriverType DRIVER_TYPE = DriverType.H2_MEM;
 
+   static
+   {
+      Environment.init();
+   }
+   
 //   private static final String DATABASE_NAME = "/tmp/PersistenceTestCase.db";
 //   private static final DriverType DRIVER_TYPE = DriverType.H2;
 

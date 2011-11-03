@@ -1,7 +1,7 @@
 package org.freebus.fts.service.job.entity;
 
 import org.freebus.fts.common.address.PhysicalAddress;
-import org.freebus.fts.service.job.DeviceScannerJob;
+import org.freebus.fts.service.job.device.DeviceScannerJob;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
 
 /**

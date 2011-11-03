@@ -66,7 +66,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    private final Telegram ackTelegram = new Telegram();
    private final LinkedList<Telegram> recvQueue = new LinkedList<Telegram>();
    private final Semaphore recvSemaphore = new Semaphore(0);
-   private int sequence = -1;
+   private int sendSequence = -1, recvSequence = -1;
    private DeviceDescriptor0 deviceDescriptor0;
    private MemoryAddressMapper memoryAddressMapper;
 
@@ -102,7 +102,8 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
 
       busInterface.addListener(this);
 
-      sequence = -1;
+      sendSequence = -1;
+      recvSequence = -1;
       recvSemaphore.drainPermits();
 
       synchronized (sendTelegram)
@@ -212,11 +213,28 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
    @Override
    public Application receive(int timeout) throws IOException
    {
-      final Telegram telegram = receiveTelegram(timeout);
-      //      logger.debug("::: receive: " + telegram);
+      final long endTime = System.nanoTime() + 3000000000L;  // +3 sek
 
-      if (telegram != null)
-         return telegram.getApplication();
+      while (true)
+      {
+         final long now = System.nanoTime();
+         final int waitMS = (int) ((endTime - now) / 1000000);
+         if (waitMS <= 0)
+         {
+            break;
+         }
+
+         final Telegram telegram = receiveTelegram(waitMS);
+         if (telegram == null)
+            return null;
+
+         if (telegram.getSequence() > recvSequence)
+         {
+            recvSequence = telegram.getSequence();
+            return telegram.getApplication();
+         }
+      }
+
       return null;
    }
 
@@ -363,7 +381,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          sendTelegram.setApplication(application);
          sendTelegram.setDest(addr);
          sendTelegram.setTransport(Transport.Connected);
-         sendTelegram.setSequence(++sequence);
+         sendTelegram.setSequence(++sendSequence);
 
          busInterface.send(sendTelegram);
 
@@ -385,7 +403,7 @@ public class DataConnectionImpl implements DataConnection, TelegramListener
          sendTelegram.setApplication(application);
          sendTelegram.setDest(addr);
          sendTelegram.setTransport(Transport.Connected);
-         sendTelegram.setSequence(++sequence);
+         sendTelegram.setSequence(++sendSequence);
 
          busInterface.send(sendTelegram);
       }

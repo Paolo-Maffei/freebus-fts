@@ -1,5 +1,6 @@
 package org.freebus.fts.client.editors.scanner;
 
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -31,11 +32,14 @@ import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductsManager;
 import org.freebus.fts.products.Program;
 import org.freebus.fts.products.services.ProgramService;
-import org.freebus.fts.service.job.DeviceScannerJob;
-import org.freebus.fts.service.job.DeviceScannerJobListener;
 import org.freebus.fts.service.job.JobQueue;
+import org.freebus.fts.service.job.device.DeviceDownloadJob;
+import org.freebus.fts.service.job.device.DeviceScannerJob;
+import org.freebus.fts.service.job.device.DeviceScannerJobListener;
 import org.freebus.fts.service.job.entity.DeviceInfo;
 import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * An editor for scanning the KNX/EIB network for devices and gather some info from
@@ -43,12 +47,15 @@ import org.freebus.knxcomm.application.devicedescriptor.DeviceDescriptor;
  */
 public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(Scanner.class);
    private static final long serialVersionUID = 5059567180513438199L;
-   private static final int COL_ID_BUTTON = 0;
-   private static final int COL_ID_ADDRESS = 1;
-   private static final int COL_ID_MANUFACTURER = 2;
-   private static final int COL_ID_DEVICE_TYPE = 3;
-   private static final int COL_ID_INFO = 4;
+
+   private static final int COL_ID_DATA = 0;
+   private static final int COL_ID_BUTTON = 1;
+   private static final int COL_ID_ADDRESS = 2;
+   private static final int COL_ID_MANUFACTURER = 3;
+   private static final int COL_ID_DEVICE_TYPE = 4;
+   private static final int COL_ID_INFO = 5;
 
    private DeviceScannerJob job;
 
@@ -91,13 +98,16 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
       // If you change the columns here, be sure to change the COL_ID_xy constants in the top
       // of the class too.
       devicesModel.setColumnIdentifiers(new String[]{
-            "+",  // "add" button
+            ".",  // the hidden data column
+            "+",  // the column with "add" buttons
             I18n.getMessage("Scanner.ColAddress"),
             I18n.getMessage("Scanner.ColManufacturer"),
             I18n.getMessage("Scanner.ColDeviceType"),
             I18n.getMessage("Scanner.ColInfo")
             });
 
+      devicesTable.getColumnModel().removeColumn(devicesTable.getColumnModel().getColumn(COL_ID_DATA));
+      
       devicesTable.setFillsViewportHeight(true);
       final TableColumn btnColumn = devicesTable.getColumn("+");
       btnColumn.setCellRenderer(new TableButtonRenderer());
@@ -130,19 +140,23 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
    private synchronized void startStopButtonClicked()
    {
       if (job == null)
-      {
+      {         
          job = new DeviceScannerJob(paramsPanel.getAreaAddr(), paramsPanel.getLineAddr());
          job.setMinAddress(paramsPanel.getMinDeviceAddr());
          job.setMaxAddress(paramsPanel.getMaxDeviceAddr());
          job.addListener(this);
 
          JobQueue.getDefaultJobQueue().add(job);
+
+         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          paramsPanel.setScanning(true);
       }
       else
       {
          JobQueue.getDefaultJobQueue().cancel(job);
          job = null;
+
+         setCursor(Cursor.getDefaultCursor());
          paramsPanel.setScanning(false);
       }
    }
@@ -155,6 +169,7 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
    {
       if (done == 100)
       {
+         setCursor(Cursor.getDefaultCursor());
          paramsPanel.setScanning(false);
          job = null;
       }
@@ -182,7 +197,7 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
     *.
     * @param info - the device information.
     */
-   public void updateDeviceInfo(DeviceInfo info)
+   public void updateDeviceInfo(final DeviceInfo info)
    {
       int row = getRowIndex(info.getAddress());
       final DeviceDescriptor descriptor = info.getDescriptor();
@@ -190,10 +205,11 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
       if (row < 0)
       {
          row = devicesModel.getRowCount();
-         devicesModel.addRow(new Object[] { null, info.getAddress(), "", "", descriptor });
+         devicesModel.addRow(new Object[] { info, null, info.getAddress(), "", "", descriptor });
       }
       else
       {
+         devicesModel.setValueAt(info, row, COL_ID_DATA);
          devicesModel.setValueAt(descriptor, row, COL_ID_INFO);
       }
 
@@ -227,9 +243,19 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
       if (info.isComplete() && devicesModel.getValueAt(row, COL_ID_BUTTON) == null)
       {
          final JButton addButton = new ToolBarButton(addIcon);
+         addButton.setToolTipText(I18n.getMessage("Scanner.AddDeviceClick"));
          devicesModel.setValueAt(addButton, row, COL_ID_BUTTON);
          
-         // TODO addButton.addActionListener(...)
+         addButton.addActionListener(new AbstractAction()
+         {
+            private static final long serialVersionUID = 1L;
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+               addDevice(info);
+            }
+         });
       }
       
       devicesTable.revalidate();
@@ -251,11 +277,16 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
          @Override
          public void actionPerformed(ActionEvent e)
          {
+            for (final int row: devicesTable.getSelectedRows())
+            {
+               final DeviceInfo info = (DeviceInfo) devicesModel.getValueAt(row, COL_ID_DATA);
+               addDevice(info);
+            }
          }
 
       });
       btn.setIcon(ImageCache.getIcon("icons/add"));
-      btn.setToolTipText(I18n.getMessage("Scanner.Add...."));
+      btn.setToolTipText(I18n.getMessage("Scanner.AddDevice"));
 
       return toolBar;
    }
@@ -274,5 +305,18 @@ public class Scanner extends WorkBenchEditor implements DeviceScannerJobListener
             updateDeviceInfo(info);
          }
       });
+   }
+
+   /**
+    * Add the device to the current project.
+    * 
+    * @param info - the info of the device to add
+    */
+   public void addDevice(final DeviceInfo info)
+   {
+      LOGGER.info("Add device " + info.getAddress());
+
+      final DeviceDownloadJob job = new DeviceDownloadJob(info);
+      JobQueue.getDefaultJobQueue().add(job);
    }
 }

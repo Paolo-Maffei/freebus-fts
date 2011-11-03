@@ -2,17 +2,30 @@ package org.freebus.fts.common;
 
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
+
 /**
  * System specific environment settings.
  */
 public final class Environment
 {
+   private static final Logger LOGGER = LoggerFactory.getLogger(Environment.class);
    static Environment instance;
 
    private final String osname, tempDir, homeDir;
    private String appDir = null;
    private String appName = "fts";
 
+   static
+   {
+      // Adds a SLF4JBridgeHandler instance to java.util.logging root logger
+      SLF4JBridgeHandler.install();
+
+      LOGGER.debug("slf4j bridge handlers installed");
+   }
+   
    /**
     * Initialize the environment. Usually programmers do not need to create
     * environment objects, as the global environment object is created
@@ -46,8 +59,6 @@ public final class Environment
       if (envHomeDir != null && !envHomeDir.isEmpty())
          homeDir = envHomeDir;
       else homeDir = tempDir;
-
-      //Logging.setup();
    }
 
    /**

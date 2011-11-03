@@ -1,5 +1,6 @@
 package org.freebus.fts.client.editors.scanner;
 
+import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -183,6 +184,7 @@ public class ScanParamsPanel extends JPanel
    {
       if (scanning)
       {
+         startStopButton.setCursor(Cursor.getDefaultCursor());
          startStopButton.setText(I18n.getMessage("Scanner.Stop"));
       }
       else

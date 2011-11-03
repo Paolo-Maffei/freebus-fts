@@ -1,4 +1,4 @@
-package org.freebus.fts.service.job;
+package org.freebus.fts.service.job.device;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -7,6 +7,8 @@ import java.util.TreeMap;
 
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.fts.service.internal.I18n;
+import org.freebus.fts.service.job.JobListener;
+import org.freebus.fts.service.job.ListenableJob;
 import org.freebus.fts.service.job.entity.DeviceInfo;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.application.ApplicationType;

@@ -1,7 +1,7 @@
 package example;
 
 import org.freebus.fts.common.Environment;
-import org.freebus.fts.service.job.DeviceScannerJob;
+import org.freebus.fts.service.job.device.DeviceScannerJob;
 import org.freebus.fts.service.job.entity.DeviceInfo;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;

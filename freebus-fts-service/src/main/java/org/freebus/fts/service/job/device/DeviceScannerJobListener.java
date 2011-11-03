@@ -1,5 +1,6 @@
-package org.freebus.fts.service.job;
+package org.freebus.fts.service.job.device;
 
+import org.freebus.fts.service.job.JobListener;
 import org.freebus.fts.service.job.entity.DeviceInfo;
 
 /**

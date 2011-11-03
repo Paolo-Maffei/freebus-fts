@@ -59,7 +59,7 @@ public class TestBcu1DeviceController extends ProjectTestCase
       assertEquals(11, objDescs.length);
    }
 
-//   @Test
+   @Test
    public void testGetAssociationTable()
    {
       final Project proj = getProject();

@@ -31,7 +31,7 @@ import org.freebus.knxcomm.types.LinkMode;
 public class DeviceDownloadExample
 {
    // The physical address of the device to download
-   private static final PhysicalAddress ADDR = new PhysicalAddress(1, 1, 101);
+   private static final PhysicalAddress ADDR = new PhysicalAddress(1, 1, 50);
 
    // The bus connection
    private final BusInterface bus =

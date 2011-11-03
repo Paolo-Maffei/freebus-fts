@@ -46,10 +46,11 @@ public final class I18n
     * @param args - an array of arguments.
     * @return the message string.
     */
-   public static String formatMessage(final String msgid, String... args)
+   public static String formatMessage(final String msgid, Object... args)
    {
       final StringBuffer sb = new StringBuffer();
-      (new MessageFormat(getMessage(msgid))).format(args, sb, null);
+      final MessageFormat fmt = new MessageFormat(getMessage(msgid));
+      fmt.format(args, sb, null);
       return sb.toString();
    }
 }
