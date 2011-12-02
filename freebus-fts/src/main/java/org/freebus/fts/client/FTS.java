@@ -14,12 +14,9 @@ import org.freebus.fts.common.Environment;
  */
 public final class FTS
 {
-//   private final static AbstractApplicationContext APPLICATION_CONTEXT;
-
    static
    {
       Environment.setAppName("fts");
-//      APPLICATION_CONTEXT = new ClassPathXmlApplicationContext("classpath:META-INF/applicationContext.xml");
    }
 
    /**
@@ -36,7 +33,6 @@ public final class FTS
    public static void main(String[] args)
    {
       ApplicationFactory.args = args;
-//      APPLICATION_CONTEXT.getBean(Application.class);
       (new ApplicationFactory()).createApplication();
    }
 }
