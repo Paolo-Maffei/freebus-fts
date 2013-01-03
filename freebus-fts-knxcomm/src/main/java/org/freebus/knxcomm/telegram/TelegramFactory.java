@@ -5,6 +5,8 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
 
+import org.freebus.fts.common.address.GroupAddress;
+import org.freebus.knxcomm.application.GroupValueWrite;
 import org.freebus.knxcomm.emi.EmiFrame;
 
 /**
@@ -13,6 +15,20 @@ import org.freebus.knxcomm.emi.EmiFrame;
  */
 public final class TelegramFactory
 {
+   /**
+    * Create a group telegram.
+    * 
+    * @param dest - the destination address
+    * @param data - the payload
+    */
+   static public Telegram createTelegram(GroupAddress dest, byte[] data)
+   {
+      final Telegram telegram = new Telegram(new GroupValueWrite(data));
+      telegram.setDest(dest);
+
+      return telegram;
+   }
+
    /**
     * Create a telegram from a raw data buffer.
     *

@@ -1,9 +1,8 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <groupId>org.freebus.fts</groupId>
- <artifactId>freebus-fts-parent</artifactId>
- <version>0.1-SNAPSHOT</version>
+ <artifactId>freebus-fts</artifactId>
+ <version>0.2-SNAPSHOT</version>
  <name>Freebus Tools Software</name>
  <packaging>pom</packaging>
  <organization>
@@ -50,11 +49,24 @@
     <scope>test</scope>
    </dependency>
    <dependency>
-    <groupId>commons-lang</groupId>
-    <artifactId>commons-lang</artifactId>
-    <version>2.6</version>
-    <type>jar</type>
-    <scope>compile</scope>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-lang3</artifactId>
+    <version>3.1</version>
+   </dependency>
+   <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>jul-to-slf4j</artifactId>
+    <version>1.7.2</version>
+   </dependency>
+   <dependency>
+    <groupId>org.slf4j</groupId>
+    <artifactId>slf4j-api</artifactId>
+    <version>1.7.2</version>
+   </dependency>
+   <dependency>
+    <groupId>ch.qos.logback</groupId>
+    <artifactId>logback-classic</artifactId>
+    <version>1.0.9</version>
    </dependency>
   </dependencies>
  </dependencyManagement>
@@ -70,31 +82,16 @@
   <dependency>
    <groupId>junit</groupId>
    <artifactId>junit</artifactId>
-   <!-- <version>4.8.1</version> -->
    <scope>test</scope>
   </dependency>
   <dependency>
-   <groupId>commons-lang</groupId>
-   <artifactId>commons-lang</artifactId>
-   <!-- <version>2.6</version> -->
-   <type>jar</type>
-   <scope>compile</scope>
-  </dependency>
-  <dependency>
-   <groupId>org.slf4j</groupId>
-   <artifactId>log4j-over-slf4j</artifactId>
-   <version>1.6.3</version>
+   <groupId>org.apache.commons</groupId>
+   <artifactId>commons-lang3</artifactId>
   </dependency>
   <dependency>
    <groupId>org.slf4j</groupId>
    <artifactId>slf4j-api</artifactId>
-   <version>1.6.3</version>
   </dependency>
-   <dependency>
-    <groupId>ch.qos.logback</groupId>
-    <artifactId>logback-classic</artifactId>
-    <version>0.9.30</version>
-   </dependency>
  </dependencies>
  <build>
   <plugins>
@@ -123,8 +120,8 @@
        <include>**/*.java</include>
        <include>**/*.properties</include>
       </includes>
-      <source>1.6</source>
-      <target>1.6</target>
+      <source>1.7</source>
+      <target>1.7</target>
       <encoding>UTF-8</encoding>
      </configuration>
     </plugin>

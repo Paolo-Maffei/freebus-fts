@@ -1,12 +1,15 @@
 package org.freebus.knxcomm;
 
+import java.io.IOException;
+
 import org.freebus.fts.common.SimpleConfig;
+import org.freebus.fts.common.exception.FtsRuntimeException;
 import org.freebus.knxcomm.internal.BusInterfaceImpl;
 import org.freebus.knxcomm.link.dummy.DummyLink;
 import org.freebus.knxcomm.link.netip.KNXnetLink;
 import org.freebus.knxcomm.link.serial.Ft12SerialLink;
 import org.freebus.knxcomm.link.serial.SerialPortUtil;
-import org.freebus.knxcomm.types.KNXConnectionType;
+import org.freebus.knxcomm.types.LinkType;
 import org.freebus.knxcomm.types.LinkMode;
 import org.slf4j.LoggerFactory;
 
@@ -37,7 +40,7 @@ public final class BusInterfaceFactory
          catch (final Exception e)
          {
             LoggerFactory.getLogger(BusInterfaceFactory.class).error("Failed to create bus interface", e);
-            return null;
+            throw new FtsRuntimeException(e);
          }
       }
 
@@ -58,28 +61,33 @@ public final class BusInterfaceFactory
     * {@link #getBusInterface()}. Uses the global {@link SimpleConfig configuration} to get
     * the configured bus interface.
     *
-    * @throws Exception
-    *
     * @see #getBusInterface()
     */
-   private static void createBusInterface() throws Exception
+   private static void createBusInterface()
    {
       final SimpleConfig cfg = SimpleConfig.getInstance();
       BusInterface newBusInterface = null;
 
-      final KNXConnectionType type = KNXConnectionType.valueOf(cfg.getStringValue("knxConnectionType"));
-      if (type == KNXConnectionType.KNXNET_IP)
+      final LinkType type = LinkType.valueOf(cfg.getStringValue("knxConnectionType"));
+      if (type == LinkType.KNXNET_IP)
       {
          newBusInterface = newKNXnetInterface(cfg.getStringValue("knxConnectionKNXnet.host"), cfg
                .getIntValue("knxConnectionKNXnet.port"));
       }
-      else if (type == KNXConnectionType.SERIAL_FT12)
+      else if (type == LinkType.SERIAL_FT12)
       {
          newBusInterface = newSerialInterface(cfg.getStringValue("knxConnectionSerial.port"));
       }
-      else throw new Exception("No bus interface configured");
+      else throw new FtsRuntimeException("No bus interface configured");
 
-      newBusInterface.open(defaultLinkMode);
+      try
+      {
+         newBusInterface.open(defaultLinkMode);
+      }
+      catch (IOException e)
+      {
+         throw new FtsRuntimeException(e);
+      }
 
       // if open() fails an exception will be thrown.
       // if not, we keep the bus interface for later use.
@@ -109,8 +117,6 @@ public final class BusInterfaceFactory
    public static BusInterface newSerialInterface(String portName)
    {
       SerialPortUtil.loadSerialPortLib();
-
-//      return new BusInterfaceImpl(new SerialFt12Link(portName));
       return new BusInterfaceImpl(new Ft12SerialLink(portName));
    }
 

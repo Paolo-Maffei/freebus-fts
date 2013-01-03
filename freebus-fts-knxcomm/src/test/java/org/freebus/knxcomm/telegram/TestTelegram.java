@@ -244,7 +244,7 @@ public class TestTelegram
       telegram.setDest(new GroupAddress(1, 2, 5));
       telegram.setRoutingCounter(3);
       telegram.setRepeated(false);
-      telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new int[] { 1 }));
+      telegram.setApplication(new GenericDataApplication(ApplicationType.GroupValue_Write, new byte[] { 1 }));
 
       final byte[] dataOut = telegram.toByteArray();
       assertArrayEquals(HexString.valueOf("bc 11 01 0a 05 b2 00 80 01"), dataOut);

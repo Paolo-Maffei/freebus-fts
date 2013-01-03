@@ -13,7 +13,7 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import javax.xml.validation.SchemaFactory;
 
-import org.apache.commons.lang.Validate;
+import org.apache.commons.lang3.Validate;
 import org.freebus.fts.common.internal.I18n;
 import org.freebus.fts.products.Manufacturer;
 import org.freebus.fts.products.ProductsManager;

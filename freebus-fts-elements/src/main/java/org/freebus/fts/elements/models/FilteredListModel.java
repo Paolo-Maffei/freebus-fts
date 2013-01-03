@@ -15,13 +15,14 @@ import javax.swing.event.ListDataListener;
  * <p>
  * The filter includes the elements - the elements that do not match the filter
  * are hidden.
+ * @param <E>
  */
-public class FilteredListModel extends AbstractListModel
+public class FilteredListModel<E> extends AbstractListModel<E>
 {
    private static final long serialVersionUID = 6890531963375522035L;
 
-   private Vector<Object> filteredList;
-   private ListModel unfilteredModel;
+   private Vector<E> filteredList;
+   private ListModel<E> unfilteredModel;
    private Filter filter;
 
    /**
@@ -38,7 +39,7 @@ public class FilteredListModel extends AbstractListModel
     * @param model - the unfiltered list model
     * @param filter - the filter that should be used for filtering
     */
-   public FilteredListModel(ListModel model, Filter filter)
+   public FilteredListModel(ListModel<E> model, Filter filter)
    {
       unfilteredModel = model;
       this.filter = filter;
@@ -74,12 +75,12 @@ public class FilteredListModel extends AbstractListModel
       final int filteredCap = filteredList == null ? -1 : filteredList.capacity();
       final int unfilteredSize = unfilteredModel == null ? 0 : unfilteredModel.getSize();
       if (unfilteredSize > filteredCap)
-         filteredList = new Vector<Object>(unfilteredSize + 100);
+         filteredList = new Vector<E>(unfilteredSize + 100);
 
       filteredList.clear();
       for (int i = 0; i < unfilteredSize; ++i)
       {
-         final Object elem = unfilteredModel.getElementAt(i);
+         final E elem = unfilteredModel.getElementAt(i);
          if (filter == null || filter.matches(elem))
             filteredList.add(elem);
       }
@@ -94,7 +95,7 @@ public class FilteredListModel extends AbstractListModel
     * @return the element
     * @throws IndexOutOfBoundsException if the index is out of bounds.
     */
-   public Object getElementAt(int index) throws IndexOutOfBoundsException
+   public E getElementAt(int index) throws IndexOutOfBoundsException
    {
       return filteredList.elementAt(index);
    }
@@ -113,7 +114,7 @@ public class FilteredListModel extends AbstractListModel
    /**
     * @return the unfiltered model
     */
-   public ListModel getUnfilteredModel()
+   public ListModel<E> getUnfilteredModel()
    {
       return unfilteredModel;
    }
@@ -123,7 +124,7 @@ public class FilteredListModel extends AbstractListModel
     *
     * @param unfilteredModel - the unfiltered model to set
     */
-   public void setUnfilteredModel(ListModel unfilteredModel)
+   public void setUnfilteredModel(ListModel<E> unfilteredModel)
    {
       this.unfilteredModel = unfilteredModel;
       update();

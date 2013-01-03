@@ -32,7 +32,7 @@ public final class GroupValueResponse extends GenericDataApplication
     * 
     * @param data - the data.
     */
-   public GroupValueResponse(int[] data)
+   public GroupValueResponse(byte[] data)
    {
       super(ApplicationType.GroupValue_Response, data);
    }

@@ -35,7 +35,7 @@ public class TestGenericDataApplication
    @Test
    public final void testGenericDataApplicationApplicationTypeIntArray()
    {
-      final int[] data = new int[] { 1, 2, 3, 4 };
+      final byte[] data = new byte[] { 1, 2, 3, 4 };
       final GenericDataApplication app = new GenericDataApplication(ApplicationType.IndividualAddress_Read, data);
 
       assertNotNull(app);
@@ -51,8 +51,8 @@ public class TestGenericDataApplication
    {
       final GenericDataApplication app = new GenericDataApplication(ApplicationType.IndividualAddress_Read);
 
-      app.setData(new int[] { 4, 8, 12 });
-      assertArrayEquals(new int[] { 4, 8, 12 }, app.getData());
+      app.setData(new byte[] { 4, 8, 12 });
+      assertArrayEquals(new byte[] { 4, 8, 12 }, app.getData());
 
       app.setData(null);
       assertNull(app.getData());
@@ -65,7 +65,7 @@ public class TestGenericDataApplication
       final Application app = ApplicationFactory.createApplication(data);
 
       assertEquals(ApplicationType.GroupValue_Write, app.getType());
-      assertArrayEquals(new int[] { 1, 4, 9 }, ((GroupValueWrite) app).getData());
+      assertArrayEquals(new byte[] { 1, 4, 9 }, ((GroupValueWrite) app).getData());
    }
 
    @Test
@@ -90,7 +90,7 @@ public class TestGenericDataApplication
       assertEquals(ApplicationType.GroupValue_Response, app.getType());
       final GroupValueResponse iapp = (GroupValueResponse) app;
 
-      assertArrayEquals(new int[] { 5, 1, 4, 9 }, iapp.getData());
+      assertArrayEquals(new byte[] { 5, 1, 4, 9 }, iapp.getData());
    }
 
    @Test
@@ -109,7 +109,7 @@ public class TestGenericDataApplication
    @Test
    public final void testToRawData()
    {
-      final Application app = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new int[] { 2, 4, 9 });
+      final Application app = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new byte[] { 2, 4, 9 });
 
       final byte[] expected = HexString.valueOf("01 00 02 04 09");
       final byte[] rawData = app.toByteArray();
@@ -131,7 +131,7 @@ public class TestGenericDataApplication
    @Test
    public final void testToRawData3()
    {
-      final Application app = new GenericDataApplication(ApplicationType.GroupValue_Response, new int[] { 5, 1, 4, 9 });
+      final Application app = new GenericDataApplication(ApplicationType.GroupValue_Response, new byte[] { 5, 1, 4, 9 });
 
       final byte[] expected = HexString.valueOf("00 40 05 01 04 09");
       final byte[] rawData = app.toByteArray();
@@ -142,7 +142,7 @@ public class TestGenericDataApplication
    @Test
    public final void testToRawData4()
    {
-      final Application app = new GroupValueResponse(new int[] { 5, 1, 4, 9 });
+      final Application app = new GroupValueResponse(new byte[] { 5, 1, 4, 9 });
 
       final byte[] expected = HexString.valueOf("00 40 05 01 04 09");
       final byte[] rawData = app.toByteArray();
@@ -153,7 +153,7 @@ public class TestGenericDataApplication
    @Test
    public final void testToRawData5()
    {
-      final Application app = new GroupValueWrite(new int[] { 1 });
+      final Application app = new GroupValueWrite(new byte[] { 1 });
 
       final byte[] expected = HexString.valueOf("00 80 01");
       final byte[] rawData = app.toByteArray();
@@ -176,9 +176,9 @@ public class TestGenericDataApplication
    @Test
    public final void testEqualsObject()
    {
-      final GenericDataApplication app1 = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new int[] { 1, 2 });
-      final GenericDataApplication app2 = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new int[] { 1, 2 });
-      final GenericDataApplication app3 = new GenericDataApplication(ApplicationType.GroupValue_Response, new int[] { 1, 2 });
+      final GenericDataApplication app1 = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new byte[] { 1, 2 });
+      final GenericDataApplication app2 = new GenericDataApplication(ApplicationType.IndividualAddress_Read, new byte[] { 1, 2 });
+      final GenericDataApplication app3 = new GenericDataApplication(ApplicationType.GroupValue_Response, new byte[] { 1, 2 });
 
       assertFalse(app1.equals(null));
       assertFalse(app1.equals(new Object()));
@@ -189,7 +189,7 @@ public class TestGenericDataApplication
       app2.setData(null);
       assertFalse(app1.equals(app2));
 
-      app1.setData(new int[] { 1, 3, 7 });
+      app1.setData(new byte[] { 1, 3, 7 });
       assertFalse(app1.equals(app2));
 
       app1.setData(null);

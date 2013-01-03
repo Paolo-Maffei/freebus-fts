@@ -25,8 +25,9 @@ public class SerialBusMonitor implements TelegramListener
     */
    public SerialBusMonitor() throws Exception
    {
-      // iface = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
+      //iface = BusInterfaceFactory.newSerialInterface(SerialPortUtil.getPortNames()[0]);
       iface = BusInterfaceFactory.newSerialInterface("/dev/ttyUSB0");
+//      iface = BusInterfaceFactory.newSerialInterface("/dev/ttyS0");
 
       iface.addListener(this);
       iface.open(LinkMode.BusMonitor);

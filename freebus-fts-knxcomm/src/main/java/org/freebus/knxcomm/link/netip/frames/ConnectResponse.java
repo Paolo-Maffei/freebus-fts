@@ -147,6 +147,10 @@ public class ConnectResponse extends AbstractFrame
    {
       channelId = in.readUnsignedByte();
       status = StatusCode.valueOf(in.readUnsignedByte());
+
+      if (status != StatusCode.OK)
+         return;
+
       dataEndPoint.readData(in);
 
       final int dataLen = in.readUnsignedByte() - 2;

@@ -29,7 +29,7 @@ import javax.swing.event.ListDataListener;
  * @author John O'Conner
  */
 @SuppressWarnings("unchecked")
-public class SortedListModel extends AbstractListModel
+public class SortedListModel<E> extends AbstractListModel<E>
 {
    private static final long serialVersionUID = -4801105186054638868L;
 
@@ -47,7 +47,7 @@ public class SortedListModel extends AbstractListModel
     * 
     * @param model the underlying, unsorted ListModel
     */
-   public SortedListModel(ListModel model)
+   public SortedListModel(ListModel<E> model)
    {
       this(model, SortOrder.ASCENDING, null);
    }
@@ -59,7 +59,7 @@ public class SortedListModel extends AbstractListModel
     * @param model the unsorted list model
     * @param sortOrder that should be used
     */
-   public SortedListModel(ListModel model, SortOrder sortOrder)
+   public SortedListModel(ListModel<E> model, SortOrder sortOrder)
    {
       this(model, sortOrder, null);
    }
@@ -73,7 +73,7 @@ public class SortedListModel extends AbstractListModel
     * @param comp - the comparator.
     * 
     */
-   public SortedListModel(ListModel model, SortOrder sortOrder, Comparator<?> comp)
+   public SortedListModel(ListModel<E> model, SortOrder sortOrder, Comparator<?> comp)
    {
       unsortedModel = model;
       unsortedModel.addListDataListener(new ListDataListener()
@@ -123,10 +123,10 @@ public class SortedListModel extends AbstractListModel
     * 
     * @throws IndexOutOfBoundsException if the index is out of bounds.
     */
-   public Object getElementAt(int index) throws IndexOutOfBoundsException
+   public E getElementAt(int index) throws IndexOutOfBoundsException
    {
       int modelIndex = toUnsortedModelIndex(index);
-      Object element = unsortedModel.getElementAt(modelIndex);
+      E element = unsortedModel.getElementAt(modelIndex);
       return element;
    }
 
@@ -400,7 +400,7 @@ public class SortedListModel extends AbstractListModel
    private Comparator comparator;
 
    private List<SortedListEntry> sortedModel;
-   private ListModel unsortedModel;
+   private ListModel<E> unsortedModel;
    private SortOrder sortOrder;
 
    /**

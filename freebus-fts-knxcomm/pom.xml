@@ -3,8 +3,8 @@
  <modelVersion>4.0.0</modelVersion>
  <parent>
   <groupId>org.freebus.fts</groupId>
-  <artifactId>freebus-fts-parent</artifactId>
-  <version>0.1-SNAPSHOT</version>
+  <artifactId>freebus-fts</artifactId>
+  <version>0.2-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
  <artifactId>freebus-fts-knxcomm</artifactId>
@@ -14,12 +14,16 @@
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-common</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>0.2-SNAPSHOT</version>
   </dependency>
   <dependency>
-   <groupId>org.rxtx</groupId>
-   <artifactId>rxtx</artifactId>
-   <version>2.1.7</version>
+   <groupId>com.neuronrobotics</groupId>
+   <artifactId>nrjavaserial</artifactId>
+   <version>3.7.5.1</version>
+  </dependency>
+  <dependency>
+   <groupId>org.apache.commons</groupId>
+   <artifactId>commons-lang3</artifactId>
   </dependency>
  </dependencies>
 </project>

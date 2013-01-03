@@ -571,7 +571,7 @@ public class Ft12SerialLink extends AbstractListenableLink
             final int funcCode = buf[0] & 255;
             final Ft12Function func = Ft12Function.valueOf(funcCode & 15);
 
-            if (LOG_FT12_MESSAGES)
+            if (LOG_FT12_MESSAGES && LOGGER.isTraceEnabled())
                LOGGER.trace("FT1.2: received "
                      + (func == null ? "0x" + Integer.toHexString(funcCode) : func.toString()));
 
@@ -629,7 +629,7 @@ public class Ft12SerialLink extends AbstractListenableLink
                for (int i = 0; i < data.length; ++i)
                   data[i] = buf[3 + i];
 
-               if (LOG_FT12_MESSAGES)
+               if (LOG_FT12_MESSAGES && LOGGER.isDebugEnabled())
                   LOGGER.debug("FT1.2 received: " + HexString.toString(data));
 
                sendAck();

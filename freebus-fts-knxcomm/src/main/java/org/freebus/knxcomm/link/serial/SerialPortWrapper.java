@@ -50,9 +50,9 @@ public class SerialPortWrapper
    private String portName;
 
    /**
-    * Ensure that the native serial port library is loaded.
+    * Create a serial port wrapper.
     */
-   static
+   public SerialPortWrapper()
    {
       SerialPortUtil.loadSerialPortLib();
    }

@@ -19,6 +19,9 @@ import org.freebus.knxcomm.types.LinkMode;
  */
 public class KNXnetBusMonitor implements TelegramListener
 {
+//   private static final String KNX_NET_HOST = "localhost";
+   private static final String KNX_NET_HOST = "omiai";
+
    private final BusInterface iface;
 
    /**
@@ -28,7 +31,7 @@ public class KNXnetBusMonitor implements TelegramListener
     */
    public KNXnetBusMonitor() throws Exception
    {
-      iface = BusInterfaceFactory.newKNXnetInterface("localhost", KNXnetLink.defaultPortUDP);
+      iface = BusInterfaceFactory.newKNXnetInterface(KNX_NET_HOST, KNXnetLink.defaultPortUDP);
       iface.addListener(this);
       iface.open(LinkMode.BusMonitor);
 

@@ -139,6 +139,12 @@ public enum EmiFrameType
    TM_TIMER_IND(0xc1, EmiFrameClass.RECEIVE),
 
    /**
+    * Bus-level acknowledgment. This is not a real frame type. It is used to transport
+    * the acknowledgments as frames.
+    */
+   BUS_ACK(0xcc, EmiFrameClass.CONFIRM),
+
+   /**
     * An unknown message (this is an internal type).
     */
    UNKNOWN(0x00, null);

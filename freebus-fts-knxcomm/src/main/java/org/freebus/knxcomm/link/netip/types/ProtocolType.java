@@ -45,7 +45,7 @@ public enum ProtocolType
             return v;
       }
 
-      throw new IllegalArgumentException("Invalid KNXnet/IP protocol type: " + code);
+      throw new IllegalArgumentException("Invalid KNXnet/IP protocol type: 0x" + Integer.toHexString(code));
    }
 
    /**

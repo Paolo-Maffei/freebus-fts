@@ -1,24 +1,26 @@
 package org.freebus.knxcomm.types;
 
+import org.freebus.knxcomm.internal.I18n;
+
 /**
  * Types for KNX/EIB bus connections.
  */
-public enum KNXConnectionType
+public enum LinkType
 {
    /**
     * No bus connection.
     */
-   NONE("No connection"),
+   NONE,
 
    /**
     * Serial port connection, using FT1.2
     */
-   SERIAL_FT12("Serial FT1.2"),
+   SERIAL_FT12,
 
    /**
     * KNXnet/IP network connection
     */
-   KNXNET_IP("KNXnet/IP");
+   KNXNET_IP;
 
    /**
     * A human readable, English label.
@@ -28,8 +30,8 @@ public enum KNXConnectionType
    /*
     * Internal constructor.
     */
-   private KNXConnectionType(String label)
+   private LinkType()
    {
-      this.label = label;
+      this.label = I18n.getMessage("LinkType." + name().toLowerCase());
    }
 }

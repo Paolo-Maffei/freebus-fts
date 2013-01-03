@@ -16,7 +16,7 @@ public interface LinkListener extends EventListener
     * @param e - the corresponding event object.
     */
    void frameReceived(FrameEvent e);
-
+   
    /**
     * Called when the link was closed.
     * 

@@ -2,12 +2,18 @@
  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
  <modelVersion>4.0.0</modelVersion>
  <parent>
-  <artifactId>freebus-fts-parent</artifactId>
+  <artifactId>freebus-fts</artifactId>
   <groupId>org.freebus.fts</groupId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
  <artifactId>freebus-fts-elements</artifactId>
  <name>freebus-fts-elements</name>
  <description>Components that come with FTS but do not contain FTS specific code.</description>
+ <dependencies>
+  <dependency>
+   <groupId>ch.qos.logback</groupId>
+   <artifactId>logback-classic</artifactId>
+  </dependency>
+ </dependencies>
 </project>

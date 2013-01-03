@@ -30,6 +30,7 @@ public class Telegram implements Cloneable
    private boolean extFormat;
    private int sequence;
    private Application application;
+   private Object userData;
 
    /**
     * Create an empty telegram object.
@@ -535,6 +536,25 @@ public class Telegram implements Cloneable
       out.writeShort(dest.getAddr());
 
       out.write(appDataLen);
+   }
+
+   /**
+    * @return The custom user data object.
+    */
+   public Object getUserData()
+   {
+      return userData;
+   }
+
+   /**
+    * Set the custom user data object. The object is not used by the library and can be
+    * accessed with {@link #getUserData()}.
+    *
+    * @param userData - the user data to set
+    */
+   public void setUserData(Object userData)
+   {
+      this.userData = userData;
    }
 
    /**

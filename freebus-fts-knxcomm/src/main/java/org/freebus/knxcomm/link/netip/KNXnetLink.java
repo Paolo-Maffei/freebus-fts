@@ -15,6 +15,7 @@ import java.util.Enumeration;
 import java.util.concurrent.Semaphore;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.lang3.Validate;
 import org.freebus.fts.common.HexString;
 import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.emi.EmiFrame;
@@ -80,8 +81,8 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
    private final DatagramSocket socket;
    private final Thread listenerThread;
 
-   private final int sendBufferSize = 4096;
-   private final int recvBufferSize = 4096;
+   private final int sendBufferSize = 1024;
+   private final int recvBufferSize = 1024;
 
    /**
     * Create a new connection to a KNXnet/IP server listening on a custom port.
@@ -94,13 +95,14 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
    public KNXnetLink(String host, int port)
    {
       addr = new InetSocketAddress(host, port);
+      Validate.notNull(addr.getAddress(), "Host not found: " + host);
       localAddr = getLocalIpAddressFor(addr.getAddress());
 
       try
       {
          socket = new DatagramSocket(0, localAddr);
-         socket.setSendBufferSize(sendBufferSize);
-         socket.setReceiveBufferSize(recvBufferSize);
+         socket.setSendBufferSize(sendBufferSize << 1);
+         socket.setReceiveBufferSize(recvBufferSize << 1);
          LOGGER.info("Opening UDP socket " + localAddr + " port " + socket.getLocalPort());
       }
       catch (SocketException e)
@@ -427,6 +429,7 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
             {
                try
                {
+                  Arrays.fill(recvBuffer, (byte) 0);
                   socket.receive(p);
                   processData(p.getData(), p.getLength());
                }
@@ -486,6 +489,8 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
     */
    static InetAddress getLocalIpAddressFor(InetAddress remoteIP)
    {
+      Validate.notNull(remoteIP, "no remote IP address given");
+
       try
       {
          final Enumeration<NetworkInterface> en = NetworkInterface.getNetworkInterfaces();

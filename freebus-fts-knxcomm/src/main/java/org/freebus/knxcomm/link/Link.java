@@ -15,6 +15,7 @@ import org.freebus.knxcomm.types.LinkMode;
  * class for doing the bus communication.
  * 
  * @see BusInterface An interface for talking with the KNX/EIB bus.
+ * @see LinkType
  */
 public interface Link
 {

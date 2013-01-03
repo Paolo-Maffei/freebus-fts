@@ -15,13 +15,7 @@ import org.freebus.knxcomm.internal.SystemPathLoader;
  */
 public final class SerialPortUtil
 {
-   private static boolean serialPortLibLoaded = false;
-
-   static
-   {
-      // Ensure that the native serial port library is loaded.
-      SerialPortUtil.loadSerialPortLib();
-   }
+   private static boolean serialPortLibLoaded = true;
 
    /**
     * Get a list of the available serial ports.
@@ -30,6 +24,9 @@ public final class SerialPortUtil
     */
    public static String[] getPortNames()
    {
+      if (!serialPortLibLoaded)
+         loadSerialPortLib();
+
       final Enumeration<?> portList = CommPortIdentifier.getPortIdentifiers();
       final Vector<String> portNames = new Vector<String>(20);
 
@@ -50,8 +47,10 @@ public final class SerialPortUtil
 
    /**
     * Ensure that the native serial port library is loaded.
+    * 
+    * @throws SerialPortException if the initialization fails.
     */
-   public static void loadSerialPortLib()
+   public synchronized static void loadSerialPortLib()
    {
       if (serialPortLibLoaded) return;
 
@@ -74,7 +73,7 @@ public final class SerialPortUtil
       }
 
       String libPath = "";
-      for (String dir : new String[] { "contrib/rxtx/", "../freebus-fts-knxcomm/contrib/rxtx/", "../../freebus-fts-knxcomm/contrib/rxtx/" })
+      for (String dir : new String[] { "contrib/rxtx/", "../freebus-fts-knxcomm/contrib/rxtx/", "../../freebus-fts-knxcomm/contrib/rxtx/", "../../freebus-fts/freebus-fts-knxcomm/contrib/rxtx/" })
       {
          libPath = (new File(dir + dirName)).getAbsolutePath();
          try
@@ -93,7 +92,7 @@ public final class SerialPortUtil
       }
 
       if (!serialPortLibLoaded)
-         throw new RuntimeException("Failed to load native rxtxSerial library for " + dirName);
+         throw new SerialPortException("Failed to load native rxtxSerial library for " + dirName);
 
       boolean jarLoaded = false;
       try
@@ -108,6 +107,6 @@ public final class SerialPortUtil
       }
 
       if (!jarLoaded)
-         throw new RuntimeException("Failed to load RXTXcomm.jar");
+         throw new SerialPortException("Failed to load RXTXcomm.jar");
    }
 }

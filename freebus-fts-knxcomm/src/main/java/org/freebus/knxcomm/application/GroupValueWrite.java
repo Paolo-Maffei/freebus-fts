@@ -32,7 +32,7 @@ public final class GroupValueWrite extends GenericDataApplication
     * 
     * @param data - the data to write.
     */
-   public GroupValueWrite(int[] data)
+   public GroupValueWrite(byte[] data)
    {
       super(ApplicationType.GroupValue_Write, data);
    }

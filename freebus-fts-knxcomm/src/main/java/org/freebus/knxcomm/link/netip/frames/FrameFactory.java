@@ -30,7 +30,7 @@ public final class FrameFactory
       in.skipBytes(1); // header size
       final int version = in.readUnsignedByte();
 
-      if (version != Frame.protocolVersion)
+      if (version != Frame.PROTOCOL_VERSION)
          throw new InvalidDataException("unsupported protocol version", version);
 
       final int serviceTypeCode = in.readShort();

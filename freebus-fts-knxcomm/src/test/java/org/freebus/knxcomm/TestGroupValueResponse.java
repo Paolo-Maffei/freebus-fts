@@ -35,7 +35,7 @@ public class TestGroupValueResponse
    @Test
    public final void testToByteArray3()
    {
-      final Application app = new GroupValueResponse(new int[] { 12 });
+      final Application app = new GroupValueResponse(new byte[] { 12 });
 
       final byte[] expected = HexString.valueOf("00 40 0c");
       final byte[] rawData = app.toByteArray();

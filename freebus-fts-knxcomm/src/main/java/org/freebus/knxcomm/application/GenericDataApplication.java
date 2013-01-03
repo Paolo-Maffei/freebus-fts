@@ -6,13 +6,12 @@ import java.io.IOException;
 import java.util.Arrays;
 
 /**
- * A generic application with data bytes. For application types where no
- * application class exists.
+ * A generic application with data bytes. For application types where no application class exists.
  */
 public class GenericDataApplication extends AbstractApplication
 {
    private final ApplicationType type;
-   private int[] data;
+   private byte[] data;
 
    /**
     * Create an instance for a specific application type.
@@ -34,7 +33,7 @@ public class GenericDataApplication extends AbstractApplication
     * 
     * @throws IllegalArgumentException if the type is null
     */
-   public GenericDataApplication(ApplicationType type, int[] data)
+   public GenericDataApplication(ApplicationType type, byte[] data)
    {
       if (type == null)
          throw new IllegalArgumentException("type is null");
@@ -57,7 +56,7 @@ public class GenericDataApplication extends AbstractApplication
     * 
     * @param data - the data to set
     */
-   public void setData(int[] data)
+   public void setData(byte[] data)
    {
       this.data = (data == null ? null : data.clone());
    }
@@ -65,9 +64,54 @@ public class GenericDataApplication extends AbstractApplication
    /**
     * @return the application data.
     */
-   public int[] getData()
+   public byte[] getData()
    {
       return data;
+   }
+
+   /**
+    * Set the application data. The first data byte is the APCI byte.
+    * The data is cloned.
+    * 
+    * @param data - the data to set
+    */
+   public void setApciData(byte[] data)
+   {
+      if (data == null)
+      {
+         this.data = null;
+         setApciValue(0);
+      }
+      else if (data.length == 1)
+      {
+         setApciValue(data[0] & 255);
+         this.data = null;
+      }
+      else
+      {
+         setApciValue(data[0] & 255);
+
+         this.data = new byte[data.length - 1];
+         for (int i = 1; i < data.length; ++i)
+            this.data[i - 1] = data[i];
+      }
+   }
+
+   /**
+    * @return The application data, with the first data byte containing the APCI byte.
+    */
+   public byte[] getApciData()
+   {
+      if (data == null || data.length == 0)
+         return new byte[] { (byte) getApciValue() };
+
+      byte[] result = new byte[data.length + 1];
+      result[0] = (byte) getApciValue();
+
+      for (int i = 0; i < data.length; ++i)
+         result[i + 1] = data[i];
+
+      return result;
    }
 
    /**
@@ -78,9 +122,9 @@ public class GenericDataApplication extends AbstractApplication
    {
       if (length > 0)
       {
-         data = new int[length];
+         data = new byte[length];
          for (int i = 0; i < length; ++i)
-            data[i] = in.readUnsignedByte();
+            data[i] = (byte) in.readUnsignedByte();
       }
       else data = null;
    }

@@ -43,7 +43,7 @@ public abstract class AbstractFrame implements Frame
       try
       {
          out.write(6); // header size
-         out.write(Frame.protocolVersion);
+         out.write(Frame.PROTOCOL_VERSION);
          out.writeShort(getServiceType().code);
          out.writeShort(0); // frame size is written later
 

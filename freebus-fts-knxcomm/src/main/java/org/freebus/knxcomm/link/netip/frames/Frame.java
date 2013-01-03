@@ -15,7 +15,7 @@ public interface Frame
    /**
     * The KNXnet/IP protocol version
     */
-   public static final int protocolVersion = 0x10;
+   public static final int PROTOCOL_VERSION = 0x10;
 
    /**
     * @return the frame service type.
