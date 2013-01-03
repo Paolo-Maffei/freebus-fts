@@ -38,7 +38,7 @@
   <module>freebus-fts-persistence</module>
   <module>freebus-fts-service</module>
   <module>freebus-fts-elements</module>
-  <module>freebus-fts</module>
+  <module>freebus-fts-client</module>
  </modules>
  <dependencyManagement>
   <dependencies>

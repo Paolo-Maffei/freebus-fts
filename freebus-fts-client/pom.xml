@@ -1,14 +1,13 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
- xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
  <parent>
-  <artifactId>freebus-fts-parent</artifactId>
+  <artifactId>freebus-fts</artifactId>
   <groupId>org.freebus.fts</groupId>
-  <version>0.1-SNAPSHOT</version>
+  <version>0.2-SNAPSHOT</version>
   <relativePath>..</relativePath>
  </parent>
  <modelVersion>4.0.0</modelVersion>
- <artifactId>freebus-fts</artifactId>
- <name>freebus-fts</name>
+ <artifactId>freebus-fts-client</artifactId>
+ <name>freebus-fts-client</name>
  <dependencyManagement>
   <dependencies>
   </dependencies>
@@ -21,7 +20,6 @@
  </issueManagement>
  <build>
   <plugins>
-
    <plugin>
     <groupId>org.codehaus.mojo</groupId>
     <artifactId>buildnumber-maven-plugin</artifactId>
@@ -117,32 +115,31 @@
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-common</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>${project.version}</version>
    <scope>compile</scope>
   </dependency>
   <dependency>
-  	<groupId>org.freebus.fts</groupId>
-  	<artifactId>freebus-fts-elements</artifactId>
-  	<version>0.1-SNAPSHOT</version>
+   <groupId>org.freebus.fts</groupId>
+   <artifactId>freebus-fts-elements</artifactId>
+   <version>${project.version}</version>
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-service</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>${project.version}</version>
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-knxcomm</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>${project.version}</version>
    <scope>compile</scope>
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-persistence</artifactId>
-   <version>0.1-SNAPSHOT</version>
+   <version>${project.version}</version>
    <scope>compile</scope>
   </dependency>
-
   <dependency>
    <groupId>net.java.dev.appframework</groupId>
    <artifactId>appframework</artifactId>
