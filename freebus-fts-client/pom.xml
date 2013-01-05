@@ -21,34 +21,6 @@
  <build>
   <plugins>
    <plugin>
-    <groupId>org.codehaus.mojo</groupId>
-    <artifactId>buildnumber-maven-plugin</artifactId>
-    <version>1.0-beta-4</version>
-    <executions>
-     <execution>
-      <id>buildnumber (install phase)</id>
-      <phase>install</phase>
-      <goals>
-       <goal>create</goal>
-      </goals>
-     </execution>
-     <execution>
-      <id>buildnumber (package phase)</id>
-      <phase>package</phase>
-      <goals>
-       <goal>create</goal>
-      </goals>
-     </execution>
-    </executions>
-    <configuration>
-     <doCheck>false</doCheck>
-     <doUpdate>false</doUpdate>
-     <getRevisionOnlyOnce>true</getRevisionOnlyOnce>
-     <revisionOnScmFailure>0</revisionOnScmFailure>
-    </configuration>
-   </plugin>
-
-   <plugin>
     <artifactId>maven-jar-plugin</artifactId>
     <version>2.3</version>
     <configuration>
@@ -79,7 +51,7 @@
      </execution>
     </executions>
     <configuration>
-     <finalName>freebus-fts-${project.version}-r${buildNumber}</finalName>
+     <finalName>freebus-fts-${project.version}-${maven.build.timestamp}</finalName>
      <ignorePermissions>false</ignorePermissions>
      <appendAssemblyId>false</appendAssemblyId>
      <archive>
