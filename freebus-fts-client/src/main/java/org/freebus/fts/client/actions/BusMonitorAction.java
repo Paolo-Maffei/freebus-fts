@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.client.editors.busmonitor.BusMonitor;
+import org.freebus.fts.elements.components.Dialogs;
 import org.freebus.fts.elements.services.ImageCache;
 import org.freebus.knxcomm.BusInterface;
 import org.freebus.knxcomm.BusInterfaceFactory;
@@ -32,12 +33,16 @@ public final class BusMonitorAction extends BasicAction
    public void actionPerformed(ActionEvent e)
    {
       final MainWindow mainWin = MainWindow.getInstance();
-      BusInterface bus;
+      BusInterface bus = null;
 
       try
       {
          mainWin.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
          bus = BusInterfaceFactory.getBusInterface();
+      }
+      catch (Exception ex)
+      {
+         Dialogs.showExceptionDialog(ex, I18n.getMessage("BusMonitor.ErrOpenBus"));
       }
       finally
       {
