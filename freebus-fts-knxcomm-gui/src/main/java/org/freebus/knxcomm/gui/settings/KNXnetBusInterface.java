@@ -1,6 +1,5 @@
-package org.freebus.fts.client.dialogs.settings;
+package org.freebus.knxcomm.gui.settings;
 
-import java.awt.Cursor;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -10,30 +9,28 @@ import java.awt.event.ActionListener;
 import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import org.freebus.fts.client.core.Config;
-import org.freebus.fts.client.core.I18n;
 import org.freebus.fts.common.SimpleConfig;
+import org.freebus.knxcomm.gui.internal.I18n;
 import org.freebus.knxcomm.link.netip.KNXnetLink;
-import org.freebus.knxcomm.types.LinkMode;
 
 /**
  * A widget for configuring a KNXnet/IP bus interface connection.
  */
-final class KNXnetBusInterface extends JPanel
+public class KNXnetBusInterface extends AbstractBusInterface
 {
    private static final long serialVersionUID = 1457255663125616282L;
    private final static String configKey = "knxConnectionKNXnet";
-   private final JTextField inpHost, inpPort;
-   private final JLabel lblTestOutput;
-
+   final JTextField inpHost;
+   final JTextField inpPort;
    /**
     * Create a new KNXnet/IP bus-interface configuration widget.
     */
    public KNXnetBusInterface()
    {
+      super();
+
       GridBagLayout layout = new GridBagLayout();
       setLayout(layout);
 
@@ -46,7 +43,7 @@ final class KNXnetBusInterface extends JPanel
       c.weightx = 1;
       c.gridx = 0;
       c.gridy = ++gridY;
-      add(new JLabel(I18n.getMessage("Settings.KNXnetBusInterface.Host")), c);
+      add(new JLabel(I18n.getMessage("KNXnetBusInterface.Host")), c);
 
       inpHost = new JTextField();
       c.fill = GridBagConstraints.HORIZONTAL;
@@ -59,7 +56,7 @@ final class KNXnetBusInterface extends JPanel
       c.weightx = 1;
       c.gridx = 0;
       c.gridy = ++gridY;
-      add(new JLabel(I18n.formatMessage("Settings.KNXnetBusInterface.Port", new String[] { Integer
+      add(new JLabel(I18n.formatMessage("KNXnetBusInterface.Port", new String[] { Integer
             .toString(KNXnetLink.defaultPortUDP) })), c);
 
       inpPort = new JTextField();
@@ -74,7 +71,7 @@ final class KNXnetBusInterface extends JPanel
       c.gridy = ++gridY;
       add(Box.createVerticalStrut(8), c);
 
-      final JButton btnTest = new JButton(I18n.getMessage("Settings.KNXnetBusInterface.Test"));
+      final JButton btnTest = new JButton(I18n.getMessage("KNXnetBusInterface.Test"));
       c.fill = GridBagConstraints.NONE;
       c.weightx = 1;
       c.gridx = 0;
@@ -91,8 +88,6 @@ final class KNXnetBusInterface extends JPanel
          }
       });
 
-      lblTestOutput = new JLabel();
-      lblTestOutput.setAlignmentY(0.1f);
       c.fill = GridBagConstraints.HORIZONTAL;
       c.weightx = 1;
       c.weighty = 1;
@@ -100,7 +95,7 @@ final class KNXnetBusInterface extends JPanel
       c.gridy = ++gridY;
       c.gridwidth = 2;
       c.insets = new Insets(8, 8, 40, 40);
-      add(lblTestOutput, c);
+      add(getTestOutputComponent(), c);
       c.gridwidth = 1;
 
       c.gridy = ++gridY;
@@ -108,7 +103,7 @@ final class KNXnetBusInterface extends JPanel
       c.fill = GridBagConstraints.VERTICAL;
       add(Box.createVerticalGlue(), c);
 
-      final SimpleConfig cfg = Config.getInstance();
+      final SimpleConfig cfg = SimpleConfig.getInstance();
 
       String host = cfg.getStringValue(configKey + ".host");
       if (host == null || host.isEmpty())
@@ -122,55 +117,21 @@ final class KNXnetBusInterface extends JPanel
    }
 
    /**
+    * Apply the widget's contents to the configuration.
+    */
+   public void apply()
+   {
+      final SimpleConfig cfg = SimpleConfig.getInstance();
+      cfg.put(configKey + ".host", inpHost.getText());
+      cfg.put(configKey + ".port", inpPort.getText());
+   }
+
+   /**
     * Test the connection to the KNXnet/IP server using the values in the input
     * fields.
     */
    protected void testConnection()
    {
-      try
-      {
-         lblTestOutput.setText(I18n.getMessage("Settings.KNXnetBusInterface.TestConnecting"));
-         setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
-
-         KNXnetLink link = new KNXnetLink(inpHost.getText(), Integer.valueOf(inpPort.getText()));
-         link.open(LinkMode.LinkLayer);
-
-         final StringBuffer sb = new StringBuffer();
-
-         sb.append("<html><body><h3>");
-         sb.append(I18n.getMessage("Settings.KNXnetBusInterface.TestOk"));
-         sb.append("</h3>");
-         sb.append("</body></html>");
-
-         lblTestOutput.setText(sb.toString());
-
-         link.close();
-      }
-      catch (Exception e)
-      {
-         final StringBuffer sb = new StringBuffer();
-
-         sb.append("<html><body><h3>");
-         sb.append(I18n.getMessage("Settings.KNXnetBusInterface.TestFailed"));
-         sb.append("</h3><br />");
-         sb.append(e.toString());
-         sb.append("</body></html>");
-
-         lblTestOutput.setText(sb.toString());
-      }
-      finally
-      {
-         setCursor(Cursor.getDefaultCursor());
-      }
-   }
-
-   /**
-    * Apply the widget's contents to the configuration.
-    */
-   protected void apply()
-   {
-      final SimpleConfig cfg = Config.getInstance();
-      cfg.put(configKey + ".host", inpHost.getText());
-      cfg.put(configKey + ".port", inpPort.getText());
+      testConnection(new KNXnetLink(inpHost.getText(), Integer.valueOf(inpPort.getText())));
    }
 }

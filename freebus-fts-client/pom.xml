@@ -104,20 +104,22 @@
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-knxcomm</artifactId>
    <version>${project.version}</version>
-   <scope>compile</scope>
+  </dependency>
+  <dependency>
+   <groupId>org.freebus.fts</groupId>
+   <artifactId>freebus-fts-knxcomm-gui</artifactId>
+   <version>${project.version}</version>
   </dependency>
   <dependency>
    <groupId>org.freebus.fts</groupId>
    <artifactId>freebus-fts-persistence</artifactId>
    <version>${project.version}</version>
-   <scope>compile</scope>
   </dependency>
   <dependency>
    <groupId>net.java.dev.appframework</groupId>
    <artifactId>appframework</artifactId>
    <version>1.03</version>
    <type>jar</type>
-   <scope>compile</scope>
   </dependency>
   <dependency>
    <groupId>mysql</groupId>
