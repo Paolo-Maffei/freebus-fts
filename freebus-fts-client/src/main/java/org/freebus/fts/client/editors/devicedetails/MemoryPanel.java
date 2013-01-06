@@ -70,16 +70,17 @@ public class MemoryPanel extends JPanel implements DeviceEditorComponent
     */
    public void setDevice(Device device, DeviceController adapter)
    {
-      if (device != null)
+      if (device != null && device.getProgram() != null)
       {
          int endAddr = device.getProgram().getMask().getUserEepromEnd();
          endAddr = (endAddr + 15) & ~15;
 
          tableModel = new DeviceMemoryTableModel(0, endAddr, getBackground());
          table.setModel(tableModel);
+         tableModel.setDevice(device);
       }
-
-      tableModel.setDevice(device);
+      else
+         tableModel.setDevice(null);
    }
 
    /**
