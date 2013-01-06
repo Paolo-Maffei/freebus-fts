@@ -473,11 +473,19 @@ public final class VdxFileReader
       {
          // Read the section title
          offset = reader.getFilePointer();
-         if (reader.read() != 'T' || reader.read() != ' ')
+         line = reader.readLine();
+         if (line == null)
+            break;
+
+         String[] words = line.split(" ");
+         if (words[0].equals("XXX"))
+            break;
+         else if (!words[0].equals("T"))
             throw new IOException("No section start at byte-pos " + Long.toString(reader.getFilePointer()));
 
-         final int sectionId = Integer.parseInt(reader.readWord());
-         String sectionName = reader.readLine();
+         final int sectionId = Integer.parseInt(words[1]);
+         String sectionName = words[2];
+
          if (sectionName != null)
             sectionName = sectionName.trim().toLowerCase();
          if (sectionHeaders.containsKey(sectionName))
@@ -540,14 +548,30 @@ public final class VdxFileReader
          sectionHeaders.put(sectionName, sectionHeader);
 
          // Skip the section entries
-         while (true)
+         final int numFields = fieldNamesArr.length;
+         line = reader.readLine();
+         while (line != null && !line.startsWith(SECTION_SEPARATOR) && !line.equals("XXX"))
          {
-            if (!reader.readUntil('-'))
-               break;
-            line = reader.readLine();
-            if (line == null || line.startsWith(SECTION_SEPARATOR))
-               break;
+            for (int i = 0; i <= numFields; ++i)
+            {
+               line = reader.readLine();
+               if (line == null)
+               {
+                  if (i > 0 && i < numFields)
+                     throw new IOException("file is truncated");
+                  break;
+               }
+
+               if (line.startsWith("\\\\") && i > 0)
+               {
+                  --i;
+                  continue;
+               }
+               if (i == numFields)
+                  break;
+            }
          }
+
       }
    }
 

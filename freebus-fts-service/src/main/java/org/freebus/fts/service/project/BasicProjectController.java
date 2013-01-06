@@ -135,6 +135,9 @@ public class BasicProjectController implements ProjectController
       building.setName(name);
       project.add(building);
 
+      if (parent != null)
+         building.setParent(parent);
+
       ProjectManager.fireComponentAdded(building);
       edit(building);
 

@@ -186,15 +186,18 @@ public final class DeviceMemoryAdapter
    private void resetDeviceDetails()
    {
       final Program program = device.getProgram();
-      final Mask mask = program.getMask();
 
-      userEepromStart = mask.getUserEepromStart();
-      userEepromEnd = mask.getUserEepromEnd();
-      userEepromAddr = userEepromStart;
+      if (program != null) {
+         final Mask mask = program.getMask();
 
-      userRamStart = mask.getUserRamStart();
-      userRamEnd = mask.getUserRamEnd();
-      userRamAddr = userRamStart;
+         userEepromStart = mask.getUserEepromStart();
+         userEepromEnd = mask.getUserEepromEnd();
+         userEepromAddr = userEepromStart;
+
+         userRamStart = mask.getUserRamStart();
+         userRamEnd = mask.getUserRamEnd();
+         userRamAddr = userRamStart;
+      }
 
       outOfRamReported = false;
    }

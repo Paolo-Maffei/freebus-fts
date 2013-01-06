@@ -197,7 +197,6 @@ public class SubGroup implements Comparable<SubGroup>, Addressable, Named
    public void remove(SubGroupToObject sgo)
    {
       subGroupToObjects.remove(sgo);
-      sgo.setSubGroup(null);
    }
 
    /**

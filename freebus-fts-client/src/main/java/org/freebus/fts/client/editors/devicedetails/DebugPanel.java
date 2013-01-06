@@ -88,7 +88,7 @@ public class DebugPanel extends JPanel implements DeviceEditorComponent
    {
       rootNode.removeAllChildren();
 
-      if (device == null)
+      if (device == null || device.getProgram() == null)
          return;
 
       final Map<Parameter, DefaultMutableTreeNode> paramNodes = new HashMap<Parameter, DefaultMutableTreeNode>();

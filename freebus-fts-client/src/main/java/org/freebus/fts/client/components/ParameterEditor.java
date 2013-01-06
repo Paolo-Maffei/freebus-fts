@@ -149,7 +149,7 @@ public class ParameterEditor extends JPanel
       //
       // Get the parameters and sort them by display order
       //
-      final Set<Parameter> paramsSet = device.getProgram().getParameters();
+      final Set<Parameter> paramsSet = device.getProgram() != null ? device.getProgram().getParameters() : new HashSet<Parameter>();
       final Parameter[] paramsSorted = new Parameter[paramsSet.size()];
       paramsSet.toArray(paramsSorted);
       Arrays.sort(paramsSorted, new Comparator<Parameter>()
