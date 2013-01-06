@@ -23,10 +23,13 @@ import javax.swing.border.EtchedBorder;
 
 import org.freebus.fts.elements.internal.I18n;
 import org.freebus.fts.elements.services.ImageCache;
+import org.slf4j.LoggerFactory;
 
 import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.spi.ILoggingEvent;
+import ch.qos.logback.core.Appender;
 import ch.qos.logback.core.AppenderBase;
-import ch.qos.logback.core.spi.ContextAwareBase;
 
 /**
  * A component that displays the first line of the latest log event and has a
@@ -88,7 +91,11 @@ public class LogLine extends JPanel
       });
 
 //      appender.setLayout(new SimpleLayout());
-//      Logger.getRootLogger().addAppender(appender);      
+
+      Logger rootLogger = (Logger) LoggerFactory.getLogger(org.slf4j.Logger.ROOT_LOGGER_NAME);
+      rootLogger.addAppender(appender);
+
+      appender.start();
    }
 
    /**
@@ -211,16 +218,16 @@ public class LogLine extends JPanel
    /**
     * The internal log-appender of {@link LogLine} that captures the log events.
     */
-   protected final transient ContextAwareBase appender = new AppenderBase<Object>()
+   protected final transient Appender<ILoggingEvent> appender = new AppenderBase<ILoggingEvent>()
    {
       @Override
-      protected void append(Object event)
+      protected void append(ILoggingEvent event)
       {
          final Level level = Level.INFO; //event.getLevel();
          if (!level.isGreaterOrEqual(Level.INFO))
             return;
 
-         final String message = event.toString(); //layout.format(event);
+         final String message = level.toString() + " - " + event.getFormattedMessage(); //layout.format(event);
 
          SwingUtilities.invokeLater(new Runnable()
          {
