@@ -6,6 +6,8 @@ java -jar libs\freebus-fts-client-*.jar -splash:libs/splash.png org.freebus.fts.
 
 if %ERRORLEVEL% neq 0 (
    echo.
+   echo Please note: FTS requires Java 7
+   echo (This might not be related to the problem above)
    echo.
    pause
 )

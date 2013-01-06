@@ -17,6 +17,15 @@
    <directoryMode>0755</directoryMode>
    <fileMode>0644</fileMode>
   </fileSet>
+  <fileSet>
+   <directory>..</directory>
+   <includes>
+    <include>README*.txt</include>
+   </includes>
+   <outputDirectory>/</outputDirectory>
+   <directoryMode>0755</directoryMode>
+   <fileMode>0644</fileMode>
+  </fileSet>
 <!-- <fileSet>
    <directory>../freebus-fts-knxcomm/contrib</directory>
    <outputDirectory>/contrib</outputDirectory>
