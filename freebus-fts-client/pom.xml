@@ -24,11 +24,11 @@
     <artifactId>maven-jar-plugin</artifactId>
     <version>2.3</version>
     <configuration>
-     <finalName>freebus-fts</finalName>
+     <finalName>freebus-fts-client</finalName>
      <archive>
       <manifest>
        <addClasspath>true</addClasspath>
-       <mainClass>org.freebus.fts.FTS</mainClass>
+       <mainClass>org.freebus.fts.client.FTS</mainClass>
       </manifest>
       <manifestEntries>
        <SplashScreen-Image>images/misc/splash.png</SplashScreen-Image>
@@ -134,8 +134,7 @@
   <dependency>
    <groupId>com.h2database</groupId>
    <artifactId>h2</artifactId>
-   <version>1.2.131</version>
-   <type>jar</type>
+   <version>1.3.170</version>
    <scope>runtime</scope>
   </dependency>
  </dependencies>

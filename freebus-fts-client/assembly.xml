@@ -11,17 +11,19 @@
   <fileSet>
    <includes>
     <include>COPYING</include>
+    <include>CREDITS.txt</include>
    </includes>
    <outputDirectory>/</outputDirectory>
    <directoryMode>0755</directoryMode>
    <fileMode>0644</fileMode>
   </fileSet>
-  <fileSet>
+<!-- <fileSet>
    <directory>../freebus-fts-knxcomm/contrib</directory>
    <outputDirectory>/contrib</outputDirectory>
    <directoryMode>0755</directoryMode>
    <fileMode>0644</fileMode>
   </fileSet>
+ -->
   <fileSet>
    <includes>
     <include>fts.sh</include>
