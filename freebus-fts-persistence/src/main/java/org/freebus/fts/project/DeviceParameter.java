@@ -143,7 +143,13 @@ public class DeviceParameter
    public void setValue(Object o)
    {
       value = o;
-      stringValue = null;
+
+      if (value instanceof String)
+         stringValue = (String) value;
+      else if (value instanceof Integer)
+         stringValue = ((Integer) value).toString();
+      else
+         throw new RuntimeException("Cannot serialize parameter value");
    }
 
    /**

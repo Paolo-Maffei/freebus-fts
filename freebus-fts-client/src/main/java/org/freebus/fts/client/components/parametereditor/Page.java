@@ -238,7 +238,7 @@ public class Page extends JPanel
          contentAddComponent(new JLabel("Unsupported atomic type " + atomicType), gridRow);
       }
 
-      if (param.getHighAccess() == 1)
+      if (valueComp != null && param.getHighAccess() == 1)
          valueComp.setEnabled(false);
 
       // final Integer addr = param.getAddress();
