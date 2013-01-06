@@ -51,8 +51,18 @@ public class BusInterfaceImpl implements BusInterface
    private final Semaphore replySemaphore = new Semaphore(0);
    private volatile long lastFrameReceive;
    private Telegram waitConTelegram;
-   private final Link link;
+   private Link link;
    private Receiver receiver;
+
+   /**
+    * Create a bus-interface object.
+    * 
+    * @see {@link #setLink(Link)}
+    */
+   public BusInterfaceImpl()
+   {
+      this(null);
+   }
 
    /**
     * Create a bus-interface object that uses the given connection for the bus
@@ -74,6 +84,22 @@ public class BusInterfaceImpl implements BusInterface
    public void addListener(TelegramListener listener)
    {
       listeners.add(listener);
+   }
+
+   /**
+    * Set the link.
+    * 
+    * @param link - the link to set.
+    * @throws IOException if the link cannot be opened.
+    */
+   public void setLink(Link link) throws IOException
+   {
+      LinkMode mode = link.getLinkMode();
+      boolean opened = link.isConnected();
+
+      if (opened) close();
+      this.link = link;
+      if (opened) open(mode);
    }
 
    /**

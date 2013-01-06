@@ -15,7 +15,6 @@ import javax.swing.JSeparator;
 import org.freebus.fts.common.SimpleConfig;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.gui.internal.I18n;
-import org.freebus.knxcomm.internal.BusInterfaceImpl;
 import org.freebus.knxcomm.types.KNXConnectionType;
 
 /**
@@ -144,7 +143,7 @@ public final class BusInterfacePanel extends JPanel
       cfgSerial.apply();
       cfgKNXnet.apply();
 
-      BusInterfaceFactory.closeBusInterface();
+      BusInterfaceFactory.reopenBusInterface();
    }
 
    /**

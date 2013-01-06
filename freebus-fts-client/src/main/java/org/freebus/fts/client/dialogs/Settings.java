@@ -20,6 +20,7 @@ import org.freebus.fts.client.dialogs.settings.BusInterfacePage;
 import org.freebus.fts.client.dialogs.settings.DatabasePage;
 import org.freebus.fts.client.dialogs.settings.SettingsPage;
 import org.freebus.fts.client.dialogs.settings.UIPage;
+import org.freebus.fts.elements.components.Dialogs;
 
 /**
  * A dialog for editing the application's settings.
@@ -104,7 +105,16 @@ public final class Settings extends JDialog
    private void accepted()
    {
       for (SettingsPage page: pages)
-         page.apply();
+      {
+         try
+         {
+            page.apply();
+         }
+         catch (Exception e)
+         {
+            Dialogs.showExceptionDialog(e, I18n.getMessage("Settings.ErrApply"));
+         }
+      }
 
       Config.getInstance().save();
       dispose();
