@@ -1,5 +1,6 @@
 package org.freebus.fts.client.editors.devicedetails;
 
+import java.awt.Component;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -13,13 +14,17 @@ import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
+import javax.swing.DefaultCellEditor;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTable;
+import javax.swing.UIManager;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableCellRenderer;
 
 import org.freebus.fts.client.application.MainWindow;
 import org.freebus.fts.client.core.I18n;
@@ -47,7 +52,15 @@ public class DeviceObjectPanel extends JPanel
    private final JLabel lblName = new JLabel();
    private final JLabel lblType = new JLabel();
    private final DefaultTableModel groupsModel = new DefaultTableModel();
-   private final JTable groupsTable = new JTable(groupsModel);
+   private final JTable groupsTable = new JTable(groupsModel)
+      {
+         public boolean isCellEditable(int rowIndex, int colIndex)
+         {
+            if (colIndex == 0)
+              return false;
+            return true;
+         }
+      };
    private final JButton addGroupButton = new JButton(ImageCache.getIcon("icons/sub-group-new"));
    private final JCheckBox transButton = new JCheckBox(I18n.getMessage("DeviceObjectPanel.ButtonTransmit"));
    private final JCheckBox readButton = new JCheckBox(I18n.getMessage("DeviceObjectPanel.ButtonRead"));
@@ -56,6 +69,96 @@ public class DeviceObjectPanel extends JPanel
    private final JComboBox priorityCombo = new JComboBox();
 
    private final DeviceObject deviceObject;
+
+
+   class ButtonRenderer extends JButton implements TableCellRenderer
+   {
+
+      public ButtonRenderer()
+      {
+         setOpaque(true);
+      }
+
+      public Component getTableCellRendererComponent(JTable table, Object value,
+            boolean isSelected, boolean hasFocus, int row, int column)
+      {
+         if (isSelected)
+         {
+            setForeground(table.getSelectionForeground());
+            setBackground(table.getSelectionBackground());
+         }
+         else
+         {
+            setForeground(table.getForeground());
+            setBackground(UIManager.getColor("Button.background"));
+         }
+         setText((value == null) ? "" : value.toString());
+         setIcon(ImageCache.getIcon("icons/delete"));
+         setToolTipText(I18n.getMessage("DeviceObjectPanel.DeleteGroup"));
+         return this;
+      }
+   }
+
+
+   class ButtonEditor extends DefaultCellEditor
+   {
+
+      protected JButton button;
+      private String label;
+      private boolean isPushed;
+
+      public ButtonEditor(JCheckBox checkBox) {
+         super(checkBox);
+         button = new JButton();
+         button.setOpaque(true);
+         button.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+               fireEditingStopped();
+            }
+         });
+      }
+
+      public Component getTableCellEditorComponent(JTable table, Object value,
+            boolean isSelected, int row, int column)
+      {
+         if (isSelected)
+         {
+            button.setForeground(table.getSelectionForeground());
+            button.setBackground(table.getSelectionBackground());
+         }
+         else
+         {
+            button.setForeground(table.getForeground());
+            button.setBackground(table.getBackground());
+         }
+         label = (value == null) ? "" : value.toString();
+         button.setText(label);
+         button.setIcon(ImageCache.getIcon("icons/delete"));
+         isPushed = true;
+         return button;
+      }
+
+      public Object getCellEditorValue()
+      {
+         return new String(label);
+      }
+
+      public boolean stopCellEditing()
+      {
+         isPushed = false;
+         return super.stopCellEditing();
+      }
+
+      protected void fireEditingStopped()
+      {
+         super.fireEditingStopped();
+         if (isPushed)
+            removeSubGroup(groupsTable.getSelectedRow(), true);
+            // JOptionPane.showMessageDialog(button, "Ouch: " + groupsTable.getSelectedRow());
+         isPushed = false;
+      }
+   }
+
 
    /**
     * Create a device-object panel.
@@ -114,8 +217,16 @@ public class DeviceObjectPanel extends JPanel
             GridBagConstraints.NONE, noInsets, 0, 0));
 
       groupsModel.addColumn("<Group>");
+      groupsModel.addColumn("<Button>");
       // groupsTable.setBorder(BorderFactory.createEmptyBorder(4, 0, 4, 0));
       groupsTable.getTableHeader().setVisible(false);
+      groupsTable.setRowSelectionAllowed(false);
+      groupsTable.getColumn("<Button>").setCellRenderer(new ButtonRenderer());
+      groupsTable.getColumn("<Button>").setCellEditor(new ButtonEditor(new JCheckBox()));
+      groupsTable.getColumn("<Button>").setPreferredWidth(30);
+      groupsTable.getColumn("<Button>").setMaxWidth(30);
+      groupsTable.getColumn("<Button>").setWidth(30);
+
       add(groupsTable, new GridBagConstraints(1, ++gridy, 6, 1, 1, 1, GridBagConstraints.WEST,
             GridBagConstraints.HORIZONTAL, noInsets, 0, 0));
 
@@ -269,6 +380,31 @@ public class DeviceObjectPanel extends JPanel
    }
 
    /**
+    * Remove a sub-group from the device object.
+    *
+    * @param index - the index of the sub-group to remove
+    * @param update - shall the device object be updated?
+    * @return True if the sub-group was removed, false if there was an error.
+    */
+   private boolean removeSubGroup(int index, boolean update)
+   {
+      SubGroupToObject sgo = (SubGroupToObject) deviceObject.getSubGroupToObjects().toArray()[index];
+      SubGroup subGroup = sgo.getSubGroup();
+      sgo.dispose();
+      groupsModel.removeRow(index);
+      ProjectManager.fireComponentRemoved(sgo);
+      ProjectManager.fireComponentModified(subGroup);
+
+      if (update)
+      {
+         groupsModel.fireTableDataChanged();
+         ProjectManager.fireComponentModified(deviceObject);
+      }
+
+      return true;
+   }
+
+   /**
     * @return The communication object that is displayed.
     */
    public DeviceObject getDeviceObject()
@@ -281,7 +417,7 @@ public class DeviceObjectPanel extends JPanel
     */
    private void groupsModelAdd(SubGroupToObject sgo)
    {
-      groupsModel.addRow(new Object[] { sgo.getSubGroup() });
+      groupsModel.addRow(new Object[] { sgo.getSubGroup(), "" });
    }
 
    /**

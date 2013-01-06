@@ -397,7 +397,6 @@ public class DeviceObject implements Comparable<DeviceObject>
    public void remove(SubGroupToObject sgo)
    {
       subGroupToObjects.remove(sgo);
-      sgo.setDeviceObject(null);
    }
 
    /**
