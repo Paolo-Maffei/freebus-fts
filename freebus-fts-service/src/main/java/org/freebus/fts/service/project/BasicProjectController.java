@@ -17,11 +17,11 @@ import org.freebus.fts.project.ProjectUtils;
 import org.freebus.fts.project.Room;
 import org.freebus.fts.project.RoomType;
 import org.freebus.fts.project.SubGroup;
-import org.freebus.fts.project.internal.I18n;
 import org.freebus.fts.project.service.ProjectController;
 import org.freebus.fts.service.devicecontroller.DeviceController;
 import org.freebus.fts.service.devicecontroller.DeviceControllerFactory;
 import org.freebus.fts.service.exception.DeviceControllerException;
+import org.freebus.fts.service.internal.I18n;
 import org.freebus.fts.service.job.JobQueue;
 import org.freebus.fts.service.job.device.DeviceProgrammerJob;
 
