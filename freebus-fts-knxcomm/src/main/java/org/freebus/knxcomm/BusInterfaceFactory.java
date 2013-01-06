@@ -8,9 +8,8 @@ import org.freebus.knxcomm.internal.BusInterfaceImpl;
 import org.freebus.knxcomm.link.dummy.DummyLink;
 import org.freebus.knxcomm.link.netip.KNXnetLink;
 import org.freebus.knxcomm.link.serial.Ft12SerialLink;
-import org.freebus.knxcomm.link.serial.SerialPortUtil;
-import org.freebus.knxcomm.types.LinkType;
 import org.freebus.knxcomm.types.LinkMode;
+import org.freebus.knxcomm.types.LinkType;
 import org.slf4j.LoggerFactory;
 
 /**
