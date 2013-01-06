@@ -116,7 +116,7 @@ public final class BusInterfaceFactory
     */
    public static BusInterface newSerialInterface(String portName)
    {
-      SerialPortUtil.loadSerialPortLib();
+      // SerialPortUtil.loadSerialPortLib();  // .. probably obsolete
       return new BusInterfaceImpl(new Ft12SerialLink(portName));
    }
 

@@ -35,6 +35,7 @@
  <modules>
   <module>freebus-fts-common</module>
   <module>freebus-fts-knxcomm</module>
+  <module>freebus-fts-knxcomm-gui</module>
   <module>freebus-fts-persistence</module>
   <module>freebus-fts-service</module>
   <module>freebus-fts-elements</module>
