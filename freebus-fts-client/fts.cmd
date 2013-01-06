@@ -1,8 +1,9 @@
 @echo off
 rem FTS start script for Windows with 32bit Java
 
-set CLASSPATH=%CLASSPATH%;libs
-java -jar libs\freebus-fts-client-*.jar -splash:libs/splash.png org.freebus.fts.client.FTS
+cd libs
+set CLASSPATH=%CLASSPATH%;.
+java -jar freebus-fts-client-0.2-SNAPSHOT.jar -splash:splash.png org.freebus.fts.client.FTS
 
 if %ERRORLEVEL% neq 0 (
    echo.

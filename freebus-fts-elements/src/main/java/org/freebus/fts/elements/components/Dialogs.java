@@ -100,8 +100,9 @@ public final class Dialogs
       for (Throwable ee = e; ee != null; ee = ee.getCause())
       {
          String msg = ee.getMessage();
+
          if (msg == null)
-            continue;
+            msg = ee.getStackTrace()[0].toString();
 
          sb.append("<b>").append(ee.getClass().getSimpleName()).append("</b><br />");
 
