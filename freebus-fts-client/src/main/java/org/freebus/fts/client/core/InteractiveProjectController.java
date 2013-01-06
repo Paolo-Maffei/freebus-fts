@@ -6,6 +6,9 @@ import org.freebus.fts.client.editors.AreaDetails;
 import org.freebus.fts.client.editors.BuildingDetails;
 import org.freebus.fts.client.editors.LineDetails;
 import org.freebus.fts.client.editors.RoomDetails;
+import org.freebus.fts.client.editors.MainGroupDetails;
+import org.freebus.fts.client.editors.MidGroupDetails;
+import org.freebus.fts.client.editors.SubGroupDetails;
 import org.freebus.fts.client.editors.devicedetails.DeviceDetails;
 import org.freebus.fts.client.workbench.WorkBench;
 import org.freebus.fts.products.VirtualDevice;
@@ -14,6 +17,9 @@ import org.freebus.fts.project.Building;
 import org.freebus.fts.project.Device;
 import org.freebus.fts.project.Line;
 import org.freebus.fts.project.Room;
+import org.freebus.fts.project.MainGroup;
+import org.freebus.fts.project.MidGroup;
+import org.freebus.fts.project.SubGroup;
 import org.freebus.fts.service.project.BasicProjectController;
 
 /**
@@ -61,6 +67,18 @@ public final class InteractiveProjectController extends BasicProjectController
       else if (obj instanceof Room)
       {
          workBench.showEditor(RoomDetails.class, obj);
+      }
+      else if (obj instanceof MainGroup)
+      {
+         workBench.showEditor(MainGroupDetails.class, obj);
+      }
+      else if (obj instanceof MidGroup)
+      {
+         workBench.showEditor(MidGroupDetails.class, obj);
+      }
+      else if (obj instanceof SubGroup)
+      {
+         workBench.showEditor(SubGroupDetails.class, obj);
       }
       else return false;
 
