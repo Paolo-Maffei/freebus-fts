@@ -1,5 +1,5 @@
 @echo off
-rem FTS start script for Windows with 32bit Java
+setlocal
 
 cd libs
 set CLASSPATH=%CLASSPATH%;.
