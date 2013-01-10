@@ -194,6 +194,14 @@ public class TestTelegram
    }
 
    @Test
+   public final void testFromRawData5() throws IOException
+   {
+      final byte[] data = HexString.valueOf("b0 11 0a 00 fe 63 43 40 07 b0 7d");
+      final Telegram telegram = TelegramFactory.createTelegram(data);
+      System.out.println(telegram);
+   }
+
+   @Test
    public void testFromRawDataDisconnect() throws IOException
    {
       final byte[] data = HexString.valueOf("90 11 06 11 ff 60 81");

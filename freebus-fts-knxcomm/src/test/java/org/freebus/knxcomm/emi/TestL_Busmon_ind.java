@@ -3,6 +3,8 @@ package org.freebus.knxcomm.emi;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.ByteArrayInputStream;
+import java.io.DataInputStream;
 import java.io.IOException;
 
 import org.freebus.fts.common.HexString;
@@ -23,6 +25,16 @@ public class TestL_Busmon_ind
 
       assertEquals(1, frame.getStatus());
       assertEquals(0x2233, frame.getTimestamp());
+   }
+
+   // this test fails currently
+   //@Test()
+   public final void testRead1() throws IOException
+   {
+      final byte[] data = HexString.valueOf("2b 04 03 01 01 01 b0 11 0a 00 fe 63 43 40 07 b0 7d");
+
+      final CEmiFrame frame = new CEmiFrame();
+      frame.readData(new DataInputStream(new ByteArrayInputStream(data)));
    }
 
    @Test
