@@ -7,6 +7,8 @@ import org.freebus.knxcomm.link.netip.frames.ConnectionStateRequest;
 import org.freebus.knxcomm.link.netip.frames.ConnectionStateResponse;
 import org.freebus.knxcomm.link.netip.frames.DescriptionRequest;
 import org.freebus.knxcomm.link.netip.frames.DescriptionResponse;
+import org.freebus.knxcomm.link.netip.frames.DeviceConfigurationAck;
+import org.freebus.knxcomm.link.netip.frames.DeviceConfigurationRequest;
 import org.freebus.knxcomm.link.netip.frames.DisconnectRequest;
 import org.freebus.knxcomm.link.netip.frames.DisconnectResponse;
 import org.freebus.knxcomm.link.netip.frames.Frame;
@@ -80,6 +82,17 @@ public enum ServiceType
     * {@link #DISCONNECT_REQUEST}.
     */
    DISCONNECT_RESPONSE(0x20a, DisconnectResponse.class),
+
+   /**
+    * KNXnet/IP server to client and client to server: device management frame
+    */
+   DEVICE_CONFIGURATION_REQUEST(0x310, DeviceConfigurationRequest.class),
+
+   /**
+    * KNXnet/IP server to client: the answer to the client's
+    * {@link #DEVICE_CONFIGURATION_REQUEST}.
+    */
+   DEVICE_CONFIGURATION_ACK(0x311, DeviceConfigurationAck.class),
 
    /**
     * KNXnet/IP server to client and client to server: tunneling

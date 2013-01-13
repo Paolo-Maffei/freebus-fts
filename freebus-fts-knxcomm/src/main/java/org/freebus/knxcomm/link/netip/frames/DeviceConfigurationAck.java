@@ -6,21 +6,18 @@ import java.io.IOException;
 
 import org.freebus.knxcomm.link.netip.types.ServiceType;
 import org.freebus.knxcomm.link.netip.types.StatusCode;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
-/**
- * Acknowledge for a {@link TunnelingRequest tunneling request}.
- */
-public class TunnelingAck extends AbstractConnectionFrame
+public class DeviceConfigurationAck extends AbstractConnectionFrame
 {
+
    /**
-    * Create a tunneling acknowledge object.
+    * Create a device configuration acknowledge object.
     *
     * @param channelId - the id of the communication channel.
     * @param sequence - the sequence counter.
     * @param status - the status code.
     */
-   public TunnelingAck(int channelId, int sequence, StatusCode status)
+   public DeviceConfigurationAck(int channelId, int sequence, StatusCode status)
    {
       super();
       setChannelId(channelId);
@@ -29,9 +26,9 @@ public class TunnelingAck extends AbstractConnectionFrame
    }
 
    /**
-    * Create an empty tunneling acknowledge object.
+    * Create an empty device configuration acknowledge object.
     */
-   public TunnelingAck()
+   public DeviceConfigurationAck()
    {
       super();
       setStatus(StatusCode.OK);
@@ -60,40 +57,22 @@ public class TunnelingAck extends AbstractConnectionFrame
       connectionHeader.setServiceTypeSpecific(status.code);
    }
 
-   /**
-    * @return {@link ServiceType#TUNNELING_ACK}.
-    */
    @Override
    public ServiceType getServiceType()
    {
-      return ServiceType.TUNNELING_ACK;
+      return ServiceType.DEVICE_CONFIGURATION_ACK;
    }
 
-
-   /**
-    * Initialize the object from the given {@link DataInput data input stream}.
-    *
-    * @param in - the input stream to read
-    *
-    * @throws InvalidDataException
-    */
    @Override
    public void readData(DataInput in) throws IOException
    {
       readHeader(in);
-      
    }
 
-   /**
-    * Write the object to a {@link DataOutput data output stream}.
-    *
-    * @param out - the output stream to write to
-    *
-    * @throws IOException
-    */
    @Override
    public void writeData(DataOutput out) throws IOException
    {
       writeHeader(out);
    }
+
 }

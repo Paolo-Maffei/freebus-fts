@@ -7,26 +7,18 @@ import java.io.IOException;
 import org.freebus.knxcomm.emi.CEmiFrame;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.link.netip.types.ServiceType;
-import org.freebus.knxcomm.telegram.InvalidDataException;
 
-/**
- * A request that tunnels a KNX frame, either from the KNXnet/IP client to the
- * server, or from the server to the client.
- *
- * The request shall be answered with a {@link TunnelingAck tunneling
- * acknowledge}.
- */
-public class TunnelingRequest extends AbstractConnectionFrame
+public class DeviceConfigurationRequest extends AbstractConnectionFrame
 {
    private final CEmiFrame frame = new CEmiFrame();
 
    /**
-    * Create a tunneling request object.
+    * Create a device configuration request object.
     *
     * @param channelId - the id of the communication channel.
     * @param sequence - the sequence counter.
     */
-   public TunnelingRequest(int channelId, int sequence)
+   public DeviceConfigurationRequest(int channelId, int sequence)
    {
       super();
       setChannelId(channelId);
@@ -34,9 +26,9 @@ public class TunnelingRequest extends AbstractConnectionFrame
    }
 
    /**
-    * Create a tunneling request object.
+    * Create a device configuration request object.
     */
-   public TunnelingRequest()
+   public DeviceConfigurationRequest()
    {
       super();
    }
@@ -78,22 +70,12 @@ public class TunnelingRequest extends AbstractConnectionFrame
       frame.setInfo(info);
    }
 
-   /**
-    * @return {@link ServiceType#TUNNELING_REQUEST}.
-    */
    @Override
    public ServiceType getServiceType()
    {
-      return ServiceType.TUNNELING_REQUEST;
+      return ServiceType.DEVICE_CONFIGURATION_REQUEST;
    }
 
-   /**
-    * Initialize the object from the given {@link DataInput data input stream}.
-    *
-    * @param in - the input stream to read
-    *
-    * @throws InvalidDataException
-    */
    @Override
    public void readData(DataInput in) throws IOException
    {
@@ -101,17 +83,11 @@ public class TunnelingRequest extends AbstractConnectionFrame
       frame.readData(in);
    }
 
-   /**
-    * Write the object to a {@link DataOutput data output stream}.
-    *
-    * @param out - the output stream to write to
-    *
-    * @throws IOException
-    */
    @Override
    public void writeData(DataOutput out) throws IOException
    {
       writeHeader(out);
       frame.writeData(out);
    }
+
 }
