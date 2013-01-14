@@ -61,24 +61,6 @@ public class TunnelingRequest extends AbstractConnectionFrame
    }
 
    /**
-    * @return the additional information, or null if none
-    */
-   public byte[] getInfo()
-   {
-      return frame.getInfo();
-   }
-
-   /**
-    * Set the additional information.
-    *
-    * @param info - the info to set
-    */
-   public void setInfo(byte[] info)
-   {
-      frame.setInfo(info);
-   }
-
-   /**
     * @return {@link ServiceType#TUNNELING_REQUEST}.
     */
    @Override

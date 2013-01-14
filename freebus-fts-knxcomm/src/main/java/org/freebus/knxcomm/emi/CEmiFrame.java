@@ -15,7 +15,7 @@ import org.freebus.knxcomm.emi.types.EmiFrameType;
 public class CEmiFrame
 {
    private EmiFrame frame;
-   private byte[] info;
+   private AdditionalInfos additionalInfo;
 
    /**
     * Create an empty cEMI frame object.
@@ -43,11 +43,11 @@ public class CEmiFrame
    }
 
    /**
-    * @return the additional information, or null if none.
+    * @return the additional information
     */
-   public byte[] getInfo()
+   public AdditionalInfos getAdditionalInfo()
    {
-      return info;
+      return additionalInfo;
    }
 
    /**
@@ -55,9 +55,9 @@ public class CEmiFrame
     *
     * @param info - the additional information to set
     */
-   public void setInfo(byte[] info)
+   public void setAdditionalInfo(AdditionalInfos additionalInfo)
    {
-      this.info = info;
+      this.additionalInfo = additionalInfo;
    }
 
    /**
@@ -71,13 +71,8 @@ public class CEmiFrame
    {
       final EmiFrameType type = EmiFrameType.valueOf(in.readUnsignedByte());
 
-      final int infoLen = in.readUnsignedByte();
-      if (infoLen > 0)
-      {
-         info = new byte[infoLen];
-         in.readFully(info);
-      }
-      else info = null;
+      additionalInfo = new AdditionalInfos();
+      additionalInfo.readFrom(in);
 
       frame = EmiFrameFactory.createFrame(type);
 
@@ -101,16 +96,7 @@ public class CEmiFrame
 
       out.write(frame.getType().code);
 
-      if (info == null)
-      {
-         out.write(0);
-      }
-      else
-      {
-         out.write(info.length);
-         out.write(info);
-      }
-
+      additionalInfo.writeTo(out);
       frame.writeData(out);
    }
 }
