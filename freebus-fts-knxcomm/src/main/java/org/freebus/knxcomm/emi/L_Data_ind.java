@@ -12,16 +12,16 @@ public class L_Data_ind extends EmiTelegramFrame
    /**
     * Create a link data indicator with the given telegram.
     */
-   public L_Data_ind(Telegram telegram)
+   public L_Data_ind(EmiFrameType type, Telegram telegram)
    {
-      super(EmiFrameType.L_DATA_IND, telegram);
+      super(type, telegram);
    }
 
    /**
     * Create an empty link data indicator message.
     */
-   public L_Data_ind()
+   public L_Data_ind(EmiFrameType type)
    {
-      super(EmiFrameType.L_DATA_IND);
+      super(type);
    }
 }

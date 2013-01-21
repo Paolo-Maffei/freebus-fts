@@ -7,6 +7,7 @@ import java.io.DataInput;
 import java.io.DataOutput;
 import java.io.IOException;
 
+import org.freebus.knxcomm.emi.types.EmiFrameFormat;
 import org.freebus.knxcomm.emi.types.EmiFrameType;
 
 /**
@@ -22,6 +23,8 @@ public class CEmiFrame
     */
    public CEmiFrame()
    {
+      super();
+      additionalInfo = new AdditionalInfos();
    }
 
    /**
@@ -69,14 +72,14 @@ public class CEmiFrame
     */
    public void readData(DataInput in) throws IOException
    {
-      final EmiFrameType type = EmiFrameType.valueOf(in.readUnsignedByte());
+      final EmiFrameType type = EmiFrameType.valueOf(in.readUnsignedByte(), EmiVersion.cEMI);
 
       additionalInfo = new AdditionalInfos();
       additionalInfo.readFrom(in);
 
       frame = EmiFrameFactory.createFrame(type);
 
-      if (frame instanceof EmiTelegramFrame)
+      if (frame.getType().frameFormat == EmiFrameFormat.cEMI)
          ((EmiTelegramFrame) frame).setForceExtTelegram(true);
 
       frame.readData(in);

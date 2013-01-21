@@ -19,9 +19,9 @@ public final class L_Poll_Data_con extends AbstractEmiFrame
    /**
     * Create an empty object.
     */
-   public L_Poll_Data_con()
+   public L_Poll_Data_con(EmiFrameType type)
    {
-      super(EmiFrameType.L_POLL_DATA_CON);
+      super(type);
    }
 
    /**

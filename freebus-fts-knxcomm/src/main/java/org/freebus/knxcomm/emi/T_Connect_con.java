@@ -16,9 +16,9 @@ public final class T_Connect_con extends AbstractEmiFrame
    /**
     * Create an empty object.
     */
-   public T_Connect_con()
+   public T_Connect_con(EmiFrameType type)
    {
-      super(EmiFrameType.T_CONNECT_CON);
+      super(type);
    }
 
    /**

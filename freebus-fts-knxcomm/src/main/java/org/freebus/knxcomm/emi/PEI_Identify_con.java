@@ -18,9 +18,9 @@ public final class PEI_Identify_con extends AbstractEmiFrame
    /**
     * Create an empty object.
     */
-   public PEI_Identify_con()
+   public PEI_Identify_con(EmiFrameType type)
    {
-      super(EmiFrameType.PEI_IDENTIFY_CON);
+      super(type);
    }
 
    /**

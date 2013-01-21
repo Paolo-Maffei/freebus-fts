@@ -36,6 +36,7 @@ import org.freebus.knxcomm.application.DeviceDescriptorRead;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.L_Data_con;
 import org.freebus.knxcomm.emi.L_Data_ind;
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.telegram.Priority;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.freebus.knxcomm.telegram.TelegramListener;
@@ -359,7 +360,7 @@ public class BusMonitor extends WorkBenchEditor implements TelegramListener
    @Override
    public void telegramReceived(Telegram telegram)
    {
-      addBusMonitorItem(new L_Data_ind(telegram));
+      addBusMonitorItem(new L_Data_ind(EmiFrameType.EMI2_L_DATA_IND, telegram));
    }
 
    /**
@@ -368,6 +369,6 @@ public class BusMonitor extends WorkBenchEditor implements TelegramListener
    @Override
    public void telegramSent(Telegram telegram)
    {
-      addBusMonitorItem(new L_Data_con(telegram));
+      addBusMonitorItem(new L_Data_con(EmiFrameType.EMI2_L_DATA_CON, telegram));
    }
 }

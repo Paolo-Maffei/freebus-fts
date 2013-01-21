@@ -17,7 +17,9 @@ import org.freebus.knxcomm.DataConnection;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
+import org.freebus.knxcomm.emi.EmiVersion;
 import org.freebus.knxcomm.emi.L_Data_req;
+import org.freebus.knxcomm.emi.types.EmiFrameType;
 import org.freebus.knxcomm.event.CloseEvent;
 import org.freebus.knxcomm.event.FrameEvent;
 import org.freebus.knxcomm.link.Link;
@@ -272,7 +274,7 @@ public class BusInterfaceImpl implements BusInterface
       final int waitTimeMS = CONFIRM_TIMEOUT_MS;
       try
       {
-         link.send(new L_Data_req(telegram), true);
+         link.send(new L_Data_req(EmiFrameType.EMI2_L_DATA_REQ, telegram), true);
 
          if (replySemaphore.tryAcquire(waitTimeMS, TimeUnit.MILLISECONDS))
             return;
@@ -402,7 +404,7 @@ public class BusInterfaceImpl implements BusInterface
          {
             try
             {
-               frame = EmiFrameFactory.createFrame(e.getData());
+               frame = EmiFrameFactory.createFrame(e.getData(), EmiVersion.EMI2);
                e.setFrame(frame);
             }
             catch (IOException ex)

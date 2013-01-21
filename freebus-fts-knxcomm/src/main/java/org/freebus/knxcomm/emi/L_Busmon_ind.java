@@ -35,17 +35,17 @@ public class L_Busmon_ind extends EmiTelegramFrame
     * 
     * @param telegram - the contained telegram.
     */
-   protected L_Busmon_ind(Telegram telegram)
+   protected L_Busmon_ind(EmiFrameType type, Telegram telegram)
    {
-      super(EmiFrameType.L_BUSMON_IND, telegram);
+      super(type, telegram);
    }
 
    /**
     * Create an empty L_Busmon.ind message.
     */
-   protected L_Busmon_ind()
+   protected L_Busmon_ind(EmiFrameType type)
    {
-      this(new Telegram());
+      this(type, new Telegram());
    }
 
    /**
@@ -121,17 +121,21 @@ public class L_Busmon_ind extends EmiTelegramFrame
    @Override
    public void readData(DataInput in) throws IOException
    {
-      setStatus(in.readUnsignedByte());
-      setTimestamp(in.readUnsignedShort());
-
-      if (in instanceof FilterInputStream)
+      if (getType() == EmiFrameType.EMI1_L_BUSMON_IND
+            || getType() == EmiFrameType.EMI2_L_BUSMON_IND)
       {
-         int avail = ((FilterInputStream) in).available();
-         if (avail == 1)
+         setStatus(in.readUnsignedByte());
+         setTimestamp(in.readUnsignedShort());
+   
+         if (in instanceof FilterInputStream)
          {
-            // A confirmation byte
-            control = in.readUnsignedByte();
-            return;
+            int avail = ((FilterInputStream) in).available();
+            if (avail == 1)
+            {
+               // A confirmation byte
+               control = in.readUnsignedByte();
+               return;
+            }
          }
       }
 
@@ -144,8 +148,12 @@ public class L_Busmon_ind extends EmiTelegramFrame
    @Override
    public void writeData(DataOutput out) throws IOException
    {
-      out.write(getStatus());
-      out.writeShort(getTimestamp());
+      if (getType() == EmiFrameType.EMI1_L_BUSMON_IND
+            || getType() == EmiFrameType.EMI2_L_BUSMON_IND)
+      {
+         out.write(getStatus());
+         out.writeShort(getTimestamp());
+      }
       super.writeData(out);
    }
 

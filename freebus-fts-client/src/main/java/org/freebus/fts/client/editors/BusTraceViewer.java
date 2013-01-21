@@ -47,6 +47,7 @@ import org.freebus.knxcomm.application.memory.MemoryAddressMapperFactory;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
 import org.freebus.knxcomm.emi.EmiTelegramFrame;
+import org.freebus.knxcomm.emi.EmiVersion;
 import org.freebus.knxcomm.telegram.Telegram;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -162,7 +163,7 @@ public class BusTraceViewer extends WorkBenchEditor
     */
    public EmiFrame createFrame(final String line) throws IOException
    {
-      final EmiFrame frame = EmiFrameFactory.createFrame(HexString.valueOf(line));
+      final EmiFrame frame = EmiFrameFactory.createFrame(HexString.valueOf(line), EmiVersion.EMI2);
 
       if (frame instanceof EmiTelegramFrame)
       {

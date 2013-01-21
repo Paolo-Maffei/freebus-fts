@@ -12,16 +12,16 @@ public class L_Data_req extends EmiTelegramFrame
    /**
     * Create a link data request with the given telegram.
     */
-   public L_Data_req(Telegram telegram)
+   public L_Data_req(EmiFrameType type, Telegram telegram)
    {
-      super(EmiFrameType.L_DATA_REQ, telegram);
+      super(type, telegram);
    }
 
    /**
     * Create an empty link data request message.
     */
-   public L_Data_req()
+   public L_Data_req(EmiFrameType type)
    {
-      super(EmiFrameType.L_DATA_REQ);
+      super(type);
    }
 }

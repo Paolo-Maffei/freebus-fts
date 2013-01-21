@@ -14,9 +14,9 @@ public final class PEI_Identify_req extends AbstractEmiFrame
    /**
     * Create a PEI-identify request.
     */
-   public PEI_Identify_req()
+   public PEI_Identify_req(EmiFrameType type)
    {
-      super(EmiFrameType.PEI_IDENTIFY_REQ);
+      super(type);
    }
 
    /**

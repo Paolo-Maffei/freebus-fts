@@ -16,17 +16,17 @@ public final class T_Connect_req extends AbstractEmiFrame
    /**
     * Create an empty connect-request object.
     */
-   public T_Connect_req()
+   public T_Connect_req(EmiFrameType type)
    {
-      super(EmiFrameType.T_CONNECT_REQ);
+      super(type);
    }
 
    /**
     * Create a connect-request object.
     */
-   public T_Connect_req(int dest)
+   public T_Connect_req(EmiFrameType type, int dest)
    {
-      super(EmiFrameType.T_CONNECT_REQ);
+      super(type);
       this.dest = dest;
    }
 

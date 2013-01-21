@@ -20,9 +20,9 @@ public class PEI_Switch_req extends AbstractEmiFrame
    /**
     * Create a new message with default values.
     */
-   public PEI_Switch_req()
+   public PEI_Switch_req(EmiFrameType type)
    {
-      super(EmiFrameType.PEI_SWITCH_REQ);
+      super(type);
 
       targets[0] = LayerType.LL;
       targets[1] = LayerType.NL;
@@ -39,9 +39,9 @@ public class PEI_Switch_req extends AbstractEmiFrame
    /**
     * Create a new switch message from a predefined mode.
     */
-   public PEI_Switch_req(PEISwitchMode mode)
+   public PEI_Switch_req(EmiFrameType type, PEISwitchMode mode)
    {
-      super(EmiFrameType.PEI_SWITCH_REQ);
+      super(type);
 
       systemStatus = mode.systemStatus;
 

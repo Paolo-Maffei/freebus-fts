@@ -13,6 +13,7 @@ import org.freebus.fts.common.address.PhysicalAddress;
 import org.freebus.knxcomm.BusInterfaceFactory;
 import org.freebus.knxcomm.emi.EmiFrame;
 import org.freebus.knxcomm.emi.EmiFrameFactory;
+import org.freebus.knxcomm.emi.EmiVersion;
 import org.freebus.knxcomm.emi.PEI_Identify_con;
 import org.freebus.knxcomm.emi.PEI_Identify_req;
 import org.freebus.knxcomm.emi.PEI_Switch_req;
@@ -132,7 +133,7 @@ public class Ft12SerialLink extends AbstractListenableLink
          try
          {
             // Identify the BCU
-            send((new PEI_Identify_req()).toByteArray(), true);
+            send((new PEI_Identify_req(EmiFrameType.EMI2_PEI_IDENTIFY_REQ)).toByteArray(), true);
 
             // Wait for the Identify reply
             openLock.wait(1000);
@@ -177,7 +178,7 @@ public class Ft12SerialLink extends AbstractListenableLink
       LOGGER.info("Closing serial port " + portName + " - " + reason);
       try
       {
-         send(new PEI_Switch_req(PEISwitchMode.NORMAL), false);
+         send(new PEI_Switch_req(EmiFrameType.EMI2_PEI_SWITCH_REQ, PEISwitchMode.NORMAL), false);
       }
       catch (IOException ex)
       {
@@ -227,7 +228,7 @@ public class Ft12SerialLink extends AbstractListenableLink
 
       LOGGER.debug("Activating " + mode + " link mode");
       this.mode = mode;
-      send((new PEI_Switch_req(switchMode)).toByteArray(), true);
+      send((new PEI_Switch_req(EmiFrameType.EMI2_PEI_SWITCH_REQ, switchMode)).toByteArray(), true);
    }
 
    /**
@@ -475,7 +476,7 @@ public class Ft12SerialLink extends AbstractListenableLink
    {
       try
       {
-         final PEI_Identify_con frame = (PEI_Identify_con) EmiFrameFactory.createFrame(data);
+         final PEI_Identify_con frame = (PEI_Identify_con) EmiFrameFactory.createFrame(data, EmiVersion.EMI2);
          bcuAddress = frame.getAddr();
          LOGGER.debug("BCU address is " + bcuAddress);
 
@@ -636,7 +637,7 @@ public class Ft12SerialLink extends AbstractListenableLink
 
                final FrameEvent e = new FrameEvent(this, data);
 
-               if ((data[0] & 255) == EmiFrameType.PEI_IDENTIFY_CON.code)
+               if ((data[0] & 255) == EmiFrameType.EMI2_PEI_IDENTIFY_CON.code)
                   peiIdentifyCon(data);
 
                fireFrameReceived(e);

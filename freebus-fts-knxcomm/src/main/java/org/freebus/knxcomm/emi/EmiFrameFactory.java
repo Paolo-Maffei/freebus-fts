@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 
 import org.freebus.knxcomm.emi.types.EmiFrameType;
 
@@ -28,13 +29,9 @@ public final class EmiFrameFactory
 
       try
       {
-         return type.clazz.newInstance();
+         return type.clazz.getDeclaredConstructor(EmiFrameType.class).newInstance(type);
       }
-      catch (InstantiationException e)
-      {
-         throw new RuntimeException(e);
-      }
-      catch (IllegalAccessException e)
+      catch (IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException e)
       {
          throw new RuntimeException(e);
       }
@@ -52,9 +49,9 @@ public final class EmiFrameFactory
     * 
     * @throws IOException if the frame could not be read from in.
     */
-   static public EmiFrame createFrame(final DataInput in) throws IOException
+   static public EmiFrame createFrame(final DataInput in, final EmiVersion version) throws IOException
    {
-      final EmiFrameType type = EmiFrameType.valueOf(in.readUnsignedByte());
+      final EmiFrameType type = EmiFrameType.valueOf(in.readUnsignedByte(), version);
       final EmiFrame frame = createFrame(type);
 
       if (frame != null)
@@ -63,7 +60,7 @@ public final class EmiFrameFactory
       }
       else
       {
-    	  
+
       }
 
       return frame;
@@ -80,9 +77,9 @@ public final class EmiFrameFactory
     * 
     * @throws IOException if the frame could not be read from data.
     */
-   static public EmiFrame createFrame(final byte[] data) throws IOException
+   static public EmiFrame createFrame(final byte[] data, final EmiVersion version) throws IOException
    {
-      return createFrame(new DataInputStream(new ByteArrayInputStream(data)));
+      return createFrame(new DataInputStream(new ByteArrayInputStream(data)), version);
    }
 
    /*

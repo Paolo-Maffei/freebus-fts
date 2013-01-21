@@ -17,9 +17,9 @@ public final class L_Poll_Data_req extends AbstractEmiFrame
    /**
     * Create an empty poll-data-request object.
     */
-   public L_Poll_Data_req()
+   public L_Poll_Data_req(EmiFrameType type)
    {
-      super(EmiFrameType.L_POLL_DATA_REQ);
+      super(type);
    }
 
    /**
@@ -28,9 +28,9 @@ public final class L_Poll_Data_req extends AbstractEmiFrame
     * @param dest the destination group address.
     * @param numSlots the number of polling slots (1..15)
     */
-   public L_Poll_Data_req(int dest, int numSlots)
+   public L_Poll_Data_req(EmiFrameType type, int dest, int numSlots)
    {
-      super(EmiFrameType.L_POLL_DATA_REQ);
+      super(type);
       this.dest = dest;
    }
 
