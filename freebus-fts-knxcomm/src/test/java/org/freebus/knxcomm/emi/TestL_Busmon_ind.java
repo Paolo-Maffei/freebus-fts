@@ -27,7 +27,6 @@ public class TestL_Busmon_ind
       assertEquals(0x2233, frame.getTimestamp());
    }
 
-   // this test fails currently
    @Test()
    public final void testRead1() throws IOException
    {
