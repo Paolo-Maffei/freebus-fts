@@ -99,9 +99,9 @@ public class BusInterfaceImpl implements BusInterface
       LinkMode mode = link.getLinkMode();
       boolean opened = link.isConnected();
 
-      if (opened) close();
+      if (opened) link.close();
       this.link = link;
-      if (opened) open(mode);
+      if (opened) link.open(mode);
    }
 
    /**
@@ -297,6 +297,8 @@ public class BusInterfaceImpl implements BusInterface
     */
    private final class Receiver extends Thread implements LinkListener
    {
+      private final Logger LOGGER = LoggerFactory.getLogger(Receiver.class);
+
       private final Queue<FrameEvent> receiveQueue = new ConcurrentLinkedQueue<FrameEvent>();
       private final Semaphore received = new Semaphore(0, true);
       private volatile boolean active;
@@ -336,8 +338,10 @@ public class BusInterfaceImpl implements BusInterface
          finally
          {
             if (active)
-               close(false, "receiver communication failure");
+               close(false, "Receiver communication failure");
          }
+
+         LOGGER.info("Receiver thread terminated");
       }
 
       /**

@@ -243,6 +243,15 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
    @Override
    public void close()
    {
+      closeQuiet();
+      fireLinkClosed(new CloseEvent(this));
+   }
+
+   /**
+    * Close the connection without firing a close event.
+    */
+   protected void closeQuiet()
+   {
       LOGGER.debug("Closing KNXnet/IP connection");
 
       try
@@ -265,7 +274,6 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
       finally
       {
          channelId = -1;
-         fireLinkClosed(new CloseEvent(this));
       }
    }
 
@@ -290,7 +298,7 @@ public final class KNXnetLink extends AbstractListenableLink implements Link
       if (this.mode == mode)
          return;
 
-      close();
+      closeQuiet();
       open(mode);
    }
 

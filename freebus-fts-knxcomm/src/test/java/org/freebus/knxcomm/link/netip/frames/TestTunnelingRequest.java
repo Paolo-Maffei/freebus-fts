@@ -49,4 +49,23 @@ public class TestTunnelingRequest
       final byte[] outData = req.toByteArray();
       assertArrayEquals(data, outData);
    }
+
+   @Test
+   public final void testFromRawData1() throws IOException
+   {
+      // IP-RECV: 06 10 04 20 00 1b 04 01 00 00 2b 04 03 01 01 01 b0 11 0a 00 fe 63 43 40 07 b0 7d [KNXnetLink.java:380]
+      // See 3.8.4 Tunneling, 4.4.6 TUNNELLING_REQUEST
+      // 06 - header size
+      // 10 - version
+      // 04 20 - tunnelling request
+      // 00 1b - total size
+      // 04 - structure length
+      // 01 - communication channel id
+      // 00 - sequence counter
+      // 00 - reserved
+      // 2b - frame type
+      // ...
+      final byte data[] = HexString.valueOf("06 10 04 20 00 1b 04 01 00 00 2b 04 03 01 01 01 b0 11 0a 00 fe 63 43 40 07 b0 7d");
+      assertNotNull(FrameFactory.createFrame(data));
+   }
 }
