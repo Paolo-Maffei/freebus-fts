@@ -542,7 +542,7 @@ public class Parameter implements Named
     */
    public boolean isPage()
    {
-      return address == null;
+      return getAtomicType() == ParameterAtomicType.NONE && address == null;
    }
 
    /**
