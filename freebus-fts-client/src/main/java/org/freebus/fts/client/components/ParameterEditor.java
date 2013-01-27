@@ -8,7 +8,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.Vector;
 
-import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingUtilities;
@@ -33,8 +32,6 @@ public class ParameterEditor extends JPanel
    private static final long serialVersionUID = -2143429348377511397L;
 
    private JTabbedPane paramTabs = new JTabbedPane(JTabbedPane.LEFT);
-   private int tabWidth = 200;
-   private int tabHeight;
 
    private Device device;
    private final Vector<Page> paramPages = new Vector<Page>();
@@ -149,7 +146,8 @@ public class ParameterEditor extends JPanel
       //
       // Get the parameters and sort them by display order
       //
-      final Set<Parameter> paramsSet = device.getProgram() != null ? device.getProgram().getParameters() : new HashSet<Parameter>();
+      final Set<Parameter> paramsSet = device.getProgram() != null ? device.getProgram().getParameters()
+            : new HashSet<Parameter>();
       final Parameter[] paramsSorted = new Parameter[paramsSet.size()];
       paramsSet.toArray(paramsSorted);
       Arrays.sort(paramsSorted, new Comparator<Parameter>()
@@ -169,6 +167,8 @@ public class ParameterEditor extends JPanel
       for (final Parameter param : paramsSorted)
       {
          final DeviceParameter devParam = device.getDeviceParameter(param);
+         if (!devParam.isVisible())
+            continue;
 
          if (param.isPage())
          {
@@ -179,7 +179,9 @@ public class ParameterEditor extends JPanel
                page = new Page(devParam);
                page.addChangeListener(paramValueChangedListener);
                paramPages.add(page);
-               paramTabs.add(param.getName(), page);
+               paramTabs.add(page.getName(), page);
+               paramTabs.setToolTipTextAt(paramTabs.getTabCount() - 1, "Debug: parameter #"
+                     + page.getVisibleDevParameter().getParameter().getNumber());
             }
          }
          else if (page != null)
@@ -193,7 +195,7 @@ public class ParameterEditor extends JPanel
          }
       }
 
-      updatePagesVisibility();
+      // updatePagesVisibility();
 
       if (paramTabs.getComponentCount() > 0)
       {
@@ -211,71 +213,17 @@ public class ParameterEditor extends JPanel
     */
    public void updatePagesVisibility()
    {
-      // Logger.getLogger(getClass()).debug("start updateVisibility");
-      updateContentsEnabled = false;
+      // get selected tab title
+      int selectedIndex = paramTabs.getSelectedIndex();
+      String selectedTitle = paramTabs.getTitleAt(selectedIndex);
 
-      // Collect the pages that shall be visible
-      final Set<Page> visiblePages = new HashSet<Page>();
-      for (final Page page : paramPages)
-      {
-         if (page.isPageVisible())
-            visiblePages.add(page);
-      }
+      // process changes
+      updateContents();
 
-      // Remove all pages that are currently visible but that shall
-      // not be visible anymore. The pages that are visible and shall stay
-      // visible are removed from visiblePages. Afterwards, visiblePages only
-      // contains those pages that need to be shown.
+      // set selected tab
       for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
-      {
-         final Page page = (Page) paramTabs.getComponentAt(i);
-
-         if (visiblePages.contains(page))
-         {
-            paramTabs.setTitleAt(i, page.getName());
-            paramTabs.setToolTipTextAt(i, "Debug: parameter #" + page.getVisibleDevParameter().getParameter().getNumber());
-            visiblePages.remove(page);
-         }
-         else paramTabs.remove(i);
-      }
-
-      // Add pages that shall be visible but are not yet.
-      for (final Page page : visiblePages)
-      {
-         final int displayOrder = page.getDisplayOrder();
-
-         int i;
-         for (i = paramTabs.getTabCount() - 1; i >= 0; --i)
-         {
-            final Page pg = (Page) paramTabs.getComponentAt(i);
-            if (pg.getDisplayOrder() < displayOrder)
-               break;
-         }
-
-         final JLabel tabLabel = new JLabel(page.getName());
-         int width = tabLabel.getPreferredSize().width;
-         if (width > tabWidth)
-            tabWidth = width;
-         if (tabHeight <= 0)
-            tabHeight = tabLabel.getPreferredSize().height;
-
-         ++i;
-         paramTabs.add(page, i);
-         paramTabs.setTabComponentAt(i, tabLabel);
-         paramTabs.setToolTipTextAt(i, "Debug: parameter #" + page.getVisibleDevParameter().getParameter().getNumber());
-      }
-
-      // Ensure that all tabs have the same width and that the tabs will not
-      // shrink when the widest tab is removed.
-//      if (paramTabs.getTabCount() > 0)
-//      {
-//         final Dimension preferredSize = new Dimension(tabWidth, tabHeight + 4);
-//         for (int i = paramTabs.getTabCount() - 1; i >= 0; --i)
-//            paramTabs.getTabComponentAt(i).setPreferredSize(preferredSize);
-//      }
-
-      updateContentsEnabled = true;
-      // Logger.getLogger(getClass()).debug("end updateVisibility");
+         if (selectedTitle.equals(paramTabs.getTitleAt(i)))
+            paramTabs.setSelectedIndex(i);
    }
 
    /**
@@ -324,33 +272,6 @@ public class ParameterEditor extends JPanel
             });
          }
 
-         //
-         // final ParamData data = (ParamData) e.getSource();
-         // fireStateChanged();
-         //
-         // if (!inStateChanged && data.hasChildren())
-         // {
-         // SwingUtilities.invokeLater(new Runnable()
-         // {
-         // @Override
-         // public void run()
-         // {
-         // try
-         // {
-         // inStateChanged = true;
-         // updateVisibility();
-         //
-         // final Component currentPageComp = paramTabs.getSelectedComponent();
-         // if (currentPageComp instanceof Page)
-         // ((Page) currentPageComp).updateContents();
-         // }
-         // finally
-         // {
-         // inStateChanged = false;
-         // }
-         // }
-         // });
-         // }
       }
    };
 }
